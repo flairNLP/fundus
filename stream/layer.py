@@ -58,7 +58,7 @@ class BaseLayer:
         if len(queues) > len(self._worker):
             raise ValueError('Tried to assign more inputs than worker')
 
-        chunk_size = ceil(len(self._worker)/len(queues))
+        chunk_size = ceil(len(self._worker) / len(queues))
 
         for i, chunk in enumerate(more_itertools.chunked(self._worker, chunk_size)):
             for worker in chunk:

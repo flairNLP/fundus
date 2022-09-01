@@ -1,11 +1,12 @@
+import pickle
 import urllib.parse
 from dataclasses import dataclass
 from datetime import datetime
 from functools import partial
-from multiprocessing import Queue
-from typing import Dict, Set, List, Generator, Callable, Optional, Literal
+from typing import Dict, Set, Generator, Callable, Optional, Literal
 from urllib.parse import urlparse
 
+import dill
 import fastwarc
 import requests
 from ftfy import guess_bytes
@@ -22,19 +23,18 @@ class Article:
     exception: Optional[Exception] = None
 
 
-def supply(queue: Queue, warc_paths: List[str], domains):
+def supply(warc_path: str, domains):
     with requests.Session() as session:
-        for path in warc_paths:
-            response = session.get(path, stream=True)
-            for warc in fastwarc.ArchiveIterator(response.raw,
-                                                 record_types=int(fastwarc.WarcRecordType.response)):
+        response = session.get(warc_path, stream=True)
+        for warc in fastwarc.ArchiveIterator(response.raw,
+                                             record_types=int(fastwarc.WarcRecordType.response)):
 
-                url = str(warc.headers['WARC-Target-URI'])
-                parsed_url = urlparse(url)
+            url = str(warc.headers['WARC-Target-URI'])
+            parsed_url = urlparse(url)
 
-                if parsed_url.hostname in domains:
-                    warc.freeze()
-                    queue.put(warc)
+            if parsed_url.hostname in domains:
+                warc.freeze()
+                yield warc
 
 
 def parse(record: fastwarc.WarcRecord,
@@ -72,7 +72,7 @@ def parse(record: fastwarc.WarcRecord,
 
 class Crawler:
 
-    def __init__(self, server_address):
+    def __init__(self, server_address: str = 'https://data.commoncrawl.org/'):
         self.server_address = server_address
         self.news_iter = CCNewsIterator()
 
@@ -81,6 +81,17 @@ class Crawler:
               start: datetime = None,
               end: datetime = None,
               exception_handling: Literal['suppress', 'catch', 'raise'] = 'catch') -> Generator[Article, None, None]:
+
+        def is_pickleable(obj: ...) -> bool:
+            try:
+                pickle.dumps(obj)
+            except AttributeError:
+                return False
+            return True
+
+        for domain, fnc in mapping.items():
+            if not is_pickleable(fnc):
+                mapping[domain] = dill.dumps(fnc)
 
         parsed_mapping: Dict[str, Set[urllib.parse.ParseResult]] = dict()
 
@@ -103,8 +114,8 @@ class Crawler:
         part_parse = partial(parse, mapping=parsed_mapping, exception_handling=exception_handling)
         warc_paths = self.news_iter.get_list_of_warc_path(self.server_address, start, end)
 
-        supplier_layer = SupplyLayer(target=part_supply, size=10, name='Supply Layer')
-        parser_layer = UnaryLayer(target=part_parse, size=20, name='Parser Layer')
+        supplier_layer = SupplyLayer(target=part_supply, size=2, name='Supply Layer')
+        parser_layer = UnaryLayer(target=part_parse, size=4, name='Parser Layer')
 
         with StreamLine([supplier_layer, parser_layer]) as stream:
             yield from stream.imap(warc_paths)

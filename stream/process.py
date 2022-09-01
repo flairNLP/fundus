@@ -1,15 +1,27 @@
+import pickle
 import traceback
 from abc import ABC, abstractmethod
+from functools import cache
 from multiprocessing import Queue, Process, Event, Pipe
 from queue import Empty
-from typing import Callable, Optional
+from typing import Callable, Optional, Union
+
+import dill
 
 
 class StreamProcess(Process, ABC):
 
     # noinspection PyShadowingBuiltins
-    def __init__(self, target: Callable, output: Queue = None, input: Queue = None, *args, **kwargs):
+    def __init__(self, target: Union[Callable, bytes], output: Queue = None, input: Queue = None, *args, **kwargs):
+
+        # noinspection PyBroadException
+        try:
+            pickle.dumps(target)
+        except Exception as err:
+            target = dill.dumps(target)
+
         super(StreamProcess, self).__init__(target=target, *args, **kwargs)
+
         self.input: Optional[Queue] = input
         self.output: Optional[Queue] = output
 
@@ -18,14 +30,18 @@ class StreamProcess(Process, ABC):
         self._pipe_out, self._pipe_in = Pipe(duplex=False)
         self._exception = None
 
-    @property
-    def target(self) -> Callable:
-        # noinspection PyUnresolvedReferences
-        return self._target
-
     @abstractmethod
     def _handle_job(self, job):
         raise NotImplementedError(f"'{type(self)} didn't implement '_handle_job'")
+
+    # noinspection PyUnresolvedReferences
+    @property
+    @cache
+    def target(self):
+        if isinstance(self._target, bytes):
+            return dill.loads(self._target)
+        else:
+            return self._target
 
     def run(self):
 
