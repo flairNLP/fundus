@@ -7,12 +7,11 @@ from typing import Dict, Set, List, Generator, Callable, Optional, Literal
 from urllib.parse import urlparse
 
 import fastwarc
-import more_itertools
 import requests
 from ftfy import guess_bytes
 
 from common_crawl.iterator import CCNewsIterator
-from stream.streampool import QueueConsumer
+from stream import StreamLine, SupplyLayer, UnaryLayer
 
 
 @dataclass
@@ -38,9 +37,9 @@ def supply(queue: Queue, warc_paths: List[str], domains):
                     queue.put(warc)
 
 
-def consume(record: fastwarc.WarcRecord,
-            mapping: Dict[str, Dict[str, Callable[[object], None]]],
-            exception_handling):
+def parse(record: fastwarc.WarcRecord,
+          mapping: Dict[str, Dict[str, Callable[[object], None]]],
+          exception_handling):
     url = str(record.headers['WARC-Target-URI'])
     parsed_url = urlparse(url)
 
@@ -77,11 +76,11 @@ class Crawler:
         self.server_address = server_address
         self.news_iter = CCNewsIterator()
 
-    def icrawl(self,
-               mapping: Dict[str, Callable[[Article], None]],
-               start: datetime = None,
-               end: datetime = None,
-               exception_handling: Literal['suppress', 'catch', 'raise'] = 'catch') -> Generator[Article, None, None]:
+    def crawl(self,
+              mapping: Dict[str, Callable[[Article], None]],
+              start: datetime = None,
+              end: datetime = None,
+              exception_handling: Literal['suppress', 'catch', 'raise'] = 'catch') -> Generator[Article, None, None]:
 
         parsed_mapping: Dict[str, Set[urllib.parse.ParseResult]] = dict()
 
@@ -101,9 +100,11 @@ class Crawler:
                 tmp[path] = func
 
         part_supply = partial(supply, domains=parsed_mapping.keys())
-        part_consume = partial(consume, mapping=parsed_mapping, exception_handling=exception_handling)
+        part_parse = partial(parse, mapping=parsed_mapping, exception_handling=exception_handling)
         warc_paths = self.news_iter.get_list_of_warc_path(self.server_address, start, end)
-        path_chunks = more_itertools.distribute(20, warc_paths)
 
-        cq = QueueConsumer(max_queue_size=10)
-        yield from cq.consume_feed((part_supply, path_chunks), part_consume, max_process=40)
+        supplier_layer = SupplyLayer(target=part_supply, size=10, name='Supply Layer')
+        parser_layer = UnaryLayer(target=part_parse, size=20, name='Parser Layer')
+
+        with StreamLine([supplier_layer, parser_layer]) as stream:
+            yield from stream.imap(warc_paths)

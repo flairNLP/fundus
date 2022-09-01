@@ -73,12 +73,12 @@ class StreamLine:
 
         self._finished.set()
 
-    def get_stream_handle(self, it):
+    def _get_stream_handle(self, it):
         return threading.Thread(target=self._handle_stream, args=(it,))
 
     def map(self, it: Iterable):
 
-        stream_handle = self.get_stream_handle(it)
+        stream_handle = self._get_stream_handle(it)
         stream_handle.start()
 
         result = []
@@ -96,7 +96,7 @@ class StreamLine:
 
     def imap(self, it: Iterable):
 
-        stream_handle = self.get_stream_handle(it)
+        stream_handle = self._get_stream_handle(it)
         stream_handle.start()
 
         while not self._finished.is_set():
