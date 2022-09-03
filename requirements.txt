@@ -3,3 +3,4 @@ FastWARC~=0.12.2
 requests~=2.28.1
 ftfy~=6.1.1
 python-dateutil~=2.8.2
+lxml~=4.9.1
