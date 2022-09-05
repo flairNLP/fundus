@@ -1,3 +1,4 @@
+import datetime
 import json
 from collections import defaultdict
 
@@ -16,15 +17,15 @@ class MDRParser(BaseParser):
 
     @BaseParser.register_control(priority=2)
     def setup(self):
-        html = self.cache.get('html')
-        doc: lxml.html.HtmlElement = lxml.html.fromstring(html)
+        content = self.cache.get('html')
+        doc: lxml.html.HtmlElement = lxml.html.fromstring(content)
         ld_content = doc.xpath('string(//script[@type="application/ld+json"]/text())')
         ld = json.loads(ld_content)
         meta = self.Utility.get_meta_content(doc)
         self.share(doc=doc, ld=defaultdict(dict, ld), meta=meta)
 
     @BaseParser.register_attribute(priority=4)
-    def plaintext(self):
+    def plaintext(self) -> str:
         doc = self.cache.get('doc')
         nodes = doc.cssselect('div.paragraph')
         return self.Utility.strip_nodes_to_text(nodes)
@@ -35,17 +36,17 @@ class MDRParser(BaseParser):
         return topics
 
     @BaseParser.register_attribute
-    def publishing_date(self):
+    def publishing_date(self) -> datetime.datetime:
         if date_string := self.cache.get('ld').get('datePublished'):
             return dateutil.parser.parse(date_string)
 
     @BaseParser.register_attribute
-    def authors(self):
+    def authors(self) -> str:
         if author_dict := self.cache.get('ld').get('author'):
             return author_dict.get('name')
 
     @BaseParser.register_attribute(priority=4)
-    def title(self):
+    def title(self) -> str:
         return self.cache.get('ld').get('headline')
 
 

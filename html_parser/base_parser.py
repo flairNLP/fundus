@@ -1,22 +1,25 @@
+import collections.abc
 import functools
+import inspect
 import re
-from functools import partial
 from typing import List, Callable, Dict, Optional, Any, Literal, Union
 
 import lxml.html
 
 
-class RegisteredFunction:
+class RegisteredFunction(collections.abc.Callable):
     __wrapped__ = None
 
     def __init__(self,
-                 func: Union[Callable, partial],
+                 func: Union[Callable, functools.partial],
                  flow_type: str,
                  priority: Optional[int] = None):
 
         self.func = func
         self.flow_type = flow_type
         self.priority = priority
+
+        functools.update_wrapper(self, func)
 
     def __call__(self, *args, **kwargs):
         return self.func(*args, *kwargs)
@@ -30,22 +33,16 @@ class RegisteredFunction:
             return self.priority < other.priority
 
     def __repr__(self):
-        return f"registered {self.flow_type}: {self.__wrapped__} --> '{self.__name__}'"
+        return f"registered {self.flow_type}: {self.func} --> '{self.__name__}'"
 
 
 class BaseParser:
 
     def __init__(self):
         self._shared_object_buffer: Dict[str, Any] = {}
-        self._func_flow: List[RegisteredFunction] = []
 
-        registered_functions: List[RegisteredFunction] = []
-        for func_name in dir(self):
-            registered_function = getattr(self, func_name)
-            if isinstance(registered_function, RegisteredFunction):
-                registered_function.func = partial(registered_function.func, self)
-                registered_functions.append(registered_function)
-
+        to_register = [func for _, func in inspect.getmembers(self, predicate=lambda x: hasattr(x, 'flow_type'))]
+        registered_functions = [RegisteredFunction(func, func.flow_type, func.priority) for func in to_register]
         self._func_flow = sorted(registered_functions)
 
     class Utility:
@@ -69,30 +66,33 @@ class BaseParser:
 
     @property
     def attributes(self) -> List[str]:
-        if self._func_flow:
-            return [func.__name__ for func in self._func_flow if func.flow_type == 'attribute']
+        return [func.__name__ for func in self._func_flow if func.flow_type == 'attribute']
 
     @staticmethod
-    def _register(cls=None, *, flow_type: Literal['attribute', 'function', 'filter'], priority=None):
+    def _register(cls, flow_type: Literal['attribute', 'function', 'filter'], priority):
 
         def wrapper(func):
-            return functools.update_wrapper(RegisteredFunction(func, flow_type, priority), func)
+            func.flow_type = flow_type
+            func.priority = priority
+            return func
 
+        # _register was called with parenthesis
         if cls is None:
             return wrapper
 
+        # register was called without parenthesis
         return wrapper(cls)
 
     @staticmethod
-    def register_attribute(cls=None, priority: int = None):
+    def register_attribute(cls=None, /, *, priority: int = None):
         return BaseParser._register(cls, flow_type='attribute', priority=priority)
 
     @staticmethod
-    def register_control(cls=None, priority: int = None):
+    def register_control(cls=None, /, *, priority: int = None):
         return BaseParser._register(cls, flow_type='function', priority=priority)
 
     @staticmethod
-    def register_filter(cls=None, priority: int = None):
+    def register_filter(cls=None, /, *, priority: int = None):
         return BaseParser._register(cls, flow_type='filter', priority=priority)
 
     def parse(self, html: str, **kwargs) -> Optional[Dict[str, Any]]:
@@ -106,7 +106,7 @@ class BaseParser:
         article_cache = {}
 
         for func in self._func_flow:
-            # TODO: replace with match statement once we have python 3.9
+            # TODO: replace with match statement once we have python 3.10
             if func.flow_type == 'function':
                 func()
             elif func.flow_type == 'attribute':
