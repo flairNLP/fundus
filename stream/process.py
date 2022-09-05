@@ -17,7 +17,7 @@ class StreamProcess(Process, ABC):
         # noinspection PyBroadException
         try:
             pickle.dumps(target)
-        except Exception as err:
+        except Exception:
             target = dill.dumps(target)
 
         super(StreamProcess, self).__init__(target=target, *args, **kwargs)

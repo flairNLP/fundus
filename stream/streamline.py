@@ -1,4 +1,5 @@
 import threading
+from contextlib import contextmanager
 from multiprocessing import Event, Queue
 from multiprocessing.queues import Queue as tQueue
 from queue import Empty
@@ -57,12 +58,19 @@ class StreamLine:
             target.output = queues
             source.input = queues
 
-    def _start(self):
-        each(lambda x: x.start(), self.layers)
+    @contextmanager
+    def _start(self, it):
+        stream_handle = self._get_stream_handle(it)
+        try:
+            stream_handle.start()
+            yield
+        finally:
+            stream_handle.join()
 
     def _handle_stream(self, tasks: Iterable):
 
-        self._start()
+        # start layers consecutively
+        each(lambda x: x.start(), self.layers)
 
         for task in tasks:
             self._task_queue.put(task)
@@ -78,34 +86,26 @@ class StreamLine:
 
     def map(self, it: Iterable):
 
-        stream_handle = self._get_stream_handle(it)
-        stream_handle.start()
-
         result = []
 
-        while not self._finished.is_set():
-            try:
-                obj = self._result_queue.get(timeout=1)
-                result.append(obj)
-            except Empty:
-                continue
-
-        stream_handle.join()
+        with self._start(it):
+            while not self._finished.is_set():
+                try:
+                    obj = self._result_queue.get(timeout=1)
+                    result.append(obj)
+                except Empty:
+                    continue
 
         return result
 
     def imap(self, it: Iterable):
 
-        stream_handle = self._get_stream_handle(it)
-        stream_handle.start()
-
-        while not self._finished.is_set():
-            try:
-                yield self._result_queue.get(timeout=1)
-            except Empty:
-                continue
-
-        stream_handle.join()
+        with self._start(it):
+            while not self._finished.is_set():
+                try:
+                    yield self._result_queue.get(timeout=1)
+                except Empty:
+                    continue
 
     def __enter__(self):
         return self
