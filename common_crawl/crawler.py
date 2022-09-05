@@ -1,26 +1,26 @@
-import pickle
 import urllib.parse
-from dataclasses import dataclass
 from datetime import datetime
 from functools import partial
-from typing import Dict, Set, Generator, Callable, Optional, Literal
+from typing import Dict, Set, Generator, Optional, Literal
 from urllib.parse import urlparse
 
-import dill
 import fastwarc
 import requests
+from dotmap import DotMap
 from ftfy import guess_bytes
 
 from common_crawl.iterator import CCNewsIterator
-from stream import StreamLine, SupplyLayer, UnaryLayer
+from html_parser import BaseParser
+from stream import StreamLine, SupplyLayer, UnaryLayer, BaseLayer
 
 
-@dataclass
-class Article:
-    url: str
-    crawl_date: datetime
-    html: str
-    exception: Optional[Exception] = None
+class Article(DotMap):
+
+    def __init__(self, url: str, crawl_date: datetime, /, **kwargs):
+        super(Article, self).__init__(**kwargs)
+        self.url = url
+        self.crawl_date = crawl_date
+        self.exception = None
 
 
 def supply(warc_path: str, domains):
@@ -38,36 +38,41 @@ def supply(warc_path: str, domains):
 
 
 def parse(record: fastwarc.WarcRecord,
-          mapping: Dict[str, Dict[str, Callable[[object], None]]],
-          exception_handling):
+          mapping: Dict[str, Dict[str, BaseParser]],
+          exception_handling) -> DotMap:
+    # extract url
     url = str(record.headers['WARC-Target-URI'])
     parsed_url = urlparse(url)
 
-    if domain := mapping.get(parsed_url.hostname):
+    # setup article
+    article = Article(url, record.record_date)
 
-        min_path = min(domain.keys(), key=lambda x: abs(len(x) - len(parsed_url.path)))
-        if not (parser_fnc := domain[min_path]):
-            # TODO: define default
-            pass
+    # get parser
+    domain = mapping.get(parsed_url.hostname)
+    min_path = min(domain.keys(), key=lambda x: abs(len(x) - len(parsed_url.path)))
+    if not (parser := domain[min_path]):
+        # TODO: define default
+        pass
 
-        raw_body = record.reader.read()
+    # extract decode html from record
+    raw_body = record.reader.read()
+    try:
+        article.html = str(raw_body, encoding=record.http_charset)
+    except (UnicodeDecodeError, TypeError):
+        article.html = guess_bytes(raw_body)[0]
+
+    if article.html:
+
         try:
-            fixed_text = str(raw_body, encoding=record.http_charset)
-        except (UnicodeDecodeError, TypeError):
-            fixed_text = guess_bytes(raw_body)[0]
+            extracted_information = parser.parse(article.html)
+            article.update(extracted_information)
 
-        if fixed_text:
-            article = Article(url=url,
-                              crawl_date=record.record_date,
-                              html=fixed_text)
-
-            try:
-                parser_fnc(article)
-            except Exception as exc:
-                if exception_handling == 'catch':
-                    article.exception = exc
-                elif exception_handling == 'raise':
-                    raise exc
+            # TODO: benchmark
+        except Exception as exc:
+            if exception_handling == 'catch':
+                article.exception = exc
+            elif exception_handling == 'raise':
+                raise exc
 
 
 class Crawler:
@@ -77,21 +82,11 @@ class Crawler:
         self.news_iter = CCNewsIterator()
 
     def crawl(self,
-              mapping: Dict[str, Callable[[Article], None]],
+              mapping: Dict[str, Optional[BaseParser]],
               start: datetime = None,
               end: datetime = None,
-              exception_handling: Literal['suppress', 'catch', 'raise'] = 'catch') -> Generator[Article, None, None]:
-
-        def is_pickleable(obj: ...) -> bool:
-            try:
-                pickle.dumps(obj)
-            except AttributeError:
-                return False
-            return True
-
-        for domain, fnc in mapping.items():
-            if not is_pickleable(fnc):
-                mapping[domain] = dill.dumps(fnc)
+              exception_handling: Literal['suppress', 'catch', 'raise'] = 'catch',
+              layers: Optional[BaseLayer] = None) -> Generator[DotMap, None, None]:
 
         parsed_mapping: Dict[str, Set[urllib.parse.ParseResult]] = dict()
 
@@ -114,8 +109,8 @@ class Crawler:
         part_parse = partial(parse, mapping=parsed_mapping, exception_handling=exception_handling)
         warc_paths = self.news_iter.get_list_of_warc_path(self.server_address, start, end)
 
-        supplier_layer = SupplyLayer(target=part_supply, size=2, name='Supply Layer')
-        parser_layer = UnaryLayer(target=part_parse, size=4, name='Parser Layer')
+        supplier_layer = SupplyLayer(target=part_supply, size=20, name='Supply Layer')
+        parser_layer = UnaryLayer(target=part_parse, size=40, name='Parser Layer')
 
-        with StreamLine([supplier_layer, parser_layer]) as stream:
+        with StreamLine([supplier_layer, parser_layer] + layers) as stream:
             yield from stream.imap(warc_paths)
