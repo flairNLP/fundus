@@ -9,9 +9,9 @@ import requests
 from dotmap import DotMap
 from ftfy import guess_bytes
 
-from common_crawl.iterator import CCNewsIterator
-from html_parser import BaseParser
-from stream import StreamLine, SupplyLayer, UnaryLayer, BaseLayer
+from src.common_crawl.iterator import CCNewsIterator
+from src.html_parser import BaseParser
+from stream import StreamLine, SupplyLayer, UnaryLayer
 
 
 class Article(DotMap):
@@ -20,7 +20,7 @@ class Article(DotMap):
         super(Article, self).__init__(**kwargs)
         self.url = url
         self.crawl_date = crawl_date
-        self.exception = None
+        self.exception: Optional[Exception] = None
 
 
 def supply(warc_path: str, domains):
@@ -66,6 +66,7 @@ def parse(record: fastwarc.WarcRecord,
         try:
             extracted_information = parser.parse(article.html)
             article.update(extracted_information)
+            return article
 
             # TODO: benchmark
         except Exception as exc:
@@ -85,8 +86,7 @@ class Crawler:
               mapping: Dict[str, Optional[BaseParser]],
               start: datetime = None,
               end: datetime = None,
-              exception_handling: Literal['suppress', 'catch', 'raise'] = 'catch',
-              layers: Optional[BaseLayer] = None) -> Generator[DotMap, None, None]:
+              exception_handling: Literal['suppress', 'catch', 'raise'] = 'catch') -> Generator[DotMap, None, None]:
 
         parsed_mapping: Dict[str, Set[urllib.parse.ParseResult]] = dict()
 
@@ -112,5 +112,5 @@ class Crawler:
         supplier_layer = SupplyLayer(target=part_supply, size=20, name='Supply Layer')
         parser_layer = UnaryLayer(target=part_parse, size=40, name='Parser Layer')
 
-        with StreamLine([supplier_layer, parser_layer] + layers) as stream:
+        with StreamLine([supplier_layer, parser_layer]) as stream:
             yield from stream.imap(warc_paths)

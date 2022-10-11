@@ -7,7 +7,7 @@ import dateutil.parser
 import lxml.html
 import requests
 
-from html_parser import BaseParser
+from src.html_parser import BaseParser
 
 
 class MDRParser(BaseParser):
@@ -28,16 +28,16 @@ class MDRParser(BaseParser):
     @BaseParser.register_attribute(priority=4)
     def plaintext(self) -> Optional[str]:
         doc = self.cache.get('doc')
-        nodes = doc.cssselect('div.paragraph')
-        return self.Utility.strip_nodes_to_text(nodes)
+        if nodes := doc.cssselect('div.paragraph'):
+            return self.Utility.strip_nodes_to_text(nodes)
 
     @BaseParser.register_attribute
-    def topics(self):
-        topics = self.cache.get('meta').get('news_keywords')
-        return topics
+    def topics(self) -> Optional[str]:
+        if topics := self.cache.get('meta').get('news_keywords'):
+            return topics
 
     @BaseParser.register_attribute
-    def publishing_date(self) -> datetime.datetime:
+    def publishing_date(self) -> Optional[datetime.datetime]:
         if date_string := self.cache.get('ld').get('datePublished'):
             return dateutil.parser.parse(date_string)
 
@@ -47,7 +47,7 @@ class MDRParser(BaseParser):
             return author_dict.get('name')
 
     @BaseParser.register_attribute(priority=4)
-    def title(self) -> str:
+    def title(self) -> Optional[str]:
         return self.cache.get('ld').get('headline')
 
 

@@ -2,12 +2,14 @@ import json
 from datetime import datetime
 from os import makedirs
 from os.path import exists
+from typing import Optional, Dict
 from urllib.parse import urlparse, quote_plus
 
 from dotmap import DotMap
 
-from common_crawl.crawler import Crawler
+from src.common_crawl import Crawler
 from example_pasrer import MDRParser
+from src.html_parser import BaseParser
 
 base_path = ...  # dir where jsons should be saved
 
@@ -32,7 +34,7 @@ if __name__ == '__main__':
     cc_news_crawler = Crawler()
     mdr_parser = MDRParser()
 
-    mapping = {'www.mdr.de': mdr_parser}
+    mapping: Dict[str, Optional[BaseParser]] = {'www.mdr.de': mdr_parser}
 
     start_date = datetime(2022, 8, 20)
     end_date = datetime(2022, 8, 21)
