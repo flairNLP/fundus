@@ -1,4 +1,3 @@
-import collections.abc
 import functools
 import inspect
 import re
@@ -7,9 +6,10 @@ from typing import List, Callable, Dict, Optional, Any, Literal, Union
 import lxml.html
 
 
-class RegisteredFunction(collections.abc.Callable):
+class RegisteredFunction:
     __wrapped__ = None
 
+    # TODO: ensure uint for priority instead of int
     def __init__(self,
                  func: Union[Callable, functools.partial],
                  flow_type: str,
@@ -19,7 +19,9 @@ class RegisteredFunction(collections.abc.Callable):
         self.flow_type = flow_type
         self.priority = priority
 
-        functools.update_wrapper(self, func)
+    def attach(self, instance: object) -> 'RegisteredFunction':
+        self.func = functools.partial(self.func, self=instance)
+        return self
 
     def __call__(self, *args, **kwargs):
         return self.func(*args, *kwargs)
@@ -33,7 +35,7 @@ class RegisteredFunction(collections.abc.Callable):
             return self.priority < other.priority
 
     def __repr__(self):
-        return f"registered {self.flow_type}: {self.func} --> '{self.__name__}'"
+        return f"registered {self.flow_type}: {self.__wrapped__} --> '{self.__name__}'"
 
 
 class BaseParser:
@@ -41,8 +43,10 @@ class BaseParser:
     def __init__(self):
         self._shared_object_buffer: Dict[str, Any] = {}
 
-        to_register = [func for _, func in inspect.getmembers(self, predicate=lambda x: hasattr(x, 'flow_type'))]
-        registered_functions = [RegisteredFunction(func, func.flow_type, func.priority) for func in to_register]
+        detached_functions = [func for _, func in
+                              inspect.getmembers(self, predicate=lambda x: isinstance(x, RegisteredFunction))]
+        registered_functions = [reg_func.attach(self) for reg_func in detached_functions]
+
         self._func_flow = sorted(registered_functions)
 
     class Utility:
@@ -72,9 +76,7 @@ class BaseParser:
     def _register(cls, flow_type: Literal['attribute', 'function', 'filter'], priority):
 
         def wrapper(func):
-            func.flow_type = flow_type
-            func.priority = priority
-            return func
+            return functools.update_wrapper(RegisteredFunction(func, flow_type, priority), func)
 
         # _register was called with parenthesis
         if cls is None:

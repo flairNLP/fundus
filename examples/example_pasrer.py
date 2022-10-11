@@ -1,6 +1,7 @@
 import datetime
 import json
 from collections import defaultdict
+from typing import Optional
 
 import dateutil.parser
 import lxml.html
@@ -25,7 +26,7 @@ class MDRParser(BaseParser):
         self.share(doc=doc, ld=defaultdict(dict, ld), meta=meta)
 
     @BaseParser.register_attribute(priority=4)
-    def plaintext(self) -> str:
+    def plaintext(self) -> Optional[str]:
         doc = self.cache.get('doc')
         nodes = doc.cssselect('div.paragraph')
         return self.Utility.strip_nodes_to_text(nodes)
