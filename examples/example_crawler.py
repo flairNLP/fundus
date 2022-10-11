@@ -7,8 +7,8 @@ from urllib.parse import urlparse, quote_plus
 
 from dotmap import DotMap
 
-from src.common_crawl import Crawler
 from example_pasrer import MDRParser
+from src.common_crawl.crawler import Crawler
 from src.html_parser import BaseParser
 
 base_path = ...  # dir where jsons should be saved

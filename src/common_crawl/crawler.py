@@ -1,7 +1,10 @@
-import urllib.parse
+from collections import defaultdict
+from collections import defaultdict
 from datetime import datetime
 from functools import partial
-from typing import Dict, Set, Generator, Optional, Literal
+from math import ceil
+from multiprocessing import cpu_count
+from typing import Dict, Generator, Optional, Literal
 from urllib.parse import urlparse
 
 import fastwarc
@@ -88,7 +91,9 @@ class Crawler:
               end: datetime = None,
               exception_handling: Literal['suppress', 'catch', 'raise'] = 'catch') -> Generator[DotMap, None, None]:
 
-        parsed_mapping: Dict[str, Set[urllib.parse.ParseResult]] = dict()
+        # parsed_mapping: Dict[str, Set[ParseResult]] = dict()
+
+        parsed_mapping: defaultdict[str, dict[(str, BaseParser)]] = defaultdict(dict)
 
         for domain, func in mapping.items():
             if '//' not in domain:
@@ -96,21 +101,23 @@ class Crawler:
                 # Otherwise, netloc and path are wrong
                 domain = 'https://' + domain
             parsed_domain = urlparse(domain)
-
-            if not (tmp := parsed_mapping.get(parsed_domain.hostname, dict())):
-                parsed_mapping[parsed_domain.hostname] = tmp
-
-            if tmp.get(path := parsed_domain.path):
-                raise ValueError
+            if func is None:
+                pass
+            elif issubclass(type(func), BaseParser):
+                parsed_mapping[parsed_domain.netloc][parsed_domain.path] = func
             else:
-                tmp[path] = func
+                raise ValueError(f"Got unexpected parser value for '{domain}'")
 
         part_supply = partial(supply, domains=parsed_mapping.keys())
         part_parse = partial(parse, mapping=parsed_mapping, exception_handling=exception_handling)
         warc_paths = self.news_iter.get_list_of_warc_path(self.server_address, start, end)
 
-        supplier_layer = SupplyLayer(target=part_supply, size=20, name='Supply Layer')
-        parser_layer = UnaryLayer(target=part_parse, size=40, name='Parser Layer')
+        max_process: int = cpu_count() - 1
+        supply_size: int = ceil(max_process/4)
+        parser_size: int = max_process - supply_size
+
+        supplier_layer = SupplyLayer(target=part_supply, size=supply_size, name='Supply Layer')
+        parser_layer = UnaryLayer(target=part_parse, size=parser_size, name='Parser Layer')
 
         with StreamLine([supplier_layer, parser_layer]) as stream:
             yield from stream.imap(warc_paths)
