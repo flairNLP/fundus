@@ -7,11 +7,11 @@ from urllib.parse import urlparse, quote_plus
 
 from dotmap import DotMap
 
-from example_pasrer import MDRParser
+from src.parser_lib.de_de.die_welt_parser import DieWeltParser
 from src.common_crawl.crawler import Crawler
 from src.html_parser import BaseParser
 
-base_path = ...  # dir where jsons should be saved
+base_path = "/glusterfs/dfs-gfs-dist/dallabem_pub/common_crawl_dbug"
 
 
 def save_article_to_json(parsed_article: DotMap):
@@ -32,9 +32,9 @@ def save_article_to_json(parsed_article: DotMap):
 
 if __name__ == '__main__':
     cc_news_crawler = Crawler()
-    mdr_parser = MDRParser()
+    welt_parser = DieWeltParser()
 
-    mapping: Dict[str, Optional[BaseParser]] = {'www.mdr.de': mdr_parser}
+    mapping: Dict[str, Optional[BaseParser]] = {'www.welt.de': welt_parser}
 
     start_date = datetime(2022, 8, 20)
     end_date = datetime(2022, 8, 21)
