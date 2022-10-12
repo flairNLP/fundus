@@ -4,7 +4,7 @@ from typing import Callable, Optional, List, Type, Set
 
 import more_itertools
 
-from stream.process import StreamProcess
+from stream.process import StreamProcess, Supplier, Unary, Consumer
 from stream.utils import each
 
 
@@ -90,40 +90,22 @@ class BaseLayer:
         return bool([worker for worker in self._worker if worker.exitcode is not None])
 
 
-class _Supplier(StreamProcess):
-
-    def _handle_job(self, job):
-        for obj in self.target(job):
-            self.output.put(obj)
-
-
-class _Unary(StreamProcess):
-
-    def _handle_job(self, job):
-        self.output.put(self.target(job))
-
-
-class _Consumer(StreamProcess):
-    def _handle_job(self, job):
-        self.target(job)
-
-
 class SupplyLayer(BaseLayer):
 
     def __init__(self, target: Callable, size: int, name: Optional[str] = None, max_queue_size: int = 50,
                  output_size: Optional[int] = None):
-        super(SupplyLayer, self).__init__(_Supplier, target, size, name, max_queue_size, output_size)
+        super(SupplyLayer, self).__init__(Supplier, target, size, name, max_queue_size, output_size)
 
 
 class UnaryLayer(BaseLayer):
 
     def __init__(self, target: Callable, size: int, name: Optional[str] = None, max_queue_size: int = 50,
                  output_size: Optional[int] = None):
-        super(UnaryLayer, self).__init__(_Unary, target, size, name, max_queue_size, output_size)
+        super(UnaryLayer, self).__init__(Unary, target, size, name, max_queue_size, output_size)
 
 
 class ConsumerLayer(BaseLayer):
 
     def __init__(self, target: Callable, size: int, name: Optional[str] = None, max_queue_size: int = 50,
                  output_size: Optional[int] = None):
-        super(ConsumerLayer, self).__init__(_Consumer, target, size, name, max_queue_size, output_size)
+        super(ConsumerLayer, self).__init__(Consumer, target, size, name, max_queue_size, output_size)

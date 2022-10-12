@@ -81,3 +81,21 @@ class StreamProcess(Process, ABC):
         if self._pipe_out.poll():
             self._exception = self._pipe_out.recv()
         return self._exception
+
+
+class Supplier(StreamProcess):
+
+    def _handle_job(self, job):
+        for obj in self.target(job):
+            self.output.put(obj)
+
+
+class Unary(StreamProcess):
+
+    def _handle_job(self, job):
+        self.output.put(self.target(job))
+
+
+class Consumer(StreamProcess):
+    def _handle_job(self, job):
+        self.target(job)
