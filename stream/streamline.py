@@ -12,7 +12,7 @@ from stream.utils import each
 
 
 class StreamLine:
-    _Chainable = Union[BaseLayer, Queue]
+    _Chainable = Union[BaseLayer, tQueue]
 
     def __init__(self,
                  layers: List[BaseLayer],
@@ -24,7 +24,6 @@ class StreamLine:
         self._result_queue = Queue()
 
         # setup grid
-
         self.chain(self.layers[0], self._task_queue)
 
         for cur, nxt in more_itertools.windowed(self.layers, 2):
@@ -33,6 +32,7 @@ class StreamLine:
         if not (disable_output or isinstance(self.layers[-1], ConsumerLayer)):
             self.chain(self._result_queue, self.layers[-1])
 
+        self._running = Event()
         self._finished = Event()
 
     @staticmethod
@@ -43,7 +43,6 @@ class StreamLine:
             raise TypeError(f"It is not allowed to chain two {type(source)}")
 
         # connect <source> -> <target>
-
         # case 1: Layer -> Queue
         if isinstance(source, BaseLayer) and isinstance(target, tQueue):
             source.input = [target]
@@ -58,16 +57,25 @@ class StreamLine:
             target.output = queues
             source.input = queues
 
+        else:
+            raise TypeError(f"{target if isinstance(source, (BaseLayer, tQueue)) else source} is not chainable")
+
     @contextmanager
     def _start(self, it):
+        if self._running.is_set():
+            self._finished.wait()
         stream_handle = self._get_stream_handle(it)
         try:
             stream_handle.start()
             yield
         finally:
             stream_handle.join()
+            del stream_handle
 
     def _handle_stream(self, tasks: Iterable):
+
+        self._running.set()
+        self._finished.clear()
 
         # start layers consecutively
         each(lambda x: x.start(), self.layers)
@@ -79,6 +87,7 @@ class StreamLine:
             layer.expire()
             layer.join()
 
+        self._running.clear()
         self._finished.set()
 
     def _get_stream_handle(self, it):
@@ -89,11 +98,13 @@ class StreamLine:
         result = []
 
         with self._start(it):
-            while not self._finished.is_set():
+            while True:
                 try:
                     obj = self._result_queue.get(timeout=1)
                     result.append(obj)
                 except Empty:
+                    if self._finished.is_set():
+                        break
                     continue
 
         return result
@@ -101,14 +112,18 @@ class StreamLine:
     def imap(self, it: Iterable):
 
         with self._start(it):
-            while not self._finished.is_set():
+            while True:
                 try:
                     yield self._result_queue.get(timeout=1)
                 except Empty:
+                    if self._finished.is_set():
+                        break
                     continue
 
     def __enter__(self):
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        each(lambda x: x.join, self.layers)
+        for layer in self.layers:
+            if not layer.terminated:
+                raise AssertionError(f"{layer.name or layer.__class__.__name__} isn't fully terminated. Potential leak.")

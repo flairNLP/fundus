@@ -16,7 +16,7 @@ class MDRParser(BaseParser):
     def filter(self):
         return False
 
-    @BaseParser.register_control(priority=2)
+    @BaseParser.register_function(priority=2)
     def setup(self):
         content = self.cache.get('html')
         doc: lxml.html.HtmlElement = lxml.html.fromstring(content)

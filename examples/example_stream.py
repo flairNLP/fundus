@@ -17,3 +17,10 @@ if __name__ == '__main__':
         result = stream.map([1, 2, 3])
 
     print(result)
+
+    with StreamLine([supplier, quadratic]) as stream:
+        result = stream.imap([1, 2, 3])
+        result2 = stream.imap([3, 4, 5])
+
+    print((list(result)))
+    print((list(result2)))

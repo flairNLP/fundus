@@ -1,5 +1,4 @@
 from collections import defaultdict
-from collections import defaultdict
 from datetime import datetime
 from functools import partial
 from math import ceil
@@ -89,9 +88,7 @@ class Crawler:
               mapping: Dict[str, Optional[BaseParser]],
               start: datetime = None,
               end: datetime = None,
-              exception_handling: Literal['suppress', 'catch', 'raise'] = 'catch') -> Generator[DotMap, None, None]:
-
-        # parsed_mapping: Dict[str, Set[ParseResult]] = dict()
+              exception_handling: Literal['suppress', 'catch', 'raise'] = 'raise') -> Generator[DotMap, None, None]:
 
         parsed_mapping: defaultdict[str, dict[(str, BaseParser)]] = defaultdict(dict)
 
@@ -110,11 +107,13 @@ class Crawler:
 
         part_supply = partial(supply, domains=parsed_mapping.keys())
         part_parse = partial(parse, mapping=parsed_mapping, exception_handling=exception_handling)
-        warc_paths = self.news_iter.get_list_of_warc_path(self.server_address, start, end)
+        warc_paths = [self.news_iter.get_list_of_warc_path(self.server_address, start, end)[0]]
 
         max_process: int = cpu_count() - 1
-        supply_size: int = ceil(max_process/4)
-        parser_size: int = max_process - supply_size
+        supply_size: int = min(ceil(max_process / 4), len(warc_paths))
+        parser_size: int = min(max_process - supply_size, supply_size * 4)
+
+        print(supply_size, parser_size)
 
         supplier_layer = SupplyLayer(target=part_supply, size=supply_size, name='Supply Layer')
         parser_layer = UnaryLayer(target=part_parse, size=parser_size, name='Parser Layer')

@@ -28,6 +28,13 @@ class BaseLayer:
 
         self._worker: List[StreamProcess] = [self.factory(target) for _ in range(size)]
 
+    def _repopulate(self):
+        in_queues = list(self.input)
+        out_queues = list(self.output)
+        self._worker = [self.factory(self.target) for _ in range(self.size)]
+        self.input = in_queues
+        self.output = out_queues
+
     @property
     def output_size(self) -> int:
         return len(self.output) if self.output else self._output_size
@@ -65,6 +72,8 @@ class BaseLayer:
                 worker.input = queues[i]
 
     def start(self):
+        if self.terminated:
+            self._repopulate()
         each(lambda x: x.start(), self._worker)
 
     def expire(self):
@@ -75,6 +84,10 @@ class BaseLayer:
 
     def join(self):
         each(lambda x: x.join(), self._worker)
+
+    @property
+    def terminated(self):
+        return bool([worker for worker in self._worker if worker.exitcode is not None])
 
 
 class _Supplier(StreamProcess):

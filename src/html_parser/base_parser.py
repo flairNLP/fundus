@@ -90,7 +90,7 @@ class BaseParser:
         return BaseParser._register(cls, flow_type='attribute', priority=priority)
 
     @staticmethod
-    def register_control(cls=None, /, *, priority: int = None):
+    def register_function(cls=None, /, *, priority: int = None):
         return BaseParser._register(cls, flow_type='function', priority=priority)
 
     @staticmethod

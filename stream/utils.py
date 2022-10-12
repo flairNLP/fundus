@@ -1,9 +1,12 @@
+from collections.abc import Collection
 from itertools import islice, cycle
-from typing import Callable, Iterable
+from typing import Callable, Iterable, Mapping
 
 
 def listify(obj: ...) -> list:
-    if isinstance(obj, Iterable):
+    if isinstance(obj, Mapping):
+        return [obj]
+    elif isinstance(obj, Collection):
         return list(obj)
     else:
         return [obj]
