@@ -37,10 +37,7 @@ class StreamLine:
 
     @staticmethod
     def chain(source: _Chainable, target: _Chainable):
-        # TODO: refactor
-
-        if type(source) == type(target) != BaseLayer:
-            raise TypeError(f"It is not allowed to chain two {type(source)}")
+        # TODO: refactor with match once python 3.10
 
         # connect <source> -> <target>
         # case 1: Layer -> Queue
@@ -58,7 +55,7 @@ class StreamLine:
             source.input = queues
 
         else:
-            raise TypeError(f"{target if isinstance(source, (BaseLayer, tQueue)) else source} is not chainable")
+            raise TypeError(f"'{source.__class__.__name__}' and '{target.__class__.__name__}' cannot be chained")
 
     @contextmanager
     def _start(self, it):
@@ -124,6 +121,7 @@ class StreamLine:
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
-        for layer in self.layers:
-            if not layer.terminated:
-                raise AssertionError(f"{layer.name or layer.__class__.__name__} isn't fully terminated. Potential leak.")
+        if unterminated_layers := [layer for layer in self.layers if not layer.terminated]:
+            each(lambda x: x.terminate(), unterminated_layers)
+            raise AssertionError(
+                f"'{', '.join([str(l) for l in unterminated_layers])}' isn't fully terminated. Potential leak.")

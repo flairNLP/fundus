@@ -7,11 +7,11 @@ from urllib.parse import urlparse, quote_plus
 
 from dotmap import DotMap
 
-from src.parser_lib.de_de.die_welt_parser import DieWeltParser
 from src.common_crawl.crawler import Crawler
 from src.html_parser import BaseParser
+from src.parser_lib.de_de.die_welt_parser import DieWeltParser
 
-base_path = "/glusterfs/dfs-gfs-dist/dallabem_pub/common_crawl_dbug"
+base_path = ...
 
 
 def save_article_to_json(parsed_article: DotMap):
