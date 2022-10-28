@@ -10,8 +10,9 @@ from dotmap import DotMap
 from src.common_crawl.crawler import Crawler
 from src.html_parser import BaseParser
 from src.parser_lib.de_de.die_welt_parser import DieWeltParser
+from src.parser_lib.de_de.focus_parser import FocusParser
 
-base_path = ...
+base_path = "./data"
 
 
 def save_article_to_json(parsed_article: DotMap):
@@ -32,12 +33,13 @@ def save_article_to_json(parsed_article: DotMap):
 
 if __name__ == '__main__':
     cc_news_crawler = Crawler()
-    welt_parser = DieWeltParser()
+    focus_parser = FocusParser()
 
-    mapping: Dict[str, Optional[BaseParser]] = {'www.welt.de': welt_parser}
+    mapping: Dict[str, Optional[BaseParser]] = {'www.focus.de': focus_parser}
 
     start_date = datetime(2022, 8, 20)
     end_date = datetime(2022, 8, 21)
 
     for article in cc_news_crawler.crawl(mapping=mapping, start=start_date, end=end_date):
+        print("!")
         save_article_to_json(article)
