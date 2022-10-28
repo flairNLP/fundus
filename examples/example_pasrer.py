@@ -1,54 +1,40 @@
 import datetime
-import json
-from collections import defaultdict
 from typing import Optional
 
 import dateutil.parser
-import lxml.html
 import requests
 
 from src.html_parser import BaseParser
+from src.html_parser.base_parser import register_attribute
+from src.html_parser.utility import strip_nodes_to_text
 
 
 class MDRParser(BaseParser):
 
-    @BaseParser.register_filter(priority=1)
-    def filter(self):
-        return False
-
-    @BaseParser.register_function(priority=2)
-    def setup(self):
-        content = self.cache.get('html')
-        doc: lxml.html.HtmlElement = lxml.html.fromstring(content)
-        ld_content = doc.xpath('string(//script[@type="application/ld+json"]/text())')
-        ld = json.loads(ld_content)
-        meta = self.Utility.get_meta_content(doc)
-        self.share(doc=doc, ld=defaultdict(dict, ld), meta=meta)
-
-    @BaseParser.register_attribute(priority=4)
+    @register_attribute(priority=4)
     def plaintext(self) -> Optional[str]:
-        doc = self.cache.get('doc')
+        doc = self.cache['doc']
         if nodes := doc.cssselect('div.paragraph'):
-            return self.Utility.strip_nodes_to_text(nodes)
+            return strip_nodes_to_text(nodes)
 
-    @BaseParser.register_attribute
+    @register_attribute
     def topics(self) -> Optional[str]:
-        if topics := self.cache.get('meta').get('news_keywords'):
+        if topics := self.meta().get('news_keywords'):
             return topics
 
-    @BaseParser.register_attribute
+    @register_attribute
     def publishing_date(self) -> Optional[datetime.datetime]:
-        if date_string := self.cache.get('ld').get('datePublished'):
+        if date_string := self.ld().get('datePublished'):
             return dateutil.parser.parse(date_string)
 
-    @BaseParser.register_attribute
+    @register_attribute
     def authors(self) -> str:
-        if author_dict := self.cache.get('ld').get('author'):
+        if author_dict := self.ld().get('author'):
             return author_dict.get('name')
 
-    @BaseParser.register_attribute(priority=4)
+    @register_attribute(priority=4)
     def title(self) -> Optional[str]:
-        return self.cache.get('ld').get('headline')
+        return self.ld().get('headline')
 
 
 if __name__ == '__main__':
