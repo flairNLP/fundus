@@ -25,7 +25,7 @@ class DieWeltParser(BaseParser):
     @register_attribute
     def authors(self) -> List[str]:
         if author_entries := self.ld().get('author'):
-            return [entry['name'].func() for entry in listify(author_entries) if entry.get('name')]
+            return [entry['name'] for entry in listify(author_entries) if entry.get('name')]
         else:
             return []
 
