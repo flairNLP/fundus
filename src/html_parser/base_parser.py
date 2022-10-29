@@ -91,7 +91,10 @@ class BaseParser:
         content = self.cache['html']
         doc = lxml.html.fromstring(content)
         ld_content = doc.xpath('string(//script[@type="application/ld+json"]/text())')
-        ld = json.loads(ld_content) or {}
+        if ld_content:
+            ld = json.loads(ld_content)
+        else:
+            ld = {}
         meta = get_meta_content(doc) or {}
         self.share(doc=doc, ld=ld, meta=meta)
 

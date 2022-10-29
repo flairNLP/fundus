@@ -2,7 +2,6 @@ import datetime
 from typing import Optional
 
 import dateutil.parser
-import requests
 
 from src.html_parser import BaseParser
 from src.html_parser.base_parser import register_attribute
@@ -35,15 +34,3 @@ class MDRParser(BaseParser):
     @register_attribute(priority=4)
     def title(self) -> Optional[str]:
         return self.ld().get('headline')
-
-
-if __name__ == '__main__':
-    url = 'https://www.mdr.de/nachrichten/sachsen-anhalt/halle/halle/preise-lebensmittel-wenig-einkommen-100.html'
-
-    html = requests.get(url).text
-
-    example_parser = MDRParser()
-    print(f"This '{example_parser.__class__.__name__}' is capable of parsing '{', '.join(example_parser.attributes)}'")
-
-    article = example_parser.parse(html)
-    print(article)
