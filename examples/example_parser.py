@@ -1,11 +1,13 @@
 import json
 import re
+from datetime import datetime
 from typing import List
 
 import feedparser
 import lxml
 import requests
 
+from src.parser_lib.de_de.bz_parser import BZParser
 from src.parser_lib.de_de.die_welt_parser import DieWeltParser
 from src.parser_lib.de_de.dw_parser import DWParser
 from src.parser_lib.de_de.focus_parser import FocusParser
@@ -30,9 +32,30 @@ def download_urls_from_rss(rss_url: str) -> List[str]:
     return sorted(list(cleaned_urls))
 
 
+def test_bz_parser():
+    # This one is not in the right format!
+
+    example_parser = BZParser()
+    print(
+        f"This '{example_parser.__class__.__name__}' is capable of parsing '{', '.join(example_parser.mandatory_attributes)}'")
+
+    current_sitemap = "https://www.berliner-zeitung.de/sitemap.current_date.xml"
+    current_sitemap = current_sitemap.replace("current_date", datetime.utcnow().date().strftime('%Y-%m-%d'))
+
+    current_url_list = download_urls_from_sitemap(current_sitemap)
+    for url_el in current_url_list:
+        try:
+            current_html = requests.get(url_el).text
+            article = example_parser.parse(current_html)
+            print("!")
+        except json.JSONDecodeError:
+            continue
+
+
 def test_welt_parser():
     example_parser = DieWeltParser()
-    print(f"This '{example_parser.__class__.__name__}' is capable of parsing '{', '.join(example_parser.attributes)}'")
+    print(
+        f"This '{example_parser.__class__.__name__}' is capable of parsing '{', '.join(example_parser.attributes)}', of which {', '.join(example_parser.mandatory_attributes)} are mandatory")
 
     current_sitemap = "https://www.ndr.de/sitemap112-newssitemap.xml"
     current_rss = "https://www.welt.de/feeds/latest.rss"
@@ -49,7 +72,8 @@ def test_welt_parser():
 
 def test_dw_parser():
     example_parser = DWParser()
-    print(f"This '{example_parser.__class__.__name__}' is capable of parsing '{', '.join(example_parser.attributes)}'")
+    print(
+        f"This '{example_parser.__class__.__name__}' is capable of parsing '{', '.join(example_parser.mandatory_attributes)}'")
 
     current_sitemap = "https://www.dw.com/de/sitemap-news.xml"
     current_rss = "https://www.welt.de/feeds/latest.rss"
@@ -66,7 +90,8 @@ def test_dw_parser():
 
 def test_focus_parser():
     example_parser = FocusParser()
-    print(f"This '{example_parser.__class__.__name__}' is capable of parsing '{', '.join(example_parser.attributes)}'")
+    print(
+        f"This '{example_parser.__class__.__name__}' is capable of parsing '{', '.join(example_parser.mandatory_attributes)}'")
 
     current_sitemap = "https://www.dw.com/de/sitemap-news.xml"
     current_rss = 'https://rss.focus.de/fol/XML/rss_folnews.xml'
@@ -83,7 +108,8 @@ def test_focus_parser():
 
 def test_mdr_parser():
     example_parser = MDRParser()
-    print(f"This '{example_parser.__class__.__name__}' is capable of parsing '{', '.join(example_parser.attributes)}'")
+    print(
+        f"This '{example_parser.__class__.__name__}' is capable of parsing '{', '.join(example_parser.mandatory_attributes)}'")
 
     current_sitemap = "https://www.mdr.de/news-sitemap.xml"
 
@@ -99,7 +125,8 @@ def test_mdr_parser():
 
 def test_merkur_parser():
     example_parser = MerkurParser()
-    print(f"This '{example_parser.__class__.__name__}' is capable of parsing '{', '.join(example_parser.attributes)}'")
+    print(
+        f"This '{example_parser.__class__.__name__}' is capable of parsing '{', '.join(example_parser.attributes)}', of which '{', '.join(example_parser.mandatory_attributes)}' are mandatory")
 
     current_rss = "https://www.merkur.de/welt/rssfeed.rdf"
 
@@ -112,9 +139,11 @@ def test_merkur_parser():
         except json.JSONDecodeError:
             continue
 
+
 def test_ndr_parser():
     example_parser = NDRParser()
-    print(f"This '{example_parser.__class__.__name__}' is capable of parsing '{', '.join(example_parser.attributes)}'")
+    print(
+        f"This '{example_parser.__class__.__name__}' is capable of parsing '{', '.join(example_parser.mandatory_attributes)}'")
 
     current_sitemap = "https://www.ndr.de/sitemap112-newssitemap.xml"
 
@@ -127,6 +156,6 @@ def test_ndr_parser():
         except json.JSONDecodeError:
             continue
 
-if __name__ == '__main__':
-    test_ndr_parser()
 
+if __name__ == '__main__':
+    test_welt_parser()

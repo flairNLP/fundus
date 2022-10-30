@@ -2,11 +2,9 @@ import datetime
 from typing import Optional, List
 
 import dateutil.parser
-import lxml.html
 
 from src.html_parser import BaseParser
 from src.html_parser.base_parser import register_attribute
-from src.html_parser.utility import strip_nodes_to_text
 
 
 class BZParser(BaseParser):
@@ -14,16 +12,9 @@ class BZParser(BaseParser):
     This parser is for the old format!
     """
 
-
     @register_attribute
     def plaintext(self) -> Optional[str]:
-        doc: lxml.html.HtmlElement = self.cache['doc']
-        text_node_selector: str = (
-            ".o-article > p"
-        )
-
-        if nodes := doc.cssselect(text_node_selector):
-            return strip_nodes_to_text(nodes)
+        return self.generic_plaintext_extraction(".o-article > p")
 
     @register_attribute
     def authors(self) -> List[str]:
@@ -34,10 +25,10 @@ class BZParser(BaseParser):
     @register_attribute
     def publishing_date(self) -> Optional[datetime.datetime]:
 
-
         iso_date_str = self.ld().get('datePublished')
-
-        return dateutil.parser.parse(iso_date_str)
+        if iso_date_str:
+            return dateutil.parser.parse(iso_date_str)
+        return None
 
     @register_attribute
     def title(self):

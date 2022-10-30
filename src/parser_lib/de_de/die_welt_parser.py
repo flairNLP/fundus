@@ -9,13 +9,13 @@ from src.html_parser.base_parser import register_attribute
 
 class DieWeltParser(BaseParser):
 
-    @register_attribute
+    @register_attribute(attribute_is_mandatory=True)
     def plaintext(self) -> Optional[str]:
 
         return self.generic_plaintext_extraction("body .c-summary > div, "
                                                  "body .c-article-text > p")
 
-    @register_attribute
+    @register_attribute(attribute_is_mandatory=True)
     def authors(self) -> List[str]:
         return self.generic_author_extraction(self.ld(), ["author"])
 

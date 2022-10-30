@@ -15,11 +15,12 @@ class RegisteredFunction:
     def __init__(self,
                  func: Union[Callable, functools.partial],
                  flow_type: str,
-                 priority: Optional[int] = None):
+                 priority: Optional[int] = None, attribute_is_mandatory=False):
 
         self.func = func
         self.flow_type = flow_type
         self.priority = priority
+        self.attribute_is_mandatory = attribute_is_mandatory
 
     def attach(self, instance: object) -> 'RegisteredFunction':
         self.func = functools.partial(self.func, self=instance)
@@ -40,9 +41,9 @@ class RegisteredFunction:
         return f"registered {self.flow_type}: {self.__wrapped__} --> '{self.__name__}'"
 
 
-def _register(cls, flow_type: Literal['attribute', 'function', 'filter'], priority):
+def _register(cls, flow_type: Literal['attribute', 'function', 'filter'], priority, attribute_is_mandatory: bool):
     def wrapper(func):
-        return functools.update_wrapper(RegisteredFunction(func, flow_type, priority), func)
+        return functools.update_wrapper(RegisteredFunction(func, flow_type, priority, attribute_is_mandatory), func)
 
     # _register was called with parenthesis
     if cls is None:
@@ -54,12 +55,12 @@ def _register(cls, flow_type: Literal['attribute', 'function', 'filter'], priori
 
 # TODO: Should 'registered_property' act like a property? and if so, implement it with a property wrapper or as __get__
 #   in 'RegisteredFunction' d
-def register_attribute(cls=None, /, *, priority: int = None):
-    return _register(cls, flow_type='attribute', priority=priority)
+def register_attribute(cls=None, /, *, priority: int = None, attribute_is_mandatory: bool = False):
+    return _register(cls, flow_type='attribute', priority=priority, attribute_is_mandatory=attribute_is_mandatory)
 
 
 def register_function(cls=None, /, *, priority: int = None):
-    return _register(cls, flow_type='function', priority=priority)
+    return _register(cls, flow_type='function', priority=priority, attribute_is_mandatory=False)
 
 
 def register_filter(cls=None, /, *, priority: int = None):
@@ -78,6 +79,8 @@ class BaseParser:
 
         self._func_flow: dict[str, RegisteredFunction] = {func.__name__: func for func in sorted(registered_functions)}
 
+        self.is_valid = True
+
     @property
     def cache(self) -> Dict[str, Any]:
         return self._shared_object_buffer
@@ -85,6 +88,12 @@ class BaseParser:
     @property
     def attributes(self) -> List[str]:
         return [func.__name__ for func in self._func_flow.values() if func.flow_type == 'attribute']
+
+    @property
+    def mandatory_attributes(self) -> List[str]:
+
+
+        return [func.__name__ for func in self._func_flow.values() if func.flow_type == 'attribute' and func.attribute_is_mandatory == True]
 
     @register_function(priority=0)
     def _base_setup(self):
@@ -119,6 +128,12 @@ class BaseParser:
             elif func.flow_type == 'attribute':
                 try:
                     article_cache[func.__name__] = func()
+
+                    # What should be done here? Not quite sure yet
+                    if func.attribute_is_mandatory and article_cache[func.__name__] is None:
+                        self.is_valid = False
+
+
                 except Exception as err:
                     if self.attr_error_handling == 'raise':
                         raise err
