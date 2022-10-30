@@ -14,6 +14,8 @@ class DieWeltParser(BaseParser):
 
     @register_attribute
     def plaintext(self) -> Optional[str]:
+
+        return self.
         doc: lxml.html.HtmlElement = self.cache['doc']
         selector: str = (
             "body .c-summary > div, "
@@ -24,10 +26,7 @@ class DieWeltParser(BaseParser):
 
     @register_attribute
     def authors(self) -> List[str]:
-        if author_entries := self.ld().get('author'):
-            return [entry['name'] for entry in listify(author_entries) if entry.get('name')]
-        else:
-            return []
+        return self.generic_author_extraction(self.ld(), ["author"])
 
     @register_attribute
     def publishing_date(self) -> Optional[datetime.datetime]:
@@ -36,9 +35,9 @@ class DieWeltParser(BaseParser):
 
     @register_attribute
     def title(self):
-        return self.ld.get('headline')
+        return self.ld().get('headline')
 
     @register_attribute
     def topics(self) -> List[str]:
-        if keyword_str := self.meta.get('keywords'):
+        if keyword_str := self.meta().get('keywords'):
             return keyword_str.split(', ')

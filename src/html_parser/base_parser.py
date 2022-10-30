@@ -5,7 +5,7 @@ from typing import List, Callable, Dict, Optional, Any, Literal, Union
 
 import lxml.html
 
-from src.html_parser.utility import get_meta_content
+from src.html_parser.utility import get_meta_content, strip_nodes_to_text
 
 
 class RegisteredFunction:
@@ -150,3 +150,23 @@ class BaseParser:
     @register_attribute
     def ld(self) -> dict[str, Any]:
         return self.cache.get('ld')
+
+    def generic_author_extraction(self, source: Dict[str, Any], key_list: List[str]) -> Optional[List[str]]:
+        current_dict = source
+        for key in key_list:
+            current_dict = current_dict.get(key, {})
+
+        authors = current_dict
+
+        if isinstance(authors, str):
+            return [authors]
+
+        if isinstance(authors, list):
+            authors = [author.get('name') for author in authors]
+        else:
+            authors = [authors.get('name')]
+        return authors
+
+    def generic_plaintext_extraction(self, selector: str) -> Optional[str]:
+        nodes = self.cache['doc'].cssselect(selector)
+        return strip_nodes_to_text(nodes)

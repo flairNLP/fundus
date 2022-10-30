@@ -17,6 +17,3 @@ def strip_nodes_to_text(text_nodes: List) -> Optional[str]:
     return "\n\n".join(([re.sub(r'\n+', ' ', node.text_content()) for node in text_nodes])).strip()
 
 
-def extract_plaintext_from_css_selector(tree: lxml.html.HtmlElement, selector: str) -> Optional[str]:
-    text_nodes = tree.cssselect(selector)
-    return strip_nodes_to_text(text_nodes)

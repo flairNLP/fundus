@@ -6,7 +6,6 @@ from dateutil import parser
 
 from src.html_parser import BaseParser
 from src.html_parser.base_parser import register_attribute
-from src.html_parser.utility import extract_plaintext_from_css_selector
 
 
 class FocusParser(BaseParser):
@@ -16,10 +15,10 @@ class FocusParser(BaseParser):
 
     @register_attribute
     def plaintext(self) -> Optional[str]:
-        return extract_plaintext_from_css_selector(self.cache['doc'],
-                                                   "div .leadIn > p, "
-                                                   "div .textBlock > p, "
-                                                   "div .textBlock > h2")
+        return self.generic_plaintext_extraction(
+            "div .leadIn > p, "
+            "div .textBlock > p, "
+            "div .textBlock > h2")
 
     @register_attribute
     def authors(self) -> List[str]:

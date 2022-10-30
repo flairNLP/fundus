@@ -5,14 +5,13 @@ import dateutil.parser
 
 from src.html_parser import BaseParser
 from src.html_parser.base_parser import register_attribute
-from src.html_parser.utility import extract_plaintext_from_css_selector
 
 
 class DWParser(BaseParser):
 
     @register_attribute
     def plaintext(self) -> Optional[str]:
-        return extract_plaintext_from_css_selector(self.cache['doc'], ".longText > p")
+        return self.generic_plaintext_extraction(".longText > p")
 
     @register_attribute
     def authors(self) -> List[str]:
