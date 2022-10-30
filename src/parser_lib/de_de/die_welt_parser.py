@@ -2,12 +2,9 @@ import datetime
 from typing import Optional, List
 
 import dateutil.parser
-import lxml.html
 
 from src.html_parser import BaseParser
 from src.html_parser.base_parser import register_attribute
-from src.html_parser.utility import strip_nodes_to_text
-from stream.utils import listify
 
 
 class DieWeltParser(BaseParser):
@@ -15,14 +12,8 @@ class DieWeltParser(BaseParser):
     @register_attribute
     def plaintext(self) -> Optional[str]:
 
-        return self.
-        doc: lxml.html.HtmlElement = self.cache['doc']
-        selector: str = (
-            "body .c-summary > div, "
-            "body .c-article-text > p"
-        )
-        if nodes := doc.cssselect(selector):
-            return strip_nodes_to_text(nodes)
+        return self.generic_plaintext_extraction("body .c-summary > div, "
+                                                 "body .c-article-text > p")
 
     @register_attribute
     def authors(self) -> List[str]:

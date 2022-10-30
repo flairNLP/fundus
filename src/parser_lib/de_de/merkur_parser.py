@@ -5,7 +5,6 @@ from dateutil import parser
 
 from src.html_parser import BaseParser
 from src.html_parser.base_parser import register_attribute
-from src.html_parser.utility import extract_plaintext_from_css_selector
 
 
 class MerkurParser(BaseParser):
@@ -15,32 +14,16 @@ class MerkurParser(BaseParser):
 
     @register_attribute
     def plaintext(self) -> Optional[str]:
-        return extract_plaintext_from_css_selector(self.cache['doc'],
-                                                   "p.id-StoryElement-leadText ,"
-                                                   "p.id-StoryElement-summary ,"
-                                                   "p.id-StoryElement-leadText ,"
-                                                   "p.id-StoryElement-paragraph"
-                                                   )
+        return self.generic_plaintext_extraction(
+            "p.id-StoryElement-leadText ,"
+            "p.id-StoryElement-summary ,"
+            "p.id-StoryElement-leadText ,"
+            "p.id-StoryElement-paragraph"
+        )
 
     @register_attribute
     def authors(self) -> List[str]:
-        try:
-            raw_str = self.ld().get('mainEntity').get('author')
-            # This is a copy from qse and should be done properly
-            if isinstance(raw_str, str):
-                return [raw_str]
-
-            if isinstance(raw_str, list):
-                authors = [author.get('name') for author in raw_str]
-            else:
-                authors = [raw_str.get('name')]
-            return authors
-        except KeyError:
-            return []
-        if raw_str:
-            return [raw_str]
-        else:
-            return []
+        return self.generic_author_extraction(self.ld(), ["mainEntity", "author"])
 
     @register_attribute
     def publishing_date(self) -> Optional[datetime.datetime]:

@@ -20,16 +20,12 @@ class NDRParser(BaseParser):
 
     @register_attribute
     def authors(self) -> List[str]:
-
-        return self.generic_author_extraction(self.ld(), ["mainEntity", "author"])
+        return self.generic_author_extraction(self.meta(), ["author"])
 
     @register_attribute
     def publishing_date(self) -> Optional[datetime.datetime]:
-        current_ld = self.ld().get('mainEntity')
-        if current_ld:
-            iso_date_str = current_ld.get('datePublished')
-        else:
-            return None
+
+        iso_date_str = self.ld().get('datePublished')
         if iso_date_str:
             return parser.parse(iso_date_str)
         return None
@@ -41,4 +37,4 @@ class NDRParser(BaseParser):
     @register_attribute
     def topics(self) -> Optional[str]:
         if topics := self.meta().get('keywords'):
-            return topics
+            return [el.strip() for el in topics.split(',')]

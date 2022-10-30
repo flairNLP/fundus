@@ -5,21 +5,19 @@ import dateutil.parser
 
 from src.html_parser import BaseParser
 from src.html_parser.base_parser import register_attribute
-from src.html_parser.utility import strip_nodes_to_text
 
 
 class MDRParser(BaseParser):
 
     @register_attribute(priority=4)
     def plaintext(self) -> Optional[str]:
-        doc = self.cache['doc']
-        if nodes := doc.cssselect('div.paragraph'):
-            return strip_nodes_to_text(nodes)
+        return self.generic_plaintext_extraction('div.paragraph')
 
     @register_attribute
     def topics(self) -> Optional[str]:
-        if topics := self.meta().get('news_keywords'):
-            return topics
+
+        if topics := self.meta().get('keywords'):
+            return topics.split(", ")
 
     @register_attribute
     def publishing_date(self) -> Optional[datetime.datetime]:
@@ -28,9 +26,9 @@ class MDRParser(BaseParser):
 
     @register_attribute
     def authors(self) -> str:
-        if author_dict := self.ld().get('author'):
-            return author_dict.get('name')
+
+        return self.generic_author_extraction(self.meta(), ['author'])
 
     @register_attribute(priority=4)
     def title(self) -> Optional[str]:
-        return self.ld().get('headline')
+        return self.meta().get('og:title')

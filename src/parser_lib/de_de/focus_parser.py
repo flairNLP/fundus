@@ -22,11 +22,7 @@ class FocusParser(BaseParser):
 
     @register_attribute
     def authors(self) -> List[str]:
-        raw_str = self.ld().get('author').get("name")
-        if raw_str:
-            return [raw_str]
-        else:
-            return []
+        return self.generic_author_extraction(self.ld(), ["author"])
 
     @register_attribute
     def publishing_date(self) -> Optional[datetime.datetime]:
