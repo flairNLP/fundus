@@ -38,5 +38,4 @@ class DWParser(BaseParser):
 
     @register_attribute
     def topics(self) -> List[str]:
-        if keyword_str := self.meta().get('keywords'):
-            return keyword_str.split(', ')
+        return self.generic_topic_extraction()

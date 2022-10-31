@@ -92,8 +92,8 @@ class BaseParser:
     @property
     def mandatory_attributes(self) -> List[str]:
 
-
-        return [func.__name__ for func in self._func_flow.values() if func.flow_type == 'attribute' and func.attribute_is_mandatory == True]
+        return [func.__name__ for func in self._func_flow.values() if
+                func.flow_type == 'attribute' and func.attribute_is_mandatory == True]
 
     @register_function(priority=0)
     def _base_setup(self):
@@ -185,3 +185,8 @@ class BaseParser:
     def generic_plaintext_extraction(self, selector: str) -> Optional[str]:
         nodes = self.cache['doc'].cssselect(selector)
         return strip_nodes_to_text(nodes)
+
+    def generic_topic_extraction(self, key_word: str = "keywords") -> List[str]:
+        if keyword_str := self.meta().get(key_word):
+            return [e.strip(" ") for e in keyword_str.split(",")]
+        return []

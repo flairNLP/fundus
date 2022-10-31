@@ -1,5 +1,5 @@
 import datetime
-from typing import Optional
+from typing import Optional, List
 
 import dateutil.parser
 
@@ -14,10 +14,8 @@ class MDRParser(BaseParser):
         return self.generic_plaintext_extraction('div.paragraph')
 
     @register_attribute
-    def topics(self) -> Optional[str]:
-
-        if topics := self.meta().get('keywords'):
-            return topics.split(", ")
+    def topics(self) -> Optional[List[str]]:
+        return self.generic_topic_extraction()
 
     @register_attribute
     def publishing_date(self) -> Optional[datetime.datetime]:
@@ -26,7 +24,6 @@ class MDRParser(BaseParser):
 
     @register_attribute
     def authors(self) -> str:
-
         return self.generic_author_extraction(self.meta(), ['author'])
 
     @register_attribute(priority=4)

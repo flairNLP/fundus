@@ -36,5 +36,4 @@ class NDRParser(BaseParser):
 
     @register_attribute
     def topics(self) -> Optional[str]:
-        if topics := self.meta().get('keywords'):
-            return [el.strip() for el in topics.split(',')]
+        return self.generic_topic_extraction()

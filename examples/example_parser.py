@@ -14,6 +14,7 @@ from src.parser_lib.de_de.focus_parser import FocusParser
 from src.parser_lib.de_de.mdr_parser import MDRParser
 from src.parser_lib.de_de.merkur_parser import MerkurParser
 from src.parser_lib.de_de.ndr_parser import NDRParser
+from src.parser_lib.de_de.ntv_parser import NTVParser
 
 
 def download_urls_from_sitemap(sitemap_url: str) -> List[str]:
@@ -155,7 +156,25 @@ def test_ndr_parser():
             print("!")
         except json.JSONDecodeError:
             continue
+def test_ntv_parser():
+    example_parser = NTVParser()
+    print(
+        f"This '{example_parser.__class__.__name__}' is capable of parsing '{', '.join(example_parser.attributes)}', of which {', '.join(example_parser.mandatory_attributes)} are mandatory")
+
+    current_sitemap =  "https://www.n-tv.de/news.xml"
+
+
+    current_url_list = download_urls_from_sitemap(current_sitemap)
+    for url_el in current_url_list:
+        try:
+            current_html = requests.get(url_el).text
+            article = example_parser.parse(current_html)
+            print("!")
+        except json.JSONDecodeError:
+            continue
+
+
 
 
 if __name__ == '__main__':
-    test_welt_parser()
+    test_ntv_parser()
