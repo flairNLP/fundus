@@ -1,43 +1,24 @@
-import json
-from datetime import datetime
-from os import makedirs
-from os.path import exists
-from typing import Optional, Dict
-from urllib.parse import urlparse, quote_plus
-
-from dotmap import DotMap
-
-from src.common_crawl.crawler import Crawler
-from src.html_parser import BaseParser
-from src.parser_lib.de_de.die_welt_parser import DieWeltParser
-
-base_path = ...
-
-
-def save_article_to_json(parsed_article: DotMap):
-    crawl_date = parsed_article.crawl_date
-
-    parsed_url = urlparse(parsed_article.url)
-    path = f'{base_path}/{crawl_date.year}/{crawl_date.month}/{parsed_url.netloc}/'
-
-    if not exists(path):
-        makedirs(path)
-
-    filename = quote_plus(parsed_article.url) + '.json'
-    filepath = path + filename
-
-    with open(filepath, 'w+', encoding='utf8') as file:
-        file.write(json.dumps(parsed_article, indent=4, ensure_ascii=False, default=str))
-
+from src.crawler.crawler import Crawler
+from src.library.collection import PublisherCollection
 
 if __name__ == '__main__':
-    cc_news_crawler = Crawler()
-    welt_parser = DieWeltParser()
 
-    mapping: Dict[str, Optional[BaseParser]] = {'www.welt.de': welt_parser}
+    de_de = PublisherCollection.de_de
 
-    start_date = datetime(2022, 8, 20)
-    end_date = datetime(2022, 8, 21)
+    crawler = Crawler(de_de)
 
-    for article in cc_news_crawler.crawl(mapping=mapping, start=start_date, end=end_date):
-        save_article_to_json(article)
+    """
+    Alternative usage:
+    
+        via attribute search:
+        crawler = Crawler(de_de.search(['plaintext']))
+        
+        or
+        
+        via explicit
+        crawler = Crawler(de_de.MDR)
+        
+    """
+
+    for article in crawler.crawl(max_articles=100):
+        print(article.pprint(exclude=['html']))

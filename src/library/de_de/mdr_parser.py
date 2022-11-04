@@ -9,7 +9,7 @@ from src.parser.html_parser.utility import strip_nodes_to_text
 
 class MDRParser(BaseParser):
 
-    @register_attribute(priority=4)
+    @register_attribute
     def plaintext(self) -> Optional[str]:
         doc = self.cache['doc']
         if nodes := doc.cssselect('div.paragraph'):
@@ -30,6 +30,6 @@ class MDRParser(BaseParser):
         if author_dict := self.ld().get('author'):
             return author_dict.get('name')
 
-    @register_attribute(priority=4)
+    @register_attribute
     def title(self) -> Optional[str]:
         return self.ld().get('headline')
