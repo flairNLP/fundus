@@ -4,9 +4,8 @@ from typing import Optional, List
 import dateutil.parser
 import lxml.html
 
-from src.html_parser import BaseParser
-from src.html_parser.base_parser import register_attribute
-from src.html_parser.utility import strip_nodes_to_text
+from src.parser.html_parser.base_parser import BaseParser, register_attribute
+from src.parser.html_parser.utility import strip_nodes_to_text
 from stream.utils import listify
 
 
@@ -36,9 +35,9 @@ class DieWeltParser(BaseParser):
 
     @register_attribute
     def title(self):
-        return self.ld.get('headline')
+        return self.ld().get('headline')
 
     @register_attribute
     def topics(self) -> List[str]:
-        if keyword_str := self.meta.get('keywords'):
+        if keyword_str := self.meta().get('keywords'):
             return keyword_str.split(', ')
