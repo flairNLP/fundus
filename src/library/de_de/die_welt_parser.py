@@ -4,7 +4,7 @@ from typing import Optional, List
 import dateutil.parser
 import lxml.html
 
-from src.parser.html_parser.base_parser import BaseParser, register_attribute
+from src.parser.html_parser import BaseParser, register_attribute
 from src.parser.html_parser.utility import strip_nodes_to_text
 from stream.utils import listify
 

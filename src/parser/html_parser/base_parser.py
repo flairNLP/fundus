@@ -3,6 +3,7 @@ import inspect
 import json
 from abc import ABC
 from typing import Callable, Dict, Optional, Any, Literal
+from copy import copy
 
 import lxml.html
 
@@ -11,8 +12,8 @@ from src.parser.html_parser.utility import get_meta_content
 
 class RegisteredFunction:
     __wrapped__: callable = None
-    __func__: callable
-    __self__: object
+    __func__: callable = None
+    __self__: object = None
 
     # TODO: ensure uint for priority instead of int
     def __init__(self,
@@ -25,7 +26,10 @@ class RegisteredFunction:
         self.priority = priority
 
     def __get__(self, instance, owner):
-        self.__self__ = instance
+        if instance and not self.__self__:
+            method = copy(self)
+            method.__self__ = instance
+            return method
         return self
 
     def __call__(self, *args, **kwargs):
@@ -40,7 +44,10 @@ class RegisteredFunction:
             return self.priority < other.priority
 
     def __repr__(self):
-        return f"registered {self.flow_type}: {self.__wrapped__} --> '{self.__name__}'"
+        if instance := self.__self__:
+            return f"bound registered {self.flow_type} of {instance}: {self.__wrapped__} --> '{self.__name__}'"
+        else:
+            return f"registered {self.flow_type}: {self.__wrapped__} --> '{self.__name__}'"
 
 
 def _register(cls, flow_type: Literal['attribute', 'function', 'filter'], priority):
@@ -74,19 +81,24 @@ class BaseParser(ABC):
     def __init__(self):
         self._shared_object_buffer: Dict[str, Any] = {}
 
-        registered_functions = [func for _, func in
-                                inspect.getmembers(self, predicate=lambda x: isinstance(x, RegisteredFunction))]
-
-        self._func_flow: dict[str, RegisteredFunction] = {func.__name__: func for func in sorted(registered_functions)}
+        self._registered_functions: list[RegisteredFunction] = [func for _, func in
+                                                                inspect.getmembers(self,
+                                                                                   predicate=lambda x: isinstance(x,
+                                                                                                                  RegisteredFunction))]
 
     @property
     def cache(self) -> Dict[str, Any]:
         return self._shared_object_buffer
 
+    # TODO: once we have python 3.11 use getmember_static these properties
+    @classmethod
+    def registered_functions(cls) -> list[RegisteredFunction]:
+        return [func for _, func in
+                inspect.getmembers(cls, predicate=lambda x: isinstance(x, RegisteredFunction))]
+
     @classmethod
     def attributes(cls):
-        return [func.__name__ for _, func in
-                inspect.getmembers(cls, predicate=lambda x: isinstance(x, RegisteredFunction))]
+        return [func.__name__ for _, func in cls.registered_functions()]
 
     def _base_setup(self):
         content = self.cache['html']
@@ -109,28 +121,31 @@ class BaseParser(ABC):
 
         article_cache = {}
 
-        for func in self._func_flow.values():
-            # TODO: replace with match statement once we have python 3.10
+        for func in sorted(self._registered_functions):
 
-            if func.flow_type == 'function':
-                func()
+            match func.flow_type:
 
-            elif func.flow_type == 'attribute':
-                try:
-                    article_cache[func.__name__] = func()
-                except Exception as err:
-                    match error_handling:
-                        case 'raise':
-                            raise err
-                        case 'catch':
-                            article_cache[func.__name__] = err
-                        case 'suppress':
-                            article_cache[func.__name__] = None
-            elif func.flow_type == 'filter':
-                if func():
-                    return None
-            else:
-                raise ValueError(f'Invalid function flow type {func.flow_type}')
+                case 'function':
+                    func()
+
+                case 'attribute':
+                    try:
+                        article_cache[func.__name__] = func()
+                    except Exception as err:
+                        match error_handling:
+                            case 'raise':
+                                raise err
+                            case 'catch':
+                                article_cache[func.__name__] = err
+                            case 'suppress':
+                                article_cache[func.__name__] = None
+
+                case 'filter':
+                    if func():
+                        return None
+
+                case _:
+                    raise ValueError(f'Invalid function flow type {func.flow_type}')
 
         return article_cache
 
