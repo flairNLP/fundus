@@ -4,9 +4,8 @@ from typing import Optional
 import dateutil.parser
 import requests
 
-from src.parser.html_parser import BaseParser
-from src.parser.html_parser import register_attribute
-from src.parser.html_parser import strip_nodes_to_text
+from src.parser.html_parser import BaseParser, register_attribute
+from src.parser.html_parser.utility import strip_nodes_to_text
 
 
 class MDRParser(BaseParser):
