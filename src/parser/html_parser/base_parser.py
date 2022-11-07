@@ -2,7 +2,7 @@ import functools
 import inspect
 import json
 from abc import ABC
-from typing import List, Callable, Dict, Optional, Any, Literal, Union, Set
+from typing import Callable, Dict, Optional, Any, Literal
 
 import lxml.html
 
@@ -69,7 +69,7 @@ def register_filter(cls=None, /, *, priority: int = None):
     return _register(cls, flow_type='filter', priority=priority)
 
 
-class BaseParser:
+class BaseParser(ABC):
 
     def __init__(self):
         self._shared_object_buffer: Dict[str, Any] = {}
