@@ -4,6 +4,7 @@ import json
 from abc import ABC
 from typing import Callable, Dict, Optional, Any, Literal
 from copy import copy
+from functools import WRAPPER_ASSIGNMENTS
 
 import lxml.html
 
@@ -12,8 +13,9 @@ from src.parser.html_parser.utility import get_meta_content
 
 class RegisteredFunction:
     __wrapped__: callable = None
-    __func__: callable = None
-    __self__: object = None
+    __func__: callable
+    __self__: object
+    __slots__ = ['__dict__', '__self__', '__func__', 'flow_type', 'priority']
 
     # TODO: ensure uint for priority instead of int
     def __init__(self,
@@ -21,7 +23,10 @@ class RegisteredFunction:
                  flow_type: str,
                  priority: Optional[int] = None):
 
+        self.__self__ = None
         self.__func__ = func
+        self.__finite__: bool = False
+
         self.flow_type = flow_type
         self.priority = priority
 
@@ -29,6 +34,7 @@ class RegisteredFunction:
         if instance and not self.__self__:
             method = copy(self)
             method.__self__ = instance
+            method.__finite__ = True
             return method
         return self
 
@@ -81,10 +87,8 @@ class BaseParser(ABC):
     def __init__(self):
         self._shared_object_buffer: Dict[str, Any] = {}
 
-        self._registered_functions: list[RegisteredFunction] = [func for _, func in
-                                                                inspect.getmembers(self,
-                                                                                   predicate=lambda x: isinstance(x,
-                                                                                                                  RegisteredFunction))]
+        self._registered_functions = [func for _, func in
+                                      inspect.getmembers(self, predicate=lambda x: isinstance(x, RegisteredFunction))]
 
     @property
     def cache(self) -> Dict[str, Any]:
@@ -98,7 +102,7 @@ class BaseParser(ABC):
 
     @classmethod
     def attributes(cls):
-        return [func.__name__ for _, func in cls.registered_functions()]
+        return [func.__name__ for func in cls.registered_functions()]
 
     def _base_setup(self):
         content = self.cache['html']
