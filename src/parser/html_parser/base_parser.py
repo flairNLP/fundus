@@ -2,9 +2,9 @@ import functools
 import inspect
 import json
 from abc import ABC
+from dataclasses import dataclass, field
 from typing import Callable, Dict, Optional, Any, Literal
 from copy import copy
-from functools import WRAPPER_ASSIGNMENTS
 
 import lxml.html
 
@@ -82,6 +82,15 @@ def register_filter(cls=None, /, *, priority: int = None):
     return _register(cls, flow_type='filter', priority=priority)
 
 
+@dataclass
+class Precomputed:
+    html: str = None
+    doc: lxml.html.HtmlElement = None
+    meta: dict[str, Any] = field(default_factory=dict)
+    ld: dict[str, Any] = field(default_factory=dict)
+    cache: dict[str, Any] = field(default_factory=dict)
+
+
 class BaseParser(ABC):
 
     def __init__(self):
@@ -90,9 +99,11 @@ class BaseParser(ABC):
         self._registered_functions = [func for _, func in
                                       inspect.getmembers(self, predicate=lambda x: isinstance(x, RegisteredFunction))]
 
+        self.precomputed = Precomputed()
+
     @property
     def cache(self) -> Dict[str, Any]:
-        return self._shared_object_buffer
+        return self.precomputed.cache
 
     # TODO: once we have python 3.11 use getmember_static these properties
     @classmethod
@@ -105,24 +116,20 @@ class BaseParser(ABC):
         return [func.__name__ for func in cls.registered_functions()]
 
     def _base_setup(self):
-        content = self.cache['html']
+        content = self.precomputed.html
         doc = lxml.html.fromstring(content)
         ld_content = doc.xpath('string(//script[@type="application/ld+json"]/text())')
-        ld = json.loads(ld_content) or {}
-        meta = get_meta_content(doc) or {}
-        self.share(doc=doc, ld=ld, meta=meta)
+        self.precomputed.doc = doc
+        self.precomputed.ld = json.loads(ld_content) or {}
+        self.precomputed.meta = get_meta_content(doc) or {}
 
     def parse(self, html: str,
               error_handling: Literal['suppress', 'catch', 'raise'] = 'raise') -> Optional[Dict[str, Any]]:
 
-        # wipe existing shared cache
+        # wipe existing precomputed
         self._wipe()
-
-        # share html and kwargs among cache
-        self.share(html=html)
-
+        self.precomputed.html = html
         self._base_setup()
-
         article_cache = {}
 
         for func in sorted(self._registered_functions):
@@ -155,16 +162,16 @@ class BaseParser(ABC):
 
     def share(self, **kwargs):
         for key, value in kwargs.items():
-            self._shared_object_buffer[key] = value
+            self.precomputed.cache[key] = value
 
     def _wipe(self):
-        self._shared_object_buffer = {}
+        self.precomputed = Precomputed()
 
     # base attribute section
     @register_attribute
     def meta(self) -> dict[str, Any]:
-        return self.cache.get('meta')
+        return self.precomputed.meta
 
     @register_attribute
     def ld(self) -> dict[str, Any]:
-        return self.cache.get('ld')
+        return self.precomputed.ld

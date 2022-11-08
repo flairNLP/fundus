@@ -20,5 +20,5 @@ if __name__ == '__main__':
         
     """
 
-    for article in crawler.crawl(max_articles=100):
+    for article in crawler.crawl(max_articles=100, error_handling='raise'):
         print(article.pprint(exclude=['html']))
