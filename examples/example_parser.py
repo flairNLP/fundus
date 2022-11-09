@@ -6,21 +6,8 @@ from typing import List
 import feedparser
 import lxml
 import requests
-from pathlib import Path
-current_path =Path(".")
-import sys
-sys.path.append(str(current_path))
 
 
-from src.parser_lib.de_de.bz_parser import BZParser
-from src.parser_lib.de_de.focus_parser import FocusParser 
-from src.parser_lib.de_de.die_welt_parser import DieWeltParser
-from src.parser_lib.de_de.dw_parser import DWParser
-from src.parser_lib.de_de.focus_parser import FocusParser
-from src.parser_lib.de_de.mdr_parser import MDRParser
-from src.parser_lib.de_de.merkur_parser import MerkurParser
-from src.parser_lib.de_de.ndr_parser import NDRParser
-from src.parser_lib.de_de.ntv_parser import NTVParser
 
 
 def download_urls_from_sitemap(sitemap_url: str) -> List[str]:
@@ -43,8 +30,8 @@ def test_bz_parser():
     # This one is not in the right format!
 
     example_parser = BZParser()
-    print(
-        f"This '{example_parser.__class__.__name__}' is capable of parsing '{', '.join(example_parser.mandatory_attributes)}'")
+ #   print(
+ #       f"This '{example_parser.__class__.__name__}' is capable of parsing '{', '.join(example_parser.mandatory_attributes)}'")
 
     current_sitemap = "https://www.berliner-zeitung.de/sitemap.current_date.xml"
     current_sitemap = current_sitemap.replace("current_date", datetime.utcnow().date().strftime('%Y-%m-%d'))
@@ -115,8 +102,8 @@ def test_focus_parser():
 
 def test_mdr_parser():
     example_parser = MDRParser()
-    print(
-        f"This '{example_parser.__class__.__name__}' is capable of parsing '{', '.join(example_parser.mandatory_attributes)}'")
+  #  print(
+   # \    f"This '{example_parser.__class__.__name__}' is capable of parsing '{', '.join(example_parser.attributes)}', of which '{', '.join(example_parser.mandatory_attributes)}' are mandatory")
 
     current_sitemap = "https://www.mdr.de/news-sitemap.xml"
 
@@ -163,13 +150,13 @@ def test_ndr_parser():
         except json.JSONDecodeError:
             continue
 
+
 def test_ntv_parser():
     example_parser = NTVParser()
     print(
         f"This '{example_parser.__class__.__name__}' is capable of parsing '{', '.join(example_parser.attributes)}', of which {', '.join(example_parser.mandatory_attributes)} are mandatory")
 
-    current_sitemap =  "https://www.n-tv.de/news.xml"
-
+    current_sitemap = "https://www.n-tv.de/news.xml"
 
     current_url_list = download_urls_from_sitemap(current_sitemap)
     for url_el in current_url_list:
@@ -179,14 +166,14 @@ def test_ntv_parser():
             print("!")
         except json.JSONDecodeError:
             continue
+
 
 def test_faz_parser():
     example_parser = FAZParser()
     print(
         f"This '{example_parser.__class__.__name__}' is capable of parsing '{', '.join(example_parser.attributes)}', of which {', '.join(example_parser.mandatory_attributes)} are mandatory")
 
-    current_sitemap =  "https://www.n-tv.de/news.xml"
-
+    current_sitemap = "https://www.n-tv.de/news.xml"
 
     current_url_list = download_urls_from_sitemap(current_sitemap)
     for url_el in current_url_list:
@@ -198,6 +185,5 @@ def test_faz_parser():
             continue
 
 
-
 if __name__ == '__main__':
-    test_faz_parser()
+    test_bz_parser()

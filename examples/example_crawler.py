@@ -19,6 +19,6 @@ if __name__ == '__main__':
         crawler = Crawler(de_de.MDR)
         
     """
-
+    crawler = Crawler(de_de.MDR)
     for article in crawler.crawl(max_articles=100, error_handling='raise'):
         print(article.pprint(exclude=['html']))
