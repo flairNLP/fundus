@@ -14,7 +14,7 @@ class BZParser(BaseParser):
 
     @register_attribute
     def plaintext(self) -> Optional[str]:
-        return self.generic_plaintext_extraction(".o-article > p")
+        return self.generic_plaintext_extraction_with_css(".o-article > p")
 
     @register_attribute
     def authors(self) -> List[str]:

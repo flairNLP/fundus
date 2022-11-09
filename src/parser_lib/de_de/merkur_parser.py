@@ -12,7 +12,7 @@ class MerkurParser(BaseParser):
 
     @register_attribute
     def plaintext(self) -> Optional[str]:
-        return self.generic_plaintext_extraction(
+        return self.generic_plaintext_extraction_with_css(
             "p.id-StoryElement-leadText ,"
             "p.id-StoryElement-summary ,"
             "p.id-StoryElement-leadText ,"

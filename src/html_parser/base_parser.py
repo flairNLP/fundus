@@ -182,7 +182,7 @@ class BaseParser:
             authors = [authors.get('name')]
         return authors
 
-    def generic_plaintext_extraction(self, selector: str) -> Optional[str]:
+    def generic_plaintext_extraction_with_css(self, selector: str) -> Optional[str]:
         nodes = self.cache['doc'].cssselect(selector)
         return strip_nodes_to_text(nodes)
 

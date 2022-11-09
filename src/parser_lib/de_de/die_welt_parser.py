@@ -12,7 +12,7 @@ class DieWeltParser(BaseParser):
     @register_attribute(attribute_is_mandatory=True)
     def plaintext(self) -> Optional[str]:
 
-        return self.generic_plaintext_extraction("body .c-summary > div, "
+        return self.generic_plaintext_extraction_with_css("body .c-summary > div, "
                                                  "body .c-article-text > p")
 
     @register_attribute(attribute_is_mandatory=True)

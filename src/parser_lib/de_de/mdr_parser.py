@@ -11,7 +11,7 @@ class MDRParser(BaseParser):
 
     @register_attribute(priority=4)
     def plaintext(self) -> Optional[str]:
-        return self.generic_plaintext_extraction('div.paragraph')
+        return self.generic_plaintext_extraction_with_css('div.paragraph')
 
     @register_attribute
     def topics(self) -> Optional[List[str]]:

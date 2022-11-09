@@ -11,7 +11,7 @@ class DWParser(BaseParser):
 
     @register_attribute
     def plaintext(self) -> Optional[str]:
-        return self.generic_plaintext_extraction(".longText > p")
+        return self.generic_plaintext_extraction_with_css(".longText > p")
 
     @register_attribute
     def authors(self) -> List[str]:

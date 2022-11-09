@@ -9,13 +9,10 @@ from src.html_parser.base_parser import register_attribute
 
 
 class FocusParser(BaseParser):
-    """
-    This parser is for the old format!
-    """
 
     @register_attribute
     def plaintext(self) -> Optional[str]:
-        return self.generic_plaintext_extraction(
+        return self.generic_plaintext_extraction_with_css(
             "div .leadIn > p, "
             "div .textBlock > p, "
             "div .textBlock > h2")
