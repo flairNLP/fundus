@@ -1,10 +1,10 @@
 import datetime
-from typing import Optional, List
+from typing import Optional
 
 import dateutil.parser
 
-from src.html_parser import BaseParser
-from src.html_parser.base_parser import register_attribute
+from src.parser.html_parser import BaseParser, register_attribute
+from src.parser.html_parser.utility import strip_nodes_to_text
 
 
 class MDRParser(BaseParser):
