@@ -1,14 +1,13 @@
 from abc import ABC, abstractmethod
 from collections.abc import Iterable
 from datetime import datetime
-from typing import Iterator, Literal, Type
+from typing import Iterator
 
 import feedparser
 import lxml.html
 import requests
 
-from src.parser.html_parser import BaseParser
-from src.pipeline.articles import ArticleSource, Article
+from src.pipeline.articles import ArticleSource
 
 
 class Source(Iterable, ABC):

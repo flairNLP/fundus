@@ -2,9 +2,9 @@ import functools
 import inspect
 import json
 from abc import ABC
-from dataclasses import dataclass, field
-from typing import Callable, Dict, Optional, Any, Literal
 from copy import copy
+from dataclasses import dataclass, field
+from typing import Callable, Dict, Optional, Any, Literal, List
 
 import lxml.html
 
@@ -86,9 +86,9 @@ def register_filter(cls=None, /, *, priority: int = None):
 class Precomputed:
     html: str = None
     doc: lxml.html.HtmlElement = None
-    meta: dict[str, Any] = field(default_factory=dict)
-    ld: dict[str, Any] = field(default_factory=dict)
-    cache: dict[str, Any] = field(default_factory=dict)
+    meta: Dict[str, Any] = field(default_factory=dict)
+    ld: Dict[str, Any] = field(default_factory=dict)
+    cache: Dict[str, Any] = field(default_factory=dict)
 
 
 class BaseParser(ABC):
@@ -107,7 +107,7 @@ class BaseParser(ABC):
 
     # TODO: once we have python 3.11 use getmember_static these properties
     @classmethod
-    def registered_functions(cls) -> list[RegisteredFunction]:
+    def registered_functions(cls) -> List[RegisteredFunction]:
         return [func for _, func in
                 inspect.getmembers(cls, predicate=lambda x: isinstance(x, RegisteredFunction))]
 
@@ -134,29 +134,28 @@ class BaseParser(ABC):
 
         for func in sorted(self._registered_functions):
 
-            match func.flow_type:
+            if func.flow_type == 'function':
+                func()
 
-                case 'function':
-                    func()
+            elif func.flow_type == 'attribute':
+                try:
+                    article_cache[func.__name__] = func()
+                except Exception as err:
+                    if error_handling == 'raise':
+                        raise err
+                    elif error_handling == 'catch':
+                        article_cache[func.__name__] = err
+                    elif error_handling == 'suppress':
+                        article_cache[func.__name__] = None
+                    else:
+                        raise ValueError(f"Invalid value '{error_handling}' for parameter <error_handling>")
 
-                case 'attribute':
-                    try:
-                        article_cache[func.__name__] = func()
-                    except Exception as err:
-                        match error_handling:
-                            case 'raise':
-                                raise err
-                            case 'catch':
-                                article_cache[func.__name__] = err
-                            case 'suppress':
-                                article_cache[func.__name__] = None
+            elif func.flow_type == 'filter':
+                if func():
+                    return None
 
-                case 'filter':
-                    if func():
-                        return None
-
-                case _:
-                    raise ValueError(f'Invalid function flow type {func.flow_type}')
+            else:
+                raise ValueError(f'Invalid flow type {func.flow_type} for {func}')
 
         return article_cache
 
@@ -169,9 +168,9 @@ class BaseParser(ABC):
 
     # base attribute section
     @register_attribute
-    def meta(self) -> dict[str, Any]:
+    def meta(self) -> Dict[str, Any]:
         return self.precomputed.meta
 
     @register_attribute
-    def ld(self) -> dict[str, Any]:
+    def ld(self) -> Dict[str, Any]:
         return self.precomputed.ld
