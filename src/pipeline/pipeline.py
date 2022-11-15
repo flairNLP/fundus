@@ -18,19 +18,22 @@ class CrawlerPipeline:
 
     def __iter__(self) -> Iterator[BaseArticle]:
         for article_source in self.source:
+
             try:
+
                 data = self.parser.parse(article_source.html, self.error_handling)
+
             except Exception as err:
-                match self.error_handling:
-                    case 'raise':
-                        raise err
-                    case 'catch':
-                        yield Article(extracted={}, exception=err, **article_source.serialize())
-                        continue
-                    case 'suppress':
-                        continue
-                    case _:
-                        raise ValueError(f"Unknown value '{self.error_handling}' for parameter 'error_handling'")
+
+                if self.error_handling == 'raise':
+                    raise err
+                elif self.error_handling == 'catch':
+                    yield Article(extracted={}, exception=err, **article_source.serialize())
+                    continue
+                elif self.error_handling == 'suppress':
+                    continue
+                else:
+                    raise ValueError(f"Unknown value '{self.error_handling}' for parameter <error_handling>'")
 
             article = Article(extracted=data, **article_source.serialize())
             yield article

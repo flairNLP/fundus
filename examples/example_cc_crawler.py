@@ -8,8 +8,8 @@ from urllib.parse import urlparse, quote_plus
 from dotmap import DotMap
 
 from src.crawler.common_crawl.crawler import Crawler
-from src.parser.html_parser import BaseParser
 from src.library.de_de.die_welt_parser import DieWeltParser
+from src.parser.html_parser import BaseParser
 
 base_path = ...
 

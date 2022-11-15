@@ -104,7 +104,7 @@ class Crawler:
               exception_handling: Literal['suppress', 'catch', 'raise'] = 'raise',
               warc_cache_dir: str = None) -> Generator[DotMap, None, None]:
 
-        parsed_mapping: defaultdict[str, dict[(str, BaseParser)]] = defaultdict(dict)
+        parsed_mapping: defaultdict[str, Dict[(str, BaseParser)]] = defaultdict(dict)
 
         for domain, func in mapping.items():
             if '//' not in domain:
