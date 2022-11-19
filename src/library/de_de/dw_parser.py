@@ -3,15 +3,15 @@ from typing import Optional, List
 
 import dateutil.parser
 
-from src.html_parser import BaseParser
-from src.html_parser.base_parser import register_attribute
+from src.parser.html_parser import BaseParser, register_attribute
+from src.parser.html_parser.utility import generic_plaintext_extraction_with_css, generic_topic_extraction
 
 
 class DWParser(BaseParser):
 
     @register_attribute
     def plaintext(self) -> Optional[str]:
-        return self.generic_plaintext_extraction_with_css(".longText > p")
+        return generic_plaintext_extraction_with_css(self.precomputed.doc, ".longText > p")
 
     @register_attribute
     def authors(self) -> List[str]:
@@ -38,4 +38,4 @@ class DWParser(BaseParser):
 
     @register_attribute
     def topics(self) -> List[str]:
-        return self.generic_topic_extraction()
+        return generic_topic_extraction(self.precomputed.meta)

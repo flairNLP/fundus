@@ -3,25 +3,24 @@ from typing import Optional, List
 
 from dateutil import parser
 
-from src.html_parser import BaseParser
-from src.html_parser.base_parser import register_attribute
+from src.parser.html_parser import BaseParser, register_attribute
+from src.parser.html_parser.utility import generic_plaintext_extraction_with_css, generic_author_extraction
 
 
 class MerkurParser(BaseParser):
 
-
     @register_attribute
     def plaintext(self) -> Optional[str]:
-        return self.generic_plaintext_extraction_with_css(
-            "p.id-StoryElement-leadText ,"
-            "p.id-StoryElement-summary ,"
-            "p.id-StoryElement-leadText ,"
-            "p.id-StoryElement-paragraph"
-        )
+        return generic_plaintext_extraction_with_css(self.precomputed.doc,
+                                                     "p.id-StoryElement-leadText ,"
+                                                     "p.id-StoryElement-summary ,"
+                                                     "p.id-StoryElement-leadText ,"
+                                                     "p.id-StoryElement-paragraph"
+                                                     )
 
     @register_attribute
     def authors(self) -> List[str]:
-        return self.generic_author_extraction(self.ld(), ["mainEntity", "author"])
+        return generic_author_extraction(self.precomputed.ld, ["mainEntity", "author"])
 
     @register_attribute
     def publishing_date(self) -> Optional[datetime.datetime]:

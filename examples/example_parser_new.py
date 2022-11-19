@@ -35,7 +35,5 @@ def test_welt_parser():
         print(article.pprint(exclude=['html']))
 
 
-
-
 if __name__ == '__main__':
     test_welt_parser()

@@ -4,29 +4,28 @@ from typing import Optional, List
 
 from dateutil import parser
 
-from src.html_parser import BaseParser
-from src.html_parser.base_parser import register_attribute
+from src.parser.html_parser import register_attribute
+from src.parser.html_parser.utility import generic_plaintext_extraction_with_css, generic_author_extraction, \
+    generic_date_extraction
 
 
 class FocusParser(BaseParser):
 
     @register_attribute
     def plaintext(self) -> Optional[str]:
-        return self.generic_plaintext_extraction_with_css(
-            "div .leadIn > p, "
-            "div .textBlock > p, "
-            "div .textBlock > h2")
+        return generic_plaintext_extraction_with_css(self.precomputed.doc,
+                                                     "div .leadIn > p, "
+                                                     "div .textBlock > p, "
+                                                     "div .textBlock > h2")
 
     @register_attribute
     def authors(self) -> List[str]:
-        return self.generic_author_extraction(self.ld(), ["author"])
+        return generic_author_extraction(self.precomputed.ld, ["author"])
 
     @register_attribute
     def publishing_date(self) -> Optional[datetime.datetime]:
+        return generic_date_extraction(self.precomputed.ld)
 
-        iso_date_str = self.ld().get('datePublished')
-
-        return parser.parse(iso_date_str)
 
     @register_attribute
     def title(self):

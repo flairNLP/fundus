@@ -1,12 +1,12 @@
 import datetime
 from typing import Optional, List
 
-from src.parser.html_parser import register_attribute, BaseParser
-from src.parser.html_parser.utility import generic_date_extraction, generic_topic_extraction, \
-    generic_plaintext_extraction_with_css, generic_author_extraction
+from src.parser.html_parser import BaseParser, register_attribute
+from src.parser.html_parser.utility import generic_plaintext_extraction_with_css, generic_date_extraction, \
+    generic_author_extraction, generic_topic_extraction
 
 
-class MDRParser(BaseParser):
+class FAZParser(BaseParser):
 
     @register_attribute(priority=4)
     def plaintext(self) -> Optional[str]:
@@ -18,7 +18,7 @@ class MDRParser(BaseParser):
 
     @register_attribute
     def publishing_date(self) -> Optional[datetime.datetime]:
-        return generic_date_extraction(self.precomputed.ld)
+        return generic_date_extraction(self.precomputed.ld, "datePublished")
 
     @register_attribute
     def authors(self) -> Optional[List[str]]:
