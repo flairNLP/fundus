@@ -1,10 +1,8 @@
 import datetime
 import re
-from typing import Optional, List
+from typing import Optional, List, Match
 
-from dateutil import parser
-
-from src.parser.html_parser import register_attribute
+from src.parser.html_parser import BaseParser, register_attribute
 from src.parser.html_parser.utility import generic_plaintext_extraction_with_css, generic_author_extraction, \
     generic_date_extraction
 
@@ -26,7 +24,6 @@ class FocusParser(BaseParser):
     def publishing_date(self) -> Optional[datetime.datetime]:
         return generic_date_extraction(self.precomputed.ld)
 
-
     @register_attribute
     def title(self):
         return self.ld().get('headline')
@@ -34,7 +31,7 @@ class FocusParser(BaseParser):
     @register_attribute
     def topics(self) -> List[str]:
 
-        snippet = self.cache['doc'].xpath(
+        snippet = self.precomputed.doc.xpath(
             'string(//script[@type="text/javascript"][contains(text(), "window.bf__bfa_metadata")])')
         if not snippet:
             return []
