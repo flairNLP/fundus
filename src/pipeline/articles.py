@@ -2,7 +2,7 @@ import json
 from abc import ABC
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Any, Callable, List
+from typing import Any, Callable, List, Dict
 
 
 @dataclass(frozen=True)
@@ -11,16 +11,16 @@ class BaseArticle(ABC):
     html: str
     crawl_date: datetime
 
-    def serialize(self) -> dict[str, Any]:
+    def serialize(self) -> Dict[str, Any]:
         return self.__dict__
 
     @classmethod
-    def deserialize(cls, serialized: dict[str, Any]):
+    def deserialize(cls, serialized: Dict[str, Any]):
         return cls(**serialized)
 
     def pprint(self, indent: int = 4, ensure_ascii: bool = False, default: Callable[[Any], Any] = str,
                exclude: List[str] = None) -> str:
-        to_serialize: dict[str, Any] = self.__dict__.copy()
+        to_serialize: Dict[str, Any] = self.__dict__.copy()
         for key in exclude:
             if not hasattr(self, key):
                 raise AttributeError(f"Tried to exclude key '{key} which isn't present in this'{self}' instance")
@@ -35,12 +35,12 @@ class ArticleSource(BaseArticle):
 
 @dataclass(frozen=True)
 class Article(BaseArticle):
-    extracted: dict[str, Any]
+    extracted: Dict[str, Any]
     exception: Exception = None
     source: str = None
 
     # TODO: discuss if we want to be straight frozen here or update for dot access
-    def update(self, data: dict[str, Any]) -> None:
+    def update(self, data: Dict[str, Any]) -> None:
         self.__dict__.update(data)
 
     @property

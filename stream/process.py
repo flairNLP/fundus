@@ -1,7 +1,7 @@
 import pickle
 import traceback
 from abc import ABC, abstractmethod
-from functools import cache
+from functools import cached_property
 from multiprocessing import Queue, Process, Event, Pipe
 from queue import Empty
 from typing import Callable, Optional, Union
@@ -35,8 +35,7 @@ class StreamProcess(Process, ABC):
         raise NotImplementedError(f"'{type(self)} didn't implement '_handle_job'")
 
     # noinspection PyUnresolvedReferences
-    @property
-    @cache
+    @cached_property
     def target(self):
         if isinstance(self._target, bytes):
             return dill.loads(self._target)
