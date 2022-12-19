@@ -7,9 +7,6 @@ from src.parser.html_parser.utility import generic_plaintext_extraction_with_css
 
 
 class NDRParser(BaseParser):
-    """
-    """
-
     @register_attribute
     def plaintext(self) -> Optional[str]:
         return generic_plaintext_extraction_with_css(self.precomputed.doc,
