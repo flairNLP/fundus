@@ -1,8 +1,7 @@
 from typing import Iterator, Literal
 
 from src.parser.html_parser import BaseParser
-from src.pipeline.articles import Article, BaseArticle
-from src.pipeline.sources import Source
+from src.pipeline.sources import Source, Article, BaseArticle
 
 
 class CrawlerPipeline:

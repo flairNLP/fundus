@@ -4,9 +4,8 @@ from functools import cached_property
 from typing import Union, List, Dict, Literal, Generator
 
 from src.library.collection.base_objects import PublisherEnum
-from src.pipeline.articles import Article
 from src.pipeline.pipeline import CrawlerPipeline
-from src.pipeline.sources import RSSSource
+from src.pipeline.sources import RSSSource, Article
 from stream.utils import listify
 
 
@@ -33,7 +32,7 @@ class Crawler:
         pipelines: List[CrawlerPipeline] = []
         for spec in self.publishers:
             if restrict_sources_to == 'rss' or restrict_sources_to is None:
-                sources = [RSSSource(spec.domain, url) for url in spec.rss_feeds]
+                sources = [RSSSource(spec.publisher_name, spec.domain, url) for url in spec.rss_feeds]
                 rss_pipes = [CrawlerPipeline(source, spec.parser(), error_handling=error_handling) for source in
                              sources]
                 pipelines.extend(rss_pipes)

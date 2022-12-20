@@ -7,6 +7,7 @@ from src.parser.html_parser import BaseParser
 
 @dataclass(frozen=True)
 class PublisherSpec:
+    name: str
     domain: str
     parser: Type[BaseParser]
     rss_feeds: List[str] = field(default_factory=list)
@@ -29,6 +30,7 @@ class PublisherEnum(Enum):
     def __init__(self, spec: PublisherSpec):
         if not isinstance(spec, PublisherSpec):
             raise ValueError("Your only allowed to generate 'PublisherEnum's from 'PublisherSpec")
+        self.publisher_name = spec.name
         self.domain = spec.domain
         self.rss_feeds = spec.rss_feeds
         self.sitemap = spec.sitemaps
