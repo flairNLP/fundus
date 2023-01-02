@@ -51,3 +51,20 @@ def generic_date_extraction(base_dict, key_word: str = "datePublished") -> Optio
     if date_str := base_dict.get(key_word):
         return dateutil.parser.parse(date_str)
     return None
+
+
+def generic_article_id_extraction_from_url(article_url, publisher_regex) -> Optional[str]:
+    """
+    This method aims to extract a unique identifier for the article from either the URL
+    :param article_url: The URL of the article
+    :param publisher_regex: The HTML of the article
+    :return: An unique identifier for the article found at this url
+    """
+
+    search_result = re.search(publisher_regex, article_url)
+
+    if search_result:
+        # We match by group name
+        return search_result.group("id_group")
+
+    return None

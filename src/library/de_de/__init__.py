@@ -5,6 +5,9 @@ from .faz_parser import FAZParser
 
 
 # noinspection PyPep8Naming
+from .merkur_parser import MerkurParser
+
+
 class DE_DE(PublisherEnum):
     DieWelt = PublisherSpec(domain='https://www.welt.de/', rss_feeds=['https://www.welt.de/feeds/latest.rss'],
                             parser=DieWeltParser)
@@ -12,3 +15,4 @@ class DE_DE(PublisherEnum):
                         sitemaps=['https://www.mdr.de/news-sitemap.xml'], parser=MDRParser)
     FAZ = PublisherSpec(domain='https://www.faz.net/', rss_feeds=['https://www.faz.net/rss/aktuell', 'https://www.faz.net/rss/aktuell/politik','https://www.faz.net/rss/aktuell/sport','https://www.faz.net/rss/aktuell/wirtschaft/','https://www.faz.net/rss/aktuell/gesellschaft/'],
                         sitemaps=[], parser=FAZParser)
+    Merkur = PublisherSpec(domain='https://www.merkur.de/', rss_feeds=['https://www.merkur.de/welt/rssfeed.rdf'], sitemaps=[], parser=MerkurParser)
