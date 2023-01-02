@@ -27,7 +27,7 @@ class MerkurParser(BaseParser):
 
     @register_attribute
     def title(self):
-        return self.meta().get('og:title')
+        return self.precomputed.meta.get('og:title')
 
     @register_attribute
     def article_id(self):
