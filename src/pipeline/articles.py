@@ -2,7 +2,7 @@ import json
 from abc import ABC
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Any, Callable, List, Dict
+from typing import Any, Callable, List, Dict, Optional
 
 
 @dataclass(frozen=True)
@@ -46,3 +46,18 @@ class Article(BaseArticle):
     @property
     def complete(self) -> bool:
         return all(not (isinstance(attr, Exception) or attr is None) for attr in self.extracted.values())
+
+    # provide direct access for commonly used attributes in self.extracted
+    @property
+    def plaintext(self) -> Optional[str]:
+        return self.extracted.get('plaintext') if self.extracted else None
+
+    @property
+    def title(self) -> Optional[str]:
+        return self.extracted.get('title') if self.extracted else None
+
+    @property
+    def authors(self) -> List[str]:
+        return self.extracted.get('authors', []) if self.extracted else None
+
+
