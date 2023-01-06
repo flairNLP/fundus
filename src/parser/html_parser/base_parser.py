@@ -82,12 +82,51 @@ def register_filter(cls=None, /, *, priority: int = None):
     return _register(cls, flow_type='filter', priority=priority)
 
 
+# noinspection PyPep8Naming
+@dataclass(repr=False)
+class LinkedData:
+    __slots__ = ['_ld_by_type']
+    _ld_by_type: Dict[str, Dict[str, any]]
+
+    @staticmethod
+    def _property_names() -> List[str]:
+        property_names = [p for p in dir(LinkedData) if isinstance(getattr(LinkedData, p), property)]
+        property_names.remove('unsupported')
+        return property_names
+
+    @property
+    def VideoObject(self) -> Dict[str, any]:
+        return self._ld_by_type.get('VideoObject', {})
+
+    @property
+    def NewsArticle(self) -> Dict[str, any]:
+        return self._ld_by_type.get('NewsArticle', {})
+
+    @property
+    def unsupported(self) -> Dict[str, any]:
+        return {k: v for k, v in self._ld_by_type.items() if k not in self._property_names()}
+
+    def get(self, key: str, default: any = None):
+        for ld in self._ld_by_type.values():
+            if value := ld.get(key):
+                return value
+        return default
+
+    def __repr__(self):
+        contains = [name for name in self._property_names() if getattr(self, name)]
+        text = f"LD containing '{', '.join(contains)}'"
+        if u := self.unsupported:
+            tmp = f" and unsupported {', '.join(u.keys())}"
+            text = text + tmp
+        return text
+
+
 @dataclass
 class Precomputed:
     html: str = None
     doc: lxml.html.HtmlElement = None
     meta: Dict[str, Any] = field(default_factory=dict)
-    ld: Dict[str, Any] = field(default_factory=dict)
+    ld: LinkedData = None
     cache: Dict[str, Any] = field(default_factory=dict)
 
 
@@ -118,9 +157,10 @@ class BaseParser(ABC):
     def _base_setup(self):
         content = self.precomputed.html
         doc = lxml.html.fromstring(content)
-        ld_content = doc.xpath('string(//script[@type="application/ld+json"]/text())')
+        ld_nodes = doc.xpath("//script[@type='application/ld+json']")
+        lds = [json.loads(node.text_content()) for node in ld_nodes]
         self.precomputed.doc = doc
-        self.precomputed.ld = json.loads(ld_content) or {}
+        self.precomputed.ld = LinkedData({ld['@type']: ld for ld in lds})
         self.precomputed.meta = get_meta_content(doc) or {}
 
     def parse(self, html: str,
@@ -172,5 +212,5 @@ class BaseParser(ABC):
         return self.precomputed.meta
 
     @register_attribute
-    def ld(self) -> Dict[str, Any]:
+    def ld(self) -> LinkedData:
         return self.precomputed.ld
