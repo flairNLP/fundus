@@ -19,21 +19,26 @@ def strip_nodes_to_text(text_nodes: List) -> Optional[str]:
     return "\n\n".join(([re.sub(r'\n+', ' ', node.text_content()) for node in text_nodes])).strip()
 
 
-def generic_author_extraction(source: Dict[str, any], key_list: List[str]) -> Optional[List[str]]:
+def generic_author_extraction(source: Dict[str, any], key_list: List[str]) -> List[str]:
     current_dict = source
     for key in key_list:
         current_dict = current_dict.get(key, {})
 
     authors = current_dict
+    if not authors:
+        return []
 
     if isinstance(authors, str):
         return [authors]
 
     if isinstance(authors, list):
         authors = [author.get('name') for author in authors]
+
     else:
         authors = [authors.get('name')]
-    return authors
+
+    return [author for author in authors if author]
+
 
 
 def generic_plaintext_extraction_with_css(doc, selector: str) -> Optional[str]:
