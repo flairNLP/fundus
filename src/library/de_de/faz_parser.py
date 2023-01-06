@@ -10,7 +10,7 @@ class FAZParser(BaseParser):
 
     @register_attribute
     def plaintext(self) -> Optional[str]:
-        return generic_plaintext_extraction_with_css(self.precomputed.doc, 'div.paragraph')
+        return generic_plaintext_extraction_with_css(self.precomputed.doc, 'div.atc-Text > p')
 
     @register_attribute
     def topics(self) -> Optional[List[str]]:
@@ -22,8 +22,8 @@ class FAZParser(BaseParser):
 
     @register_attribute
     def authors(self) -> List[str]:
-        return generic_author_extraction(self.meta(), ['author'])
+        return generic_author_extraction(self.precomputed.meta, ['author'])
 
-    @register_attribute(priority=4)
+    @register_attribute
     def title(self) -> Optional[str]:
         return self.meta().get('og:title')
