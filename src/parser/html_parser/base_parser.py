@@ -2,9 +2,10 @@ import functools
 import inspect
 import json
 from abc import ABC
+from collections import defaultdict
 from copy import copy
 from dataclasses import dataclass, field
-from typing import Callable, Dict, Optional, Any, Literal, List
+from typing import Callable, Dict, Optional, Any, Literal, List, Union
 
 import lxml.html
 
@@ -83,10 +84,16 @@ def register_filter(cls=None, /, *, priority: int = None):
 
 
 # noinspection PyPep8Naming
-@dataclass(repr=False)
 class LinkedData:
     __slots__ = ['_ld_by_type']
-    _ld_by_type: Dict[str, Dict[str, any]]
+
+    def __init__(self, lds: List[Dict[str, any]]):
+        self._ld_by_type: Dict[str, Union[List[Dict[str, any]], Dict[str, any]]] = defaultdict(list)
+        for ld in lds:
+            if ld_type := ld.get('@type'):
+                self._ld_by_type[ld_type] = ld
+            else:
+                self._ld_by_type[ld_type].append(ld)
 
     @staticmethod
     def _property_names() -> List[str]:
@@ -107,8 +114,10 @@ class LinkedData:
         return {k: v for k, v in self._ld_by_type.items() if k not in self._property_names()}
 
     def get(self, key: str, default: any = None):
-        for ld in self._ld_by_type.values():
-            if value := ld.get(key):
+        for key, ld in self._ld_by_type.items():
+            if not key:
+                raise NotImplementedError("Currently this function does not support lds without types")
+            elif value := ld.get(key):
                 return value
         return default
 
@@ -160,7 +169,7 @@ class BaseParser(ABC):
         ld_nodes = doc.xpath("//script[@type='application/ld+json']")
         lds = [json.loads(node.text_content()) for node in ld_nodes]
         self.precomputed.doc = doc
-        self.precomputed.ld = LinkedData({ld['@type']: ld for ld in lds})
+        self.precomputed.ld = LinkedData(lds)
         self.precomputed.meta = get_meta_content(doc) or {}
 
     def parse(self, html: str,
