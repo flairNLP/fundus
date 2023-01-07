@@ -114,8 +114,8 @@ class LinkedData:
         return {k: v for k, v in self._ld_by_type.items() if k not in self._property_names()}
 
     def get(self, key: str, default: any = None):
-        for key, ld in self._ld_by_type.items():
-            if not key:
+        for name, ld in self._ld_by_type.items():
+            if not name:
                 raise NotImplementedError("Currently this function does not support lds without types")
             elif value := ld.get(key):
                 return value
