@@ -1,12 +1,12 @@
 import re
 from datetime import datetime
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Any
 
 import dateutil
 import lxml.html
 
 
-def _get_nested_value_with_key_path_as_list(source: dict, key_list: List[str]):
+def _get_nested_value_with_key_path_as_list(source: Dict[Any, Any], key_list: List[str]) -> Any:
     visited = []
     cur = source
     for key in key_list:
