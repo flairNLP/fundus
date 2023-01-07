@@ -114,7 +114,18 @@ class LinkedData:
         return {k: v for k, v in self._ld_by_type.items() if k not in self._property_names()}
 
     def get(self, key: str, default: any = None):
-        for name, ld in self._ld_by_type.items():
+        """
+        This function acts like get() on pythons Mapping type with the difference that this method will
+        iterate through all found ld types and return the first value where <key> matches. If no match occurs,
+        <default> will be returned.
+
+        If there is a ld without a type, thins methode will raise a NotImplementedError
+
+        :param key: The key to search vor
+        :param default: The returned default if <key> is not found, default: None
+        :return:
+        """
+        for name, ld in sorted(self._ld_by_type.items(), key=lambda t: t[0]):
             if not name:
                 raise NotImplementedError("Currently this function does not support lds without types")
             elif value := ld.get(key):
