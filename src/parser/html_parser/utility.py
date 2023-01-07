@@ -1,9 +1,23 @@
 import re
 from datetime import datetime
+from typing import Dict, List, Optional, Any
+from datetime import datetime
 from typing import Dict, List, Optional
 
 import dateutil
 import lxml.html
+
+
+def _get_nested_value_with_key_path_as_list(source: Dict[Any, Any], key_list: List[str]) -> Any:
+    visited = []
+    cur = source
+    for key in key_list:
+        if not isinstance(cur, dict):
+            raise TypeError(f"Key path '{' -> '.join(visited)}' leads to an unsupported Value in between. Only dict "
+                            f"is allowed.")
+        cur = cur.get(key)
+        visited.append(key)
+    return cur
 
 
 def get_meta_content(tree: lxml.html.HtmlElement) -> Dict[str, str]:
@@ -19,20 +33,25 @@ def strip_nodes_to_text(text_nodes: List) -> Optional[str]:
     return "\n\n".join(([re.sub(r'\n+', ' ', node.text_content()) for node in text_nodes])).strip()
 
 
-def generic_author_extraction(source: Dict[str, any], key_list: List[str]) -> Optional[List[str]]:
-    current_dict = source
-    for key in key_list:
-        current_dict = current_dict.get(key, {})
+def generic_author_extraction(source: Dict[str, any], key_list: List[str]) -> List[str]:
+    authors = _get_nested_value_with_key_path_as_list(source, key_list)
 
-    authors = current_dict
+    if not authors:
+        return []
 
     if isinstance(authors, str):
-        return [authors]
+        authors = [authors]
 
-    if isinstance(authors, list):
-        authors = [author.get('name') for author in authors]
+    elif isinstance(authors, list):
+        authors = [name for author in authors if (name := author.get('name'))]
+
+    elif isinstance(authors, dict):
+        authors = [name] if (name := authors.get('name')) else []
+
     else:
-        authors = [authors.get('name')]
+        raise TypeError(f"Value '{authors}' in 'source' dict with key path '{' -> '.join(key_list)}' has an unsupported"
+                        f"type. Supported types are 'str, list, dict'")
+
     return authors
 
 
@@ -41,13 +60,13 @@ def generic_plaintext_extraction_with_css(doc, selector: str) -> Optional[str]:
     return strip_nodes_to_text(nodes)
 
 
-def generic_topic_extraction(base_dict, key_word: str = "keywords") -> List[str]:
-    if keyword_str := base_dict.get(key_word):
-        return [e.strip(" ") for e in keyword_str.split(",")]
+def generic_topic_extraction(meta: Dict[str, any], key_word: str = "keywords", delimiter: str = ',') -> List[str]:
+    if keyword_str := meta.get(key_word):
+        return [keyword.strip() for keyword in keyword_str.split(delimiter)]
     return []
 
 
-def generic_date_extraction(base_dict, key_word: str = "datePublished") -> Optional[datetime]:
-    if date_str := base_dict.get(key_word):
+def generic_date_extraction(meta, key_word: str = "datePublished") -> Optional[datetime]:
+    if date_str := meta.get(key_word):
         return dateutil.parser.parse(date_str)
     return None
