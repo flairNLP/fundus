@@ -5,14 +5,16 @@ from typing import Dict, List, Optional, Any
 import dateutil
 import lxml.html
 
+from src.custom_types.structural_typing import HasGet
 
-def _get_nested_value_with_key_path_as_list(source: Dict[Any, Any], key_list: List[str]) -> Any:
+
+def _get_nested_value_with_key_path_as_list(source: HasGet, key_list: List[str]) -> Any:
     visited = []
     cur = source
     for key in key_list:
-        if not isinstance(cur, dict):
-            raise TypeError(f"Key path '{' -> '.join(visited)}' leads to an unsupported Value in between. Only dict "
-                            f"is allowed.")
+        if not hasattr(cur, 'get'):
+            raise TypeError(f"Key path '{' -> '.join(visited)}' leads to an unsupported value in between. Only objects"
+                            f" who implement a get method are allowed is allowed.")
         cur = cur.get(key)
         visited.append(key)
     return cur
@@ -31,7 +33,7 @@ def strip_nodes_to_text(text_nodes: List) -> Optional[str]:
     return "\n\n".join(([re.sub(r'\n+', ' ', node.text_content()) for node in text_nodes])).strip()
 
 
-def generic_author_extraction(source: Dict[str, any], key_list: List[str]) -> List[str]:
+def generic_author_extraction(source: HasGet, key_list: List[str]) -> List[str]:
     authors = _get_nested_value_with_key_path_as_list(source, key_list)
 
     if not authors:
