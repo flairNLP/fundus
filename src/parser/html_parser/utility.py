@@ -12,9 +12,9 @@ def _get_nested_value_with_key_path_as_list(source: HasGet, key_list: List[str])
     visited = []
     cur = source
     for key in key_list:
-        if not hasattr(cur, 'get'):
+        if not isinstance(cur, HasGet):
             raise TypeError(f"Key path '{' -> '.join(visited)}' leads to an unsupported value in between. Only objects"
-                            f" who implement a get method are allowed is allowed.")
+                            f" who implement a get method are allowed.")
         cur = cur.get(key)
         visited.append(key)
     return cur
