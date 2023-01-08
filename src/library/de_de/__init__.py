@@ -1,6 +1,7 @@
 from src.library.collection.base_objects import PublisherEnum, PublisherSpec
 from .die_welt_parser import DieWeltParser
 from .faz_parser import FAZParser
+from .focus_parser import FocusParser
 from .mdr_parser import MDRParser
 
 
@@ -21,3 +22,8 @@ class DE_DE(PublisherEnum):
                                    'https://www.faz.net/rss/aktuell/wirtschaft/',
                                    'https://www.faz.net/rss/aktuell/gesellschaft/'],
                         parser=FAZParser)
+
+    Focus = PublisherSpec(domain='https://www.focus.de/',
+                          rss_feeds=['https://rss.focus.de/fol/XML/rss_folnews.xml'],
+                          sitemaps=[],
+                          parser=FocusParser)
