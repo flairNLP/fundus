@@ -208,6 +208,19 @@ class BaseParser(ABC):
         self.precomputed = Precomputed()
 
     # base attribute section
+    # These attributes present a significant design flaw
+    # We would like to expose them in the article, but also include them in the precomputed attribute.
+    # We would like to include them in the precomputed attribute, because they are both easy to obtain
+    # and useful for the extraction of other attributes.
+    # We would like to expose them in the article, because they are useful for the end user, for
+    # example to filter out articles based on metadata.
+    # But doing both contradicts "There should be one-- and preferably only one --obvious way to do it." as
+    # quoted in PEP 20 (Zen of Python) at https://peps.python.org/pep-0020/
+    # In this particular instance it is not obvious which of
+    # "parser.ld()"  vs  "parser.precomputed.ld"  should be used.
+    # Maintaining both is possible, but is both confusing and error-prone.
+    # As of 2023-01-08 there is no clear solution to this problem.
+
     @register_attribute
     def meta(self) -> Dict[str, Any]:
         return self.precomputed.meta
