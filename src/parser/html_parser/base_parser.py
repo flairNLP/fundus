@@ -83,9 +83,8 @@ def register_filter(cls=None, /, *, priority: int = None):
     return _register(cls, flow_type='filter', priority=priority)
 
 
-# noinspection PyPep8Naming
 class LinkedData:
-    __slots__ = ['_ld_by_type']
+    __slots__ = ['_ld_by_type', '__dict__']
 
     def __init__(self, lds: List[Dict[str, any]]):
         self._ld_by_type: Dict[str, Union[List[Dict[str, any]], Dict[str, any]]] = defaultdict(list)
@@ -95,23 +94,10 @@ class LinkedData:
             else:
                 self._ld_by_type[ld_type].append(ld)
 
-    @staticmethod
-    def _property_names() -> List[str]:
-        property_names = [p for p in dir(LinkedData) if isinstance(getattr(LinkedData, p), property)]
-        property_names.remove('unsupported')
-        return property_names
+        for name, ld in sorted(self._ld_by_type.items(), key=lambda t: t[0]):
+            self.__dict__[name] = ld
 
-    @property
-    def VideoObject(self) -> Dict[str, any]:
-        return self._ld_by_type.get('VideoObject', {})
-
-    @property
-    def NewsArticle(self) -> Dict[str, any]:
-        return self._ld_by_type.get('NewsArticle', {})
-
-    @property
-    def unsupported(self) -> Dict[str, any]:
-        return {k: v for k, v in self._ld_by_type.items() if k not in self._property_names()}
+        self._contains = [ld_type for ld_type in self._ld_by_type.keys() if ld_type is not None]
 
     def get(self, key: str, default: any = None):
         """
@@ -133,12 +119,7 @@ class LinkedData:
         return default
 
     def __repr__(self):
-        contains = [name for name in self._property_names() if getattr(self, name)]
-        text = f"LD containing '{', '.join(contains)}'"
-        if u := self.unsupported:
-            tmp = f" and unsupported {', '.join(u.keys())}"
-            text = text + tmp
-        return text
+        return f"LD containing '{', '.join(self._contains)}'"
 
 
 @dataclass
