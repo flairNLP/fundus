@@ -1,6 +1,5 @@
 import datetime
-import re
-from typing import Optional, List, Match
+from typing import Optional, List
 
 from src.parser.html_parser import BaseParser, register_attribute
 from src.parser.html_parser.utility import generic_plaintext_extraction_with_css, generic_author_extraction, \
@@ -26,8 +25,8 @@ class SZParser(BaseParser):
 
     @register_attribute
     def title(self):
-        return self.ld().get('headline')
+        return self.precomputed.ld.get('headline')
 
     @register_attribute
     def topics(self) -> List[str]:
-        return  generic_topic_extraction(self.precomputed.ld)
+        return generic_topic_extraction(self.precomputed.ld)
