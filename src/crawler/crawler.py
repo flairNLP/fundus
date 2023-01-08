@@ -28,7 +28,7 @@ class Crawler:
     def crawl(self,
               max_articles: int = None,
               restrict_sources_to: Literal['rss', 'sitemap'] = None,
-              error_handling: Literal['suppress', 'catch', 'raise'] = 'catch') -> Generator[Article, None, None]:
+              error_handling: Literal['suppress', 'catch', 'raise'] = 'raise') -> Generator[Article, None, None]:
 
         pipelines: List[CrawlerPipeline] = []
         for spec in self.publishers:

@@ -2,9 +2,10 @@ import functools
 import inspect
 import json
 from abc import ABC
+from collections import defaultdict
 from copy import copy
 from dataclasses import dataclass, field
-from typing import Callable, Dict, Optional, Any, Literal, List
+from typing import Callable, Dict, Optional, Any, Literal, List, Union
 
 import lxml.html
 
@@ -82,12 +83,51 @@ def register_filter(cls=None, /, *, priority: int = None):
     return _register(cls, flow_type='filter', priority=priority)
 
 
+class LinkedData:
+    __slots__ = ['_ld_by_type', '__dict__']
+
+    def __init__(self, lds: List[Dict[str, any]]):
+        self._ld_by_type: Dict[str, Union[List[Dict[str, any]], Dict[str, any]]] = defaultdict(list)
+        for ld in lds:
+            if ld_type := ld.get('@type'):
+                self._ld_by_type[ld_type] = ld
+            else:
+                self._ld_by_type[ld_type].append(ld)
+
+        for name, ld in sorted(self._ld_by_type.items(), key=lambda t: t[0]):
+            self.__dict__[name] = ld
+
+        self._contains = [ld_type for ld_type in self._ld_by_type.keys() if ld_type is not None]
+
+    def get(self, key: str, default: any = None):
+        """
+        This function acts like get() on pythons Mapping type with the difference that this method will
+        iterate through all found ld types and return the first value where <key> matches. If no match occurs,
+        <default> will be returned.
+
+        If there is a ld without a type, thins methode will raise a NotImplementedError
+
+        :param key: The key to search vor
+        :param default: The returned default if <key> is not found, default: None
+        :return:
+        """
+        for name, ld in sorted(self._ld_by_type.items(), key=lambda t: t[0]):
+            if not name:
+                raise NotImplementedError("Currently this function does not support lds without types")
+            elif value := ld.get(key):
+                return value
+        return default
+
+    def __repr__(self):
+        return f"LD containing '{', '.join(self._contains)}'"
+
+
 @dataclass
 class Precomputed:
     html: str = None
     doc: lxml.html.HtmlElement = None
     meta: Dict[str, Any] = field(default_factory=dict)
-    ld: Dict[str, Any] = field(default_factory=dict)
+    ld: LinkedData = None
     cache: Dict[str, Any] = field(default_factory=dict)
 
 
@@ -118,9 +158,10 @@ class BaseParser(ABC):
     def _base_setup(self):
         content = self.precomputed.html
         doc = lxml.html.fromstring(content)
-        ld_content = doc.xpath('string(//script[@type="application/ld+json"]/text())')
+        ld_nodes = doc.xpath("//script[@type='application/ld+json']")
+        lds = [json.loads(node.text_content()) for node in ld_nodes]
         self.precomputed.doc = doc
-        self.precomputed.ld = json.loads(ld_content) or {}
+        self.precomputed.ld = LinkedData(lds)
         self.precomputed.meta = get_meta_content(doc) or {}
 
     def parse(self, html: str,
@@ -172,5 +213,5 @@ class BaseParser(ABC):
         return self.precomputed.meta
 
     @register_attribute
-    def ld(self) -> Dict[str, Any]:
+    def ld(self) -> LinkedData:
         return self.precomputed.ld
