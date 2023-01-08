@@ -1,7 +1,6 @@
 from src.library.collection.base_objects import PublisherEnum, PublisherSpec
 from .die_welt_parser import DieWeltParser
 from .faz_parser import FAZParser
-from .faz_parser import FAZParser
 from .focus_parser import FocusParser
 from .mdr_parser import MDRParser
 
