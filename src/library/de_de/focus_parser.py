@@ -8,6 +8,9 @@ from src.parser.html_parser.utility import generic_plaintext_extraction_with_css
 
 
 class FocusParser(BaseParser):
+    _author_substitution_pattern: re.Pattern = re.compile(r'Von FOCUS-online-(Redakteur|Autorin)\s')
+    _topic_pattern: re.Pattern = re.compile(r'"keywords":\[{(.*?)}\]')
+    _topic_name_pattern: re.Pattern = re.compile(r'"name":"(.*?)"', flags=re.MULTILINE)
 
     @register_attribute
     def plaintext(self) -> Optional[str]:
@@ -18,7 +21,10 @@ class FocusParser(BaseParser):
 
     @register_attribute
     def authors(self) -> List[str]:
-        return generic_author_extraction(self.precomputed.ld, ["author"])
+        author_names = generic_author_extraction(self.precomputed.ld, ["author"])
+        for i, name in enumerate(author_names):
+            author_names[i] = re.sub(self._author_substitution_pattern, '', name)
+        return author_names
 
     @register_attribute
     def publishing_date(self) -> Optional[datetime.datetime]:
@@ -35,19 +41,10 @@ class FocusParser(BaseParser):
             'string(//script[@type="text/javascript"][contains(text(), "window.bf__bfa_metadata")])')
         if not snippet:
             return []
-        js: str = snippet.replace('\n', '')
 
-        regex: str = r'\"hyscore\":{\s*\"keywords\":\[(.*?)]'
-        parsed_topics: Optional[Match] = re.search(regex, str(js), flags=re.MULTILINE)
-        if parsed_topics:
-            result = parsed_topics.group(1).replace('\"', '').split(",")
-
-        else:
+        match: Optional[Match] = re.search(self._topic_pattern, snippet)
+        if not match:
             return []
+        topic_names: List[str] = re.findall(self._topic_name_pattern, match.group(1))
 
-        split_topics = []
-        for topic_el in result:
-            split = re.findall('[A-Z][^A-Z]*', topic_el)
-            split_topics.append(" ".join(split))
-
-        return split_topics
+        return topic_names
