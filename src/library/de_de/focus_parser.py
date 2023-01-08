@@ -26,7 +26,7 @@ class FocusParser(BaseParser):
 
     @register_attribute
     def title(self):
-        return self.ld().get('headline')
+        return self.precomputed.ld.get('headline')
 
     @register_attribute
     def topics(self) -> List[str]:
