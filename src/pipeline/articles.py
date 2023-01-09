@@ -2,7 +2,9 @@ import json
 from abc import ABC
 from dataclasses import dataclass
 from datetime import datetime
+from textwrap import TextWrapper, dedent
 from typing import Any, Callable, List, Dict, Optional
+from colorama import Fore, Style
 
 
 @dataclass(frozen=True)
@@ -60,4 +62,20 @@ class Article(BaseArticle):
     def authors(self) -> List[str]:
         return self.extracted.get('authors', []) if self.extracted else None
 
+    def __str__(self):
+        # the subsequent indent here is a bit wacky, but textwrapper.dedent won't work with tabs, so we have to use
+        # whitespaces instead.
+        text_wrapper = TextWrapper(width=100, max_lines=5, initial_indent='"', subsequent_indent='             ')
+        wrapped_title = text_wrapper.fill(self.title or f"{Fore.RED}--missing title--{Style.RESET_ALL}")
+        wrapped_plaintext = text_wrapper.fill(self.plaintext or f"{Fore.RED}--missing plaintext--{Style.RESET_ALL}")
 
+        text = f"""
+            {wrapped_title}"
+                - by {', '.join(self.authors) if self.authors else f"{Fore.RED}--missing authors--{Style.RESET_ALL}"}
+            
+            {wrapped_plaintext}"
+            
+            from: {self.url}
+        """
+
+        return dedent(text)
