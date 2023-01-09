@@ -1,7 +1,6 @@
 import re
 from datetime import datetime
-from typing import Dict, List, Optional, Any
-from datetime import datetime
+from typing import Any
 from typing import Dict, List, Optional
 
 import dateutil
@@ -71,4 +70,21 @@ def generic_topic_extraction(meta: Dict[str, any], key_word: str = "keywords", d
 def generic_date_extraction(meta, key_word: str = "datePublished") -> Optional[datetime]:
     if date_str := meta.get(key_word):
         return dateutil.parser.parse(date_str)
+    return None
+
+
+def generic_article_id_extraction_from_url(article_url: str, publisher_regex: str) -> Optional[str]:
+    """
+    This method aims to extract a unique identifier for the article from the URL
+    :param article_url: The URL of the article
+    :param publisher_regex: A regex which matches the article ID in the URL
+    :return: An unique identifier for the article found at this url
+    """
+
+    search_result = re.search(publisher_regex, article_url)
+
+    if search_result:
+        # We match by group name
+        return search_result.group("id_group")
+
     return None

@@ -23,7 +23,7 @@ class MerkurParser(BaseParser):
 
     @register_attribute
     def publishing_date(self) -> Optional[datetime.datetime]:
-        return generic_date_extraction(self.precomputed.ld["mainEntity"])
+        return generic_date_extraction(self.precomputed.ld.get("mainEntity"))
 
     @register_attribute
     def title(self):
