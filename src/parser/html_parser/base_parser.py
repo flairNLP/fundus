@@ -138,7 +138,7 @@ class LinkedData:
                 return default
         return tmp
 
-    def breadth_first_search(self, key: str, depth: int = None) -> Any:
+    def bf_search(self, key: str, depth: int = None) -> Any:
         """
         This is a classic BF search on the nested dicts representing the JSON-LD. <key> specifies the dict key to
         search, <depth> the depth level. If the depth level is set to None, this method will search through the whole
