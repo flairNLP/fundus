@@ -26,4 +26,4 @@ class FAZParser(BaseParser):
 
     @register_attribute
     def title(self) -> Optional[str]:
-        return self.meta().get('og:title')
+        return self.precomputed.meta.get('og:title')

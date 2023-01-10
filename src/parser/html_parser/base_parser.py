@@ -1,6 +1,7 @@
 import functools
 import inspect
 import json
+import re
 from abc import ABC
 from collections import defaultdict
 from copy import copy
@@ -175,19 +176,21 @@ class BaseParser(ABC):
 
         for func in sorted(self._registered_functions):
 
+            attribute_name = re.sub(r'^_{1,2}([^_]*_?)$', r'\g<1>', func.__name__)
+
             if func.flow_type == 'function':
                 func()
 
             elif func.flow_type == 'attribute':
                 try:
-                    article_cache[func.__name__] = func()
+                    article_cache[attribute_name] = func()
                 except Exception as err:
                     if error_handling == 'raise':
                         raise err
                     elif error_handling == 'catch':
-                        article_cache[func.__name__] = err
+                        article_cache[attribute_name] = err
                     elif error_handling == 'suppress':
-                        article_cache[func.__name__] = None
+                        article_cache[attribute_name] = None
                     else:
                         raise ValueError(f"Invalid value '{error_handling}' for parameter <error_handling>")
 
@@ -209,9 +212,9 @@ class BaseParser(ABC):
 
     # base attribute section
     @register_attribute
-    def meta(self) -> Dict[str, Any]:
+    def __meta(self) -> Dict[str, Any]:
         return self.precomputed.meta
 
     @register_attribute
-    def ld(self) -> LinkedData:
+    def __ld(self) -> LinkedData:
         return self.precomputed.ld
