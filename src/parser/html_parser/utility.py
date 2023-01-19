@@ -64,20 +64,3 @@ def generic_topic_parsing(keyword_str: str, delimiter: str = ',') -> List[str]:
 
 def generic_date_parsing(date_str: str) -> Optional[datetime]:
     return dateutil.parser.parse(date_str) if date_str else None
-
-
-def generic_article_id_extraction_from_url(article_url: str, publisher_regex: str) -> Optional[str]:
-    """
-    This method aims to extract a unique identifier for the article from the URL
-    :param article_url: The URL of the article
-    :param publisher_regex: A regex which matches the article ID in the URL
-    :return: An unique identifier for the article found at this url
-    """
-
-    search_result = re.search(publisher_regex, article_url)
-
-    if search_result:
-        # We match by group name
-        return search_result.group("id_group")
-
-    return None
