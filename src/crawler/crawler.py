@@ -1,7 +1,8 @@
-import itertools
 from collections import defaultdict
 from functools import cached_property
 from typing import Union, List, Dict, Literal, Generator
+
+import more_itertools
 
 from src.library.collection.base_objects import PublisherEnum
 from src.pipeline.articles import Article
@@ -40,9 +41,14 @@ class Crawler:
             if restrict_sources_to == 'sitemap' or restrict_sources_to is None:
                 pass
 
-        chain = itertools.chain.from_iterable(pipelines)
+        robin = more_itertools.interleave_longest(*tuple(pipelines))
 
         if max_articles:
-            yield from itertools.islice(chain, max_articles)
+            while max_articles:
+                try:
+                    yield next(robin)
+                except StopIteration:
+                    pass
+                max_articles -= 1
         else:
-            yield from chain
+            yield from robin
