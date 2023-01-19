@@ -1,34 +1,31 @@
 import datetime
-from typing import Optional
-
-import dateutil.parser
+from typing import Optional, List
 
 from src.parser.html_parser import BaseParser, register_attribute
-from src.parser.html_parser.utility import strip_nodes_to_text
+from src.parser.html_parser.utility import (generic_plaintext_extraction_with_css, generic_topic_parsing,
+                                            generic_date_parsing)
 
 
 class MDRParser(BaseParser):
 
     @register_attribute
     def plaintext(self) -> Optional[str]:
-        doc = self.precomputed.doc
-        if nodes := doc.cssselect('div.paragraph'):
-            return strip_nodes_to_text(nodes)
+        return generic_plaintext_extraction_with_css(self.precomputed.doc, 'div.paragraph')
 
     @register_attribute
-    def topics(self) -> Optional[str]:
-        if topics := self.precomputed.meta.get('news_keywords'):
-            return topics.split(', ')
+    def topics(self) -> List[str]:
+        return generic_topic_parsing(self.precomputed.meta.get('news_keywords'))
 
     @register_attribute
     def publishing_date(self) -> Optional[datetime.datetime]:
-        if date_string := self.precomputed.ld.get('datePublished'):
-            return dateutil.parser.parse(date_string)
+        return generic_date_parsing(self.precomputed.ld.get('datePublished'))
 
     @register_attribute
-    def authors(self) -> str:
-        if author_dict := self.precomputed.ld.get('author'):
-            return author_dict.get('name')
+    def authors(self) -> List[str]:
+        if author := generic_plaintext_extraction_with_css(self.precomputed.doc, '.articleMeta > .author'):
+            cleaned_author = author.replace('von', '').replace(' und ', ', ')
+            return [name.strip() for name in cleaned_author.split(',')]
+        return []
 
     @register_attribute
     def title(self) -> Optional[str]:

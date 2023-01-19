@@ -3,8 +3,8 @@ import re
 from typing import Optional, List, Match
 
 from src.parser.html_parser import BaseParser, register_attribute
-from src.parser.html_parser.utility import generic_plaintext_extraction_with_css, generic_author_extraction, \
-    generic_date_extraction
+from src.parser.html_parser.utility import generic_plaintext_extraction_with_css, generic_author_parsing, \
+    generic_date_parsing
 
 
 class FocusParser(BaseParser):
@@ -21,14 +21,14 @@ class FocusParser(BaseParser):
 
     @register_attribute
     def authors(self) -> List[str]:
-        author_names = generic_author_extraction(self.precomputed.ld, ["author"])
+        author_names = generic_author_parsing(self.precomputed.ld.get("author"))
         for i, name in enumerate(author_names):
             author_names[i] = re.sub(self._author_substitution_pattern, '', name)
         return author_names
 
     @register_attribute
     def publishing_date(self) -> Optional[datetime.datetime]:
-        return generic_date_extraction(self.precomputed.ld)
+        return generic_date_parsing(self.precomputed.ld.get('datePublished'))
 
     @register_attribute
     def title(self):
