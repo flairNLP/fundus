@@ -1,41 +1,28 @@
 import datetime
 from typing import Optional, List
 
-import dateutil.parser
-import lxml.html
-
 from src.parser.html_parser import BaseParser, register_attribute
-from src.parser.html_parser.utility import strip_nodes_to_text
-from stream.utils import listify
+from src.parser.html_parser.utility import generic_plaintext_extraction_with_css, \
+    generic_author_parsing, generic_date_parsing
 
 
 class DieWeltParser(BaseParser):
 
     @register_attribute
     def plaintext(self) -> Optional[str]:
-        doc: lxml.html.HtmlElement = self.precomputed.doc
-        selector: str = (
-            "body .c-summary > div, "
-            "body .c-article-text > p"
-        )
-        if nodes := doc.cssselect(selector):
-            return strip_nodes_to_text(nodes)
+        return generic_plaintext_extraction_with_css(self.precomputed.doc, 'body .c-article-text > p')
 
     @register_attribute
     def authors(self) -> List[str]:
-        if author_entries := self.precomputed.ld.get('author'):
-            return [entry['name'] for entry in listify(author_entries) if entry.get('name')]
-        else:
-            return []
+        return generic_author_parsing(self.precomputed.ld.bf_search('author'))
 
     @register_attribute
     def publishing_date(self) -> Optional[datetime.datetime]:
-        if iso_date_str := self.precomputed.ld.get('datePublished'):
-            return dateutil.parser.parse(iso_date_str)
+        return generic_date_parsing(self.precomputed.ld.bf_search('datePublished'))
 
     @register_attribute
     def title(self):
-        return self.precomputed.ld.get('headline')
+        return self.precomputed.ld.bf_search('headline')
 
     @register_attribute
     def topics(self) -> List[str]:
