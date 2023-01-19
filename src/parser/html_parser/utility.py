@@ -33,7 +33,7 @@ def strip_nodes_to_text(text_nodes: List) -> Optional[str]:
     return "\n\n".join(([re.sub(r'\n+', ' ', node.text_content()) for node in text_nodes])).strip()
 
 
-def generic_author_parsing(value: Union[str, dict, List[dict]]) -> List[str]:
+def generic_author_parsing(value: Union[str, dict, List[dict]]) -> Optional[List[str]]:
     if not value:
         return []
 
