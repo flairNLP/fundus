@@ -196,7 +196,7 @@ class LinkedData:
                     if isinstance(node, dict) and (value := node.get(key)):
                         return value
                     new.extend(v for v in node.values() if isinstance(v, dict))
-                return search_recursive(new, current_depth + 1)
+                return search_recursive(new, current_depth + 1) if new else None
 
         return search_recursive(self._ld_by_type.values(), 0)
 
