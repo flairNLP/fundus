@@ -1,12 +1,68 @@
 import re
+from dataclasses import dataclass, field
 from datetime import datetime
-from typing import Any, Union
+from functools import total_ordering
+from typing import Any, Union, Tuple
 from typing import Dict, List, Optional
 
 import dateutil
 import lxml.html
+import more_itertools
 
 from src.custom_types.structural_typing import HasGet
+from src.parser.html_parser.data import ArticleBody
+
+
+@total_ordering
+@dataclass
+class Node:
+    position: int
+    node: lxml.html.HtmlElement = field(compare=False)
+    type: str = field(compare=False)
+
+    def __eq__(self, other: 'Node') -> bool:
+        return self.position == other.position
+
+    def __lt__(self, other: 'Node') -> bool:
+        return self.position < other.position
+
+    def __hash__(self) -> int:
+        return hash(self.position)
+
+    def __str__(self) -> str:
+        return self.node.text_content()
+
+    def __repr__(self) -> Tuple[int, hex, str]:
+        return self.position, hex(id(self)), self.type
+
+
+def extract_article_body_with_css(doc: lxml.html.HtmlElement,
+                                  meta: dict,
+                                  paragraph_selector: str,
+                                  summary_selector: str = None,
+                                  subhead_selector: str = None) -> ArticleBody:
+    # depth first index for each element in tree
+    df_idx_by_ref = {element: i for i, element in enumerate(doc.iter())}
+
+    def extract_nodes(selector: str, node_type: str) -> List[Node]:
+        if not selector and node_type:
+            raise ValueError("Both a selector and node type are required")
+        return [Node(df_idx_by_ref.get(element), element, node_type) for element in doc.cssselect(selector)]
+
+    summary_nodes = extract_nodes(summary_selector, 'S') if summary_selector else []
+    subhead_nodes = extract_nodes(subhead_selector, 'H') if subhead_selector else []
+    paragraph_nodes = extract_nodes(paragraph_selector, 'P')
+    nodes = sorted(summary_nodes + subhead_nodes + paragraph_nodes)
+
+    instructions = more_itertools.split_when(nodes, pred=lambda x, y: x.type != y.type)
+
+    # if not summary_nodes:
+    #     instructions = more_itertools.prepend([], instructions)
+
+    if subhead_nodes[0] > paragraph_nodes[0]:
+        instructions = more_itertools.prepend([], instructions)
+
+    return ArticleBody.from_instructions(instructions)
 
 
 def _get_nested_value_with_key_path_as_list(source: HasGet, key_list: List[str]) -> Any:

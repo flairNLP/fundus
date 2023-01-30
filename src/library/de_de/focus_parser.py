@@ -2,9 +2,9 @@ import datetime
 import re
 from typing import Optional, List, Match
 
-from src.parser.html_parser import BaseParser, register_attribute
-from src.parser.html_parser.utility import generic_plaintext_extraction_with_css, generic_author_parsing, \
-    generic_date_parsing
+from src.parser.html_parser import BaseParser, register_attribute, ArticleBody
+from src.parser.html_parser.utility import generic_author_parsing, \
+    generic_date_parsing, extract_article_body_with_css
 
 
 class FocusParser(BaseParser):
@@ -13,11 +13,12 @@ class FocusParser(BaseParser):
     _topic_name_pattern: re.Pattern = re.compile(r'"name":"(.*?)"', flags=re.MULTILINE)
 
     @register_attribute
-    def plaintext(self) -> Optional[str]:
-        return generic_plaintext_extraction_with_css(self.precomputed.doc,
-                                                     "div .leadIn > p, "
-                                                     "div .textBlock > p, "
-                                                     "div .textBlock > h2")
+    def plaintext(self) -> Optional[ArticleBody]:
+        return extract_article_body_with_css(self.precomputed.doc,
+                                             self.precomputed.meta,
+                                             # summary_selector='div.leadIn > p',
+                                             subhead_selector='div.textBlock > h2',
+                                             paragraph_selector='div.textBlock > p')
 
     @register_attribute
     def authors(self) -> List[str]:

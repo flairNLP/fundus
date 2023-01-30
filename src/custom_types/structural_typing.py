@@ -11,3 +11,9 @@ class HasGet(Protocol):
 
     def get(self, key: KT, default: Union[VT_co, T]) -> Union[VT_co, T]:
         ...
+
+
+class SupportsText(Protocol):
+
+    def __str__(self) -> str:
+        ...
