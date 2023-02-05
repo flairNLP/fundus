@@ -18,7 +18,7 @@ class FAZParser(BaseParser):
 
     @register_attribute
     def publishing_date(self) -> Optional[datetime.datetime]:
-        return generic_date_parsing(self.precomputed.ld.get('datePublished'))
+        return generic_date_parsing(self.precomputed.ld.bf_search('datePublished'))
 
     @register_attribute
     def authors(self) -> List[str]:
