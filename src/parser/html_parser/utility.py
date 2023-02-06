@@ -1,23 +1,9 @@
 import re
 from datetime import datetime
-from typing import Dict, List, Optional, Any
+from typing import Dict, List, Optional, Union
 
-import dateutil
 import lxml.html
-
-from src.custom_types.structural_typing import HasGet
-
-
-def _get_nested_value_with_key_path_as_list(source: HasGet, key_list: List[str]) -> Any:
-    visited = []
-    cur = source
-    for key in key_list:
-        if not isinstance(cur, HasGet):
-            raise TypeError(f"Key path '{' -> '.join(visited)}' leads to an unsupported value in between. Only objects"
-                            f" who implement a get method are allowed.")
-        cur = cur.get(key)
-        visited.append(key)
-    return cur
+from dateutil import parser
 
 
 def get_meta_content(tree: lxml.html.HtmlElement) -> Dict[str, str]:
@@ -33,26 +19,24 @@ def strip_nodes_to_text(text_nodes: List) -> Optional[str]:
     return "\n\n".join(([re.sub(r'\n+', ' ', node.text_content()) for node in text_nodes])).strip()
 
 
-def generic_author_extraction(source: HasGet, key_list: List[str]) -> List[str]:
-    authors = _get_nested_value_with_key_path_as_list(source, key_list)
-
-    if not authors:
+def generic_author_parsing(value: Union[str, dict, List[dict]]) -> List[str]:
+    if not value:
         return []
 
-    if isinstance(authors, str):
-        authors = [authors]
+    if isinstance(value, str):
+        authors = [value]
 
-    elif isinstance(authors, list):
-        authors = [name for author in authors if (name := author.get('name'))]
+    elif isinstance(value, list):
+        authors = [name for author in value if (name := author.get('name'))]
 
-    elif isinstance(authors, dict):
-        authors = [name] if (name := authors.get('name')) else []
+    elif isinstance(value, dict):
+        authors = [name] if (name := value.get('name')) else []
 
     else:
-        raise TypeError(f"Value '{authors}' in 'source' dict with key path '{' -> '.join(key_list)}' has an unsupported"
-                        f"type. Supported types are 'str, list, dict'")
+        raise TypeError(f"<value> '{value}' has an unsupported type {type(value)}. "
+                        f"Supported types are 'str, dict, List[dict]'")
 
-    return authors
+    return [name.strip() for name in authors]
 
 
 def generic_plaintext_extraction_with_css(doc, selector: str) -> Optional[str]:
@@ -60,13 +44,9 @@ def generic_plaintext_extraction_with_css(doc, selector: str) -> Optional[str]:
     return strip_nodes_to_text(nodes)
 
 
-def generic_topic_extraction(meta: Dict[str, any], key_word: str = "keywords", delimiter: str = ',') -> List[str]:
-    if keyword_str := meta.get(key_word):
-        return [keyword.strip() for keyword in keyword_str.split(delimiter)]
-    return []
+def generic_topic_parsing(keyword_str: str, delimiter: str = ',') -> List[str]:
+    return [keyword.strip() for keyword in keyword_str.split(delimiter)] if keyword_str else []
 
 
-def generic_date_extraction(meta, key_word: str = "datePublished") -> Optional[datetime]:
-    if date_str := meta.get(key_word):
-        return dateutil.parser.parse(date_str)
-    return None
+def generic_date_parsing(date_str: str) -> Optional[datetime]:
+    return parser.parse(date_str) if date_str else None

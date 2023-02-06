@@ -2,15 +2,16 @@ import datetime
 from typing import Optional, List
 
 from src.parser.html_parser import BaseParser, register_attribute
-from src.parser.html_parser.utility import generic_plaintext_extraction_with_css, \
-    generic_author_parsing, generic_date_parsing
+from src.parser.html_parser.utility import generic_plaintext_extraction_with_css, generic_author_parsing, \
+    generic_date_parsing
 
 
-class DieWeltParser(BaseParser):
+class OrfParser(BaseParser):
 
     @register_attribute
     def plaintext(self) -> Optional[str]:
-        return generic_plaintext_extraction_with_css(self.precomputed.doc, 'body .c-article-text > p')
+        return generic_plaintext_extraction_with_css(self.precomputed.doc,
+                                                     "div.story-story > p:not(.caption.tvthek.stripe-credits)")
 
     @register_attribute
     def authors(self) -> List[str]:
@@ -22,9 +23,4 @@ class DieWeltParser(BaseParser):
 
     @register_attribute
     def title(self):
-        return self.precomputed.ld.bf_search('headline')
-
-    @register_attribute
-    def topics(self) -> List[str]:
-        if keyword_str := self.precomputed.meta.get('keywords'):
-            return keyword_str.split(', ')
+        return self.precomputed.meta.get('og:title')
