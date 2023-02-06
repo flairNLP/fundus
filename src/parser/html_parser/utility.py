@@ -2,8 +2,8 @@ import re
 from datetime import datetime
 from typing import Dict, List, Optional, Union
 
-from dateutil import parser
 import lxml.html
+from dateutil import parser
 
 
 def get_meta_content(tree: lxml.html.HtmlElement) -> Dict[str, str]:
