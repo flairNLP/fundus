@@ -1,23 +1,9 @@
 import re
 from datetime import datetime
-from typing import Any, Union, Dict, List, Optional
+from typing import Dict, List, Optional, Union
 
-import dateutil
+from dateutil import parser
 import lxml.html
-
-from src.custom_types.structural_typing import HasGet
-
-
-def _get_nested_value_with_key_path_as_list(source: HasGet, key_list: List[str]) -> Any:
-    visited = []
-    cur = source
-    for key in key_list:
-        if not isinstance(cur, HasGet):
-            raise TypeError(f"Key path '{' -> '.join(visited)}' leads to an unsupported value in between. Only objects"
-                            f" who implement a get method are allowed.")
-        cur = cur.get(key)
-        visited.append(key)
-    return cur
 
 
 def get_meta_content(tree: lxml.html.HtmlElement) -> Dict[str, str]:
@@ -63,4 +49,4 @@ def generic_topic_parsing(keyword_str: str, delimiter: str = ',') -> List[str]:
 
 
 def generic_date_parsing(date_str: str) -> Optional[datetime]:
-    return dateutil.parser.parse(date_str) if date_str else None
+    return parser.parse(date_str) if date_str else None
