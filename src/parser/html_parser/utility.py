@@ -1,9 +1,9 @@
 import re
 from datetime import datetime
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Union
 
-import dateutil
 import lxml.html
+from dateutil import parser
 
 
 def get_meta_content(tree: lxml.html.HtmlElement) -> Dict[str, str]:
@@ -19,21 +19,24 @@ def strip_nodes_to_text(text_nodes: List) -> Optional[str]:
     return "\n\n".join(([re.sub(r'\n+', ' ', node.text_content()) for node in text_nodes])).strip()
 
 
-def generic_author_extraction(source: Dict[str, any], key_list: List[str]) -> Optional[List[str]]:
-    current_dict = source
-    for key in key_list:
-        current_dict = current_dict.get(key, {})
+def generic_author_parsing(value: Union[str, dict, List[dict]]) -> List[str]:
+    if not value:
+        return []
 
-    authors = current_dict
+    if isinstance(value, str):
+        authors = [value]
 
-    if isinstance(authors, str):
-        return [authors]
+    elif isinstance(value, list):
+        authors = [name for author in value if (name := author.get('name'))]
 
-    if isinstance(authors, list):
-        authors = [author.get('name') for author in authors]
+    elif isinstance(value, dict):
+        authors = [name] if (name := value.get('name')) else []
+
     else:
-        authors = [authors.get('name')]
-    return authors
+        raise TypeError(f"<value> '{value}' has an unsupported type {type(value)}. "
+                        f"Supported types are 'str, dict, List[dict]'")
+
+    return [name.strip() for name in authors]
 
 
 def generic_plaintext_extraction_with_css(doc, selector: str) -> Optional[str]:
@@ -41,30 +44,9 @@ def generic_plaintext_extraction_with_css(doc, selector: str) -> Optional[str]:
     return strip_nodes_to_text(nodes)
 
 
-def generic_topic_extraction(base_dict, key_word: str = "keywords") -> List[str]:
-    if keyword_str := base_dict.get(key_word):
-        return [e.strip(" ") for e in keyword_str.split(",")]
-    return []
+def generic_topic_parsing(keyword_str: str, delimiter: str = ',') -> List[str]:
+    return [keyword.strip() for keyword in keyword_str.split(delimiter)] if keyword_str else []
 
 
-def generic_date_extraction(base_dict, key_word: str = "datePublished") -> Optional[datetime]:
-    if date_str := base_dict.get(key_word):
-        return dateutil.parser.parse(date_str)
-    return None
-
-
-def generic_article_id_extraction_from_url(article_url, publisher_regex) -> Optional[str]:
-    """
-    This method aims to extract a unique identifier for the article from either the URL
-    :param article_url: The URL of the article
-    :param publisher_regex: The HTML of the article
-    :return: An unique identifier for the article found at this url
-    """
-
-    search_result = re.search(publisher_regex, article_url)
-
-    if search_result:
-        # We match by group name
-        return search_result.group("id_group")
-
-    return None
+def generic_date_parsing(date_str: str) -> Optional[datetime]:
+    return parser.parse(date_str) if date_str else None
