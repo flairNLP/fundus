@@ -4,7 +4,6 @@ from .faz_parser import FAZParser
 from .focus_parser import FocusParser
 from .mdr_parser import MDRParser
 from .merkur_parser import MerkurParser
-from .orf_parser import OrfParser
 
 
 # noinspection PyPep8Naming
@@ -34,8 +33,3 @@ class DE_DE(PublisherEnum):
                            rss_feeds=['https://www.merkur.de/welt/rssfeed.rdf'],
                            sitemaps=[],
                            parser=MerkurParser)
-
-    ORF = PublisherSpec(domain='https://www.orf.at',
-                        rss_feeds=["https://rss.orf.at/news.xml"],
-                        sitemaps=[],
-                        parser=OrfParser)
