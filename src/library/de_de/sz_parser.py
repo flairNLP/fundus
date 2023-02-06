@@ -2,8 +2,8 @@ import datetime
 from typing import Optional, List
 
 from src.parser.html_parser import BaseParser, register_attribute
-from src.parser.html_parser.utility import generic_plaintext_extraction_with_css, generic_author_extraction, \
-    generic_date_extraction, generic_topic_extraction
+from src.parser.html_parser.utility import generic_plaintext_extraction_with_css, generic_author_parsing, \
+    generic_date_parsing, generic_topic_parsing
 
 
 class SZParser(BaseParser):
@@ -17,11 +17,11 @@ class SZParser(BaseParser):
 
     @register_attribute
     def authors(self) -> List[str]:
-        return generic_author_extraction(self.precomputed.ld, ["author"])
+        return generic_author_parsing(self.precomputed.ld.bf_search('author'))
 
     @register_attribute
     def publishing_date(self) -> Optional[datetime.datetime]:
-        return generic_date_extraction(self.precomputed.ld)
+        return generic_date_parsing(self.precomputed.ld.bf_search('datePublished'))
 
     @register_attribute
     def title(self):
@@ -29,4 +29,4 @@ class SZParser(BaseParser):
 
     @register_attribute
     def topics(self) -> List[str]:
-        return generic_topic_extraction(self.precomputed.ld)
+        return generic_topic_parsing(self.precomputed.ld.bf_search('keywords'))
