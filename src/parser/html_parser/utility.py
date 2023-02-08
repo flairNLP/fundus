@@ -2,14 +2,12 @@ import re
 from dataclasses import dataclass, field
 from datetime import datetime
 from functools import total_ordering
-from typing import Any, Union, Tuple
-from typing import Dict, List, Optional
+from typing import Union, Tuple, Dict, List, Optional
 
-import dateutil
 import lxml.html
 import more_itertools
+from dateutil import parser
 
-from src.custom_types.structural_typing import HasGet
 from src.parser.html_parser.data import ArticleBody, ArticleSection, TextList
 
 
@@ -74,18 +72,6 @@ def extract_article_body_with_css(doc: lxml.html.HtmlElement,
     return ArticleBody(**kwargs)
 
 
-def _get_nested_value_with_key_path_as_list(source: HasGet, key_list: List[str]) -> Any:
-    visited = []
-    cur = source
-    for key in key_list:
-        if not isinstance(cur, HasGet):
-            raise TypeError(f"Key path '{' -> '.join(visited)}' leads to an unsupported value in between. Only objects"
-                            f" who implement a get method are allowed.")
-        cur = cur.get(key)
-        visited.append(key)
-    return cur
-
-
 def get_meta_content(tree: lxml.html.HtmlElement) -> Dict[str, str]:
     meta_node_selector = 'head > meta[name], head > meta[property]'
     meta_nodes = tree.cssselect(meta_node_selector)
@@ -129,4 +115,4 @@ def generic_topic_parsing(keyword_str: str, delimiter: str = ',') -> List[str]:
 
 
 def generic_date_parsing(date_str: str) -> Optional[datetime]:
-    return dateutil.parser.parse(date_str) if date_str else None
+    return parser.parse(date_str) if date_str else None

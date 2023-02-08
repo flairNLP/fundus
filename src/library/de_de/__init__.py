@@ -3,6 +3,8 @@ from .die_welt_parser import DieWeltParser
 from .faz_parser import FAZParser
 from .focus_parser import FocusParser
 from .mdr_parser import MDRParser
+from .merkur_parser import MerkurParser
+from .sz_parser import SZParser
 
 
 # noinspection PyPep8Naming
@@ -27,3 +29,13 @@ class DE_DE(PublisherEnum):
                           rss_feeds=['https://rss.focus.de/fol/XML/rss_folnews.xml'],
                           sitemaps=[],
                           parser=FocusParser)
+
+    Merkur = PublisherSpec(domain='https://www.merkur.de/',
+                           rss_feeds=['https://www.merkur.de/welt/rssfeed.rdf'],
+                           sitemaps=[],
+                           parser=MerkurParser)
+
+    SZ = PublisherSpec(domain='https://www.sueddeutsche.de/',
+                       rss_feeds=["https://rss.sueddeutsche.de/app/service/rss/alles/index.rss?output=rss"],
+                       sitemaps=[], parser=SZParser)
+

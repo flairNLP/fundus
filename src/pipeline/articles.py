@@ -41,10 +41,6 @@ class Article(BaseArticle):
     exception: Exception = None
     source: str = None
 
-    # TODO: discuss if we want to be straight frozen here or update for dot access
-    def update(self, data: Dict[str, Any]) -> None:
-        self.__dict__.update(data)
-
     @property
     def complete(self) -> bool:
         return all(not (isinstance(attr, Exception) or attr is None) for attr in self.extracted.values())

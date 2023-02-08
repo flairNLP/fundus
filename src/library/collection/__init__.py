@@ -1,5 +1,6 @@
 from typing import Iterator, Any, Dict
 
+from src.library.at_at import AT_AT
 from src.library.de_de import DE_DE
 
 
@@ -21,3 +22,4 @@ class CollectionMeta(type):
 
 class PublisherCollection(metaclass=CollectionMeta):
     de_de = DE_DE
+    at_at = AT_AT

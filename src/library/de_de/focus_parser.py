@@ -21,14 +21,14 @@ class FocusParser(BaseParser):
 
     @register_attribute
     def authors(self) -> List[str]:
-        author_names = generic_author_parsing(self.precomputed.ld.get("author"))
+        author_names = generic_author_parsing(self.precomputed.ld.bf_search("author"))
         for i, name in enumerate(author_names):
             author_names[i] = re.sub(self._author_substitution_pattern, '', name)
         return author_names
 
     @register_attribute
     def publishing_date(self) -> Optional[datetime.datetime]:
-        return generic_date_parsing(self.precomputed.ld.get('datePublished'))
+        return generic_date_parsing(self.precomputed.ld.bf_search('datePublished'))
 
     @register_attribute
     def title(self):

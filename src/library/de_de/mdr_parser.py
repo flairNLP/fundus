@@ -18,7 +18,7 @@ class MDRParser(BaseParser):
 
     @register_attribute
     def publishing_date(self) -> Optional[datetime.datetime]:
-        return generic_date_parsing(self.precomputed.ld.get('datePublished'))
+        return generic_date_parsing(self.precomputed.ld.bf_search('datePublished'))
 
     @register_attribute
     def authors(self) -> List[str]:
@@ -29,4 +29,4 @@ class MDRParser(BaseParser):
 
     @register_attribute
     def title(self) -> Optional[str]:
-        return self.precomputed.ld.get('headline')
+        return self.precomputed.ld.bf_search('headline')
