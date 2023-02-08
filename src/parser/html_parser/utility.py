@@ -10,7 +10,7 @@ import lxml.html
 import more_itertools
 
 from src.custom_types.structural_typing import HasGet
-from src.parser.html_parser.data import ArticleBody
+from src.parser.html_parser.data import ArticleBody, ArticleSection, TextList
 
 
 @total_ordering
@@ -32,12 +32,11 @@ class Node:
     def __str__(self) -> str:
         return self.node.text_content()
 
-    def __repr__(self) -> Tuple[int, hex, str]:
-        return self.position, hex(id(self)), self.type
+    def __repr__(self) -> Tuple[int, str]:
+        return self.position, self.type
 
 
 def extract_article_body_with_css(doc: lxml.html.HtmlElement,
-                                  meta: dict,
                                   paragraph_selector: str,
                                   summary_selector: str = None,
                                   subhead_selector: str = None) -> ArticleBody:
@@ -54,15 +53,25 @@ def extract_article_body_with_css(doc: lxml.html.HtmlElement,
     paragraph_nodes = extract_nodes(paragraph_selector, 'P')
     nodes = sorted(summary_nodes + subhead_nodes + paragraph_nodes)
 
-    instructions = more_itertools.split_when(nodes, pred=lambda x, y: x.type != y.type)
+    striped_nodes = [node for node in nodes if str(node)]
 
-    # if not summary_nodes:
-    #     instructions = more_itertools.prepend([], instructions)
+    instructions = more_itertools.split_when(striped_nodes, pred=lambda x, y: x.type != y.type)
 
-    if subhead_nodes[0] > paragraph_nodes[0]:
+    if not summary_nodes:
         instructions = more_itertools.prepend([], instructions)
 
-    return ArticleBody.from_instructions(instructions)
+    if (subhead_nodes and paragraph_nodes) and subhead_nodes[0] > paragraph_nodes[0]:
+        instructions = more_itertools.prepend([], instructions)
+
+    kwargs = {'summary': TextList(map(str, next(instructions))), 'sections': []}
+
+    for chunk in more_itertools.chunked(instructions, 2):
+        if len(chunk) == 1:
+            chunk.append([])
+        chunk = [list(map(str, c)) for c in chunk]
+        kwargs['sections'].append(ArticleSection(*map(TextList, chunk)))
+
+    return ArticleBody(**kwargs)
 
 
 def _get_nested_value_with_key_path_as_list(source: HasGet, key_list: List[str]) -> Any:

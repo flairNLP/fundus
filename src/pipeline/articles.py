@@ -52,7 +52,8 @@ class Article(BaseArticle):
     # provide direct access for commonly used attributes in self.extracted
     @property
     def plaintext(self) -> Optional[str]:
-        return self.extracted.get('plaintext') if self.extracted else None
+        body = self.extracted.get('body') if self.extracted else None
+        return str(body) if body else None
 
     @property
     def title(self) -> Optional[str]:

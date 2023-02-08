@@ -13,10 +13,9 @@ class FocusParser(BaseParser):
     _topic_name_pattern: re.Pattern = re.compile(r'"name":"(.*?)"', flags=re.MULTILINE)
 
     @register_attribute
-    def plaintext(self) -> Optional[ArticleBody]:
+    def body(self) -> Optional[ArticleBody]:
         return extract_article_body_with_css(self.precomputed.doc,
-                                             self.precomputed.meta,
-                                             # summary_selector='div.leadIn > p',
+                                             summary_selector='div.leadIn > p',
                                              subhead_selector='div.textBlock > h2',
                                              paragraph_selector='div.textBlock > p')
 
