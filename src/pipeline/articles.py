@@ -4,7 +4,10 @@ from dataclasses import dataclass
 from datetime import datetime
 from textwrap import TextWrapper, dedent
 from typing import Any, Callable, List, Dict, Optional
+
 from colorama import Fore, Style
+
+from src.parser.html_parser import ArticleBody, LinkedData
 
 
 @dataclass(frozen=True)
@@ -48,7 +51,7 @@ class Article(BaseArticle):
     # provide direct access for commonly used attributes in self.extracted
     @property
     def plaintext(self) -> Optional[str]:
-        body = self.extracted.get('body') if self.extracted else None
+        body = self.body
         return str(body) if body else None
 
     @property
@@ -56,8 +59,20 @@ class Article(BaseArticle):
         return self.extracted.get('title') if self.extracted else None
 
     @property
+    def body(self) -> Optional[ArticleBody]:
+        return self.extracted.get('body') if self.extracted else None
+
+    @property
     def authors(self) -> List[str]:
         return self.extracted.get('authors', []) if self.extracted else None
+
+    @property
+    def ld(self) -> Optional[LinkedData]:
+        return self.extracted.get('ld') if self.extracted else None
+
+    @property
+    def meta(self):
+        return self.extracted.get('meta') if self.extracted else None
 
     def __str__(self):
         # the subsequent indent here is a bit wacky, but textwrapper.dedent won't work with tabs, so we have to use
