@@ -1,16 +1,19 @@
 import datetime
 from typing import Optional, List
 
-from src.parser.html_parser import BaseParser, register_attribute
-from src.parser.html_parser.utility import (generic_plaintext_extraction_with_css, generic_topic_parsing,
-                                            generic_date_parsing)
+from src.parser.html_parser import BaseParser, register_attribute, ArticleBody
+from src.parser.html_parser.utility import (extract_article_body_with_css, generic_topic_parsing,
+                                            generic_date_parsing, generic_text_extraction_with_css)
 
 
 class MDRParser(BaseParser):
 
     @register_attribute
-    def plaintext(self) -> Optional[str]:
-        return generic_plaintext_extraction_with_css(self.precomputed.doc, 'div.paragraph')
+    def body(self) -> ArticleBody:
+        return extract_article_body_with_css(self.precomputed.doc,
+                                             summary_selector='p.einleitung',
+                                             subhead_selector='div > .subtitle',
+                                             paragraph_selector='div.paragraph')
 
     @register_attribute
     def topics(self) -> List[str]:
@@ -22,7 +25,7 @@ class MDRParser(BaseParser):
 
     @register_attribute
     def authors(self) -> List[str]:
-        if author := generic_plaintext_extraction_with_css(self.precomputed.doc, '.articleMeta > .author'):
+        if author := generic_text_extraction_with_css(self.precomputed.doc, '.articleMeta > .author'):
             cleaned_author = author.replace('von', '').replace(' und ', ', ')
             return [name.strip() for name in cleaned_author.split(',')]
         return []
