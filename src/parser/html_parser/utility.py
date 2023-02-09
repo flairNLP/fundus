@@ -1,8 +1,10 @@
+import itertools
 import re
+from copy import copy
 from dataclasses import dataclass, field
 from datetime import datetime
 from functools import total_ordering
-from typing import Union, Tuple, Dict, List, Optional
+from typing import Union, Dict, List, Optional
 
 import lxml.html
 import more_itertools
@@ -18,6 +20,15 @@ class Node:
     node: lxml.html.HtmlElement = field(compare=False)
     type: str = field(compare=False)
 
+    def striped(self, chars: str = '') -> str:
+        return str(self).strip(chars)
+
+    def _get_break_preserved_node(self) -> lxml.html.HtmlElement:
+        copied_node = copy(self.node)
+        for br in copied_node.xpath('*//br'):
+            br.tail = "\n" + br.tail if br.tail else "\n"
+        return copied_node
+
     def __eq__(self, other: 'Node') -> bool:
         return self.position == other.position
 
@@ -28,10 +39,7 @@ class Node:
         return hash(self.position)
 
     def __str__(self) -> str:
-        return self.node.text_content()
-
-    def __repr__(self) -> Tuple[int, str]:
-        return self.position, self.type
+        return self._get_break_preserved_node().text_content()
 
 
 def extract_article_body_with_css(doc: lxml.html.HtmlElement,
@@ -59,14 +67,15 @@ def extract_article_body_with_css(doc: lxml.html.HtmlElement,
         instructions = more_itertools.prepend([], instructions)
 
     if (subhead_nodes and paragraph_nodes) and subhead_nodes[0] > paragraph_nodes[0]:
-        instructions = more_itertools.prepend([], instructions)
+        first = next(instructions)
+        instructions = itertools.chain([first, []], instructions)
 
-    kwargs = {'summary': TextList(map(str, next(instructions))), 'sections': []}
+    kwargs = {'summary': TextList(map(lambda x: x.striped('\n'), next(instructions))), 'sections': []}
 
     for chunk in more_itertools.chunked(instructions, 2):
         if len(chunk) == 1:
             chunk.append([])
-        chunk = [list(map(str, c)) for c in chunk]
+        chunk = [list(map(lambda x: x.striped('\n'), c)) for c in chunk]
         kwargs['sections'].append(ArticleSection(*map(TextList, chunk)))
 
     return ArticleBody(**kwargs)
@@ -105,7 +114,7 @@ def generic_author_parsing(value: Union[str, dict, List[dict]]) -> List[str]:
     return [name.strip() for name in authors]
 
 
-def generic_plaintext_extraction_with_css(doc, selector: str) -> Optional[str]:
+def generic_text_extraction_with_css(doc, selector: str) -> Optional[str]:
     nodes = doc.cssselect(selector)
     return strip_nodes_to_text(nodes)
 
