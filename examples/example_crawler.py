@@ -1,11 +1,11 @@
-from src.crawler.crawler import Crawler
+from src.crawler.pipelines import AutoPipeline
 from src.library.collection import PublisherCollection
 
 if __name__ == '__main__':
 
     de_de = PublisherCollection.de_de
 
-    crawler = Crawler(de_de)
+    crawler = AutoPipeline(de_de)
 
     """
     Alternative usage:

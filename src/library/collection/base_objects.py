@@ -31,7 +31,7 @@ class PublisherEnum(Enum):
             raise ValueError("Your only allowed to generate 'PublisherEnum's from 'PublisherSpec")
         self.domain = spec.domain
         self.rss_feeds = spec.rss_feeds
-        self.sitemap = spec.sitemaps
+        self.sitemaps = spec.sitemaps
         self.parser = spec.parser
 
     @classmethod
