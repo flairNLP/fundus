@@ -20,5 +20,5 @@ if __name__ == '__main__':
         
     """
 
-    for article in crawler.crawl(max_articles=100, error_handling='raise'):
+    for article in crawler.run(max_articles=100, error_handling='raise'):
         print(article)

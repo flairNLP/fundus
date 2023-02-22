@@ -26,10 +26,10 @@ class AutoPipeline:
                 sources[spec.domain].append(url)
         return sources
 
-    def crawl(self,
-              max_articles: int = None,
-              restrict_sources_to: Literal['rss', 'sitemap'] = None,
-              error_handling: Literal['suppress', 'catch', 'raise'] = 'raise') -> Generator[Article, None, None]:
+    def run(self,
+            max_articles: int = None,
+            restrict_sources_to: Literal['rss', 'sitemap'] = None,
+            error_handling: Literal['suppress', 'catch', 'raise'] = 'raise') -> Generator[Article, None, None]:
 
         scraper: List[Scraper] = []
         for spec in self.publishers:
