@@ -1,5 +1,5 @@
-from src.crawler.pipelines import AutoPipeline
 from src.library.collection import PublisherCollection
+from src.scraping.pipeline import AutoPipeline
 
 if __name__ == '__main__':
 

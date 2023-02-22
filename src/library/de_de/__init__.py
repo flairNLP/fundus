@@ -15,7 +15,6 @@ class DE_DE(PublisherEnum):
 
     MDR = PublisherSpec(domain='https://www.mdr.de/',
                         rss_feeds=['https://www.mdr.de/nachrichten/index-rss.xml'],
-                        sitemaps=['https://www.mdr.de/news-sitemap.xml'],
                         parser=MDRParser)
 
     FAZ = PublisherSpec(domain='https://www.faz.net/',
@@ -37,4 +36,3 @@ class DE_DE(PublisherEnum):
     SZ = PublisherSpec(domain='https://www.sueddeutsche.de/',
                        rss_feeds=["https://rss.sueddeutsche.de/app/service/rss/alles/index.rss?output=rss"],
                        parser=SZParser)
-
