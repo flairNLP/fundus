@@ -4,6 +4,7 @@ from dataclasses import dataclass
 from datetime import datetime
 from textwrap import TextWrapper, dedent
 from typing import Any, Callable, List, Dict, Optional
+
 from colorama import Fore, Style
 
 
@@ -32,7 +33,7 @@ class BaseArticle(ABC):
 
 @dataclass(frozen=True)
 class ArticleSource(BaseArticle):
-    source: str
+    source: object
 
 
 @dataclass(frozen=True)

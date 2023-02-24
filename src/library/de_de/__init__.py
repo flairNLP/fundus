@@ -15,11 +15,11 @@ class DE_DE(PublisherEnum):
 
     MDR = PublisherSpec(domain='https://www.mdr.de/',
                         rss_feeds=['https://www.mdr.de/nachrichten/index-rss.xml'],
-                        sitemaps=['https://www.mdr.de/news-sitemap.xml'],
                         parser=MDRParser)
 
     FAZ = PublisherSpec(domain='https://www.faz.net/',
-                        rss_feeds=['https://www.faz.net/rss/aktuell', 'https://www.faz.net/rss/aktuell/politik',
+                        rss_feeds=['https://www.faz.net/rss/aktuell',
+                                   'https://www.faz.net/rss/aktuell/politik',
                                    'https://www.faz.net/rss/aktuell/sport',
                                    'https://www.faz.net/rss/aktuell/wirtschaft/',
                                    'https://www.faz.net/rss/aktuell/gesellschaft/'],
@@ -27,15 +27,12 @@ class DE_DE(PublisherEnum):
 
     Focus = PublisherSpec(domain='https://www.focus.de/',
                           rss_feeds=['https://rss.focus.de/fol/XML/rss_folnews.xml'],
-                          sitemaps=[],
                           parser=FocusParser)
 
     Merkur = PublisherSpec(domain='https://www.merkur.de/',
                            rss_feeds=['https://www.merkur.de/welt/rssfeed.rdf'],
-                           sitemaps=[],
                            parser=MerkurParser)
 
     SZ = PublisherSpec(domain='https://www.sueddeutsche.de/',
                        rss_feeds=["https://rss.sueddeutsche.de/app/service/rss/alles/index.rss?output=rss"],
-                       sitemaps=[], parser=SZParser)
-
+                       parser=SZParser)
