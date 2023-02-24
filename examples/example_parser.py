@@ -12,28 +12,27 @@ class MDRParser(BaseParser):
 
     @register_attribute(priority=4)
     def plaintext(self) -> Optional[str]:
-        doc = self.cache['doc']
-        if nodes := doc.cssselect('div.paragraph'):
+        if nodes := self.precomputed.doc.cssselect('div.paragraph'):
             return strip_nodes_to_text(nodes)
 
     @register_attribute
     def topics(self) -> Optional[str]:
-        if topics := self.meta().get('news_keywords'):
+        if topics := self.precomputed.meta.get('news_keywords'):
             return topics
 
     @register_attribute
     def publishing_date(self) -> Optional[datetime.datetime]:
-        if date_string := self.ld().get('datePublished'):
+        if date_string := self.precomputed.ld.get('datePublished'):
             return dateutil.parser.parse(date_string)
 
     @register_attribute
     def authors(self) -> str:
-        if author_dict := self.ld().get('author'):
+        if author_dict := self.precomputed.ld.get('author'):
             return author_dict.get('name')
 
     @register_attribute(priority=4)
     def title(self) -> Optional[str]:
-        return self.ld().get('headline')
+        return self.precomputed.ld.get('headline')
 
 
 if __name__ == '__main__':
