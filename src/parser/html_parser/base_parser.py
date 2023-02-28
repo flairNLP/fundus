@@ -210,6 +210,8 @@ class Precomputed:
     doc: lxml.html.HtmlElement = None
     meta: Dict[str, Any] = field(default_factory=dict)
     ld: LinkedData = None
+    cache: Dict[str, Any] = field(default_factory=dict)
+
 
 class BaseParser(ABC):
 
@@ -223,7 +225,9 @@ class BaseParser(ABC):
 
         self.precomputed = Precomputed()
 
-
+    @property
+    def cache(self) -> Dict[str, Any]:
+        return self.precomputed.cache
 
     @classmethod
     def _search_members(cls, obj_type: type) -> List[Tuple[str, Any]]:
@@ -279,6 +283,10 @@ class BaseParser(ABC):
                 raise TypeError(f"Invalid type for {func}. Only subclasses of 'RegisteredFunction' are allowed")
 
         return parsed_data
+
+    def share(self, **kwargs):
+        for key, value in kwargs.items():
+            self.precomputed.cache[key] = value
 
     # base attribute section
     @register_attribute
