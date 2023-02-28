@@ -1,18 +1,19 @@
 import datetime
 from typing import Optional, List
 
-from src.parser.html_parser import BaseParser, register_attribute
-from src.parser.html_parser.utility import generic_plaintext_extraction_with_css, generic_author_parsing, \
+from src.parser.html_parser import BaseParser, register_attribute, ArticleBody
+from src.parser.html_parser.utility import extract_article_body_with_css, generic_author_parsing, \
     generic_date_parsing
 
 
 class MerkurParser(BaseParser):
 
     @register_attribute
-    def plaintext(self) -> Optional[str]:
-        return generic_plaintext_extraction_with_css(self.precomputed.doc,
-                                                     "p.id-StoryElement-paragraph"
-                                                     )
+    def body(self) -> ArticleBody:
+        return extract_article_body_with_css(self.precomputed.doc,
+                                             summary_selector='p.id-StoryElement-leadText',
+                                             subhead_selector='h2.id-StoryElement-crosshead',
+                                             paragraph_selector="p.id-StoryElement-paragraph, article > ul > li")
 
     @register_attribute
     def authors(self) -> Optional[List[str]]:
