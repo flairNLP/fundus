@@ -10,7 +10,7 @@ from src.parser.html_parser.utility import strip_nodes_to_text
 
 class MDRParser(BaseParser):
 
-    @register_attribute(priority=4)
+    @register_attribute
     def plaintext(self) -> Optional[str]:
         if nodes := self.precomputed.doc.cssselect('div.paragraph'):
             return strip_nodes_to_text(nodes)
@@ -22,17 +22,17 @@ class MDRParser(BaseParser):
 
     @register_attribute
     def publishing_date(self) -> Optional[datetime.datetime]:
-        if date_string := self.precomputed.ld.get('datePublished'):
+        if date_string := self.precomputed.ld.bf_search('datePublished'):
             return dateutil.parser.parse(date_string)
 
     @register_attribute
     def authors(self) -> str:
-        if author_dict := self.precomputed.ld.get('author'):
+        if author_dict := self.precomputed.ld.bf_search('author'):
             return author_dict.get('name')
 
-    @register_attribute(priority=4)
+    @register_attribute
     def title(self) -> Optional[str]:
-        return self.precomputed.ld.get('headline')
+        return self.precomputed.ld.bf_search('headline')
 
 
 if __name__ == '__main__':
