@@ -1,11 +1,10 @@
 from abc import ABC
 from collections import defaultdict
-from dataclasses import dataclass, fields, field
-from typing import List, Iterable, Any, Union, Dict, MutableSequence, overload, get_args, Generic, Collection, get_origin
+from dataclasses import dataclass, fields
+from typing import List, Iterable, Any, Union, Dict, overload, Tuple, Sequence, Collection
 
 
 class LinkedData:
-    __slots__ = ['_ld_by_type', '__dict__']
 
     def __init__(self, lds: List[Dict[str, any]]):
         self._ld_by_type: Dict[str, Union[List[Dict[str, any]], Dict[str, any]]] = defaultdict(list)
@@ -114,18 +113,10 @@ class LinkedData:
         return f"LD containing '{', '.join(self._contains)}'"
 
 
-# TODO: i wish we could use collections.UserList here but sadly, and i don't understand why, python do not support this
-#   wth a type hint
-class TextList(MutableSequence[str]):
+class TextSequence(Sequence[str]):
 
     def __init__(self, texts: Iterable[str] = None):
-        self.data: List[str] = list(texts) if texts else []
-
-    def as_list(self) -> List[str]:
-        return [text for text in self.data]
-
-    def insert(self, index: int, value: str) -> None:
-        self.data.insert(index, value)
+        self._data: Tuple[str] = tuple(texts) if texts else tuple()
 
     def text(self, join_on: str = '\n') -> str:
         return join_on.join(self)
@@ -135,91 +126,60 @@ class TextList(MutableSequence[str]):
         ...
 
     @overload
-    def __getitem__(self, s: slice) -> 'TextList':
+    def __getitem__(self, s: slice) -> 'TextSequence':
         ...
 
     def __getitem__(self, i):
-        if isinstance(i, slice):
-            return self.__class__(self.data[i])
-        else:
-            return self.data[i]
-
-    @overload
-    def __setitem__(self, i: int, item: str) -> None:
-        ...
-
-    @overload
-    def __setitem__(self, s: slice, item: Iterable[str]) -> None:
-        ...
-
-    def __setitem__(self, i, item):
-        self.data.__setitem__(i, item)
-
-    def __delitem__(self, i: Union[int, slice]) -> None:
-        self.data.__delitem__(i)
+        return self._data[i] if isinstance(i, int) else type(self)(self._data[i])
 
     def __len__(self) -> int:
-        return len(self.data)
+        return len(self._data)
 
     def __iter__(self) -> Iterable[str]:
-        return iter(self.data)
+        return iter(self._data)
 
     def __repr__(self) -> str:
-        return repr(self.data)
+        return repr(self._data)
 
 
 @dataclass
-class TextTree(ABC):
+class TextSequenceTree(ABC):
 
-    def as_ordered_list(self) -> TextList:
-        texts = [text for tl in self._iter_text() for text in tl]
-        return TextList(texts)
+    def as_text_sequence(self) -> TextSequence:
+        texts = [text for tl in self.df_traversal() for text in tl]
+        return TextSequence(texts)
 
     def text(self, join_on: str = '\n\n') -> str:
-        return self.as_ordered_list().text(join_on)
+        return self.as_text_sequence().text(join_on)
 
-    def _iter_text(self) -> Iterable[TextList]:
-        field_values = [getattr(self, field.name) for field in fields(self)]
-        for value in field_values:
-            if isinstance(value, TextList):
-                yield value
-            elif isinstance(value, TextTree):
-                yield from value._iter_text()
-            elif isinstance(value, list):
-                for element in value:
-                    if isinstance(element, TextTree):
-                        yield from element._iter_text()
-                    else:
-                        raise TypeError(f"only lists of type {TextTree} are allowed as list typed fields "
-                                        f"but found value with type {type(value)}")
+    def df_traversal(self) -> Iterable[TextSequence]:
+        def recursion(o: object):
+            if isinstance(o, TextSequence):
+                yield o
+            elif isinstance(o, Collection):
+                for el in o:
+                    yield from el
             else:
-                raise TypeError(f"{type(self)} should only consists of fields "
-                                f"with type {TextList} or {type(self)} but found value with type {type(value)}")
+                yield o
 
-    @classmethod
-    def from_instructions(cls, instructions: tuple) -> 'TextTree':
-        kwargs = {}
-        for i, dc_field in enumerate(fields(cls)):
-            a = get_args(dc_field.type)
-            o = get_origin(dc_field.type)
-            if o:
-                kwargs[dc_field.name] = o([a[0].from_instructions(args) for args in instructions[i]])
-            else:
-                kwargs[dc_field.name] = dc_field.type(instructions[i])
+        for value in self:
+            yield from recursion(value)
 
-        return cls(**kwargs)
+    def __iter__(self):
+        field_values = [getattr(self, f.name) for f in fields(self)]
+        yield from field_values
 
     def __str__(self):
         return self.text()
 
 
 @dataclass
-class ArticleSection(TextTree):
-    headline: TextList
-    paragraphs: TextList
+class ArticleSection(TextSequenceTree):
+    headline: TextSequence
+    paragraphs: TextSequence
 
 
 @dataclass
-class ArticleBody(TextTree):
-    summary: TextList
+class ArticleBody(TextSequenceTree):
+    summary: TextSequence
     sections: List[ArticleSection]

@@ -10,7 +10,7 @@ import lxml.html
 import more_itertools
 from dateutil import parser
 
-from src.parser.html_parser.data import ArticleBody, ArticleSection, TextList
+from src.parser.html_parser.data import ArticleBody, ArticleSection, TextSequence
 
 
 @total_ordering
@@ -70,13 +70,13 @@ def extract_article_body_with_css(doc: lxml.html.HtmlElement,
         first = next(instructions)
         instructions = itertools.chain([first, []], instructions)
 
-    kwargs = {'summary': TextList(map(lambda x: x.striped('\n'), next(instructions))), 'sections': []}
+    kwargs = {'summary': TextSequence(map(lambda x: x.striped('\n'), next(instructions))), 'sections': []}
 
     for chunk in more_itertools.chunked(instructions, 2):
         if len(chunk) == 1:
             chunk.append([])
         chunk = [list(map(lambda x: x.striped('\n'), c)) for c in chunk]
-        kwargs['sections'].append(ArticleSection(*map(TextList, chunk)))
+        kwargs['sections'].append(ArticleSection(*map(TextSequence, chunk)))
 
     return ArticleBody(**kwargs)
 
