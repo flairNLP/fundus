@@ -14,8 +14,8 @@ import requests
 from dotmap import DotMap
 from ftfy import guess_bytes
 
-from src.crawler.common_crawl.iterator import CCNewsIterator
 from src.parser.html_parser import BaseParser
+from src.scraping.crawler.common_crawl.iterator import CCNewsIterator
 from stream import StreamLine, SupplyLayer, UnaryLayer
 
 

@@ -35,7 +35,7 @@ class BaseArticle(ABC):
 
 @dataclass(frozen=True)
 class ArticleSource(BaseArticle):
-    source: str
+    source: object
 
 
 @dataclass(frozen=True)
