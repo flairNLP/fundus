@@ -1,6 +1,6 @@
 from src.library.collection import PublisherCollection
 from src.library.de_de import FAZParser, MDRParser
-from src.scraping.crawler.crawler import RSSCrawler, SitemapCrawler
+from src.scraping.crawler import RSSCrawler, SitemapCrawler
 from src.scraping.pipeline import AutoPipeline
 from src.scraping.scraper import Scraper
 

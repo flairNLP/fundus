@@ -6,7 +6,7 @@ import more_itertools
 
 from src.library.collection.base_objects import PublisherEnum
 from src.scraping.article import Article
-from src.scraping.crawler.crawler import RSSCrawler, SitemapCrawler
+from src.scraping.crawler import RSSCrawler, SitemapCrawler
 from src.scraping.scraper import Scraper
 from stream.utils import listify
 
