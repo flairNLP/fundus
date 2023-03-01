@@ -1,19 +1,20 @@
 import datetime
 from typing import Optional, List
 
-from src.parser.html_parser import BaseParser, register_attribute
-from src.parser.html_parser.utility import generic_plaintext_extraction_with_css, generic_author_parsing, \
+from src.parser.html_parser import BaseParser, register_attribute, ArticleBody
+from src.parser.html_parser.utility import extract_article_body_with_css, generic_author_parsing, \
     generic_date_parsing, generic_topic_parsing
 
 
 class SZParser(BaseParser):
 
     @register_attribute
-    def plaintext(self) -> Optional[str]:
-        return generic_plaintext_extraction_with_css(self.precomputed.doc,
-                                                     'main [itemprop="articleBody"] > p, '
-                                                     'main .css-korpch > div > ul > li'
-                                                     )
+    def body(self) -> ArticleBody:
+        return extract_article_body_with_css(self.precomputed.doc,
+                                             summary_selector='main [data-manual="teaserText"]',
+                                             subhead_selector='main [itemprop="articleBody"] > h3',
+                                             paragraph_selector='main [itemprop="articleBody"] > p, '
+                                                                'main .css-korpch > div > ul > li')
 
     @register_attribute
     def authors(self) -> List[str]:
