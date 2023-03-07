@@ -49,7 +49,7 @@ class RSSCrawler(Crawler):
 
     def __iter__(self) -> Iterator[str]:
         rss_feed = feedparser.parse(self.url)
-        return [entry["link"] for entry in rss_feed['entries']]
+        return (entry["link"] for entry in rss_feed['entries'])
 
 
 class SitemapCrawler(Crawler):
