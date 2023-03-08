@@ -22,4 +22,4 @@ class CollectionMeta(type):
 
 class PublisherCollection(metaclass=CollectionMeta):
     de_de = DE_DE
-    at_at = AT_AT
+    # at_at = AT_AT
