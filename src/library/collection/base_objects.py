@@ -1,3 +1,4 @@
+import urllib.error
 from dataclasses import dataclass, field
 from enum import Enum, unique
 from typing import Type, List, Optional, Tuple
@@ -16,7 +17,10 @@ def parse_robots(url: str) -> RobotFileParser:
     parsed_url = urlparse(url)
     robots_link = url[:len(url) - len(parsed_url.path)] + '/robots.txt'
     rp = RobotFileParser(robots_link)
-    rp.read()
+    try:
+        rp.read()
+    except urllib.error.URLError as err:
+        print(Warning(f"Couldn't parse robots for {url}. Error: {err}"))
     return rp
 
 
