@@ -77,17 +77,15 @@ class Article(BaseArticle):
     def __str__(self):
         # the subsequent indent here is a bit wacky, but textwrapper.dedent won't work with tabs, so we have to use
         # whitespaces instead.
-        text_wrapper = TextWrapper(width=100, max_lines=5, initial_indent='"', subsequent_indent='             ')
-        wrapped_title = text_wrapper.fill(self.title or f"{Fore.RED}--missing title--{Style.RESET_ALL}")
-        wrapped_plaintext = text_wrapper.fill(self.plaintext or f"{Fore.RED}--missing plaintext--{Style.RESET_ALL}")
+        title_wrapper = TextWrapper(width=80, max_lines=1, initial_indent='')
+        text_wrapper = TextWrapper(width=80, max_lines=2, initial_indent='', subsequent_indent='          ')
+        wrapped_title = title_wrapper.fill(self.title.strip() or f"{Fore.RED}--missing title--{Style.RESET_ALL}")
+        wrapped_plaintext = text_wrapper.fill(self.plaintext.strip() or f"{Fore.RED}--missing plaintext--{Style.RESET_ALL}")
 
-        text = f"""
-            {wrapped_title}"
-                - by {', '.join(self.authors) if self.authors else f"{Fore.RED}--missing authors--{Style.RESET_ALL}"}
-            
-            {wrapped_plaintext}"
-            
-            from: {self.url}
-        """
+        text = f'Fundus-Article:' \
+               f'\n- Title: "{wrapped_title}"' \
+               f'\n- Text:  "{wrapped_plaintext}"' \
+               f'\n- URL:    {self.url}'
+               #f'\n- From:   {self.source} ({self.crawl_date.strftime("%Y-%m-%d %H:%M")})'
 
         return dedent(text)
