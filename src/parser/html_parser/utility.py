@@ -52,7 +52,8 @@ def extract_article_body_with_css(doc: lxml.html.HtmlElement,
     def extract_nodes(selector: str, node_type: str) -> List[Node]:
         if not selector and node_type:
             raise ValueError("Both a selector and node type are required")
-        return [Node(df_idx_by_ref.get(element), element, node_type) for element in doc.cssselect(selector)]
+        raw_nodes = [Node(df_idx_by_ref.get(element), element, node_type) for element in doc.cssselect(selector)]
+        return [node for node in raw_nodes if node.striped(chars=' \n ')]
 
     summary_nodes = extract_nodes(summary_selector, 'S') if summary_selector else []
     subhead_nodes = extract_nodes(subhead_selector, 'H') if subhead_selector else []
