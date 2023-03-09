@@ -13,6 +13,9 @@ from src.scraping.article import ArticleSource
 
 class Crawler(Iterable, ABC):
 
+    def __init__(self, publisher: str):
+        self.publisher = publisher
+
     @abstractmethod
     def __iter__(self) -> Iterator[str]:
         """
@@ -29,13 +32,15 @@ class Crawler(Iterable, ABC):
                 article_source = ArticleSource(url=response.url,
                                                html=response.text,
                                                crawl_date=datetime.now(),
-                                               source=self)
+                                               publisher=self.publisher, 
+                                               crawler_ref=self)
                 yield article_source
 
 
 class StaticCrawler(Crawler):
 
-    def __init__(self, links: List[str]):
+    def __init__(self, links: List[str], publisher: str = None):
+        super().__init__(publisher)
         self.links = links
 
     def __iter__(self):
@@ -44,7 +49,8 @@ class StaticCrawler(Crawler):
 
 class RSSCrawler(Crawler):
 
-    def __init__(self, url: str):
+    def __init__(self, url: str, publisher: str):
+        super().__init__(publisher)
         self.url = url
 
     def __iter__(self) -> Iterator[str]:
@@ -54,7 +60,8 @@ class RSSCrawler(Crawler):
 
 class SitemapCrawler(Crawler):
 
-    def __init__(self, sitemap: str, recursive: bool = True, reverse: bool = False):
+    def __init__(self, sitemap: str, publisher: str, recursive: bool = True, reverse: bool = False):
+        super().__init__(publisher)
 
         self.sitemap = sitemap
         self.recursive = recursive

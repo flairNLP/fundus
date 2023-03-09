@@ -1,6 +1,6 @@
 import json
 from abc import ABC
-from dataclasses import dataclass
+from dataclasses import dataclass, InitVar, field
 from datetime import datetime
 from textwrap import TextWrapper, dedent
 from typing import Any, Callable, List, Dict, Optional
@@ -15,9 +15,16 @@ class BaseArticle(ABC):
     url: str
     html: str
     crawl_date: datetime
+    publisher: str = None
+    crawler_ref: InitVar[object] = None
+
+    def __post_init__(self, crawler_ref: object):
+        object.__setattr__(self, '_crawler_ref', crawler_ref)
 
     def serialize(self) -> Dict[str, Any]:
-        return self.__dict__
+        attrs = self.__dict__
+        attrs['crawler_ref'] = attrs.pop('_crawler_ref')
+        return attrs
 
     @classmethod
     def deserialize(cls, serialized: Dict[str, Any]):
@@ -35,14 +42,13 @@ class BaseArticle(ABC):
 
 @dataclass(frozen=True)
 class ArticleSource(BaseArticle):
-    source: object
+    pass
 
 
 @dataclass(frozen=True)
 class Article(BaseArticle):
-    extracted: Dict[str, Any]
+    extracted: Dict[str, Any] = field(default_factory=dict)
     exception: Exception = None
-    source: str = None
 
     @property
     def complete(self) -> bool:

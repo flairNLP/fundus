@@ -76,13 +76,13 @@ class PublisherEnum(Enum):
         self.news_map = spec.news_map
         self.parser = spec.parser
 
-        if not (self.sitemaps and self.news_map):
-            sitemaps, news_map = resolve_sitemaps(self.domain)
-            if not self.sitemaps:
-                self.sitemaps = sitemaps
-            if not self.news_map:
-                assert len(news_map) < 2, f'Found more than one news-map while parsing {self.domain}'
-                self.news_map = next(iter(news_map), None)
+        # if not (self.sitemaps and self.news_map):
+        #     sitemaps, news_map = resolve_sitemaps(self.domain)
+        #     if not self.sitemaps:
+        #         self.sitemaps = sitemaps
+        #     if not self.news_map:
+        #         assert len(news_map) < 2, f'Found more than one news-map while parsing {self.domain}'
+        #         self.news_map = next(iter(news_map), None)
 
     def supports(self, source_type: str) -> bool:
         if source_type == 'rss':
