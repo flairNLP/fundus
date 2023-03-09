@@ -86,12 +86,13 @@ class Article(BaseArticle):
         title_wrapper = TextWrapper(width=80, max_lines=1, initial_indent='')
         text_wrapper = TextWrapper(width=80, max_lines=2, initial_indent='', subsequent_indent='          ')
         wrapped_title = title_wrapper.fill(self.title.strip() or f"{Fore.RED}--missing title--{Style.RESET_ALL}")
-        wrapped_plaintext = text_wrapper.fill(self.plaintext.strip() or f"{Fore.RED}--missing plaintext--{Style.RESET_ALL}")
+        wrapped_plaintext = text_wrapper.fill(
+            self.plaintext.strip() or f"{Fore.RED}--missing plaintext--{Style.RESET_ALL}")
 
         text = f'Fundus-Article:' \
                f'\n- Title: "{wrapped_title}"' \
                f'\n- Text:  "{wrapped_plaintext}"' \
-               f'\n- URL:    {self.url}'
-               #f'\n- From:   {self.source} ({self.crawl_date.strftime("%Y-%m-%d %H:%M")})'
+               f'\n- URL:    {self.url}' \
+               f'\n- From:   {self.publisher} ({self.crawl_date.strftime("%Y-%m-%d %H:%M")})'
 
         return dedent(text)
