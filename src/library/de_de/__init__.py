@@ -1,5 +1,8 @@
+from datetime import datetime
+
 from src.library.collection.base_objects import PublisherEnum, PublisherSpec
 from .die_welt_parser import DieWeltParser
+from .die_zeit_parser import DieZeitParser
 from .faz_parser import FAZParser
 from .focus_parser import FocusParser
 from .mdr_parser import MDRParser
@@ -36,3 +39,10 @@ class DE_DE(PublisherEnum):
     SZ = PublisherSpec(domain='https://www.sueddeutsche.de/',
                        rss_feeds=["https://rss.sueddeutsche.de/app/service/rss/alles/index.rss?output=rss"],
                        parser=SZParser)
+
+    DieZeit = PublisherSpec(domain='https://www.sueddeutsche.de/',
+                            rss_feeds=['https://newsfeed.zeit.de/news/index'],
+                            sitemaps=['https://www.zeit.de/gsitemaps/index.xml'],
+                            news_map=f'https://www.zeit.de/gsitemaps/index.xml?date='
+                                     f'{datetime.now().strftime("%Y-%m-%d")}&unit=days&period=1',
+                            parser=DieZeitParser)
