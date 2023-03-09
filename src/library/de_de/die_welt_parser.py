@@ -3,7 +3,7 @@ from typing import Optional, List
 
 from src.parser.html_parser import BaseParser, register_attribute, ArticleBody
 from src.parser.html_parser.utility import extract_article_body_with_css, \
-    generic_author_parsing, generic_date_parsing
+    generic_author_parsing, generic_date_parsing, generic_topic_parsing
 
 
 class DieWeltParser(BaseParser):
@@ -29,5 +29,4 @@ class DieWeltParser(BaseParser):
 
     @register_attribute
     def topics(self) -> List[str]:
-        if keyword_str := self.precomputed.meta.get('keywords'):
-            return keyword_str.split(', ')
+        return generic_topic_parsing(self.precomputed.meta.get('keywords'))
