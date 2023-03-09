@@ -66,7 +66,7 @@ def extract_article_body_with_css(doc: lxml.html.HtmlElement,
     if not summary_nodes:
         instructions = more_itertools.prepend([], instructions)
 
-    if (subhead_nodes and paragraph_nodes) and subhead_nodes[0] > paragraph_nodes[0]:
+    if not subhead_nodes or (paragraph_nodes and subhead_nodes[0] > paragraph_nodes[0]):
         first = next(instructions)
         instructions = itertools.chain([first, []], instructions)
 
