@@ -1,4 +1,5 @@
 from src.library.collection.base_objects import PublisherEnum, PublisherSpec
+from .berliner_zeitung_parser import BerlinerZeitungParser
 from .die_welt_parser import DieWeltParser
 from .faz_parser import FAZParser
 from .focus_parser import FocusParser
@@ -36,3 +37,9 @@ class DE_DE(PublisherEnum):
     SZ = PublisherSpec(domain='https://www.sueddeutsche.de/',
                        rss_feeds=["https://rss.sueddeutsche.de/app/service/rss/alles/index.rss?output=rss"],
                        parser=SZParser)
+
+    BerlinerZeitung = PublisherSpec(domain='https://www.sueddeutsche.de/',
+                                    rss_feeds=['https://www.berliner-zeitung.de/feed.xml'],
+                                    sitemaps=['https://www.berliner-zeitung.de/sitemap.xml'],
+                                    news_map='https://www.berliner-zeitung.de/news-sitemap.xml',
+                                    parser=BerlinerZeitungParser)
