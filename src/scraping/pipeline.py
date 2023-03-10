@@ -35,11 +35,11 @@ class AutoPipeline:
         for spec in self.publishers:
             sources = []
             if restrict_sources_to == 'rss' or restrict_sources_to is None:
-                sources.extend([RSSCrawler(url) for url in spec.rss_feeds])
+                sources.extend([RSSCrawler(url, publisher=spec.name) for url in spec.rss_feeds])
             if restrict_sources_to == 'sitemap' or restrict_sources_to is None:
-                sources.extend([SitemapCrawler(sitemap) for sitemap in spec.sitemaps])
+                sources.extend([SitemapCrawler(sitemap, publisher=spec.name) for sitemap in spec.sitemaps])
             if (restrict_sources_to == 'news' or restrict_sources_to is None) and spec.news_map:
-                sources.append(SitemapCrawler(spec.news_map))
+                sources.append(SitemapCrawler(spec.news_map, publisher=spec.name))
 
             if sources:
                 scraper.append(Scraper(*sources, parser=spec.parser()))
