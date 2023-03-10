@@ -6,7 +6,7 @@ from typing import List, Iterable, Any, Union, Dict, overload, Tuple, Sequence, 
 
 class LinkedData:
 
-    def __init__(self, lds: List[Dict[str, any]]):
+    def __init__(self, lds: Iterable[Dict[str, any]]):
         self._ld_by_type: Dict[str, Union[List[Dict[str, any]], Dict[str, any]]] = defaultdict(list)
         for ld in lds:
             if ld_type := ld.get('@type'):
@@ -110,7 +110,7 @@ class LinkedData:
         return search_recursive(self._ld_by_type.values(), 0)
 
     def __repr__(self):
-        return f"LD containing '{', '.join(self._contains)}'"
+        return f"LD containing '{', '.join(content)}'" if (content := self._contains) else "Empty LD"
 
 
 class TextSequence(Sequence[str]):

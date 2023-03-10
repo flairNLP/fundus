@@ -4,7 +4,7 @@ from copy import copy
 from dataclasses import dataclass, field
 from datetime import datetime
 from functools import total_ordering
-from typing import Union, Dict, List, Optional
+from typing import Union, Dict, List, Optional, Literal
 
 import lxml.html
 import more_itertools
@@ -42,18 +42,21 @@ class Node:
         return self._get_break_preserved_node().text_content()
 
 
-def extract_article_body_with_css(doc: lxml.html.HtmlElement,
-                                  paragraph_selector: str,
-                                  summary_selector: str = None,
-                                  subhead_selector: str = None) -> ArticleBody:
+def extract_article_body_with_selector(doc: lxml.html.HtmlElement,
+                                       paragraph_selector: str,
+                                       summary_selector: str = None,
+                                       subhead_selector: str = None,
+                                       mode: Literal['css', 'xpath'] = 'css') -> ArticleBody:
     # depth first index for each element in tree
     df_idx_by_ref = {element: i for i, element in enumerate(doc.iter())}
 
     def extract_nodes(selector: str, node_type: str) -> List[Node]:
         if not selector and node_type:
             raise ValueError("Both a selector and node type are required")
-        raw_nodes = [Node(df_idx_by_ref.get(element), element, node_type) for element in doc.cssselect(selector)]
-        return [node for node in raw_nodes if node.striped(chars=' \n ')]
+        if mode == 'css':
+            return [Node(df_idx_by_ref.get(element), element, node_type) for element in doc.cssselect(selector)]
+        else:
+            return [Node(df_idx_by_ref.get(element), element, node_type) for element in doc.xpath(selector)]
 
     summary_nodes = extract_nodes(summary_selector, 'S') if summary_selector else []
     subhead_nodes = extract_nodes(subhead_selector, 'H') if subhead_selector else []
@@ -67,7 +70,7 @@ def extract_article_body_with_css(doc: lxml.html.HtmlElement,
     if not summary_nodes:
         instructions = more_itertools.prepend([], instructions)
 
-    if (subhead_nodes and paragraph_nodes) and subhead_nodes[0] > paragraph_nodes[0]:
+    if not subhead_nodes or (paragraph_nodes and subhead_nodes[0] > paragraph_nodes[0]):
         first = next(instructions)
         instructions = itertools.chain([first, []], instructions)
 

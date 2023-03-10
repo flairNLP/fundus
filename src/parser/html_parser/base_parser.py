@@ -8,6 +8,7 @@ from dataclasses import field, dataclass
 from typing import Callable, Dict, Optional, Any, Literal, List, Tuple, Type
 
 import lxml.html
+import more_itertools
 
 from src.parser.html_parser.data import LinkedData
 from src.parser.html_parser.utility import get_meta_content
@@ -133,6 +134,7 @@ class BaseParser(ABC):
         doc = lxml.html.fromstring(html)
         ld_nodes = doc.xpath("//script[@type='application/ld+json']")
         lds = [json.loads(node.text_content()) for node in ld_nodes]
+        lds = more_itertools.collapse(lds, base_type=dict)
         self.precomputed.doc = doc
         self.precomputed.ld = LinkedData(lds)
         self.precomputed.meta = get_meta_content(doc)
