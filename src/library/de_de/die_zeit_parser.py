@@ -2,15 +2,14 @@ import datetime
 from typing import Optional, List
 
 from src.parser.html_parser import BaseParser, register_attribute, ArticleBody
-from src.parser.html_parser.utility import extract_article_body_with_css, \
-    generic_author_parsing, generic_date_parsing, generic_topic_parsing
+from src.parser.html_parser.utility import  generic_author_parsing, generic_date_parsing, generic_topic_parsing,extract_article_body_with_selector
 
 
 class DieZeitParser(BaseParser):
 
     @register_attribute
     def body(self) -> ArticleBody:
-        return extract_article_body_with_css(self.precomputed.doc,
+        return extract_article_body_with_selector(self.precomputed.doc,
                                              summary_selector='div.summary',
                                              subhead_selector='div.article-page > h2',
                                              paragraph_selector='div.article-page > p')

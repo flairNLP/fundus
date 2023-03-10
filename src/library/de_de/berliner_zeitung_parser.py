@@ -2,7 +2,7 @@ import datetime
 from typing import Optional, List
 
 from src.parser.html_parser import BaseParser, register_attribute, ArticleBody
-from src.parser.html_parser.utility import extract_article_body_with_css, generic_date_parsing, \
+from src.parser.html_parser.utility import generic_date_parsing, extract_article_body_with_selector, \
     generic_author_parsing, generic_topic_parsing
 
 
@@ -10,10 +10,10 @@ class BerlinerZeitungParser(BaseParser):
 
     @register_attribute
     def body(self) -> ArticleBody:
-        return extract_article_body_with_css(self.precomputed.doc,
-                                             summary_selector='div[data-testid=article-header] > p',
-                                             subhead_selector='div[id=articleBody] > p',
-                                             paragraph_selector='div[id=articleBody] > h2')
+        return extract_article_body_with_selector(self.precomputed.doc,
+                                                  summary_selector='div[data-testid=article-header] > p',
+                                                  subhead_selector='div[id=articleBody] > p',
+                                                  paragraph_selector='div[id=articleBody] > h2')
 
     @register_attribute
     def title(self) -> Optional[str]:
