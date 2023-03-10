@@ -2,7 +2,7 @@ import datetime
 from typing import Optional, List
 
 from src.parser.html_parser import BaseParser, register_attribute, ArticleBody
-from src.parser.html_parser.utility import  generic_author_parsing, \
+from src.parser.html_parser.utility import generic_author_parsing, \
     generic_date_parsing, generic_topic_parsing, generic_text_extraction_with_css, extract_article_body_with_selector
 
 
@@ -11,9 +11,9 @@ class DWParser(BaseParser):
     @register_attribute
     def body(self) -> ArticleBody:
         return extract_article_body_with_selector(self.precomputed.doc,
-                                             summary_selector='p.intro',
-                                             subhead_selector='div.longText > p',
-                                             paragraph_selector='div.longText > h2')
+                                                  summary_selector='p.intro',
+                                                  subhead_selector='div.longText > p',
+                                                  paragraph_selector='div.longText > h2')
 
     @register_attribute
     def authors(self) -> List[str]:
