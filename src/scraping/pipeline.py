@@ -28,7 +28,7 @@ class AutoPipeline:
 
     def run(self,
             max_articles: int = None,
-            restrict_sources_to: Literal['rss', 'sitemap'] = None,
+            restrict_sources_to: Literal['rss', 'sitemap', 'news'] = None,
             error_handling: Literal['suppress', 'catch', 'raise'] = 'raise') -> Generator[Article, None, None]:
 
         scraper: List[Scraper] = []
