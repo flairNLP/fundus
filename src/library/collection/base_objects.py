@@ -10,6 +10,7 @@ import requests
 from lxml import etree
 from lxml.etree import Element
 
+from src.logging.logger import basic_logger
 from src.parser.html_parser import BaseParser
 
 
@@ -20,7 +21,7 @@ def parse_robots(url: str) -> RobotFileParser:
     try:
         rp.read()
     except urllib.error.URLError as err:
-        print(Warning(f"Couldn't parse robots for {url}. Error: {err}"))
+        basic_logger.warning(f"Couldn't parse robots for {url}. Error: {err}")
     return rp
 
 

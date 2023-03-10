@@ -1,5 +1,6 @@
 from typing import Literal
 
+from src.logging.logger import basic_logger
 from src.parser.html_parser import BaseParser
 from src.scraping.article import Article
 from src.scraping.crawler.crawler import Crawler
@@ -30,6 +31,7 @@ class Scraper:
                         yield Article(extracted={}, exception=err, **article_source.serialize())
                         continue
                     elif error_handling == 'suppress':
+                        basic_logger.info(f'Skipped {article_source.url} because of {err}')
                         continue
                     else:
                         raise ValueError(f"Unknown value '{error_handling}' for parameter <error_handling>'")

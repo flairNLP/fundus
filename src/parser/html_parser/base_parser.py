@@ -162,12 +162,10 @@ class BaseParser(ABC):
                 try:
                     parsed_data[attribute_name] = func()
                 except Exception as err:
-                    if error_handling == 'raise':
-                        raise err
-                    elif error_handling == 'catch':
+                    if error_handling == 'catch':
                         parsed_data[attribute_name] = err
-                    elif error_handling == 'suppress':
-                        parsed_data[attribute_name] = None
+                    elif error_handling == 'suppress' or error_handling == 'raise':
+                        raise err
                     else:
                         raise ValueError(f"Invalid value '{error_handling}' for parameter <error_handling>")
 
