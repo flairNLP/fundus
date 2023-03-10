@@ -1,5 +1,6 @@
 from src.library.collection.base_objects import PublisherEnum, PublisherSpec
 from .die_welt_parser import DieWeltParser
+from .dw_parser import DWParser
 from .faz_parser import FAZParser
 from .focus_parser import FocusParser
 from .mdr_parser import MDRParser
@@ -41,3 +42,9 @@ class DE_DE(PublisherEnum):
     Tagesschau = PublisherSpec(domain='https://www.tagesschau.de/',
                                rss_feeds=['https://www.tagesschau.de/xml/rss2/'],
                                parser=TagesschauParser)
+
+    DW = PublisherSpec(domain='https://www.dw.com/',
+                       rss_feeds=['https://rss.dw.com/xml/rss-de-all'],
+                       sitemaps=['https://www.dw.com/de/article-sitemap.xml'],
+                       news_map='https://www.dw.com/de/news-sitemap.xml',
+                       parser=DWParser)
