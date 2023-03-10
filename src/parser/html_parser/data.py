@@ -6,7 +6,7 @@ from typing import List, Iterable, Any, Union, Dict, overload, Tuple, Sequence, 
 
 class LinkedData:
 
-    def __init__(self, lds: List[Dict[str, any]]):
+    def __init__(self, lds: Iterable[Dict[str, any]]):
         self._ld_by_type: Dict[str, Union[List[Dict[str, any]], Dict[str, any]]] = defaultdict(list)
         for ld in lds:
             if ld_type := ld.get('@type'):
