@@ -14,7 +14,7 @@ class SZParser(BaseParser):
                                                   summary_selector='main [data-manual="teaserText"]',
                                                   subhead_selector='main [itemprop="articleBody"] > h3',
                                                   paragraph_selector='main [itemprop="articleBody"] > p, '
-                                                                'main .css-korpch > div > ul > li')
+                                                                     'main .css-korpch > div > ul > li')
 
     @register_attribute
     def authors(self) -> List[str]:
