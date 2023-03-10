@@ -1,6 +1,6 @@
 import json
 from abc import ABC
-from dataclasses import dataclass
+from dataclasses import dataclass, InitVar, field
 from datetime import datetime
 from textwrap import TextWrapper, dedent
 from typing import Any, Callable, List, Dict, Optional
@@ -15,9 +15,16 @@ class BaseArticle(ABC):
     url: str
     html: str
     crawl_date: datetime
+    publisher: str = None
+    crawler_ref: InitVar[object] = None
+
+    def __post_init__(self, crawler_ref: object):
+        object.__setattr__(self, '_crawler_ref', crawler_ref)
 
     def serialize(self) -> Dict[str, Any]:
-        return self.__dict__
+        attrs = self.__dict__
+        attrs['crawler_ref'] = attrs.pop('_crawler_ref')
+        return attrs
 
     @classmethod
     def deserialize(cls, serialized: Dict[str, Any]):
@@ -35,14 +42,13 @@ class BaseArticle(ABC):
 
 @dataclass(frozen=True)
 class ArticleSource(BaseArticle):
-    source: object
+    pass
 
 
 @dataclass(frozen=True)
 class Article(BaseArticle):
-    extracted: Dict[str, Any]
+    extracted: Dict[str, Any] = field(default_factory=dict)
     exception: Exception = None
-    source: str = None
 
     @property
     def complete(self) -> bool:
@@ -80,12 +86,13 @@ class Article(BaseArticle):
         title_wrapper = TextWrapper(width=80, max_lines=1, initial_indent='')
         text_wrapper = TextWrapper(width=80, max_lines=2, initial_indent='', subsequent_indent='          ')
         wrapped_title = title_wrapper.fill(self.title.strip() or f"{Fore.RED}--missing title--{Style.RESET_ALL}")
-        wrapped_plaintext = text_wrapper.fill(self.plaintext.strip() or f"{Fore.RED}--missing plaintext--{Style.RESET_ALL}")
+        wrapped_plaintext = text_wrapper.fill(
+            self.plaintext.strip() or f"{Fore.RED}--missing plaintext--{Style.RESET_ALL}")
 
         text = f'Fundus-Article:' \
                f'\n- Title: "{wrapped_title}"' \
                f'\n- Text:  "{wrapped_plaintext}"' \
-               f'\n- URL:    {self.url}'
-               #f'\n- From:   {self.source} ({self.crawl_date.strftime("%Y-%m-%d %H:%M")})'
+               f'\n- URL:    {self.url}' \
+               f'\n- From:   {self.publisher} ({self.crawl_date.strftime("%Y-%m-%d %H:%M")})'
 
         return dedent(text)

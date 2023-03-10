@@ -6,6 +6,7 @@ from .focus_parser import FocusParser
 from .mdr_parser import MDRParser
 from .merkur_parser import MerkurParser
 from .sz_parser import SZParser
+from .tagesschau_parser import TagesschauParser
 
 
 # noinspection PyPep8Naming
@@ -37,6 +38,10 @@ class DE_DE(PublisherEnum):
     SZ = PublisherSpec(domain='https://www.sueddeutsche.de/',
                        rss_feeds=["https://rss.sueddeutsche.de/app/service/rss/alles/index.rss?output=rss"],
                        parser=SZParser)
+
+    Tagesschau = PublisherSpec(domain='https://www.tagesschau.de/',
+                               rss_feeds=['https://www.tagesschau.de/xml/rss2/'],
+                               parser=TagesschauParser)
 
     DW = PublisherSpec(domain='https://www.dw.com/',
                        rss_feeds=['https://rss.dw.com/xml/rss-de-all'],
