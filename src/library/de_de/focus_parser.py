@@ -4,7 +4,7 @@ from typing import Optional, List, Match
 
 from src.parser.html_parser import BaseParser, register_attribute, ArticleBody
 from src.parser.html_parser.utility import generic_author_parsing, \
-    generic_date_parsing, extract_article_body_with_css
+    generic_date_parsing, extract_article_body_with_selector
 
 
 class FocusParser(BaseParser):
@@ -14,10 +14,10 @@ class FocusParser(BaseParser):
 
     @register_attribute
     def body(self) -> Optional[ArticleBody]:
-        return extract_article_body_with_css(self.precomputed.doc,
-                                             summary_selector='div.leadIn > p',
-                                             subhead_selector='div.textBlock > h2',
-                                             paragraph_selector='div.textBlock > p')
+        return extract_article_body_with_selector(self.precomputed.doc,
+                                                  summary_selector='div.leadIn > p',
+                                                  subhead_selector='div.textBlock > h2',
+                                                  paragraph_selector='div.textBlock > p')
 
     @register_attribute
     def authors(self) -> List[str]:

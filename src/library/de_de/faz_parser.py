@@ -2,7 +2,7 @@ import datetime
 from typing import Optional, List
 
 from src.parser.html_parser import BaseParser, register_attribute, ArticleBody
-from src.parser.html_parser.utility import extract_article_body_with_css, generic_date_parsing, \
+from src.parser.html_parser.utility import extract_article_body_with_selector, generic_date_parsing, \
     generic_author_parsing, generic_topic_parsing
 
 
@@ -10,10 +10,10 @@ class FAZParser(BaseParser):
 
     @register_attribute
     def body(self) -> ArticleBody:
-        return extract_article_body_with_css(self.precomputed.doc,
-                                             summary_selector='div.atc-Intro > p',
-                                             subhead_selector='div.atc-Text > h3',
-                                             paragraph_selector='div.atc-Text > p')
+        return extract_article_body_with_selector(self.precomputed.doc,
+                                                  summary_selector='div.atc-Intro > p',
+                                                  subhead_selector='div.atc-Text > h3',
+                                                  paragraph_selector='div.atc-Text > p')
 
     @register_attribute
     def topics(self) -> Optional[List[str]]:

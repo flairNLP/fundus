@@ -110,7 +110,7 @@ class LinkedData:
         return search_recursive(self._ld_by_type.values(), 0)
 
     def __repr__(self):
-        return f"LD containing '{', '.join(self._contains)}'"
+        return f"LD containing '{', '.join(content)}'" if (content := self._contains) else "Empty LD"
 
 
 class TextSequence(Sequence[str]):
