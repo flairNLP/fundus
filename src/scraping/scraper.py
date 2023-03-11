@@ -14,7 +14,7 @@ class Scraper:
         self.crawler = list(sources)
         self.parser = parser
 
-    def scrape(self, error_handling: Literal['suppress', 'catch', 'raise'] = 'raise'):
+    def scrape(self, error_handling: Literal['suppress', 'catch', 'raise']):
         for crawler in self.crawler:
             for article_source in crawler.crawl():
 
