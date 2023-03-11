@@ -6,6 +6,7 @@ from datetime import datetime
 from functools import total_ordering
 from typing import Union, Dict, List, Optional, Literal
 
+import dateutil.tz
 import lxml.html
 import more_itertools
 from dateutil import parser
@@ -127,5 +128,9 @@ def generic_topic_parsing(keyword_str: str, delimiter: str = ',') -> List[str]:
     return [keyword.strip() for keyword in keyword_str.split(delimiter)] if keyword_str else []
 
 
+_tzs = ['CET', 'CEST']
+_tz_infos = {tz: dateutil.tz.gettz(tz) for tz in _tzs}
+
+
 def generic_date_parsing(date_str: str) -> Optional[datetime]:
-    return parser.parse(date_str) if date_str else None
+    return parser.parse(date_str, tzinfos=_tz_infos) if date_str else None
