@@ -93,10 +93,34 @@ The tutorials explain how ...
 
 Fundus currently has support for the following news sources. We are constantly expanding the supported sources.
 
-| Source | Domain | Language | Class |
-| ------ | -- | --- | --- |
-| Die Welt | www.welt.de | German | DieWelt |
-| Berliner Zeitung | www.berliner-zeitung.de | German | BerlinerZeitung |
+<table>
+    <tr>
+        <th>Source</th>
+        <th>Domain</th>
+        <th>Language</th>
+        <th>Class</th>
+    </tr>
+    <tr>
+        <td>Die Welt</td>
+        <td>
+            <a href="https://www.welt.de">
+                <span>www.welt.de</span>
+            </a>
+        </td>
+        <td>German</td>
+        <td><code>DieWelt</code></td>
+    </tr>
+    <tr>
+        <td>Berliner Zeitung</td>
+        <td>
+            <a href="https://www.berliner-zeitung.de">
+                <span>www.berliner-zeitung.de</span>
+            </a>
+        </td>
+        <td>German</td>
+        <td><code>BerlinerZeitung</code></td>
+    </tr>
+</table>
 
 Also: **Adding a new source is easy - consider contributing to the project!** 
 
