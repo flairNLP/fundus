@@ -25,7 +25,7 @@ In your favorite virtual environment, simply do:
 pip install fundus
 ```
 
-Fundus requires Python 3.7+. 
+Fundus requires Python 3.8+. 
 
 ### Example 1: Crawl a bunch of German-language news articles
 
