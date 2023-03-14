@@ -40,10 +40,7 @@ class RegisteredFunction(ABC):
         return self
 
     def __call__(self):
-        if self.__self__ and self.__self__.precomputed:
-            return self.__func__(self.__self__)
-        else:
-            raise ValueError('Your not allowed to call attributes or functions outside the parse() method')
+        return self.__func__(self.__self__)
 
     def __lt__(self, other):
         if self.priority is None:
