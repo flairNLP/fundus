@@ -15,19 +15,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+
       - name: Set up Python 3.8
         uses: actions/setup-python@v4
         with:
           python-version: 3.8
+
       - name: Cache environment
         uses: actions/cache@master
         id: cache
         with:
-          path: ${{ env.pythonLocation }}/lib/python3.9/site-packages/*
-          key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-
-            ${{ runner.os }}-
+          path: ${{ env.pythonLocation }}/lib/python3.8/site-packages/*
+          key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt', 'requirements-dev.txt') }}
       - name: Install dependencies
         if: steps.cache.outputs.cache-hit != 'true'
         run: |
@@ -41,11 +40,12 @@ jobs:
         uses: actions/cache@master
         id: cache
         with:
-          path: ${{ env.pythonLocation }}/lib/python3.9/site-packages/*
-          key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-
-            ${{ runner.os }}-
+          path: ${{ env.pythonLocation }}/lib/python3.8/site-packages/*
+          key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt', 'requirements-dev.txt') }}
+      - name: Install dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: |
+          pip install -r requirements.txt -r requirements-dev.txt
       - name: Run pytest
         run: python -m pytest -vv
 
@@ -57,11 +57,12 @@ jobs:
         uses: actions/cache@master
         id: cache
         with:
-          path: ${{ env.pythonLocation }}/lib/python3.9/site-packages/*
-          key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-
-            ${{ runner.os }}-
+          path: ${{ env.pythonLocation }}/lib/python3.8/site-packages/*
+          key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt', 'requirements-dev.txt') }}
+      - name: Install dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: |
+          pip install -r requirements.txt -r requirements-dev.txt
       - name: Run mypy
         run: python -m mypy .
 
