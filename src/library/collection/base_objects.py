@@ -1,52 +1,8 @@
-import urllib.error
 from dataclasses import dataclass, field
 from enum import Enum, unique
-from typing import Type, List, Optional, Tuple
-from urllib.parse import urlparse
-from urllib.robotparser import RobotFileParser
-
-import more_itertools
-import requests
-from lxml import etree
-from lxml.etree import Element
+from typing import Type, List, Optional
 
 from src.parser.html_parser import BaseParser
-
-
-def parse_robots(url: str) -> RobotFileParser:
-    parsed_url = urlparse(url)
-    robots_link = url[:len(url) - len(parsed_url.path)] + '/robots.txt'
-    rp = RobotFileParser(robots_link)
-    try:
-        rp.read()
-    except urllib.error.URLError as err:
-        print(Warning(f"Couldn't parse robots for {url}. Error: {err}"))
-    return rp
-
-
-def resolve_sitemaps(domain: str) -> Tuple[List[str], ...]:
-    with requests.Session() as session:
-        def is_news_sitemap(url: str) -> bool:
-            remaining_depth = 30
-            while url:
-                if remaining_depth == 0:
-                    raise RecursionError('Exceeded recursion depth')
-                remaining_depth -= 1
-                html: bytes = session.get(url).content
-                root: Element = etree.fromstring(html)
-                if new := root.cssselect('sitemap > loc'):
-                    url = new[0].text
-                    continue
-                else:
-                    return True if root.nsmap.get('news') else False
-
-        robots = parse_robots(domain)
-        if not (sitemaps := robots.site_maps()):
-            return [], []
-        sitemaps, news_maps = more_itertools.partition(is_news_sitemap, set(sitemaps))
-        sitemaps = list(sitemaps)
-        news_maps = list(news_maps)
-        return sitemaps, news_maps
 
 
 @dataclass(frozen=True)
@@ -79,14 +35,6 @@ class PublisherEnum(Enum):
         self.sitemaps = spec.sitemaps
         self.news_map = spec.news_map
         self.parser = spec.parser
-
-        if not (self.sitemaps and self.news_map):
-            sitemaps, news_map = resolve_sitemaps(self.domain)
-            if not self.sitemaps:
-                self.sitemaps = sitemaps
-            if not self.news_map:
-                assert len(news_map) < 2, f'Found more than one news-map while parsing {self.domain}'
-                self.news_map = next(iter(news_map), None)
 
     def supports(self, source_type: str) -> bool:
         if source_type == 'rss':
