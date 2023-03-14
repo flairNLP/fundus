@@ -47,7 +47,7 @@ class DE_DE(PublisherEnum):
                            parser=MerkurParser)
 
     SZ = PublisherSpec(domain='https://www.sueddeutsche.de/',
-                       rss_feeds=["https://rss.sueddeutsche.de/app/service/rss/alles/index.rss?output=rss"],
+                       rss_feeds=["https://rss.sueddeutsche.de/alles"],
                        parser=SZParser)
 
     SpiegelOnline = PublisherSpec(domain='https://www.spiegel.de/',
