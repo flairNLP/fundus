@@ -32,5 +32,6 @@ jobs:
         if: steps.cache.outputs.cache-hit != 'true'
         run: |
           pip install -r requirements.txt
+          pip install -r requirements-dev.txt
       - name: Run pytest
         run: python -m pytest
