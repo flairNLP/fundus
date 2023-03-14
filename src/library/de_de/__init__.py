@@ -18,10 +18,14 @@ from .tagesschau_parser import TagesschauParser
 class DE_DE(PublisherEnum):
     DieWelt = PublisherSpec(domain='https://www.welt.de/',
                             rss_feeds=['https://www.welt.de/feeds/latest.rss'],
+                            sitemaps=['https://www.welt.de/sitemaps/sitemap/sitemap.xml'],
+                            news_map='https://www.welt.de/sitemaps/newssitemap/newssitemap.xml',
                             parser=DieWeltParser)
 
     MDR = PublisherSpec(domain='https://www.mdr.de/',
                         rss_feeds=['https://www.mdr.de/nachrichten/index-rss.xml'],
+                        sitemaps=['https://www.mdr.de/sitemap-index-100.xml'],
+                        news_map='https://www.mdr.de/news-sitemap.xml',
                         parser=MDRParser)
 
     FAZ = PublisherSpec(domain='https://www.faz.net/',
@@ -30,6 +34,8 @@ class DE_DE(PublisherEnum):
                                    'https://www.faz.net/rss/aktuell/sport',
                                    'https://www.faz.net/rss/aktuell/wirtschaft/',
                                    'https://www.faz.net/rss/aktuell/gesellschaft/'],
+                        sitemaps=['https://www.faz.net/sitemap-index.xml'],
+                        news_map='https://www.faz.net/sitemap-news.xml',
                         parser=FAZParser)
 
     Focus = PublisherSpec(domain='https://www.focus.de/',
@@ -46,6 +52,8 @@ class DE_DE(PublisherEnum):
 
     SpiegelOnline = PublisherSpec(domain='https://www.spiegel.de/',
                                   rss_feeds=["https://www.spiegel.de/schlagzeilen/index.rss"],
+                                  sitemaps=['https://www.spiegel.de/sitemap.xml'],
+                                  news_map='https://www.spiegel.de/sitemaps/news-de.xml',
                                   parser=SPONParser)
 
     DieZeit = PublisherSpec(domain='https://www.sueddeutsche.de/',
