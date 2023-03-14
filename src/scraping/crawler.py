@@ -53,12 +53,14 @@ class RSSCrawler(Crawler):
         self.url = url
 
     def __iter__(self) -> Iterator[str]:
-        rss_feed = feedparser.parse(self.url)
-        if exception := rss_feed.get('bozo_exception'):
-            print(f"Warning! Couldn't parse rss feed at {self.url}. Exception: {exception}")
-            return iter(())
-        else:
-            return (entry["link"] for entry in rss_feed['entries'])
+        with requests.Session() as session:
+            content = session.get(self.url).content
+            rss_feed = feedparser.parse(content)
+            if exception := rss_feed.get('bozo_exception'):
+                print(f"Warning! Couldn't parse rss feed at {self.url}. Exception: {exception}")
+                return iter(())
+            else:
+                return (entry["link"] for entry in rss_feed['entries'])
 
 
 class SitemapCrawler(Crawler):
