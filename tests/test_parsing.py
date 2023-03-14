@@ -30,7 +30,9 @@ def load_data(parser: BaseParser) -> Dict[str, Any]:
 
 
 @pytest.mark.parametrize(
-    "parser", [publisher.parser() for publisher in de_de], ids=[publisher.name for publisher in de_de]
+    "parser",
+    [publisher.parser() for publisher in PublisherCollection],
+    ids=[publisher.name for publisher in PublisherCollection]
 )
 class TestCrawling:
 
