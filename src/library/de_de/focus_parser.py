@@ -1,6 +1,6 @@
 import datetime
 import re
-from typing import Optional, List, Match
+from typing import Optional, List, Match, Pattern
 
 from src.parser.html_parser import BaseParser, register_attribute, ArticleBody
 from src.parser.html_parser.utility import generic_author_parsing, \
@@ -8,9 +8,9 @@ from src.parser.html_parser.utility import generic_author_parsing, \
 
 
 class FocusParser(BaseParser):
-    _author_substitution_pattern: re.Pattern[str] = re.compile(r'Von FOCUS-online-(Redakteur|Autorin)\s')
-    _topic_pattern: re.Pattern[str] = re.compile(r'"keywords":\[{(.*?)}\]')
-    _topic_name_pattern: re.Pattern[str] = re.compile(r'"name":"(.*?)"', flags=re.MULTILINE)
+    _author_substitution_pattern: Pattern[str] = re.compile(r'Von FOCUS-online-(Redakteur|Autorin)\s')
+    _topic_pattern: Pattern[str] = re.compile(r'"keywords":\[{(.*?)}\]')
+    _topic_name_pattern: Pattern[str] = re.compile(r'"name":"(.*?)"', flags=re.MULTILINE)
 
     @register_attribute
     def body(self) -> Optional[ArticleBody]:
