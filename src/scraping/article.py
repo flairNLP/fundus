@@ -85,9 +85,10 @@ class Article(BaseArticle):
         # whitespaces instead.
         title_wrapper = TextWrapper(width=80, max_lines=1, initial_indent='')
         text_wrapper = TextWrapper(width=80, max_lines=2, initial_indent='', subsequent_indent='          ')
-        wrapped_title = title_wrapper.fill(self.title or f"{Fore.RED}--missing title--{Style.RESET_ALL}")
-        wrapped_plaintext = text_wrapper.fill(
-            self.plaintext or f"{Fore.RED}--missing plaintext--{Style.RESET_ALL}")
+        wrapped_title = title_wrapper.fill(self.title.strip() if self.title
+                                           else f"{Fore.RED}--missing title--{Style.RESET_ALL}")
+        wrapped_plaintext = text_wrapper.fill(self.plaintext.strip() if self.plaintext
+                                              else f"{Fore.RED}--missing plaintext--{Style.RESET_ALL}")
 
         text = f'Fundus-Article:' \
                f'\n- Title: "{wrapped_title}"' \
