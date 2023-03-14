@@ -37,6 +37,15 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
+      - name: Cache environment
+        uses: actions/cache@master
+        id: cache
+        with:
+          path: ${{ env.pythonLocation }}/lib/python3.9/site-packages/*
+          key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+            ${{ runner.os }}-
       - name: Run pytest
         run: python -m pytest -vv
 
@@ -44,6 +53,15 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
+      - name: Cache environment
+        uses: actions/cache@master
+        id: cache
+        with:
+          path: ${{ env.pythonLocation }}/lib/python3.9/site-packages/*
+          key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+            ${{ runner.os }}-
       - name: Run mypy
         run: python -m mypy .
 
