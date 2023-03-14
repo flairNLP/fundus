@@ -31,7 +31,17 @@ jobs:
       - name: Install dependencies
         if: steps.cache.outputs.cache-hit != 'true'
         run: |
-          pip install -r requirements.txt
-          pip install -r requirements-dev.txt
+          pip install -r requirements.txt -r requirements-dev.txt
+
+  pytest:
+    needs: build
+    steps:
       - name: Run pytest
         run: python -m pytest -vv
+
+  mypy:
+    needs: build
+    steps:
+      - name: Run mypy
+        run: python -m mypy .
+

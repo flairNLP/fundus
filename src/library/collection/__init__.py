@@ -1,6 +1,7 @@
 from typing import Iterator, Any, Dict
 
 from src.library.at_at import AT_AT
+from src.library.collection.base_objects import PublisherEnum
 from src.library.de_de import DE_DE
 
 
@@ -13,7 +14,7 @@ class CollectionMeta(type):
     def __contains__(cls, __x: object) -> bool:
         return __x in cls._members.values()
 
-    def __iter__(cls) -> Iterator["PublisherCollection"]:
+    def __iter__(cls) -> Iterator[PublisherEnum]:
         for coll in cls._members.values():
             yield from coll
 
