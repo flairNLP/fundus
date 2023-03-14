@@ -1,4 +1,4 @@
-[tool.mypy]
+[mypy]
 check_untyped_defs = true
 disallow_any_generics = true
 ignore_missing_imports = true
@@ -10,3 +10,4 @@ warn_return_any = true
 warn_unreachable = true
 warn_unused_configs = true
 no_implicit_reexport = true
+exclude = 'stream/'

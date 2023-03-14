@@ -107,7 +107,7 @@ def strip_nodes_to_text(text_nodes: List[lxml.html.HtmlElement]) -> Optional[str
     return "\n\n".join(([re.sub(r'\n+', ' ', node.text_content()) for node in text_nodes])).strip()
 
 
-def generic_author_parsing(value: Union[str, Dict[str, str], List[Dict[str, str]]]) -> List[str]:
+def generic_author_parsing(value: Union[Optional[str], Dict[str, str], List[Dict[str, str]]]) -> List[str]:
     if not value:
         return []
 
@@ -132,7 +132,7 @@ def generic_text_extraction_with_css(doc, selector: str) -> Optional[str]:
     return strip_nodes_to_text(nodes)
 
 
-def generic_topic_parsing(keyword_str: str, delimiter: str = ',') -> List[str]:
+def generic_topic_parsing(keyword_str: Optional[str], delimiter: str = ',') -> List[str]:
     return [keyword.strip() for keyword in keyword_str.split(delimiter)] if keyword_str else []
 
 

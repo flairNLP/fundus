@@ -8,9 +8,9 @@ from src.parser.html_parser.utility import generic_author_parsing, \
 
 
 class FocusParser(BaseParser):
-    _author_substitution_pattern: re.Pattern = re.compile(r'Von FOCUS-online-(Redakteur|Autorin)\s')
-    _topic_pattern: re.Pattern = re.compile(r'"keywords":\[{(.*?)}\]')
-    _topic_name_pattern: re.Pattern = re.compile(r'"name":"(.*?)"', flags=re.MULTILINE)
+    _author_substitution_pattern: re.Pattern[str] = re.compile(r'Von FOCUS-online-(Redakteur|Autorin)\s')
+    _topic_pattern: re.Pattern[str] = re.compile(r'"keywords":\[{(.*?)}\]')
+    _topic_name_pattern: re.Pattern[str] = re.compile(r'"name":"(.*?)"', flags=re.MULTILINE)
 
     @register_attribute
     def body(self) -> Optional[ArticleBody]:
@@ -42,7 +42,7 @@ class FocusParser(BaseParser):
         if not snippet:
             return []
 
-        match: Optional[Match] = re.search(self._topic_pattern, snippet)
+        match: Optional[Match[str]] = re.search(self._topic_pattern, snippet)
         if not match:
             return []
         topic_names: List[str] = re.findall(self._topic_name_pattern, match.group(1))

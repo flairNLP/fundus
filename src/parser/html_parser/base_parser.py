@@ -9,6 +9,7 @@ from typing import Callable, Dict, Optional, Any, Literal, List, Tuple, Type
 
 import lxml.html
 import more_itertools
+from typing_extensions import reveal_type
 
 from src.parser.html_parser.data import LinkedData
 from src.parser.html_parser.utility import get_meta_content
@@ -18,7 +19,7 @@ class RegisteredFunction(ABC):
     __wrapped__: Callable[[object], Any]
     __name__: str
     __func__: Callable[[object], Any]
-    __self__: object
+    __self__: Optional["BaseParser"]
 
     # TODO: ensure uint for priority instead of int
     def __init__(self,
@@ -40,7 +41,10 @@ class RegisteredFunction(ABC):
         return self
 
     def __call__(self):
-        return self.__func__(self.__self__)
+        if self.__self__ and self.__self__.precomputed:
+            return self.__func__(self.__self__)
+        else:
+            raise ValueError('Your not allowed to call attributes or functions outside the parse() method')
 
     def __lt__(self, other):
         if self.priority is None:
@@ -97,14 +101,16 @@ def register_function(cls=None, /, *, priority: Optional[int] = None):
 
 @dataclass
 class Precomputed:
-    html: Optional[str] = None
-    doc: Optional[lxml.html.HtmlElement] = None
-    meta: Dict[str, Any] = field(default_factory=dict)
-    ld: Optional[LinkedData] = None
+    html: str
+    doc: lxml.html.HtmlElement
+    meta: Dict[str, str]
+    ld: LinkedData
     cache: Dict[str, Any] = field(default_factory=dict)
 
 
 class BaseParser(ABC):
+
+    precomputed: Precomputed
 
     def __init__(self):
         self._shared_object_buffer: Dict[str, Any] = {}
@@ -113,11 +119,10 @@ class BaseParser(ABC):
         predicated_members: List[Tuple[str, RegisteredFunction]] = inspect.getmembers(self, predicate=predicate)
         bound_registered_functions: List[RegisteredFunction] = [func for _, func in predicated_members]
         self._sorted_registered_functions = sorted(bound_registered_functions, key=lambda f: (f, f.__name__))
-        self.precomputed = Precomputed()
 
     @property
-    def cache(self) -> Dict[str, Any]:
-        return self.precomputed.cache
+    def cache(self) -> Optional[Dict[str, Any]]:
+        return self.precomputed.cache if self.precomputed else None
 
     @classmethod
     def _search_members(cls, obj_type: type) -> List[Tuple[str, Any]]:
@@ -135,14 +140,14 @@ class BaseParser(ABC):
         collapsed_lds = more_itertools.collapse(lds, base_type=dict)
         self.precomputed = Precomputed(html, doc, get_meta_content(doc), LinkedData(collapsed_lds))
 
-    def _wipe(self):
-        self.precomputed = Precomputed()
+    # def _wipe(self):
+    #     self.precomputed = None
 
     def parse(self, html: str,
               error_handling: Literal['suppress', 'catch', 'raise'] = 'raise') -> Optional[Dict[str, Any]]:
 
         # wipe existing precomputed
-        self._wipe()
+        # self._wipe()
         self._base_setup(html)
 
         parsed_data = {}

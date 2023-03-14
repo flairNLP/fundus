@@ -13,7 +13,7 @@ class CollectionMeta(type):
     def __contains__(cls, __x: object) -> bool:
         return __x in cls._members.values()
 
-    def __iter__(cls) -> Iterator:
+    def __iter__(cls) -> Iterator["PublisherCollection"]:
         return iter(cls._members.values())
 
     def __len__(cls) -> int:

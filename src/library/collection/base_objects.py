@@ -36,7 +36,7 @@ class PublisherEnum(Enum):
         self.news_map = spec.news_map
         self.parser = spec.parser
 
-    def supports(self, source_type: str) -> bool:
+    def supports(self, source_type: Optional[str]) -> bool:
         if source_type == 'rss':
             return bool(self.rss_feeds)
         elif source_type == 'sitemap':
@@ -45,16 +45,18 @@ class PublisherEnum(Enum):
             return bool(self.news_map)
         elif source_type is None:
             return True
+        else:
+            raise ValueError(f'Unsupported value {source_type} for parameter <source_type>')
 
     @classmethod
-    def search(cls, attrs: List[str] = None, source_type: str = None) -> List['PublisherEnum']:
+    def search(cls, attrs: Optional[List[str]] = None, source_type: Optional[str] = None) -> List['PublisherEnum']:
         assert attrs or source_type, "You have to define at least one search condition"
         if not attrs:
             attrs = []
         matched = []
-        attrs = set(attrs)
+        attrs_set = set(attrs)
         spec: PublisherEnum
         for spec in list(cls):
-            if attrs.issubset(spec.parser.attributes()) and spec.supports(source_type):
+            if attrs_set.issubset(spec.parser.attributes()) and spec.supports(source_type):
                 matched.append(spec)
         return matched
