@@ -5,7 +5,7 @@ from typing import List, Iterable, Any, Dict, overload, Tuple, Sequence, Collect
 
 class LinkedData:
 
-    def __init__(self, lds: Iterable[Dict[str, Any]]):
+    def __init__(self, lds: Iterable[Dict[str, Any]] = ()):
         self._ld_by_type: Dict[str, Dict[str, Any]] = {}
         for ld in lds:
             if ld_type := ld.get('@type'):

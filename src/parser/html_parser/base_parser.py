@@ -9,7 +9,6 @@ from typing import Callable, Dict, Optional, Any, Literal, List, Tuple, Type
 
 import lxml.html
 import more_itertools
-from typing_extensions import reveal_type
 
 from src.parser.html_parser.data import LinkedData
 from src.parser.html_parser.utility import get_meta_content
@@ -109,7 +108,6 @@ class Precomputed:
 
 
 class BaseParser(ABC):
-
     precomputed: Precomputed
 
     def __init__(self):
@@ -140,14 +138,10 @@ class BaseParser(ABC):
         collapsed_lds = more_itertools.collapse(lds, base_type=dict)
         self.precomputed = Precomputed(html, doc, get_meta_content(doc), LinkedData(collapsed_lds))
 
-    # def _wipe(self):
-    #     self.precomputed = None
-
     def parse(self, html: str,
-              error_handling: Literal['suppress', 'catch', 'raise'] = 'raise') -> Optional[Dict[str, Any]]:
+              error_handling: Literal['suppress', 'catch', 'raise'] = 'raise') -> Dict[str, Any]:
 
         # wipe existing precomputed
-        # self._wipe()
         self._base_setup(html)
 
         parsed_data = {}

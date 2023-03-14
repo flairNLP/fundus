@@ -1,5 +1,5 @@
 import datetime
-from typing import Optional, List, Any
+from typing import Optional, List
 
 from src.parser.html_parser import BaseParser, register_attribute, ArticleBody
 from src.parser.html_parser.utility import (extract_article_body_with_selector, generic_topic_parsing,
@@ -31,5 +31,5 @@ class MDRParser(BaseParser):
         return []
 
     @register_attribute
-    def title(self) -> Optional[Any]:
-        return self.precomputed.ld.bf_search('headline')
+    def title(self) -> Optional[str]:
+        return title if isinstance(title := self.precomputed.ld.bf_search('headline'), str) else None

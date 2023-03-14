@@ -15,7 +15,7 @@ class BaseArticle(ABC):
     url: str
     html: str
     crawl_date: datetime
-    publisher: str = None
+    publisher: Optional[str] = None
     crawler_ref: InitVar[object] = None
 
     def __post_init__(self, crawler_ref: object):
@@ -31,8 +31,10 @@ class BaseArticle(ABC):
         return cls(**serialized)
 
     def pprint(self, indent: int = 4, ensure_ascii: bool = False, default: Callable[[Any], Any] = str,
-               exclude: List[str] = None) -> str:
+               exclude: Optional[List[str]] = None) -> str:
         to_serialize: Dict[str, Any] = self.__dict__.copy()
+        if not exclude:
+            exclude = []
         for key in exclude:
             if not hasattr(self, key):
                 raise AttributeError(f"Tried to exclude key '{key} which isn't present in this'{self}' instance")
@@ -48,7 +50,7 @@ class ArticleSource(BaseArticle):
 @dataclass(frozen=True)
 class Article(BaseArticle):
     extracted: Dict[str, Any] = field(default_factory=dict)
-    exception: Exception = None
+    exception: Optional[Exception] = None
 
     @property
     def complete(self) -> bool:
@@ -70,7 +72,7 @@ class Article(BaseArticle):
 
     @property
     def authors(self) -> List[str]:
-        return self.extracted.get('authors', []) if self.extracted else None
+        return self.extracted.get('authors', []) if self.extracted else []
 
     @property
     def ld(self) -> Optional[LinkedData]:

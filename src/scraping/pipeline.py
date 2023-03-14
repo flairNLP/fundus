@@ -1,39 +1,30 @@
-from collections import defaultdict
-from functools import cached_property
-from typing import Literal, Union, List, Dict, Generator
+from typing import Literal, Union, List, Generator, Optional, Type, Set
 
 import more_itertools
 
 from src.library.collection.base_objects import PublisherEnum
 from src.scraping.article import Article
-from src.scraping.crawler.crawler import RSSCrawler, SitemapCrawler
+from src.scraping.crawler import RSSCrawler, SitemapCrawler, Crawler
 from src.scraping.scraper import Scraper
 from src.utils.validation import listify
 
 
 class AutoPipeline:
 
-    def __init__(self, publishers: Union[PublisherEnum, List[PublisherEnum]]):
+    def __init__(self, *publishers: Union[PublisherEnum, Type[PublisherEnum]]):
         if not publishers:
             raise ValueError('param <publishers> of <Crawler.__init__> has to be non empty')
-        self.publishers: List[PublisherEnum] = listify(publishers)
-
-    @cached_property
-    def rss_sources(self) -> Dict[str, List[str]]:
-        sources = defaultdict(list)
-        for spec in self.publishers:
-            for url in spec.rss_feeds:
-                sources[spec.domain].append(url)
-        return sources
+        nested_publisher = [listify(publisher) for publisher in publishers]
+        self.publishers: Set[PublisherEnum] = set(more_itertools.flatten(nested_publisher))
 
     def run(self,
-            max_articles: int = None,
-            restrict_sources_to: Literal['rss', 'sitemap', 'news'] = None,
+            max_articles: Optional[int] = None,
+            restrict_sources_to: Optional[Literal['rss', 'sitemap', 'news']] = None,
             error_handling: Literal['suppress', 'catch', 'raise'] = 'suppress') -> Generator[Article, None, None]:
 
         scraper: List[Scraper] = []
         for spec in self.publishers:
-            sources = []
+            sources: List[Crawler] = []
             if restrict_sources_to == 'rss' or restrict_sources_to is None:
                 sources.extend([RSSCrawler(url, publisher=spec.name) for url in spec.rss_feeds])
             if restrict_sources_to == 'sitemap' or restrict_sources_to is None:
