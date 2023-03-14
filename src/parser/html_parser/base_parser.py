@@ -15,14 +15,14 @@ from src.parser.html_parser.utility import get_meta_content
 
 
 class RegisteredFunction(ABC):
-    __wrapped__: callable = None
-    __func__: callable
+    __wrapped__: Callable[[object], Any]
+    __name__: str
+    __func__: Callable[[object], Any]
     __self__: object
-    __slots__ = ['__dict__', '__self__', '__func__', 'priority']
 
     # TODO: ensure uint for priority instead of int
     def __init__(self,
-                 func: Callable,
+                 func: Callable[[object], Any],
                  priority: Optional[int] = None):
 
         self.__self__ = None
@@ -39,8 +39,8 @@ class RegisteredFunction(ABC):
             return method
         return self
 
-    def __call__(self, *args, **kwargs):
-        return self.__func__(self.__self__, *args, *kwargs)
+    def __call__(self):
+        return self.__func__(self.__self__)
 
     def __lt__(self, other):
         if self.priority is None:
@@ -60,7 +60,7 @@ class RegisteredFunction(ABC):
 class Attribute(RegisteredFunction):
 
     def __init__(self,
-                 func: Callable,
+                 func: Callable[[object], Any],
                  priority: Optional[int] = None):
         super(Attribute, self).__init__(func=func,
                                         priority=priority)
@@ -69,7 +69,7 @@ class Attribute(RegisteredFunction):
 class Function(RegisteredFunction):
 
     def __init__(self,
-                 func: Callable,
+                 func: Callable[[object], Any],
                  priority: Optional[int] = None):
         super(Function, self).__init__(func=func,
                                        priority=priority)
@@ -97,10 +97,10 @@ def register_function(cls=None, /, *, priority: Optional[int] = None):
 
 @dataclass
 class Precomputed:
-    html: str = None
-    doc: lxml.html.HtmlElement = None
+    html: Optional[str] = None
+    doc: Optional[lxml.html.HtmlElement] = None
     meta: Dict[str, Any] = field(default_factory=dict)
-    ld: LinkedData = None
+    ld: Optional[LinkedData] = None
     cache: Dict[str, Any] = field(default_factory=dict)
 
 
@@ -109,11 +109,10 @@ class BaseParser(ABC):
     def __init__(self):
         self._shared_object_buffer: Dict[str, Any] = {}
 
-        predicate: callable = lambda x: isinstance(x, RegisteredFunction)
+        predicate: Callable[[object], bool] = lambda x: isinstance(x, RegisteredFunction)
         predicated_members: List[Tuple[str, RegisteredFunction]] = inspect.getmembers(self, predicate=predicate)
         bound_registered_functions: List[RegisteredFunction] = [func for _, func in predicated_members]
         self._sorted_registered_functions = sorted(bound_registered_functions, key=lambda f: (f, f.__name__))
-
         self.precomputed = Precomputed()
 
     @property
@@ -122,7 +121,7 @@ class BaseParser(ABC):
 
     @classmethod
     def _search_members(cls, obj_type: type) -> List[Tuple[str, Any]]:
-        members = inspect.getmembers(cls, predicate=lambda x: isinstance(x, obj_type)) if obj_type else None
+        members = inspect.getmembers(cls, predicate=lambda x: isinstance(x, obj_type)) if obj_type else []
         return members
 
     @classmethod
@@ -130,14 +129,11 @@ class BaseParser(ABC):
         return [func.__name__ for _, func in cls._search_members(Attribute)]
 
     def _base_setup(self, html: str) -> None:
-        self.precomputed.html = html
-        doc = lxml.html.fromstring(html)
+        doc = lxml.html.document_fromstring(html)
         ld_nodes = doc.xpath("//script[@type='application/ld+json']")
         lds = [json.loads(node.text_content()) for node in ld_nodes]
-        lds = more_itertools.collapse(lds, base_type=dict)
-        self.precomputed.doc = doc
-        self.precomputed.ld = LinkedData(lds)
-        self.precomputed.meta = get_meta_content(doc)
+        collapsed_lds = more_itertools.collapse(lds, base_type=dict)
+        self.precomputed = Precomputed(html, doc, get_meta_content(doc), LinkedData(collapsed_lds))
 
     def _wipe(self):
         self.precomputed = Precomputed()
@@ -186,5 +182,5 @@ class BaseParser(ABC):
         return self.precomputed.meta
 
     @register_attribute
-    def __ld(self) -> LinkedData:
+    def __ld(self) -> Optional[LinkedData]:
         return self.precomputed.ld
