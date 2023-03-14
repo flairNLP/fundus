@@ -35,12 +35,14 @@ jobs:
 
   pytest:
     needs: build
+    runs-on: ubuntu-latest
     steps:
       - name: Run pytest
         run: python -m pytest -vv
 
   mypy:
     needs: build
+    runs-on: ubuntu-latest
     steps:
       - name: Run mypy
         run: python -m mypy .
