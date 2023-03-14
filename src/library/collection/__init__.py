@@ -14,7 +14,8 @@ class CollectionMeta(type):
         return __x in cls._members.values()
 
     def __iter__(cls) -> Iterator:
-        return iter(cls._members.values())
+        for coll in cls._members.values():
+            yield from coll
 
     def __len__(cls) -> int:
         return len(cls._members)
