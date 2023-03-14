@@ -25,7 +25,11 @@ def load_data(publisher_name: str) -> Dict[str, Any]:
     with open(file_source_path, 'r', encoding='utf-8') as file:
         content = file.read()
 
-    return json.loads(content)
+    data = json.loads(content)
+    if isinstance(data, dict):
+        return data
+    else:
+        raise ValueError('Unknown json format')
 
 
 @pytest.mark.parametrize(
