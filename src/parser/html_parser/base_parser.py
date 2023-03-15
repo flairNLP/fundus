@@ -4,8 +4,8 @@ import json
 import re
 from abc import ABC
 from copy import copy
-from dataclasses import field, dataclass
-from typing import Callable, Dict, Optional, Any, Literal, List, Tuple, Type
+from dataclasses import dataclass, field
+from typing import Any, Callable, Dict, List, Literal, Optional, Tuple, Type
 
 import lxml.html
 import more_itertools
@@ -21,10 +21,7 @@ class RegisteredFunction(ABC):
     __self__: Optional["BaseParser"]
 
     # TODO: ensure uint for priority instead of int
-    def __init__(self,
-                 func: Callable[[object], Any],
-                 priority: Optional[int] = None):
-
+    def __init__(self, func: Callable[[object], Any], priority: Optional[int] = None):
         self.__self__ = None
         self.__func__ = func
         self.__finite__: bool = False
@@ -40,10 +37,10 @@ class RegisteredFunction(ABC):
         return self
 
     def __call__(self):
-        if self.__self__ and hasattr(self.__self__, 'precomputed'):
+        if self.__self__ and hasattr(self.__self__, "precomputed"):
             return self.__func__(self.__self__)
         else:
-            raise ValueError('You are not allowed to call attributes or functions outside the parse() method')
+            raise ValueError("You are not allowed to call attributes or functions outside the parse() method")
 
     def __lt__(self, other):
         if self.priority is None:
@@ -61,21 +58,13 @@ class RegisteredFunction(ABC):
 
 
 class Attribute(RegisteredFunction):
-
-    def __init__(self,
-                 func: Callable[[object], Any],
-                 priority: Optional[int] = None):
-        super(Attribute, self).__init__(func=func,
-                                        priority=priority)
+    def __init__(self, func: Callable[[object], Any], priority: Optional[int] = None):
+        super(Attribute, self).__init__(func=func, priority=priority)
 
 
 class Function(RegisteredFunction):
-
-    def __init__(self,
-                 func: Callable[[object], Any],
-                 priority: Optional[int] = None):
-        super(Function, self).__init__(func=func,
-                                       priority=priority)
+    def __init__(self, func: Callable[[object], Any], priority: Optional[int] = None):
+        super(Function, self).__init__(func=func, priority=priority)
 
 
 def _register(cls, factory: Type[RegisteredFunction], priority):
@@ -142,17 +131,14 @@ class BaseParser(ABC):
         collapsed_lds = more_itertools.collapse(lds, base_type=dict)
         self.precomputed = Precomputed(html, doc, get_meta_content(doc), LinkedData(collapsed_lds))
 
-    def parse(self, html: str,
-              error_handling: Literal['suppress', 'catch', 'raise'] = 'raise') -> Dict[str, Any]:
-
+    def parse(self, html: str, error_handling: Literal["suppress", "catch", "raise"] = "raise") -> Dict[str, Any]:
         # wipe existing precomputed
         self._base_setup(html)
 
         parsed_data = {}
 
         for func in self._sorted_registered_functions:
-
-            attribute_name = re.sub(r'^_{1,2}([^_]*_?)$', r'\g<1>', func.__name__)
+            attribute_name = re.sub(r"^_{1,2}([^_]*_?)$", r"\g<1>", func.__name__)
 
             if isinstance(func, Function):
                 func()
@@ -161,9 +147,9 @@ class BaseParser(ABC):
                 try:
                     parsed_data[attribute_name] = func()
                 except Exception as err:
-                    if error_handling == 'catch':
+                    if error_handling == "catch":
                         parsed_data[attribute_name] = err
-                    elif error_handling == 'suppress' or error_handling == 'raise':
+                    elif error_handling == "suppress" or error_handling == "raise":
                         raise err
                     else:
                         raise ValueError(f"Invalid value '{error_handling}' for parameter <error_handling>")

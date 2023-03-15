@@ -59,6 +59,3 @@ jobs:
 
       - name: Run mypy
         run: python -m mypy .
-
-
-

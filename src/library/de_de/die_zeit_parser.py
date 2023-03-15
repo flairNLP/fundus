@@ -1,32 +1,37 @@
 import datetime
-from typing import Optional, List
+from typing import List, Optional
 
-from src.parser.html_parser import BaseParser, attribute, ArticleBody
-from src.parser.html_parser.utility import generic_author_parsing, generic_date_parsing, generic_topic_parsing, \
-    extract_article_body_with_selector
+from src.parser.html_parser import ArticleBody, BaseParser, register_attribute
+from src.parser.html_parser.utility import (
+    extract_article_body_with_selector,
+    generic_author_parsing,
+    generic_date_parsing,
+    generic_topic_parsing,
+)
 
 
 class DieZeitParser(BaseParser):
-
-    @attribute
+    @register_attribute
     def body(self) -> ArticleBody:
-        return extract_article_body_with_selector(self.precomputed.doc,
-                                                  summary_selector='div.summary',
-                                                  subhead_selector='div.article-page > h2',
-                                                  paragraph_selector='div.article-page > p')
+        return extract_article_body_with_selector(
+            self.precomputed.doc,
+            summary_selector="div.summary",
+            subheadline_selector="div.article-page > h2",
+            paragraph_selector="div.article-page > p",
+        )
 
-    @attribute
+    @register_attribute
     def authors(self) -> List[str]:
-        return generic_author_parsing(self.precomputed.ld.bf_search('author'))
+        return generic_author_parsing(self.precomputed.ld.bf_search("author"))
 
-    @attribute
+    @register_attribute
     def publishing_date(self) -> Optional[datetime.datetime]:
-        return generic_date_parsing(self.precomputed.ld.bf_search('datePublished'))
+        return generic_date_parsing(self.precomputed.ld.bf_search("datePublished"))
 
-    @attribute
+    @register_attribute
     def title(self):
-        return self.precomputed.ld.bf_search('headline')
+        return self.precomputed.ld.bf_search("headline")
 
-    @attribute
+    @register_attribute
     def topics(self) -> List[str]:
-        return generic_topic_parsing(self.precomputed.meta.get('keywords'))
+        return generic_topic_parsing(self.precomputed.meta.get("keywords"))
