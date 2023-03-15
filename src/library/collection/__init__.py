@@ -1,4 +1,4 @@
-from typing import Iterator, Any, Dict
+from typing import Any, Dict, Iterator
 
 from src.library.at_at import AT_AT
 from src.library.collection.base_objects import PublisherEnum

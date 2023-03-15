@@ -1,9 +1,9 @@
 import json
 from abc import ABC
-from dataclasses import dataclass, InitVar, field
+from dataclasses import InitVar, dataclass, field
 from datetime import datetime
 from textwrap import TextWrapper, dedent
-from typing import Any, Callable, List, Dict, Optional
+from typing import Any, Callable, Dict, List, Optional
 
 from colorama import Fore, Style
 

@@ -1,6 +1,7 @@
 from datetime import datetime
 
 from src.library.collection.base_objects import PublisherEnum, PublisherSpec
+
 from .berliner_zeitung_parser import BerlinerZeitungParser
 from .die_welt_parser import DieWeltParser
 from .die_zeit_parser import DieZeitParser

@@ -1,4 +1,5 @@
 from src.library.collection.base_objects import PublisherEnum, PublisherSpec
+
 from .orf_parser import OrfParser
 
 

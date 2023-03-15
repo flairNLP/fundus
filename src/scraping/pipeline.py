@@ -1,10 +1,10 @@
-from typing import Literal, Union, List, Generator, Optional, Type, Set
+from typing import Generator, List, Literal, Optional, Set, Type, Union
 
 import more_itertools
 
 from src.library.collection.base_objects import PublisherEnum
 from src.scraping.article import Article
-from src.scraping.crawler import RSSCrawler, SitemapCrawler, Crawler
+from src.scraping.crawler import Crawler, RSSCrawler, SitemapCrawler
 from src.scraping.scraper import Scraper
 from src.utils.validation import listify
 

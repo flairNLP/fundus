@@ -1,17 +1,7 @@
 from abc import ABC
 from dataclasses import dataclass, fields
-from typing import (
-    List,
-    Iterable,
-    Any,
-    Dict,
-    overload,
-    Tuple,
-    Sequence,
-    Collection,
-    Iterator,
-    Optional,
-)
+from typing import (Any, Collection, Dict, Iterable, Iterator, List, Optional,
+                    Sequence, Tuple, overload)
 
 
 class LinkedData:

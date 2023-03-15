@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from datetime import datetime
 from time import sleep
-from typing import Iterator, List, Callable, Optional, Iterable
+from typing import Callable, Iterable, Iterator, List, Optional
 
 import feedparser
 import lxml.html

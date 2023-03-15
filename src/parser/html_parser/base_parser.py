@@ -4,8 +4,8 @@ import json
 import re
 from abc import ABC
 from copy import copy
-from dataclasses import field, dataclass
-from typing import Callable, Dict, Optional, Any, Literal, List, Tuple, Type
+from dataclasses import dataclass, field
+from typing import Any, Callable, Dict, List, Literal, Optional, Tuple, Type
 
 import lxml.html
 import more_itertools

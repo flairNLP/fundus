@@ -1,13 +1,11 @@
 import datetime
 import re
-from typing import Optional, List, Match, Pattern
+from typing import List, Match, Optional, Pattern
 
-from src.parser.html_parser import BaseParser, register_attribute, ArticleBody
-from src.parser.html_parser.utility import (
-    generic_author_parsing,
-    generic_date_parsing,
-    extract_article_body_with_selector,
-)
+from src.parser.html_parser import ArticleBody, BaseParser, register_attribute
+from src.parser.html_parser.utility import (extract_article_body_with_selector,
+                                            generic_author_parsing,
+                                            generic_date_parsing)
 
 
 class FocusParser(BaseParser):

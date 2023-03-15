@@ -4,14 +4,15 @@ from copy import copy
 from dataclasses import dataclass, field
 from datetime import datetime
 from functools import total_ordering
-from typing import Union, Dict, List, Optional, Literal
+from typing import Dict, List, Literal, Optional, Union
 
 import dateutil.tz
 import lxml.html
 import more_itertools
 from dateutil import parser
 
-from src.parser.html_parser.data import ArticleBody, ArticleSection, TextSequence
+from src.parser.html_parser.data import (ArticleBody, ArticleSection,
+                                         TextSequence)
 
 
 @total_ordering
