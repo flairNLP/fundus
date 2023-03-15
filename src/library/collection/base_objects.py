@@ -1,8 +1,14 @@
+import urllib
 from dataclasses import dataclass, field
 from enum import Enum, unique
 from typing import Type, List, Optional, Tuple
 from urllib.parse import urlparse
 from urllib.robotparser import RobotFileParser
+from xml import etree
+from xml.etree.ElementTree import Element
+
+import more_itertools
+import requests
 
 from src.logging.logger import basic_logger
 from src.parser.html_parser import BaseParser
