@@ -1,8 +1,7 @@
 from abc import ABC, abstractmethod
-from collections.abc import Iterable
 from datetime import datetime
 from time import sleep
-from typing import Iterator, List, Callable
+from typing import Iterator, List, Callable, Optional, Iterable
 
 import feedparser
 import lxml.html
@@ -12,9 +11,9 @@ from src.logging.logger import basic_logger
 from src.scraping.article import ArticleSource
 
 
-class Crawler(Iterable, ABC):
+class Crawler(Iterable[str], ABC):
 
-    def __init__(self, publisher: str):
+    def __init__(self, publisher: Optional[str]):
         self.publisher = publisher
 
     @abstractmethod
@@ -40,7 +39,7 @@ class Crawler(Iterable, ABC):
 
 class StaticCrawler(Crawler):
 
-    def __init__(self, links: List[str], publisher: str = None):
+    def __init__(self, links: List[str], publisher: Optional[str] = None):
         super().__init__(publisher)
         self.links = links
 
@@ -55,12 +54,14 @@ class RSSCrawler(Crawler):
         self.url = url
 
     def __iter__(self) -> Iterator[str]:
-        rss_feed = feedparser.parse(self.url)
-        if exception := rss_feed.get('bozo_exception'):
-            basic_logger.info(f"Warning! Couldn't parse rss feed at {self.url}. Exception: {exception}")
-            return iter(())
-        else:
-            return (entry["link"] for entry in rss_feed['entries'])
+        with requests.Session() as session:
+            content = session.get(self.url).content
+            rss_feed = feedparser.parse(content)
+            if exception := rss_feed.get('bozo_exception'):
+                basic_logger.info(f"Warning! Couldn't parse rss feed at {self.url}. Exception: {exception}")
+                return iter(())
+            else:
+                return (entry["link"] for entry in rss_feed['entries'])
 
 
 class SitemapCrawler(Crawler):
