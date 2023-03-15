@@ -7,6 +7,7 @@ import feedparser
 import lxml.html
 import requests
 
+from src.logging.logger import basic_logger
 from src.scraping.article import ArticleSource
 
 
@@ -57,7 +58,7 @@ class RSSCrawler(Crawler):
             content = session.get(self.url).content
             rss_feed = feedparser.parse(content)
             if exception := rss_feed.get('bozo_exception'):
-                print(f"Warning! Couldn't parse rss feed at {self.url}. Exception: {exception}")
+                basic_logger.info(f"Warning! Couldn't parse rss feed at {self.url}. Exception: {exception}")
                 return iter(())
             else:
                 return (entry["link"] for entry in rss_feed['entries'])
