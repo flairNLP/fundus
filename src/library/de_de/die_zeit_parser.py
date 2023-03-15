@@ -12,7 +12,7 @@ class DieZeitParser(BaseParser):
     def body(self) -> ArticleBody:
         return extract_article_body_with_selector(self.precomputed.doc,
                                                   summary_selector='div.summary',
-                                                  subhead_selector='div.article-page > h2',
+                                                  subheadline_selector='div.article-page > h2',
                                                   paragraph_selector='div.article-page > p')
 
     @register_attribute

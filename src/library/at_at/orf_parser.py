@@ -12,7 +12,7 @@ class OrfParser(BaseParser):
     def body(self) -> ArticleBody:
         return extract_article_body_with_selector(self.precomputed.doc,
                                                   summary_selector='div.story-lead > p',
-                                                  subhead_selector='div.story-story > h2',
+                                                  subheadline_selector='div.story-story > h2',
                                                   paragraph_selector='div.story-story > '
                                                                 'p:not(.caption.tvthek.stripe-credits)')
 

@@ -12,7 +12,7 @@ class MerkurParser(BaseParser):
     def body(self) -> ArticleBody:
         return extract_article_body_with_selector(self.precomputed.doc,
                                                   summary_selector='p.id-StoryElement-leadText',
-                                                  subhead_selector='h2.id-StoryElement-crosshead',
+                                                  subheadline_selector='h2.id-StoryElement-crosshead',
                                                   paragraph_selector="p.id-StoryElement-paragraph, article > ul > li")
 
     @register_attribute

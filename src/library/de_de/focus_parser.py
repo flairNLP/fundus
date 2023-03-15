@@ -16,7 +16,7 @@ class FocusParser(BaseParser):
     def body(self) -> Optional[ArticleBody]:
         return extract_article_body_with_selector(self.precomputed.doc,
                                                   summary_selector='div.leadIn > p',
-                                                  subhead_selector='div.textBlock > h2',
+                                                  subheadline_selector='div.textBlock > h2',
                                                   paragraph_selector='div.textBlock > p')
 
     @register_attribute
