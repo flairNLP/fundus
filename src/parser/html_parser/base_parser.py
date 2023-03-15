@@ -43,7 +43,7 @@ class RegisteredFunction(ABC):
         if self.__self__ and hasattr(self.__self__, 'precomputed'):
             return self.__func__(self.__self__)
         else:
-            raise ValueError('Your not allowed to call attributes or functions outside the parse() method')
+            raise ValueError('You are not allowed to call attributes or functions outside the parse() method')
 
     def __lt__(self, other):
         if self.priority is None:
@@ -111,7 +111,7 @@ class BaseParser(ABC):
     precomputed: Precomputed
 
     def __init__(self):
-        self._shared_object_buffer: Dict[str, Any] = {}
+        self_shared_object_buffer: Dict[str, Any] = {}
 
         predicate: Callable[[object], bool] = lambda x: isinstance(x, RegisteredFunction)
         predicated_members: List[Tuple[str, RegisteredFunction]] = inspect.getmembers(self, predicate=predicate)

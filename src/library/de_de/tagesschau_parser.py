@@ -2,8 +2,6 @@ import datetime
 import re
 from typing import Optional, List
 
-from typing_extensions import reveal_type
-
 from src.parser.html_parser import BaseParser, register_attribute, ArticleBody
 from src.parser.html_parser.utility import extract_article_body_with_selector, generic_author_parsing, \
     generic_date_parsing
