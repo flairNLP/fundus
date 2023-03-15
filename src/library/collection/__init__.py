@@ -1,4 +1,4 @@
-from typing import Iterator, Any, Dict
+from typing import Any, Dict, Iterator
 
 from src.library.at_at import AT_AT
 from src.library.collection.base_objects import PublisherEnum
@@ -6,10 +6,9 @@ from src.library.de_de import DE_DE
 
 
 class CollectionMeta(type):
-
     @property
     def _members(cls) -> Dict[str, Any]:
-        return {name: obj for name, obj in cls.__dict__.items() if '__' not in name}
+        return {name: obj for name, obj in cls.__dict__.items() if "__" not in name}
 
     def __contains__(cls, __x: object) -> bool:
         return __x in cls._members.values()

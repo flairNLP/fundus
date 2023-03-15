@@ -1,19 +1,25 @@
 import datetime
-from typing import Optional, List
+from typing import List, Optional
 
-from src.parser.html_parser import BaseParser, register_attribute, ArticleBody
-from src.parser.html_parser.utility import generic_author_parsing, \
-    generic_date_parsing, generic_topic_parsing, generic_text_extraction_with_css, extract_article_body_with_selector
+from src.parser.html_parser import ArticleBody, BaseParser, register_attribute
+from src.parser.html_parser.utility import (
+    extract_article_body_with_selector,
+    generic_author_parsing,
+    generic_date_parsing,
+    generic_text_extraction_with_css,
+    generic_topic_parsing,
+)
 
 
 class DWParser(BaseParser):
-
     @register_attribute
     def body(self) -> ArticleBody:
-        return extract_article_body_with_selector(self.precomputed.doc,
-                                                  summary_selector='p.intro',
-                                                  subheadline_selector='div.longText > p',
-                                                  paragraph_selector='div.longText > h2')
+        return extract_article_body_with_selector(
+            self.precomputed.doc,
+            summary_selector="p.intro",
+            subheadline_selector="div.longText > p",
+            paragraph_selector="div.longText > h2",
+        )
 
     @register_attribute
     def authors(self) -> List[str]:
@@ -31,8 +37,8 @@ class DWParser(BaseParser):
 
     @register_attribute
     def title(self):
-        return generic_text_extraction_with_css(self.precomputed.doc, '.col3 h1')
+        return generic_text_extraction_with_css(self.precomputed.doc, ".col3 h1")
 
     @register_attribute
     def topics(self) -> List[str]:
-        return generic_topic_parsing(self.precomputed.meta.get('keywords'))
+        return generic_topic_parsing(self.precomputed.meta.get("keywords"))

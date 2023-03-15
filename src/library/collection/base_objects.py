@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 from enum import Enum, unique
-from typing import Type, List, Optional
+from typing import List, Optional, Type
 
 from src.logging.logger import basic_logger
 from src.parser.html_parser import BaseParser
@@ -21,7 +21,6 @@ class PublisherSpec:
 
 @unique
 class PublisherEnum(Enum):
-
     def __new__(cls, *args, **kwargs):
         value = len(cls.__members__) + 1
         obj = object.__new__(cls)
@@ -38,19 +37,19 @@ class PublisherEnum(Enum):
         self.parser = spec.parser
 
     def supports(self, source_type: Optional[str]) -> bool:
-        if source_type == 'rss':
+        if source_type == "rss":
             return bool(self.rss_feeds)
-        elif source_type == 'sitemap':
+        elif source_type == "sitemap":
             return bool(self.sitemaps)
-        elif source_type == 'news':
+        elif source_type == "news":
             return bool(self.news_map)
         elif source_type is None:
             return True
         else:
-            raise ValueError(f'Unsupported value {source_type} for parameter <source_type>')
+            raise ValueError(f"Unsupported value {source_type} for parameter <source_type>")
 
     @classmethod
-    def search(cls, attrs: Optional[List[str]] = None, source_type: Optional[str] = None) -> List['PublisherEnum']:
+    def search(cls, attrs: Optional[List[str]] = None, source_type: Optional[str] = None) -> List["PublisherEnum"]:
         assert attrs or source_type, "You have to define at least one search condition"
         if not attrs:
             attrs = []

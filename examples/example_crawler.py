@@ -5,8 +5,7 @@ from src.scraping.crawler import RSSCrawler, SitemapCrawler
 from src.scraping.pipeline import AutoPipeline
 from src.scraping.scraper import Scraper
 
-if __name__ == '__main__':
-
+if __name__ == "__main__":
     # You can use fundus via the shipped collection of publisher
 
     de_de = PublisherCollection.de_de
@@ -29,7 +28,7 @@ if __name__ == '__main__':
         
     """
 
-    for article in pipeline.run(max_articles=10, error_handling='raise'):
+    for article in pipeline.run(max_articles=10, error_handling="raise"):
         print(article)
 
     # or explicitly create your own pipeline
@@ -41,7 +40,7 @@ if __name__ == '__main__':
     faz_crawler = [RSSCrawler(feed, FAZ.name) for feed in FAZ.rss_feeds]
     faz_scraper = Scraper(*faz_crawler, parser=FAZ.parser())
 
-    for article in faz_scraper.scrape(error_handling='raise'):
+    for article in faz_scraper.scrape(error_handling="raise"):
         print(article)
 
     # or sitemaps
@@ -51,7 +50,7 @@ if __name__ == '__main__':
     mdr_crawler = SitemapCrawler(MDR.news_map, MDR.name, recursive=False)  # type: ignore[arg-type]
     mdr_scraper = Scraper(mdr_crawler, parser=MDR.parser())
 
-    for article in mdr_scraper.scrape(error_handling='suppress'):
+    for article in mdr_scraper.scrape(error_handling="suppress"):
         print(article)
 
     # TODO: implement base pipeline to enable the same features as with AutoPipeline
