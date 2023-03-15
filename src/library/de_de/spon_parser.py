@@ -11,7 +11,7 @@ class SPONParser(BaseParser):
     def body(self) -> ArticleBody:
         return extract_article_body_with_selector(self.precomputed.doc,
                                                   summary_selector='header .leading-loose',
-                                                  subhead_selector='main .word-wrap > h3',
+                                                  subheadline_selector='main .word-wrap > h3',
                                                   paragraph_selector='main .word-wrap > p')
 
     @register_attribute

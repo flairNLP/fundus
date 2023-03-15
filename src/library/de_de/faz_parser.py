@@ -12,7 +12,7 @@ class FAZParser(BaseParser):
     def body(self) -> ArticleBody:
         return extract_article_body_with_selector(self.precomputed.doc,
                                                   summary_selector='div.atc-Intro > p',
-                                                  subhead_selector='div.atc-Text > h3',
+                                                  subheadline_selector='div.atc-Text > h3',
                                                   paragraph_selector='div.atc-Text > p')
 
     @register_attribute

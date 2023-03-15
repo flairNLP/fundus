@@ -12,7 +12,7 @@ class DieWeltParser(BaseParser):
     def body(self) -> ArticleBody:
         return extract_article_body_with_selector(self.precomputed.doc,
                                                   summary_selector='div.c-summary__intro',
-                                                  subhead_selector='.c-article-text > h3',
+                                                  subheadline_selector='.c-article-text > h3',
                                                   paragraph_selector='body .c-article-text > p')
 
     @register_attribute

@@ -13,7 +13,7 @@ class TagesschauParser(BaseParser):
     def body(self) -> ArticleBody:
         return extract_article_body_with_selector(self.precomputed.doc,
                                                   summary_selector='//article/p[1]',
-                                                  subhead_selector='//article/h2',
+                                                  subheadline_selector='//article/h2',
                                                   paragraph_selector='//article/p[position() > 1]',
                                                   mode='xpath')
 

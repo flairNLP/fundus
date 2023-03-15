@@ -12,7 +12,7 @@ class BerlinerZeitungParser(BaseParser):
     def body(self) -> ArticleBody:
         return extract_article_body_with_selector(self.precomputed.doc,
                                                   summary_selector='div[data-testid=article-header] > p',
-                                                  subhead_selector='div[id=articleBody] > p',
+                                                  subheadline_selector='div[id=articleBody] > p',
                                                   paragraph_selector='div[id=articleBody] > h2')
 
     @register_attribute

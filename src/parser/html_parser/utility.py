@@ -48,7 +48,7 @@ class Node:
 def extract_article_body_with_selector(doc: lxml.html.HtmlElement,
                                        paragraph_selector: str,
                                        summary_selector: Optional[str] = None,
-                                       subhead_selector: Optional[str] = None,
+                                       subheadline_selector: Optional[str] = None,
                                        mode: Literal['css', 'xpath'] = 'css') -> ArticleBody:
     # depth first index for each element in tree
     df_idx_by_ref = {element: i for i, element in enumerate(doc.iter())}
@@ -62,7 +62,7 @@ def extract_article_body_with_selector(doc: lxml.html.HtmlElement,
             return [Node(df_idx_by_ref[element], element, node_type) for element in doc.xpath(selector)]
 
     summary_nodes = extract_nodes(summary_selector, 'S') if summary_selector else []
-    subhead_nodes = extract_nodes(subhead_selector, 'H') if subhead_selector else []
+    subhead_nodes = extract_nodes(subheadline_selector, 'H') if subheadline_selector else []
     paragraph_nodes = extract_nodes(paragraph_selector, 'P')
     nodes = sorted(summary_nodes + subhead_nodes + paragraph_nodes)
 

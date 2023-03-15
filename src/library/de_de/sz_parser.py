@@ -12,7 +12,7 @@ class SZParser(BaseParser):
     def body(self) -> ArticleBody:
         return extract_article_body_with_selector(self.precomputed.doc,
                                                   summary_selector='main [data-manual="teaserText"]',
-                                                  subhead_selector='main [itemprop="articleBody"] > h3',
+                                                  subheadline_selector='main [itemprop="articleBody"] > h3',
                                                   paragraph_selector='main [itemprop="articleBody"] > p, '
                                                                      'main .css-korpch > div > ul > li')
 

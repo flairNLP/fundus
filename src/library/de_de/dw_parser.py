@@ -12,7 +12,7 @@ class DWParser(BaseParser):
     def body(self) -> ArticleBody:
         return extract_article_body_with_selector(self.precomputed.doc,
                                                   summary_selector='p.intro',
-                                                  subhead_selector='div.longText > p',
+                                                  subheadline_selector='div.longText > p',
                                                   paragraph_selector='div.longText > h2')
 
     @register_attribute

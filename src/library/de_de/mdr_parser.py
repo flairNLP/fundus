@@ -12,7 +12,7 @@ class MDRParser(BaseParser):
     def body(self) -> ArticleBody:
         return extract_article_body_with_selector(self.precomputed.doc,
                                                   summary_selector='p.einleitung',
-                                                  subhead_selector='div > .subtitle',
+                                                  subheadline_selector='div > .subtitle',
                                                   paragraph_selector='div.paragraph')
 
     @register_attribute
