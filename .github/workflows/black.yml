@@ -1,4 +1,4 @@
-name: Black
+name: black
 
 on:
   push:
