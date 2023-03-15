@@ -1,4 +1,4 @@
-from typing import Mapping, Collection, Any, List
+from typing import Any, Collection, List, Mapping
 
 
 def listify(obj: Any) -> List[Any]:

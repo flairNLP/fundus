@@ -1,17 +1,27 @@
 from abc import ABC
 from dataclasses import dataclass, fields
-from typing import List, Iterable, Any, Dict, overload, Tuple, Sequence, Collection, Iterator, Optional
+from typing import (
+    Any,
+    Collection,
+    Dict,
+    Iterable,
+    Iterator,
+    List,
+    Optional,
+    Sequence,
+    Tuple,
+    overload,
+)
 
 
 class LinkedData:
-
     def __init__(self, lds: Iterable[Dict[str, Any]] = ()):
         self._ld_by_type: Dict[str, Dict[str, Any]] = {}
         for ld in lds:
-            if ld_type := ld.get('@type'):
+            if ld_type := ld.get("@type"):
                 self._ld_by_type[ld_type] = ld
             else:
-                raise ValueError(f'Found no type for LD')
+                raise ValueError(f"Found no type for LD")
 
         for name, ld in sorted(self._ld_by_type.items(), key=lambda t: t[0]):
             self.__dict__[name] = ld
@@ -114,11 +124,10 @@ class LinkedData:
 
 
 class TextSequence(Sequence[str]):
-
     def __init__(self, texts: Iterable[str]):
         self._data: Tuple[str, ...] = tuple(texts)
 
-    def text(self, join_on: str = '\n') -> str:
+    def text(self, join_on: str = "\n") -> str:
         return join_on.join(self)
 
     @overload
@@ -126,7 +135,7 @@ class TextSequence(Sequence[str]):
         ...
 
     @overload
-    def __getitem__(self, s: slice) -> 'TextSequence':
+    def __getitem__(self, s: slice) -> "TextSequence":
         ...
 
     def __getitem__(self, i):
@@ -144,12 +153,11 @@ class TextSequence(Sequence[str]):
 
 @dataclass
 class TextSequenceTree(ABC):
-
     def as_text_sequence(self) -> TextSequence:
         texts = [text for tl in self.df_traversal() for text in tl]
         return TextSequence(texts)
 
-    def text(self, join_on: str = '\n\n') -> str:
+    def text(self, join_on: str = "\n\n") -> str:
         return self.as_text_sequence().text(join_on)
 
     def df_traversal(self) -> Iterable[TextSequence]:
