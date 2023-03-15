@@ -2,10 +2,12 @@ import datetime
 from typing import List, Optional
 
 from src.parser.html_parser import ArticleBody, BaseParser, register_attribute
-from src.parser.html_parser.utility import (extract_article_body_with_selector,
-                                            generic_author_parsing,
-                                            generic_date_parsing,
-                                            generic_topic_parsing)
+from src.parser.html_parser.utility import (
+    extract_article_body_with_selector,
+    generic_author_parsing,
+    generic_date_parsing,
+    generic_topic_parsing,
+)
 
 
 class SZParser(BaseParser):
@@ -15,8 +17,7 @@ class SZParser(BaseParser):
             self.precomputed.doc,
             summary_selector='main [data-manual="teaserText"]',
             subheadline_selector='main [itemprop="articleBody"] > h3',
-            paragraph_selector='main [itemprop="articleBody"] > p, '
-            "main .css-korpch > div > ul > li",
+            paragraph_selector='main [itemprop="articleBody"] > p, ' "main .css-korpch > div > ul > li",
         )
 
     @register_attribute

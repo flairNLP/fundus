@@ -1,7 +1,17 @@
 from abc import ABC
 from dataclasses import dataclass, fields
-from typing import (Any, Collection, Dict, Iterable, Iterator, List, Optional,
-                    Sequence, Tuple, overload)
+from typing import (
+    Any,
+    Collection,
+    Dict,
+    Iterable,
+    Iterator,
+    List,
+    Optional,
+    Sequence,
+    Tuple,
+    overload,
+)
 
 
 class LinkedData:
@@ -16,9 +26,7 @@ class LinkedData:
         for name, ld in sorted(self._ld_by_type.items(), key=lambda t: t[0]):
             self.__dict__[name] = ld
 
-        self._contains = [
-            ld_type for ld_type in self._ld_by_type.keys() if ld_type is not None
-        ]
+        self._contains = [ld_type for ld_type in self._ld_by_type.keys() if ld_type is not None]
 
     def get(self, key: str, default: Any = None):
         """
@@ -34,9 +42,7 @@ class LinkedData:
         """
         for name, ld in sorted(self._ld_by_type.items(), key=lambda t: t[0]):
             if not name:
-                raise NotImplementedError(
-                    "Currently this function does not support lds without types"
-                )
+                raise NotImplementedError("Currently this function does not support lds without types")
             elif value := ld.get(key):
                 return value
         return default
@@ -114,11 +120,7 @@ class LinkedData:
         return search_recursive(self._ld_by_type.values(), 0)
 
     def __repr__(self):
-        return (
-            f"LD containing '{', '.join(content)}'"
-            if (content := self._contains)
-            else "Empty LD"
-        )
+        return f"LD containing '{', '.join(content)}'" if (content := self._contains) else "Empty LD"
 
 
 class TextSequence(Sequence[str]):

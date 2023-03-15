@@ -11,9 +11,7 @@ class Scraper:
         self.crawler = list(sources)
         self.parser = parser
 
-    def scrape(
-        self, error_handling: Literal["suppress", "catch", "raise"]
-    ) -> Iterator[Article]:
+    def scrape(self, error_handling: Literal["suppress", "catch", "raise"]) -> Iterator[Article]:
         for crawler in self.crawler:
             for article_source in crawler.crawl():
                 try:
@@ -23,19 +21,13 @@ class Scraper:
                     if error_handling == "raise":
                         raise err
                     elif error_handling == "catch":
-                        yield Article(
-                            extracted={}, exception=err, **article_source.serialize()
-                        )
+                        yield Article(extracted={}, exception=err, **article_source.serialize())
                         continue
                     elif error_handling == "suppress":
-                        basic_logger.info(
-                            f"Skipped {article_source.url} because of {err}"
-                        )
+                        basic_logger.info(f"Skipped {article_source.url} because of {err}")
                         continue
                     else:
-                        raise ValueError(
-                            f"Unknown value '{error_handling}' for parameter <error_handling>'"
-                        )
+                        raise ValueError(f"Unknown value '{error_handling}' for parameter <error_handling>'")
 
                 article = Article(extracted=data, **article_source.serialize())
                 yield article

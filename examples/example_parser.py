@@ -4,10 +4,12 @@ from typing import List, Optional
 import requests
 
 from src.parser.html_parser import ArticleBody, BaseParser, register_attribute
-from src.parser.html_parser.utility import (extract_article_body_with_selector,
-                                            generic_date_parsing,
-                                            generic_text_extraction_with_css,
-                                            generic_topic_parsing)
+from src.parser.html_parser.utility import (
+    extract_article_body_with_selector,
+    generic_date_parsing,
+    generic_text_extraction_with_css,
+    generic_topic_parsing,
+)
 
 
 class MDRParser(BaseParser):
@@ -30,20 +32,14 @@ class MDRParser(BaseParser):
 
     @register_attribute
     def authors(self) -> List[str]:
-        if author := generic_text_extraction_with_css(
-            self.precomputed.doc, ".articleMeta > .author"
-        ):
+        if author := generic_text_extraction_with_css(self.precomputed.doc, ".articleMeta > .author"):
             cleaned_author = author.replace("von", "").replace(" und ", ", ")
             return [name.strip() for name in cleaned_author.split(",")]
         return []
 
     @register_attribute
     def title(self) -> Optional[str]:
-        return (
-            title
-            if isinstance(title := self.precomputed.ld.bf_search("headline"), str)
-            else None
-        )
+        return title if isinstance(title := self.precomputed.ld.bf_search("headline"), str) else None
 
 
 if __name__ == "__main__":

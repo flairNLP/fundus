@@ -42,13 +42,9 @@ class BaseArticle(ABC):
             exclude = []
         for key in exclude:
             if not hasattr(self, key):
-                raise AttributeError(
-                    f"Tried to exclude key '{key} which isn't present in this'{self}' instance"
-                )
+                raise AttributeError(f"Tried to exclude key '{key} which isn't present in this'{self}' instance")
             to_serialize.pop(key)
-        return json.dumps(
-            to_serialize, indent=indent, ensure_ascii=ensure_ascii, default=default
-        )
+        return json.dumps(to_serialize, indent=indent, ensure_ascii=ensure_ascii, default=default)
 
 
 @dataclass(frozen=True)
@@ -63,10 +59,7 @@ class Article(BaseArticle):
 
     @property
     def complete(self) -> bool:
-        return all(
-            not (isinstance(attr, Exception) or attr is None)
-            for attr in self.extracted.values()
-        )
+        return all(not (isinstance(attr, Exception) or attr is None) for attr in self.extracted.values())
 
     # provide direct access for commonly used attributes in self.extracted
     @property
@@ -98,18 +91,12 @@ class Article(BaseArticle):
         # the subsequent indent here is a bit wacky, but textwrapper.dedent won't work with tabs, so we have to use
         # whitespaces instead.
         title_wrapper = TextWrapper(width=80, max_lines=1, initial_indent="")
-        text_wrapper = TextWrapper(
-            width=80, max_lines=2, initial_indent="", subsequent_indent="          "
-        )
+        text_wrapper = TextWrapper(width=80, max_lines=2, initial_indent="", subsequent_indent="          ")
         wrapped_title = title_wrapper.fill(
-            self.title.strip()
-            if self.title
-            else f"{Fore.RED}--missing title--{Style.RESET_ALL}"
+            self.title.strip() if self.title else f"{Fore.RED}--missing title--{Style.RESET_ALL}"
         )
         wrapped_plaintext = text_wrapper.fill(
-            self.plaintext.strip()
-            if self.plaintext
-            else f"{Fore.RED}--missing plaintext--{Style.RESET_ALL}"
+            self.plaintext.strip() if self.plaintext else f"{Fore.RED}--missing plaintext--{Style.RESET_ALL}"
         )
 
         text = (

@@ -40,9 +40,7 @@ class RegisteredFunction(ABC):
         if self.__self__ and hasattr(self.__self__, "precomputed"):
             return self.__func__(self.__self__)
         else:
-            raise ValueError(
-                "You are not allowed to call attributes or functions outside the parse() method"
-            )
+            raise ValueError("You are not allowed to call attributes or functions outside the parse() method")
 
     def __lt__(self, other):
         if self.priority is None:
@@ -104,18 +102,10 @@ class BaseParser(ABC):
     def __init__(self):
         self_shared_object_buffer: Dict[str, Any] = {}
 
-        predicate: Callable[[object], bool] = lambda x: isinstance(
-            x, RegisteredFunction
-        )
-        predicated_members: List[Tuple[str, RegisteredFunction]] = inspect.getmembers(
-            self, predicate=predicate
-        )
-        bound_registered_functions: List[RegisteredFunction] = [
-            func for _, func in predicated_members
-        ]
-        self._sorted_registered_functions = sorted(
-            bound_registered_functions, key=lambda f: (f, f.__name__)
-        )
+        predicate: Callable[[object], bool] = lambda x: isinstance(x, RegisteredFunction)
+        predicated_members: List[Tuple[str, RegisteredFunction]] = inspect.getmembers(self, predicate=predicate)
+        bound_registered_functions: List[RegisteredFunction] = [func for _, func in predicated_members]
+        self._sorted_registered_functions = sorted(bound_registered_functions, key=lambda f: (f, f.__name__))
 
     @property
     def cache(self) -> Optional[Dict[str, Any]]:
@@ -123,11 +113,7 @@ class BaseParser(ABC):
 
     @classmethod
     def _search_members(cls, obj_type: type) -> List[Tuple[str, Any]]:
-        members = (
-            inspect.getmembers(cls, predicate=lambda x: isinstance(x, obj_type))
-            if obj_type
-            else []
-        )
+        members = inspect.getmembers(cls, predicate=lambda x: isinstance(x, obj_type)) if obj_type else []
         return members
 
     @classmethod
@@ -139,13 +125,9 @@ class BaseParser(ABC):
         ld_nodes = doc.xpath("//script[@type='application/ld+json']")
         lds = [json.loads(node.text_content()) for node in ld_nodes]
         collapsed_lds = more_itertools.collapse(lds, base_type=dict)
-        self.precomputed = Precomputed(
-            html, doc, get_meta_content(doc), LinkedData(collapsed_lds)
-        )
+        self.precomputed = Precomputed(html, doc, get_meta_content(doc), LinkedData(collapsed_lds))
 
-    def parse(
-        self, html: str, error_handling: Literal["suppress", "catch", "raise"] = "raise"
-    ) -> Dict[str, Any]:
+    def parse(self, html: str, error_handling: Literal["suppress", "catch", "raise"] = "raise") -> Dict[str, Any]:
         # wipe existing precomputed
         self._base_setup(html)
 
@@ -166,14 +148,10 @@ class BaseParser(ABC):
                     elif error_handling == "suppress" or error_handling == "raise":
                         raise err
                     else:
-                        raise ValueError(
-                            f"Invalid value '{error_handling}' for parameter <error_handling>"
-                        )
+                        raise ValueError(f"Invalid value '{error_handling}' for parameter <error_handling>")
 
             else:
-                raise TypeError(
-                    f"Invalid type for {func}. Only subclasses of 'RegisteredFunction' are allowed"
-                )
+                raise TypeError(f"Invalid type for {func}. Only subclasses of 'RegisteredFunction' are allowed")
 
         return parsed_data
 

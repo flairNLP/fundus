@@ -3,9 +3,11 @@ import re
 from typing import List, Optional
 
 from src.parser.html_parser import ArticleBody, BaseParser, register_attribute
-from src.parser.html_parser.utility import (extract_article_body_with_selector,
-                                            generic_author_parsing,
-                                            generic_date_parsing)
+from src.parser.html_parser.utility import (
+    extract_article_body_with_selector,
+    generic_author_parsing,
+    generic_date_parsing,
+)
 
 
 class TagesschauParser(BaseParser):
@@ -21,9 +23,7 @@ class TagesschauParser(BaseParser):
 
     @register_attribute
     def authors(self) -> List[str]:
-        if raw_author_string := self.precomputed.doc.xpath(
-            'string(//div[contains(@class, "authorline__author")])'
-        ):
+        if raw_author_string := self.precomputed.doc.xpath('string(//div[contains(@class, "authorline__author")])'):
             cleaned_author_string = re.sub(r"^Von |, ARD[^\s,]*", "", raw_author_string)
             return generic_author_parsing(cleaned_author_string)
         else:

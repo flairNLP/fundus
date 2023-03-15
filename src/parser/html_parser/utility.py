@@ -11,8 +11,7 @@ import lxml.html
 import more_itertools
 from dateutil import parser
 
-from src.parser.html_parser.data import (ArticleBody, ArticleSection,
-                                         TextSequence)
+from src.parser.html_parser.data import ArticleBody, ArticleSection, TextSequence
 
 
 @total_ordering
@@ -60,28 +59,18 @@ def extract_article_body_with_selector(
         if not selector and node_type:
             raise ValueError("Both a selector and node type are required")
         if mode == "css":
-            return [
-                Node(df_idx_by_ref[element], element, node_type)
-                for element in doc.cssselect(selector)
-            ]
+            return [Node(df_idx_by_ref[element], element, node_type) for element in doc.cssselect(selector)]
         else:
-            return [
-                Node(df_idx_by_ref[element], element, node_type)
-                for element in doc.xpath(selector)
-            ]
+            return [Node(df_idx_by_ref[element], element, node_type) for element in doc.xpath(selector)]
 
     summary_nodes = extract_nodes(summary_selector, "S") if summary_selector else []
-    subhead_nodes = (
-        extract_nodes(subheadline_selector, "H") if subheadline_selector else []
-    )
+    subhead_nodes = extract_nodes(subheadline_selector, "H") if subheadline_selector else []
     paragraph_nodes = extract_nodes(paragraph_selector, "P")
     nodes = sorted(summary_nodes + subhead_nodes + paragraph_nodes)
 
     striped_nodes = [node for node in nodes if str(node)]
 
-    instructions = more_itertools.split_when(
-        striped_nodes, pred=lambda x, y: x.type != y.type
-    )
+    instructions = more_itertools.split_when(striped_nodes, pred=lambda x, y: x.type != y.type)
 
     if not summary_nodes:
         instructions = more_itertools.prepend([], instructions)
@@ -117,14 +106,10 @@ def get_meta_content(tree: lxml.html.HtmlElement) -> Dict[str, str]:
 def strip_nodes_to_text(text_nodes: List[lxml.html.HtmlElement]) -> Optional[str]:
     if not text_nodes:
         return None
-    return "\n\n".join(
-        ([re.sub(r"\n+", " ", node.text_content()) for node in text_nodes])
-    ).strip()
+    return "\n\n".join(([re.sub(r"\n+", " ", node.text_content()) for node in text_nodes])).strip()
 
 
-def generic_author_parsing(
-    value: Union[Optional[str], Dict[str, str], List[Dict[str, str]]]
-) -> List[str]:
+def generic_author_parsing(value: Union[Optional[str], Dict[str, str], List[Dict[str, str]]]) -> List[str]:
     if not value:
         return []
 
@@ -139,8 +124,7 @@ def generic_author_parsing(
 
     else:
         raise TypeError(
-            f"<value> '{value}' has an unsupported type {type(value)}. "
-            f"Supported types are 'str, dict, List[dict]'"
+            f"<value> '{value}' has an unsupported type {type(value)}. " f"Supported types are 'str, dict, List[dict]'"
         )
 
     return [name.strip() for name in authors]
@@ -151,14 +135,8 @@ def generic_text_extraction_with_css(doc, selector: str) -> Optional[str]:
     return strip_nodes_to_text(nodes)
 
 
-def generic_topic_parsing(
-    keyword_str: Optional[str], delimiter: str = ","
-) -> List[str]:
-    return (
-        [keyword.strip() for keyword in keyword_str.split(delimiter)]
-        if keyword_str
-        else []
-    )
+def generic_topic_parsing(keyword_str: Optional[str], delimiter: str = ",") -> List[str]:
+    return [keyword.strip() for keyword in keyword_str.split(delimiter)] if keyword_str else []
 
 
 _tzs = ["CET", "CEST"]

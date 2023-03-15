@@ -23,9 +23,7 @@ class Crawler(Iterable[str], ABC):
         """
         raise NotImplementedError
 
-    def crawl(
-        self, delay: Callable[[], float] = lambda: 0.0
-    ) -> Iterator[ArticleSource]:
+    def crawl(self, delay: Callable[[], float] = lambda: 0.0) -> Iterator[ArticleSource]:
         with requests.Session() as session:
             for url in self:
                 sleep(delay())
@@ -59,9 +57,7 @@ class RSSCrawler(Crawler):
             content = session.get(self.url).content
             rss_feed = feedparser.parse(content)
             if exception := rss_feed.get("bozo_exception"):
-                basic_logger.info(
-                    f"Warning! Couldn't parse rss feed at {self.url}. Exception: {exception}"
-                )
+                basic_logger.info(f"Warning! Couldn't parse rss feed at {self.url}. Exception: {exception}")
                 return iter(())
             else:
                 return (entry["link"] for entry in rss_feed["entries"])
@@ -97,9 +93,7 @@ class SitemapCrawler(Crawler):
             urls = [node.text_content() for node in tree.cssselect("url > loc")]
             yield from reversed(urls) if self.reverse else urls
             if self.recursive:
-                sitemap_locs = [
-                    node.text_content() for node in tree.cssselect("sitemap > loc")
-                ]
+                sitemap_locs = [node.text_content() for node in tree.cssselect("sitemap > loc")]
                 for loc in reversed(sitemap_locs) if self.reverse else sitemap_locs:
                     yield from yield_recursive(loc)
 

@@ -16,9 +16,7 @@ class PublisherSpec:
 
     def __post_init__(self):
         if not (self.rss_feeds or self.sitemaps):
-            raise ValueError(
-                "Publishers must at least define either an rss-feed or sitemap to crawl"
-            )
+            raise ValueError("Publishers must at least define either an rss-feed or sitemap to crawl")
 
 
 @unique
@@ -31,9 +29,7 @@ class PublisherEnum(Enum):
 
     def __init__(self, spec: PublisherSpec):
         if not isinstance(spec, PublisherSpec):
-            raise ValueError(
-                "Your only allowed to generate 'PublisherEnum's from 'PublisherSpec"
-            )
+            raise ValueError("Your only allowed to generate 'PublisherEnum's from 'PublisherSpec")
         self.domain = spec.domain
         self.rss_feeds = spec.rss_feeds
         self.sitemaps = spec.sitemaps
@@ -50,14 +46,10 @@ class PublisherEnum(Enum):
         elif source_type is None:
             return True
         else:
-            raise ValueError(
-                f"Unsupported value {source_type} for parameter <source_type>"
-            )
+            raise ValueError(f"Unsupported value {source_type} for parameter <source_type>")
 
     @classmethod
-    def search(
-        cls, attrs: Optional[List[str]] = None, source_type: Optional[str] = None
-    ) -> List["PublisherEnum"]:
+    def search(cls, attrs: Optional[List[str]] = None, source_type: Optional[str] = None) -> List["PublisherEnum"]:
         assert attrs or source_type, "You have to define at least one search condition"
         if not attrs:
             attrs = []
@@ -65,8 +57,6 @@ class PublisherEnum(Enum):
         attrs_set = set(attrs)
         spec: PublisherEnum
         for spec in list(cls):
-            if attrs_set.issubset(spec.parser.attributes()) and spec.supports(
-                source_type
-            ):
+            if attrs_set.issubset(spec.parser.attributes()) and spec.supports(source_type):
                 matched.append(spec)
         return matched

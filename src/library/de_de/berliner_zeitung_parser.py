@@ -2,10 +2,12 @@ import datetime
 from typing import List, Optional
 
 from src.parser.html_parser import ArticleBody, BaseParser, register_attribute
-from src.parser.html_parser.utility import (extract_article_body_with_selector,
-                                            generic_author_parsing,
-                                            generic_date_parsing,
-                                            generic_topic_parsing)
+from src.parser.html_parser.utility import (
+    extract_article_body_with_selector,
+    generic_author_parsing,
+    generic_date_parsing,
+    generic_topic_parsing,
+)
 
 
 class BerlinerZeitungParser(BaseParser):

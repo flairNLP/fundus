@@ -3,19 +3,17 @@ import re
 from typing import List, Match, Optional, Pattern
 
 from src.parser.html_parser import ArticleBody, BaseParser, register_attribute
-from src.parser.html_parser.utility import (extract_article_body_with_selector,
-                                            generic_author_parsing,
-                                            generic_date_parsing)
+from src.parser.html_parser.utility import (
+    extract_article_body_with_selector,
+    generic_author_parsing,
+    generic_date_parsing,
+)
 
 
 class FocusParser(BaseParser):
-    _author_substitution_pattern: Pattern[str] = re.compile(
-        r"Von FOCUS-online-(Redakteur|Autorin)\s"
-    )
+    _author_substitution_pattern: Pattern[str] = re.compile(r"Von FOCUS-online-(Redakteur|Autorin)\s")
     _topic_pattern: Pattern[str] = re.compile(r'"keywords":\[{(.*?)}\]')
-    _topic_name_pattern: Pattern[str] = re.compile(
-        r'"name":"(.*?)"', flags=re.MULTILINE
-    )
+    _topic_name_pattern: Pattern[str] = re.compile(r'"name":"(.*?)"', flags=re.MULTILINE)
 
     @register_attribute
     def body(self) -> Optional[ArticleBody]:
