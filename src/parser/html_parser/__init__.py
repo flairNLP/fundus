@@ -1,10 +1,10 @@
-from .base_parser import BaseParser, register_attribute, register_function
+from .base_parser import BaseParser, attribute, function
 from .data import ArticleBody, ArticleSection, LinkedData
 
 __all__ = [
     "BaseParser",
-    "register_attribute",
-    "register_function",
+    "attribute",
+    "function",
     "ArticleBody",
     "ArticleSection",
     "LinkedData",
