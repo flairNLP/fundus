@@ -1,8 +1,7 @@
 from abc import ABC, abstractmethod
-from collections.abc import Iterable
 from datetime import datetime
 from time import sleep
-from typing import Iterator, List, Callable
+from typing import Iterator, List, Callable, Optional, Iterable
 
 import feedparser
 import lxml.html
@@ -11,9 +10,9 @@ import requests
 from src.scraping.article import ArticleSource
 
 
-class Crawler(Iterable, ABC):
+class Crawler(Iterable[str], ABC):
 
-    def __init__(self, publisher: str):
+    def __init__(self, publisher: Optional[str]):
         self.publisher = publisher
 
     @abstractmethod
@@ -32,14 +31,14 @@ class Crawler(Iterable, ABC):
                 article_source = ArticleSource(url=response.url,
                                                html=response.text,
                                                crawl_date=datetime.now(),
-                                               publisher=self.publisher, 
+                                               publisher=self.publisher,
                                                crawler_ref=self)
                 yield article_source
 
 
 class StaticCrawler(Crawler):
 
-    def __init__(self, links: List[str], publisher: str = None):
+    def __init__(self, links: List[str], publisher: Optional[str] = None):
         super().__init__(publisher)
         self.links = links
 

@@ -5,12 +5,13 @@
 [![Contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg)](CONTRIBUTING.md)
 [![License: MIT](https://img.shields.io/badge/License-MIT-brightgreen.svg)](https://opensource.org/licenses/MIT)
 
-A very simple **news crawler**. 
+A very simple **news crawler**.
 Developed at [Humboldt University of Berlin](https://www.informatik.hu-berlin.de/en/forschung-en/gebiete/ml-en/).
 
 ---
 
 Fundus is:
+
 * A crawler for news ...
 
 * A Python ...
@@ -25,11 +26,11 @@ In your favorite virtual environment, simply do:
 pip install fundus
 ```
 
-Fundus requires Python 3.8+. 
+Fundus requires Python 3.8+.
 
 ### Example 1: Crawl a bunch of German-language news articles
 
-Let's use Fundus to crawl 2 articles of German-language news. 
+Let's use Fundus to crawl 2 articles of German-language news.
 
 ```python
 from src.library.collection import PublisherCollection
@@ -61,11 +62,11 @@ Fundus-Article:
 - From:   MDR (2023-03-12 21:40)
 ```
 
-This means that you crawled 2 articles from different German-language sources. 
+This means that you crawled 2 articles from different German-language sources.
 
-### Example 2: Crawl a specific news source 
+### Example 2: Crawl a specific news source
 
-Maybe you want to crawl a specific news source instead. Let's crawl news articles form Berliner Zeitung only: 
+Maybe you want to crawl a specific news source instead. Let's crawl news articles form Berliner Zeitung only:
 
 ```python
 from src.library.collection import PublisherCollection
@@ -122,8 +123,7 @@ Fundus currently has support for the following news sources. We are constantly e
     </tr>
 </table>
 
-Also: **Adding a new source is easy - consider contributing to the project!** 
-
+Also: **Adding a new source is easy - consider contributing to the project!**
 
 ## Contact
 
@@ -134,7 +134,6 @@ Please email your questions or comments to ...
 Thanks for your interest in contributing! There are many ways to get involved;
 start with our [contributor guidelines](CONTRIBUTING.md) and then
 check these [open issues](https://github.com/flairNLP/fundus/issues) for specific tasks.
-
 
 ## [License](/LICENSE)
 

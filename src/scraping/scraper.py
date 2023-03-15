@@ -1,8 +1,8 @@
-from typing import Literal
+from typing import Literal, Iterator
 
 from src.parser.html_parser import BaseParser
 from src.scraping.article import Article
-from src.scraping.crawler.crawler import Crawler
+from src.scraping.crawler import Crawler
 
 
 class Scraper:
@@ -14,7 +14,7 @@ class Scraper:
         self.crawler = list(sources)
         self.parser = parser
 
-    def scrape(self, error_handling: Literal['suppress', 'catch', 'raise']):
+    def scrape(self, error_handling: Literal['suppress', 'catch', 'raise']) -> Iterator[Article]:
         for crawler in self.crawler:
             for article_source in crawler.crawl():
 

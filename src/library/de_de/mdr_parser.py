@@ -32,4 +32,4 @@ class MDRParser(BaseParser):
 
     @register_attribute
     def title(self) -> Optional[str]:
-        return self.precomputed.ld.bf_search('headline')
+        return title if isinstance(title := self.precomputed.ld.bf_search('headline'), str) else None
