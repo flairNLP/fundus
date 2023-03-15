@@ -1,6 +1,8 @@
 from dataclasses import dataclass, field
 from enum import Enum, unique
-from typing import Type, List, Optional
+from typing import Type, List, Optional, Tuple
+from urllib.parse import urlparse
+from urllib.robotparser import RobotFileParser
 
 from src.logging.logger import basic_logger
 from src.parser.html_parser import BaseParser
