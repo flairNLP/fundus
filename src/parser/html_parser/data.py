@@ -1,18 +1,17 @@
 from abc import ABC
-from collections import defaultdict
 from dataclasses import dataclass, fields
-from typing import List, Iterable, Any, Union, Dict, overload, Tuple, Sequence, Collection
+from typing import List, Iterable, Any, Dict, overload, Tuple, Sequence, Collection, Iterator, Optional
 
 
 class LinkedData:
 
-    def __init__(self, lds: Iterable[Dict[str, any]]):
-        self._ld_by_type: Dict[str, Union[List[Dict[str, any]], Dict[str, any]]] = defaultdict(list)
+    def __init__(self, lds: Iterable[Dict[str, Any]] = ()):
+        self._ld_by_type: Dict[str, Dict[str, Any]] = {}
         for ld in lds:
             if ld_type := ld.get('@type'):
                 self._ld_by_type[ld_type] = ld
             else:
-                self._ld_by_type[ld_type].append(ld)
+                raise ValueError(f'Found no type for LD')
 
         for name, ld in sorted(self._ld_by_type.items(), key=lambda t: t[0]):
             self.__dict__[name] = ld
@@ -54,11 +53,12 @@ class LinkedData:
         """
         tmp = self._ld_by_type.copy()
         for key in key_path:
-            if not (tmp := tmp.get(key)):
+            if not (nxt := tmp.get(key)):
                 return default
+            tmp = nxt
         return tmp
 
-    def bf_search(self, key: str, depth: int = None) -> Any:
+    def bf_search(self, key: str, depth: Optional[int] = None) -> Any:
         """
         This is a classic BF search on the nested dicts representing the JSON-LD. <key> specifies the dict key to
         search, <depth> the depth level. If the depth level is set to None, this method will search through the whole
@@ -96,13 +96,13 @@ class LinkedData:
         :return: The content of the first matched key or None
         """
 
-        def search_recursive(nodes: Iterable[dict], current_depth: int):
+        def search_recursive(nodes: Iterable[Dict[str, Any]], current_depth: int):
             if current_depth == depth:
                 return None
             else:
-                new = []
+                new: List[Dict[str, Any]] = []
                 for node in nodes:
-                    if isinstance(node, dict) and (value := node.get(key)):
+                    if value := node.get(key):
                         return value
                     new.extend(v for v in node.values() if isinstance(v, dict))
                 return search_recursive(new, current_depth + 1) if new else None
@@ -115,8 +115,8 @@ class LinkedData:
 
 class TextSequence(Sequence[str]):
 
-    def __init__(self, texts: Iterable[str] = None):
-        self._data: Tuple[str] = tuple(texts) if texts else tuple()
+    def __init__(self, texts: Iterable[str]):
+        self._data: Tuple[str, ...] = tuple(texts)
 
     def text(self, join_on: str = '\n') -> str:
         return join_on.join(self)
@@ -135,7 +135,7 @@ class TextSequence(Sequence[str]):
     def __len__(self) -> int:
         return len(self._data)
 
-    def __iter__(self) -> Iterable[str]:
+    def __iter__(self) -> Iterator[str]:
         return iter(self._data)
 
     def __repr__(self) -> str:

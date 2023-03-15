@@ -3,17 +3,19 @@ from typing import Optional, List
 
 import requests
 
-from src.parser.html_parser import BaseParser, register_attribute
-from src.parser.html_parser.utility import strip_nodes_to_text, generic_date_parsing, generic_author_parsing, \
-    generic_topic_parsing
+from src.parser.html_parser import BaseParser, register_attribute, ArticleBody
+from src.parser.html_parser.utility import (extract_article_body_with_selector, generic_topic_parsing,
+                                            generic_date_parsing, generic_text_extraction_with_css)
 
 
 class MDRParser(BaseParser):
 
     @register_attribute
-    def plaintext(self) -> Optional[str]:
-        if nodes := self.precomputed.doc.cssselect('div.paragraph'):
-            return strip_nodes_to_text(nodes)
+    def body(self) -> ArticleBody:
+        return extract_article_body_with_selector(self.precomputed.doc,
+                                                  summary_selector='p.einleitung',
+                                                  subhead_selector='div > .subtitle',
+                                                  paragraph_selector='div.paragraph')
 
     @register_attribute
     def topics(self) -> List[str]:
@@ -25,11 +27,14 @@ class MDRParser(BaseParser):
 
     @register_attribute
     def authors(self) -> List[str]:
-        return generic_author_parsing(self.precomputed.ld.bf_search('author'))
+        if author := generic_text_extraction_with_css(self.precomputed.doc, '.articleMeta > .author'):
+            cleaned_author = author.replace('von', '').replace(' und ', ', ')
+            return [name.strip() for name in cleaned_author.split(',')]
+        return []
 
     @register_attribute
     def title(self) -> Optional[str]:
-        return self.precomputed.ld.bf_search('headline')
+        return title if isinstance(title := self.precomputed.ld.bf_search('headline'), str) else None
 
 
 if __name__ == '__main__':

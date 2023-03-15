@@ -1,6 +1,7 @@
+from enum import Enum
+
 from src.library.collection import PublisherCollection
-from src.library.de_de import FAZParser, MDRParser
-from src.scraping.crawler.crawler import RSSCrawler, SitemapCrawler
+from src.scraping.crawler import RSSCrawler, SitemapCrawler
 from src.scraping.pipeline import AutoPipeline
 from src.scraping.scraper import Scraper
 
@@ -35,18 +36,22 @@ if __name__ == '__main__':
 
     # using rss-feeds
 
-    faz_crawler = [RSSCrawler(feed) for feed in PublisherCollection.de_de.FAZ.rss_feeds]
-    faz_scraper = Scraper(*faz_crawler, parser=FAZParser())
+    FAZ = PublisherCollection.de_de.FAZ
 
-    for article in faz_scraper.scrape():
+    faz_crawler = [RSSCrawler(feed, FAZ.name) for feed in FAZ.rss_feeds]
+    faz_scraper = Scraper(*faz_crawler, parser=FAZ.parser())
+
+    for article in faz_scraper.scrape(error_handling='raise'):
         print(article)
 
     # or sitemaps
 
-    mdr_crawler = SitemapCrawler(PublisherCollection.de_de.MDR.news_map, recursive=False)
-    mdr_scraper = Scraper(mdr_crawler, parser=MDRParser())
+    MDR = PublisherCollection.de_de.MDR
 
-    for article in mdr_scraper.scrape():
+    mdr_crawler = SitemapCrawler(MDR.news_map, MDR.name, recursive=False)  # type: ignore[arg-type]
+    mdr_scraper = Scraper(mdr_crawler, parser=MDR.parser())
+
+    for article in mdr_scraper.scrape(error_handling='suppress'):
         print(article)
 
     # TODO: implement base pipeline to enable the same features as with AutoPipeline
