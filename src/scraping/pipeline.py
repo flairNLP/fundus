@@ -10,8 +10,8 @@ from src.utils.validation import listify
 
 
 class Pipeline:
-    def __init__(self, *scraper: Scraper):
-        self.scrapers: Tuple[Scraper] = scraper
+    def __init__(self, *scrapers: Scraper):
+        self.scrapers: Tuple[Scraper, ...] = scrapers
 
     def run(
         self, error_handling: Literal["suppress", "catch", "raise"], max_articles: Optional[int] = None
@@ -59,3 +59,5 @@ class Crawler:
         if scrapers:
             pipeline = Pipeline(*scrapers)
             return pipeline.run(error_handling=error_handling, max_articles=max_articles)
+        else:
+            return iter(())
