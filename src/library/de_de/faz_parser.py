@@ -30,7 +30,21 @@ class FAZParser(BaseParser):
 
     @register_attribute
     def authors(self) -> List[str]:
-        return generic_author_parsing(self.precomputed.meta.get("author"))
+        # Unfortunately, the raw data may contain cities. Most of these methods aims to remove the cities heuristically.
+        first_author_extraction_attempt = [
+            el.text_content() for el in self.precomputed.doc.cssselect(".atc-MetaAuthor")
+        ]
+        if not first_author_extraction_attempt:
+            return []
+        if len(first_author_extraction_attempt) == 1:
+            # With a single entry we can be sure that it won't contain a city
+            return first_author_extraction_attempt
+        else:
+            # With more than one entry, we abuse the fact that authors are linked, but cities are not
+            link_based_extraction = [el.text_content() for el in self.precomputed.doc.cssselect(".atc-MetaAuthorLink")]
+            return link_based_extraction
+
+        return []
 
     @register_attribute
     def title(self) -> Optional[str]:
