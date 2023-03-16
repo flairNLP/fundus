@@ -2,7 +2,6 @@ from src import Crawler
 
 
 class TestPipeline:
-
     def test_crawler_with_empty_collection(self, collection_with_empty_publisher_enum):
         crawler = Crawler(collection_with_empty_publisher_enum)
         assert crawler.publishers == set()
