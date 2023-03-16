@@ -14,4 +14,4 @@ def path_to_plugin(path: Path) -> str:
 # The setup is inspired by https://gist.github.com/peterhurford/09f7dcda0ab04b95c026c60fa49c2a68
 # Documentation on the `pytest_plugins` variable:
 # https://docs.pytest.org/en/latest/reference/reference.html#globalvar-pytest_plugins
-pytest_plugins: List[str] = ['tests.' + path_to_plugin(fixture) for fixture in Path("./fixtures").glob("fixture_*.py")]
+pytest_plugins: List[str] = [path_to_plugin(fixture) for fixture in Path("tests/fixtures").glob("fixture_*.py")]
