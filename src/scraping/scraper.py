@@ -3,11 +3,11 @@ from typing import Iterator, Literal
 from src.logging.logger import basic_logger
 from src.parser.html_parser import BaseParser
 from src.scraping.article import Article
-from src.scraping.crawler import Crawler
+from src.scraping.source import Source
 
 
 class Scraper:
-    def __init__(self, *sources: Crawler, parser: BaseParser):
+    def __init__(self, *sources: Source, parser: BaseParser):
         self.crawler = list(sources)
         self.parser = parser
 

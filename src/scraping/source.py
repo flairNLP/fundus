@@ -11,7 +11,7 @@ from src.logging.logger import basic_logger
 from src.scraping.article import ArticleSource
 
 
-class Crawler(Iterable[str], ABC):
+class Source(Iterable[str], ABC):
     def __init__(self, publisher: Optional[str]):
         self.publisher = publisher
 
@@ -38,7 +38,7 @@ class Crawler(Iterable[str], ABC):
                 yield article_source
 
 
-class StaticCrawler(Crawler):
+class StaticSource(Source):
     def __init__(self, links: List[str], publisher: Optional[str] = None):
         super().__init__(publisher)
         self.links = links
@@ -47,7 +47,7 @@ class StaticCrawler(Crawler):
         yield from self.links
 
 
-class RSSCrawler(Crawler):
+class RSSSource(Source):
     def __init__(self, url: str, publisher: str):
         super().__init__(publisher)
         self.url = url
@@ -63,7 +63,7 @@ class RSSCrawler(Crawler):
                 return (entry["link"] for entry in rss_feed["entries"])
 
 
-class SitemapCrawler(Crawler):
+class SitemapSource(Source):
     def __init__(
         self,
         sitemap: str,
