@@ -10,7 +10,7 @@ if __name__ == "__main__":
 
     de_de = PublisherCollection.de_de
 
-    pipeline = Crawler(de_de)
+    crawler = Crawler(de_de)
 
     """
     Alternative usage:
@@ -28,7 +28,7 @@ if __name__ == "__main__":
         
     """
 
-    for article in pipeline.crawl(max_articles=5, error_handling="raise"):
+    for article in crawler.crawl(max_articles=5, error_handling="raise"):
         print(article)
 
     # or explicitly create your own pipeline
@@ -51,5 +51,5 @@ if __name__ == "__main__":
 
     pipeline = Pipeline(faz_scraper, mdr_scraper)
 
-    for article in pipeline.run(max_articles=5, error_handling='raise'):
+    for article in pipeline.run(max_articles=5, error_handling="raise"):
         print(article)
