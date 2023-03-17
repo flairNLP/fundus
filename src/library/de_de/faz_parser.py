@@ -34,6 +34,7 @@ class FAZParser(BaseParser):
         first_author_extraction_attempt = [
             el.text_content() for el in self.precomputed.doc.cssselect(".atc-MetaAuthor")
         ]
+
         if not first_author_extraction_attempt:
             return []
         if len(first_author_extraction_attempt) == 1:
@@ -43,8 +44,6 @@ class FAZParser(BaseParser):
             # With more than one entry, we abuse the fact that authors are linked, but cities are not
             link_based_extraction = [el.text_content() for el in self.precomputed.doc.cssselect(".atc-MetaAuthorLink")]
             return link_based_extraction
-
-        return []
 
     @register_attribute
     def title(self) -> Optional[str]:
