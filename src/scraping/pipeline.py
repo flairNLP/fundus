@@ -14,9 +14,12 @@ class Pipeline:
         self.scrapers: Tuple[Scraper, ...] = scrapers
 
     def run(
-        self, error_handling: Literal["suppress", "catch", "raise"], max_articles: Optional[int] = None
+        self,
+        error_handling: Literal["suppress", "catch", "raise"],
+        max_articles: Optional[int] = None,
+        batch_size: int = 10,
     ) -> Iterator[Article]:
-        scrape_map = map(lambda x: x.scrape(error_handling=error_handling), self.scrapers)
+        scrape_map = map(lambda x: x.scrape(error_handling=error_handling, batch_size=batch_size), self.scrapers)
         robin = more_itertools.interleave_longest(*tuple(scrape_map))
 
         if max_articles:
@@ -42,6 +45,7 @@ class Crawler:
         max_articles: Optional[int] = None,
         restrict_sources_to: Optional[Literal["rss", "sitemap", "news"]] = None,
         error_handling: Literal["suppress", "catch", "raise"] = "suppress",
+        batch_size: int = 10,
     ) -> Iterator[Article]:
         scrapers: List[Scraper] = []
         for spec in self.publishers:
@@ -58,6 +62,6 @@ class Crawler:
 
         if scrapers:
             pipeline = Pipeline(*scrapers)
-            return pipeline.run(error_handling=error_handling, max_articles=max_articles)
+            return pipeline.run(error_handling=error_handling, max_articles=max_articles, batch_size=batch_size)
         else:
             return iter(())
