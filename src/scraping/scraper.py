@@ -1,4 +1,4 @@
-from typing import Iterator, Literal, Callable, Optional
+from typing import Callable, Iterator, Literal, Optional
 
 from src.logging.logger import basic_logger
 from src.parser.html_parser import BaseParser

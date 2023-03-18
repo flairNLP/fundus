@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from datetime import datetime
 from multiprocessing.pool import ThreadPool
 from time import sleep
-from typing import Callable, Iterable, Iterator, List, Optional, Generator
+from typing import Callable, Generator, Iterable, Iterator, List, Optional
 
 import feedparser
 import lxml.html
@@ -14,7 +14,7 @@ from src.scraping.article import ArticleSource
 
 class Source(Iterable[str], ABC):
     def __init__(
-            self, publisher: Optional[str], delay: Optional[Callable[[], float]] = None, max_threads: Optional[int] = 4
+        self, publisher: Optional[str], delay: Optional[Callable[[], float]] = None, max_threads: Optional[int] = 4
     ):
         self.publisher = publisher
         self.delay = delay
@@ -97,11 +97,11 @@ class RSSSource(Source):
 
 class SitemapSource(Source):
     def __init__(
-            self,
-            sitemap: str,
-            publisher: str,
-            recursive: bool = True,
-            reverse: bool = False,
+        self,
+        sitemap: str,
+        publisher: str,
+        recursive: bool = True,
+        reverse: bool = False,
     ):
         super().__init__(publisher)
 
