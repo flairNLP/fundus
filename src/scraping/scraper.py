@@ -13,7 +13,7 @@ class Scraper:
 
     def scrape(self, error_handling: Literal["suppress", "catch", "raise"]) -> Iterator[Article]:
         for crawler in self.sources:
-            for article_source in crawler.crawl():
+            for article_source in crawler.fetch():
                 try:
                     data = self.parser.parse(article_source.html, error_handling)
 

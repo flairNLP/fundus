@@ -23,7 +23,7 @@ class Source(Iterable[str], ABC):
         """
         raise NotImplementedError
 
-    def crawl(self, delay: Callable[[], float] = lambda: 0.0) -> Iterator[ArticleSource]:
+    def fetch(self, delay: Callable[[], float] = lambda: 0.0) -> Iterator[ArticleSource]:
         with requests.Session() as session:
             for url in self:
                 sleep(delay())
