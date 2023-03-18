@@ -8,11 +8,11 @@ from src.scraping.source import Source
 
 class Scraper:
     def __init__(self, *sources: Source, parser: BaseParser):
-        self.crawler = list(sources)
+        self.sources = list(sources)
         self.parser = parser
 
     def scrape(self, error_handling: Literal["suppress", "catch", "raise"]) -> Iterator[Article]:
-        for crawler in self.crawler:
+        for crawler in self.sources:
             for article_source in crawler.crawl():
                 try:
                     data = self.parser.parse(article_source.html, error_handling)
