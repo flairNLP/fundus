@@ -48,19 +48,18 @@ class Source(Iterable[str], ABC):
             empty = False
             with ThreadPool(processes=self.max_threads) as pool:
                 while not empty:
-                    batch_size = yield  # type: ignore
+                    current_size = batch_size = yield  # type: ignore
                     batch_urls = []
-                    while batch_size > 0 and (nxt := next(it, None)):
+                    while current_size > 0 and (nxt := next(it, None)):
                         batch_urls.append(nxt)
-                        batch_size -= 1
+                        current_size -= 1
                     if not batch_urls:
                         break
                     elif len(batch_urls) < batch_size:
                         empty = True
-                    batch = pool.map(thread, batch_urls)
-                    yield batch
+                    yield pool.map(thread, batch_urls)
 
-    def fetch(self, batch_size: int = 10) -> Iterator[ArticleSource]:
+    def fetch(self, batch_size: int = 12) -> Iterator[ArticleSource]:
         gen = self._batched_fetch()
         while True:
             try:
