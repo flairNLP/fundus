@@ -50,7 +50,7 @@ class Source(Iterable[str], ABC):
                 while not empty:
                     batch_size = yield  # type: ignore
                     batch_urls = []
-                    while (nxt := next(it, None)) and batch_size > 0:
+                    while batch_size > 0 and (nxt := next(it, None)):
                         batch_urls.append(nxt)
                         batch_size -= 1
                     if not batch_urls:
