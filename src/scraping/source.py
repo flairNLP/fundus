@@ -14,7 +14,7 @@ from src.scraping.article import ArticleSource
 
 class Source(Iterable[str], ABC):
     def __init__(
-        self, publisher: Optional[str], delay: Optional[Callable[[], float]] = None, max_threads: Optional[int] = 4
+        self, publisher: Optional[str], delay: Optional[Callable[[], float]] = None, max_threads: Optional[int] = 10
     ):
         self.publisher = publisher
         self.delay = delay
