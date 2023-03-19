@@ -59,7 +59,7 @@ class Source(Iterable[str], ABC):
                         empty = True
                     yield pool.map(thread, batch_urls)
 
-    def fetch(self, batch_size: int = 12) -> Iterator[ArticleSource]:
+    def fetch(self, batch_size: int = 10) -> Iterator[ArticleSource]:
         gen = self._batched_fetch()
         while True:
             try:
