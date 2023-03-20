@@ -2,7 +2,7 @@ import datetime
 import re
 from typing import List, Optional
 
-from src.parser.html_parser import ArticleBody, BaseParser, register_attribute
+from src.parser.html_parser import ArticleBody, BaseParser, attribute
 from src.parser.html_parser.utility import (
     extract_article_body_with_selector,
     generic_author_parsing,
@@ -11,7 +11,7 @@ from src.parser.html_parser.utility import (
 
 
 class TagesschauParser(BaseParser):
-    @register_attribute
+    @attribute
     def body(self) -> ArticleBody:
         return extract_article_body_with_selector(
             self.precomputed.doc,
@@ -21,7 +21,7 @@ class TagesschauParser(BaseParser):
             mode="xpath",
         )
 
-    @register_attribute
+    @attribute
     def authors(self) -> List[str]:
         if raw_author_string := self.precomputed.doc.xpath('string(//div[contains(@class, "authorline__author")])'):
             cleaned_author_string = re.sub(r"^Von |, ARD[^\s,]*", "", raw_author_string)
@@ -29,15 +29,15 @@ class TagesschauParser(BaseParser):
         else:
             return []
 
-    @register_attribute
+    @attribute
     def publishing_date(self) -> Optional[datetime.datetime]:
         return generic_date_parsing(self.precomputed.ld.bf_search("datePublished"))
 
-    @register_attribute
+    @attribute
     def title(self):
         return self.precomputed.meta.get("og:title")
 
-    @register_attribute
+    @attribute
     def topics(self) -> List[str]:
         topic_nodes = self.precomputed.doc.cssselect("div.meldungsfooter .taglist a")
         return [node.text_content() for node in topic_nodes]
