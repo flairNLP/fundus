@@ -21,7 +21,7 @@ class Node:
     node: lxml.html.HtmlElement = field(compare=False)
     type: str = field(compare=False)
 
-    def striped(self, chars: str = "") -> str:
+    def striped(self, chars: Optional[str] = None) -> str:
         return str(self).strip(chars)
 
     def _get_break_preserved_node(self) -> lxml.html.HtmlElement:
@@ -68,7 +68,7 @@ def extract_article_body_with_selector(
     paragraph_nodes = extract_nodes(paragraph_selector, "P")
     nodes = sorted(summary_nodes + subhead_nodes + paragraph_nodes)
 
-    striped_nodes = [node for node in nodes if str(node)]
+    striped_nodes = [node for node in nodes if node.striped()]
 
     instructions = more_itertools.split_when(striped_nodes, pred=lambda x, y: x.type != y.type)
 
