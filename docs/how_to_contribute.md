@@ -76,7 +76,7 @@ ValueError: Publishers must at least define either an rss-feed, sitemap or news_
 since we didn't specify yet where to look for articles.
 
 #### 5.
-To work your newly added source has to specify a location where to look for articles. Right now fundus has support for
+To work, your newly added source has to specify a location where to look for articles. Right now fundus has support for
 reading sitemaps or rss feeds. You usually find sitemaps for the news source you want to add at the end of 
 `<your_news_source_domain>/robots.txt` or through a quick google search.
 
@@ -96,10 +96,12 @@ covering recently published articles.
 
 Given the above information our entry should look like this now:
 ``` python
-    WashingtonPost = PublisherSpec(domain='https://www.washingtonpost.com/',
-                                   sitemaps=['https://www.washingtonpost.com/arcio/sitemap/master/index/'],
-                                   news_map='https://www.washingtonpost.com/arcio/news-sitemap/',
-                                   parser=WashingtonPostParser)
+    LATimes = PublisherSpec(
+        domain="https://www.latimes.com/",
+        sitemaps=["https://www.latimes.com/sitemap.xml"],
+        news_map="https://www.latimes.com/news-sitemap.xml",
+        parser=LATimesParser,
+    )
 ```
 
 #### 6.
@@ -130,9 +132,10 @@ Fundus-Article:
 - From:   LATimes (2023-03-20 19:25)
 ```
 
-Since we didn't add anything to the parser yet most of the entries are empty. Because the parser you just wrote
-inherits from `BaseParser` it automatically parsers the articles `ld+json` and `meta` content located in the article 
-`head`. You can access those properties with `article.ld` and `article.meta`.
+Since we didn't add anything to the parser yet most of the entries are empty. 
+
+Because the parser you just wrote inherits from `BaseParser` it automatically parses the articles `ld+json` and 
+`meta` content located in the article `head`. You can access those properties with `article.ld` and `article.meta`.
 
 #### 7.
 Bring your parser to life and fill it with `Attribute`'s to parse.
@@ -142,9 +145,9 @@ In the end this decorator indicates to the `BaseParser` which class method to us
 [attribute_guidelines](attribute_guidelines.md). They define the information your parser will extract.
 
 For example, if we want our parser to extract article titles, we would look at the 
-[attribute_guidelines](attribute_guidelines.md) to check if there is something defined which matches our expectations.
-In the guidelines we find an attribute called `title` which exactly describes what we want to extract and also defines
-an expected return type. It is very important that you stick to the expected return types since those will be enforced
+[attribute_guidelines](attribute_guidelines.md) and see if there is something defined which matches our expectations.
+In the guidelines we find an attribute called `title` which exactly describes what we want to extract and also
+an expected return type. It is very important that you stick to the return types since those will be enforced
 at run time and otherwise an error will be thrown.
 
 Now that we have our attribute name we can start to add it to the parser by defining a class method called `title`
@@ -165,8 +168,8 @@ attributes of `Article`. Those will be extracted automatically, when present, an
 therefore within your parsers `Attributes`. Often useful information about an article like `title`, `author` or 
 `topics` can be found in these two objects.
 
-You can access them inside your parser class via `self.precomputed.ld` and `self.precomputed.meta`. `self.precomputed` 
-is a `dataclass` named `Precomputed` which contains meta information about the article you're currently parsing.
+You can access them inside your parser class via `precomputed` attribute of `BaseParser` which holds a dataclass 
+of type `Precomputed`. This object contains meta information about the article you're currently parsing.
 
 ``` python
 @dataclass
