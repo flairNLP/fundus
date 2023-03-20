@@ -1,6 +1,6 @@
 import pytest
 
-from src.parser.html_parser import BaseParser, register_attribute
+from src.parser.html_parser import BaseParser, attribute
 
 
 @pytest.fixture
@@ -14,7 +14,7 @@ def empty_parser():
 @pytest.fixture
 def parser_with_attr_title():
     class ParserWithAttrTitle(BaseParser):
-        @register_attribute
+        @attribute
         def title(self) -> str:
             return "This is a title"
 
