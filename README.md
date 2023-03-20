@@ -34,13 +34,13 @@ Let's use Fundus to crawl 2 articles of German-language news.
 
 ```python
 from src.library.collection import PublisherCollection
-from src.scraping.pipeline import AutoPipeline
+from src.scraping.pipeline import Crawler
 
 # initialize the crawler for German-language news
-pipeline = AutoPipeline(PublisherCollection.de_de)
+pipeline = Crawler(PublisherCollection.de_de)
 
 # crawl 2 articles and print
-for article in pipeline.run(max_articles=2):
+for article in pipeline.crawl(max_articles=2):
     print(article)
 ```
 
@@ -70,13 +70,13 @@ Maybe you want to crawl a specific news source instead. Let's crawl news article
 
 ```python
 from src.library.collection import PublisherCollection
-from src.scraping.pipeline import AutoPipeline
+from src.scraping.pipeline import Crawler
 
 # initialize the crawler for German-language news
-pipeline = AutoPipeline(PublisherCollection.de_de.BerlinerZeitung)
+pipeline = Crawler(PublisherCollection.de_de.BerlinerZeitung)
 
 # crawl 5 articles and print
-for article in pipeline.run(max_articles=5):
+for article in pipeline.crawl(max_articles=5):
     print(article)
 ```
 
