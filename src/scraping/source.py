@@ -27,7 +27,8 @@ class Source(Iterable[str], ABC):
         with requests.Session() as session:
             for url in self:
                 sleep(delay())
-                response = session.get(url=url)
+                response = session.get(url=url, headers={"User-Agent": ""})
+                response.raise_for_status()
                 article_source = ArticleSource(
                     url=response.url,
                     html=response.text,
@@ -83,13 +84,9 @@ class SitemapSource(Source):
 
     def __iter__(self) -> Iterator[str]:
         def yield_recursive(url: str):
-            try:
-                sitemap_html = session.get(url).content
-            except Exception as err:
-                raise err
-            if not sitemap_html:
-                return
-            tree = lxml.html.fromstring(sitemap_html)
+            response = session.get(url=url, headers={"User-Agent": ""})
+            response.raise_for_status()
+            tree = lxml.html.fromstring(response.content)
             urls = [node.text_content() for node in tree.cssselect("url > loc")]
             yield from reversed(urls) if self.reverse else urls
             if self.recursive:
