@@ -86,7 +86,7 @@ We provide **quick tutorials** to get you started with the library:
 
 1. [**Tutorial 1: How to crawl news with Fundus**](/resources/docs/...)
 2. [**Tutorial 2: The Article Class**](/resources/docs/...)
-3. [**Tutorial 3: How to add a new news source**](/resources/docs/...)
+3. [**Tutorial 3: How to add a new news source**](docs/how_to_contribute.md)
 
 The tutorials explain how ...
 
