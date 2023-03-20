@@ -16,7 +16,7 @@ this library, please ensure that these attributes are named consistently.
         <td>title</td>
         <td>A string representing the headline of a given article.
             Does not include subheaders, aims to be as short as possible.</td>
-        <td><code>str</code></td>
+        <td><code>Optional[str]</code></td>
     </tr>
     <tr>
         <td>body</td>
