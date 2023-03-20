@@ -122,6 +122,9 @@ class LinkedData:
     def __repr__(self):
         return f"LD containing '{', '.join(content)}'" if (content := self._contains) else "Empty LD"
 
+    def __str__(self):
+        return str(self._ld_by_type)
+
 
 class TextSequence(Sequence[str]):
     def __init__(self, texts: Iterable[str]):
