@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 from datetime import datetime
 from functools import cached_property
 from time import sleep
-from typing import Callable, Iterable, Iterator, List, Optional, Dict
+from typing import Callable, Dict, Iterable, Iterator, List, Optional
 
 import feedparser
 import lxml.html
@@ -66,16 +66,15 @@ class RSSCrawler(Crawler):
 
 
 class _ArchiveDecompressor:
-
     def __init__(self):
-        self.archive_mapping: Dict[str, Callable[[bytes], bytes]] = {'gz': self._decompress_gzip}
+        self.archive_mapping: Dict[str, Callable[[bytes], bytes]] = {"gz": self._decompress_gzip}
 
     @staticmethod
     def _decompress_gzip(compressed_content: bytes) -> bytes:
         decompressed_content = gzip.decompress(compressed_content)
         return decompressed_content
 
-    def decompress(self, content: bytes, file_format: 'str') -> bytes:
+    def decompress(self, content: bytes, file_format: "str") -> bytes:
         decompress_function = self.archive_mapping[file_format]
         return decompress_function(content)
 
@@ -85,13 +84,12 @@ class _ArchiveDecompressor:
 
 
 class SitemapCrawler(Crawler):
-
     def __init__(
-            self,
-            sitemap: str,
-            publisher: str,
-            recursive: bool = True,
-            reverse: bool = False,
+        self,
+        sitemap: str,
+        publisher: str,
+        recursive: bool = True,
+        reverse: bool = False,
     ):
         super().__init__(publisher)
 
@@ -105,16 +103,10 @@ class SitemapCrawler(Crawler):
         self.reverse = reverse
 
     def _get_archive_format(self, url: str) -> Optional[str]:
-        if '.' in url and (file_format := url.split('.')[-1]) in self._decompressor.supported_file_formats:
+        if "." in url and (file_format := url.split(".")[-1]) in self._decompressor.supported_file_formats:
             return file_format
         else:
             return None
-
-    @staticmethod
-    def _load_archive_file(content: bytes, file_format: str) -> Optional[bytes]:
-        if file_format == '.gz':
-            with gzip.open(content, 'rb') as file:
-                return file.read()
 
     def __iter__(self) -> Iterator[str]:
         def yield_recursive(url: str):
