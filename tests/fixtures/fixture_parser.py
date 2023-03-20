@@ -13,9 +13,9 @@ def empty_parser():
 
 @pytest.fixture
 def parser_with_attr_title():
-    class ParserWithTitle(BaseParser):
+    class ParserWithAttrTitle(BaseParser):
         @register_attribute
         def title(self) -> str:
             return "This is a title"
 
-    return ParserWithTitle
+    return ParserWithAttrTitle
