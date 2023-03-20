@@ -68,7 +68,7 @@ class RSSCrawler(Crawler):
 class _ArchiveDecompressor:
 
     def __init__(self):
-        self.archive_mapping: Dict[str, Callable[[bytes], bytes]] = {'.gz': self._decompress_gzip}
+        self.archive_mapping: Dict[str, Callable[[bytes], bytes]] = {'gz': self._decompress_gzip}
 
     @staticmethod
     def _decompress_gzip(compressed_content: bytes) -> bytes:
@@ -105,7 +105,7 @@ class SitemapCrawler(Crawler):
         self.reverse = reverse
 
     def _get_archive_format(self, url: str) -> Optional[str]:
-        if '.' in url and (file_format := '.' + url.split('.')[-1]) in self._decompressor.supported_file_formats:
+        if '.' in url and (file_format := url.split('.')[-1]) in self._decompressor.supported_file_formats:
             return file_format
         else:
             return None
