@@ -1,7 +1,8 @@
 from abc import ABC, abstractmethod
 from datetime import datetime
+from multiprocessing.pool import ThreadPool
 from time import sleep
-from typing import Callable, Iterable, Iterator, List, Optional
+from typing import Callable, Generator, Iterable, Iterator, List, Optional
 
 import feedparser
 import lxml.html
@@ -12,8 +13,12 @@ from src.scraping.article import ArticleSource
 
 
 class Source(Iterable[str], ABC):
-    def __init__(self, publisher: Optional[str]):
+    def __init__(
+        self, publisher: Optional[str], delay: Optional[Callable[[], float]] = None, max_threads: Optional[int] = 10
+    ):
         self.publisher = publisher
+        self.delay = delay
+        self.max_threads = max_threads
 
     @abstractmethod
     def __iter__(self) -> Iterator[str]:
@@ -23,10 +28,13 @@ class Source(Iterable[str], ABC):
         """
         raise NotImplementedError
 
-    def fetch(self, delay: Callable[[], float] = lambda: 0.0) -> Iterator[ArticleSource]:
+    def _batched_fetch(self) -> Generator[List[ArticleSource], int, None]:
         with requests.Session() as session:
-            for url in self:
-                sleep(delay())
+            it = iter(self)
+
+            def thread(url: str) -> ArticleSource:
+                if self.delay:
+                    sleep(self.delay())
                 response = session.get(url=url)
                 article_source = ArticleSource(
                     url=response.url,
@@ -35,7 +43,30 @@ class Source(Iterable[str], ABC):
                     publisher=self.publisher,
                     crawler_ref=self,
                 )
-                yield article_source
+                return article_source
+
+            empty = False
+            with ThreadPool(processes=self.max_threads) as pool:
+                while not empty:
+                    current_size = batch_size = yield  # type: ignore
+                    batch_urls = []
+                    while current_size > 0 and (nxt := next(it, None)):
+                        batch_urls.append(nxt)
+                        current_size -= 1
+                    if not batch_urls:
+                        break
+                    elif len(batch_urls) < batch_size:
+                        empty = True
+                    yield pool.map(thread, batch_urls)
+
+    def fetch(self, batch_size: int = 10) -> Iterator[ArticleSource]:
+        gen = self._batched_fetch()
+        while True:
+            try:
+                next(gen)
+                yield from gen.send(batch_size)
+            except StopIteration:
+                break
 
 
 class StaticSource(Source):
