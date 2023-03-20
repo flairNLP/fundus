@@ -118,7 +118,7 @@ class BaseParser(ABC):
 
     @classmethod
     def attributes(cls) -> List[str]:
-        return [func.__name__ for _, func in cls._search_members(Attribute)]
+        return [func.__name__ for _, func in cls._search_members(Attribute) if func.__name__ not in ["__ld", "__meta"]]
 
     def _base_setup(self, html: str) -> None:
         doc = lxml.html.document_fromstring(html)
