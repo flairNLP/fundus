@@ -13,7 +13,7 @@ from requests import HTTPError
 
 from src.logging.logger import basic_logger
 from src.scraping.article import ArticleSource
-from src.utils.error_states import error_stated, Failed, Succeeded, Result
+from src.utils.error_states import Failed, Result, Succeeded, error_stated
 
 
 class Source(Iterable[str], ABC):

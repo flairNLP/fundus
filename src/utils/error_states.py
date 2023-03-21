@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from functools import wraps
-from typing import Type, Callable, Any, Tuple, Dict
+from typing import Any, Callable, Dict, Tuple, Type
 
 
 @dataclass
@@ -25,7 +25,6 @@ def error_stated(*exceptions: Type[Exception]):
         raise ValueError("function <error_stated> requires one or more exception types as parameter")
 
     def decorator(func: Callable[[Any], Any]):
-
         @wraps(func)
         def wrapper(*args, **kwargs) -> Result:
             try:
