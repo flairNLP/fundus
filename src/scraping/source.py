@@ -13,6 +13,8 @@ from src.scraping.article import ArticleSource
 
 
 class Source(Iterable[str], ABC):
+    request_header = {"user-agent": "Mozilla/5.0"}
+
     def __init__(
         self, publisher: Optional[str], delay: Optional[Callable[[], float]] = None, max_threads: Optional[int] = 10
     ):
@@ -35,7 +37,7 @@ class Source(Iterable[str], ABC):
             def thread(url: str) -> ArticleSource:
                 if self.delay:
                     sleep(self.delay())
-                response = session.get(url=url, headers={"User-Agent": ""})
+                response = session.get(url=url, headers=self.request_header)
                 response.raise_for_status()
                 article_source = ArticleSource(
                     url=response.url,
@@ -115,7 +117,7 @@ class SitemapSource(Source):
 
     def __iter__(self) -> Iterator[str]:
         def yield_recursive(url: str):
-            response = session.get(url=url, headers={"User-Agent": ""})
+            response = session.get(url=url, headers=self.request_header)
             response.raise_for_status()
             tree = lxml.html.fromstring(response.content)
             urls = [node.text_content() for node in tree.cssselect("url > loc")]
