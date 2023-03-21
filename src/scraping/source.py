@@ -7,9 +7,11 @@ from typing import Callable, Generator, Iterable, Iterator, List, Optional
 import feedparser
 import lxml.html
 import requests
+from requests import HTTPError
 
 from src.logging.logger import basic_logger
 from src.scraping.article import ArticleSource
+from src.utils.error_states import error_stated, Failed, Succeeded, Result
 
 
 class Source(Iterable[str], ABC):
@@ -30,10 +32,11 @@ class Source(Iterable[str], ABC):
         """
         raise NotImplementedError
 
-    def _batched_fetch(self) -> Generator[List[ArticleSource], int, None]:
+    def _batched_fetch(self) -> Generator[List[Result], int, None]:
         with requests.Session() as session:
             it = iter(self)
 
+            @error_stated(HTTPError)
             def thread(url: str) -> ArticleSource:
                 if self.delay:
                     sleep(self.delay())
@@ -67,7 +70,14 @@ class Source(Iterable[str], ABC):
         while True:
             try:
                 next(gen)
-                yield from gen.send(batch_size)
+                batch = gen.send(batch_size)
+                for element in batch:
+                    if isinstance(element, Failed):
+                        basic_logger.info(f"Skipped {element.args[0]} because of {element.exception}")
+                    elif isinstance(element, Succeeded):
+                        yield element.result
+                    else:
+                        raise TypeError(f"Found unexpected object type {type(element)}")
             except StopIteration:
                 break
 
