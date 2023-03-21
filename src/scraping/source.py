@@ -13,14 +13,13 @@ from requests import HTTPError
 
 from src.logging.logger import basic_logger
 from src.scraping.article import ArticleSource
-from src.utils.error_states import Result
 
 
 class Source(Iterable[str], ABC):
     request_header = {"user-agent": "Mozilla/5.0"}
 
     def __init__(
-        self, publisher: Optional[str], delay: Optional[Callable[[], float]] = None, max_threads: Optional[int] = 10
+            self, publisher: Optional[str], delay: Optional[Callable[[], float]] = None, max_threads: Optional[int] = 10
     ):
         self.publisher = publisher
         self.delay = delay
@@ -125,11 +124,11 @@ class _ArchiveDecompressor:
 
 class SitemapSource(Source):
     def __init__(
-        self,
-        sitemap: str,
-        publisher: str,
-        recursive: bool = True,
-        reverse: bool = False,
+            self,
+            sitemap: str,
+            publisher: str,
+            recursive: bool = True,
+            reverse: bool = False,
     ):
         super().__init__(publisher)
 
