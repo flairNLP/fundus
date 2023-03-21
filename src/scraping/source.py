@@ -1,8 +1,10 @@
+import gzip
 from abc import ABC, abstractmethod
 from datetime import datetime
+from functools import cached_property
 from multiprocessing.pool import ThreadPool
 from time import sleep
-from typing import Callable, Generator, Iterable, Iterator, List, Optional
+from typing import Callable, Dict, Generator, Iterable, Iterator, List, Optional
 
 import feedparser
 import lxml.html
@@ -107,6 +109,24 @@ class RSSSource(Source):
                 return (entry["link"] for entry in rss_feed["entries"])
 
 
+class _ArchiveDecompressor:
+    def __init__(self):
+        self.archive_mapping: Dict[str, Callable[[bytes], bytes]] = {"gz": self._decompress_gzip}
+
+    @staticmethod
+    def _decompress_gzip(compressed_content: bytes) -> bytes:
+        decompressed_content = gzip.decompress(compressed_content)
+        return decompressed_content
+
+    def decompress(self, content: bytes, file_format: "str") -> bytes:
+        decompress_function = self.archive_mapping[file_format]
+        return decompress_function(content)
+
+    @cached_property
+    def supported_file_formats(self) -> List[str]:
+        return list(self.archive_mapping.keys())
+
+
 class SitemapSource(Source):
     def __init__(
         self,
@@ -120,16 +140,26 @@ class SitemapSource(Source):
         self.sitemap = sitemap
         self.recursive = recursive
         self.reverse = reverse
+        self._decompressor = _ArchiveDecompressor()
 
     def config(self, recursive: bool, reverse: bool):
         self.recursive = recursive
         self.reverse = reverse
 
+    def _get_archive_format(self, url: str) -> Optional[str]:
+        if "." in url and (file_format := url.split(".")[-1]) in self._decompressor.supported_file_formats:
+            return file_format
+        else:
+            return None
+
     def __iter__(self) -> Iterator[str]:
         def yield_recursive(url: str):
             response = session.get(url=url, headers=self.request_header)
             response.raise_for_status()
-            tree = lxml.html.fromstring(response.content)
+            content = response.content
+            if supported_file_format := self._get_archive_format(url):
+                content = self._decompressor.decompress(content, supported_file_format)
+            tree = lxml.html.fromstring(content)
             urls = [node.text_content() for node in tree.cssselect("url > loc")]
             yield from reversed(urls) if self.reverse else urls
             if self.recursive:
