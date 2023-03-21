@@ -13,7 +13,7 @@ from requests import HTTPError
 
 from src.logging.logger import basic_logger
 from src.scraping.article import ArticleSource
-from src.utils.error_states import Failed, Result, Succeeded, error_stated
+from src.utils.error_states import Result
 
 
 class Source(Iterable[str], ABC):
@@ -34,16 +34,19 @@ class Source(Iterable[str], ABC):
         """
         raise NotImplementedError
 
-    def _batched_fetch(self) -> Generator[List[Result], int, None]:
+    def _batched_fetch(self) -> Generator[List[Optional[ArticleSource]], int, None]:
         with requests.Session() as session:
             it = iter(self)
 
-            @error_stated(HTTPError)
-            def thread(url: str) -> ArticleSource:
+            def thread(url: str) -> Optional[ArticleSource]:
                 if self.delay:
                     sleep(self.delay())
-                response = session.get(url=url, headers=self.request_header)
-                response.raise_for_status()
+                try:
+                    response = session.get(url=url, headers=self.request_header)
+                    response.raise_for_status()
+                except HTTPError as error:
+                    basic_logger.info(f"Skipped {url} because of {error}")
+                    return None
                 article_source = ArticleSource(
                     url=response.url,
                     html=response.text,
@@ -72,14 +75,7 @@ class Source(Iterable[str], ABC):
         while True:
             try:
                 next(gen)
-                batch = gen.send(batch_size)
-                for element in batch:
-                    if isinstance(element, Failed):
-                        basic_logger.info(f"Skipped {element.args[0]} because of {element.exception}")
-                    elif isinstance(element, Succeeded):
-                        yield element.result
-                    else:
-                        raise TypeError(f"Found unexpected object type {type(element)}")
+                yield from filter(lambda x: bool(x), gen.send(batch_size))
             except StopIteration:
                 break
 
@@ -111,7 +107,7 @@ class RSSSource(Source):
 
 class _ArchiveDecompressor:
     def __init__(self):
-        self.archive_mapping: Dict[str, Callable[[bytes], bytes]] = {"gz": self._decompress_gzip}
+        self.archive_mapping: Dict[str, Callable[[bytes], bytes]] = {"application/x-gzip": self._decompress_gzip}
 
     @staticmethod
     def _decompress_gzip(compressed_content: bytes) -> bytes:
@@ -153,28 +149,22 @@ class SitemapSource(Source):
             return None
 
     def __iter__(self) -> Iterator[str]:
-        @error_stated(HTTPError)
         def yield_recursive(url: str):
-            response = session.get(url=url, headers=self.request_header)
-            response.raise_for_status()
-            content = response.content
-            if supported_file_format := self._get_archive_format(url):
-                content = self._decompressor.decompress(content, supported_file_format)
-            tree = lxml.html.fromstring(content)
-            urls = [node.text_content() for node in tree.cssselect("url > loc")]
-            yield from reversed(urls) if self.reverse else urls
-            if self.recursive:
-                sitemap_locs = [node.text_content() for node in tree.cssselect("sitemap > loc")]
-                for loc in reversed(sitemap_locs) if self.reverse else sitemap_locs:
-                    yield from yield_recursive(loc)
+            try:
+                response = session.get(url=url, headers=self.request_header)
+                response.raise_for_status()
+                content = response.content
+                if (content_type := response.headers.get("Content-Type")) in self._decompressor.supported_file_formats:
+                    content = self._decompressor.decompress(content, content_type)
+                tree = lxml.html.fromstring(content)
+                urls = [node.text_content() for node in tree.cssselect("url > loc")]
+                yield from reversed(urls) if self.reverse else urls
+                if self.recursive:
+                    sitemap_locs = [node.text_content() for node in tree.cssselect("sitemap > loc")]
+                    for loc in reversed(sitemap_locs) if self.reverse else sitemap_locs:
+                        yield from yield_recursive(loc)
+            except (HTTPError, ConnectionError) as error:
+                basic_logger.info(f"Warning! Couldn't reach sitemap {url}. " f"Exception: {error}")
 
         with requests.Session() as session:
-            for result in yield_recursive(self.sitemap):
-                if isinstance(result, Succeeded):
-                    yield result.result
-                elif isinstance(result, Failed):
-                    basic_logger.info(
-                        f"Warning! Couldn't reach sitemap {result.args[0]}. " f"Exception: {result.exception}"
-                    )
-                else:
-                    raise TypeError(f"Found unexpected object type {type(result)}")
+            yield from yield_recursive(self.sitemap)
