@@ -153,6 +153,7 @@ class SitemapSource(Source):
             return None
 
     def __iter__(self) -> Iterator[str]:
+        @error_stated(HTTPError)
         def yield_recursive(url: str):
             response = session.get(url=url, headers=self.request_header)
             response.raise_for_status()
@@ -168,4 +169,12 @@ class SitemapSource(Source):
                     yield from yield_recursive(loc)
 
         with requests.Session() as session:
-            yield from yield_recursive(self.sitemap)
+            for result in yield_recursive(self.sitemap):
+                if isinstance(result, Succeeded):
+                    yield result.result
+                elif isinstance(result, Failed):
+                    basic_logger.info(
+                        f"Warning! Couldn't reach sitemap {result.args[0]}. " f"Exception: {result.exception}"
+                    )
+                else:
+                    raise TypeError(f"Found unexpected object type {type(result)}")
