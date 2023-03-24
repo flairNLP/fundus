@@ -1,7 +1,7 @@
 import datetime
 from typing import List, Optional
 
-from src.parser.html_parser import ArticleBody, BaseParser, register_attribute
+from src.parser.html_parser import ArticleBody, BaseParser, attribute
 from src.parser.html_parser.utility import (
     extract_article_body_with_selector,
     generic_date_parsing,
@@ -11,7 +11,7 @@ from src.parser.html_parser.utility import (
 
 
 class MDRParser(BaseParser):
-    @register_attribute
+    @attribute
     def body(self) -> ArticleBody:
         return extract_article_body_with_selector(
             self.precomputed.doc,
@@ -20,21 +20,21 @@ class MDRParser(BaseParser):
             paragraph_selector="div.paragraph",
         )
 
-    @register_attribute
+    @attribute
     def topics(self) -> List[str]:
         return generic_topic_parsing(self.precomputed.meta.get("news_keywords"))
 
-    @register_attribute
+    @attribute
     def publishing_date(self) -> Optional[datetime.datetime]:
         return generic_date_parsing(self.precomputed.ld.bf_search("datePublished"))
 
-    @register_attribute
+    @attribute
     def authors(self) -> List[str]:
         if author := generic_text_extraction_with_css(self.precomputed.doc, ".articleMeta > .author"):
             cleaned_author = author.replace("von", "").replace(" und ", ", ")
             return [name.strip() for name in cleaned_author.split(",")]
         return []
 
-    @register_attribute
+    @attribute
     def title(self) -> Optional[str]:
         return title if isinstance(title := self.precomputed.ld.bf_search("headline"), str) else None

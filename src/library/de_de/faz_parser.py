@@ -1,7 +1,7 @@
 import datetime
 from typing import List, Optional
 
-from src.parser.html_parser import ArticleBody, BaseParser, register_attribute
+from src.parser.html_parser import ArticleBody, BaseParser, attribute
 from src.parser.html_parser.utility import (
     extract_article_body_with_selector,
     generic_author_parsing,
@@ -11,7 +11,7 @@ from src.parser.html_parser.utility import (
 
 
 class FAZParser(BaseParser):
-    @register_attribute
+    @attribute
     def body(self) -> ArticleBody:
         return extract_article_body_with_selector(
             self.precomputed.doc,
@@ -20,15 +20,15 @@ class FAZParser(BaseParser):
             paragraph_selector="div.atc-Text > p",
         )
 
-    @register_attribute
+    @attribute
     def topics(self) -> Optional[List[str]]:
         return generic_topic_parsing(self.precomputed.meta.get("keywords"))
 
-    @register_attribute
+    @attribute
     def publishing_date(self) -> Optional[datetime.datetime]:
         return generic_date_parsing(self.precomputed.ld.bf_search("datePublished"))
 
-    @register_attribute
+    @attribute
     def authors(self) -> List[str]:
         # Unfortunately, the raw data may contain cities. Most of these methods aims to remove the cities heuristically.
         first_author_extraction_attempt = [
@@ -45,6 +45,6 @@ class FAZParser(BaseParser):
             link_based_extraction = [el.text_content() for el in self.precomputed.doc.cssselect(".atc-MetaAuthorLink")]
             return link_based_extraction
 
-    @register_attribute
+    @attribute
     def title(self) -> Optional[str]:
         return self.precomputed.meta.get("og:title")
