@@ -152,18 +152,19 @@ class SitemapSource(Source):
             try:
                 response = session.get(url=url, headers=self.request_header)
                 response.raise_for_status()
-                content = response.content
-                if (content_type := response.headers.get("Content-Type")) in self._decompressor.supported_file_formats:
-                    content = self._decompressor.decompress(content, content_type)
-                tree = lxml.html.fromstring(content)
-                urls = [node.text_content() for node in tree.cssselect("url > loc")]
-                yield from reversed(urls) if self.reverse else urls
-                if self.recursive:
-                    sitemap_locs = [node.text_content() for node in tree.cssselect("sitemap > loc")]
-                    for loc in reversed(sitemap_locs) if self.reverse else sitemap_locs:
-                        yield from yield_recursive(loc)
             except (HTTPError, ConnectionError) as error:
-                basic_logger.info(f"Warning! Couldn't reach sitemap {url}. " f"Exception: {error}")
+                basic_logger.info(f"Warning! Couldn't reach sitemap {url} so skipped it. Exception: {error}")
+                return
+            content = response.content
+            if (content_type := response.headers.get("Content-Type")) in self._decompressor.supported_file_formats:
+                content = self._decompressor.decompress(content, content_type)
+            tree = lxml.html.fromstring(content)
+            urls = [node.text_content() for node in tree.cssselect("url > loc")]
+            yield from reversed(urls) if self.reverse else urls
+            if self.recursive:
+                sitemap_locs = [node.text_content() for node in tree.cssselect("sitemap > loc")]
+                for loc in reversed(sitemap_locs) if self.reverse else sitemap_locs:
+                    yield from yield_recursive(loc)
 
         with requests.Session() as session:
             yield from yield_recursive(self.sitemap)
