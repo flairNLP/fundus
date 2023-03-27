@@ -1,3 +1,4 @@
+import webbrowser
 from enum import Enum
 
 from src.library.collection import PublisherCollection
@@ -9,8 +10,7 @@ if __name__ == "__main__":
     # You can use fundus via the shipped collection of publisher
 
     de_de = PublisherCollection.de_de
-
-    pipeline = AutoPipeline(de_de)
+    pipeline = AutoPipeline(de_de.Merkur)
 
     """
     Alternative usage:
@@ -28,9 +28,15 @@ if __name__ == "__main__":
         
     """
 
-    for article in pipeline.run(max_articles=10, error_handling="raise"):
-        print(article)
+    for article in pipeline.run(max_articles=20, error_handling="raise"):
 
+        print(article.url)
+        print(article.extracted['topics'])
+        print(article.extracted['authors'])
+        #webbrowser.open_new_tab(article.url)
+
+
+    exit()
     # or explicitly create your own pipeline
 
     # using rss-feeds

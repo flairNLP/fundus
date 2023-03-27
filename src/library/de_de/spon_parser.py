@@ -5,7 +5,7 @@ from src.parser.html_parser import ArticleBody, BaseParser, register_attribute
 from src.parser.html_parser.utility import (
     extract_article_body_with_selector,
     generic_author_parsing,
-    generic_date_parsing,
+    generic_date_parsing, generic_topic_parsing,
 )
 
 
@@ -30,3 +30,7 @@ class SPONParser(BaseParser):
     @register_attribute
     def title(self) -> Optional[str]:
         return self.precomputed.meta.get("og:title")
+
+    @register_attribute
+    def topics(self) -> Optional[str]:
+        return generic_topic_parsing(self.precomputed.meta.get('news_keywords'))
