@@ -7,14 +7,14 @@ from src.parser.html_parser.utility import (
     extract_article_body_with_selector,
     generic_author_parsing,
     generic_date_parsing,
-    generic_topic_parsing, substitute_all_strs_in_list,
+    generic_topic_parsing,
+    substitute_all_strs_in_list,
 )
 
 
 class DieWeltParser(BaseParser):
-    _author_substitution_pattern: Pattern[str] = re.compile(
-        r"WELT"
-    )
+    _author_substitution_pattern: Pattern[str] = re.compile(r"WELT")
+
     @attribute
     def body(self) -> ArticleBody:
         return extract_article_body_with_selector(
@@ -26,8 +26,9 @@ class DieWeltParser(BaseParser):
 
     @attribute
     def authors(self) -> List[str]:
-        return substitute_all_strs_in_list(generic_author_parsing(self.precomputed.ld.bf_search("author")), self._author_substitution_pattern)
-
+        return substitute_all_strs_in_list(
+            generic_author_parsing(self.precomputed.ld.bf_search("author")), self._author_substitution_pattern
+        )
 
     @attribute
     def publishing_date(self) -> Optional[datetime.datetime]:
