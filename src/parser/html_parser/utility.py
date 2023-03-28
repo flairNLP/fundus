@@ -136,6 +136,7 @@ def generic_author_parsing(value: Union[Optional[str], Dict[str, str], List[Dict
         def flatten(list_of_lists):
             "Flatten one level of nesting"
             return itertools.chain.from_iterable(list_of_lists)
+
         return [name.strip() for name in flatten(authors)]
 
 
