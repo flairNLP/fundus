@@ -9,8 +9,7 @@ import pytest
 from src.library.collection import PublisherCollection
 from src.library.collection.base_objects import PublisherEnum
 
-__location__ = os.path.realpath(
-    os.path.join(os.getcwd(), os.path.dirname(__file__)))
+__location__ = os.path.dirname(os.path.realpath(__file__))
 
 de_de = PublisherCollection.de_de
 
