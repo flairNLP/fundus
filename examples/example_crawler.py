@@ -10,7 +10,7 @@ if __name__ == "__main__":
 
     de_de = PublisherCollection.de_de
 
-    crawler= Crawler(de_de)
+    crawler = Crawler(de_de)
 
     """
     Alternative usage:

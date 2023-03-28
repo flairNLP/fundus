@@ -33,5 +33,5 @@ class SPONParser(BaseParser):
         return self.precomputed.meta.get("og:title")
 
     @attribute
-    def topics(self) -> Optional[str]:
+    def topics(self) -> List[str]:
         return generic_topic_parsing(self.precomputed.meta.get("news_keywords"))
