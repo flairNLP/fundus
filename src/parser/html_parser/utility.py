@@ -154,17 +154,7 @@ def generic_author_parsing(
     else:
         raise parameter_type_error
 
-    try:
-        return [name.strip() for name in authors]
-    except AttributeError:
-        # This fixes an issue in which the list of names might be a list of lists by flattening the list once
-        # Doing it this way avoids an import from more itertools.
-
-        def flatten(list_of_lists):
-            "Flatten one level of nesting"
-            return itertools.chain.from_iterable(list_of_lists)
-
-        return [name.strip() for name in flatten(authors)]
+    return [name.strip() for name in authors]
 
 
 def generic_text_extraction_with_css(doc, selector: str) -> Optional[str]:
