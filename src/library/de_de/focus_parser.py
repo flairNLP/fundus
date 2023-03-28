@@ -11,7 +11,9 @@ from src.parser.html_parser.utility import (
 
 
 class FocusParser(BaseParser):
-    _author_substitution_pattern: Pattern[str] = re.compile(r"Von FOCUS-online-(Redakteur|Autorin|Reporter|Redakteurin|Gastautor)\s")
+    _author_substitution_pattern: Pattern[str] = re.compile(
+        r"Von FOCUS-online-(Redakteur|Autorin|Reporter|Redakteurin|Gastautor)\s"
+    )
     _topic_pattern: Pattern[str] = re.compile(r'"keywords":\[{(.*?)}\]')
     _topic_name_pattern: Pattern[str] = re.compile(r'"name":"(.*?)"', flags=re.MULTILINE)
 

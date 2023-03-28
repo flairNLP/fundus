@@ -26,8 +26,7 @@ class BerlinerZeitungParser(BaseParser):
 
     @attribute
     def authors(self) -> List[str]:
-
-       return generic_author_parsing(self.precomputed.meta.get("article:author"))
+        return generic_author_parsing(self.precomputed.meta.get("article:author"))
 
     @attribute
     def publishing_date(self) -> Optional[datetime.datetime]:
