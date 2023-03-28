@@ -15,7 +15,7 @@ de_de = PublisherCollection.de_de
 
 
 def load_html(publisher_name: str) -> str:
-    print(os.path.realpath(__file__))
+    print(__location__)
     relative_resource_path = Path(f"./ressources/{publisher_name}.html.gz").resolve()
     absolute_path = os.path.join(__location__, relative_resource_path)
 
