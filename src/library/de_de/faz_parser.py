@@ -4,7 +4,6 @@ from typing import List, Optional
 from src.parser.html_parser import ArticleBody, BaseParser, attribute
 from src.parser.html_parser.utility import (
     extract_article_body_with_selector,
-    generic_author_parsing,
     generic_date_parsing,
     generic_topic_parsing,
 )
@@ -30,23 +29,15 @@ class FAZParser(BaseParser):
 
     @attribute
     def authors(self) -> List[str]:
-        result = []
         # Unfortunately, the raw data may contain cities. Most of these methods aims to remove the cities heuristically.
-        first_author_extraction_attempt = [
-            el.text_content() for el in self.precomputed.doc.cssselect(".atc-MetaAuthor")
-        ]
-
-        if not first_author_extraction_attempt:
-            result = []
-        if len(first_author_extraction_attempt) == 1:
-            # With a single entry we can be sure that it won't contain a city
-            result = first_author_extraction_attempt
+        if not (author_nodes := self.precomputed.doc.cssselect(".atc-MetaAuthor")):
+            return []
         else:
-            # With more than one entry, we abuse the fact that authors are linked, but cities are not
-            link_based_extraction = [el.text_content() for el in self.precomputed.doc.cssselect(".atc-MetaAuthorLink")]
-            result = link_based_extraction
-
-        return [el for el in result if "F.A.Z" not in el]
+            if len(author_nodes) > 1:
+                # With more than one entry, we abuse the fact that authors are linked with an <a> tag,
+                # but cities are not
+                author_nodes = [node for node in author_nodes if bool(next(node.iterchildren(tag="a"), None))]
+            return [text for node in author_nodes if "F.A.Z" not in (text := node.text_content())]
 
     @attribute
     def title(self) -> Optional[str]:
