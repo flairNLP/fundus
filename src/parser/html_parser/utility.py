@@ -4,7 +4,7 @@ from copy import copy
 from dataclasses import dataclass, field
 from datetime import datetime
 from functools import total_ordering
-from typing import Dict, List, Literal, Optional, Union
+from typing import Dict, List, Literal, Optional, Union, cast
 
 import dateutil.tz
 import lxml.html
@@ -109,23 +109,44 @@ def strip_nodes_to_text(text_nodes: List[lxml.html.HtmlElement]) -> Optional[str
     return "\n\n".join(([re.sub(r"\n+", " ", node.text_content()) for node in text_nodes])).strip()
 
 
-def generic_author_parsing(value: Union[Optional[str], Dict[str, str], List[Dict[str, str]]]) -> List[str]:
+def generic_author_parsing(
+    value: Union[
+        Optional[str],
+        Dict[str, str],
+        List[str],
+        List[Dict[str, str]],
+    ]
+) -> List[str]:
     if not value:
         return []
+
+    parameter_type_error: TypeError = TypeError(
+        f"<value> '{value}' has an unsupported type {type(value)}. "
+        f"Supported types are 'Optional[str], Dict[str, str], List[str], List[Dict[str, str]],'"
+    )
+
+    authors: List[str]
 
     if isinstance(value, str):
         authors = [value]
 
-    elif isinstance(value, list):
-        authors = [name for author in value if (name := author.get("name"))]
-
     elif isinstance(value, dict):
         authors = [name] if (name := value.get("name")) else []
 
+    elif isinstance(value, list):
+        if isinstance(value[0], str):
+            value = cast(List[str], value)
+            authors = value
+
+        elif isinstance(value[0], dict):
+            value = cast(List[Dict[str, str]], value)
+            authors = [name for author in value if (name := author.get("name"))]
+
+        else:
+            raise parameter_type_error
+
     else:
-        raise TypeError(
-            f"<value> '{value}' has an unsupported type {type(value)}. " f"Supported types are 'str, dict, List[dict]'"
-        )
+        raise parameter_type_error
 
     return [name.strip() for name in authors]
 
