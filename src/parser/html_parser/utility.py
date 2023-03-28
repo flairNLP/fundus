@@ -4,7 +4,7 @@ from copy import copy
 from dataclasses import dataclass, field
 from datetime import datetime
 from functools import total_ordering
-from typing import Dict, List, Literal, Optional, Union
+from typing import Dict, List, Literal, Optional, Union, Pattern
 
 import dateutil.tz
 import lxml.html
@@ -109,6 +109,13 @@ def strip_nodes_to_text(text_nodes: List[lxml.html.HtmlElement]) -> Optional[str
     return "\n\n".join(([re.sub(r"\n+", " ", node.text_content()) for node in text_nodes])).strip()
 
 
+
+def substitute_all_strs_in_list(input_list:List[str], sub_pattern:Pattern[str])-> List[str]:
+    cleaned_list = [re.sub(sub_pattern, '', el).strip() for el in input_list]
+    cleaned_list = [el for el in cleaned_list if el]
+    return cleaned_list
+
+
 def generic_author_parsing(value: Union[Optional[str], Dict[str, str], List[Dict[str, str]]]) -> List[str]:
     if not value:
         return []
@@ -127,7 +134,17 @@ def generic_author_parsing(value: Union[Optional[str], Dict[str, str], List[Dict
             f"<value> '{value}' has an unsupported type {type(value)}. " f"Supported types are 'str, dict, List[dict]'"
         )
 
-    return [name.strip() for name in authors]
+    try:
+        return [name.strip() for name in authors]
+    except AttributeError:
+        # This fixes an issue in which the list of names might be a list of lists by flattening the list once
+        # Doing it this way avoids an import from more itertools.
+
+        def flatten(list_of_lists):
+            "Flatten one level of nesting"
+            return itertools.chain.from_iterable(list_of_lists)
+
+        return [name.strip() for name in flatten(authors)]
 
 
 def generic_text_extraction_with_css(doc, selector: str) -> Optional[str]:
