@@ -1,17 +1,16 @@
 import datetime
 from typing import List, Optional
 
-from src.parser.html_parser import ArticleBody, BaseParser, register_attribute
+from src.parser.html_parser import ArticleBody, BaseParser, attribute
 from src.parser.html_parser.utility import (
     extract_article_body_with_selector,
-    generic_author_parsing,
     generic_date_parsing,
     generic_topic_parsing,
 )
 
 
 class FAZParser(BaseParser):
-    @register_attribute
+    @attribute
     def body(self) -> ArticleBody:
         return extract_article_body_with_selector(
             self.precomputed.doc,
@@ -20,18 +19,26 @@ class FAZParser(BaseParser):
             paragraph_selector="div.atc-Text > p",
         )
 
-    @register_attribute
+    @attribute
     def topics(self) -> Optional[List[str]]:
         return generic_topic_parsing(self.precomputed.meta.get("keywords"))
 
-    @register_attribute
+    @attribute
     def publishing_date(self) -> Optional[datetime.datetime]:
         return generic_date_parsing(self.precomputed.ld.bf_search("datePublished"))
 
-    @register_attribute
+    @attribute
     def authors(self) -> List[str]:
-        return generic_author_parsing(self.precomputed.meta.get("author"))
+        # Unfortunately, the raw data may contain cities. Most of these methods aims to remove the cities heuristically.
+        if not (author_nodes := self.precomputed.doc.cssselect(".atc-MetaAuthor")):
+            return []
+        else:
+            if len(author_nodes) > 1:
+                # With more than one entry, we abuse the fact that authors are linked with an <a> tag,
+                # but cities are not
+                author_nodes = [node for node in author_nodes if bool(next(node.iterchildren(tag="a"), None))]
+            return [text for node in author_nodes if "F.A.Z" not in (text := node.text_content())]
 
-    @register_attribute
+    @attribute
     def title(self) -> Optional[str]:
         return self.precomputed.meta.get("og:title")

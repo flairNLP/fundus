@@ -1,7 +1,7 @@
 import datetime
 from typing import List, Optional
 
-from src.parser.html_parser import ArticleBody, BaseParser, register_attribute
+from src.parser.html_parser import ArticleBody, BaseParser, attribute
 from src.parser.html_parser.utility import (
     extract_article_body_with_selector,
     generic_author_parsing,
@@ -11,7 +11,7 @@ from src.parser.html_parser.utility import (
 
 
 class SZParser(BaseParser):
-    @register_attribute
+    @attribute
     def body(self) -> ArticleBody:
         return extract_article_body_with_selector(
             self.precomputed.doc,
@@ -20,18 +20,18 @@ class SZParser(BaseParser):
             paragraph_selector='main [itemprop="articleBody"] > p, ' "main .css-korpch > div > ul > li",
         )
 
-    @register_attribute
+    @attribute
     def authors(self) -> List[str]:
         return generic_author_parsing(self.precomputed.ld.bf_search("author"))
 
-    @register_attribute
+    @attribute
     def publishing_date(self) -> Optional[datetime.datetime]:
         return generic_date_parsing(self.precomputed.ld.bf_search("datePublished"))
 
-    @register_attribute
+    @attribute
     def title(self):
         return self.precomputed.ld.get("headline")
 
-    @register_attribute
+    @attribute
     def topics(self) -> List[str]:
         return generic_topic_parsing(self.precomputed.ld.bf_search("keywords"))

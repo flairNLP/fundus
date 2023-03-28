@@ -2,7 +2,6 @@ from dataclasses import dataclass, field
 from enum import Enum, unique
 from typing import List, Optional, Type
 
-from src.logging.logger import basic_logger
 from src.parser.html_parser import BaseParser
 
 
@@ -15,8 +14,8 @@ class PublisherSpec:
     news_map: Optional[str] = field(default=None)
 
     def __post_init__(self):
-        if not (self.rss_feeds or self.sitemaps):
-            raise ValueError("Publishers must at least define either an rss-feed or sitemap to crawl")
+        if not (self.rss_feeds or self.sitemaps or self.news_map):
+            raise ValueError("Publishers must at least define either an rss-feed, sitemap or news_map to crawl")
 
 
 @unique

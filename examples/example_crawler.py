@@ -1,16 +1,16 @@
-import webbrowser
 from enum import Enum
 
 from src.library.collection import PublisherCollection
-from src.scraping.crawler import RSSCrawler, SitemapCrawler
-from src.scraping.pipeline import AutoPipeline
+from src.scraping.pipeline import Crawler, Pipeline
 from src.scraping.scraper import Scraper
+from src.scraping.source import RSSSource, SitemapSource
 
 if __name__ == "__main__":
-    # You can use fundus via the shipped collection of publisher
+    # You can use fundus via the Crawler class and the shipped collection of publisher
 
     de_de = PublisherCollection.de_de
-    pipeline = AutoPipeline(de_de.Merkur)
+
+    pipeline = AutoPipeline(de_de)
 
     """
     Alternative usage:
@@ -28,35 +28,28 @@ if __name__ == "__main__":
         
     """
 
-    for article in pipeline.run(max_articles=20, error_handling="raise"):
+    for article in crawler.crawl(max_articles=5, error_handling="raise"):
+        print(article)
 
-        print(article.url)
-        print(article.extracted['topics'])
-        print(article.extracted['authors'])
-        #webbrowser.open_new_tab(article.url)
-
-
-    exit()
     # or explicitly create your own pipeline
 
     # using rss-feeds
 
     FAZ = PublisherCollection.de_de.FAZ
 
-    faz_crawler = [RSSCrawler(feed, FAZ.name) for feed in FAZ.rss_feeds]
+    faz_crawler = [RSSSource(feed, FAZ.name) for feed in FAZ.rss_feeds]
     faz_scraper = Scraper(*faz_crawler, parser=FAZ.parser())
-
-    for article in faz_scraper.scrape(error_handling="raise"):
-        print(article)
 
     # or sitemaps
 
     MDR = PublisherCollection.de_de.MDR
 
-    mdr_crawler = SitemapCrawler(MDR.news_map, MDR.name, recursive=False)  # type: ignore[arg-type]
+    mdr_crawler = SitemapSource("https://www.mdr.de/news-sitemap.xml", "MDR", recursive=False)
     mdr_scraper = Scraper(mdr_crawler, parser=MDR.parser())
 
-    for article in mdr_scraper.scrape(error_handling="suppress"):
-        print(article)
+    # and combine them with the pipeline class
 
-    # TODO: implement base pipeline to enable the same features as with AutoPipeline
+    pipeline = Pipeline(faz_scraper, mdr_scraper)
+
+    for article in pipeline.run(max_articles=5, error_handling="raise"):
+        print(article)
