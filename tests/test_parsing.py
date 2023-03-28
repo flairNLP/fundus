@@ -1,5 +1,6 @@
 import gzip
 import json
+import os
 from pathlib import Path
 from typing import Any, Dict
 
@@ -7,15 +8,18 @@ import pytest
 
 from src.library.collection import PublisherCollection
 from src.library.collection.base_objects import PublisherEnum
-from src.parser.html_parser import BaseParser
+
+__location__ = os.path.realpath(
+    os.path.join(os.getcwd(), os.path.dirname(__file__)))
 
 de_de = PublisherCollection.de_de
 
 
 def load_html(publisher_name: str) -> str:
-    file_source_path = Path(f"./tests/ressources/{publisher_name}.html.gz").resolve()
+    relative_resource_path = Path(f"./ressources/{publisher_name}.html.gz").resolve()
+    absolute_path = os.path.join(__location__, relative_resource_path)
 
-    with open(file_source_path, "rb") as file:
+    with open(absolute_path, "rb") as file:
         content = file.read()
 
     decompressed_content = gzip.decompress(content)
@@ -24,9 +28,10 @@ def load_html(publisher_name: str) -> str:
 
 
 def load_data(publisher_name: str) -> Dict[str, Any]:
-    file_source_path = Path(f"./tests/ressources/{publisher_name}.json").resolve()
+    relative_resource_path = Path(f"./ressources/{publisher_name}.json").resolve()
+    absolute_path = os.path.join(__location__, relative_resource_path)
 
-    with open(file_source_path, "r", encoding="utf-8") as file:
+    with open(absolute_path, "r", encoding="utf-8") as file:
         content = file.read()
 
     data = json.loads(content)
