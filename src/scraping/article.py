@@ -93,7 +93,7 @@ class Article(BaseArticle):
         title_wrapper = TextWrapper(width=80, max_lines=1, initial_indent="")
         text_wrapper = TextWrapper(width=80, max_lines=2, initial_indent="", subsequent_indent="          ")
         wrapped_title = title_wrapper.fill(
-            f'{Fore.RED}--missing title--{Style.RESET_ALL}' if self.title is None else self.title.strip()
+            f"{Fore.RED}--missing title--{Style.RESET_ALL}" if self.title is None else self.title.strip()
         )
         wrapped_plaintext = text_wrapper.fill(
             f"{Fore.RED}--missing plaintext--{Style.RESET_ALL}" if self.plaintext is None else self.plaintext.strip()
