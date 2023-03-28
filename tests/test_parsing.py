@@ -39,7 +39,7 @@ def load_data(publisher_name: str) -> Dict[str, Any]:
 @pytest.mark.parametrize(
     "publisher", list(PublisherCollection), ids=[publisher.name for publisher in PublisherCollection]
 )
-class TestCrawling:
+class TestParsing:
     def test_parser(self, publisher: PublisherEnum) -> None:
         html = load_html(publisher.name)
         comparative_data = load_data(publisher.name)

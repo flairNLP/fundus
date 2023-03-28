@@ -34,13 +34,13 @@ Let's use Fundus to crawl 2 articles of German-language news.
 
 ```python
 from src.library.collection import PublisherCollection
-from src.scraping.pipeline import AutoPipeline
+from src.scraping.pipeline import Crawler
 
 # initialize the crawler for German-language news
-pipeline = AutoPipeline(PublisherCollection.de_de)
+pipeline = Crawler(PublisherCollection.de_de)
 
 # crawl 2 articles and print
-for article in pipeline.run(max_articles=2):
+for article in pipeline.crawl(max_articles=2):
     print(article)
 ```
 
@@ -70,13 +70,13 @@ Maybe you want to crawl a specific news source instead. Let's crawl news article
 
 ```python
 from src.library.collection import PublisherCollection
-from src.scraping.pipeline import AutoPipeline
+from src.scraping.pipeline import Crawler
 
 # initialize the crawler for German-language news
-pipeline = AutoPipeline(PublisherCollection.de_de.BerlinerZeitung)
+pipeline = Crawler(PublisherCollection.de_de.BerlinerZeitung)
 
 # crawl 5 articles and print
-for article in pipeline.run(max_articles=5):
+for article in pipeline.crawl(max_articles=5):
     print(article)
 ```
 
@@ -120,6 +120,106 @@ Fundus currently has support for the following news sources. We are constantly e
         </td>
         <td>German</td>
         <td><code>BerlinerZeitung</code></td>
+    </tr>
+    <tr>
+        <td>Mitteldeutscher Rundfunk</td>
+        <td>
+            <a href="https://www.mdr.de">
+                <span>www.mdr.de</span>
+            </a>
+        </td>
+        <td>German</td>
+        <td><code>MDR</code></td>
+    </tr>
+    <tr>
+        <td>Frankfurter Allgemeine Zeitung</td>
+        <td>
+            <a href="https://www.faz.de">
+                <span>www.faz.de</span>
+            </a>
+        </td>
+        <td>German</td>
+        <td><code>FAZ</code></td>
+    </tr>
+    <tr>
+        <td>Focus Online</td>
+        <td>
+            <a href="https://www.focus.de">
+                <span>www.focus.de</span>
+            </a>
+        </td>
+        <td>German</td>
+        <td><code>Focus</code></td>
+    </tr>
+    <tr>
+        <td>Münchner Merkur</td>
+        <td>
+            <a href="https://www.merkur.de">
+                <span>www.merkur.de</span>
+            </a>
+        </td>
+        <td>German</td>
+        <td><code>Merkur</code></td>
+    </tr>
+    <tr>
+        <td>Süddeutsche Zeitung</td>
+        <td>
+            <a href="https://www.sueddeutsche.de/">
+                <span>www.sueddeutsche.de</span>
+            </a>
+        </td>
+        <td>German</td>
+        <td><code>SZ</code></td>
+    </tr>
+    <tr>
+        <td>Spiegel Online</td>
+        <td>
+            <a href="https://www.spiegel.de">
+                <span>www.spiegel.de</span>
+            </a>
+        </td>
+        <td>German</td>
+        <td><code>SpiegelOnline</code></td>
+    </tr>
+    <tr>
+        <td>Die Zeit</td>
+        <td>
+            <a href="https://www.zeit.de">
+                <span>www.zeit.de</span>
+            </a>
+        </td>
+        <td>German</td>
+        <td><code>DieZeit</code></td>
+    </tr>
+    <tr>
+        <td>Tagesschau</td>
+        <td>
+            <a href="https://www.tagesschau.de">
+                <span>www.tagesschau.de</span>
+            </a>
+        </td>
+        <td>German</td>
+        <td><code>Tagesschau</code></td>
+    </tr>
+    <tr>
+        <td>Deutsche Welle</td>
+        <td>
+            <a href="https://www.dw.de">
+                <span>www.dw.de</span>
+            </a>
+        </td>
+        <td>German</td>
+        <td><code>DW</code></td>
+    </tr>
+    <tr>
+        <td>ORF</td>
+        <td>
+            <a href="https://www.orf.de">
+                <span>www.orf.de</span>
+            </a>
+        </td>
+        <td>German</td>
+        <td><code>ORF</code></td>
     </tr>
 </table>
 

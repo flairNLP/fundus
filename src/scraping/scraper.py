@@ -1,19 +1,19 @@
-from typing import Iterator, Literal
+from typing import Callable, Iterator, Literal, Optional
 
 from src.logging.logger import basic_logger
 from src.parser.html_parser import BaseParser
 from src.scraping.article import Article
-from src.scraping.crawler import Crawler
+from src.scraping.source import Source
 
 
 class Scraper:
-    def __init__(self, *sources: Crawler, parser: BaseParser):
-        self.crawler = list(sources)
+    def __init__(self, *sources: Source, parser: BaseParser):
+        self.sources = list(sources)
         self.parser = parser
 
-    def scrape(self, error_handling: Literal["suppress", "catch", "raise"]) -> Iterator[Article]:
-        for crawler in self.crawler:
-            for article_source in crawler.crawl():
+    def scrape(self, error_handling: Literal["suppress", "catch", "raise"], batch_size: int = 10) -> Iterator[Article]:
+        for crawler in self.sources:
+            for article_source in crawler.fetch(batch_size):
                 try:
                     data = self.parser.parse(article_source.html, error_handling)
 

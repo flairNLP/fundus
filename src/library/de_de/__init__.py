@@ -56,6 +56,8 @@ class DE_DE(PublisherEnum):
     Merkur = PublisherSpec(
         domain="https://www.merkur.de/",
         rss_feeds=["https://www.merkur.de/welt/rssfeed.rdf"],
+        sitemaps=["https://www.merkur.de/sitemap-index.xml"],
+        news_map="https://www.merkur.de/news.xml",
         parser=MerkurParser,
     )
 

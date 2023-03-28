@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import List, Optional
 
-from src.parser.html_parser import ArticleBody, BaseParser, register_attribute
+from src.parser.html_parser import ArticleBody, BaseParser, attribute
 from src.parser.html_parser.utility import (
     extract_article_body_with_selector,
     generic_author_parsing,
@@ -10,7 +10,7 @@ from src.parser.html_parser.utility import (
 
 
 class SPONParser(BaseParser):
-    @register_attribute
+    @attribute
     def body(self) -> ArticleBody:
         return extract_article_body_with_selector(
             self.precomputed.doc,
@@ -19,14 +19,14 @@ class SPONParser(BaseParser):
             paragraph_selector="main .word-wrap > p",
         )
 
-    @register_attribute
+    @attribute
     def authors(self) -> List[str]:
         return generic_author_parsing(self.precomputed.ld.bf_search("author"))
 
-    @register_attribute
+    @attribute
     def publishing_date(self) -> Optional[datetime]:
         return generic_date_parsing(self.precomputed.ld.bf_search("datePublished"))
 
-    @register_attribute
+    @attribute
     def title(self) -> Optional[str]:
         return self.precomputed.meta.get("og:title")

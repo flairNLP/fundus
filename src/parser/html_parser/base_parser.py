@@ -79,11 +79,11 @@ def _register(cls, factory: Type[RegisteredFunction], priority):
     return wrapper(cls)
 
 
-def register_attribute(cls=None, /, *, priority: Optional[int] = None):
+def attribute(cls=None, /, *, priority: Optional[int] = None):
     return _register(cls, factory=Attribute, priority=priority)
 
 
-def register_function(cls=None, /, *, priority: Optional[int] = None):
+def function(cls=None, /, *, priority: Optional[int] = None):
     return _register(cls, factory=Function, priority=priority)
 
 
@@ -118,7 +118,11 @@ class BaseParser(ABC):
 
     @classmethod
     def attributes(cls) -> List[str]:
-        return [func.__name__ for _, func in cls._search_members(Attribute)]
+        return [func.__name__ for _, func in cls._search_members(Attribute) if func.__name__ not in ["__ld", "__meta"]]
+
+    @classmethod
+    def functions(cls) -> List[str]:
+        return [func.__name__ for _, func in cls._search_members(Function)]
 
     def _base_setup(self, html: str) -> None:
         doc = lxml.html.document_fromstring(html)
@@ -160,10 +164,10 @@ class BaseParser(ABC):
             self.precomputed.cache[key] = value
 
     # base attribute section
-    @register_attribute
+    @attribute
     def __meta(self) -> Dict[str, Any]:
         return self.precomputed.meta
 
-    @register_attribute
+    @attribute
     def __ld(self) -> Optional[LinkedData]:
         return self.precomputed.ld

@@ -2,7 +2,7 @@ import datetime
 import re
 from typing import List, Match, Optional, Pattern
 
-from src.parser.html_parser import ArticleBody, BaseParser, register_attribute
+from src.parser.html_parser import ArticleBody, BaseParser, attribute
 from src.parser.html_parser.utility import (
     extract_article_body_with_selector,
     generic_author_parsing,
@@ -15,7 +15,7 @@ class FocusParser(BaseParser):
     _topic_pattern: Pattern[str] = re.compile(r'"keywords":\[{(.*?)}\]')
     _topic_name_pattern: Pattern[str] = re.compile(r'"name":"(.*?)"', flags=re.MULTILINE)
 
-    @register_attribute
+    @attribute
     def body(self) -> Optional[ArticleBody]:
         return extract_article_body_with_selector(
             self.precomputed.doc,
@@ -24,22 +24,22 @@ class FocusParser(BaseParser):
             paragraph_selector="div.textBlock > p",
         )
 
-    @register_attribute
+    @attribute
     def authors(self) -> List[str]:
         author_names = generic_author_parsing(self.precomputed.ld.bf_search("author"))
         for i, name in enumerate(author_names):
             author_names[i] = re.sub(self._author_substitution_pattern, "", name)
         return author_names
 
-    @register_attribute
+    @attribute
     def publishing_date(self) -> Optional[datetime.datetime]:
         return generic_date_parsing(self.precomputed.ld.bf_search("datePublished"))
 
-    @register_attribute
+    @attribute
     def title(self):
         return self.precomputed.ld.get("headline")
 
-    @register_attribute
+    @attribute
     def topics(self) -> List[str]:
         snippet = self.precomputed.doc.xpath(
             'string(//script[@type="text/javascript"][contains(text(), "window.bf__bfa_metadata")])'
