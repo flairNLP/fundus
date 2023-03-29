@@ -13,6 +13,10 @@ from typing import (
     overload,
 )
 
+from src.logging.logger import basic_logger
+
+_displayed_deprecation_info = False
+
 
 class LinkedData:
     def __init__(self, lds: Iterable[Dict[str, Any]] = ()):
@@ -40,6 +44,12 @@ class LinkedData:
         :param default: The returned default if <key> is not found, default: None
         :return: The reached value or <default>
         """
+        global _displayed_deprecation_info
+
+        if not _displayed_deprecation_info:
+            _displayed_deprecation_info = True
+            basic_logger.warning("LinkedDate.get() will be deprecated in the future. Use .get_value_by_key_path() "
+                                 "or .bf_search() instead")
         for name, ld in sorted(self._ld_by_type.items(), key=lambda t: t[0]):
             if not name:
                 raise NotImplementedError("Currently this function does not support lds without types")
