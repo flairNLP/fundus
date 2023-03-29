@@ -48,8 +48,10 @@ class LinkedData:
 
         if not _displayed_deprecation_info:
             _displayed_deprecation_info = True
-            basic_logger.warning("LinkedDate.get() will be deprecated in the future. Use .get_value_by_key_path() "
-                                 "or .bf_search() instead")
+            basic_logger.warning(
+                "LinkedDate.get() will be deprecated in the future. Use .get_value_by_key_path() "
+                "or .bf_search() instead"
+            )
         for name, ld in sorted(self._ld_by_type.items(), key=lambda t: t[0]):
             if not name:
                 raise NotImplementedError("Currently this function does not support lds without types")
