@@ -7,12 +7,10 @@ this massive workload, we depend on people like you to contribute.
 
 # What is fundus
 
-fundus aims to be a very lightweight but precises news scraping library.
-Easy to use while being able to precisely extract information from
-provided html. This is possible because fundus, at it's core, is
-a massive parser library and rather than automate the extraction
-layer, we build on handcrafted, and therefore precise, parser.
-This also means: For fundus being able to parse a specific news domain,
+fundus aims to be a lightweight but precise news scraping library.
+The focus is on ease to use while being able to extract information from
+html precisely. This is possible because fundus relies on handcrafted parsers.
+One consequence is, that in order to parse a specific news domain,
 someone has to write a parser specific to this domain. And there are
 a lot of domains.
 
