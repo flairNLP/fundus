@@ -84,9 +84,9 @@ for article in pipeline.crawl(max_articles=5):
 
 We provide **quick tutorials** to get you started with the library:
 
-1. [**Tutorial 1: How to crawl news with Fundus**](/resources/docs/...)
-2. [**Tutorial 2: The Article Class**](/resources/docs/...)
-3. [**Tutorial 3: How to add a new news source**](docs/how_to_contribute.md)
+1. [**Tutorial 1: How to crawl news with Fundus**](docs/...)
+2. [**Tutorial 2: The Article Class**](docs/...)
+3. [**Tutorial 3: How to add a new news-source**](docs/how_to_contribute.md)
 
 The tutorials explain how ...
 
@@ -232,7 +232,7 @@ Please email your questions or comments to ...
 ## Contributing
 
 Thanks for your interest in contributing! There are many ways to get involved;
-start with our [contributor guidelines](CONTRIBUTING.md) and then
+start with our [contributor guidelines](docs/how_to_contribute.md) and then
 check these [open issues](https://github.com/flairNLP/fundus/issues) for specific tasks.
 
 ## [License](/LICENSE)
