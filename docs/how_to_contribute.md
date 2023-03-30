@@ -25,8 +25,7 @@ If you want to be a part of this project, here are some steps on how to contribu
 Before contributing a parser, check the [**readme**](../README.md) if there is already 
 support for your desired publisher.
 
-Best practice for adding a new news source:
-This will follow the example implementation of a news source covering `https://www.latimes.com/`
+In the following, we will walk you through an example implementation covering the best practised for adding a news source.
 
 #### 1.
 Get used to the library (`src/library`) architecture. Fundus library is divided in country specific sections
