@@ -97,11 +97,12 @@ covering recently published articles.
 
 Given the above information our entry should look like this now:
 ``` python
-    LATimes = PublisherSpec(
-        domain="https://www.latimes.com/",
-        sitemaps=["https://www.latimes.com/sitemap.xml"],
-        news_map="https://www.latimes.com/news-sitemap.xml",
-        parser=LATimesParser,
+LATimes = PublisherSpec(
+    domain="https://www.latimes.com/",
+    sitemaps=["https://www.latimes.com/sitemap.xml"],
+    news_map="https://www.latimes.com/news-sitemap.xml",
+    parser=LATimesParser,
+)
     )
 ```
 
