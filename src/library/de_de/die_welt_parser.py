@@ -8,7 +8,7 @@ from src.parser.html_parser.utility import (
     generic_author_parsing,
     generic_date_parsing,
     generic_topic_parsing,
-    substitute_all_strs_in_list,
+    apply_substitution_pattern_over_list,
 )
 
 
@@ -26,7 +26,7 @@ class DieWeltParser(BaseParser):
 
     @attribute
     def authors(self) -> List[str]:
-        return substitute_all_strs_in_list(
+        return apply_substitution_pattern_over_list(
             generic_author_parsing(self.precomputed.ld.bf_search("author")), self._author_substitution_pattern
         )
 

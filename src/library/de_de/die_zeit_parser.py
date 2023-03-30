@@ -8,12 +8,12 @@ from src.parser.html_parser.utility import (
     generic_author_parsing,
     generic_date_parsing,
     generic_topic_parsing,
-    substitute_all_strs_in_list,
+    apply_substitution_pattern_over_list,
 )
 
 
 class DieZeitParser(BaseParser):
-    _author_substitution_pattern: Pattern[str] = re.compile(r"dpa|DIE ZEIT (Archiv)|Reuters")
+    _author_substitution_pattern: Pattern[str] = re.compile(r"DIE ZEIT (Archiv)")
 
     @attribute
     def body(self) -> ArticleBody:
@@ -26,7 +26,7 @@ class DieZeitParser(BaseParser):
 
     @attribute
     def authors(self) -> List[str]:
-        return substitute_all_strs_in_list(
+        return apply_substitution_pattern_over_list(
             generic_author_parsing(self.precomputed.ld.bf_search("author")), self._author_substitution_pattern
         )
 

@@ -8,7 +8,7 @@ from src.parser.html_parser.utility import (
     generic_date_parsing,
     generic_text_extraction_with_css,
     generic_topic_parsing,
-    substitute_all_strs_in_list,
+    apply_substitution_pattern_over_list,
 )
 
 
@@ -37,7 +37,7 @@ class MDRParser(BaseParser):
         if raw_author_str := generic_text_extraction_with_css(self.precomputed.doc, ".articleMeta > .author"):
             raw_author_str = raw_author_str.replace(" und ", ", ")
             author_list = [name.strip() for name in raw_author_str.split(",")]
-            return substitute_all_strs_in_list(author_list, self._author_substitution_pattern)
+            return apply_substitution_pattern_over_list(author_list, self._author_substitution_pattern)
 
         return []
 
