@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime
 from typing import List, Optional
 
 from src.parser.html_parser import ArticleBody, BaseParser, attribute
@@ -22,15 +22,15 @@ class APNewsParser(BaseParser):
 
     @attribute
     def authors(self) -> List[str]:
-        return generic_author_parsing(self.precomputed.ld.get("author"))
+        return generic_author_parsing(self.precomputed.ld.get_value_by_key_path(["NewsArticle", "author"]))
 
     @attribute
-    def publishing_date(self) -> Optional[datetime.datetime]:
-        return generic_date_parsing(self.precomputed.ld.get("datePublished"))
+    def publishing_date(self) -> Optional[datetime]:
+        return generic_date_parsing(self.precomputed.ld.get_value_by_key_path(["NewsArticle", "datePublished"]))
 
     @attribute
-    def title(self):
-        return self.precomputed.ld.get("headline")
+    def title(self) -> Optional[str]:
+        return self.precomputed.ld.get_value_by_key_path(["NewsArticle", "headline"])
 
     @attribute
     def topics(self) -> List[str]:
