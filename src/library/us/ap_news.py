@@ -22,6 +22,7 @@ class APNewsParser(BaseParser):
         return extract_article_body_with_selector(
             self.precomputed.doc,
             summary_selector="//div[@data-key = 'article']/p[1]",
+            subheadline_selector="//div[@data-key = 'article']/h2",
             paragraph_selector="//div[@data-key = 'article']/p[position() > 1]",
             mode="xpath",
         )
