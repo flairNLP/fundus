@@ -77,8 +77,8 @@ ValueError: Publishers must at least define either an rss-feed, sitemap or news_
 since we didn't specify yet where to look for articles.
 
 #### 5.
-To work, your newly added source has to specify a location where to look for articles. Right now fundus has support for
-reading sitemaps or rss feeds. You usually find sitemaps for the news source you want to add at the end of 
+Your newly added source has to specify a location where to look for articles. Right now, fundus has support for
+reading sitemaps or RSS feeds. You usually find sitemaps for the news source you want to add at the end of 
 `<your_news_source_domain>/robots.txt` or through a quick google search.
 
 In our case jumping to the end of `https://www.latimes.com/robots.txt` gives us the following information.
