@@ -89,7 +89,8 @@ and a sitemap for the entire LA Times website
 ```
 https://www.latimes.com/sitemap.xml
 ```
-In this case the Google News map is actually an index map referring to other sitemaps
+
+If we access [https://www.latimes.com/news-sitemap.xml](https://www.latimes.com/news-sitemap.xml) we should see something lime this .
 ```
 <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" 
               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
@@ -103,6 +104,7 @@ In this case the Google News map is actually an index map referring to other sit
     </sitemap>
 </sitemapindex>
 ```
+We see that the actual sitemap refers to other sitemaps and therefore it is a index map
 If you access one of those sitemaps (in the following example we used [https://www.latimes.com/news-sitemap-latest.xml](https://www.latimes.com/news-sitemap-latest.xml)) you will find something like this
 ```
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" 
