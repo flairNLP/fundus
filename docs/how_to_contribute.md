@@ -22,7 +22,7 @@ If you want to be a part of this project, here are some steps on how to contribu
 
 ## News Source
 
-Before contributing a parser, check on [**Readme**](../README.md) if there is already 
+Before contributing a parser, check the [**readme**](../README.md) if there is already 
 support for your desired publisher.
 
 Best practice for adding a new news source:
