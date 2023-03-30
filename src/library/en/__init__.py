@@ -6,5 +6,6 @@ class EN(PublisherEnum):
     FoxNews = PublisherSpec(
         domain="https://foxnews.com/",
         sitemaps=[" https://www.foxnews.com/sitemap.xml"],
+        news_map='https://www.foxnews.com/sitemap.xml?type=news',
         parser=FoxNewsParser,
     )
