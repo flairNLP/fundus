@@ -13,6 +13,7 @@ from .merkur_parser import MerkurParser
 from .spon_parser import SPONParser
 from .sz_parser import SZParser
 from .tagesschau_parser import TagesschauParser
+from .waz import WazParser
 
 
 # noinspection PyPep8Naming
@@ -105,3 +106,10 @@ class DE_DE(PublisherEnum):
         news_map="https://www.dw.com/de/news-sitemap.xml",
         parser=DWParser,
     )
+
+    WAZ = PublisherSpec(
+        domain="https://www.waz.de/",
+        news_map= "https://www.waz.de/sitemaps/news.xml",
+        parser=WazParser,
+    )
+
