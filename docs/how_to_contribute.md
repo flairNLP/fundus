@@ -140,11 +140,11 @@ Because the parser you just wrote inherits from `BaseParser` it automatically pa
 `meta` content located in the article `head`. You can access those properties with `article.ld` and `article.meta`.
 
 #### 7.
-Bring your parser to life and fill it with `Attribute`'s to parse.
+Bring your parser to life and fill it with attributes to parse.
 You can do so by decorating the class methods of your parser with the `@attribute` decorator.
-In the end this decorator indicates to the `BaseParser` which class method to use for parsing an attribute. 
-`Attributes`'s are expected to have a return value and are precisely specified in the 
-[attribute_guidelines](attribute_guidelines.md). They define the information your parser will extract.
+In the end, this decorator indicates to the `BaseParser` which class method to use for parsing an attribute. 
+Attributes are expected to have a return value and are precisely specified in the 
+[attribute guidelines](attribute_guidelines.md). They define the information your parser will extract.
 
 For example, if we want our parser to extract article titles, we would look at the 
 [attribute_guidelines](attribute_guidelines.md) and see if there is something defined which matches our expectations.
