@@ -134,7 +134,7 @@ Fundus-Article:
 - From:   LATimes (2023-03-20 19:25)
 ```
 
-Since we didn't add anything to the parser yet most of the entries are empty. 
+Since we didn't add anything to the parser yet, most of the entries are empty. 
 
 Because the parser you just wrote inherits from `BaseParser` it automatically parses the articles `ld+json` and 
 `meta` content located in the article `head`. You can access those properties with `article.ld` and `article.meta`.
