@@ -54,8 +54,10 @@ located at `src/library/us/__init__.py`, which looks like this:
 
 ``` python
 class US(PublisherEnum):
-    LATimes = PublisherSpec(domain='https://www.latimes.com/',
-                            parser=LATimesParser)
+    LATimes = PublisherSpec(
+        domain="https://www.latimes.com/",
+        parser=LATimesParser,
+    )
 ```
 
 #### 4.
