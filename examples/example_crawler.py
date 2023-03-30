@@ -1,5 +1,3 @@
-from enum import Enum
-
 from src.library.collection import PublisherCollection
 from src.scraping.pipeline import Crawler, Pipeline
 from src.scraping.scraper import Scraper

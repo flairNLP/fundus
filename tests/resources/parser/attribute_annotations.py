@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Dict, Generic, List, Optional, Type, Union
+from typing import Dict, List, Optional, Union
 
 from src.parser.html_parser import ArticleBody
 
