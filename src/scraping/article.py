@@ -84,7 +84,7 @@ class Article(BaseArticle):
         return self.extracted.get("ld") if self.extracted else None
 
     @property
-    def meta(self) -> Optional[Dict]:
+    def meta(self) -> Optional[Dict[str, Any]]:
         return self.extracted.get("meta") if self.extracted else None
 
     def __str__(self):
