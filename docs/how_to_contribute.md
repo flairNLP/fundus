@@ -210,10 +210,10 @@ class LATimesParser(BaseParser):
 ```
 
 #### 8.
-Add a test case for your news source to `tests/resorces/` by compressing an example html of your news_source to 
-`<news_source_enum_name>.html.gz` in our case `LATimes.html.gz` and specifying asserted values your parser should 
-extract from the example html in `<news_source_enum_name>.json`
-Currently, we only test on `title` so it should look something like this.
+Add a test case for your news source to `tests/resources/` by compressing an example HTML of your publisher to 
+`<publisher>.html.gz` in our case, `LATimes.html.gz` and specifying asserted values your parser should 
+extract from the example HTML in `<news_source_enum_name>.json`.
+Currently, we only test the `title` attribute. So it should look something like this:
 ``` json
 {
   "title": "High school lacrosse is starting to have an L.A. moment. Here's why"
