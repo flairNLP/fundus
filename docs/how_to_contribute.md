@@ -90,7 +90,61 @@ and a sitemap for the entire LA Times website
 https://www.latimes.com/sitemap.xml
 ```
 
-If we access [https://www.latimes.com/news-sitemap.xml](https://www.latimes.com/news-sitemap.xml) we should see something lime this .
+If we access [https://www.latimes.com/news-sitemap.xml](https://www.latimes.com/news-sitemap.xml) we should see something like this.
+```
+<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" 
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+              xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemapindex.xsd">
+    <sitemap>
+        <loc>https://www.latimes.com/news-sitemap-content.xml</loc>
+        <lastmod>2023-03-30T04:35-04:00</lastmod>
+    </sitemap>
+        <sitemap>
+        <loc>https://www.latimes.com/news-sitemap-latest.xml</loc>
+    </sitemap>
+</sitemapindex>
+```
+We see that the actual sitemap refers to other sitemaps and therefore it is an index map
+If you access one of those sitemaps (in the following example we used [https://www.latimes.com/news-sitemap-latest.xml](https://www.latimes.com/news-sitemap-latest.xml)) you will find something like this
+```
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" 
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" 
+        xmlns:video="http://www.google.com/schemas/sitemap-video/1.1" 
+        xmlns:news="http://www.google.com/schemas/sitemap-news/0.9" 
+        xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+    <url>
+        <loc>https://www.latimes.com/sports/dodgers/story/2023-03-30/dodgers-2023-season-opener-diamondbacks-tv-times-odds</loc>
+        <lastmod>2023-03-30</lastmod>
+        <news:news>
+            <news:publication>
+                <news:name>Los Angeles Times</news:name>
+                <news:language>eng</news:language>
+            </news:publication>
+            <news:publication_date>2023-03-30T06:00:25-04:00</news:publication_date>
+            <news:title>Dodgers 2023 season opener vs. Diamondbacks: TV times, odds</news:title>
+        </news:news>
+    </url>
+```
+The important line here is `xmlns:news="http://www.google.com/schemas/sitemap-news/0.9"`.
+Here the prefix `news` gets bound to the namespace `http://www.google.com/schemas/sitemap-news/0.9`. 
+This indicates the sitemap is a Google News Sitemap and thus `https://www.latimes.com/news-sitemap.xml` is a Google News Index Map.
+
+The idea of the news sitemap is to give an overview of recent articles while a sitemap spans the entire website. 
+To get your news source running, specify either `sitemaps` (spanning the entire website), a `news_map` (referring to a Google News Sitemap or Google News Index Map if available), or `rss_feeds` covering recently published articles.
+
+Given the above information, our entry should look like this now:
+Here we see two sitemaps specified. 
+One [Google News](https://support.google.com/news/publisher-center/answer/9607107?hl=en&ref_topic=9606468) sitemap
+```
+https://www.latimes.com/news-sitemap.xml
+``` 
+and a sitemap for the entire LA Times website 
+```
+https://www.latimes.com/sitemap.xml
+```
+
+If we access [https://www.latimes.com/news-sitemap.xml](https://www.latimes.com/news-sitemap.xml) we should see something like this.
 ```
 <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" 
               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
@@ -131,9 +185,9 @@ Here the prefix `news` gets bound to the namespace `http://www.google.com/schema
 This indicates the sitemap is a Google News Sitemap and thus `https://www.latimes.com/news-sitemap.xml` is a Google News Index Map.
 
 The idea of the news sitemap is to give an overview of recent articles while a sitemap spans the entire website. 
-To get your news source running, specify either `sitemaps` (spanning the entire website), a `news_map` (referring to a Google News Sitemap or Google News Index Map if available) or `rss_feeds` covering recently published articles.
+To get your news source running, specify either `sitemaps` (spanning the entire website), a `news_map` (referring to a Google News Sitemap or Google News Index Map if available), or `rss_feeds` covering recently published articles.
 
-Given the above information our entry should look like this now:
+Given the above information, our entry should look like this now:
 ``` python
 LATimes = PublisherSpec(
     domain="https://www.latimes.com/",
