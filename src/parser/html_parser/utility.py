@@ -92,7 +92,7 @@ def extract_article_body_with_selector(
 
 
 def get_meta_content(tree: lxml.html.HtmlElement) -> Dict[str, str]:
-    meta_node_selector = "head > meta[name], head > meta[property]"
+    meta_node_selector = "meta[name], meta[property]"
     meta_nodes = tree.cssselect(meta_node_selector)
     meta: Dict[str, str] = {}
     for node in meta_nodes:
