@@ -46,8 +46,8 @@ Add a new specification for the publisher/domain you want to cover. You can add 
 (or entire PublisherEnum if it doesn't exist yet) to the country-specific `PublisherEnum` in the `__init__.py` of 
 the country section you want to contribute to. The `__init__.py` can be found at `src/library/<country_code>/__init__.py`.
 
-If the country section you are contributing to didn't exist till now you also have to add it to 
-`/library/collection/__init__.py'`.
+If the country section does not exist, please add it to
+`src/library/collection/__init__.py'`.
 
 To continue our journey of adding the LA Times to fundus we would add an entry to the class `US(PublisherEnum)` 
 located at `/library/us/__init__.py` which would look like the this.
