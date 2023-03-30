@@ -160,8 +160,8 @@ class LATimesParser(BaseParser):
     def title(self) -> Optional[str]:
         return 'This is a title'
 ```
-Your parser now supports an `Attribute` called `title` which can be directly accessed through `article.title` or 
-`article.extracted['title']`. Not all `Attributes` are directly accessible like `title` but all of them can be 
+Your parser now supports an attribute called `title` which can be directly accessed through `article.title` or 
+`article.extracted['title']`. Not all attributes are directly accessible like `title` but all of them can be 
 accessed via the `extracted` attribute of `Article`.
 
 To let your parser extract useful information rather than placeholders, you can have a look at the `ld` and `meta`
