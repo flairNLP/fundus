@@ -16,7 +16,7 @@ class WazParser(BaseParser):
         return extract_article_body_with_selector(
             self.precomputed.doc,
             paragraph_selector=".article__body > p",
-            summary_selector='.article__header__intro__text',
+            summary_selector=".article__header__intro__text",
             subheadline_selector=".article__body > h3",
         )
 

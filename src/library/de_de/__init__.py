@@ -109,7 +109,6 @@ class DE_DE(PublisherEnum):
 
     WAZ = PublisherSpec(
         domain="https://www.waz.de/",
-        news_map= "https://www.waz.de/sitemaps/news.xml",
+        news_map="https://www.waz.de/sitemaps/news.xml",
         parser=WazParser,
     )
-
