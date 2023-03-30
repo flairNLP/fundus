@@ -56,6 +56,6 @@ class PublisherEnum(Enum):
         attrs_set = set(attrs)
         spec: PublisherEnum
         for spec in list(cls):
-            if attrs_set.issubset(spec.parser.attributes()) and spec.supports(source_type):
+            if attrs_set.issubset(spec.parser.attributes().names) and spec.supports(source_type):
                 matched.append(spec)
         return matched
