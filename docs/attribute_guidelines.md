@@ -30,7 +30,7 @@ If you want to contribute a parser to this library, please ensure that these att
         <td><code>List[str]</code></td>
     </tr>
     <tr>
-        <td>publishing_time</td>
+        <td>publishing_date</td>
         <td>The earliest release date provided by the publisher. It is not required to be timezone-aware.
             The date must at least include year, month, day, hours and minutes.</td>
         <td><code>Optional[datetime]</code></td>
