@@ -168,8 +168,8 @@ attributes of `Article`. Those will be extracted automatically, when present, an
 therefore within your parsers `Attributes`. Often useful information about an article like `title`, `author` or 
 `topics` can be found in these two objects.
 
-You can access them inside your parser class via `precomputed` attribute of `BaseParser` which holds a dataclass 
-of type `Precomputed`. This object contains meta information about the article you're currently parsing.
+You can access them inside your parser class via the `precomputed` attribute of `BaseParser`, which holds a dataclass 
+of type `Precomputed`. This object contains meta-information about the article you're currently parsing.
 
 ``` python
 @dataclass
