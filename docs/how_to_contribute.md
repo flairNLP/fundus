@@ -28,9 +28,9 @@ support for your desired publisher.
 In the following, we will walk you through an example implementation covering the best practised for adding a news source.
 
 #### 1.
-Get used to the library (`src/library`) architecture. Fundus library is divided in country specific sections
-(`/library/at/, /library/de/, ..., /library/us/`) which represents the country a news source originates from. In our
-case the correct location were operating on would be `/library/us/`.
+Get used to the library architecture in `src/library`. Fundus is divided into country-specific sections
+(`/library/at/, /library/de/, ..., /library/us/`) representing the country a news source originates from. In our
+case, the correct location we're operating on is `/library/us/`.
 
 #### 2.
 Add an empty parser class which inherits from `BaseParser` at the desired country location in the library. Following
