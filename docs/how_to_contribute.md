@@ -180,10 +180,41 @@ class Precomputed:
     cache: Dict[str, Any]
 ```
 
-Here `html` is the original html to parse, `doc` is a root node from a `lxml.html.Etree`,
-`meta` is the meta information extracted from the html's meta tags, `ld` is the linked data
-parsed from the html's `ld+json` and `cache` a cache specific to the html which can be used to
-share objects between class methods. In order to do so use the `share` class method.
+In the following table you can find a short description about the fields of `Precomputed`
+
+<table>
+    <tr>
+        <th>attr</th>
+        <th>description</th>
+    </tr>
+    <tr>
+        <td>html</td>
+        <td>The original fetched HTML.</td>
+    </tr>
+    <tr>
+        <td>doc</td>
+        <td>The root node of an <code>lxml.html.Etree</code>.</td>
+    </tr>
+    <tr>
+        <td>meta</td>
+        <td>The sites meta information extracted from <code>&lt;meta&gt;</code> tags.</td>
+    </tr>
+    <tr>
+        <td>ld</td>
+        <td>The linked data extracted from the sites
+            <a href="https://json-ld.org/"><code>ld+json</code></a>. 
+        </td>
+    </tr>
+    <tr>
+        <td>cache</td>
+        <td>A cache specific to the currently parsed site which 
+            can be used to share objects between attributes.
+            Share objects with the <code>BaseParser.share(...)</code> 
+            class-method.
+        </td>
+    </tr>
+
+</table>
 
 There are many utility functions defined at `src/parser/html_parser/utility.py` to aid you with
 your attributes. Make sure to check out other parsers on how to write specific attributes.
