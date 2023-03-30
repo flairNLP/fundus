@@ -90,6 +90,9 @@ and a sitemap for the entire LA Times website
 https://www.latimes.com/sitemap.xml
 ```
 
+**_NOTE:_** There is a known issue with Firefox not displaying XML properly. 
+You can find a plugin to resolve this issue [here](https://addons.mozilla.org/de/firefox/addon/pretty-xml/)
+
 If we access [https://www.latimes.com/news-sitemap.xml](https://www.latimes.com/news-sitemap.xml) we should see something like this.
 ```
 <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" 
@@ -199,8 +202,7 @@ LATimes = PublisherSpec(
 ```
 
 #### 6.
-Now validate your progress by replacing everything inside <> of the following script with your information and 
-running it.
+Now validate your progress by replacing everything inside <> of the following script with your information and running it.
 ``` python
 from src import PublisherCollection, Crawler
 
@@ -228,23 +230,21 @@ Fundus-Article:
 
 Since we didn't add anything to the parser yet, most of the entries are empty. 
 
-Because the parser you just wrote inherits from `BaseParser` it automatically parses the articles `ld+json` and 
-`meta` content located in the article `head`. You can access those properties with `article.ld` and `article.meta`.
+Because the parser you just wrote inherits from `BaseParser` it automatically parses the articles `ld+json` and`meta` content located in the article `head`. 
+You can access those properties with `article.ld` and `article.meta`.
 
 #### 7.
 Bring your parser to life and fill it with attributes to parse.
 You can do so by decorating the class methods of your parser with the `@attribute` decorator.
 In the end, this decorator indicates to the `BaseParser` which class method to use for parsing an attribute. 
-Attributes are expected to have a return value and are precisely specified in the 
-[attribute guidelines](attribute_guidelines.md). They define the information your parser will extract.
+Attributes are expected to have a return value and are precisely specified in the [attribute guidelines](attribute_guidelines.md). 
+They define the information your parser will extract.
 
-For example, if we want our parser to extract article titles, we would look at the 
-[attribute guidelines](attribute_guidelines.md) and see if there is something defined which matches our expectations.
-In the guidelines, we find an attribute called `title` which exactly describes what we want to extract and also
-an expected return type. You must stick to the return types since those will be checked by `pytest`. You're free to do whatever you want locally, but you won't be able to contribute to the repository when your PR isn't compliant with the guidelines.
+For example, if we want our parser to extract article titles, we would look at the [attribute guidelines](attribute_guidelines.md) and see if there is something defined which matches our expectations.
+In the guidelines, we find an attribute called `title` which exactly describes what we want to extract and also an expected return type. 
+You must stick to the return types since those will be checked by `pytest`. You're free to do whatever you want locally, but you won't be able to contribute to the repository when your PR isn't compliant with the guidelines.
 
-Now that we have our attribute name, we can start to add it to the parser by defining a class method called `title`
-and declare it as an attribute with the `@attribute` decorator.
+Now that we have our attribute name, we can start to add it to the parser by defining a class method called `title` and declare it as an attribute with the `@attribute` decorator.
 ``` python
 class LATimesParser(BaseParser):
 
@@ -252,17 +252,15 @@ class LATimesParser(BaseParser):
     def title(self) -> Optional[str]:
         return 'This is a title'
 ```
-Your parser now supports an attribute called `title` which can be directly accessed through `article.title` or 
-`article.extracted['title']`. Not all attributes are directly accessible like `title` but all of them can be 
-accessed via the `extracted` attribute of `Article`.
+Your parser now supports an attribute called `title` which can be directly accessed through `article.title` or `article.extracted['title']`. 
+Not all attributes are directly accessible like `title` but all of them can be accessed via the `extracted` attribute of `Article`.
 
-To let your parser extract useful information rather than placeholders, you can have a look at the `ld` and `meta`
-attributes of `Article`. Those will be extracted automatically, when present, and are also accessible during parsing
-therefore within your parsers `Attributes`. Often useful information about an article like `title`, `author` or 
-`topics` can be found in these two objects.
+To let your parser extract useful information rather than placeholders, you can have a look at the `ld` and `meta` attributes of `Article`.
+Those will be extracted automatically, when present, and are also accessible during parsing therefore within your parsers `Attributes`.
+Often useful information about an article like `title`, `author` or `topics` can be found in these two objects.
 
-You can access them inside your parser class via the `precomputed` attribute of `BaseParser`, which holds a dataclass 
-of type `Precomputed`. This object contains meta-information about the article you're currently parsing.
+You can access them inside your parser class via the `precomputed` attribute of `BaseParser`, which holds a dataclass of type `Precomputed`.
+This object contains meta-information about the article you're currently parsing.
 
 ``` python
 @dataclass
@@ -310,8 +308,8 @@ In the following table you can find a short description about the fields of `Pre
 
 </table>
 
-There are many utility functions defined at `src/parser/html_parser/utility.py` to aid you with
-your attributes. Make sure to check out other parsers on how to implement specific attributes.
+There are many utility functions defined at `src/parser/html_parser/utility.py` to aid you with your attributes.
+Make sure to check out other parsers on how to implement specific attributes.
 
 Bringing all above together our parser now looks like this:
 ``` python
@@ -335,16 +333,20 @@ class LATimesParser(BaseParser):
 ```
 
 #### 8.
-Add a test case for your news source to `tests/resources/` by compressing an example HTML of your publisher to 
-`<publisher>.html.gz` in our case, `LATimes.html.gz` and specifying asserted values your parser should 
-extract from the example HTML in `<news_source_enum_name>.json`.
-Currently, we only test the `title` attribute. So it should look something like this:
+Add a test case for your news source to `tests/resources/` by compressing an example HTML of your publisher to `<publisher_enum>.html.gz`.
+In our case that would be `LATimes.html.gz`.
+Next specify asserted values your parser should extract from the example HTML in `<news_source_enum_name>.json`.
+Currently, we only test the `title, authors, topics` attribute. 
+So it should look something like this:
 ``` json
 {
   "title": "High school lacrosse is starting to have an L.A. moment. Here's why"
+  "authots": ...
+  ...
 }
 ```
+Don't worry if your parser does not support all the attributes specified above. 
+Only those supported by your parser will be tested.
 
 #### 9.
-Make sure you tested your parser before opening a PR and once again go through the attributes
-guidelines and ensure your parser is compliant with them.
+Make sure you tested your parser before opening a PR and once again go through the attributes guidelines and ensure your parser is compliant with them.
