@@ -217,7 +217,7 @@ In the following table you can find a short description about the fields of `Pre
 </table>
 
 There are many utility functions defined at `src/parser/html_parser/utility.py` to aid you with
-your attributes. Make sure to check out other parsers on how to write specific attributes.
+your attributes. Make sure to check out other parsers on how to implement specific attributes.
 
 Bringing all above together our parser now looks like this:
 ``` python
