@@ -33,7 +33,7 @@ Get used to the library architecture in `src/library`. Fundus is divided into co
 case, the correct location we're operating on is `/library/us/`.
 
 #### 2.
-Add an empty parser class which inherits from `BaseParser` at the desired country location in the library. Following
+Add an empty parser class inheriting from `BaseParser` at the designated country section in the library. Following
 the example of contributing a parser for the LA Times, we would add something like this:
 ``` python
 class LATimesParser(BaseParser):
