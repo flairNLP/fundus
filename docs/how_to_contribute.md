@@ -1,8 +1,8 @@
 # We want you!
 
 First of all: Thank you for thinking about making fundus better.
-We try to answer news scraping with the implementation of domain specific
-parser to focus on precise extraction. In order to be able to handle
+We try to tackle news scraping with domain-specific
+parsers to focus on precise extraction. To handle
 this massive workload, we depend on people like you to contribute.
 
 # What is fundus
