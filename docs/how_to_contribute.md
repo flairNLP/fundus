@@ -107,7 +107,7 @@ If we access [https://www.latimes.com/news-sitemap.xml](https://www.latimes.com/
     </sitemap>
 </sitemapindex>
 ```
-We see that the actual sitemap refers to other sitemaps and therefore it is an index map
+We see that the actual sitemap refers to other sitemaps, and therefore it is an index map.
 If you access one of those sitemaps (in the following example we used [https://www.latimes.com/news-sitemap-latest.xml](https://www.latimes.com/news-sitemap-latest.xml)) you will find something like this
 ```
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" 
