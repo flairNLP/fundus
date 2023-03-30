@@ -28,12 +28,12 @@ support for your desired publisher.
 In the following, we will walk you through an example implementation covering the best practised for adding a news source.
 
 #### 1.
-Get used to the library (`src/library`) architecture. Fundus library is divided in country specific sections
-(`/library/at/, /library/de/, ..., /library/us/`) which represents the country a news source originates from. In our
-case the correct location were operating on would be `/library/us/`.
+Get used to the library architecture in `src/library`. Fundus is divided into country-specific sections
+(`/library/at/, /library/de/, ..., /library/us/`) representing the country a news source originates from. In our
+case, the correct location we're operating on is `/library/us/`.
 
 #### 2.
-Add an empty parser class which inherits from `BaseParser` at the desired country location in the library. Following
+Add an empty parser class inheriting from `BaseParser` at the designated country section in the library. Following
 the example of contributing a parser for the LA Times, we would add something like this:
 ``` python
 class LATimesParser(BaseParser):
@@ -241,10 +241,10 @@ class LATimesParser(BaseParser):
 ```
 
 #### 8.
-Add a test case for your news source to `tests/resorces/` by compressing an example html of your news_source to 
-`<news_source_enum_name>.html.gz` in our case `LATimes.html.gz` and specifying asserted values your parser should 
-extract from the example html in `<news_source_enum_name>.json`
-Currently, we only test on `title` so it should look something like this.
+Add a test case for your news source to `tests/resources/` by compressing an example HTML of your publisher to 
+`<publisher>.html.gz` in our case, `LATimes.html.gz` and specifying asserted values your parser should 
+extract from the example HTML in `<news_source_enum_name>.json`.
+Currently, we only test the `title` attribute. So it should look something like this:
 ``` json
 {
   "title": "High school lacrosse is starting to have an L.A. moment. Here's why"
