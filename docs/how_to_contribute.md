@@ -42,9 +42,9 @@ class LATimesParser(BaseParser):
 to a new file at `src/library/us/la_times_parser.py`.
 
 #### 3.
-Add a new specification for the publisher/domain you want to cover. You do so by adding a new entry 
-(or entire PublisherEnum if it doesn't exist yet) to the country specific `PublisherEnumm` in the `__init__.py` of 
-the country section you want to contribute to. The `__init__` can be found at `/library/<country_code>/__init__.py`.
+Add a new specification for the publisher/domain you want to cover. You can add a new entry 
+(or entire PublisherEnum if it doesn't exist yet) to the country-specific `PublisherEnum` in the `__init__.py` of 
+the country section you want to contribute to. The `__init__.py` can be found at `src/library/<country_code>/__init__.py`.
 
 If the country section you are contributing to didn't exist till now you also have to add it to 
 `/library/collection/__init__.py'`.
