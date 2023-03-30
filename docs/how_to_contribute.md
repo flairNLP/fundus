@@ -91,7 +91,7 @@ Here we see two sitemaps specified. One
 [Google News](https://support.google.com/news/publisher-center/answer/9607107?hl=en&ref_topic=9606468) sitemap 
 `https://www.latimes.com/news-sitemap.xml` and a sitemap for the entire LA Times website 
 `https://www.latimes.com/sitemap.xml`. The idea of the news sitemap is to give an overview
-over recent articles while the other one spans the entire website. To get your news source running you have to
+of recent articles while the other one spans the entire website. To get your news source running, 
 specify either `sitemaps` (spanning the entire website), a `news_map` (referring to a Google News map) or `rss_feeds` 
 covering recently published articles.
 
