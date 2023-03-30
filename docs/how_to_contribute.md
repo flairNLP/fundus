@@ -151,7 +151,7 @@ For example, if we want our parser to extract article titles, we would look at t
 In the guidelines, we find an attribute called `title` which exactly describes what we want to extract and also
 an expected return type. You must stick to the return types since those will be checked by `pytest`. You're free to do whatever you want locally, but you won't be able to contribute to the repository when your PR isn't compliant with the guidelines.
 
-Now that we have our attribute name we can start to add it to the parser by defining a class method called `title`
+Now that we have our attribute name, we can start to add it to the parser by defining a class method called `title`
 and declare it as an attribute with the `@attribute` decorator.
 ``` python
 class LATimesParser(BaseParser):
