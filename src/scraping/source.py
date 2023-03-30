@@ -47,7 +47,7 @@ class Source(Iterable[str], ABC):
                     basic_logger.info(f"Skipped {url} because of {error}")
                     return None
                 if history := response.history:
-                    basic_logger.info(f"Got redirected {len(history)} times from {url} -> {response.url}")
+                    basic_logger.info(f"Got redirected {len(history)} time(s) from {url} -> {response.url}")
                 article_source = ArticleSource(
                     url=response.url,
                     html=response.text,
