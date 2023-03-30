@@ -1,6 +1,6 @@
 from src.library.collection.base_objects import PublisherEnum, PublisherSpec
-from src.library.en.ap_news import APNewsParser
-from src.library.en.cnbc import CNBCParser
+from src.library.us.ap_news import APNewsParser
+from src.library.us.cnbc import CNBCParser
 
 
 class US(PublisherEnum):

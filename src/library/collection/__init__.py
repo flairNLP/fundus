@@ -3,7 +3,7 @@ from typing import Any, Dict, Iterator
 from src.library.at_at import AT_AT
 from src.library.collection.base_objects import PublisherEnum
 from src.library.de_de import DE_DE
-from src.library.en import US
+from src.library.us import US
 
 
 class CollectionMeta(type):
