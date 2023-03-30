@@ -49,8 +49,8 @@ the country section you want to contribute to. The `__init__.py` can be found at
 If the country section does not exist, please add it to
 `src/library/collection/__init__.py'`.
 
-To continue our journey of adding the LA Times to fundus we would add an entry to the class `US(PublisherEnum)` 
-located at `/library/us/__init__.py` which would look like the this.
+To continue our journey of adding the LA Times to Fundus, we add an entry to the `US(PublisherEnum)` class
+located at `src/library/us/__init__.py`, which looks like this:
 
 ``` python
 class US(PublisherEnum):
