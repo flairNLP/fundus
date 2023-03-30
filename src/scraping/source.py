@@ -35,7 +35,6 @@ class Source(Iterable[str], ABC):
 
     def _batched_fetch(self) -> Generator[List[Optional[ArticleSource]], int, None]:
         with requests.Session() as session:
-            it = iter(self)
 
             def thread(url: str) -> Optional[ArticleSource]:
                 if self.delay:
@@ -55,8 +54,9 @@ class Source(Iterable[str], ABC):
                 )
                 return article_source
 
-            empty = False
             with ThreadPool(processes=self.max_threads) as pool:
+                it = iter(self)
+                empty = False
                 while not empty:
                     current_size = batch_size = yield  # type: ignore
                     batch_urls = []
