@@ -1,20 +1,17 @@
 # We want you!
 
 First of all: Thank you for thinking about making fundus better.
-We try to tackle news scraping with domain-specific
-parsers to focus on precise extraction. To handle
-this massive workload, we depend on people like you to contribute.
+We try to tackle news scraping with domain-specific parsers to focus on precise extraction. 
+To handle this massive workload, we depend on people like you to contribute.
 
 # What is fundus
 
 Fundus aims to be a very lightweight but precise news-scraping library.
-Easy to use while being able to precisely extract information from
-provided HTML. This is possible because fundus, at it's core, is
-a massive parser library and rather than automate the extraction
-layer, we build on handcrafted, and therefore precise, parser.
-This also means: For fundus being able to parse a specific news domain,
-someone has to write a parser specific to this domain. And there are
-a lot of domains.
+Easy to use while being able to precisely extract information from provided HTML. 
+This is possible because fundus, at it's core, is a massive parser library. 
+Rather than automate the extraction layer, we build on handcrafted, and therefore precise, parser.
+This also means: For fundus being able to parse a specific news domain, someone has to write a parser specific to this domain. 
+And there are a lot of domains.
 
 # How to contribute
 
@@ -22,19 +19,17 @@ If you want to be a part of this project, here are some steps on how to contribu
 
 ## News Source
 
-Before contributing a parser, check the [**readme**](../README.md) if there is already 
-support for your desired publisher.
-
+Before contributing a parser, check the [**readme**](../README.md) if there is already support for your desired publisher.
 In the following, we will walk you through an example implementation covering the best practised for adding a news source.
 
 #### 1.
-Get used to the library architecture in `src/library`. Fundus is divided into country-specific sections
-(`/library/at/, /library/de/, ..., /library/us/`) representing the country a news source originates from. In our
-case, the correct location we're operating on is `/library/us/`.
+Get used to the library architecture in `src/library`. 
+Fundus is divided into country-specific sections (`/library/at/, /library/de/, ..., /library/us/`) representing the country a news source originates from. 
+In our case, the correct location we're operating on is `/library/us/`.
 
 #### 2.
-Add an empty parser class inheriting from `BaseParser` at the designated country section in the library. Following
-the example of contributing a parser for the LA Times, we would add something like this:
+Add an empty parser class inheriting from `BaseParser` at the designated country section in the library. 
+Following the example of contributing a parser for the LA Times, we would add something like this:
 ``` python
 class LATimesParser(BaseParser):
     pass
@@ -42,15 +37,13 @@ class LATimesParser(BaseParser):
 to a new file at `src/library/us/la_times_parser.py`.
 
 #### 3.
-Add a new specification for the publisher/domain you want to cover. You can add a new entry 
-(or entire PublisherEnum if it doesn't exist yet) to the country-specific `PublisherEnum` in the `__init__.py` of 
-the country section you want to contribute to. The `__init__.py` can be found at `src/library/<country_code>/__init__.py`.
+Add a new specification for the publisher/domain you want to cover. 
+You can add a new entry (or entire PublisherEnum if it doesn't exist yet) to the country-specific `PublisherEnum` in the `__init__.py` of the country section you want to contribute to. 
+The `__init__.py` can be found at `src/library/<country_code>/__init__.py`.
 
-If the country section does not exist, please add it to
-`src/library/collection/__init__.py'`.
+If the country section does not exist, please add it to `src/library/collection/__init__.py'`.
 
-To continue our journey of adding the LA Times to Fundus, we add an entry to the `US(PublisherEnum)` class
-located at `src/library/us/__init__.py`, which looks like this:
+To continue our journey of adding the LA Times to Fundus, we add an entry to the `US(PublisherEnum)` class located at `src/library/us/__init__.py`, which looks like this:
 
 ``` python
 class US(PublisherEnum):
@@ -77,9 +70,9 @@ ValueError: Publishers must at least define either an rss-feed, sitemap or news_
 since we didn't specify yet where to look for articles.
 
 #### 5.
-Your newly added source has to specify a location where to look for articles. Right now, fundus has support for
-reading sitemaps or RSS feeds. You usually find sitemaps for the news source you want to add at the end of 
-`<your_news_source_domain>/robots.txt` or through a quick google search.
+Your newly added source has to specify a location where to look for articles. 
+Right now, fundus has support for reading sitemaps or RSS feeds.
+You usually find sitemaps for the news source you want to add at the end of `<your_news_source_domain>/robots.txt` or through a quick google search.
 
 In our case, jumping to the end of the LA Times [robots.txt](https://www.latimes.com/robots.txt) gives us the following information.
 ``` console
@@ -87,13 +80,56 @@ Sitemap: https://www.latimes.com/sitemap.xml
 Sitemap: https://www.latimes.com/news-sitemap.xml
 ```
 
-Here we see two sitemaps specified. One 
-[Google News](https://support.google.com/news/publisher-center/answer/9607107?hl=en&ref_topic=9606468) sitemap 
-`https://www.latimes.com/news-sitemap.xml` and a sitemap for the entire LA Times website 
-`https://www.latimes.com/sitemap.xml`. The idea of the news sitemap is to give an overview
-of recent articles while the other one spans the entire website. To get your news source running, 
-specify either `sitemaps` (spanning the entire website), a `news_map` (referring to a Google News map) or `rss_feeds` 
-covering recently published articles.
+Here we see two sitemaps specified. 
+One [Google News](https://support.google.com/news/publisher-center/answer/9607107?hl=en&ref_topic=9606468) sitemap
+```
+https://www.latimes.com/news-sitemap.xml
+``` 
+and a sitemap for the entire LA Times website 
+```
+https://www.latimes.com/sitemap.xml
+```
+In this case the Google News map is actually an index map referring to other sitemaps
+```
+<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" 
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+              xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemapindex.xsd">
+    <sitemap>
+        <loc>https://www.latimes.com/news-sitemap-content.xml</loc>
+        <lastmod>2023-03-30T04:35-04:00</lastmod>
+    </sitemap>
+        <sitemap>
+        <loc>https://www.latimes.com/news-sitemap-latest.xml</loc>
+    </sitemap>
+</sitemapindex>
+```
+If you access one of those sitemaps (in the following example we used [https://www.latimes.com/news-sitemap-latest.xml](https://www.latimes.com/news-sitemap-latest.xml)) you will find something like this
+```
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" 
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" 
+        xmlns:video="http://www.google.com/schemas/sitemap-video/1.1" 
+        xmlns:news="http://www.google.com/schemas/sitemap-news/0.9" 
+        xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+    <url>
+        <loc>https://www.latimes.com/sports/dodgers/story/2023-03-30/dodgers-2023-season-opener-diamondbacks-tv-times-odds</loc>
+        <lastmod>2023-03-30</lastmod>
+        <news:news>
+            <news:publication>
+                <news:name>Los Angeles Times</news:name>
+                <news:language>eng</news:language>
+            </news:publication>
+            <news:publication_date>2023-03-30T06:00:25-04:00</news:publication_date>
+            <news:title>Dodgers 2023 season opener vs. Diamondbacks: TV times, odds</news:title>
+        </news:news>
+    </url>
+```
+The important line here is `xmlns:news="http://www.google.com/schemas/sitemap-news/0.9"`.
+Here the prefix `news` gets bound to the namespace `http://www.google.com/schemas/sitemap-news/0.9`. 
+This indicates the sitemap is a Google News Sitemap and thus `https://www.latimes.com/news-sitemap.xml` is a Google News Index Map.
+
+The idea of the news sitemap is to give an overview of recent articles while a sitemap spans the entire website. 
+To get your news source running, specify either `sitemaps` (spanning the entire website), a `news_map` (referring to a Google News Sitemap or Google News Index Map if available) or `rss_feeds` covering recently published articles.
 
 Given the above information our entry should look like this now:
 ``` python
