@@ -253,4 +253,4 @@ Currently, we only test the `title` attribute. So it should look something like 
 
 #### 9.
 Make sure you tested your parser before opening a PR and once again go through the attributes
-guidelines and ensure your parser is compliant with whatever is being specified there.
+guidelines and ensure your parser is compliant with them.
