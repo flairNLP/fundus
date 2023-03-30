@@ -11,11 +11,14 @@ from .focus_parser import FocusParser
 from .mdr_parser import MDRParser
 from .merkur_parser import MerkurParser
 from .spon_parser import SPONParser
+from .stern_parser import SternParser
 from .sz_parser import SZParser
 from .tagesschau_parser import TagesschauParser
 
 
 # noinspection PyPep8Naming
+
+
 class DE_DE(PublisherEnum):
     DieWelt = PublisherSpec(
         domain="https://www.welt.de/",
@@ -104,4 +107,9 @@ class DE_DE(PublisherEnum):
         sitemaps=["https://www.dw.com/de/article-sitemap.xml"],
         news_map="https://www.dw.com/de/news-sitemap.xml",
         parser=DWParser,
+    )
+    Stern = PublisherSpec(
+        domain="https://www.stern.de/",
+        rss_feeds=["https://www.stern.de/feed/standard/alle-nachrichten/"],
+        parser=SternParser,
     )
