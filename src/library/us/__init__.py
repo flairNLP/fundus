@@ -1,4 +1,5 @@
 from src.library.collection.base_objects import PublisherEnum, PublisherSpec
+
 from .ap_news import APNewsParser
 from .fox_news import FoxNewsParser
 
@@ -14,6 +15,6 @@ class US(PublisherEnum):
     FoxNews = PublisherSpec(
         domain="https://foxnews.com/",
         sitemaps=[" https://www.foxnews.com/sitemap.xml"],
-        news_map='https://www.foxnews.com/sitemap.xml?type=news',
+        news_map="https://www.foxnews.com/sitemap.xml?type=news",
         parser=FoxNewsParser,
     )
