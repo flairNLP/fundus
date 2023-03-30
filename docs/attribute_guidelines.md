@@ -1,8 +1,6 @@
-The following document aims to describe which parsable attributes of a
-parser class represent which semantic piece of a given news article.
-Consistency between publishers and parsers is a main goal, please report any
-cases you deem to be inconsistent with this document. If you want to contribute a parser to
-this library, please ensure that these attributes are named consistently.
+The following document aims to describe which parsable attributes of a parser class represent which semantic piece of a given news article.
+Consistency between publishers and parsers is a main goal, please report any cases you deem to be inconsistent with this document. 
+If you want to contribute a parser to this library, please ensure that these attributes are named consistently.
 
 ## Attributes table
 
@@ -35,7 +33,7 @@ this library, please ensure that these attributes are named consistently.
         <td>publishing_time</td>
         <td>The earliest release date provided by the publisher. It is not required to be timezone-aware.
             The date must at least include year, month, day, hours and minutes.</td>
-        <td><code>datetime</code></td>
+        <td><code>Optional[datetime]</code></td>
     </tr>
     <tr>
         <td>topics</td>
