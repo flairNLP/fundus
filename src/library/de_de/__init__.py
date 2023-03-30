@@ -10,6 +10,7 @@ from .faz_parser import FAZParser
 from .focus_parser import FocusParser
 from .mdr_parser import MDRParser
 from .merkur_parser import MerkurParser
+from .ntv_parser import NtvParser
 from .spon_parser import SPONParser
 from .sz_parser import SZParser
 from .tagesschau_parser import TagesschauParser
@@ -105,3 +106,10 @@ class DE_DE(PublisherEnum):
         news_map="https://www.dw.com/de/news-sitemap.xml",
         parser=DWParser,
     )
+
+    Ntv= PublisherSpec(
+        domain="https://www.ntv.de/",
+        news_map="https://www.n-tv.de/news.xml",
+        parser=NtvParser,
+    )
+
