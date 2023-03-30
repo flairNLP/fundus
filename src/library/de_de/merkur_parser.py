@@ -20,7 +20,7 @@ class MerkurParser(BaseParser):
         )
 
     @attribute
-    def authors(self) -> Optional[List[str]]:
+    def authors(self) -> List[str]:
         return generic_author_parsing(self.precomputed.ld.bf_search("author"))
 
     @attribute

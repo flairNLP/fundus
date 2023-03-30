@@ -33,5 +33,5 @@ class BerlinerZeitungParser(BaseParser):
         return generic_date_parsing(self.precomputed.ld.bf_search("datePublished"))
 
     @attribute
-    def topics(self) -> Optional[List[str]]:
+    def topics(self) -> List[str]:
         return generic_topic_parsing(self.precomputed.ld.bf_search("keywords"))
