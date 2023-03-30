@@ -8,10 +8,9 @@ from src.scraping.source import RSSSource, SitemapSource
 if __name__ == "__main__":
     # You can use fundus via the Crawler class and the shipped collection of publisher
 
-    de_de = PublisherCollection.de_de
+    de_de = PublisherCollection.en
 
-    crawler = Crawler(de_de)
-
+    crawler = Crawler(de_de.WorldTruth)
     """
     Alternative usage:
     
@@ -29,7 +28,8 @@ if __name__ == "__main__":
     """
 
     for article in crawler.crawl(max_articles=5, error_handling="raise"):
-        print(article)
+        print(article.extracted)
+    exit()
 
     # or explicitly create your own pipeline
 
