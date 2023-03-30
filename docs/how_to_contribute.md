@@ -129,8 +129,8 @@ If you access one of those sitemaps (in the following example we used [https://w
         </news:news>
     </url>
 ```
-The important line here is `xmlns:news="http://www.google.com/schemas/sitemap-news/0.9"`.
-The prefix `news` gets bound to the namespace `http://www.google.com/schemas/sitemap-news/0.9`. 
+The line we look after is `xmlns:news="http://www.google.com/schemas/sitemap-news/0.9"`.
+Here the prefix `news` gets bound to the namespace `http://www.google.com/schemas/sitemap-news/0.9`. 
 This indicates the sitemap is a Google News Sitemap and thus `https://www.latimes.com/news-sitemap.xml` is a Google News Index Map.
 
 The idea of the news sitemap is to give an overview of recent articles while a sitemap spans the entire website. 
