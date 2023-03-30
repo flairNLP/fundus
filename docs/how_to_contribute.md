@@ -81,7 +81,7 @@ Your newly added source has to specify a location where to look for articles. Ri
 reading sitemaps or RSS feeds. You usually find sitemaps for the news source you want to add at the end of 
 `<your_news_source_domain>/robots.txt` or through a quick google search.
 
-In our case jumping to the end of `https://www.latimes.com/robots.txt` gives us the following information.
+In our case, jumping to the end of the LA Times [robots.txt](https://www.latimes.com/robots.txt) gives us the following information.
 ``` console
 Sitemap: https://www.latimes.com/sitemap.xml
 Sitemap: https://www.latimes.com/news-sitemap.xml
