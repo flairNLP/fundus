@@ -147,10 +147,9 @@ Attributes are expected to have a return value and are precisely specified in th
 [attribute guidelines](attribute_guidelines.md). They define the information your parser will extract.
 
 For example, if we want our parser to extract article titles, we would look at the 
-[attribute_guidelines](attribute_guidelines.md) and see if there is something defined which matches our expectations.
-In the guidelines we find an attribute called `title` which exactly describes what we want to extract and also
-an expected return type. It is very important that you stick to the return types since those will be enforced
-at run time and otherwise an error will be thrown.
+[attribute guidelines](attribute_guidelines.md) and see if there is something defined which matches our expectations.
+In the guidelines, we find an attribute called `title` which exactly describes what we want to extract and also
+an expected return type. You must stick to the return types since those will be checked by `pytest`. You're free to do whatever you want locally, but you won't be able to contribute to the repository when your PR isn't compliant with the guidelines.
 
 Now that we have our attribute name we can start to add it to the parser by defining a class method called `title`
 and declare it as an attribute with the `@attribute` decorator.
