@@ -21,16 +21,27 @@ _displayed_deprecation_info = False
 class LinkedData:
     def __init__(self, lds: Iterable[Dict[str, Any]] = ()):
         self._ld_by_type: Dict[str, Dict[str, Any]] = {}
+
         for ld in lds:
-            if ld_type := ld.get("@type"):
-                self._ld_by_type[ld_type] = ld
+            if graph := ld.get('@graph'):
+                for nested in graph:
+                    self._add_ld(nested)
             else:
-                raise ValueError(f"Found no type for LD")
+                self._add_ld(ld)
 
         for name, ld in sorted(self._ld_by_type.items(), key=lambda t: t[0]):
             self.__dict__[name] = ld
 
         self._contains = [ld_type for ld_type in self._ld_by_type.keys() if ld_type is not None]
+
+    def _add_ld(self, ld: Dict[str, Any]) -> None:
+        if ld_type := ld.get("@type"):
+            if not self._ld_by_type.get(ld_type):
+                self._ld_by_type[ld_type] = ld
+            else:
+                raise KeyError(f"Found multiple LDs with same type '{ld_type}'")
+        else:
+            raise ValueError(f"Found no type for LD")
 
     def get(self, key: str, default: Any = None):
         """
