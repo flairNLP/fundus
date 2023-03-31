@@ -13,7 +13,7 @@ from .merkur_parser import MerkurParser
 from .spon_parser import SPONParser
 from .sz_parser import SZParser
 from .tagesschau_parser import TagesschauParser
-from .waz import WazParser
+from .waz_parser import WazParser
 
 
 # noinspection PyPep8Naming

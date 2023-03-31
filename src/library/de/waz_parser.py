@@ -33,5 +33,5 @@ class WazParser(BaseParser):
         return generic_date_parsing(self.precomputed.meta.get("datePublished"))
 
     @attribute
-    def topics(self) -> Optional[List[str]]:
+    def topics(self) -> List[str]:
         return generic_topic_parsing(self.precomputed.meta.get("keywords"))
