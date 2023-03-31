@@ -13,6 +13,10 @@ from typing import (
     overload,
 )
 
+from src.logging.logger import basic_logger
+
+_displayed_deprecation_info = False
+
 
 class LinkedData:
     def __init__(self, lds: Iterable[Dict[str, Any]] = ()):
@@ -28,7 +32,7 @@ class LinkedData:
 
         self._contains = [ld_type for ld_type in self._ld_by_type.keys() if ld_type is not None]
 
-    def get(self, key: str, default: Any = None):
+    def get(self, key: str, default: Any = None) -> Optional[Any]:
         """
         This function acts like get() on pythons Mapping type with the difference that this method will
         iterate through all found ld types and return the first value where <key> matches. If no match occurs,
@@ -40,6 +44,14 @@ class LinkedData:
         :param default: The returned default if <key> is not found, default: None
         :return: The reached value or <default>
         """
+        global _displayed_deprecation_info
+
+        if not _displayed_deprecation_info:
+            _displayed_deprecation_info = True
+            basic_logger.warning(
+                "LinkedDate.get() will be deprecated in the future. Use .get_value_by_key_path() "
+                "or .bf_search() instead"
+            )
         for name, ld in sorted(self._ld_by_type.items(), key=lambda t: t[0]):
             if not name:
                 raise NotImplementedError("Currently this function does not support lds without types")
@@ -68,12 +80,12 @@ class LinkedData:
             tmp = nxt
         return tmp
 
-    def bf_search(self, key: str, depth: Optional[int] = None) -> Any:
+    def bf_search(self, key: str, depth: Optional[int] = None, default: Any = None) -> Optional[Any]:
         """
         This is a classic BF search on the nested dicts representing the JSON-LD. <key> specifies the dict key to
         search, <depth> the depth level. If the depth level is set to None, this method will search through the whole
-        LD. It is important to notice that this will  only return the value of the first matched key.
-        For more precise operations consider using get() or get_by_key_path().
+        LD. It is important to notice that this will only return the value of the first matched key.
+        For more precise operations consider using get_by_key_path().
 
         I.e:
 
@@ -117,7 +129,7 @@ class LinkedData:
                     new.extend(v for v in node.values() if isinstance(v, dict))
                 return search_recursive(new, current_depth + 1) if new else None
 
-        return search_recursive(self._ld_by_type.values(), 0)
+        return search_recursive(self._ld_by_type.values(), 0) or default
 
     def __repr__(self):
         return f"LD containing '{', '.join(content)}'" if (content := self._contains) else "Empty LD"

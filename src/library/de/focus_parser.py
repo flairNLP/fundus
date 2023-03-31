@@ -18,7 +18,7 @@ class FocusParser(BaseParser):
     _topic_name_pattern: Pattern[str] = re.compile(r'"name":"(.*?)"', flags=re.MULTILINE)
 
     @attribute
-    def body(self) -> Optional[ArticleBody]:
+    def body(self) -> ArticleBody:
         return extract_article_body_with_selector(
             self.precomputed.doc,
             summary_selector="div.leadIn > p",
@@ -38,7 +38,7 @@ class FocusParser(BaseParser):
         return generic_date_parsing(self.precomputed.ld.bf_search("datePublished"))
 
     @attribute
-    def title(self):
+    def title(self) -> Optional[str]:
         return self.precomputed.ld.get("headline")
 
     @attribute
