@@ -92,7 +92,7 @@ def extract_article_body_with_selector(
 
 
 def get_meta_content(tree: lxml.html.HtmlElement) -> Dict[str, str]:
-    meta_node_selector = "head > meta[name], head > meta[property]"
+    meta_node_selector = "meta[name], meta[property]"
     meta_nodes = tree.cssselect(meta_node_selector)
     meta: Dict[str, str] = {}
     for node in meta_nodes:
@@ -164,5 +164,5 @@ _tzs = ["CET", "CEST"]
 _tz_infos = {tz: dateutil.tz.gettz(tz) for tz in _tzs}
 
 
-def generic_date_parsing(date_str: str) -> Optional[datetime]:
+def generic_date_parsing(date_str: Optional[str]) -> Optional[datetime]:
     return parser.parse(date_str, tzinfos=_tz_infos) if date_str else None

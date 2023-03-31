@@ -6,18 +6,17 @@ from src.parser.html_parser.utility import (
     extract_article_body_with_selector,
     generic_author_parsing,
     generic_date_parsing,
-    generic_topic_parsing,
 )
 
 
-class SZParser(BaseParser):
+class MerkurParser(BaseParser):
     @attribute
     def body(self) -> ArticleBody:
         return extract_article_body_with_selector(
             self.precomputed.doc,
-            summary_selector='main [data-manual="teaserText"]',
-            subheadline_selector='main [itemprop="articleBody"] > h3',
-            paragraph_selector='main [itemprop="articleBody"] > p, ' "main .css-korpch > div > ul > li",
+            summary_selector="p.id-StoryElement-leadText",
+            subheadline_selector="h2.id-StoryElement-crosshead",
+            paragraph_selector="p.id-StoryElement-paragraph, article > ul > li",
         )
 
     @attribute
@@ -29,9 +28,5 @@ class SZParser(BaseParser):
         return generic_date_parsing(self.precomputed.ld.bf_search("datePublished"))
 
     @attribute
-    def title(self):
-        return self.precomputed.ld.get("headline")
-
-    @attribute
-    def topics(self) -> List[str]:
-        return generic_topic_parsing(self.precomputed.ld.bf_search("keywords"))
+    def title(self) -> Optional[str]:
+        return self.precomputed.meta.get("og:title")
