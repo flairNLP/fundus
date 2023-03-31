@@ -10,28 +10,28 @@ from src.parser.html_parser.utility import (
 )
 
 
-class BerlinerZeitungParser(BaseParser):
+class SZParser(BaseParser):
     @attribute
     def body(self) -> ArticleBody:
         return extract_article_body_with_selector(
             self.precomputed.doc,
-            summary_selector="div[data-testid=article-header] > p",
-            subheadline_selector="div[id=articleBody] > p",
-            paragraph_selector="div[id=articleBody] > h2",
+            summary_selector='main [data-manual="teaserText"]',
+            subheadline_selector='main [itemprop="articleBody"] > h3',
+            paragraph_selector='main [itemprop="articleBody"] > p, ' "main .css-korpch > div > ul > li",
         )
 
     @attribute
-    def title(self) -> Optional[str]:
-        return self.precomputed.meta.get("og:title")
-
-    @attribute
     def authors(self) -> List[str]:
-        return generic_author_parsing(self.precomputed.meta.get("author"))
+        return generic_author_parsing(self.precomputed.ld.bf_search("author"))
 
     @attribute
     def publishing_date(self) -> Optional[datetime.datetime]:
         return generic_date_parsing(self.precomputed.ld.bf_search("datePublished"))
 
     @attribute
-    def topics(self) -> Optional[List[str]]:
+    def title(self) -> Optional[str]:
+        return self.precomputed.ld.get("headline")
+
+    @attribute
+    def topics(self) -> List[str]:
         return generic_topic_parsing(self.precomputed.ld.bf_search("keywords"))

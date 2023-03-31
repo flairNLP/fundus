@@ -20,7 +20,7 @@ class FAZParser(BaseParser):
         )
 
     @attribute
-    def topics(self) -> Optional[List[str]]:
+    def topics(self) -> List[str]:
         return generic_topic_parsing(self.precomputed.meta.get("keywords"))
 
     @attribute
