@@ -34,7 +34,7 @@ class TagesschauParser(BaseParser):
         return generic_date_parsing(self.precomputed.ld.bf_search("datePublished"))
 
     @attribute
-    def title(self):
+    def title(self) -> Optional[str]:
         return self.precomputed.meta.get("og:title")
 
     @attribute
