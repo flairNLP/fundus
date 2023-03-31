@@ -14,6 +14,7 @@ from src.parser.html_parser.utility import (
 
 class NtvParser(BaseParser):
     _author_substitution_pattern: Pattern[str] = re.compile(r"n-tv NACHRICHTEN")
+
     @attribute
     def body(self) -> ArticleBody:
         return extract_article_body_with_selector(
@@ -24,19 +25,17 @@ class NtvParser(BaseParser):
 
     @attribute
     def authors(self) -> List[str]:
-        initial_list= generic_author_parsing(self.precomputed.meta.get('author'))
-        cleaned_list =[re.sub(self._author_substitution_pattern,'', el) for el in initial_list]
+        initial_list = generic_author_parsing(self.precomputed.meta.get("author"))
+        cleaned_list = [re.sub(self._author_substitution_pattern, "", el) for el in initial_list]
         return [el for el in cleaned_list if el]
-
-
 
     @attribute
     def publishing_date(self) -> Optional[datetime.datetime]:
-        return generic_date_parsing(self.precomputed.meta.get('date'))
+        return generic_date_parsing(self.precomputed.meta.get("date"))
 
     @attribute
     def title(self):
-        return self.precomputed.meta.get('og:title')
+        return self.precomputed.meta.get("og:title")
 
     @attribute
     def topics(self) -> List[str]:

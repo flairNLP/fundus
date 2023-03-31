@@ -107,9 +107,8 @@ class DE_DE(PublisherEnum):
         parser=DWParser,
     )
 
-    Ntv= PublisherSpec(
+    Ntv = PublisherSpec(
         domain="https://www.ntv.de/",
         news_map="https://www.n-tv.de/news.xml",
         parser=NtvParser,
     )
-
