@@ -34,7 +34,7 @@ class NtvParser(BaseParser):
         return generic_date_parsing(self.precomputed.meta.get("date"))
 
     @attribute
-    def title(self):
+    def title(self) -> Optional[str]:
         return self.precomputed.meta.get("og:title")
 
     @attribute
