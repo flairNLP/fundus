@@ -46,6 +46,8 @@ class Source(Iterable[str], ABC):
                 except HTTPError as error:
                     basic_logger.info(f"Skipped {url} because of {error}")
                     return None
+                if history := response.history:
+                    basic_logger.info(f"Got redirected {len(history)} time(s) from {url} -> {response.url}")
                 article_source = ArticleSource(
                     url=response.url,
                     html=response.text,
@@ -98,7 +100,7 @@ class RSSSource(Source):
             content = session.get(self.url).content
             rss_feed = feedparser.parse(content)
             if exception := rss_feed.get("bozo_exception"):
-                basic_logger.info(f"Warning! Couldn't parse rss feed at {self.url}. Exception: {exception}")
+                basic_logger.warning(f"Warning! Couldn't parse rss feed at {self.url}. Exception: {exception}")
                 return iter(())
             else:
                 return (entry["link"] for entry in rss_feed["entries"])
@@ -153,7 +155,7 @@ class SitemapSource(Source):
                 response = session.get(url=url, headers=self.request_header)
                 response.raise_for_status()
             except (HTTPError, ConnectionError) as error:
-                basic_logger.info(f"Warning! Couldn't reach sitemap {url} so skipped it. Exception: {error}")
+                basic_logger.warning(f"Warning! Couldn't reach sitemap {url} so skipped it. Exception: {error}")
                 return
             content = response.content
             if (content_type := response.headers.get("Content-Type")) in self._decompressor.supported_file_formats:
