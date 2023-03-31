@@ -33,10 +33,9 @@ class SternParser(BaseParser):
         )
 
     @attribute
-    def title(self)-> Optional[str]:
+    def title(self) -> Optional[str]:
         return self.precomputed.meta.get("og:title")
 
     @attribute
     def topics(self) -> List[str]:
-        return generic_topic_parsing(self.precomputed.meta.get("sis-article-keywords"), delimiter='|')
-
+        return generic_topic_parsing(self.precomputed.meta.get("sis-article-keywords"), delimiter="|")
