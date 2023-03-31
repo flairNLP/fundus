@@ -2,6 +2,7 @@ from src.library.collection.base_objects import PublisherEnum, PublisherSpec
 
 from .ap_news import APNewsParser
 from .fox_news import FoxNewsParser
+from .washington_times_parser import WashingtonTimesParser
 
 
 class US(PublisherEnum):
@@ -17,4 +18,9 @@ class US(PublisherEnum):
         sitemaps=[" https://www.foxnews.com/sitemap.xml"],
         news_map="https://www.foxnews.com/sitemap.xml?type=news",
         parser=FoxNewsParser,
+    )
+    WashingtonTimes = PublisherSpec(
+        domain="https://www.washingtontimes.com/",
+        rss_feeds=["https://www.washingtontimes.com/rss/headlines/news/politics/"],
+        parser=WashingtonTimesParser,
     )
