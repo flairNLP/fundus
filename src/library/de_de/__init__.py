@@ -13,6 +13,7 @@ from .merkur_parser import MerkurParser
 from .spon_parser import SPONParser
 from .sz_parser import SZParser
 from .tagesschau_parser import TagesschauParser
+from .taz_parser import TazParser
 
 
 # noinspection PyPep8Naming
@@ -105,3 +106,9 @@ class DE_DE(PublisherEnum):
         news_map="https://www.dw.com/de/news-sitemap.xml",
         parser=DWParser,
     )
+    Taz = PublisherSpec(
+        domain="https://www.taz.de/",
+        news_map="https://taz.de/sitemap-google-news.xml",
+        parser=TazParser,
+    )
+
