@@ -5,7 +5,18 @@ import re
 from abc import ABC
 from copy import copy
 from dataclasses import dataclass, field
-from typing import Any, Callable, Dict, List, Literal, Optional, Tuple, Type
+from typing import (
+    Any,
+    Callable,
+    Collection,
+    Dict,
+    Iterator,
+    List,
+    Literal,
+    Optional,
+    Tuple,
+    Type,
+)
 
 import lxml.html
 import more_itertools
@@ -87,6 +98,24 @@ def function(cls=None, /, *, priority: Optional[int] = None):
     return _register(cls, factory=Function, priority=priority)
 
 
+class RegisteredFunctionCollection(Collection[RegisteredFunction]):
+    def __init__(self, *functions: RegisteredFunction):
+        self.functions = tuple(functions)
+
+    @property
+    def names(self) -> List[str]:
+        return [func.__name__ for func in self.functions]
+
+    def __len__(self) -> int:
+        return len(self.functions)
+
+    def __iter__(self) -> Iterator[RegisteredFunction]:
+        return iter(self.functions)
+
+    def __contains__(self, item) -> bool:
+        return self.functions.__contains__(item)
+
+
 @dataclass
 class Precomputed:
     html: str
@@ -100,16 +129,10 @@ class BaseParser(ABC):
     precomputed: Precomputed
 
     def __init__(self):
-        self_shared_object_buffer: Dict[str, Any] = {}
-
         predicate: Callable[[object], bool] = lambda x: isinstance(x, RegisteredFunction)
         predicated_members: List[Tuple[str, RegisteredFunction]] = inspect.getmembers(self, predicate=predicate)
         bound_registered_functions: List[RegisteredFunction] = [func for _, func in predicated_members]
         self._sorted_registered_functions = sorted(bound_registered_functions, key=lambda f: (f, f.__name__))
-
-    @property
-    def cache(self) -> Optional[Dict[str, Any]]:
-        return self.precomputed.cache if self.precomputed else None
 
     @classmethod
     def _search_members(cls, obj_type: type) -> List[Tuple[str, Any]]:
@@ -117,12 +140,18 @@ class BaseParser(ABC):
         return members
 
     @classmethod
-    def attributes(cls) -> List[str]:
-        return [func.__name__ for _, func in cls._search_members(Attribute) if func.__name__ not in ["__ld", "__meta"]]
+    def attributes(cls) -> RegisteredFunctionCollection:
+        attrs = [func for _, func in cls._search_members(Attribute) if func.__name__ not in ["__ld", "__meta"]]
+        return RegisteredFunctionCollection(*attrs)
 
     @classmethod
-    def functions(cls) -> List[str]:
-        return [func.__name__ for _, func in cls._search_members(Function)]
+    def functions(cls) -> RegisteredFunctionCollection:
+        funcs = [func for _, func in cls._search_members(Function)]
+        return RegisteredFunctionCollection(*funcs)
+
+    @property
+    def cache(self) -> Optional[Dict[str, Any]]:
+        return self.precomputed.cache if self.precomputed else None
 
     def _base_setup(self, html: str) -> None:
         doc = lxml.html.document_fromstring(html)

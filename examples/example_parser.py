@@ -49,7 +49,8 @@ if __name__ == "__main__":
 
     example_parser = MDRParser()
     print(
-        f"This '{example_parser.__class__.__name__}' is capable of parsing '{', '.join(example_parser.attributes())}'"
+        f"This '{example_parser.__class__.__name__}' is capable of parsing "
+        f"'{', '.join(example_parser.attributes().names)}'"
     )
 
     article = example_parser.parse(html)
