@@ -8,11 +8,11 @@ import pytest
 
 from src.library.collection import PublisherCollection
 from src.library.collection.base_objects import PublisherEnum
-from tests.resources import attribute_annotations, parser_test_data_path
+from tests.resources import attribute_annotation_mapping, parser_test_data_path
 
 
-def load_html(publisher_name: str) -> str:
-    relative_file_path = Path(f"{publisher_name}.html.gz")
+def load_html(publisher: PublisherEnum) -> str:
+    relative_file_path = Path(f"{publisher.__class__.__name__.lower()}/{publisher.name}.html.gz")
     absolute_path = os.path.join(parser_test_data_path, relative_file_path)
 
     with open(absolute_path, "rb") as file:
@@ -23,8 +23,8 @@ def load_html(publisher_name: str) -> str:
     return result
 
 
-def load_data(publisher_name: str) -> Dict[str, Any]:
-    relative_file_path = Path(f"{publisher_name}.json")
+def load_data(publisher: PublisherEnum) -> Dict[str, Any]:
+    relative_file_path = Path(f"{publisher.__class__.__name__.lower()}/{publisher.name}.json")
     absolute_path = os.path.join(parser_test_data_path, relative_file_path)
 
     with open(absolute_path, "r", encoding="utf-8") as file:
@@ -44,14 +44,14 @@ class TestParser:
     def test_annotations(self, publisher: PublisherEnum) -> None:
         parser = publisher.parser
         for attr in parser.attributes():
-            if annotation := attribute_annotations[attr.__name__]:
+            if annotation := attribute_annotation_mapping[attr.__name__]:
                 assert (
                     attr.__annotations__.get("return") == annotation
                 ), f"Attribute {attr.__name__} for {parser.__name__} failed"
 
     def test_parsing(self, publisher: PublisherEnum) -> None:
-        html = load_html(publisher.name)
-        comparative_data = load_data(publisher.name)
+        html = load_html(publisher)
+        comparative_data = load_data(publisher)
         parser = publisher.parser()
 
         result = parser.parse(html, "raise")

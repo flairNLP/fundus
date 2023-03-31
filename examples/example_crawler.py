@@ -6,7 +6,7 @@ from src.scraping.source import RSSSource, SitemapSource
 if __name__ == "__main__":
     # You can use fundus via the Crawler class and the shipped collection of publisher
 
-    de_de = PublisherCollection.de_de
+    de_de = PublisherCollection.de
 
     crawler = Crawler(de_de)
 
@@ -33,14 +33,14 @@ if __name__ == "__main__":
 
     # using rss-feeds
 
-    FAZ = PublisherCollection.de_de.FAZ
+    FAZ = PublisherCollection.de.FAZ
 
     faz_crawler = [RSSSource(feed, FAZ.name) for feed in FAZ.rss_feeds]
     faz_scraper = Scraper(*faz_crawler, parser=FAZ.parser())
 
     # or sitemaps
 
-    MDR = PublisherCollection.de_de.MDR
+    MDR = PublisherCollection.de.MDR
 
     mdr_crawler = SitemapSource("https://www.mdr.de/news-sitemap.xml", "MDR", recursive=False)
     mdr_scraper = Scraper(mdr_crawler, parser=MDR.parser())

@@ -59,3 +59,6 @@ class PublisherEnum(Enum):
             if attrs_set.issubset(spec.parser.attributes().names) and spec.supports(source_type):
                 matched.append(spec)
         return matched
+
+    def __get__(self, instance, owner):
+        return self
