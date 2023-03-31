@@ -10,7 +10,7 @@ if __name__ == "__main__":
 
     de_de = PublisherCollection.de_de
 
-    crawler = Crawler(de_de)
+    crawler = Crawler(de_de.Ndr)
 
     """
     Alternative usage:
@@ -28,8 +28,10 @@ if __name__ == "__main__":
         
     """
 
-    for article in crawler.crawl(max_articles=5, error_handling="raise"):
+    for article in crawler.crawl(max_articles=15, error_handling="raise"):
         print(article)
+        print("")
+    exit()
 
     # or explicitly create your own pipeline
 

@@ -10,6 +10,7 @@ from .faz_parser import FAZParser
 from .focus_parser import FocusParser
 from .mdr_parser import MDRParser
 from .merkur_parser import MerkurParser
+from .ndr_parser import NdrParser
 from .spon_parser import SPONParser
 from .sz_parser import SZParser
 from .tagesschau_parser import TagesschauParser
@@ -104,4 +105,9 @@ class DE_DE(PublisherEnum):
         sitemaps=["https://www.dw.com/de/article-sitemap.xml"],
         news_map="https://www.dw.com/de/news-sitemap.xml",
         parser=DWParser,
+    )
+    Ndr = PublisherSpec(
+        domain="https://www.ndr.de/",
+        news_map="https://www.ndr.de/sitemap112-newssitemap.xml",
+        parser=NdrParser,
     )
