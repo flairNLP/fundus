@@ -33,15 +33,10 @@ class SternParser(BaseParser):
         )
 
     @attribute
-    def title(self):
-        first_title_candidate = self.precomputed.ld.bf_search("headline")
-        second_title_candidate = self.precomputed.meta.get("og:title")
-        longer_title = max((first_title_candidate, second_title_candidate), key=lambda x: len(x))
-        return longer_title
+    def title(self)-> Optional[str]:
+        return self.precomputed.meta.get("og:title")
 
     @attribute
-    def topics(self) -> Optional[List[str]]:
-        all_topics = generic_topic_parsing(self.precomputed.meta.get("sis-article-keywords"))
-        if not all_topics:
-            return []
-        return all_topics[0].split("|")
+    def topics(self) -> List[str]:
+        return generic_topic_parsing(self.precomputed.meta.get("sis-article-keywords"), delimiter='|')
+
