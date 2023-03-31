@@ -19,12 +19,16 @@ class NtvParser(BaseParser):
         return extract_article_body_with_selector(
             self.precomputed.doc,
             paragraph_selector=".article__text > p",
-            subheadline_selector=".article__text > h2"
+            subheadline_selector=".article__text > h2", mode='xpath'
         )
 
     @attribute
     def authors(self) -> List[str]:
-        return generic_author_parsing(self.precomputed.meta.get('author'))
+        initial_list= generic_author_parsing(self.precomputed.meta.get('author'))
+        cleaned_list =[re.sub(self._author_substitution_pattern,'', el) for el in initial_list]
+        return [el for el in cleaned_list if el]
+
+
 
     @attribute
     def publishing_date(self) -> Optional[datetime.datetime]:
