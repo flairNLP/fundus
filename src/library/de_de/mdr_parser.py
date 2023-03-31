@@ -4,11 +4,11 @@ from typing import List, Optional, Pattern
 
 from src.parser.html_parser import ArticleBody, BaseParser, attribute
 from src.parser.html_parser.utility import (
+    apply_substitution_pattern_over_list,
     extract_article_body_with_selector,
     generic_date_parsing,
     generic_text_extraction_with_css,
     generic_topic_parsing,
-    apply_substitution_pattern_over_list,
 )
 
 

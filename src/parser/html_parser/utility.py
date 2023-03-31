@@ -115,9 +115,6 @@ def apply_substitution_pattern_over_list(input_list: List[str], sub_pattern: Pat
     return cleaned_list
 
 
-
-
-
 def generic_author_parsing(
     value: Union[
         Optional[str],
