@@ -164,5 +164,5 @@ _tzs = ["CET", "CEST"]
 _tz_infos = {tz: dateutil.tz.gettz(tz) for tz in _tzs}
 
 
-def generic_date_parsing(date_str: str) -> Optional[datetime]:
+def generic_date_parsing(date_str: Optional[str]) -> Optional[datetime]:
     return parser.parse(date_str, tzinfos=_tz_infos) if date_str else None

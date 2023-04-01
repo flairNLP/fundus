@@ -17,7 +17,7 @@ from .taz_parser import TazParser
 
 
 # noinspection PyPep8Naming
-class DE_DE(PublisherEnum):
+class DE(PublisherEnum):
     DieWelt = PublisherSpec(
         domain="https://www.welt.de/",
         rss_feeds=["https://www.welt.de/feeds/latest.rss"],
