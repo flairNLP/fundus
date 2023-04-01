@@ -15,6 +15,7 @@ from .stern_parser import SternParser
 from .sz_parser import SZParser
 from .tagesschau_parser import TagesschauParser
 
+
 # noinspection PyPep8Naming
 class DE(PublisherEnum):
     DieWelt = PublisherSpec(
