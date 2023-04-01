@@ -1,6 +1,8 @@
 import datetime
 from typing import List, Optional
 
+from lxml.cssselect import CSSSelector
+
 from src.parser.html_parser import ArticleBody, BaseParser, attribute
 from src.parser.html_parser.data import TextSequence
 from src.parser.html_parser.utility import (
@@ -12,6 +14,9 @@ from src.parser.html_parser.utility import (
 
 
 class CNBCParser(BaseParser):
+
+    _key_points_selector: CSSSelector = CSSSelector("div.RenderKeyPoints-list li")
+
     @attribute
     def body(self) -> ArticleBody:
         body: ArticleBody = extract_article_body_with_selector(
@@ -40,3 +45,7 @@ class CNBCParser(BaseParser):
     @attribute
     def topics(self) -> List[str]:
         return generic_topic_parsing(self.precomputed.meta.get("keywords"))
+
+    @attribute
+    def key_points(self) -> List[str]:
+        return [key_point.text_content() for key_point in self._key_points_selector(self.precomputed.doc)]
