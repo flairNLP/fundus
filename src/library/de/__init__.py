@@ -111,4 +111,3 @@ class DE(PublisherEnum):
         news_map="https://taz.de/sitemap-google-news.xml",
         parser=TazParser,
     )
-

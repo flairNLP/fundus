@@ -17,7 +17,7 @@ class TazParser(BaseParser):
             self.precomputed.doc,
             paragraph_selector=".sectbody > p[class*='article']",
             subheadline_selector=".sectbody > h6",
-            summary_selector=".intro"
+            summary_selector=".intro",
         )
 
     @attribute
