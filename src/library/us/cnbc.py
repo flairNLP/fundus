@@ -39,7 +39,8 @@ class CNBCParser(BaseParser):
 
     @attribute
     def title(self) -> Optional[str]:
-        return self.precomputed.ld.get_value_by_key_path(["NewsArticle", "headline"])
+        title: Optional[str] = self.precomputed.ld.get_value_by_key_path(["NewsArticle", "headline"])
+        return title
 
     @attribute
     def topics(self) -> List[str]:
