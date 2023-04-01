@@ -36,7 +36,7 @@ class DWParser(BaseParser):
         return generic_date_parsing(raw_date_str)
 
     @attribute
-    def title(self):
+    def title(self) -> Optional[str]:
         return generic_text_extraction_with_css(self.precomputed.doc, ".col3 h1")
 
     @attribute

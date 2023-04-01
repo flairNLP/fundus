@@ -1,5 +1,4 @@
 from abc import ABC
-from collections import UserList
 from dataclasses import dataclass, fields
 from typing import (
     Any,
@@ -46,7 +45,7 @@ class LinkedData:
         else:
             raise ValueError(f"Found no type for LD")
 
-    def get(self, key: str, default: Any = None):
+    def get(self, key: str, default: Any = None) -> Optional[Any]:
         """
         This function acts like get() on pythons Mapping type with the difference that this method will
         iterate through all found ld types and return the first value where <key> matches. If no match occurs,
@@ -96,12 +95,12 @@ class LinkedData:
             tmp = nxt
         return tmp
 
-    def bf_search(self, key: str, depth: Optional[int] = None) -> Any:
+    def bf_search(self, key: str, depth: Optional[int] = None, default: Any = None) -> Optional[Any]:
         """
         This is a classic BF search on the nested dicts representing the JSON-LD. <key> specifies the dict key to
         search, <depth> the depth level. If the depth level is set to None, this method will search through the whole
-        LD. It is important to notice that this will  only return the value of the first matched key.
-        For more precise operations consider using get() or get_by_key_path().
+        LD. It is important to notice that this will only return the value of the first matched key.
+        For more precise operations consider using get_by_key_path().
 
         I.e:
 
@@ -147,7 +146,7 @@ class LinkedData:
                     new.extend(v for v in node.values() if isinstance(v, dict))
                 return search_recursive(new, current_depth + 1) if new else None
 
-        return search_recursive(self._ld_by_type.values(), 0)
+        return search_recursive(self._ld_by_type.values(), 0) or default
 
     def __repr__(self):
         return f"LD containing '{', '.join(content)}'" if (content := self._contains) else "Empty LD"
