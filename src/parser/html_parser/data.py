@@ -1,4 +1,5 @@
 from abc import ABC
+from collections import UserList
 from dataclasses import dataclass, fields
 from typing import (
     Any,
@@ -10,7 +11,7 @@ from typing import (
     Optional,
     Sequence,
     Tuple,
-    overload,
+    overload, Union,
 )
 
 from src.logging.logger import basic_logger
@@ -20,7 +21,7 @@ _displayed_deprecation_info = False
 
 class LinkedData:
     def __init__(self, lds: Iterable[Dict[str, Any]] = ()):
-        self._ld_by_type: Dict[str, Dict[str, Any]] = {}
+        self._ld_by_type: Dict[str, Union[List[Dict[str, Any]], Dict[str, Any]]] = {}
 
         for ld in lds:
             if graph := ld.get('@graph'):
@@ -36,10 +37,12 @@ class LinkedData:
 
     def _add_ld(self, ld: Dict[str, Any]) -> None:
         if ld_type := ld.get("@type"):
-            if not self._ld_by_type.get(ld_type):
-                self._ld_by_type[ld_type] = ld
+            if value := self._ld_by_type.get(ld_type):
+                if not isinstance(value, list):
+                    self._ld_by_type[ld_type] = [value]
+                self._ld_by_type[ld_type].append(ld)
             else:
-                raise KeyError(f"Found multiple LDs with same type '{ld_type}'")
+                self._ld_by_type[ld_type] = ld
         else:
             raise ValueError(f"Found no type for LD")
 
@@ -66,6 +69,8 @@ class LinkedData:
         for name, ld in sorted(self._ld_by_type.items(), key=lambda t: t[0]):
             if not name:
                 raise NotImplementedError("Currently this function does not support lds without types")
+            elif isinstance(ld, list):
+                continue
             elif value := ld.get(key):
                 return value
         return default
@@ -135,7 +140,9 @@ class LinkedData:
             else:
                 new: List[Dict[str, Any]] = []
                 for node in nodes:
-                    if value := node.get(key):
+                    if isinstance(node, list):
+                        new.extend(node)
+                    elif value := node.get(key):
                         return value
                     new.extend(v for v in node.values() if isinstance(v, dict))
                 return search_recursive(new, current_depth + 1) if new else None
