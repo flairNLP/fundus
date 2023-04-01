@@ -47,8 +47,7 @@ class APNewsParser(BaseParser):
 
     @attribute
     def title(self) -> Optional[str]:
-        title: str = self.precomputed.ld.get_value_by_key_path(["NewsArticle", "headline"])
-        return title
+        return self.precomputed.ld.get_value_by_key_path(["NewsArticle", "headline"])
 
     @attribute
     def topics(self) -> List[str]:

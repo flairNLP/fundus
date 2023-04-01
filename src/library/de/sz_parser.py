@@ -30,7 +30,7 @@ class SZParser(BaseParser):
 
     @attribute
     def title(self) -> Optional[str]:
-        return self.precomputed.ld.get("headline")
+        return self.precomputed.ld.bf_search("headline")
 
     @attribute
     def topics(self) -> List[str]:
