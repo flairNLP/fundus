@@ -9,12 +9,15 @@ from typing import Callable, Dict, Generator, Iterable, Iterator, List, Optional
 import feedparser
 import lxml.html
 import requests
+from requests import HTTPError
 
 from src.logging.logger import basic_logger
 from src.scraping.article import ArticleSource
 
 
 class Source(Iterable[str], ABC):
+    request_header = {"user-agent": "Mozilla/5.0"}
+
     def __init__(
         self, publisher: Optional[str], delay: Optional[Callable[[], float]] = None, max_threads: Optional[int] = 10
     ):
@@ -30,14 +33,20 @@ class Source(Iterable[str], ABC):
         """
         raise NotImplementedError
 
-    def _batched_fetch(self) -> Generator[List[ArticleSource], int, None]:
+    def _batched_fetch(self) -> Generator[List[Optional[ArticleSource]], int, None]:
         with requests.Session() as session:
-            it = iter(self)
 
-            def thread(url: str) -> ArticleSource:
+            def thread(url: str) -> Optional[ArticleSource]:
                 if self.delay:
                     sleep(self.delay())
-                response = session.get(url=url)
+                try:
+                    response = session.get(url=url, headers=self.request_header)
+                    response.raise_for_status()
+                except HTTPError as error:
+                    basic_logger.info(f"Skipped {url} because of {error}")
+                    return None
+                if history := response.history:
+                    basic_logger.info(f"Got redirected {len(history)} time(s) from {url} -> {response.url}")
                 article_source = ArticleSource(
                     url=response.url,
                     html=response.text,
@@ -47,8 +56,9 @@ class Source(Iterable[str], ABC):
                 )
                 return article_source
 
-            empty = False
             with ThreadPool(processes=self.max_threads) as pool:
+                it = iter(self)
+                empty = False
                 while not empty:
                     current_size = batch_size = yield  # type: ignore
                     batch_urls = []
@@ -66,7 +76,7 @@ class Source(Iterable[str], ABC):
         while True:
             try:
                 next(gen)
-                yield from gen.send(batch_size)
+                yield from filter(lambda x: bool(x), gen.send(batch_size))
             except StopIteration:
                 break
 
@@ -90,7 +100,7 @@ class RSSSource(Source):
             content = session.get(self.url).content
             rss_feed = feedparser.parse(content)
             if exception := rss_feed.get("bozo_exception"):
-                basic_logger.info(f"Warning! Couldn't parse rss feed at {self.url}. Exception: {exception}")
+                basic_logger.warning(f"Warning! Couldn't parse rss feed at {self.url}. Exception: {exception}")
                 return iter(())
             else:
                 return (entry["link"] for entry in rss_feed["entries"])
@@ -98,7 +108,7 @@ class RSSSource(Source):
 
 class _ArchiveDecompressor:
     def __init__(self):
-        self.archive_mapping: Dict[str, Callable[[bytes], bytes]] = {"gz": self._decompress_gzip}
+        self.archive_mapping: Dict[str, Callable[[bytes], bytes]] = {"application/x-gzip": self._decompress_gzip}
 
     @staticmethod
     def _decompress_gzip(compressed_content: bytes) -> bytes:
@@ -141,9 +151,15 @@ class SitemapSource(Source):
 
     def __iter__(self) -> Iterator[str]:
         def yield_recursive(url: str):
-            content = session.get(url).content
-            if supported_file_format := self._get_archive_format(url):
-                content = self._decompressor.decompress(content, supported_file_format)
+            try:
+                response = session.get(url=url, headers=self.request_header)
+                response.raise_for_status()
+            except (HTTPError, ConnectionError) as error:
+                basic_logger.warning(f"Warning! Couldn't reach sitemap {url} so skipped it. Exception: {error}")
+                return
+            content = response.content
+            if (content_type := response.headers.get("Content-Type")) in self._decompressor.supported_file_formats:
+                content = self._decompressor.decompress(content, content_type)
             tree = lxml.html.fromstring(content)
             urls = [node.text_content() for node in tree.cssselect("url > loc")]
             yield from reversed(urls) if self.reverse else urls

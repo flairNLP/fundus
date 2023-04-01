@@ -4,7 +4,18 @@ from copy import copy
 from dataclasses import dataclass, field
 from datetime import datetime
 from functools import total_ordering
-from typing import Dict, List, Literal, Optional, Union, cast
+from typing import (
+    AnyStr,
+    Callable,
+    Dict,
+    List,
+    Literal,
+    Match,
+    Optional,
+    Pattern,
+    Union,
+    cast,
+)
 
 import dateutil.tz
 import lxml.html
@@ -92,7 +103,7 @@ def extract_article_body_with_selector(
 
 
 def get_meta_content(tree: lxml.html.HtmlElement) -> Dict[str, str]:
-    meta_node_selector = "head > meta[name], head > meta[property]"
+    meta_node_selector = "meta[name], meta[property]"
     meta_nodes = tree.cssselect(meta_node_selector)
     meta: Dict[str, str] = {}
     for node in meta_nodes:
@@ -107,6 +118,12 @@ def strip_nodes_to_text(text_nodes: List[lxml.html.HtmlElement]) -> Optional[str
     if not text_nodes:
         return None
     return "\n\n".join(([re.sub(r"\n+", " ", node.text_content()) for node in text_nodes])).strip()
+
+
+def apply_substitution_pattern_over_list(
+    input_list: List[str], pattern: Pattern[str], replacement: Union[str, Callable[[Match[str]], str]] = ""
+) -> List[str]:
+    return [subbed for text in input_list if (subbed := re.sub(pattern, replacement, text).strip())]
 
 
 def generic_author_parsing(
@@ -164,5 +181,5 @@ _tzs = ["CET", "CEST"]
 _tz_infos = {tz: dateutil.tz.gettz(tz) for tz in _tzs}
 
 
-def generic_date_parsing(date_str: str) -> Optional[datetime]:
+def generic_date_parsing(date_str: Optional[str]) -> Optional[datetime]:
     return parser.parse(date_str, tzinfos=_tz_infos) if date_str else None
