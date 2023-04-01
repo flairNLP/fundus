@@ -33,5 +33,5 @@ class TazParser(BaseParser):
         return generic_date_parsing(self.precomputed.meta.get("article:published_time"))
 
     @attribute
-    def topics(self) -> Optional[List[str]]:
+    def topics(self) -> List[str]:
         return generic_topic_parsing(self.precomputed.meta.get("keywords"))
