@@ -13,7 +13,7 @@ from src.parser.html_parser.utility import (
 
 
 class MDRParser(BaseParser):
-    _author_substitution_pattern: Pattern[str] = re.compile(r"MDR \w*$|MDR \w*-\w*$|MDRfragt-Redaktionsteam|von")
+    _author_substitution_pattern: Pattern[str] = re.compile(r"MDR \w*$|MDR \w*-\w*$|MDRfragt-Redaktionsteam|^von")
 
     @attribute
     def body(self) -> ArticleBody:
