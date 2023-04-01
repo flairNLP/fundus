@@ -1,13 +1,17 @@
 {
   "title": "Libanon: (Wirtschafts-)Krise ohne Ende",
-  "authors" :["Diana Hodali"],
-  "topics": ["Libanon",
- "Beirut",
- "Wirtschaftskrise",
- "Finanzkrise",
- "Dollar",
- "Libanesische Lira",
- "Libanesische Pfund",
- "Korruption",
- "Reformen"]
+  "authors": [
+    "Diana Hodali"
+  ],
+  "topics": [
+    "Libanon",
+    "Beirut",
+    "Wirtschaftskrise",
+    "Finanzkrise",
+    "Dollar",
+    "Libanesische Lira",
+    "Libanesische Pfund",
+    "Korruption",
+    "Reformen"
+  ]
 }
