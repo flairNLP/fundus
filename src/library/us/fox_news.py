@@ -27,7 +27,7 @@ class FoxNewsParser(BaseParser):
         return generic_date_parsing(self.precomputed.ld.get("datePublished"))
 
     @attribute
-    def title(self):
+    def title(self) -> Optional[str]:
         return self.precomputed.ld.get("headline")
 
     @attribute
