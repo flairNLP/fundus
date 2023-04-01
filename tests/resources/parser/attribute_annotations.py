@@ -9,4 +9,5 @@ attribute_annotation_mapping: Dict[str, Union[type, object]] = {
     "authors": List[str],
     "publishing_date": Optional[datetime],
     "topics": List[str],
+    "key_points": List[str],
 }
