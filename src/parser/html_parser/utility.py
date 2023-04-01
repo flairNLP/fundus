@@ -4,7 +4,18 @@ from copy import copy
 from dataclasses import dataclass, field
 from datetime import datetime
 from functools import total_ordering
-from typing import Dict, List, Literal, Optional, Pattern, Union, cast
+from typing import (
+    AnyStr,
+    Callable,
+    Dict,
+    List,
+    Literal,
+    Match,
+    Optional,
+    Pattern,
+    Union,
+    cast,
+)
 
 import dateutil.tz
 import lxml.html
@@ -109,10 +120,10 @@ def strip_nodes_to_text(text_nodes: List[lxml.html.HtmlElement]) -> Optional[str
     return "\n\n".join(([re.sub(r"\n+", " ", node.text_content()) for node in text_nodes])).strip()
 
 
-def apply_substitution_pattern_over_list(input_list: List[str], sub_pattern: Pattern[str]) -> List[str]:
-    cleaned_list = [re.sub(sub_pattern, "", el).strip() for el in input_list]
-    cleaned_list = [el for el in cleaned_list if el]
-    return cleaned_list
+def apply_substitution_pattern_over_list(
+    input_list: List[str], pattern: Pattern[str], replacement: Union[str, Callable[[Match[str]], str]] = ""
+) -> List[str]:
+    return [subbed for text in input_list if (subbed := re.sub(pattern, replacement, text).strip())]
 
 
 def generic_author_parsing(
