@@ -1,0 +1,42 @@
+import datetime
+from typing import List, Optional
+
+from src.parser.html_parser import ArticleBody, BaseParser, attribute
+from src.parser.html_parser.data import TextSequence
+from src.parser.html_parser.utility import (
+    extract_article_body_with_selector,
+    generic_author_parsing,
+    generic_date_parsing,
+    generic_topic_parsing,
+)
+
+
+class CNBCParser(BaseParser):
+    @attribute
+    def body(self) -> ArticleBody:
+        body: ArticleBody = extract_article_body_with_selector(
+            self.precomputed.doc,
+            subheadline_selector="div[data-module = 'ArticleBody'] > h2",
+            paragraph_selector="div.group > p",
+            mode="css",
+        )
+        description: Optional[str] = self.precomputed.meta.get("og:description")
+        if description is not None:
+            body.summary = TextSequence(texts=(description,))
+        return body
+
+    @attribute
+    def authors(self) -> List[str]:
+        return generic_author_parsing(self.precomputed.ld.get("author"))
+
+    @attribute
+    def publishing_date(self) -> Optional[datetime.datetime]:
+        return generic_date_parsing(self.precomputed.ld.get("datePublished"))
+
+    @attribute
+    def title(self):
+        return self.precomputed.ld.get("headline")
+
+    @attribute
+    def topics(self) -> List[str]:
+        return generic_topic_parsing(self.precomputed.meta.get("keywords"))
