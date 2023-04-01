@@ -57,7 +57,7 @@ class TestParser:
         parser = publisher.parser()
 
         # enforce test coverage
-        attrs_required_to_cover = {"title", 'authors', 'topics'}
+        attrs_required_to_cover = {"title", "authors", "topics"}
         supported_attrs = set(parser.attributes().names)
         missing_attrs = attrs_required_to_cover & supported_attrs - set(comparative_data.keys())
         assert not missing_attrs, f"Test JSON does not cover the following attribute(s): {missing_attrs}"
