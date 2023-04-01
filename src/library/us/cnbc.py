@@ -14,7 +14,6 @@ from src.parser.html_parser.utility import (
 
 
 class CNBCParser(BaseParser):
-
     _key_points_selector: CSSSelector = CSSSelector("div.RenderKeyPoints-list li")
 
     @attribute
