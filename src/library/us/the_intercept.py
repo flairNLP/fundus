@@ -19,6 +19,7 @@ class TheInterceptParser(BaseParser):
             # The Intercept uses `p` tags for the article's paragraphs, image captions and photo grid descriptions.
             # Since we are only interested in the article's paragraphs,
             # we exclude the other elements from the paragraph selector.
+            # Example article: https://theintercept.com/2023/04/01/israel-palestine-apartheid-settlements/
             paragraph_selector="div.PostContent > div > p:not(p.caption):not(p.PhotoGrid-description)",
             mode="css",
         )
