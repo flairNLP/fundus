@@ -43,6 +43,9 @@ class TheInterceptParser(BaseParser):
 
     @attribute
     def topics(self) -> List[str]:
+        # The Intercept specifies the article's topics, including other metadata,
+        # inside the "keywords" linked data indicated by a "Subject: " prefix.
+        # Example keywords: ["Day: Saturday", ..., "Subject: World", ...]
         return [
             keyword[9:]  # Strip "Subject: "
             for keyword in self.precomputed.ld.get_value_by_key_path(["NewsArticle", "keywords"])
