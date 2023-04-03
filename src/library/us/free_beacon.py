@@ -38,4 +38,6 @@ class FreeBeaconParser(BaseParser):
 
     @attribute
     def topics(self) -> List[str]:
-        return self.precomputed.ld.bf_search("keywords")
+        topics = self.precomputed.ld.bf_search("keywords")
+        assert isinstance(topics, list)
+        return topics
