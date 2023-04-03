@@ -106,7 +106,7 @@ class DE(PublisherEnum):
         news_map="https://www.dw.com/de/news-sitemap.xml",
         parser=DWParser,
     )
-    Ndr = PublisherSpec(
+    NDR = PublisherSpec(
         domain="https://www.ndr.de/",
         news_map="https://www.ndr.de/sitemap112-newssitemap.xml",
         parser=NdrParser,
