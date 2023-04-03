@@ -37,7 +37,7 @@ from src.library.collection import PublisherCollection
 from src.scraping.pipeline import Crawler
 
 # initialize the crawler for German-language news
-pipeline = Crawler(PublisherCollection.de_de)
+pipeline = Crawler(PublisherCollection.de)
 
 # crawl 2 articles and print
 for article in pipeline.crawl(max_articles=2):
@@ -73,7 +73,7 @@ from src.library.collection import PublisherCollection
 from src.scraping.pipeline import Crawler
 
 # initialize the crawler for German-language news
-pipeline = Crawler(PublisherCollection.de_de.BerlinerZeitung)
+pipeline = Crawler(PublisherCollection.de.BerlinerZeitung)
 
 # crawl 5 articles and print
 for article in pipeline.crawl(max_articles=5):

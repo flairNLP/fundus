@@ -7,7 +7,7 @@ from typing import Any, Callable, Dict, List, Optional
 
 from colorama import Fore, Style
 
-from src.parser.html_parser import ArticleBody, LinkedData
+from src.parser.html_parser import ArticleBody, LinkedDataMapping
 
 
 @dataclass(frozen=True)
@@ -80,11 +80,11 @@ class Article(BaseArticle):
         return self.extracted.get("authors", []) if self.extracted else []
 
     @property
-    def ld(self) -> Optional[LinkedData]:
+    def ld(self) -> Optional[LinkedDataMapping]:
         return self.extracted.get("ld") if self.extracted else None
 
     @property
-    def meta(self):
+    def meta(self) -> Optional[Dict[str, Any]]:
         return self.extracted.get("meta") if self.extracted else None
 
     def __str__(self):

@@ -10,14 +10,14 @@ from src.parser.html_parser.utility import (
 )
 
 
-class DieZeitParser(BaseParser):
+class SZParser(BaseParser):
     @attribute
     def body(self) -> ArticleBody:
         return extract_article_body_with_selector(
             self.precomputed.doc,
-            summary_selector="div.summary",
-            subheadline_selector="div.article-page > h2",
-            paragraph_selector="div.article-page > p",
+            summary_selector='main [data-manual="teaserText"]',
+            subheadline_selector='main [itemprop="articleBody"] > h3',
+            paragraph_selector='main [itemprop="articleBody"] > p, ' "main .css-korpch > div > ul > li",
         )
 
     @attribute
@@ -29,9 +29,9 @@ class DieZeitParser(BaseParser):
         return generic_date_parsing(self.precomputed.ld.bf_search("datePublished"))
 
     @attribute
-    def title(self):
+    def title(self) -> Optional[str]:
         return self.precomputed.ld.bf_search("headline")
 
     @attribute
     def topics(self) -> List[str]:
-        return generic_topic_parsing(self.precomputed.meta.get("keywords"))
+        return generic_topic_parsing(self.precomputed.ld.bf_search("keywords"))
