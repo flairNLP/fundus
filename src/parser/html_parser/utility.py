@@ -115,7 +115,7 @@ def extract_article_body_with_selector_precompiled(
         if not selector and node_type:
             raise ValueError("Both a selector and node type are required")
 
-        return [Node(df_idx_by_ref[element], element, node_type) for element in selector.evaluate(doc)]
+        return [Node(df_idx_by_ref[element], element, node_type) for element in selector(doc)]
 
     summary_nodes = extract_nodes(summary_selector, "S") if summary_selector else []
     subhead_nodes = extract_nodes(subheadline_selector, "H") if subheadline_selector else []
