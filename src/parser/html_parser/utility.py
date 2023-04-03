@@ -5,7 +5,6 @@ from dataclasses import dataclass, field
 from datetime import datetime
 from functools import total_ordering
 from typing import (
-    AnyStr,
     Callable,
     Dict,
     List,
