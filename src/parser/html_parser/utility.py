@@ -5,7 +5,6 @@ from dataclasses import dataclass, field
 from datetime import datetime
 from functools import total_ordering
 from typing import (
-    AnyStr,
     Callable,
     Dict,
     List,
@@ -21,6 +20,7 @@ import dateutil.tz
 import lxml.html
 import more_itertools
 from dateutil import parser
+from lxml.etree import XPath
 
 from src.parser.html_parser.data import ArticleBody, ArticleSection, TextSequence
 
@@ -73,6 +73,49 @@ def extract_article_body_with_selector(
             return [Node(df_idx_by_ref[element], element, node_type) for element in doc.cssselect(selector)]
         else:
             return [Node(df_idx_by_ref[element], element, node_type) for element in doc.xpath(selector)]
+
+    summary_nodes = extract_nodes(summary_selector, "S") if summary_selector else []
+    subhead_nodes = extract_nodes(subheadline_selector, "H") if subheadline_selector else []
+    paragraph_nodes = extract_nodes(paragraph_selector, "P")
+    nodes = sorted(summary_nodes + subhead_nodes + paragraph_nodes)
+
+    striped_nodes = [node for node in nodes if node.striped()]
+
+    instructions = more_itertools.split_when(striped_nodes, pred=lambda x, y: x.type != y.type)
+
+    if not summary_nodes:
+        instructions = more_itertools.prepend([], instructions)
+
+    if not subhead_nodes or (paragraph_nodes and subhead_nodes[0] > paragraph_nodes[0]):
+        first = next(instructions)
+        instructions = itertools.chain([first, []], instructions)
+
+    summary = TextSequence(map(lambda x: x.striped("\n"), next(instructions)))
+    sections: List[ArticleSection] = []
+
+    for chunk in more_itertools.chunked(instructions, 2):
+        if len(chunk) == 1:
+            chunk.append([])
+        texts = [list(map(lambda x: x.striped("\n"), c)) for c in chunk]
+        sections.append(ArticleSection(*map(TextSequence, texts)))
+
+    return ArticleBody(summary=summary, sections=sections)
+
+
+def extract_article_body_with_selector_precompiled(
+    doc: lxml.html.HtmlElement,
+    paragraph_selector: XPath,
+    summary_selector: Optional[XPath] = None,
+    subheadline_selector: Optional[XPath] = None,
+) -> ArticleBody:
+    # depth first index for each element in tree
+    df_idx_by_ref = {element: i for i, element in enumerate(doc.iter())}
+
+    def extract_nodes(selector: XPath, node_type: str) -> List[Node]:
+        if not selector and node_type:
+            raise ValueError("Both a selector and node type are required")
+
+        return [Node(df_idx_by_ref[element], element, node_type) for element in selector.evaluate(doc)]
 
     summary_nodes = extract_nodes(summary_selector, "S") if summary_selector else []
     subhead_nodes = extract_nodes(subheadline_selector, "H") if subheadline_selector else []
