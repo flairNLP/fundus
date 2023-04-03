@@ -14,7 +14,7 @@ from .spon_parser import SPONParser
 from .stern_parser import SternParser
 from .sz_parser import SZParser
 from .tagesschau_parser import TagesschauParser
-from .waz_parser import WazParser
+from .waz_parser import WAZParser
 
 
 # noinspection PyPep8Naming
@@ -116,5 +116,5 @@ class DE(PublisherEnum):
     WAZ = PublisherSpec(
         domain="https://www.waz.de/",
         news_map="https://www.waz.de/sitemaps/news.xml",
-        parser=WazParser,
+        parser=WAZParser,
     )

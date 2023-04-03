@@ -10,7 +10,7 @@ from src.parser.html_parser.utility import (
 )
 
 
-class WazParser(BaseParser):
+class WAZParser(BaseParser):
     @attribute
     def body(self) -> ArticleBody:
         return extract_article_body_with_selector(
