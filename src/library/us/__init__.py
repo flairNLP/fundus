@@ -2,6 +2,7 @@ from src.library.collection.base_objects import PublisherEnum, PublisherSpec
 
 from .ap_news import APNewsParser
 from .fox_news import FoxNewsParser
+from .the_gateway_pundit import TheGatewayPunditParser
 
 
 class US(PublisherEnum):
@@ -10,6 +11,13 @@ class US(PublisherEnum):
         sitemaps=["https://apnews.com/sitemap/sitemaps/sitemap_index.xml"],
         news_map="https://apnews.com/sitemap/google-news-sitemap/sitemap_index.xml",
         parser=APNewsParser,
+    )
+
+    TheGatewayPundit = PublisherSpec(
+        domain="https://www.thegatewaypundit.com/",
+        sitemaps=["https://www.thegatewaypundit.com/sitemap_index.xml"],
+        news_map="https://www.thegatewaypundit.com/news-sitemap.xml",
+        parser=TheGatewayPunditParser,
     )
 
     FoxNews = PublisherSpec(
