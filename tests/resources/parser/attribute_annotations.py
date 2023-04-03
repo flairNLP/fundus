@@ -12,8 +12,8 @@ from doc import docs_path
 @lru_cache
 def parse_annotations() -> Dict[str, Union[type, object]]:
     # There is no need to import these objects locally rather than globally, but we need to import them nonetheless.
-    # We do it locally to get noinspection for the function scope
-    # We have to so eval() can link the objects
+    # We have to so eval() can link the objects with either globals() or locals()
+    # We do it locally to get noinspection on the function scope
     from datetime import datetime
     from typing import Optional
 
@@ -28,6 +28,6 @@ def parse_annotations() -> Dict[str, Union[type, object]]:
         content = file.read()
 
     root = lxml.html.fromstring(content)
-    row_nodes: List[lxml.html.HtmlElement] = root.xpath("//tr[position() > 1]")
+    row_nodes: List[lxml.html.HtmlElement] = root.xpath("//table[@class='annotations']/tr[position() > 1]")
     rows = [tuple(child.text_content() for child in node.iterchildren()) for node in row_nodes]
     return {name: eval(annotation, globals(), local_ns) for name, _, annotation in rows}

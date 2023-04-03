@@ -6,7 +6,7 @@ this library, please ensure that these attributes are named consistently.
 
 ## Attributes table
 
-<table>
+<table class="annotations">
     <tr>
         <th>Name</th>
         <th>Description</th>
