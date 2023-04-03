@@ -33,8 +33,5 @@ class FreeBeaconParser(BaseParser):
 
     @attribute
     def topics(self) -> List[str]:
-        topics = self.precomputed.ld.bf_search("keywords")
-        if not topics:
-            return []
-        assert isinstance(topics, list)
-        return topics
+        topics: Optional[List[str]] = self.precomputed.ld.bf_search("keywords")
+        return topics if topics else []
