@@ -11,6 +11,9 @@ from doc import docs_path
 # noinspection PyUnresolvedReferences
 @lru_cache
 def parse_annotations() -> Dict[str, Union[type, object]]:
+    # There is no need to import these objects locally rather than globally, but we need to import them nonetheless.
+    # We do it locally to get noinspection for the function scope
+    # We have to so eval() can link the objects
     from datetime import datetime
     from typing import Optional
 
