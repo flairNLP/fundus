@@ -19,8 +19,11 @@ class US(PublisherEnum):
         news_map="https://www.foxnews.com/sitemap.xml?type=news",
         parser=FoxNewsParser,
     )
+
     WashingtonTimes = PublisherSpec(
         domain="https://www.washingtontimes.com/",
         rss_feeds=["https://www.washingtontimes.com/rss/headlines/news/politics/"],
+        sitemaps=["https://www.washingtontimes.com/sitemap-stories.xml",
+                  "https://www.washingtontimes.com/sitemap-entries.xml"],
         parser=WashingtonTimesParser,
     )
