@@ -12,7 +12,6 @@ from src.parser.html_parser.utility import (
 
 
 class FreeBeaconParser(BaseParser):
-    _author_selector: XPath = XPath(f"{CSSSelector('div.CardHeadline').path}/span/span[1]")
 
     @attribute
     def body(self) -> ArticleBody:
