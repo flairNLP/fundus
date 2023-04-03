@@ -10,7 +10,7 @@ from .faz_parser import FAZParser
 from .focus_parser import FocusParser
 from .mdr_parser import MDRParser
 from .merkur_parser import MerkurParser
-from .ndr_parser import NdrParser
+from .ndr_parser import NDRParser
 from .spon_parser import SPONParser
 from .stern_parser import SternParser
 from .sz_parser import SZParser
@@ -115,5 +115,5 @@ class DE(PublisherEnum):
     NDR = PublisherSpec(
         domain="https://www.ndr.de/",
         news_map="https://www.ndr.de/sitemap112-newssitemap.xml",
-        parser=NdrParser,
+        parser=NDRParser,
     )

@@ -11,7 +11,7 @@ from src.parser.html_parser.utility import (
 )
 
 
-class NdrParser(BaseParser):
+class NDRParser(BaseParser):
     @attribute
     def body(self) -> ArticleBody:
         return extract_article_body_with_selector(
