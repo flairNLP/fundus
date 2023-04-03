@@ -1,5 +1,5 @@
 from .base_parser import BaseParser, attribute, function
-from .data import ArticleBody, ArticleSection, LinkedData
+from .data import ArticleBody, ArticleSection, LinkedDataMapping
 
 __all__ = [
     "BaseParser",
@@ -7,5 +7,5 @@ __all__ = [
     "function",
     "ArticleBody",
     "ArticleSection",
-    "LinkedData",
+    "LinkedDataMapping",
 ]

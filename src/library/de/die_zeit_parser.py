@@ -1,8 +1,10 @@
 import datetime
-from typing import List, Optional
+import re
+from typing import List, Optional, Pattern
 
 from src.parser.html_parser import ArticleBody, BaseParser, attribute
 from src.parser.html_parser.utility import (
+    apply_substitution_pattern_over_list,
     extract_article_body_with_selector,
     generic_author_parsing,
     generic_date_parsing,
@@ -10,17 +12,23 @@ from src.parser.html_parser.utility import (
 )
 
 
-class FoxNewsParser(BaseParser):
+class DieZeitParser(BaseParser):
+    _author_substitution_pattern: Pattern[str] = re.compile(r"DIE ZEIT (Archiv)")
+
     @attribute
     def body(self) -> ArticleBody:
         return extract_article_body_with_selector(
             self.precomputed.doc,
-            paragraph_selector=".article-body > p",
+            summary_selector="div.summary",
+            subheadline_selector="div.article-page > h2",
+            paragraph_selector="div.article-page > p",
         )
 
     @attribute
     def authors(self) -> List[str]:
-        return generic_author_parsing(self.precomputed.meta.get("dc.creator"))
+        return apply_substitution_pattern_over_list(
+            generic_author_parsing(self.precomputed.ld.bf_search("author")), self._author_substitution_pattern
+        )
 
     @attribute
     def publishing_date(self) -> Optional[datetime.datetime]:
@@ -32,4 +40,4 @@ class FoxNewsParser(BaseParser):
 
     @attribute
     def topics(self) -> List[str]:
-        return generic_topic_parsing(self.precomputed.meta.get("classification-tags"))
+        return generic_topic_parsing(self.precomputed.meta.get("keywords"))
