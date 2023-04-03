@@ -22,7 +22,8 @@ class SternParser(BaseParser):
 
     @attribute
     def authors(self) -> List[str]:
-        return generic_author_parsing(self.precomputed.ld.bf_search("author"))
+        initial_authors = generic_author_parsing(self.precomputed.ld.bf_search("author"))
+        return [el for el in initial_authors if el != "STERN.de"]
 
     @attribute
     def publishing_date(self) -> Optional[datetime.datetime]:
