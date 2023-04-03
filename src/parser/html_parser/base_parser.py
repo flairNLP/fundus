@@ -21,7 +21,7 @@ from typing import (
 import lxml.html
 import more_itertools
 
-from src.parser.html_parser.data import LinkedData
+from src.parser.html_parser.data import LinkedDataMapping
 from src.parser.html_parser.utility import get_meta_content
 
 
@@ -121,7 +121,7 @@ class Precomputed:
     html: str
     doc: lxml.html.HtmlElement
     meta: Dict[str, str]
-    ld: LinkedData
+    ld: LinkedDataMapping
     cache: Dict[str, Any] = field(default_factory=dict)
 
 
@@ -158,7 +158,7 @@ class BaseParser(ABC):
         ld_nodes = doc.xpath("//script[@type='application/ld+json']")
         lds = [json.loads(node.text_content()) for node in ld_nodes]
         collapsed_lds = more_itertools.collapse(lds, base_type=dict)
-        self.precomputed = Precomputed(html, doc, get_meta_content(doc), LinkedData(collapsed_lds))
+        self.precomputed = Precomputed(html, doc, get_meta_content(doc), LinkedDataMapping(collapsed_lds))
 
     def parse(self, html: str, error_handling: Literal["suppress", "catch", "raise"] = "raise") -> Dict[str, Any]:
         # wipe existing precomputed
@@ -198,5 +198,5 @@ class BaseParser(ABC):
         return self.precomputed.meta
 
     @attribute
-    def __ld(self) -> Optional[LinkedData]:
+    def __ld(self) -> Optional[LinkedDataMapping]:
         return self.precomputed.ld
