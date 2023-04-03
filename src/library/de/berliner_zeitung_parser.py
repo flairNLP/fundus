@@ -7,10 +7,10 @@ from lxml.etree import XPath
 from src.parser.html_parser import ArticleBody, BaseParser, attribute
 from src.parser.html_parser.utility import (
     extract_article_body_with_selector,
+    extract_article_body_with_selector_precompiled,
     generic_author_parsing,
     generic_date_parsing,
     generic_topic_parsing,
-    extract_article_body_with_selector_precompiled,
 )
 
 

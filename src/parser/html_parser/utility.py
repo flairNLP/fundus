@@ -4,17 +4,7 @@ from copy import copy
 from dataclasses import dataclass, field
 from datetime import datetime
 from functools import total_ordering
-from typing import (
-    Callable,
-    Dict,
-    List,
-    Literal,
-    Match,
-    Optional,
-    Pattern,
-    Union,
-    cast,
-)
+from typing import Callable, Dict, List, Literal, Match, Optional, Pattern, Union, cast
 
 import dateutil.tz
 import lxml.html
