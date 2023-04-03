@@ -16,7 +16,7 @@ class NdrParser(BaseParser):
     def body(self) -> ArticleBody:
         return extract_article_body_with_selector(
             self.precomputed.doc,
-            paragraph_selector=".modulepadding > p",
+            paragraph_selector=".modulepadding > p, .modulepadding > ol > li",
             summary_selector=".preface",
             subheadline_selector=".modulepadding > h2",
         )
