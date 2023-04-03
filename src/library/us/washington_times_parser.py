@@ -19,12 +19,12 @@ class WashingtonTimesParser(BaseParser):
 
     @attribute
     def authors(self) -> List[str]:
-        return generic_author_parsing(self.precomputed.ld.get("author"))
+        return generic_author_parsing(self.precomputed.ld.bf_search("author"))
 
     @attribute
     def publishing_date(self) -> Optional[datetime.datetime]:
-        return generic_date_parsing(self.precomputed.ld.get("datePublished"))
+        return generic_date_parsing(self.precomputed.ld.bf_search("datePublished"))
 
     @attribute
     def title(self) -> Optional[str]:
-        return self.precomputed.ld.get("headline")
+        return self.precomputed.ld.bf_search("headline")
