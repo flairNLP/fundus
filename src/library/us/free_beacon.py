@@ -12,7 +12,6 @@ from src.parser.html_parser.utility import (
 
 
 class FreeBeaconParser(BaseParser):
-
     @attribute
     def body(self) -> ArticleBody:
         return extract_article_body_with_selector(
@@ -35,5 +34,7 @@ class FreeBeaconParser(BaseParser):
     @attribute
     def topics(self) -> List[str]:
         topics = self.precomputed.ld.bf_search("keywords")
+        if not topics:
+            return []
         assert isinstance(topics, list)
         return topics
