@@ -1,8 +1,10 @@
 import datetime
-from typing import List, Optional
+import re
+from typing import List, Optional, Pattern
 
 from src.parser.html_parser import ArticleBody, BaseParser, attribute
 from src.parser.html_parser.utility import (
+    apply_substitution_pattern_over_list,
     extract_article_body_with_selector,
     generic_date_parsing,
     generic_text_extraction_with_css,
@@ -11,6 +13,8 @@ from src.parser.html_parser.utility import (
 
 
 class MDRParser(BaseParser):
+    _author_substitution_pattern: Pattern[str] = re.compile(r"MDR \w*$|MDR \w*-\w*$|MDRfragt-Redaktionsteam|^von")
+
     @attribute
     def body(self) -> ArticleBody:
         return extract_article_body_with_selector(
@@ -30,9 +34,11 @@ class MDRParser(BaseParser):
 
     @attribute
     def authors(self) -> List[str]:
-        if author := generic_text_extraction_with_css(self.precomputed.doc, ".articleMeta > .author"):
-            cleaned_author = author.replace("von", "").replace(" und ", ", ")
-            return [name.strip() for name in cleaned_author.split(",")]
+        if raw_author_str := generic_text_extraction_with_css(self.precomputed.doc, ".articleMeta > .author"):
+            raw_author_str = raw_author_str.replace(" und ", ", ")
+            author_list = [name.strip() for name in raw_author_str.split(",")]
+            return apply_substitution_pattern_over_list(author_list, self._author_substitution_pattern)
+
         return []
 
     @attribute
