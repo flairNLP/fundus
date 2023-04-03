@@ -15,21 +15,14 @@ class WorldTruthParser(BaseParser):
     def body(self) -> ArticleBody:
         return extract_article_body_with_selector(
             self.precomputed.doc,
-            paragraph_selector=".article-body > p",
+            paragraph_selector=".td-post-content > p",
         )
 
     @attribute
-    def authors(self) -> List[str]:
-        return generic_author_parsing(self.precomputed.meta.get("dc.creator"))
-
-    @attribute
     def publishing_date(self) -> Optional[datetime.datetime]:
-        return generic_date_parsing(self.precomputed.ld.get("datePublished"))
+        return generic_date_parsing(self.precomputed.meta.get("article:published_time"))
 
     @attribute
-    def title(self):
-        return self.precomputed.ld.get("headline")
+    def title(self)->Optional[str]:
+        return self.precomputed.meta.get("og:title")
 
-    @attribute
-    def topics(self) -> List[str]:
-        return generic_topic_parsing(self.precomputed.meta.get("classification-tags"))

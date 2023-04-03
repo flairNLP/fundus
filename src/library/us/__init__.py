@@ -2,6 +2,7 @@ from src.library.collection.base_objects import PublisherEnum, PublisherSpec
 
 from .ap_news import APNewsParser
 from .fox_news import FoxNewsParser
+from .world_truth import WorldTruthParser
 
 
 class US(PublisherEnum):
@@ -18,3 +19,9 @@ class US(PublisherEnum):
         news_map="https://www.foxnews.com/sitemap.xml?type=news",
         parser=FoxNewsParser,
     )
+    WorldTruth= PublisherSpec(
+        domain="https://worldtruth.tv/",
+        rss_feeds=['https://feeds.feedburner.com/ConsciousnessTv'],
+        parser=WorldTruthParser,
+    )
+
