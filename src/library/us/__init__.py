@@ -19,9 +19,8 @@ class US(PublisherEnum):
         news_map="https://www.foxnews.com/sitemap.xml?type=news",
         parser=FoxNewsParser,
     )
-    WorldTruth= PublisherSpec(
+    WorldTruth = PublisherSpec(
         domain="https://worldtruth.tv/",
-        rss_feeds=['https://feeds.feedburner.com/ConsciousnessTv'],
+        rss_feeds=["https://feeds.feedburner.com/ConsciousnessTv"],
         parser=WorldTruthParser,
     )
-

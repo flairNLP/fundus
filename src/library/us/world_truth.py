@@ -23,6 +23,5 @@ class WorldTruthParser(BaseParser):
         return generic_date_parsing(self.precomputed.meta.get("article:published_time"))
 
     @attribute
-    def title(self)->Optional[str]:
+    def title(self) -> Optional[str]:
         return self.precomputed.meta.get("og:title")
-
