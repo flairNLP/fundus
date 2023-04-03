@@ -31,7 +31,7 @@ class NdrParser(BaseParser):
 
     @attribute
     def authors(self) -> List[str]:
-        return generic_author_parsing(self.precomputed.meta.get("author"))
+        return generic_author_parsing(self.precomputed.ld.bf_search("author"))
 
     @attribute
     def title(self) -> Optional[str]:
