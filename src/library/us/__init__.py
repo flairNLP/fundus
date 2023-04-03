@@ -2,8 +2,8 @@ from src.library.collection.base_objects import PublisherEnum, PublisherSpec
 
 from .ap_news import APNewsParser
 from .fox_news import FoxNewsParser
-from .the_gateway_pundit import TheGatewayPunditParser
 from .free_beacon import FreeBeaconParser
+from .the_gateway_pundit import TheGatewayPunditParser
 
 
 class US(PublisherEnum):
