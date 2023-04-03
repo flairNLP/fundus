@@ -2,9 +2,6 @@ import re
 from datetime import datetime
 from typing import List, Optional
 
-from lxml.cssselect import CSSSelector
-from lxml.etree import XPath
-
 from src.parser.html_parser import ArticleBody, BaseParser, attribute
 from src.parser.html_parser.utility import (
     extract_article_body_with_selector,
