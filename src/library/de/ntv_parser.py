@@ -8,7 +8,7 @@ from src.parser.html_parser.utility import (
     generic_author_parsing,
     generic_date_parsing,
     generic_text_extraction_with_css,
-    generic_topic_parsing,
+    generic_topic_parsing, apply_substitution_pattern_over_list,
 )
 
 
@@ -26,8 +26,9 @@ class NtvParser(BaseParser):
     @attribute
     def authors(self) -> List[str]:
         initial_list = generic_author_parsing(self.precomputed.meta.get("author"))
-        cleaned_list = [re.sub(self._author_substitution_pattern, "", el) for el in initial_list]
-        return [el for el in cleaned_list if el]
+        return apply_substitution_pattern_over_list(initial_list, self._author_substitution_pattern)
+
+
 
     @attribute
     def publishing_date(self) -> Optional[datetime.datetime]:
