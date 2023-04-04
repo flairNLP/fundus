@@ -4,7 +4,18 @@ from copy import copy
 from dataclasses import dataclass, field
 from datetime import datetime
 from functools import total_ordering
-from typing import Callable, Dict, List, Literal, Match, Optional, Pattern, Union, cast, Type
+from typing import (
+    Callable,
+    Dict,
+    List,
+    Literal,
+    Match,
+    Optional,
+    Pattern,
+    Type,
+    Union,
+    cast,
+)
 
 import dateutil.tz
 import lxml.html
@@ -44,14 +55,18 @@ class Node:
     def __str__(self) -> str:
         return self._get_break_preserved_node().text_content()
 
+
 class SummaryNode(Node):
     pass
+
 
 class SubheadNode(Node):
     pass
 
+
 class ParagraphNode(Node):
     pass
+
 
 def extract_article_body_with_selector(
     doc: lxml.html.HtmlElement,

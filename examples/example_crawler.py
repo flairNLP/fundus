@@ -1,3 +1,5 @@
+import webbrowser
+
 from src.library.collection import PublisherCollection
 from src.scraping.pipeline import Crawler, Pipeline
 from src.scraping.scraper import Scraper
@@ -8,7 +10,7 @@ if __name__ == "__main__":
 
     de_de = PublisherCollection.de
 
-    crawler = Crawler(de_de)
+    crawler = Crawler(de_de.BerlinerZeitung)
 
     """
     Alternative usage:
@@ -26,8 +28,11 @@ if __name__ == "__main__":
         
     """
 
-    for article in crawler.crawl(max_articles=5, error_handling="raise"):
+    for article in crawler.crawl(max_articles=15, error_handling="raise"):
         print(article)
+        print(article.extracted["topics"])
+        print()
+    exit(0)
 
     # or explicitly create your own pipeline
 
