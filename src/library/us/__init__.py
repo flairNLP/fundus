@@ -5,6 +5,7 @@ from .fox_news import FoxNewsParser
 from .free_beacon import FreeBeaconParser
 from .the_gateway_pundit import TheGatewayPunditParser
 from .the_intercept import TheInterceptParser
+from .washington_times_parser import WashingtonTimesParser
 
 
 class US(PublisherEnum):
@@ -39,4 +40,14 @@ class US(PublisherEnum):
         domain="https://freebeacon.com/",
         news_map="https://freebeacon.com/post_google_news.xml",
         parser=FreeBeaconParser,
+    )
+
+    WashingtonTimes = PublisherSpec(
+        domain="https://www.washingtontimes.com/",
+        rss_feeds=["https://www.washingtontimes.com/rss/headlines/news/politics/"],
+        sitemaps=[
+            "https://www.washingtontimes.com/sitemap-stories.xml",
+            "https://www.washingtontimes.com/sitemap-entries.xml",
+        ],
+        parser=WashingtonTimesParser,
     )
