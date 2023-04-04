@@ -10,37 +10,60 @@ from typing import (
     Optional,
     Sequence,
     Tuple,
+    Union,
     overload,
 )
+
+from typing_extensions import TypeAlias
 
 from src.logging.logger import basic_logger
 
 _displayed_deprecation_info = False
 
+LDMappingValueT: TypeAlias = Union[List[Dict[str, Any]], Dict[str, Any]]
 
-class LinkedData:
+
+class LinkedDataMapping:
+    """
+    This class is a @type -> LD mapping.
+    Given LD:
+        ld_1 = {
+            @type: 'Article'
+            ...
+            ...
+        }
+    Article will be mapped to ld_1
+
+    If there are multiple LDs with the same type, this type will map to a list of LDs.
+    In this context an LD is represented as a python dict.
+    """
+
     def __init__(self, lds: Iterable[Dict[str, Any]] = ()):
-        self._ld_by_type: Dict[str, Dict[str, Any]] = {}
         for ld in lds:
-            if ld_type := ld.get("@type"):
-                self._ld_by_type[ld_type] = ld
+            if graph := ld.get("@graph"):
+                for nested in graph:
+                    self.add_ld(nested)
             else:
-                raise ValueError(f"Found no type for LD")
+                self.add_ld(ld)
 
-        for name, ld in sorted(self._ld_by_type.items(), key=lambda t: t[0]):
-            self.__dict__[name] = ld
+    def add_ld(self, ld: Dict[str, Any]) -> None:
+        if ld_type := ld.get("@type"):
+            if value := self.__dict__.get(ld_type):
+                if not isinstance(value, list):
+                    self.__dict__[ld_type] = [value]
+                self.__dict__[ld_type].append(ld)
+            else:
+                self.__dict__[ld_type] = ld
+        else:
+            raise ValueError(f"Found no type for LD")
 
-        self._contains = [ld_type for ld_type in self._ld_by_type.keys() if ld_type is not None]
-
-    def get(self, key: str, default: Any = None) -> Optional[Any]:
+    def get(self, ld_type: str, default: Any = None) -> Optional[LDMappingValueT]:
         """
-        This function acts like get() on pythons Mapping type with the difference that this method will
-        iterate through all found ld types and return the first value where <key> matches. If no match occurs,
-        <default> will be returned.
+        This function works like get() on a mapping. It will return all LDs containing
+        the given <ld_type>. If there are multiple LDs of the same '@type' this function
+        returns a list instead of a dictionary.
 
-        If there is a ld without a type, thins methode will raise a NotImplementedError
-
-        :param key: The key to search vor
+        :param ld_type: The key to search for
         :param default: The returned default if <key> is not found, default: None
         :return: The reached value or <default>
         """
@@ -52,14 +75,9 @@ class LinkedData:
                 "LinkedDate.get() will be deprecated in the future. Use .get_value_by_key_path() "
                 "or .bf_search() instead"
             )
-        for name, ld in sorted(self._ld_by_type.items(), key=lambda t: t[0]):
-            if not name:
-                raise NotImplementedError("Currently this function does not support lds without types")
-            elif value := ld.get(key):
-                return value
-        return default
+        return self.__dict__.get(ld_type, default)
 
-    def get_value_by_key_path(self, key_path: List[str], default: Any = None):
+    def get_value_by_key_path(self, key_path: List[str], default: Any = None) -> Optional[Any]:
         """
         Works like get() except this one assumes a path is given as list of keys (str).
         I.e:
@@ -73,7 +91,7 @@ class LinkedData:
         :param default: A default returned when either a key is missing or resulting in an empty/null value
         :return: The reached value or <default>
         """
-        tmp = self._ld_by_type.copy()
+        tmp = self.__dict__.copy()
         for key in key_path:
             if not (nxt := tmp.get(key)):
                 return default
@@ -118,21 +136,24 @@ class LinkedData:
         :return: The content of the first matched key or None
         """
 
-        def search_recursive(nodes: Iterable[Dict[str, Any]], current_depth: int):
+        def search_recursive(nodes: Iterable[LDMappingValueT], current_depth: int):
             if current_depth == depth:
                 return None
             else:
                 new: List[Dict[str, Any]] = []
                 for node in nodes:
-                    if value := node.get(key):
+                    if isinstance(node, list):
+                        new.extend(node)
+                        continue
+                    elif value := node.get(key):
                         return value
                     new.extend(v for v in node.values() if isinstance(v, dict))
                 return search_recursive(new, current_depth + 1) if new else None
 
-        return search_recursive(self._ld_by_type.values(), 0) or default
+        return search_recursive(self.__dict__.values(), 0) or default
 
     def __repr__(self):
-        return f"LD containing '{', '.join(content)}'" if (content := self._contains) else "Empty LD"
+        return f"LD containing '{', '.join(content)}'" if (content := self.__dict__.keys()) else "Empty LD"
 
 
 class TextSequence(Sequence[str]):
