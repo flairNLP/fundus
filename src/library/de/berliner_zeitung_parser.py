@@ -7,7 +7,7 @@ from lxml.etree import XPath
 from src.parser.html_parser import ArticleBody, BaseParser, attribute
 from src.parser.html_parser.utility import (
     extract_article_body_with_selector,
-    extract_article_body_with_selector_precompiled,
+    extract_article_body_with_selector,
     generic_author_parsing,
     generic_date_parsing,
     generic_topic_parsing,
@@ -15,16 +15,18 @@ from src.parser.html_parser.utility import (
 
 
 class BerlinerZeitungParser(BaseParser):
+    _paragraph_selector = CSSSelector("div[id=articleBody] > p")
+    _summary_selector = CSSSelector("div[id=articleBody] > p")
+    _subheadline_selector = CSSSelector("div[id=articleBody] > h2")
+
     @attribute
     def body(self) -> ArticleBody:
-        selector = CSSSelector("div[id=articleBody] > p")
-        summary_selector = CSSSelector("div[id=articleBody] > p")
-        subheadline_selector = CSSSelector("div[id=articleBody] > h2")
-        return extract_article_body_with_selector_precompiled(
+
+        return extract_article_body_with_selector(
             self.precomputed.doc,
-            paragraph_selector=selector,
-            subheadline_selector=subheadline_selector,
-            summary_selector=summary_selector,
+            paragraph_selector=self._paragraph_selector,
+            subheadline_selector=self._subheadline_selector,
+            summary_selector=self._summary_selector,
         )
 
     @attribute

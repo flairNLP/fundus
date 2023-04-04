@@ -4,7 +4,7 @@ from copy import copy
 from dataclasses import dataclass, field
 from datetime import datetime
 from functools import total_ordering
-from typing import Callable, Dict, List, Literal, Match, Optional, Pattern, Union, cast
+from typing import Callable, Dict, List, Literal, Match, Optional, Pattern, Union, cast, Type
 
 import dateutil.tz
 import lxml.html
@@ -20,7 +20,6 @@ from src.parser.html_parser.data import ArticleBody, ArticleSection, TextSequenc
 class Node:
     position: int
     node: lxml.html.HtmlElement = field(compare=False)
-    type: str = field(compare=False)
 
     def striped(self, chars: Optional[str] = None) -> str:
         return str(self).strip(chars)
@@ -45,54 +44,16 @@ class Node:
     def __str__(self) -> str:
         return self._get_break_preserved_node().text_content()
 
+class SummaryNode(Node):
+    pass
+
+class SubheadNode(Node):
+    pass
+
+class ParagraphNode(Node):
+    pass
 
 def extract_article_body_with_selector(
-    doc: lxml.html.HtmlElement,
-    paragraph_selector: str,
-    summary_selector: Optional[str] = None,
-    subheadline_selector: Optional[str] = None,
-    mode: Literal["css", "xpath"] = "css",
-) -> ArticleBody:
-    # depth first index for each element in tree
-    df_idx_by_ref = {element: i for i, element in enumerate(doc.iter())}
-
-    def extract_nodes(selector: str, node_type: str) -> List[Node]:
-        if not selector and node_type:
-            raise ValueError("Both a selector and node type are required")
-        if mode == "css":
-            return [Node(df_idx_by_ref[element], element, node_type) for element in doc.cssselect(selector)]
-        else:
-            return [Node(df_idx_by_ref[element], element, node_type) for element in doc.xpath(selector)]
-
-    summary_nodes = extract_nodes(summary_selector, "S") if summary_selector else []
-    subhead_nodes = extract_nodes(subheadline_selector, "H") if subheadline_selector else []
-    paragraph_nodes = extract_nodes(paragraph_selector, "P")
-    nodes = sorted(summary_nodes + subhead_nodes + paragraph_nodes)
-
-    striped_nodes = [node for node in nodes if node.striped()]
-
-    instructions = more_itertools.split_when(striped_nodes, pred=lambda x, y: x.type != y.type)
-
-    if not summary_nodes:
-        instructions = more_itertools.prepend([], instructions)
-
-    if not subhead_nodes or (paragraph_nodes and subhead_nodes[0] > paragraph_nodes[0]):
-        first = next(instructions)
-        instructions = itertools.chain([first, []], instructions)
-
-    summary = TextSequence(map(lambda x: x.striped("\n"), next(instructions)))
-    sections: List[ArticleSection] = []
-
-    for chunk in more_itertools.chunked(instructions, 2):
-        if len(chunk) == 1:
-            chunk.append([])
-        texts = [list(map(lambda x: x.striped("\n"), c)) for c in chunk]
-        sections.append(ArticleSection(*map(TextSequence, texts)))
-
-    return ArticleBody(summary=summary, sections=sections)
-
-
-def extract_article_body_with_selector_precompiled(
     doc: lxml.html.HtmlElement,
     paragraph_selector: XPath,
     summary_selector: Optional[XPath] = None,
@@ -101,20 +62,20 @@ def extract_article_body_with_selector_precompiled(
     # depth first index for each element in tree
     df_idx_by_ref = {element: i for i, element in enumerate(doc.iter())}
 
-    def extract_nodes(selector: XPath, node_type: str) -> List[Node]:
+    def extract_nodes(selector: XPath, node_type: Type[Node]) -> List[Node]:
         if not selector and node_type:
             raise ValueError("Both a selector and node type are required")
 
-        return [Node(df_idx_by_ref[element], element, node_type) for element in selector(doc)]
+        return [node_type(df_idx_by_ref[element], element) for element in selector(doc)]
 
-    summary_nodes = extract_nodes(summary_selector, "S") if summary_selector else []
-    subhead_nodes = extract_nodes(subheadline_selector, "H") if subheadline_selector else []
-    paragraph_nodes = extract_nodes(paragraph_selector, "P")
+    summary_nodes = extract_nodes(summary_selector, SummaryNode) if summary_selector else []
+    subhead_nodes = extract_nodes(subheadline_selector, SubheadNode) if subheadline_selector else []
+    paragraph_nodes = extract_nodes(paragraph_selector, ParagraphNode)
     nodes = sorted(summary_nodes + subhead_nodes + paragraph_nodes)
 
     striped_nodes = [node for node in nodes if node.striped()]
 
-    instructions = more_itertools.split_when(striped_nodes, pred=lambda x, y: x.type != y.type)
+    instructions = more_itertools.split_when(striped_nodes, pred=lambda x, y: x.__class__ != y.__class__)
 
     if not summary_nodes:
         instructions = more_itertools.prepend([], instructions)
