@@ -66,7 +66,7 @@ class TestParser:
     def test_annotations(self, publisher: PublisherEnum) -> None:
         parser = publisher.parser
         mapping = parse_annotations()
-        for attr in parser.attributes():
+        for attr in parser.attributes().supported:
             if annotation := mapping[attr.__name__]:
                 assert (
                         attr.__annotations__.get("return") == annotation
