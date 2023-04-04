@@ -15,7 +15,7 @@ from typing import (
     Literal,
     Optional,
     Tuple,
-    Type,
+    Type, TypeVar,
 )
 
 import lxml.html
@@ -32,7 +32,7 @@ class RegisteredFunction(ABC):
     __self__: Optional["BaseParser"]
 
     # TODO: ensure uint for priority instead of int
-    def __init__(self, func: Callable[[object], Any], priority: Optional[int] = None):
+    def __init__(self, func: Callable[[object], Any], priority: Optional[int]):
         self.__self__ = None
         self.__func__ = func
         self.__finite__: bool = False
@@ -69,18 +69,19 @@ class RegisteredFunction(ABC):
 
 
 class Attribute(RegisteredFunction):
-    def __init__(self, func: Callable[[object], Any], priority: Optional[int] = None):
+    def __init__(self, func: Callable[[object], Any], priority: Optional[int], supported: bool):
+        self.supported = supported
         super(Attribute, self).__init__(func=func, priority=priority)
 
 
 class Function(RegisteredFunction):
-    def __init__(self, func: Callable[[object], Any], priority: Optional[int] = None):
+    def __init__(self, func: Callable[[object], Any], priority: Optional[int]):
         super(Function, self).__init__(func=func, priority=priority)
 
 
-def _register(cls, factory: Type[RegisteredFunction], priority):
+def _register(cls, factory: Type[RegisteredFunction], **kwargs):
     def wrapper(func):
-        return functools.update_wrapper(factory(func, priority), func)
+        return functools.update_wrapper(factory(func, **kwargs), func)
 
     # _register was called with parenthesis
     if cls is None:
@@ -90,16 +91,19 @@ def _register(cls, factory: Type[RegisteredFunction], priority):
     return wrapper(cls)
 
 
-def attribute(cls=None, /, *, priority: Optional[int] = None):
-    return _register(cls, factory=Attribute, priority=priority)
+def attribute(cls=None, /, *, priority: Optional[int] = None, supported: bool = True):
+    return _register(cls, factory=Attribute, priority=priority, supported=supported)
 
 
 def function(cls=None, /, *, priority: Optional[int] = None):
     return _register(cls, factory=Function, priority=priority)
 
 
-class RegisteredFunctionCollection(Collection[RegisteredFunction]):
-    def __init__(self, *functions: RegisteredFunction):
+RegisteredFunctionT_co = TypeVar("RegisteredFunctionT_co", covariant=True, bound=RegisteredFunction)
+
+
+class RegisteredFunctionCollection(Collection[RegisteredFunctionT_co]):
+    def __init__(self, *functions: RegisteredFunctionT_co):
         self.functions = tuple(functions)
 
     @property
@@ -109,11 +113,29 @@ class RegisteredFunctionCollection(Collection[RegisteredFunction]):
     def __len__(self) -> int:
         return len(self.functions)
 
-    def __iter__(self) -> Iterator[RegisteredFunction]:
+    def __iter__(self) -> Iterator[RegisteredFunctionT_co]:
         return iter(self.functions)
 
     def __contains__(self, item) -> bool:
         return self.functions.__contains__(item)
+
+    def __eq__(self, other) -> bool:
+        return self.functions == other.functions if isinstance(other, RegisteredFunctionCollection) else False
+
+
+class AttributeCollection(RegisteredFunctionCollection[Attribute]):
+
+    @property
+    def supported(self) -> List[Attribute]:
+        return [attr for attr in self.functions if attr.supported]
+
+    @property
+    def unsupported(self) -> List[Attribute]:
+        return [attr for attr in self.functions if not attr.supported]
+
+
+class FunctionCollection(RegisteredFunctionCollection[Function]):
+    pass
 
 
 @dataclass
@@ -140,14 +162,14 @@ class BaseParser(ABC):
         return members
 
     @classmethod
-    def attributes(cls) -> RegisteredFunctionCollection:
+    def attributes(cls) -> AttributeCollection:
         attrs = [func for _, func in cls._search_members(Attribute) if func.__name__ not in ["__ld", "__meta"]]
-        return RegisteredFunctionCollection(*attrs)
+        return AttributeCollection(*attrs)
 
     @classmethod
-    def functions(cls) -> RegisteredFunctionCollection:
+    def functions(cls) -> FunctionCollection:
         funcs = [func for _, func in cls._search_members(Function)]
-        return RegisteredFunctionCollection(*funcs)
+        return FunctionCollection(*funcs)
 
     @property
     def cache(self) -> Optional[Dict[str, Any]]:
