@@ -1,11 +1,14 @@
 import gzip
 import json
 import os
+from os.path import exists
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any, Dict, List
 
+import lxml.html
 import pytest
 
+from doc import docs_path
 from src.library.collection import PublisherCollection
 from src.library.collection.base_objects import PublisherEnum
 from tests.resources import attribute_annotation_mapping, parser_test_data_path
@@ -37,10 +40,27 @@ def load_data(publisher: PublisherEnum) -> Dict[str, Any]:
         raise ValueError("Unknown json format")
 
 
-@pytest.mark.parametrize(
-    "publisher", list(PublisherCollection), ids=[publisher.name for publisher in PublisherCollection]
-)
 class TestParser:
+    def test_supported(self):
+        relative_path = Path("supported_news.md")
+        supported_news_path = os.path.join(docs_path, relative_path)
+
+        if not exists(supported_news_path):
+            raise FileNotFoundError(f"The '{relative_path}' is missing. Run 'python -m src/utils/tables.py'")
+
+        with open(supported_news_path, "rb") as file:
+            content = file.read()
+
+        root = lxml.html.fromstring(content)
+        parsed_names: List[lxml.html.HtmlElement] = root.xpath("//table[contains(@class,'source')]//code/text()")
+        for publisher in PublisherCollection:
+            assert publisher.name in parsed_names, (
+                f"Publisher {publisher.name} is not included in README.md. " f"Run 'python -m src/utils/table.py'"
+            )
+
+    @pytest.mark.parametrize(
+        "publisher", list(PublisherCollection), ids=[publisher.name for publisher in PublisherCollection]
+    )
     def test_annotations(self, publisher: PublisherEnum) -> None:
         parser = publisher.parser
         for attr in parser.attributes():
@@ -49,6 +69,9 @@ class TestParser:
                     attr.__annotations__.get("return") == annotation
                 ), f"Attribute {attr.__name__} for {parser.__name__} failed"
 
+    @pytest.mark.parametrize(
+        "publisher", list(PublisherCollection), ids=[publisher.name for publisher in PublisherCollection]
+    )
     def test_parsing(self, publisher: PublisherEnum) -> None:
         html = load_html(publisher)
         comparative_data = load_data(publisher)
