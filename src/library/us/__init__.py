@@ -9,6 +9,7 @@ from .washington_times_parser import WashingtonTimesParser
 
 class US(PublisherEnum):
     APNews = PublisherSpec(
+        name="Associated Press News",
         domain="https://apnews.com/",
         sitemaps=["https://apnews.com/sitemap/sitemaps/sitemap_index.xml"],
         news_map="https://apnews.com/sitemap/google-news-sitemap/sitemap_index.xml",
@@ -16,6 +17,7 @@ class US(PublisherEnum):
     )
 
     TheGatewayPundit = PublisherSpec(
+        name="The Gateway Pundit",
         domain="https://www.thegatewaypundit.com/",
         sitemaps=["https://www.thegatewaypundit.com/sitemap_index.xml"],
         news_map="https://www.thegatewaypundit.com/news-sitemap.xml",
@@ -23,6 +25,7 @@ class US(PublisherEnum):
     )
 
     FoxNews = PublisherSpec(
+        name="Fox News",
         domain="https://foxnews.com/",
         sitemaps=[" https://www.foxnews.com/sitemap.xml"],
         news_map="https://www.foxnews.com/sitemap.xml?type=news",
@@ -30,12 +33,14 @@ class US(PublisherEnum):
     )
 
     FreeBeacon = PublisherSpec(
+        name="The Washington Free Beacon",
         domain="https://freebeacon.com/",
         news_map="https://freebeacon.com/post_google_news.xml",
         parser=FreeBeaconParser,
     )
 
     WashingtonTimes = PublisherSpec(
+        name="The Washington Times",
         domain="https://www.washingtontimes.com/",
         rss_feeds=["https://www.washingtontimes.com/rss/headlines/news/politics/"],
         sitemaps=[

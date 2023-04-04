@@ -51,11 +51,11 @@ class Crawler:
         for spec in self.publishers:
             sources: List[Source] = []
             if restrict_sources_to == "rss" or restrict_sources_to is None:
-                sources.extend([RSSSource(url, publisher=spec.name) for url in spec.rss_feeds])
+                sources.extend([RSSSource(url, publisher=spec.publisher_name) for url in spec.rss_feeds])
             if restrict_sources_to == "sitemap" or restrict_sources_to is None:
-                sources.extend([SitemapSource(sitemap, publisher=spec.name) for sitemap in spec.sitemaps])
+                sources.extend([SitemapSource(sitemap, publisher=spec.publisher_name) for sitemap in spec.sitemaps])
             if (restrict_sources_to == "news" or restrict_sources_to is None) and spec.news_map:
-                sources.append(SitemapSource(spec.news_map, publisher=spec.name))
+                sources.append(SitemapSource(spec.news_map, publisher=spec.publisher_name))
 
             if sources:
                 scrapers.append(Scraper(*sources, parser=spec.parser()))

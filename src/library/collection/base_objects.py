@@ -7,6 +7,7 @@ from src.parser.html_parser import BaseParser
 
 @dataclass(frozen=True)
 class PublisherSpec:
+    name: str
     domain: str
     parser: Type[BaseParser]
     rss_feeds: List[str] = field(default_factory=list)
@@ -34,6 +35,7 @@ class PublisherEnum(Enum):
         self.sitemaps = spec.sitemaps
         self.news_map = spec.news_map
         self.parser = spec.parser
+        self.publisher_name = spec.name
 
     def supports(self, source_type: Optional[str]) -> bool:
         if source_type == "rss":

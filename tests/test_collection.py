@@ -27,7 +27,7 @@ class TestCollection:
                 pass
 
             class PublisherEnumWithWrongValueSpec(PublisherEnum):
-                value = PublisherSpec(domain="https//:test.com/", parser=EmptyParser)
+                value = PublisherSpec(name="test_pub", domain="https//:test.com/", parser=EmptyParser)
 
     def test_supports(self, publisher_enum_with_news_map):
         assert publisher_enum_with_news_map.value.supports("news")
