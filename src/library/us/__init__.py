@@ -5,7 +5,6 @@ from .fox_news import FoxNewsParser
 from .free_beacon import FreeBeaconParser
 from .the_gateway_pundit import TheGatewayPunditParser
 from .washington_times_parser import WashingtonTimesParser
-from .the_gateway_pundit import TheGatewayPunditParser
 
 
 class US(PublisherEnum):
