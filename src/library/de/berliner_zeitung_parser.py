@@ -7,7 +7,6 @@ from lxml.etree import XPath
 from src.parser.html_parser import ArticleBody, BaseParser, attribute
 from src.parser.html_parser.utility import (
     extract_article_body_with_selector,
-    extract_article_body_with_selector,
     generic_author_parsing,
     generic_date_parsing,
     generic_topic_parsing,
@@ -21,7 +20,6 @@ class BerlinerZeitungParser(BaseParser):
 
     @attribute
     def body(self) -> ArticleBody:
-
         return extract_article_body_with_selector(
             self.precomputed.doc,
             paragraph_selector=self._paragraph_selector,
