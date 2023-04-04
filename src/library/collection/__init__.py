@@ -1,4 +1,4 @@
-from typing import Any, Dict, Iterator
+from typing import Any, Dict, Iterator, Tuple
 
 from src.library.at import AT
 from src.library.collection.base_objects import PublisherEnum
@@ -10,6 +10,9 @@ class CollectionMeta(type):
     @property
     def _members(cls) -> Dict[str, Any]:
         return {name: obj for name, obj in cls.__dict__.items() if "__" not in name}
+
+    def iter_countries(cls) -> Iterator[Tuple[str, Iterator[PublisherEnum]]]:
+        yield from cls._members.items()
 
     def __contains__(cls, __x: object) -> bool:
         return __x in cls._members.values()
