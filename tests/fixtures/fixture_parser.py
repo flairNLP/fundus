@@ -14,10 +14,9 @@ def empty_parser():
 @pytest.fixture
 def parser_with_static_method():
     class ParserWithStaticMethod(BaseParser):
-
         @staticmethod
         def test():
-            return 'this is not an attribute'
+            return "this is not an attribute"
 
     return ParserWithStaticMethod
 
@@ -25,7 +24,6 @@ def parser_with_static_method():
 @pytest.fixture
 def parser_with_function_test():
     class ParserWithFunctionTest(BaseParser):
-
         @function
         def test(self):
             pass
@@ -48,10 +46,10 @@ def parser_with_supported_and_unsupported():
     class ParserWithSupportedAndUnsupported(BaseParser):
         @attribute
         def supported(self):
-            return 'supported'
+            return "supported"
 
         @attribute(supported=False)
         def unsupported(self):
-            return 'unsupported'
+            return "unsupported"
 
     return ParserWithSupportedAndUnsupported
