@@ -1,4 +1,4 @@
-from src.library.collection.base_objects import PublisherEnum, PublisherSpec
+from src.publishers.base_objects import PublisherEnum, PublisherSpec
 
 from .ap_news import APNewsParser
 from .fox_news import FoxNewsParser

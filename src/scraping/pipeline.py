@@ -2,7 +2,7 @@ from typing import Iterator, List, Literal, Optional, Set, Tuple, Type, Union
 
 import more_itertools
 
-from src.library.collection.base_objects import PublisherEnum
+from src.publishers.base_objects import PublisherEnum
 from src.scraping.article import Article
 from src.scraping.scraper import Scraper
 from src.scraping.source import RSSSource, SitemapSource, Source

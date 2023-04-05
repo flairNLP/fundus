@@ -6,8 +6,8 @@ from typing import Any, Dict
 
 import pytest
 
-from src.library.collection import PublisherCollection
-from src.library.collection.base_objects import PublisherEnum
+from src import PublisherCollection
+from src.publishers.base_objects import PublisherEnum
 from tests.resources import attribute_annotation_mapping, parser_test_data_path
 
 

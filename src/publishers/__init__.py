@@ -1,9 +1,9 @@
-from typing import Any, Dict, Iterator
+from typing import Dict, Any, Iterator
 
-from src.library.at import AT
-from src.library.collection.base_objects import PublisherEnum
-from src.library.de import DE
-from src.library.us import US
+from src.publishers.at import AT
+from src.publishers.base_objects import PublisherEnum
+from src.publishers.de import DE
+from src.publishers.us import US
 
 
 class CollectionMeta(type):

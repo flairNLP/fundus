@@ -1,6 +1,6 @@
 import pytest
 
-from src.library.collection.base_objects import PublisherEnum, PublisherSpec
+from src.publishers.base_objects import PublisherEnum, PublisherSpec
 from src.parser.html_parser import BaseParser
 
 
