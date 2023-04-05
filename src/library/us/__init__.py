@@ -6,7 +6,6 @@ from .free_beacon import FreeBeaconParser
 from .the_gateway_pundit import TheGatewayPunditParser
 from .the_intercept import TheInterceptParser
 from .washington_times_parser import WashingtonTimesParser
-from .the_gateway_pundit import TheGatewayPunditParser
 
 
 class US(PublisherEnum):
