@@ -31,7 +31,3 @@ class WAZParser(BaseParser):
     @attribute
     def publishing_date(self) -> Optional[datetime.datetime]:
         return generic_date_parsing(self.precomputed.meta.get("datePublished"))
-
-    @attribute
-    def topics(self) -> List[str]:
-        return generic_topic_parsing(self.precomputed.meta.get("keywords"))

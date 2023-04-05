@@ -14,6 +14,7 @@ from .spon import SPONParser
 from .stern import SternParser
 from .sz import SZParser
 from .tagesschau import TagesschauParser
+from .waz import WAZParser
 
 
 # noinspection PyPep8Naming
