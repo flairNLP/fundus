@@ -7,15 +7,7 @@ import more_itertools
 from colorama import Fore, Style
 
 from src.parser.html_parser import ArticleBody
-
-
-@dataclass(frozen=True)
-class ArticleSource:
-    url: str
-    html: str
-    crawl_date: datetime
-    publisher: Optional[str] = None
-    crawler_ref: object = None
+from src.scraping.source import ArticleSource
 
 
 @dataclass(frozen=True)
