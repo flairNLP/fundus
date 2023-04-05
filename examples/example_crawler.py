@@ -1,4 +1,4 @@
-from src import PublisherCollection
+from src.publishers import PublisherCollection
 from src.scraping.pipeline import Crawler, Pipeline
 from src.scraping.scraper import Scraper
 from src.scraping.source import RSSSource, SitemapSource
