@@ -13,11 +13,9 @@ from src.parser.html_parser.utility import (
 )
 
 
-
-
 class TagesschauParser(BaseParser):
     _paragraph_selector = XPath("//article/p[position() > 1]")
-    _summary_selector =XPath("//article/p[1]")
+    _summary_selector = XPath("//article/p[1]")
     _subheadline_selector = XPath("//article/h2")
 
     def body(self) -> ArticleBody:

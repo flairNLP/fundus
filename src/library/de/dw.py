@@ -14,7 +14,6 @@ from src.parser.html_parser.utility import (
 
 
 class DWParser(BaseParser):
-
     _paragraph_selector = CSSSelector("div.longText > p")
     _summary_selector = CSSSelector("p.intro")
     _subheadline_selector = CSSSelector("div.longText > h2")
@@ -26,15 +25,6 @@ class DWParser(BaseParser):
             subheadline_selector=self._subheadline_selector,
             paragraph_selector=self._paragraph_selector,
         )
-
-    def body(self) -> ArticleBody:
-        return extract_article_body_with_selector(
-            self.precomputed.doc,
-            summary_selector=self._summary_selector,
-            subheadline_selector=self._subheadline_selector,
-            paragraph_selector=self._paragraph_selector,
-        )
-
 
     @attribute
     def authors(self) -> List[str]:

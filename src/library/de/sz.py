@@ -25,7 +25,6 @@ class SZParser(BaseParser):
             paragraph_selector=self._paragraph_selector,
         )
 
-
     @attribute
     def authors(self) -> List[str]:
         return generic_author_parsing(self.precomputed.ld.bf_search("author"))

@@ -30,7 +30,6 @@ class FocusParser(BaseParser):
             paragraph_selector=self._paragraph_selector,
         )
 
-
     @attribute
     def authors(self) -> List[str]:
         author_names = generic_author_parsing(self.precomputed.ld.bf_search("author"))

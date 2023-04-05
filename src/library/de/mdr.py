@@ -27,6 +27,7 @@ class MDRParser(BaseParser):
             subheadline_selector=self._subheadline_selector,
             paragraph_selector=self._paragraph_selector,
         )
+
     @attribute
     def topics(self) -> List[str]:
         return generic_topic_parsing(self.precomputed.meta.get("news_keywords"))

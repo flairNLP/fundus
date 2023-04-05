@@ -16,7 +16,6 @@ class FAZParser(BaseParser):
     _summary_selector = CSSSelector("div.atc-Intro > p")
     _subheadline_selector = CSSSelector("div.atc-Text > h3")
 
-
     def body(self) -> ArticleBody:
         return extract_article_body_with_selector(
             self.precomputed.doc,
@@ -24,6 +23,7 @@ class FAZParser(BaseParser):
             subheadline_selector=self._subheadline_selector,
             paragraph_selector=self._paragraph_selector,
         )
+
     @attribute
     def topics(self) -> List[str]:
         return generic_topic_parsing(self.precomputed.meta.get("keywords"))

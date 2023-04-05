@@ -90,7 +90,7 @@ def extract_article_body_with_selector(
 
     striped_nodes = [node for node in nodes if node.striped()]
 
-    instructions = more_itertools.split_when(striped_nodes, pred=lambda x, y: type(x)!= type(y))
+    instructions = more_itertools.split_when(striped_nodes, pred=lambda x, y: type(x) != type(y))
 
     if not summary_nodes:
         instructions = more_itertools.prepend([], instructions)
