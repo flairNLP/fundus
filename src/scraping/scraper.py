@@ -1,7 +1,7 @@
 from typing import Iterator, Literal
 
 from src.logging.logger import basic_logger
-from src.parser.html_parser import BaseParser
+from src.parsing import BaseParser
 from src.scraping.article import Article
 from src.scraping.source import Source
 

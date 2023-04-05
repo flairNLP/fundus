@@ -7,7 +7,7 @@ from typing import Any, Callable, Dict, List, Optional
 
 from colorama import Fore, Style
 
-from src.parser.html_parser import ArticleBody, LinkedDataMapping
+from src.parsing import ArticleBody, LinkedDataMapping
 
 
 @dataclass(frozen=True)

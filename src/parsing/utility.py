@@ -22,7 +22,7 @@ import lxml.html
 import more_itertools
 from dateutil import parser
 
-from src.parser.html_parser.data import ArticleBody, ArticleSection, TextSequence
+from src.parsing.data import ArticleBody, ArticleSection, TextSequence
 
 
 @total_ordering

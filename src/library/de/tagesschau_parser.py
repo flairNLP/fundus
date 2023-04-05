@@ -2,8 +2,8 @@ import datetime
 import re
 from typing import List, Optional
 
-from src.parser.html_parser import ArticleBody, BaseParser, attribute
-from src.parser.html_parser.utility import (
+from src.parsing import ArticleBody, BaseParser, attribute
+from src.parsing.utility import (
     extract_article_body_with_selector,
     generic_author_parsing,
     generic_date_parsing,

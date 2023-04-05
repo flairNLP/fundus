@@ -2,7 +2,7 @@ from dataclasses import dataclass, field
 from enum import Enum, unique
 from typing import List, Optional, Type
 
-from src.parser.html_parser import BaseParser
+from src.parsing.base_parser import BaseParser
 
 
 @dataclass(frozen=True)

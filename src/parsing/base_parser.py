@@ -21,8 +21,8 @@ from typing import (
 import lxml.html
 import more_itertools
 
-from src.parser.html_parser.data import LinkedDataMapping
-from src.parser.html_parser.utility import get_meta_content
+from src.parsing.data import LinkedDataMapping
+from src.parsing.utility import get_meta_content
 
 
 class RegisteredFunction(ABC):
