@@ -10,26 +10,33 @@ from src.parser.html_parser.utility import (
 )
 
 
-class FoxNewsParser(BaseParser):
+class SternParser(BaseParser):
     @attribute
     def body(self) -> ArticleBody:
         return extract_article_body_with_selector(
             self.precomputed.doc,
-            paragraph_selector=".article-body > p",
+            paragraph_selector=".article__body >p",
+            summary_selector=".intro__text",
+            subheadline_selector=".subheadline-element",
         )
 
     @attribute
     def authors(self) -> List[str]:
-        return generic_author_parsing(self.precomputed.meta.get("dc.creator"))
+        initial_authors = generic_author_parsing(self.precomputed.ld.bf_search("author"))
+        return [el for el in initial_authors if el != "STERN.de"]
 
     @attribute
     def publishing_date(self) -> Optional[datetime.datetime]:
-        return generic_date_parsing(self.precomputed.ld.bf_search("datePublished"))
+        return generic_date_parsing(
+            self.precomputed.meta.get(
+                "date",
+            )
+        )
 
     @attribute
     def title(self) -> Optional[str]:
-        return self.precomputed.ld.bf_search("headline")
+        return self.precomputed.meta.get("og:title")
 
     @attribute
     def topics(self) -> List[str]:
-        return generic_topic_parsing(self.precomputed.meta.get("classification-tags"))
+        return generic_topic_parsing(self.precomputed.meta.get("sis-article-keywords"), delimiter="|")

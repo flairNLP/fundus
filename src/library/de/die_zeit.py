@@ -1,8 +1,10 @@
 import datetime
-from typing import List, Optional
+import re
+from typing import List, Optional, Pattern
 
 from src.parser.html_parser import ArticleBody, BaseParser, attribute
 from src.parser.html_parser.utility import (
+    apply_substitution_pattern_over_list,
     extract_article_body_with_selector,
     generic_author_parsing,
     generic_date_parsing,
@@ -10,19 +12,23 @@ from src.parser.html_parser.utility import (
 )
 
 
-class SZParser(BaseParser):
+class DieZeitParser(BaseParser):
+    _author_substitution_pattern: Pattern[str] = re.compile(r"DIE ZEIT (Archiv)")
+
     @attribute
     def body(self) -> ArticleBody:
         return extract_article_body_with_selector(
             self.precomputed.doc,
-            summary_selector='main [data-manual="teaserText"]',
-            subheadline_selector='main [itemprop="articleBody"] > h3',
-            paragraph_selector='main [itemprop="articleBody"] > p, ' "main .css-korpch > div > ul > li",
+            summary_selector="div.summary",
+            subheadline_selector="div.article-page > h2",
+            paragraph_selector="div.article-page > p",
         )
 
     @attribute
     def authors(self) -> List[str]:
-        return generic_author_parsing(self.precomputed.ld.bf_search("author"))
+        return apply_substitution_pattern_over_list(
+            generic_author_parsing(self.precomputed.ld.bf_search("author")), self._author_substitution_pattern
+        )
 
     @attribute
     def publishing_date(self) -> Optional[datetime.datetime]:
@@ -30,8 +36,8 @@ class SZParser(BaseParser):
 
     @attribute
     def title(self) -> Optional[str]:
-        return self.precomputed.ld.get("headline")
+        return self.precomputed.ld.bf_search("headline")
 
     @attribute
     def topics(self) -> List[str]:
-        return generic_topic_parsing(self.precomputed.ld.bf_search("keywords"))
+        return generic_topic_parsing(self.precomputed.meta.get("keywords"))
