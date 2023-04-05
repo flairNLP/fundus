@@ -1,6 +1,8 @@
 from datetime import datetime
 from typing import List, Optional
 
+from lxml.cssselect import CSSSelector
+
 from src.parser.html_parser import ArticleBody, BaseParser, attribute
 from src.parser.html_parser.utility import (
     extract_article_body_with_selector,
@@ -11,13 +13,16 @@ from src.parser.html_parser.utility import (
 
 
 class SPONParser(BaseParser):
-    @attribute
+    _paragraph_selector = CSSSelector("main .word-wrap > p")
+    _summary_selector = CSSSelector("header .leading-loose")
+    _subheadline_selector = CSSSelector("main .word-wrap > h3")
+
     def body(self) -> ArticleBody:
         return extract_article_body_with_selector(
             self.precomputed.doc,
-            summary_selector="header .leading-loose",
-            subheadline_selector="main .word-wrap > h3",
-            paragraph_selector="main .word-wrap > p",
+            summary_selector=self._summary_selector,
+            subheadline_selector=self._subheadline_selector,
+            paragraph_selector=self._paragraph_selector,
         )
 
     @attribute

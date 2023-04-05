@@ -1,6 +1,8 @@
 import datetime
 from typing import List, Optional
 
+from lxml.cssselect import CSSSelector
+
 from src.parser.html_parser import ArticleBody, BaseParser, attribute
 from src.parser.html_parser.utility import (
     extract_article_body_with_selector,
@@ -10,13 +12,16 @@ from src.parser.html_parser.utility import (
 
 
 class MerkurParser(BaseParser):
-    @attribute
+    _paragraph_selector = CSSSelector("p.id-StoryElement-paragraph, article > ul > li")
+    _summary_selector = CSSSelector("p.id-StoryElement-leadText")
+    _subheadline_selector = CSSSelector("h2.id-StoryElement-crosshead")
+
     def body(self) -> ArticleBody:
         return extract_article_body_with_selector(
             self.precomputed.doc,
-            summary_selector="p.id-StoryElement-leadText",
-            subheadline_selector="h2.id-StoryElement-crosshead",
-            paragraph_selector="p.id-StoryElement-paragraph, article > ul > li",
+            summary_selector=self._summary_selector,
+            subheadline_selector=self._subheadline_selector,
+            paragraph_selector=self._paragraph_selector,
         )
 
     @attribute

@@ -1,6 +1,8 @@
 import datetime
 from typing import List, Optional
 
+from lxml.cssselect import CSSSelector
+
 from src.parser.html_parser import ArticleBody, BaseParser, attribute
 from src.parser.html_parser.utility import (
     extract_article_body_with_selector,
@@ -11,13 +13,16 @@ from src.parser.html_parser.utility import (
 
 
 class SternParser(BaseParser):
-    @attribute
+    _paragraph_selector = CSSSelector(".article__body >p")
+    _summary_selector = CSSSelector(".intro__text")
+    _subheadline_selector = CSSSelector(".subheadline-element")
+
     def body(self) -> ArticleBody:
         return extract_article_body_with_selector(
             self.precomputed.doc,
-            paragraph_selector=".article__body >p",
-            summary_selector=".intro__text",
-            subheadline_selector=".subheadline-element",
+            summary_selector=self._summary_selector,
+            subheadline_selector=self._subheadline_selector,
+            paragraph_selector=self._paragraph_selector,
         )
 
     @attribute
