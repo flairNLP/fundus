@@ -4,6 +4,7 @@ from .ap_news import APNewsParser
 from .fox_news import FoxNewsParser
 from .free_beacon import FreeBeaconParser
 from .the_gateway_pundit import TheGatewayPunditParser
+from .the_intercept import TheInterceptParser
 from .washington_times_parser import WashingtonTimesParser
 
 
@@ -13,6 +14,12 @@ class US(PublisherEnum):
         sitemaps=["https://apnews.com/sitemap/sitemaps/sitemap_index.xml"],
         news_map="https://apnews.com/sitemap/google-news-sitemap/sitemap_index.xml",
         parser=APNewsParser,
+    )
+
+    TheIntercept = PublisherSpec(
+        domain="https://theintercept.com/",
+        sitemaps=["https://theintercept.com/theintercept/sitemap/master/index/"],
+        parser=TheInterceptParser,
     )
 
     TheGatewayPundit = PublisherSpec(
