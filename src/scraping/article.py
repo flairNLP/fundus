@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field
 from datetime import datetime
 from textwrap import TextWrapper, dedent
-from typing import Any, Dict, ItemsView, List, Optional
+from typing import Any, Dict, List, Optional
 
 import more_itertools
 from colorama import Fore, Style
