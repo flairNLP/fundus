@@ -14,6 +14,7 @@ from .spon import SPONParser
 from .stern import SternParser
 from .sz import SZParser
 from .tagesschau import TagesschauParser
+from .taz import TazParser
 
 
 # noinspection PyPep8Naming
@@ -114,5 +115,6 @@ class DE(PublisherEnum):
     Taz = PublisherSpec(
         domain="https://www.taz.de/",
         news_map="https://taz.de/sitemap-google-news.xml",
+        sitemaps=['https://taz.de/sitemap-index.xml'],
         parser=TazParser,
     )
