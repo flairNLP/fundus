@@ -10,11 +10,11 @@ from .faz import FAZParser
 from .focus import FocusParser
 from .mdr import MDRParser
 from .merkur import MerkurParser
+from .ntv import NtvParser
 from .spon import SPONParser
 from .stern import SternParser
 from .sz import SZParser
 from .tagesschau import TagesschauParser
-from .ntv import NtvParser
 
 
 # noinspection PyPep8Naming
@@ -116,6 +116,6 @@ class DE(PublisherEnum):
     Ntv = PublisherSpec(
         domain="https://www.ntv.de/",
         news_map="https://www.n-tv.de/news.xml",
-        sitemaps=['https://www.n-tv.de/sitemap.xml'],
+        sitemaps=["https://www.n-tv.de/sitemap.xml"],
         parser=NtvParser,
     )
