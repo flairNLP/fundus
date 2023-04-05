@@ -47,6 +47,9 @@ class Article:
         body = self.body
         return str(body) if body else None
 
+    def __getattr__(self, item):
+        raise AttributeError(f"Article has no attribute '{item}'")
+
     def __str__(self):
         # the subsequent indent here is a bit wacky, but textwrapper.dedent won't work with tabs, so we have to use
         # whitespaces instead.
