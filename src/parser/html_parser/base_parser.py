@@ -15,7 +15,8 @@ from typing import (
     Literal,
     Optional,
     Tuple,
-    Type, TypeVar,
+    Type,
+    TypeVar,
 )
 
 import lxml.html
@@ -23,6 +24,8 @@ import more_itertools
 
 from src.parser.html_parser.data import LinkedDataMapping
 from src.parser.html_parser.utility import get_meta_content
+
+RegisteredFunctionT_co = TypeVar("RegisteredFunctionT_co", covariant=True, bound="RegisteredFunction")
 
 
 class RegisteredFunction(ABC):
@@ -99,9 +102,6 @@ def function(cls=None, /, *, priority: Optional[int] = None):
     return _register(cls, factory=Function, priority=priority)
 
 
-RegisteredFunctionT_co = TypeVar("RegisteredFunctionT_co", covariant=True, bound=RegisteredFunction)
-
-
 class RegisteredFunctionCollection(Collection[RegisteredFunctionT_co]):
     def __init__(self, *functions: RegisteredFunctionT_co):
         self.functions = tuple(functions)
@@ -124,7 +124,6 @@ class RegisteredFunctionCollection(Collection[RegisteredFunctionT_co]):
 
 
 class AttributeCollection(RegisteredFunctionCollection[Attribute]):
-
     @property
     def supported(self) -> List[Attribute]:
         return [attr for attr in self.functions if attr.supported]
