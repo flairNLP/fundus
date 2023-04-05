@@ -39,18 +39,17 @@ def load_data(publisher: PublisherEnum) -> Dict[str, Any]:
 
 
 class TestBaseParser:
-
     def test_functions_iter(self, parser_with_function_test, parser_with_static_method):
         assert len(BaseParser.functions()) == 0
         assert len(parser_with_static_method.functions()) == 0
         assert len(parser_with_function_test.functions()) == 1
-        assert parser_with_function_test.functions().names == ['test']
+        assert parser_with_function_test.functions().names == ["test"]
 
     def test_attributes_iter(self, parser_with_attr_title, parser_with_static_method):
         assert len(BaseParser.attributes()) == 0
         assert len(parser_with_static_method.attributes()) == 0
         assert len(parser_with_attr_title.attributes()) == 1
-        assert parser_with_attr_title.attributes().names == ['title']
+        assert parser_with_attr_title.attributes().names == ["title"]
 
     def test_supported_unsupported(self, parser_with_supported_and_unsupported):
         parser = parser_with_supported_and_unsupported
@@ -69,7 +68,7 @@ class TestParser:
         for attr in parser.attributes().supported:
             if annotation := mapping[attr.__name__]:
                 assert (
-                        attr.__annotations__.get("return") == annotation
+                    attr.__annotations__.get("return") == annotation
                 ), f"Attribute {attr.__name__} for {parser.__name__} failed"
 
     def test_parsing(self, publisher: PublisherEnum) -> None:

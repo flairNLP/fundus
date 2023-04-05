@@ -1,91 +1,51 @@
-import json
-from abc import ABC
-from dataclasses import InitVar, dataclass, field
+from dataclasses import dataclass, field
 from datetime import datetime
 from textwrap import TextWrapper, dedent
-from typing import Any, Callable, Dict, List, Optional
+from typing import Any, Dict, ItemsView, List, Optional
 
+import more_itertools
 from colorama import Fore, Style
 
-from src.parser.html_parser import ArticleBody, LinkedDataMapping
+from src.parser.html_parser import ArticleBody
 
 
 @dataclass(frozen=True)
-class BaseArticle(ABC):
+class ArticleSource:
     url: str
     html: str
     crawl_date: datetime
     publisher: Optional[str] = None
-    crawler_ref: InitVar[object] = None
-
-    def __post_init__(self, crawler_ref: object):
-        object.__setattr__(self, "_crawler_ref", crawler_ref)
-
-    def serialize(self) -> Dict[str, Any]:
-        attrs = self.__dict__
-        attrs["crawler_ref"] = attrs.pop("_crawler_ref")
-        return attrs
-
-    @classmethod
-    def deserialize(cls, serialized: Dict[str, Any]):
-        return cls(**serialized)
-
-    def pprint(
-        self,
-        indent: int = 4,
-        ensure_ascii: bool = False,
-        default: Callable[[Any], Any] = str,
-        exclude: Optional[List[str]] = None,
-    ) -> str:
-        to_serialize: Dict[str, Any] = self.__dict__.copy()
-        if not exclude:
-            exclude = []
-        for key in exclude:
-            if not hasattr(self, key):
-                raise AttributeError(f"Tried to exclude key '{key} which isn't present in this'{self}' instance")
-            to_serialize.pop(key)
-        return json.dumps(to_serialize, indent=indent, ensure_ascii=ensure_ascii, default=default)
+    crawler_ref: object = None
 
 
 @dataclass(frozen=True)
-class ArticleSource(BaseArticle):
-    pass
-
-
-@dataclass(frozen=True)
-class Article(BaseArticle):
-    extracted: Dict[str, Any] = field(default_factory=dict)
+class Article:
+    source: ArticleSource
     exception: Optional[Exception] = None
 
-    @property
-    def complete(self) -> bool:
-        return all(not (isinstance(attr, Exception) or attr is None) for attr in self.extracted.values())
+    # supported attributes as defined in the guidelines
+    title: Optional[str] = None
+    author: List[str] = field(default_factory=list)
+    body: Optional[ArticleBody] = None
+    publishing_date: Optional[datetime] = None
+    topics: List[str] = field(default_factory=list)
 
-    # provide direct access for commonly used attributes in self.extracted
+    @classmethod
+    def from_extracted(cls, source: ArticleSource, extracted: Dict[str, Any], exception: Optional[Exception] = None):
+        unsupported, supported = more_itertools.partition(
+            lambda view: view[0] in cls.__annotations__, extracted.items()
+        )
+
+        new = cls(source, exception, **dict(supported))
+        for attr, value in unsupported:
+            object.__setattr__(new, attr, value)
+
+        return new
+
     @property
     def plaintext(self) -> Optional[str]:
         body = self.body
         return str(body) if body else None
-
-    @property
-    def title(self) -> Optional[str]:
-        return self.extracted.get("title") if self.extracted else None
-
-    @property
-    def body(self) -> Optional[ArticleBody]:
-        return self.extracted.get("body") if self.extracted else None
-
-    @property
-    def authors(self) -> List[str]:
-        return self.extracted.get("authors", []) if self.extracted else []
-
-    @property
-    def ld(self) -> Optional[LinkedDataMapping]:
-        return self.extracted.get("ld") if self.extracted else None
-
-    @property
-    def meta(self) -> Optional[Dict[str, Any]]:
-        return self.extracted.get("meta") if self.extracted else None
 
     def __str__(self):
         # the subsequent indent here is a bit wacky, but textwrapper.dedent won't work with tabs, so we have to use
@@ -103,8 +63,8 @@ class Article(BaseArticle):
             f"Fundus-Article:"
             f'\n- Title: "{wrapped_title}"'
             f'\n- Text:  "{wrapped_plaintext}"'
-            f"\n- URL:    {self.url}"
-            f'\n- From:   {self.publisher} ({self.crawl_date.strftime("%Y-%m-%d %H:%M")})'
+            f"\n- URL:    {self.source.url}"
+            f'\n- From:   {self.source.publisher} ({self.publishing_date.strftime("%Y-%m-%d %H:%M") if self.publishing_date else ""})'
         )
 
         return dedent(text)
