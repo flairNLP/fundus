@@ -1,14 +1,29 @@
+import datetime
 import gzip
 import json
 import os
+from json import JSONDecoder
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any, Dict, Callable
 
 import pytest
 
 from src.library.collection import PublisherCollection
 from src.library.collection.base_objects import PublisherEnum
 from tests.resources import attribute_annotation_mapping, parser_test_data_path
+
+
+class CustomJsonDecoder(JSONDecoder):
+    def decode(self, s: str, _w: Callable[..., Any] = ...) -> Any:
+        transformations = {"publishing_date": lambda x: datetime.datetime.fromisoformat(x)}
+
+        raw_data = json.loads(s)
+        transformed_dict = {}
+        for key_el in raw_data:
+            transformation = transformations.get(key_el, lambda x: x)
+            transformed_dict.update({key_el: transformation(raw_data[key_el])})
+
+        return transformed_dict
 
 
 def load_html(publisher: PublisherEnum) -> str:
@@ -30,7 +45,7 @@ def load_data(publisher: PublisherEnum) -> Dict[str, Any]:
     with open(absolute_path, "r", encoding="utf-8") as file:
         content = file.read()
 
-    data = json.loads(content)
+    data = json.loads(content, cls=CustomJsonDecoder)
     if isinstance(data, dict):
         return data
     else:
