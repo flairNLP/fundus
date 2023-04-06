@@ -10,10 +10,12 @@ from .faz import FAZParser
 from .focus import FocusParser
 from .mdr import MDRParser
 from .merkur import MerkurParser
+from .ndr_parser import NDRParser
 from .spon import SPONParser
 from .stern import SternParser
 from .sz import SZParser
 from .tagesschau import TagesschauParser
+from .taz import TazParser
 
 
 # noinspection PyPep8Naming
@@ -110,4 +112,18 @@ class DE(PublisherEnum):
         domain="https://www.stern.de/",
         rss_feeds=["https://www.stern.de/feed/standard/alle-nachrichten/"],
         parser=SternParser,
+    )
+
+    NDR = PublisherSpec(
+        domain="https://www.ndr.de/",
+        news_map="https://www.ndr.de/sitemap112-newssitemap.xml",
+        sitemaps=["https://www.ndr.de/sitemap112-sitemap.xml"],
+        parser=NDRParser,
+    )
+
+    Taz = PublisherSpec(
+        domain="https://www.taz.de/",
+        news_map="https://taz.de/sitemap-google-news.xml",
+        sitemaps=["https://taz.de/sitemap-index.xml"],
+        parser=TazParser,
     )
