@@ -17,6 +17,7 @@ class SZParser(BaseParser):
     _summary_selector = CSSSelector("main [data-manual='teaserText']")
     _subheadline_selector = CSSSelector("main [itemprop='articleBody'] > h3")
 
+    @attribute
     def body(self) -> ArticleBody:
         return extract_article_body_with_selector(
             self.precomputed.doc,

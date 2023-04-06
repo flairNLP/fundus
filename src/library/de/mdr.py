@@ -20,6 +20,7 @@ class MDRParser(BaseParser):
     _summary_selector = CSSSelector("p.einleitung")
     _subheadline_selector = CSSSelector("div > .subtitle")
 
+    @attribute
     def body(self) -> ArticleBody:
         return extract_article_body_with_selector(
             self.precomputed.doc,

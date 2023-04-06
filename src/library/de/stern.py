@@ -17,6 +17,7 @@ class SternParser(BaseParser):
     _summary_selector = CSSSelector(".intro__text")
     _subheadline_selector = CSSSelector(".subheadline-element")
 
+    @attribute
     def body(self) -> ArticleBody:
         return extract_article_body_with_selector(
             self.precomputed.doc,

@@ -17,6 +17,7 @@ class SPONParser(BaseParser):
     _summary_selector = CSSSelector("header .leading-loose")
     _subheadline_selector = CSSSelector("main .word-wrap > h3")
 
+    @attribute
     def body(self) -> ArticleBody:
         return extract_article_body_with_selector(
             self.precomputed.doc,

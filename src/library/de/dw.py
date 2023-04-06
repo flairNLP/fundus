@@ -18,6 +18,7 @@ class DWParser(BaseParser):
     _summary_selector = CSSSelector("p.intro")
     _subheadline_selector = CSSSelector("div.longText > h2")
 
+    @attribute
     def body(self) -> ArticleBody:
         return extract_article_body_with_selector(
             self.precomputed.doc,

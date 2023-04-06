@@ -16,6 +16,7 @@ class OrfParser(BaseParser):
     _summary_selector = CSSSelector("div.story-lead > p")
     _subheadline_selector = CSSSelector("div.story-story > h2")
 
+    @attribute
     def body(self) -> ArticleBody:
         return extract_article_body_with_selector(
             self.precomputed.doc,

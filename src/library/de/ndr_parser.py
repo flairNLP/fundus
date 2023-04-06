@@ -17,6 +17,7 @@ class NDRParser(BaseParser):
     _summary_selector = CSSSelector(".preface")
     _subheadline_selector = CSSSelector(".modulepadding > h2")
 
+    @attribute
     def body(self) -> ArticleBody:
         return extract_article_body_with_selector(
             self.precomputed.doc,

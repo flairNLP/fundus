@@ -21,6 +21,7 @@ class APNewsParser(BaseParser):
     _summary_selector = XPath("//div[@data-key = 'article']/p[1]")
     _subheadline_selector = XPath("//div[@data-key = 'article']/h2")
 
+    @attribute
     def body(self) -> ArticleBody:
         return extract_article_body_with_selector(
             self.precomputed.doc,

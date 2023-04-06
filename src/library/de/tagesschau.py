@@ -18,6 +18,7 @@ class TagesschauParser(BaseParser):
     _summary_selector = XPath("//article/p[1]")
     _subheadline_selector = XPath("//article/h2")
 
+    @attribute
     def body(self) -> ArticleBody:
         return extract_article_body_with_selector(
             self.precomputed.doc,

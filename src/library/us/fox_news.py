@@ -15,6 +15,7 @@ from src.parser.html_parser.utility import (
 class FoxNewsParser(BaseParser):
     _paragraph_selector = CSSSelector(".article-body > p")
 
+    @attribute
     def body(self) -> ArticleBody:
         return extract_article_body_with_selector(
             self.precomputed.doc,

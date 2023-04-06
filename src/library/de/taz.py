@@ -17,6 +17,7 @@ class TazParser(BaseParser):
     _summary_selector = CSSSelector(".intro")
     _subheadline_selector = CSSSelector(".sectbody > h6")
 
+    @attribute
     def body(self) -> ArticleBody:
         return extract_article_body_with_selector(
             self.precomputed.doc,

@@ -22,6 +22,7 @@ class FocusParser(BaseParser):
     _topic_pattern: Pattern[str] = re.compile(r'"keywords":\[{(.*?)}\]')
     _topic_name_pattern: Pattern[str] = re.compile(r'"name":"(.*?)"', flags=re.MULTILINE)
 
+    @attribute
     def body(self) -> ArticleBody:
         return extract_article_body_with_selector(
             self.precomputed.doc,
