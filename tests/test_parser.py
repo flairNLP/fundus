@@ -47,7 +47,7 @@ class TestParser:
         for attr in parser.attributes():
             if annotation := attribute_annotation_mapping.get(attr.__name__):
                 assert (
-                        attr.__annotations__.get("return") == annotation
+                    attr.__annotations__.get("return") == annotation
                 ), f"Attribute {attr.__name__} for {parser.__name__} failed"
             else:
                 raise KeyError(f"Unsupported attribute '{attr.__name__}'")
