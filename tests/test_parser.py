@@ -4,7 +4,7 @@ import json
 import os
 from json import JSONDecoder
 from pathlib import Path
-from typing import Any, Dict, Callable
+from typing import Any, Callable, Dict
 
 import pytest
 
