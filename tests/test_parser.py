@@ -8,6 +8,7 @@ import pytest
 
 from src.library.collection import PublisherCollection
 from src.library.collection.base_objects import PublisherEnum
+from src.parser.html_parser.base_parser import Attribute
 from tests.resources import attribute_annotation_mapping, parser_test_data_path
 
 
@@ -46,7 +47,7 @@ class TestParser:
         for attr in parser.attributes():
             if annotation := attribute_annotation_mapping.get(attr.__name__):
                 assert (
-                    attr.__annotations__.get("return") == annotation
+                        attr.__annotations__.get("return") == annotation
                 ), f"Attribute {attr.__name__} for {parser.__name__} failed"
             else:
                 raise KeyError(f"Unsupported attribute '{attr.__name__}'")
@@ -66,3 +67,9 @@ class TestParser:
         result = parser.parse(html, "raise")
         for key in comparative_data.keys():
             assert comparative_data[key] == result[key]
+
+    def test_reserved_attribute_names(self, publisher: PublisherEnum):
+        parser = publisher.parser
+        for attr in attribute_annotation_mapping.keys():
+            if value := getattr(parser, attr, None):
+                assert isinstance(value, Attribute), f"The name '{attr}' is reserved for attributes only."
