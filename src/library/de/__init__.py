@@ -10,7 +10,7 @@ from .faz import FAZParser
 from .focus import FocusParser
 from .mdr import MDRParser
 from .merkur import MerkurParser
-from .ndr_parser import NDRParser
+from .ndr import NDRParser
 from .spon import SPONParser
 from .stern import SternParser
 from .sz import SZParser
