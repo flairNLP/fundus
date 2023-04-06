@@ -14,8 +14,11 @@ from tests.resources import attribute_annotation_mapping, parser_test_data_path
 
 
 class CustomJsonDecoder(JSONDecoder):
-    def decode(self, s: str, _w: Callable[..., Any] = ...) -> Any:
-        transformations = {"publishing_date": lambda x: datetime.datetime.fromisoformat(x)}
+    # The lambda in the signature is used to satisfy mypy
+    def decode(self, s: str, _w: Callable[..., Any] = lambda x: x) -> Any:
+        transformations: Dict[str, Callable[..., Any]] = {
+            "publishing_date": lambda x: datetime.datetime.fromisoformat(x)
+        }
 
         raw_data = json.loads(s)
         transformed_dict = {}
