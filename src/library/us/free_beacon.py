@@ -1,4 +1,5 @@
-import datetime
+import re
+from datetime import datetime
 from typing import List, Optional
 
 from lxml.cssselect import CSSSelector
@@ -12,8 +13,8 @@ from src.parser.html_parser.utility import (
 )
 
 
-class FoxNewsParser(BaseParser):
-    _paragraph_selector = CSSSelector(".article-body > p")
+class FreeBeaconParser(BaseParser):
+    _paragraph_selector = CSSSelector(".article-content > p")
 
     @attribute
     def body(self) -> ArticleBody:
@@ -24,10 +25,10 @@ class FoxNewsParser(BaseParser):
 
     @attribute
     def authors(self) -> List[str]:
-        return generic_author_parsing(self.precomputed.meta.get("dc.creator"))
+        return generic_author_parsing(self.precomputed.meta.get("author"))
 
     @attribute
-    def publishing_date(self) -> Optional[datetime.datetime]:
+    def publishing_date(self) -> Optional[datetime]:
         return generic_date_parsing(self.precomputed.ld.bf_search("datePublished"))
 
     @attribute
@@ -36,4 +37,5 @@ class FoxNewsParser(BaseParser):
 
     @attribute
     def topics(self) -> List[str]:
-        return generic_topic_parsing(self.precomputed.meta.get("classification-tags"))
+        topics: Optional[List[str]] = self.precomputed.ld.bf_search("keywords")
+        return topics if topics else []

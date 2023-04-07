@@ -2,6 +2,8 @@ import datetime
 import re
 from typing import List, Optional, Pattern
 
+from lxml.cssselect import CSSSelector
+
 from src.parser.html_parser import ArticleBody, BaseParser, attribute
 from src.parser.html_parser.utility import (
     apply_substitution_pattern_over_list,
@@ -14,14 +16,17 @@ from src.parser.html_parser.utility import (
 
 class MDRParser(BaseParser):
     _author_substitution_pattern: Pattern[str] = re.compile(r"MDR \w*$|MDR \w*-\w*$|MDRfragt-Redaktionsteam|^von")
+    _paragraph_selector = CSSSelector("div.paragraph")
+    _summary_selector = CSSSelector("p.einleitung")
+    _subheadline_selector = CSSSelector("div > .subtitle")
 
     @attribute
     def body(self) -> ArticleBody:
         return extract_article_body_with_selector(
             self.precomputed.doc,
-            summary_selector="p.einleitung",
-            subheadline_selector="div > .subtitle",
-            paragraph_selector="div.paragraph",
+            summary_selector=self._summary_selector,
+            subheadline_selector=self._subheadline_selector,
+            paragraph_selector=self._paragraph_selector,
         )
 
     @attribute
