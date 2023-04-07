@@ -21,12 +21,12 @@ class TheNationParser(BaseParser):
     def body(self) -> ArticleBody:
         return extract_article_body_with_selector(
             self.precomputed.doc,
-            paragraph_selector=".article > p"
+            paragraph_selector=".article-body-inner > p"
         )
 
     @attribute
     def authors(self) -> List[str]:
-        print()
+        return generic_author_parsing(self.precomputed.meta.get('sailthru.author'))
 
     @attribute
     def publishing_date(self) -> Optional[datetime]:
