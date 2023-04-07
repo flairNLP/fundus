@@ -19,6 +19,7 @@ class MDRParser(BaseParser):
     _paragraph_selector = CSSSelector("div.paragraph")
     _summary_selector = CSSSelector("p.einleitung")
     _subheadline_selector = CSSSelector("div > .subtitle")
+    _author_selector =CSSSelector(".articleMeta > .author")
 
     @attribute
     def body(self) -> ArticleBody:
@@ -39,7 +40,7 @@ class MDRParser(BaseParser):
 
     @attribute
     def authors(self) -> List[str]:
-        if raw_author_str := generic_text_extraction_with_css(self.precomputed.doc, ".articleMeta > .author"):
+        if raw_author_str := generic_text_extraction_with_css(self.precomputed.doc, self._author_selector):
             raw_author_str = raw_author_str.replace(" und ", ", ")
             author_list = [name.strip() for name in raw_author_str.split(",")]
             return apply_substitution_pattern_over_list(author_list, self._author_substitution_pattern)

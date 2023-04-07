@@ -177,8 +177,8 @@ def generic_author_parsing(
     return [name.strip() for name in authors]
 
 
-def generic_text_extraction_with_css(doc, selector: str) -> Optional[str]:
-    nodes = doc.cssselect(selector)
+def generic_text_extraction_with_css(doc, selector: XPath) -> Optional[str]:
+    nodes = selector(doc)
     return strip_nodes_to_text(nodes)
 
 

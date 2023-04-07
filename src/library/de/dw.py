@@ -17,6 +17,7 @@ class DWParser(BaseParser):
     _paragraph_selector = CSSSelector("div.longText > p")
     _summary_selector = CSSSelector("p.intro")
     _subheadline_selector = CSSSelector("div.longText > h2")
+    _title_selector =CSSSelector(".col3 h1")
 
     @attribute
     def body(self) -> ArticleBody:
@@ -43,7 +44,7 @@ class DWParser(BaseParser):
 
     @attribute
     def title(self) -> Optional[str]:
-        return generic_text_extraction_with_css(self.precomputed.doc, ".col3 h1")
+        return generic_text_extraction_with_css(self.precomputed.doc, self._title_selector)
 
     @attribute
     def topics(self) -> List[str]:
