@@ -6,6 +6,7 @@ from .free_beacon import FreeBeaconParser
 from .the_gateway_pundit import TheGatewayPunditParser
 from .the_intercept import TheInterceptParser
 from .washington_times_parser import WashingtonTimesParser
+from .world_truth import WorldTruthParser
 
 
 class US(PublisherEnum):
@@ -34,6 +35,11 @@ class US(PublisherEnum):
         sitemaps=[" https://www.foxnews.com/sitemap.xml"],
         news_map="https://www.foxnews.com/sitemap.xml?type=news",
         parser=FoxNewsParser,
+    )
+    WorldTruth = PublisherSpec(
+        domain="https://worldtruth.tv/",
+        rss_feeds=["https://feeds.feedburner.com/ConsciousnessTv"],
+        parser=WorldTruthParser,
     )
 
     FreeBeacon = PublisherSpec(
