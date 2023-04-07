@@ -19,7 +19,7 @@ class MDRParser(BaseParser):
     _paragraph_selector = CSSSelector("div.paragraph")
     _summary_selector = CSSSelector("p.einleitung")
     _subheadline_selector = CSSSelector("div > .subtitle")
-    _author_selector =CSSSelector(".articleMeta > .author")
+    _author_selector = CSSSelector(".articleMeta > .author")
 
     @attribute
     def body(self) -> ArticleBody:
