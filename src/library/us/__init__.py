@@ -2,10 +2,10 @@ from src.library.collection.base_objects import PublisherEnum, PublisherSpec
 
 from .ap_news import APNewsParser
 from .fox_news import FoxNewsParser
-from .the_nation_parser import TheNationParser
 from .free_beacon import FreeBeaconParser
 from .the_gateway_pundit import TheGatewayPunditParser
 from .the_intercept import TheInterceptParser
+from .the_nation_parser import TheNationParser
 from .washington_times_parser import WashingtonTimesParser
 
 

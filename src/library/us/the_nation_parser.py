@@ -15,27 +15,21 @@ from src.parser.html_parser.utility import (
 
 
 class TheNationParser(BaseParser):
-    _author_selector: XPath = XPath(f"{CSSSelector('div.CardHeadline').path}/span/span[1]")
-
     @attribute
     def body(self) -> ArticleBody:
-        return extract_article_body_with_selector(
-            self.precomputed.doc,
-            paragraph_selector=".article-body-inner > p"
-        )
+        return extract_article_body_with_selector(self.precomputed.doc, paragraph_selector=".article-body-inner > p")
 
     @attribute
     def authors(self) -> List[str]:
-        return generic_author_parsing(self.precomputed.meta.get('sailthru.author'))
+        return generic_author_parsing(self.precomputed.meta.get("sailthru.author"))
 
     @attribute
     def publishing_date(self) -> Optional[datetime]:
-        return generic_date_parsing(self.precomputed.ld.bf_search('datePublished'))
+        return generic_date_parsing(self.precomputed.ld.bf_search("datePublished"))
 
     @attribute
     def title(self) -> Optional[str]:
-        return self.precomputed.meta.get('og:title')
-
+        return self.precomputed.meta.get("og:title")
 
     @attribute
     def topics(self) -> List[str]:
