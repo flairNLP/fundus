@@ -4,6 +4,7 @@ First of all: Thank you for thinking about making Fundus better.
 We try to tackle news scraping with domain-specific parsers to focus on precise extraction. 
 To handle this massive workload, we depend on people like you to contribute.
 
+
 # What is Fundus
 
 Fundus aims to be a very lightweight but precise news-scraping library.
@@ -13,10 +14,12 @@ Rather than automate the extraction layer, we build a handcrafted, precise parse
 In consequence,  for Fundus to be able to parse a specific news domain, someone has to write a parser specific to this domain. 
 And there are a lot of domains.
 
+
 # How to Contribute
 
 Before contributing a parser, check the [**readme**](../README.md) if there is already support for your desired publisher.
 In the following, we will walk you through an example implementation of the [*Los Angeles Times*](https://www.latimes.com/) covering the best practices for adding a news source.
+
 
 ### 1. Library Structure
 Take a look at the library architecture in `src/library`. 
@@ -37,6 +40,7 @@ class LosAngelesTimesParser(BaseParser):
     pass
 ```
 
+
 ### 3. Publisher Specification
 Add a new publisher specification for the publisher you want to cover.
 The publisher specification includes the publisher's domain, sitemap and the corresponding parser.
@@ -54,6 +58,7 @@ class US(PublisherEnum):
 ```
 
 If the country section for your publisher did not exist before step 1, please add the `PublisherEnum` to `src/library/collection/__init__.py'`.
+
 
 ### 4. Publisher Specification Sitemap
 The added publisher specification has to specify where to look for articles.
@@ -146,6 +151,7 @@ class US(PublisherEnum):
     )
 ```
 
+
 ### 5. Validating the Implementation
 Now validate your implementation progress by crawling some example articles from your publisher. 
 The following script fits the Los Angeles Times and is adaptable by changing the publisher variable accordingly.
@@ -180,35 +186,29 @@ Fundus-Article:
 Since we didn't add any specific implementation to the parser yet, most entries are empty.
 
 
-Because the parser you just wrote inherits from `BaseParser` it automatically parses the articles `ld+json` and`meta` content located in the article `head`. 
-You can access those properties with `article.ld` and `article.meta`.
-
-### 7.
+### 6. Implementing the Parser
 Bring your parser to life and fill it with attributes to parse.
-You can do so by decorating the class methods of your parser with the `@attribute` decorator.
-In the end, this decorator indicates to the `BaseParser` which class method to use for parsing an attribute. 
-Attributes are expected to have a return value and are precisely specified in the [attribute guidelines](attribute_guidelines.md). 
-They define the information your parser will extract.
+You can add attributes by decorating the methods of your parser with the `@attribute` decorator.
+Attributes are expected to have a return value precisely specified in the [attribute guidelines](attribute_guidelines.md).
 
-For example, if we want our parser to extract article titles, we would look at the [attribute guidelines](attribute_guidelines.md) and see if there is something defined which matches our expectations.
-In the guidelines, we find an attribute called `title` which exactly describes what we want to extract and also an expected return type. 
-You must stick to the return types since those will be checked by `pytest`. You're free to do whatever you want locally, but you won't be able to contribute to the repository when your PR isn't compliant with the guidelines.
+For example, if we want our parser to extract article titles, we take the [attribute guidelines](attribute_guidelines.md) and look for a defined attribute which matches our expectations.
+In the guidelines, we find an attribute called `title`, which exactly describes what we want to extract and the expected return type. 
+You must stick to the specified return types since they are enforced in our unit tests. 
+You're free to experiment locally, but you won't be able to contribute to the repository when your PR isn't compliant with the guidelines.
 
-Now that we have our attribute name, we can start to add it to the parser by defining a class method called `title` and declare it as an attribute with the `@attribute` decorator.
+Now that we have our attribute name, we add it to the parser by defining a method called `title` and declaring it as an attribute with the `@attribute` decorator.
 ``` python
-class LATimesParser(BaseParser):
-
+class LosAngelesTimesParser(BaseParser):
     @attribute
     def title(self) -> Optional[str]:
-        return 'This is a title'
+        return "This is a Title"
 ```
-Your parser now supports an attribute called `title` which can be directly accessed through `article.title` or `article.extracted['title']`. 
-Not all attributes are directly accessible like `title` but all of them can be accessed via the `extracted` attribute of `Article`.
 
-To let your parser extract useful information rather than placeholders, you can have a look at the `ld` and `meta` attributes of `Article`.
-Those will be extracted automatically, when present, and are also accessible during parsing therefore within your parsers `Attributes`.
-Often useful information about an article like `title`, `author` or `topics` can be found in these two objects.
+The Los Angeles Times now supports an attribute called `title` that is directly accessible through `article.title` when crawling for articles.
 
+To let your parser extract useful information rather than placeholders, use the `ld` and `meta` attributes of `Article`.
+These attributes are automatically extracted when present in the HTML and are accessible during parsing time within your parser's attributes.
+Often useful information about an article like the `title`, `author` or `topics` can be found in these two objects.
 You can access them inside your parser class via the `precomputed` attribute of `BaseParser`, which holds a dataclass of type `Precomputed`.
 This object contains meta-information about the article you're currently parsing.
 
@@ -217,70 +217,59 @@ This object contains meta-information about the article you're currently parsing
 class Precomputed:
     html: str
     doc: lxml.html.HtmlElement
-    meta: Dict[str, Any]
+    meta: Dict[str, str]
     ld: LinkedData
     cache: Dict[str, Any]
 ```
 
-In the following table you can find a short description about the fields of `Precomputed`
+In the following table, you can find a short description of the fields of the `precomputed` attribute.
 
-<table>
-    <tr>
-        <th>attr</th>
-        <th>description</th>
-    </tr>
-    <tr>
-        <td>html</td>
-        <td>The original fetched HTML.</td>
-    </tr>
-    <tr>
-        <td>doc</td>
-        <td>The root node of an <code>lxml.html.Etree</code>.</td>
-    </tr>
-    <tr>
-        <td>meta</td>
-        <td>The sites meta information extracted from <code>&lt;meta&gt;</code> tags.</td>
-    </tr>
-    <tr>
-        <td>ld</td>
-        <td>The linked data extracted from the sites
-            <a href="https://json-ld.org/"><code>ld+json</code></a>. 
-        </td>
-    </tr>
-    <tr>
-        <td>cache</td>
-        <td>A cache specific to the currently parsed site which 
-            can be used to share objects between attributes.
-            Share objects with the <code>BaseParser.share(...)</code> 
-            class-method.
-        </td>
-    </tr>
+| Precomputed Attribute | Description                                                                                                                                            |
+|-----------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------|
+| html                  | The original fetched HTML.                                                                                                                             |
+| doc                   | The root node of an `lxml.html.Etree`.                                                                                                                 |
+| meta                  | The article's meta-information extracted from `<meta>` tags.                                                                                           |
+| ld                    | The linked data extracted from the article's [`ld+json`](https://json-ld.org/)                                                                         |
+| cache                 | A cache specific to the currently parsed site which can be used to share objects between attributes. Share objects with the `BaseParser.share` method. |
 
-</table>
-
-There are many utility functions defined at `src/parser/html_parser/utility.py` to aid you with your attributes.
+There are many utility functions defined at `src/parser/html_parser/utility.py` to aid when implementing parser attributes.
 Make sure to check out other parsers on how to implement specific attributes.
 
-Bringing all above together our parser now looks like this:
+Bringing all above together the Los Angeles Times now looks like this.
 ``` python
-class LATimesParser(BaseParser):
+from datetime import datetime
+from typing import Optional, List
 
+from src.parser.html_parser import attribute, BaseParser, ArticleBody
+from src.parser.html_parser.utility import (
+    extract_article_body_with_selector,
+    generic_date_parsing,
+    generic_author_parsing,
+)
+
+
+class LosAngelesTimesParser(BaseParser):
     @attribute
     def body(self) -> ArticleBody:
-        return extract_article_body_with_selector(self.precomputed.doc,
-                                                  paragraph_selector='.story-stack-story-body > p')
+        return extract_article_body_with_selector(
+            self.precomputed.doc,
+            paragraph_selector=".story-stack-story-body > p",
+        )
+
     @attribute
     def date_published(self) -> datetime:
-        return generic_date_parsing(self.precomputed.ld.bf_search('datePublished'))
+        return generic_date_parsing(self.precomputed.ld.bf_search("datePublished"))
 
     @attribute
     def authors(self) -> List[str]:
-        return generic_author_parsing(self.precomputed.ld.bf_search('author'))
+        return generic_author_parsing(self.precomputed.ld.bf_search("author"))
 
     @attribute
     def title(self) -> Optional[str]:
-        return self.precomputed.meta.get('og:title')
+        return self.precomputed.meta.get("og:title")
+
 ```
+
 
 ### 8.
 Add a test case for your news source to `tests/resources/` by compressing an example HTML of your publisher to `<publisher_enum>.html.gz`.
