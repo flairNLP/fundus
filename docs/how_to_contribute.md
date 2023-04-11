@@ -130,7 +130,12 @@ Thus `https://www.latimes.com/news-sitemap.xml` is a Google News Index Map.
 
 #### Finishing the Publisher Specification
 
-Given the above information, our entry should look like this now:
+To complete the publisher specification, specify at least
+- `sitemaps` spanning the entire website, 
+- `news_map` referring to a Google News Sitemap or Google News Index Map or
+- `rss_feeds` covering recently published articles.
+
+Given the above information, the publisher specification for the Los Angeles Times should now look like this.
 ``` python
 class US(PublisherEnum):
     LATimes = PublisherSpec(
