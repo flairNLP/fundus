@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field
 from datetime import datetime
 from textwrap import TextWrapper, dedent
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Set, Iterator, Tuple
 
 import more_itertools
 from colorama import Fore, Style
@@ -23,16 +23,22 @@ class Article:
     topics: List[str] = field(default_factory=list)
 
     @classmethod
-    def from_extracted(cls, source: ArticleSource, extracted: Dict[str, Any], exception: Optional[Exception] = None):
-        unsupported, supported = more_itertools.partition(
-            lambda view: view[0] in cls.__annotations__, extracted.items()
+    def from_extracted(
+            cls, source: ArticleSource, extracted: Dict[str, Any], exception: Optional[Exception] = None
+    ) -> 'Article':
+        supported_attributes: Set[str] = {article_field.name for article_field in fields(cls)}
+
+        extracted_unsupported: Iterator[Tuple[str, Any]]
+        extracted_supported: Iterator[Tuple[str, Any]]
+        extracted_unsupported, extracted_supported = more_itertools.partition(
+            lambda attribute_and_value: attribute_and_value[0] in supported_attributes, extracted.items()
         )
 
-        new = cls(source, exception, **dict(supported))
-        for attr, value in unsupported:
-            object.__setattr__(new, attr, value)
+        article: Article = cls(source, exception, **dict(extracted_supported))
+        for attribute, value in extracted_unsupported:
+            object.__setattr__(article, attribute, value)  # Sets attributes on a frozen dataclass
 
-        return new
+        return article
 
     @property
     def plaintext(self) -> Optional[str]:

@@ -45,11 +45,11 @@ def parser_with_attr_title():
 def parser_with_supported_and_unsupported():
     class ParserWithSupportedAndUnsupported(BaseParser):
         @attribute
-        def supported(self):
+        def supported(self) -> str:
             return "supported"
 
         @attribute(supported=False)
-        def unsupported(self):
+        def unsupported(self) -> str:
             return "unsupported"
 
     return ParserWithSupportedAndUnsupported
