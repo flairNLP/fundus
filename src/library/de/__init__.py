@@ -11,6 +11,7 @@ from .focus import FocusParser
 from .mdr import MDRParser
 from .merkur import MerkurParser
 from .ndr import NDRParser
+from .ntv import NTVParser
 from .spon import SPONParser
 from .stern import SternParser
 from .sz import SZParser
@@ -112,6 +113,13 @@ class DE(PublisherEnum):
         domain="https://www.stern.de/",
         rss_feeds=["https://www.stern.de/feed/standard/alle-nachrichten/"],
         parser=SternParser,
+    )
+
+    NTV = PublisherSpec(
+        domain="https://www.ntv.de/",
+        news_map="https://www.n-tv.de/news.xml",
+        sitemaps=["https://www.n-tv.de/sitemap.xml"],
+        parser=NTVParser,
     )
 
     NDR = PublisherSpec(
