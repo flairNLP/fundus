@@ -1,16 +1,16 @@
 # We want you!
 
-First of all: Thank you for thinking about making fundus better.
+First of all: Thank you for thinking about making Fundus better.
 We try to tackle news scraping with domain-specific parsers to focus on precise extraction. 
 To handle this massive workload, we depend on people like you to contribute.
 
-# What is fundus
+# What is Fundus
 
 Fundus aims to be a very lightweight but precise news-scraping library.
 Easy to use while being able to precisely extract information from provided HTML. 
-This is possible because fundus, at it's core, is a massive parser library. 
+This is possible because Fundus, at it's core, is a massive parser library. 
 Rather than automate the extraction layer, we build on handcrafted, and therefore precise, parser.
-This also means: For fundus being able to parse a specific news domain, someone has to write a parser specific to this domain. 
+This also means: For Fundus being able to parse a specific news domain, someone has to write a parser specific to this domain. 
 And there are a lot of domains.
 
 # How to contribute
@@ -71,7 +71,7 @@ since we didn't specify yet where to look for articles.
 
 #### 5.
 Your newly added source has to specify a location where to look for articles. 
-Right now, fundus has support for reading sitemaps or RSS feeds.
+Right now, Fundus has support for reading sitemaps or RSS feeds.
 You usually find sitemaps for the news source you want to add at the end of `<your_news_source_domain>/robots.txt` or through a quick google search.
 
 In our case, jumping to the end of the LA Times [robots.txt](https://www.latimes.com/robots.txt) gives us the following information.
