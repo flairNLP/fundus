@@ -1,7 +1,7 @@
 import os
 from functools import lru_cache
 from pathlib import Path
-from typing import Dict, List, Union
+from typing import Dict, List
 
 import lxml.html
 
@@ -9,25 +9,30 @@ from doc import docs_path
 
 
 # noinspection PyUnresolvedReferences
-@lru_cache
-def parse_annotations() -> Dict[str, Union[type, object]]:
-    # There is no need to import these objects locally rather than globally, but we need to import them nonetheless.
-    # We have to so eval() can link the objects with either globals() or locals()
-    # We do it locally to get noinspection on the function scope
+@lru_cache(maxsize=1)
+def parse_attribute_annotations() -> Dict[str, object]:
+    """Returns a dictionary of the parser's attribute type guidelines mapping from the attribute's name to its type."""
+
+    # We import the attribute annotations types locally to make them accessible in the local namespace,
+    # such that eval() can evaluate the type annotations.
+    # Therefore, these imports are not unused and manageable more easily than defining them in the global namespace.
     from datetime import datetime
     from typing import Optional
 
     from src.parser.html_parser import ArticleBody
 
-    local_ns = locals()
-
     relative_path = Path("attribute_guidelines.md")
     attribute_guidelines_path = os.path.join(docs_path, relative_path)
 
     with open(attribute_guidelines_path, "rb") as file:
-        content = file.read()
+        attribute_guidelines: bytes = file.read()
 
-    root = lxml.html.fromstring(content)
+    root = lxml.html.fromstring(attribute_guidelines)
     row_nodes: List[lxml.html.HtmlElement] = root.xpath("//table[@class='annotations']/tr[position() > 1]")
-    rows = [tuple(child.text_content() for child in node.iterchildren()) for node in row_nodes]
+    rows: List[Tuple[str, ...]] = [tuple(child.text_content() for child in node.iterchildren()) for node in row_nodes]
+    assert rows and all(len(row) == 3 for row in rows), (
+        "The annotation guideline table is expected to have exactly three columns: " "'Name', 'Description' and 'Type'."
+    )
+
+    local_ns: Dict[str, Any] = locals()
     return {name: eval(annotation, globals(), local_ns) for name, _, annotation in rows}

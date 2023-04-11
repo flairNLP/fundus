@@ -8,7 +8,7 @@ import pytest
 
 from src.library.collection import PublisherCollection
 from src.library.collection.base_objects import PublisherEnum
-from tests.resources import parse_annotations, parser_test_data_path
+from tests.resources import parse_attribute_annotations, parser_test_data_path
 
 
 def load_html(publisher: PublisherEnum) -> str:
@@ -43,7 +43,7 @@ def load_data(publisher: PublisherEnum) -> Dict[str, Any]:
 class TestParser:
     def test_annotations(self, publisher: PublisherEnum) -> None:
         parser = publisher.parser
-        mapping = parse_annotations()
+        mapping = parse_attribute_annotations()
         for attr in parser.attributes():
             if annotation := mapping[attr.__name__]:
                 assert (
