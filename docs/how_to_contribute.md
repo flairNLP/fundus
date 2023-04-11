@@ -119,6 +119,7 @@ Accessing one of these sitemaps, e.g. [https://www.latimes.com/news-sitemap-late
             <news:title>Dodgers 2023 season opener vs. Diamondbacks: TV times, odds</news:title>
         </news:news>
     </url>
+</urlset>
 ```
 The line we look after is `xmlns:news="http://www.google.com/schemas/sitemap-news/0.9"`.
 Here the prefix `news` gets bound to the namespace `http://www.google.com/schemas/sitemap-news/0.9`. 
