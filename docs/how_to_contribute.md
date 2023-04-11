@@ -83,7 +83,7 @@ The idea of the Google News sitemap is to give an overview of recent articles wh
 You can find a plugin to resolve this issue [here](https://addons.mozilla.org/de/firefox/addon/pretty-xml/)
 
 Accessing [https://www.latimes.com/news-sitemap.xml](https://www.latimes.com/news-sitemap.xml) should yield an XML file like the following.
-```
+```xml
 <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" 
               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
               xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemapindex.xsd">
@@ -97,9 +97,10 @@ Accessing [https://www.latimes.com/news-sitemap.xml](https://www.latimes.com/new
 </sitemapindex>
 ```
 
-We see that the actual sitemap refers to other sitemaps, and therefore it is an index map.
-If you access one of those sitemaps (in the following example we used [https://www.latimes.com/news-sitemap-latest.xml](https://www.latimes.com/news-sitemap-latest.xml)) you will find something like this
-```
+We see that the actual sitemap refers to other sitemaps. 
+Therefore, it is an index map.
+Accessing one of these sitemaps, e.g. [https://www.latimes.com/news-sitemap-latest.xml](https://www.latimes.com/news-sitemap-latest.xml)), should yield and XML file like the following.
+```xml
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" 
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" 
