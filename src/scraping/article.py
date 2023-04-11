@@ -45,7 +45,7 @@ class Article:
         body = self.body
         return str(body) if body else None
 
-    def __getattr__(self, item):
+    def __getattr__(self, item: object):
         raise AttributeError(f"'{self.__class__.__name__}' object has no attribute '{item}'")
 
     def __str__(self):
