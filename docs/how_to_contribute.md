@@ -27,14 +27,12 @@ For example
 
 For the Los Angeles Times, the correct location is `src/library/us/los_angeles_times.py` since they are an American publisher.
 
-#### 2.
-Add an empty parser class inheriting from `BaseParser` at the designated country section in the library. 
-Following the example of contributing a parser for the LA Times, we would add something like this:
+#### 2. Parser Stub
+In the Python file from step 1, add an empty parser class inheriting from `BaseParser`.
 ``` python
 class LATimesParser(BaseParser):
     pass
 ```
-to a new file at `src/library/us/la_times_parser.py`.
 
 #### 3.
 Add a new specification for the publisher/domain you want to cover. 
