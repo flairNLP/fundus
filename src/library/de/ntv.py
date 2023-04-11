@@ -2,6 +2,9 @@ import datetime
 import re
 from typing import List, Optional, Pattern
 
+from lxml.cssselect import CSSSelector
+from lxml.etree import XPath
+
 from src.parser.html_parser import ArticleBody, BaseParser, attribute
 from src.parser.html_parser.utility import (
     apply_substitution_pattern_over_list,
@@ -12,15 +15,21 @@ from src.parser.html_parser.utility import (
 )
 
 
-class NtvParser(BaseParser):
+class NTVParser(BaseParser):
     _author_substitution_pattern: Pattern[str] = re.compile(r"n-tv NACHRICHTEN")
+    _summary_selector = XPath("//div[@class='article__text']/p[not(last()) and strong][1]")
+    _paragraph_selector = XPath(
+        "//div[@class='article__text']" "/p[not(strong) or (strong and (position() > 1 or last()))]"
+    )
+    _subheadline_selector = CSSSelector(".article__text > h2")
 
     @attribute
     def body(self) -> ArticleBody:
         return extract_article_body_with_selector(
             self.precomputed.doc,
-            paragraph_selector=".article__text > p",
-            subheadline_selector=".article__text > h2",
+            summary_selector=self._summary_selector,
+            subheadline_selector=self._subheadline_selector,
+            paragraph_selector=self._paragraph_selector,
         )
 
     @attribute
