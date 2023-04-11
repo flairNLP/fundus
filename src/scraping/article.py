@@ -1,4 +1,4 @@
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, fields
 from datetime import datetime
 from textwrap import TextWrapper, dedent
 from typing import Any, Dict, List, Optional, Set, Iterator, Tuple
@@ -46,7 +46,7 @@ class Article:
         return str(body) if body else None
 
     def __getattr__(self, item):
-        raise AttributeError(f"Article has no attribute '{item}'")
+        raise AttributeError(f"'{self.__class__.__name__}' object has no attribute '{item}'")
 
     def __str__(self):
         # the subsequent indent here is a bit wacky, but textwrapper.dedent won't work with tabs, so we have to use
