@@ -1,6 +1,8 @@
 from datetime import datetime
 from typing import List, Optional
 
+from lxml.cssselect import CSSSelector
+
 from src.parser.html_parser import ArticleBody, BaseParser, attribute
 from src.parser.html_parser.data import TextSequence
 from src.parser.html_parser.utility import (
@@ -11,17 +13,19 @@ from src.parser.html_parser.utility import (
 
 
 class TheInterceptParser(BaseParser):
+    _paragraph_selector = CSSSelector("div.PostContent > div > p:not(p.caption):not(p.PhotoGrid-description)")
+    _subheadline_selector = CSSSelector("div.PostContent > div > h2")
+
     @attribute
     def body(self) -> ArticleBody:
         body: ArticleBody = extract_article_body_with_selector(
             self.precomputed.doc,
-            subheadline_selector="div.PostContent > div > h2",
+            subheadline_selector=self._subheadline_selector,
             # The Intercept uses `p` tags for the article's paragraphs, image captions and photo grid descriptions.
             # Since we are only interested in the article's paragraphs,
             # we exclude the other elements from the paragraph selector.
             # Example article: https://theintercept.com/2023/04/01/israel-palestine-apartheid-settlements/
-            paragraph_selector="div.PostContent > div > p:not(p.caption):not(p.PhotoGrid-description)",
-            mode="css",
+            paragraph_selector=self._paragraph_selector,
         )
         description: Optional[str] = self.precomputed.meta.get("og:description")
         if description is not None:

@@ -11,10 +11,12 @@ from .focus import FocusParser
 from .mdr import MDRParser
 from .merkur import MerkurParser
 from .ntv import NtvParser
+from .ndr import NDRParser
 from .spon import SPONParser
 from .stern import SternParser
 from .sz import SZParser
 from .tagesschau import TagesschauParser
+from .taz import TazParser
 
 
 # noinspection PyPep8Naming
@@ -118,4 +120,18 @@ class DE(PublisherEnum):
         news_map="https://www.n-tv.de/news.xml",
         sitemaps=["https://www.n-tv.de/sitemap.xml"],
         parser=NtvParser,
+    )
+
+    NDR = PublisherSpec(
+        domain="https://www.ndr.de/",
+        news_map="https://www.ndr.de/sitemap112-newssitemap.xml",
+        sitemaps=["https://www.ndr.de/sitemap112-sitemap.xml"],
+        parser=NDRParser,
+    )
+
+    Taz = PublisherSpec(
+        domain="https://www.taz.de/",
+        news_map="https://taz.de/sitemap-google-news.xml",
+        sitemaps=["https://taz.de/sitemap-index.xml"],
+        parser=TazParser,
     )

@@ -1,6 +1,8 @@
 import datetime
 from typing import List, Optional
 
+from lxml.cssselect import CSSSelector
+
 from src.parser.html_parser import ArticleBody, BaseParser, attribute
 from src.parser.html_parser.utility import (
     extract_article_body_with_selector,
@@ -11,11 +13,13 @@ from src.parser.html_parser.utility import (
 
 
 class FoxNewsParser(BaseParser):
+    _paragraph_selector = CSSSelector(".article-body > p")
+
     @attribute
     def body(self) -> ArticleBody:
         return extract_article_body_with_selector(
             self.precomputed.doc,
-            paragraph_selector=".article-body > p",
+            paragraph_selector=self._paragraph_selector,
         )
 
     @attribute

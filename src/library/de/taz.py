@@ -12,32 +12,32 @@ from src.parser.html_parser.utility import (
 )
 
 
-class BerlinerZeitungParser(BaseParser):
-    _paragraph_selector = CSSSelector("div[id=articleBody] > p")
-    _summary_selector = CSSSelector("div[id=articleBody] > p")
-    _subheadline_selector = CSSSelector("div[id=articleBody] > h2")
+class TazParser(BaseParser):
+    _paragraph_selector = CSSSelector(".sectbody > p[class*='article']")
+    _summary_selector = CSSSelector(".intro")
+    _subheadline_selector = CSSSelector(".sectbody > h6")
 
     @attribute
     def body(self) -> ArticleBody:
         return extract_article_body_with_selector(
             self.precomputed.doc,
-            paragraph_selector=self._paragraph_selector,
-            subheadline_selector=self._subheadline_selector,
             summary_selector=self._summary_selector,
+            subheadline_selector=self._subheadline_selector,
+            paragraph_selector=self._paragraph_selector,
         )
 
     @attribute
     def title(self) -> Optional[str]:
-        return self.precomputed.meta.get("og:title")
+        return self.precomputed.meta.get("taz:title")
 
     @attribute
     def authors(self) -> List[str]:
-        return generic_author_parsing(self.precomputed.meta.get("article:author"))
+        return generic_author_parsing(self.precomputed.meta.get("author"))
 
     @attribute
     def publishing_date(self) -> Optional[datetime.datetime]:
-        return generic_date_parsing(self.precomputed.ld.bf_search("datePublished"))
+        return generic_date_parsing(self.precomputed.meta.get("article:published_time"))
 
     @attribute
     def topics(self) -> List[str]:
-        return generic_topic_parsing(self.precomputed.ld.bf_search("keywords"))
+        return generic_topic_parsing(self.precomputed.meta.get("keywords"))
