@@ -55,23 +55,9 @@ class US(PublisherEnum):
 
 If the country section for your publisher did not exist before step 1, please add the `PublisherEnum` to `src/library/collection/__init__.py'`.
 
-#### 4.
-Now try running your news source with the following lines of code.
-``` python
-from src import PublisherCollection, Crawler
+#### 4. Publisher Specification Sitemap
+The publisher speicifcation added in step 
 
-crawler = Crawler(PublisherCollection.us.<your_news_source>)
-
-for article in crawler.crawl(max_articles=2):
-    print(article)
-```
-This will raise the following error 
-```
-ValueError: Publishers must at least define either an rss-feed, sitemap or news_map to crawl
-```
-since we didn't specify yet where to look for articles.
-
-#### 4. Publisher Sitemap
 Your newly added source has to specify a location where to look for articles. 
 Right now, Fundus has support for reading sitemaps or RSS feeds.
 You usually find sitemaps for the news source you want to add at the end of `<your_news_source_domain>/robots.txt` or through a quick google search.
