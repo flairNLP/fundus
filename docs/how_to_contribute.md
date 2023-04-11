@@ -91,14 +91,14 @@ You can find a plugin to resolve this issue [here](https://addons.mozilla.org/de
 
 Accessing [https://www.latimes.com/news-sitemap.xml](https://www.latimes.com/news-sitemap.xml) should yield an XML file like the following.
 ```xml
-<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" 
-              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
               xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemapindex.xsd">
     <sitemap>
         <loc>https://www.latimes.com/news-sitemap-content.xml</loc>
         <lastmod>2023-03-30T04:35-04:00</lastmod>
     </sitemap>
-        <sitemap>
+    <sitemap>
         <loc>https://www.latimes.com/news-sitemap-latest.xml</loc>
     </sitemap>
 </sitemapindex>
@@ -108,14 +108,16 @@ We see that the actual sitemap refers to other sitemaps.
 Therefore, it is an index map.
 Accessing one of these sitemaps, e.g. [https://www.latimes.com/news-sitemap-latest.xml](https://www.latimes.com/news-sitemap-latest.xml), should yield and XML file like the following.
 ```xml
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" 
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" 
-        xmlns:video="http://www.google.com/schemas/sitemap-video/1.1" 
-        xmlns:news="http://www.google.com/schemas/sitemap-news/0.9" 
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
+        xmlns:video="http://www.google.com/schemas/sitemap-video/1.1"
+        xmlns:news="http://www.google.com/schemas/sitemap-news/0.9"
         xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
     <url>
-        <loc>https://www.latimes.com/sports/dodgers/story/2023-03-30/dodgers-2023-season-opener-diamondbacks-tv-times-odds</loc>
+        <loc>
+            https://www.latimes.com/sports/dodgers/story/2023-03-30/dodgers-2023-season-opener-diamondbacks-tv-times-odds
+        </loc>
         <lastmod>2023-03-30</lastmod>
         <news:news>
             <news:publication>
