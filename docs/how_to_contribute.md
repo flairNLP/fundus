@@ -25,7 +25,7 @@ For example
 - `src/library/de/` for German publishers and
 - `src/library/us/` for American publishers.
 
-For the Los Angeles Times, the correct location is `src/library/us/` since they are an American publisher.
+For the Los Angeles Times, the correct location is `src/library/us/los_angeles_times.py` since they are an American publisher.
 
 #### 2.
 Add an empty parser class inheriting from `BaseParser` at the designated country section in the library. 
