@@ -1,4 +1,4 @@
-# We want you!
+# We Want You!
 
 First of all: Thank you for thinking about making Fundus better.
 We try to tackle news scraping with domain-specific parsers to focus on precise extraction. 
@@ -13,7 +13,7 @@ Rather than automate the extraction layer, we build a handcrafted, precise parse
 In consequence,  for Fundus to be able to parse a specific news domain, someone has to write a parser specific to this domain. 
 And there are a lot of domains.
 
-# How to contribute
+# How to Contribute
 
 Before contributing a parser, check the [**readme**](../README.md) if there is already support for your desired publisher.
 In the following, we will walk you through an example implementation of the [*Los Angeles Times*](https://www.latimes.com/) covering the best practices for adding a news source.
