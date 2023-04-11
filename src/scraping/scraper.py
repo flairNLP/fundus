@@ -21,13 +21,13 @@ class Scraper:
                     if error_handling == "raise":
                         raise err
                     elif error_handling == "catch":
-                        yield Article(extracted={}, exception=err, **article_source.serialize())
+                        yield Article(source=article_source, exception=err)
                         continue
                     elif error_handling == "suppress":
-                        basic_logger.info(f"Skipped {article_source.url} because of {err}")
+                        basic_logger.info(f"Skipped {article_source.url} because of: {err!r}")
                         continue
                     else:
                         raise ValueError(f"Unknown value '{error_handling}' for parameter <error_handling>'")
 
-                article = Article(extracted=data, **article_source.serialize())
+                article = Article.from_extracted(source=article_source, extracted=data)
                 yield article

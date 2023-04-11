@@ -3,6 +3,8 @@ from src.library.collection.base_objects import PublisherEnum, PublisherSpec
 from .ap_news import APNewsParser
 from .cnbc import CNBCParser
 from .fox_news import FoxNewsParser
+from .free_beacon import FreeBeaconParser
+from .the_gateway_pundit import TheGatewayPunditParser
 
 
 class US(PublisherEnum):
@@ -20,9 +22,22 @@ class US(PublisherEnum):
         parser=CNBCParser,
     )
 
+    TheGatewayPundit = PublisherSpec(
+        domain="https://www.thegatewaypundit.com/",
+        sitemaps=["https://www.thegatewaypundit.com/sitemap_index.xml"],
+        news_map="https://www.thegatewaypundit.com/news-sitemap.xml",
+        parser=TheGatewayPunditParser,
+    )
+
     FoxNews = PublisherSpec(
         domain="https://foxnews.com/",
         sitemaps=[" https://www.foxnews.com/sitemap.xml"],
         news_map="https://www.foxnews.com/sitemap.xml?type=news",
         parser=FoxNewsParser,
+    )
+
+    FreeBeacon = PublisherSpec(
+        domain="https://freebeacon.com/",
+        news_map="https://freebeacon.com/post_google_news.xml",
+        parser=FreeBeaconParser,
     )

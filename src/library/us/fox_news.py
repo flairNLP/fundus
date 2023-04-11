@@ -24,11 +24,11 @@ class FoxNewsParser(BaseParser):
 
     @attribute
     def publishing_date(self) -> Optional[datetime.datetime]:
-        return generic_date_parsing(self.precomputed.ld.get("datePublished"))
+        return generic_date_parsing(self.precomputed.ld.bf_search("datePublished"))
 
     @attribute
     def title(self) -> Optional[str]:
-        return self.precomputed.ld.get("headline")
+        return self.precomputed.ld.bf_search("headline")
 
     @attribute
     def topics(self) -> List[str]:

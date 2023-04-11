@@ -8,7 +8,8 @@ import pytest
 
 from src.library.collection import PublisherCollection
 from src.library.collection.base_objects import PublisherEnum
-from tests.resources import attribute_annotation_mapping, parser_test_data_path
+from src.parser.html_parser import BaseParser
+from tests.resources import parse_annotations, parser_test_data_path
 
 
 def load_html(publisher: PublisherEnum) -> str:
@@ -37,14 +38,35 @@ def load_data(publisher: PublisherEnum) -> Dict[str, Any]:
         raise ValueError("Unknown json format")
 
 
+class TestBaseParser:
+    def test_functions_iter(self, parser_with_function_test, parser_with_static_method):
+        assert len(BaseParser.functions()) == 0
+        assert len(parser_with_static_method.functions()) == 0
+        assert len(parser_with_function_test.functions()) == 1
+        assert parser_with_function_test.functions().names == ["test"]
+
+    def test_attributes_iter(self, parser_with_attr_title, parser_with_static_method):
+        assert len(BaseParser.attributes()) == 0
+        assert len(parser_with_static_method.attributes()) == 0
+        assert len(parser_with_attr_title.attributes()) == 1
+        assert parser_with_attr_title.attributes().names == ["title"]
+
+    def test_supported_unsupported(self, parser_with_supported_and_unsupported):
+        parser = parser_with_supported_and_unsupported
+        assert len(parser.attributes()) == 2
+        assert parser.attributes().supported == [parser.supported]
+        assert parser.attributes().unsupported == [parser.unsupported]
+
+
 @pytest.mark.parametrize(
     "publisher", list(PublisherCollection), ids=[publisher.name for publisher in PublisherCollection]
 )
 class TestParser:
     def test_annotations(self, publisher: PublisherEnum) -> None:
         parser = publisher.parser
-        for attr in parser.attributes():
-            if annotation := attribute_annotation_mapping[attr.__name__]:
+        mapping = parse_annotations()
+        for attr in parser.attributes().supported:
+            if annotation := mapping[attr.__name__]:
                 assert (
                     attr.__annotations__.get("return") == annotation
                 ), f"Attribute {attr.__name__} for {parser.__name__} failed"
