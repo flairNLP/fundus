@@ -5,7 +5,6 @@ from dataclasses import dataclass, field
 from datetime import datetime
 from functools import total_ordering
 from typing import (
-    AnyStr,
     Callable,
     Dict,
     List,
@@ -13,6 +12,7 @@ from typing import (
     Match,
     Optional,
     Pattern,
+    Type,
     Union,
     cast,
 )
@@ -21,6 +21,7 @@ import dateutil.tz
 import lxml.html
 import more_itertools
 from dateutil import parser
+from lxml.etree import XPath
 
 from src.parser.html_parser.data import ArticleBody, ArticleSection, TextSequence
 
@@ -30,7 +31,6 @@ from src.parser.html_parser.data import ArticleBody, ArticleSection, TextSequenc
 class Node:
     position: int
     node: lxml.html.HtmlElement = field(compare=False)
-    type: str = field(compare=False)
 
     def striped(self, chars: Optional[str] = None) -> str:
         return str(self).strip(chars)
@@ -56,32 +56,41 @@ class Node:
         return self._get_break_preserved_node().text_content()
 
 
+class SummaryNode(Node):
+    pass
+
+
+class SubheadNode(Node):
+    pass
+
+
+class ParagraphNode(Node):
+    pass
+
+
 def extract_article_body_with_selector(
     doc: lxml.html.HtmlElement,
-    paragraph_selector: str,
-    summary_selector: Optional[str] = None,
-    subheadline_selector: Optional[str] = None,
-    mode: Literal["css", "xpath"] = "css",
+    paragraph_selector: XPath,
+    summary_selector: Optional[XPath] = None,
+    subheadline_selector: Optional[XPath] = None,
 ) -> ArticleBody:
     # depth first index for each element in tree
     df_idx_by_ref = {element: i for i, element in enumerate(doc.iter())}
 
-    def extract_nodes(selector: str, node_type: str) -> List[Node]:
+    def extract_nodes(selector: XPath, node_type: Type[Node]) -> List[Node]:
         if not selector and node_type:
             raise ValueError("Both a selector and node type are required")
-        if mode == "css":
-            return [Node(df_idx_by_ref[element], element, node_type) for element in doc.cssselect(selector)]
-        else:
-            return [Node(df_idx_by_ref[element], element, node_type) for element in doc.xpath(selector)]
 
-    summary_nodes = extract_nodes(summary_selector, "S") if summary_selector else []
-    subhead_nodes = extract_nodes(subheadline_selector, "H") if subheadline_selector else []
-    paragraph_nodes = extract_nodes(paragraph_selector, "P")
+        return [node_type(df_idx_by_ref[element], element) for element in selector(doc)]
+
+    summary_nodes = extract_nodes(summary_selector, SummaryNode) if summary_selector else []
+    subhead_nodes = extract_nodes(subheadline_selector, SubheadNode) if subheadline_selector else []
+    paragraph_nodes = extract_nodes(paragraph_selector, ParagraphNode)
     nodes = sorted(summary_nodes + subhead_nodes + paragraph_nodes)
 
     striped_nodes = [node for node in nodes if node.striped()]
 
-    instructions = more_itertools.split_when(striped_nodes, pred=lambda x, y: x.type != y.type)
+    instructions = more_itertools.split_when(striped_nodes, pred=lambda x, y: type(x) != type(y))
 
     if not summary_nodes:
         instructions = more_itertools.prepend([], instructions)
@@ -168,8 +177,8 @@ def generic_author_parsing(
     return [name.strip() for name in authors]
 
 
-def generic_text_extraction_with_css(doc, selector: str) -> Optional[str]:
-    nodes = doc.cssselect(selector)
+def generic_text_extraction_with_css(doc, selector: XPath) -> Optional[str]:
+    nodes = selector(doc)
     return strip_nodes_to_text(nodes)
 
 

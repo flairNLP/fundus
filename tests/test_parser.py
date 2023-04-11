@@ -8,7 +8,8 @@ import pytest
 
 from src.library.collection import PublisherCollection
 from src.library.collection.base_objects import PublisherEnum
-from tests.resources import parse_attribute_annotations, parser_test_data_path
+from src.parser.html_parser.base_parser import Attribute
+from tests.resources import parser_test_data_path, attribute_annotation_mapping
 
 
 def load_html(publisher: PublisherEnum) -> str:
@@ -43,18 +44,32 @@ def load_data(publisher: PublisherEnum) -> Dict[str, Any]:
 class TestParser:
     def test_annotations(self, publisher: PublisherEnum) -> None:
         parser = publisher.parser
-        mapping = parse_attribute_annotations()
         for attr in parser.attributes():
-            if annotation := mapping[attr.__name__]:
+            if annotation := attribute_annotation_mapping[attr.__name__]:
                 assert (
                     attr.__annotations__.get("return") == annotation
                 ), f"Attribute {attr.__name__} for {parser.__name__} failed"
+            else:
+                raise KeyError(f"Unsupported attribute '{attr.__name__}'")
 
     def test_parsing(self, publisher: PublisherEnum) -> None:
         html = load_html(publisher)
         comparative_data = load_data(publisher)
         parser = publisher.parser()
 
+        # enforce test coverage
+        attrs_required_to_cover = {"title", "authors", "topics"}
+        supported_attrs = set(parser.attributes().names)
+        missing_attrs = attrs_required_to_cover & supported_attrs - set(comparative_data.keys())
+        assert not missing_attrs, f"Test JSON does not cover the following attribute(s): {missing_attrs}"
+
+        # compare data
         result = parser.parse(html, "raise")
         for key in comparative_data.keys():
             assert comparative_data[key] == result[key]
+
+    def test_reserved_attribute_names(self, publisher: PublisherEnum):
+        parser = publisher.parser
+        for attr in attribute_annotation_mapping.keys():
+            if value := getattr(parser, attr, None):
+                assert isinstance(value, Attribute), f"The name '{attr}' is reserved for attributes only."
