@@ -21,7 +21,7 @@ class ArticleSource:
     html: str
     crawl_date: datetime
     publisher: Optional[str] = None
-    crawler_ref: Optional['Source'] = None
+    source: Optional['Source'] = None
 
 
 class Source(Iterable[str], ABC):
