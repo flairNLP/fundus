@@ -36,4 +36,4 @@ def _parse_attribute_annotations() -> Dict[str, object]:
     return {name: eval(annotation, globals(), local_ns) for name, _, annotation in rows}
 
 
-attribute_annotations_mapping = _parse_attribute_annotations()
+attribute_annotations_mapping: Dict[str, object] = _parse_attribute_annotations()
