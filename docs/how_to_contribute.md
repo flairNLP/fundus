@@ -146,12 +146,16 @@ class US(PublisherEnum):
     )
 ```
 
-### 6.
-Now validate your progress by replacing everything inside <> of the following script with your information and running it.
+### 5. Validating the Implementation
+Now validate your implementation progress by crawling some example articles from your publisher. 
+The following script fits the Los Angeles Times and is adaptable by changing the publisher variable accordingly.
+
 ``` python
 from src import PublisherCollection, Crawler
 
-publisher = PublisherCollection.<your_country_section>.<your_publisher_entry>
+# Change to:
+# PublisherCollection.<country_section>.<publisher_speicifcation>
+publisher = PublisherCollection.us.LosAngelesTimes
 
 crawler = Crawler(publisher)
 
@@ -159,7 +163,7 @@ for article in crawler.crawl(max_articles=2):
     print(article)
 ```
 
-If everything went well you should see something like this
+If everything has been implemented correctly, the script should output text articles like the following.
 ``` console
 Fundus-Article:
 - Title: "--missing title--"
@@ -173,7 +177,8 @@ Fundus-Article:
 - From:   LATimes (2023-03-20 19:25)
 ```
 
-Since we didn't add anything to the parser yet, most of the entries are empty. 
+Since we didn't add any specific implementation to the parser yet, most entries are empty.
+
 
 Because the parser you just wrote inherits from `BaseParser` it automatically parses the articles `ld+json` and`meta` content located in the article `head`. 
 You can access those properties with `article.ld` and `article.meta`.
