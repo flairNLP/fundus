@@ -18,7 +18,7 @@ And there are a lot of domains.
 Before contributing a parser, check the [**readme**](../README.md) if there is already support for your desired publisher.
 In the following, we will walk you through an example implementation of the [*Los Angeles Times*](https://www.latimes.com/) covering the best practices for adding a news source.
 
-#### 1. Library Structure
+### 1. Library Structure
 Take a look at the library architecture in `src/library`. 
 Fundus is divided into country-specific sections representing the country a news source originates from.
 For example
@@ -28,7 +28,7 @@ For example
 For the Los Angeles Times, the correct location is `src/library/us/los_angeles_times.py` since they are an American publisher.
 If your publisher requires a new country section, please add it.
 
-#### 2. Parser Stub
+### 2. Parser Stub
 In the Python file from step 1, add an empty parser class inheriting from `BaseParser`.
 ``` python
 from src.parser.html_parser import BaseParser
@@ -37,7 +37,7 @@ class LosAngelesTimesParser(BaseParser):
     pass
 ```
 
-#### 3. Publisher Specification
+### 3. Publisher Specification
 Add a new publisher specification for the publisher you want to cover.
 The publisher specification includes the publisher's domain, sitemap and the corresponding parser.
 You can add a new entry to the country-specific `PublisherEnum` in the `__init__.py` of the country section you want to contribute to, i.e. `src/library/<country_code>/__init__.py`.
@@ -55,7 +55,7 @@ class US(PublisherEnum):
 
 If the country section for your publisher did not exist before step 1, please add the `PublisherEnum` to `src/library/collection/__init__.py'`.
 
-#### 4. Publisher Specification Sitemap
+### 4. Publisher Specification Sitemap
 The added publisher specification has to specify where to look for articles.
 Right now, Fundus has support for reading sitemaps or RSS feeds.
 Usually, the publisher's sitemaps are located at the end of `<publisher_domain>/robots.txt` or through a quick Google search.
@@ -138,7 +138,7 @@ class US(PublisherEnum):
     )
 ```
 
-#### 6.
+### 6.
 Now validate your progress by replacing everything inside <> of the following script with your information and running it.
 ``` python
 from src import PublisherCollection, Crawler
@@ -170,7 +170,7 @@ Since we didn't add anything to the parser yet, most of the entries are empty.
 Because the parser you just wrote inherits from `BaseParser` it automatically parses the articles `ld+json` and`meta` content located in the article `head`. 
 You can access those properties with `article.ld` and `article.meta`.
 
-#### 7.
+### 7.
 Bring your parser to life and fill it with attributes to parse.
 You can do so by decorating the class methods of your parser with the `@attribute` decorator.
 In the end, this decorator indicates to the `BaseParser` which class method to use for parsing an attribute. 
@@ -269,7 +269,7 @@ class LATimesParser(BaseParser):
         return self.precomputed.meta.get('og:title')
 ```
 
-#### 8.
+### 8.
 Add a test case for your news source to `tests/resources/` by compressing an example HTML of your publisher to `<publisher_enum>.html.gz`.
 In our case that would be `LATimes.html.gz`.
 Next specify asserted values your parser should extract from the example HTML in `<news_source_enum_name>.json`.
@@ -285,5 +285,5 @@ So it should look something like this:
 Don't worry if your parser does not support all the attributes specified above. 
 Only those supported by your parser will be tested.
 
-#### 9.
+### 9.
 Make sure you tested your parser before opening a PR and once again go through the attributes guidelines and ensure your parser is compliant with them.
