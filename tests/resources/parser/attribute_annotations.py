@@ -1,5 +1,4 @@
 import os
-from functools import lru_cache
 from pathlib import Path
 from typing import Any, Dict, List, Tuple
 
@@ -9,8 +8,7 @@ from doc import docs_path
 
 
 # noinspection PyUnresolvedReferences
-@lru_cache(maxsize=1)
-def parse_attribute_annotations() -> Dict[str, object]:
+def _parse_attribute_annotations() -> Dict[str, object]:
     """Returns a dictionary of the parser's attribute type guidelines mapping from the attribute's name to its type."""
 
     # We import the attribute annotations types locally to make them accessible in the local namespace,
@@ -36,3 +34,6 @@ def parse_attribute_annotations() -> Dict[str, object]:
 
     local_ns: Dict[str, Any] = locals()
     return {name: eval(annotation, globals(), local_ns) for name, _, annotation in rows}
+
+
+attribute_annotations_mapping = _parse_attribute_annotations()
