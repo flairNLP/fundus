@@ -8,9 +8,9 @@ To handle this massive workload, we depend on people like you to contribute.
 
 Fundus aims to be a very lightweight but precise news-scraping library.
 Easy to use while being able to precisely extract information from provided HTML. 
-This is possible because Fundus, at it's core, is a massive parser library. 
-Rather than automate the extraction layer, we build on handcrafted, and therefore precise, parser.
-This also means: For Fundus being able to parse a specific news domain, someone has to write a parser specific to this domain. 
+At its core Fundus is a massive parser library. 
+Rather than automate the extraction layer, we build a handcrafted, precise parser.
+In consequence,  for Fundus to be able to parse a specific news domain, someone has to write a parser specific to this domain. 
 And there are a lot of domains.
 
 # How to contribute
