@@ -15,12 +15,8 @@ And there are a lot of domains.
 
 # How to contribute
 
-If you want to be a part of this project, here are some steps on how to contribute.
-
-## News Source
-
 Before contributing a parser, check the [**readme**](../README.md) if there is already support for your desired publisher.
-In the following, we will walk you through an example implementation covering the best practised for adding a news source.
+In the following, we will walk you through an example implementation covering the best practices for adding a news source.
 
 #### 1.
 Get used to the library architecture in `src/library`. 
