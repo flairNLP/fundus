@@ -119,7 +119,7 @@ class RegisteredFunctionCollection(Collection[RegisteredFunctionT_co]):
     def __contains__(self, item) -> bool:
         return self.functions.__contains__(item)
 
-    def __eq__(self, other) -> bool:
+    def __eq__(self, other: object) -> bool:
         return self.functions == other.functions if isinstance(other, RegisteredFunctionCollection) else False
 
 
