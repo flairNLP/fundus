@@ -18,10 +18,14 @@ And there are a lot of domains.
 Before contributing a parser, check the [**readme**](../README.md) if there is already support for your desired publisher.
 In the following, we will walk you through an example implementation of the [*Los Angeles Times*](https://www.latimes.com/) covering the best practices for adding a news source.
 
-#### 1.
-Get used to the library architecture in `src/library`. 
-Fundus is divided into country-specific sections (`/library/at/, /library/de/, ..., /library/us/`) representing the country a news source originates from. 
-In our case, the correct location we're operating on is `/library/us/`.
+#### 1. Library Structure
+Take a look at the library architecture in `src/library`. 
+Fundus is divided into country-specific sections representing the country a news source originates from.
+For example
+- `src/library/de/` for German publishers and
+- `src/library/us/` for American publishers.
+
+For the Los Angeles Times, the correct location is `src/library/us/` since they are an American publisher.
 
 #### 2.
 Add an empty parser class inheriting from `BaseParser` at the designated country section in the library. 
