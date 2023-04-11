@@ -101,7 +101,7 @@ Accessing [https://www.latimes.com/news-sitemap.xml](https://www.latimes.com/new
 
 We see that the actual sitemap refers to other sitemaps. 
 Therefore, it is an index map.
-Accessing one of these sitemaps, e.g. [https://www.latimes.com/news-sitemap-latest.xml](https://www.latimes.com/news-sitemap-latest.xml)), should yield and XML file like the following.
+Accessing one of these sitemaps, e.g. [https://www.latimes.com/news-sitemap-latest.xml](https://www.latimes.com/news-sitemap-latest.xml), should yield and XML file like the following.
 ```xml
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" 
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
