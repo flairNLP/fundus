@@ -2,6 +2,7 @@ import datetime
 from typing import List, Optional
 
 from lxml.cssselect import CSSSelector
+from lxml.etree import XPath
 
 from src.parser.html_parser import ArticleBody, BaseParser, attribute
 from src.parser.html_parser.utility import (
@@ -18,6 +19,12 @@ class DWParser(BaseParser):
     _summary_selector = CSSSelector("p.intro")
     _subheadline_selector = CSSSelector("div.longText > h2")
     _title_selector = CSSSelector(".col3 h1")
+    _author_selector = XPath(
+        "normalize-space(" '//ul[@class="smallList"]' '/li[strong[contains(text(), "Auto")]]' "/text()[last()]" ")"
+    )
+    _date_selector = XPath(
+        "normalize-space(" '//ul[@class="smallList"]' '/li[strong[contains(text(), "Datum")]]' "/text())"
+    )
 
     @attribute
     def body(self) -> ArticleBody:
@@ -30,16 +37,12 @@ class DWParser(BaseParser):
 
     @attribute
     def authors(self) -> List[str]:
-        raw_author_string: str = self.precomputed.doc.xpath(
-            "normalize-space(" '//ul[@class="smallList"]' '/li[strong[contains(text(), "Auto")]]' "/text()[last()]" ")"
-        )
+        raw_author_string: str = self._author_selector(self.precomputed.doc)
         return generic_author_parsing(raw_author_string)
 
     @attribute
     def publishing_date(self) -> Optional[datetime.datetime]:
-        raw_date_str: str = self.precomputed.doc.xpath(
-            "normalize-space(" '//ul[@class="smallList"]' '/li[strong[contains(text(), "Datum")]]' "/text())"
-        )
+        raw_date_str: str = self._date_selector(self.precomputed.doc)
         return generic_date_parsing(raw_date_str)
 
     @attribute

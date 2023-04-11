@@ -15,6 +15,7 @@ class FAZParser(BaseParser):
     _paragraph_selector = CSSSelector("div.atc-Text > p")
     _summary_selector = CSSSelector("div.atc-Intro > p")
     _subheadline_selector = CSSSelector("div.atc-Text > h3")
+    _author_selector = CSSSelector(".atc-MetaAuthor")
 
     @attribute
     def body(self) -> ArticleBody:
@@ -36,7 +37,7 @@ class FAZParser(BaseParser):
     @attribute
     def authors(self) -> List[str]:
         # Unfortunately, the raw data may contain cities. Most of these methods aims to remove the cities heuristically.
-        if not (author_nodes := self.precomputed.doc.cssselect(".atc-MetaAuthor")):
+        if not (author_nodes := self._author_selector(self.precomputed.doc)):
             return []
         else:
             if len(author_nodes) > 1:

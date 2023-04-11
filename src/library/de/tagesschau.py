@@ -17,6 +17,8 @@ class TagesschauParser(BaseParser):
     _paragraph_selector = XPath("//article/p[position() > 1]")
     _summary_selector = XPath("//article/p[1]")
     _subheadline_selector = XPath("//article/h2")
+    _author_selector = XPath('string(//div[contains(@class, "authorline__author")])')
+    _topic_selector = CSSSelector("div.meldungsfooter .taglist a")
 
     @attribute
     def body(self) -> ArticleBody:
@@ -29,7 +31,7 @@ class TagesschauParser(BaseParser):
 
     @attribute
     def authors(self) -> List[str]:
-        if raw_author_string := self.precomputed.doc.xpath('string(//div[contains(@class, "authorline__author")])'):
+        if raw_author_string := self._author_selector(self.precomputed.doc):
             cleaned_author_string = re.sub(r"^Von |, ARD[^\s,]*", "", raw_author_string)
             return generic_author_parsing(cleaned_author_string)
         else:
@@ -45,5 +47,5 @@ class TagesschauParser(BaseParser):
 
     @attribute
     def topics(self) -> List[str]:
-        topic_nodes = self.precomputed.doc.cssselect("div.meldungsfooter .taglist a")
+        topic_nodes = self._topic_selector(self.precomputed.doc)
         return [node.text_content() for node in topic_nodes]

@@ -15,12 +15,14 @@ from typing import (
     Type,
     Union,
     cast,
+    ClassVar,
 )
 
 import dateutil.tz
 import lxml.html
 import more_itertools
 from dateutil import parser
+from lxml.cssselect import CSSSelector
 from lxml.etree import XPath
 
 from src.parser.html_parser.data import ArticleBody, ArticleSection, TextSequence
@@ -31,13 +33,14 @@ from src.parser.html_parser.data import ArticleBody, ArticleSection, TextSequenc
 class Node:
     position: int
     node: lxml.html.HtmlElement = field(compare=False)
+    _break_selector: ClassVar[XPath] = XPath("*//br")
 
     def striped(self, chars: Optional[str] = None) -> str:
         return str(self).strip(chars)
 
     def _get_break_preserved_node(self) -> lxml.html.HtmlElement:
         copied_node = copy(self.node)
-        for br in copied_node.xpath("*//br"):
+        for br in self._break_selector(copied_node):
             br.tail = "\n" + br.tail if br.tail else "\n"
         return copied_node
 
@@ -111,9 +114,11 @@ def extract_article_body_with_selector(
     return ArticleBody(summary=summary, sections=sections)
 
 
+_meta_node_selector = CSSSelector("meta[name], meta[property]")
+
+
 def get_meta_content(tree: lxml.html.HtmlElement) -> Dict[str, str]:
-    meta_node_selector = "meta[name], meta[property]"
-    meta_nodes = tree.cssselect(meta_node_selector)
+    meta_nodes = _meta_node_selector(tree)
     meta: Dict[str, str] = {}
     for node in meta_nodes:
         key = node.attrib.get("name") or node.attrib.get("property")
