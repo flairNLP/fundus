@@ -269,6 +269,21 @@ class LosAngelesTimesParser(BaseParser):
         return self.precomputed.meta.get("og:title")
 ```
 
+Now, execute the example script from step 5 to validate your implementation.
+If the attributes are implemented correctly, they appear in the printout accordingly.
+
+``` console
+Fundus-Article:
+- Title: "Sarah Snook wasn't sold on 'Succession' at first. Now, she feels a 'sense of loss'"
+- Text:  "--missing plaintext--"  # TODO ADD THIS
+- URL:    https://www.latimes.com/entertainment-arts/tv/story/2023-03-19/sarah-snook-shiv-succession
+- From:   LATimes (2023-03-20 19:25)
+Fundus-Article:
+- Title: "Manhattan Beach mayor apologizes to Bruce's Beach families, unveils new city monument"
+- Text:  "--missing plaintext--"  # TODO ADD THIS
+- URL:    https://www.latimes.com/california/story/2023-03-18/la-me-bruces-beach-manhattan-beach-new-monument-ceremony
+- From:   LATimes (2023-03-20 19:25)
+```
 
 ### 7. Writing Tests
 Add a test case to `tests/resources/parser/test_data/<country_section>/` by compressing the HTML of an example article of your publisher to `<publisher_name>.html.gz`, e.g. `LosAngelesTimes.html.gz`.
