@@ -39,14 +39,17 @@ class LosAngelesTimesParser(BaseParser):
 
 #### 3. Publisher Specification
 Add a new publisher specification for the publisher you want to cover.
+The publisher specification includes the publisher's domain, sitemap and the corresponding parser.
 You can add a new entry to the country-specific `PublisherEnum` in the `__init__.py` of the country section you want to contribute to, i.e. `src/library/<country_code>/__init__.py`.
+For now, we specify the publisher's domain and parser. 
+We cover the publisher's sitemap in the next step.
 
 For the Long Angeles Times, we add the following entry to `src/library/us/__init__.py`.
 ``` python
 class US(PublisherEnum):
     LATimes = PublisherSpec(
         domain="https://www.latimes.com/",
-        parser=LATimesParser,
+        parser=LosAngelesTimesParser,
     )
 ```
 
@@ -68,7 +71,7 @@ ValueError: Publishers must at least define either an rss-feed, sitemap or news_
 ```
 since we didn't specify yet where to look for articles.
 
-#### 5.
+#### 4. Publisher Sitemap
 Your newly added source has to specify a location where to look for articles. 
 Right now, Fundus has support for reading sitemaps or RSS feeds.
 You usually find sitemaps for the news source you want to add at the end of `<your_news_source_domain>/robots.txt` or through a quick google search.
