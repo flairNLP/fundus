@@ -26,6 +26,7 @@ For example
 - `src/library/us/` for American publishers.
 
 For the Los Angeles Times, the correct location is `src/library/us/los_angeles_times.py` since they are an American publisher.
+If your publisher requires a new country section, please add it.
 
 #### 2. Parser Stub
 In the Python file from step 1, add an empty parser class inheriting from `BaseParser`.
@@ -36,15 +37,11 @@ class LosAngelesTimesParser(BaseParser):
     pass
 ```
 
-#### 3.
-Add a new specification for the publisher/domain you want to cover. 
-You can add a new entry (or entire PublisherEnum if it doesn't exist yet) to the country-specific `PublisherEnum` in the `__init__.py` of the country section you want to contribute to. 
-The `__init__.py` can be found at `src/library/<country_code>/__init__.py`.
+#### 3. Publisher Specification
+Add a new publisher specification for the publisher you want to cover.
+You can add a new entry to the country-specific `PublisherEnum` in the `__init__.py` of the country section you want to contribute to, i.e. `src/library/<country_code>/__init__.py`.
 
-If the country section does not exist, please add it to `src/library/collection/__init__.py'`.
-
-To continue our journey of adding the LA Times to Fundus, we add an entry to the `US(PublisherEnum)` class located at `src/library/us/__init__.py`, which looks like this:
-
+For the Long Angeles Times, we add the following entry to `src/library/us/__init__.py`.
 ``` python
 class US(PublisherEnum):
     LATimes = PublisherSpec(
@@ -52,6 +49,8 @@ class US(PublisherEnum):
         parser=LATimesParser,
     )
 ```
+
+If the country section for your publisher did not exist before step 1, please add the `PublisherEnum` to `src/library/collection/__init__.py'`.
 
 #### 4.
 Now try running your news source with the following lines of code.
