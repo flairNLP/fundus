@@ -82,6 +82,8 @@ The idea of the Google News sitemap is to give an overview of recent articles wh
 **_NOTE:_** There is a known issue with Firefox not displaying XML properly. 
 You can find a plugin to resolve this issue [here](https://addons.mozilla.org/de/firefox/addon/pretty-xml/)
 
+#### Finding a Google News Sitemap
+
 Accessing [https://www.latimes.com/news-sitemap.xml](https://www.latimes.com/news-sitemap.xml) should yield an XML file like the following.
 ```xml
 <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" 
@@ -121,11 +123,12 @@ Accessing one of these sitemaps, e.g. [https://www.latimes.com/news-sitemap-late
     </url>
 </urlset>
 ```
-The line we look after is `xmlns:news="http://www.google.com/schemas/sitemap-news/0.9"`.
-Here the prefix `news` gets bound to the namespace `http://www.google.com/schemas/sitemap-news/0.9`. 
-This indicates the sitemap is a Google News Sitemap and thus `https://www.latimes.com/news-sitemap.xml` is a Google News Index Map.
+The line we are looking for is `xmlns:news="http://www.google.com/schemas/sitemap-news/0.9"`.
+Here, the prefix `news` is bound to the namespace `http://www.google.com/schemas/sitemap-news/0.9`. 
+This indicates the sitemap is a Google News Sitemap. 
+Thus `https://www.latimes.com/news-sitemap.xml` is a Google News Index Map.
 
-To get your news source running, specify either `sitemaps` (spanning the entire website), a `news_map` (referring to a Google News Sitemap or Google News Index Map if available), or `rss_feeds` covering recently published articles.
+#### Finishing the Publisher Specification
 
 Given the above information, our entry should look like this now:
 ``` python
