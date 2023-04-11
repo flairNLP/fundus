@@ -127,8 +127,8 @@ class _ArchiveDecompressor:
 
 
 class SitemapSource(Source):
-    _sitemap_selector = CSSSelector("sitemap > loc")
-    _url_selector = CSSSelector("url > loc")
+    _sitemap_selector: XPath = CSSSelector("sitemap > loc")
+    _url_selector: XPath = CSSSelector("url > loc")
 
     def __init__(
         self,
