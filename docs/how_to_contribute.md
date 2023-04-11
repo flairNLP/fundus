@@ -56,24 +56,22 @@ class US(PublisherEnum):
 If the country section for your publisher did not exist before step 1, please add the `PublisherEnum` to `src/library/collection/__init__.py'`.
 
 #### 4. Publisher Specification Sitemap
-The publisher speicifcation added in step 
-
-Your newly added source has to specify a location where to look for articles. 
+The added publisher specification has to specify where to look for articles. 
 Right now, Fundus has support for reading sitemaps or RSS feeds.
-You usually find sitemaps for the news source you want to add at the end of `<your_news_source_domain>/robots.txt` or through a quick google search.
+Usually, the publisher's sitemaps are located at the end of `<publisher_domain>/robots.txt` or through a quick Google search.
 
-In our case, jumping to the end of the LA Times [robots.txt](https://www.latimes.com/robots.txt) gives us the following information.
+For the Los Angeles Times, jumping to the end of their [robots.txt](https://www.latimes.com/robots.txt) gives us the following information.
 ``` console
 Sitemap: https://www.latimes.com/sitemap.xml
 Sitemap: https://www.latimes.com/news-sitemap.xml
 ```
 
-Here we see two sitemaps specified. 
+They specify two sitemaps. 
 One [Google News](https://support.google.com/news/publisher-center/answer/9607107?hl=en&ref_topic=9606468) sitemap
 ```
 https://www.latimes.com/news-sitemap.xml
 ``` 
-and a sitemap for the entire LA Times website 
+and a sitemap for the entire Los Angeles Times website
 ```
 https://www.latimes.com/sitemap.xml
 ```
@@ -81,7 +79,7 @@ https://www.latimes.com/sitemap.xml
 **_NOTE:_** There is a known issue with Firefox not displaying XML properly. 
 You can find a plugin to resolve this issue [here](https://addons.mozilla.org/de/firefox/addon/pretty-xml/)
 
-If we access [https://www.latimes.com/news-sitemap.xml](https://www.latimes.com/news-sitemap.xml) we should see something like this.
+Accessing [https://www.latimes.com/news-sitemap.xml](https://www.latimes.com/news-sitemap.xml) should yield an XML file like the following.
 ```
 <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" 
               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
@@ -95,6 +93,7 @@ If we access [https://www.latimes.com/news-sitemap.xml](https://www.latimes.com/
     </sitemap>
 </sitemapindex>
 ```
+
 We see that the actual sitemap refers to other sitemaps, and therefore it is an index map.
 If you access one of those sitemaps (in the following example we used [https://www.latimes.com/news-sitemap-latest.xml](https://www.latimes.com/news-sitemap-latest.xml)) you will find something like this
 ```
