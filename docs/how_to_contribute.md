@@ -47,7 +47,7 @@ We cover the publisher's sitemap in the next step.
 For the Long Angeles Times, we add the following entry to `src/library/us/__init__.py`.
 ``` python
 class US(PublisherEnum):
-    LATimes = PublisherSpec(
+    LosAngelesTimes = PublisherSpec(
         domain="https://www.latimes.com/",
         parser=LosAngelesTimesParser,
     )
@@ -138,7 +138,7 @@ To complete the publisher specification, specify at least
 Given the above information, the publisher specification for the Los Angeles Times should now look like this.
 ``` python
 class US(PublisherEnum):
-    LATimes = PublisherSpec(
+    LosAngelesTimes = PublisherSpec(
         domain="https://www.latimes.com/",
         sitemaps=["https://www.latimes.com/sitemap.xml"],
         news_map="https://www.latimes.com/news-sitemap.xml",
