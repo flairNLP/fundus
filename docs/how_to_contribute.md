@@ -30,7 +30,7 @@ For the Los Angeles Times, the correct location is `src/library/us/los_angeles_t
 #### 2. Parser Stub
 In the Python file from step 1, add an empty parser class inheriting from `BaseParser`.
 ``` python
-class LATimesParser(BaseParser):
+class LosAngelesTimesParser(BaseParser):
     pass
 ```
 
