@@ -16,7 +16,7 @@ And there are a lot of domains.
 # How to contribute
 
 Before contributing a parser, check the [**readme**](../README.md) if there is already support for your desired publisher.
-In the following, we will walk you through an example implementation covering the best practices for adding a news source.
+In the following, we will walk you through an example implementation of the [*Los Angeles Times*](https://www.latimes.com/) covering the best practices for adding a news source.
 
 #### 1.
 Get used to the library architecture in `src/library`. 
