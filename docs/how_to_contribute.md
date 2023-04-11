@@ -56,7 +56,7 @@ class US(PublisherEnum):
 If the country section for your publisher did not exist before step 1, please add the `PublisherEnum` to `src/library/collection/__init__.py'`.
 
 #### 4. Publisher Specification Sitemap
-The added publisher specification has to specify where to look for articles. 
+The added publisher specification has to specify where to look for articles.
 Right now, Fundus has support for reading sitemaps or RSS feeds.
 Usually, the publisher's sitemaps are located at the end of `<publisher_domain>/robots.txt` or through a quick Google search.
 
@@ -67,14 +67,17 @@ Sitemap: https://www.latimes.com/news-sitemap.xml
 ```
 
 They specify two sitemaps. 
-One [Google News](https://support.google.com/news/publisher-center/answer/9607107?hl=en&ref_topic=9606468) sitemap
+One [Google News](https://support.google.com/news/publisher-center/answer/9607107?hl=en&ref_topic=9606468) sitemap.
 ```
 https://www.latimes.com/news-sitemap.xml
 ``` 
-and a sitemap for the entire Los Angeles Times website
+
+And a sitemap for the entire Los Angeles Times website.
 ```
 https://www.latimes.com/sitemap.xml
 ```
+
+The idea of the Google News sitemap is to give an overview of recent articles while a sitemap spans the entire website.
 
 **_NOTE:_** There is a known issue with Firefox not displaying XML properly. 
 You can find a plugin to resolve this issue [here](https://addons.mozilla.org/de/firefox/addon/pretty-xml/)
@@ -120,7 +123,6 @@ The line we look after is `xmlns:news="http://www.google.com/schemas/sitemap-new
 Here the prefix `news` gets bound to the namespace `http://www.google.com/schemas/sitemap-news/0.9`. 
 This indicates the sitemap is a Google News Sitemap and thus `https://www.latimes.com/news-sitemap.xml` is a Google News Index Map.
 
-The idea of the news sitemap is to give an overview of recent articles while a sitemap spans the entire website. 
 To get your news source running, specify either `sitemaps` (spanning the entire website), a `news_map` (referring to a Google News Sitemap or Google News Index Map if available), or `rss_feeds` covering recently published articles.
 
 Given the above information, our entry should look like this now:
