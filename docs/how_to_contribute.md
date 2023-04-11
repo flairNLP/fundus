@@ -267,25 +267,27 @@ class LosAngelesTimesParser(BaseParser):
     @attribute
     def title(self) -> Optional[str]:
         return self.precomputed.meta.get("og:title")
-
 ```
 
 
-### 8.
-Add a test case for your news source to `tests/resources/` by compressing an example HTML of your publisher to `<publisher_enum>.html.gz`.
-In our case that would be `LATimes.html.gz`.
-Next specify asserted values your parser should extract from the example HTML in `<news_source_enum_name>.json`.
-Currently, we only test the `title, authors, topics` attribute. 
-So it should look something like this:
-``` json
+### 7. Writing Tests
+Add a test case to `tests/resources/parser/test_data/<country_section>/` by compressing the HTML of an example article of your publisher to `<publisher_name>.html.gz`, e.g. `LosAngelesTimes.html.gz`.
+Next, specify asserted values your parser should extract from the example HTML in `<publisher_name>.json`, e.g. `LosAngelesTimes.json`.
+Currently, we only support tests for the `title`, `authors` and `topics` attributes. 
+
+A `LosAngelesTimes.json` may look like the following.
+```json
 {
-  "title": "High school lacrosse is starting to have an L.A. moment. Here's why"
-  "authots": ...
-  ...
+  "authors": [
+    "Luca Evans"
+  ],
+  "title": "Victims of Nashville school shooting honored in somber vigil"
 }
 ```
+
 Don't worry if your parser does not support all the attributes specified above. 
 Only those supported by your parser will be tested.
 
-### 9.
-Make sure you tested your parser before opening a PR and once again go through the attributes guidelines and ensure your parser is compliant with them.
+### 8. Opening a Pull Request
+Make sure you tested your parser before opening a pull request. 
+Once again, go through the attributes guidelines and ensure your parser is compliant with them.
