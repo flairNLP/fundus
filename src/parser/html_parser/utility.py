@@ -6,6 +6,7 @@ from datetime import datetime
 from functools import total_ordering
 from typing import (
     Callable,
+    ClassVar,
     Dict,
     List,
     Literal,
@@ -15,7 +16,6 @@ from typing import (
     Type,
     Union,
     cast,
-    ClassVar,
 )
 
 import dateutil.tz
