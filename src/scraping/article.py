@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field, fields
 from datetime import datetime
 from textwrap import TextWrapper, dedent
-from typing import Any, Dict, List, Optional, Set, Iterator, Tuple
+from typing import Any, Dict, Iterator, List, Optional, Set, Tuple
 
 import more_itertools
 from colorama import Fore, Style
@@ -24,8 +24,8 @@ class Article:
 
     @classmethod
     def from_extracted(
-            cls, source: ArticleSource, extracted: Dict[str, Any], exception: Optional[Exception] = None
-    ) -> 'Article':
+        cls, source: ArticleSource, extracted: Dict[str, Any], exception: Optional[Exception] = None
+    ) -> "Article":
         supported_attributes: Set[str] = {article_field.name for article_field in fields(cls)}
 
         extracted_unsupported: Iterator[Tuple[str, Any]]

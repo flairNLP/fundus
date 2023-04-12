@@ -23,7 +23,7 @@ class ArticleSource:
     html: str
     crawl_date: datetime
     publisher: Optional[str] = None
-    source: Optional['Source'] = None
+    source: Optional["Source"] = None
 
 
 class Source(Iterable[str], ABC):
@@ -63,7 +63,7 @@ class Source(Iterable[str], ABC):
                     html=response.text,
                     crawl_date=datetime.now(),
                     publisher=self.publisher,
-                    crawler_ref=self,
+                    source=self,
                 )
                 return article_source
 
