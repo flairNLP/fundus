@@ -95,8 +95,8 @@ def _register(cls, factory: Type[RegisteredFunction], **kwargs):
     return wrapper(cls)
 
 
-def attribute(cls=None, /, *, priority: Optional[int] = None, validation: bool = True):
-    return _register(cls, factory=Attribute, priority=priority, validate=validation)
+def attribute(cls=None, /, *, priority: Optional[int] = None, validate: bool = True):
+    return _register(cls, factory=Attribute, priority=priority, validate=validate)
 
 
 def function(cls=None, /, *, priority: Optional[int] = None):
