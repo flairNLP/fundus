@@ -20,6 +20,7 @@ class US(PublisherEnum):
     )
 
     CNBC = PublisherSpec(
+        name="CNBC",
         domain="https://www.cnbc.com/",
         sitemaps=["https://www.cnbc.com/sitemapAll.xml"],
         news_map="https://www.cnbc.com/sitemap_news.xml",
@@ -27,6 +28,7 @@ class US(PublisherEnum):
     )
 
     TheIntercept = PublisherSpec(
+        name="The Intercept",
         domain="https://theintercept.com/",
         sitemaps=["https://theintercept.com/theintercept/sitemap/master/index/"],
         parser=TheInterceptParser,
@@ -49,6 +51,7 @@ class US(PublisherEnum):
     )
 
     WorldTruth = PublisherSpec(
+        name="World Truth",
         domain="https://worldtruth.tv/",
         rss_feeds=["https://feeds.feedburner.com/ConsciousnessTv"],
         parser=WorldTruthParser,

@@ -31,7 +31,7 @@ class DE(PublisherEnum):
     )
 
     MDR = PublisherSpec(
-        name="Mitteldeutscher Rundfunk",
+        name="Mitteldeutscher Rundfunk (MDR)",
         domain="https://www.mdr.de/",
         rss_feeds=["https://www.mdr.de/nachrichten/index-rss.xml"],
         sitemaps=["https://www.mdr.de/sitemap-index-100.xml"],
@@ -128,6 +128,7 @@ class DE(PublisherEnum):
     )
 
     NTV = PublisherSpec(
+        name="N-Tv",
         domain="https://www.ntv.de/",
         news_map="https://www.n-tv.de/news.xml",
         sitemaps=["https://www.n-tv.de/sitemap.xml"],
@@ -135,6 +136,7 @@ class DE(PublisherEnum):
     )
 
     NDR = PublisherSpec(
+        name="Norddeutscher Rundfunk (NDR)",
         domain="https://www.ndr.de/",
         news_map="https://www.ndr.de/sitemap112-newssitemap.xml",
         sitemaps=["https://www.ndr.de/sitemap112-sitemap.xml"],
@@ -142,6 +144,7 @@ class DE(PublisherEnum):
     )
 
     Taz = PublisherSpec(
+        name="Die Tageszeitung (taz)",
         domain="https://www.taz.de/",
         news_map="https://taz.de/sitemap-google-news.xml",
         sitemaps=["https://taz.de/sitemap-index.xml"],

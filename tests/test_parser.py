@@ -41,6 +41,24 @@ def load_data(publisher: PublisherEnum) -> Dict[str, Any]:
         raise ValueError("Unknown json format")
 
 
+def test_supported():
+    relative_path = Path("supported_news.md")
+    supported_news_path = os.path.join(docs_path, relative_path)
+
+    if not exists(supported_news_path):
+        raise FileNotFoundError(f"The '{relative_path}' is missing. Run 'python -m src/utils/tables.py'")
+
+    with open(supported_news_path, "rb") as file:
+        content = file.read()
+
+    root = lxml.html.fromstring(content)
+    parsed_names: List[lxml.html.HtmlElement] = root.xpath("//table[contains(@class,'source')]//code/text()")
+    for publisher in PublisherCollection:
+        assert publisher.name in parsed_names, (
+            f"Publisher {publisher.name} is not included in README.md. " f"Run 'python -m src/fundus/utils/tables.py'"
+        )
+
+
 class TestBaseParser:
     def test_functions_iter(self, parser_with_function_test, parser_with_static_method):
         assert len(BaseParser.functions()) == 0
@@ -70,14 +88,11 @@ class TestParser:
         for attr in parser.attributes().validated:
             if annotation := attribute_annotations_mapping[attr.__name__]:
                 assert (
-                    attr.__annotations__.get("return") == annotation
+                        attr.__annotations__.get("return") == annotation
                 ), f"Attribute {attr.__name__} for {parser.__name__} failed"
             else:
                 raise KeyError(f"Unsupported attribute '{attr.__name__}'")
 
-    @pytest.mark.parametrize(
-        "publisher", list(PublisherCollection), ids=[publisher.name for publisher in PublisherCollection]
-    )
     def test_parsing(self, publisher: PublisherEnum) -> None:
         html = load_html(publisher)
         comparative_data = load_data(publisher)

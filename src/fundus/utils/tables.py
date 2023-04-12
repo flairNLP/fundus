@@ -1,11 +1,10 @@
-import inspect
 import os.path
 import textwrap
 from pathlib import Path
 from urllib.parse import urlparse
 
 from doc import docs_path
-from src import PublisherCollection
+from src.fundus import PublisherCollection
 
 
 def build_supported_news_table(md_path: str) -> None:
