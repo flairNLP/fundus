@@ -14,15 +14,16 @@ from src.parser.html_parser.utility import (
 
 
 class CNBCParser(BaseParser):
+    _subheadline_selector: CSSSelector = CSSSelector("div[data-module = 'ArticleBody'] > h2")
+    _paragraph_selector: CSSSelector = CSSSelector("div.group > p")
     _key_points_selector: CSSSelector = CSSSelector("div.RenderKeyPoints-list li")
 
     @attribute
     def body(self) -> ArticleBody:
         body: ArticleBody = extract_article_body_with_selector(
             self.precomputed.doc,
-            subheadline_selector="div[data-module = 'ArticleBody'] > h2",
-            paragraph_selector="div.group > p",
-            mode="css",
+            subheadline_selector=self._subheadline_selector,
+            paragraph_selector=self._paragraph_selector,
         )
         description: Optional[str] = self.precomputed.meta.get("og:description")
         if description is not None:
