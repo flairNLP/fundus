@@ -2,6 +2,8 @@ import datetime
 import re
 from typing import List, Optional, Pattern
 
+from lxml.cssselect import CSSSelector
+
 from src.parser.html_parser import ArticleBody, BaseParser, attribute
 from src.parser.html_parser.utility import (
     apply_substitution_pattern_over_list,
@@ -12,16 +14,19 @@ from src.parser.html_parser.utility import (
 )
 
 
-class DieZeitParser(BaseParser):
-    _author_substitution_pattern: Pattern[str] = re.compile(r"DIE ZEIT (Archiv)")
+class DieWeltParser(BaseParser):
+    _author_substitution_pattern: Pattern[str] = re.compile(r"WELT")
+    _paragraph_selector = CSSSelector("body .c-article-text > p")
+    _summary_selector = CSSSelector("div.c-summary__intro")
+    _subheadline_selector = CSSSelector(".c-article-text > h3")
 
     @attribute
     def body(self) -> ArticleBody:
         return extract_article_body_with_selector(
             self.precomputed.doc,
-            summary_selector="div.summary",
-            subheadline_selector="div.article-page > h2",
-            paragraph_selector="div.article-page > p",
+            summary_selector=self._summary_selector,
+            subheadline_selector=self._subheadline_selector,
+            paragraph_selector=self._paragraph_selector,
         )
 
     @attribute

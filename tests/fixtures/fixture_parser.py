@@ -42,14 +42,14 @@ def parser_with_attr_title():
 
 
 @pytest.fixture
-def parser_with_supported_and_unsupported():
-    class ParserWithSupportedAndUnsupported(BaseParser):
+def parser_with_validated_and_unvalidated():
+    class ParserWithValidatedAndUnvalidated(BaseParser):
         @attribute
-        def supported(self) -> str:
+        def validated(self) -> str:
             return "supported"
 
-        @attribute(supported=False)
-        def unsupported(self) -> str:
+        @attribute(validate=False)
+        def unvalidated(self) -> str:
             return "unsupported"
 
-    return ParserWithSupportedAndUnsupported
+    return ParserWithValidatedAndUnvalidated

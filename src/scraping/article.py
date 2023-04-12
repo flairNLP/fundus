@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field, fields
 from datetime import datetime
 from textwrap import TextWrapper, dedent
-from typing import Any, Dict, List, Optional, Set, Iterator, Tuple
+from typing import Any, Dict, Iterator, List, Optional, Set, Tuple
 
 import more_itertools
 from colorama import Fore, Style
@@ -24,18 +24,18 @@ class Article:
 
     @classmethod
     def from_extracted(
-            cls, source: ArticleSource, extracted: Dict[str, Any], exception: Optional[Exception] = None
-    ) -> 'Article':
-        supported_attributes: Set[str] = {article_field.name for article_field in fields(cls)}
+        cls, source: ArticleSource, extracted: Dict[str, Any], exception: Optional[Exception] = None
+    ) -> "Article":
+        validated_attributes: Set[str] = {article_field.name for article_field in fields(cls)}
 
-        extracted_unsupported: Iterator[Tuple[str, Any]]
-        extracted_supported: Iterator[Tuple[str, Any]]
-        extracted_unsupported, extracted_supported = more_itertools.partition(
-            lambda attribute_and_value: attribute_and_value[0] in supported_attributes, extracted.items()
+        extracted_unvalidated: Iterator[Tuple[str, Any]]
+        extracted_validated: Iterator[Tuple[str, Any]]
+        extracted_unvalidated, extracted_validated = more_itertools.partition(
+            lambda attribute_and_value: attribute_and_value[0] in validated_attributes, extracted.items()
         )
 
-        article: Article = cls(source, exception, **dict(extracted_supported))
-        for attribute, value in extracted_unsupported:
+        article: Article = cls(source, exception, **dict(extracted_validated))
+        for attribute, value in extracted_unvalidated:
             object.__setattr__(article, attribute, value)  # Sets attributes on a frozen dataclass
 
         return article
@@ -45,8 +45,8 @@ class Article:
         body = self.body
         return str(body) if body else None
 
-    def __getattr__(self, item: object):
-        raise AttributeError(f"'{self.__class__.__name__}' object has no attribute '{item}'")
+    def __getattr__(self, item: object) -> Any:
+        raise AttributeError(f"'{type(self).__name__}' object has no attribute '{item}'")
 
     def __str__(self):
         # the subsequent indent here is a bit wacky, but textwrapper.dedent won't work with tabs, so we have to use

@@ -5,6 +5,9 @@ from .cnbc import CNBCParser
 from .fox_news import FoxNewsParser
 from .free_beacon import FreeBeaconParser
 from .the_gateway_pundit import TheGatewayPunditParser
+from .the_intercept import TheInterceptParser
+from .washington_times_parser import WashingtonTimesParser
+from .world_truth import WorldTruthParser
 
 
 class US(PublisherEnum):
@@ -20,6 +23,11 @@ class US(PublisherEnum):
         sitemaps=["https://www.cnbc.com/sitemapAll.xml"],
         news_map="https://www.cnbc.com/sitemap_news.xml",
         parser=CNBCParser,
+
+    TheIntercept = PublisherSpec(
+        domain="https://theintercept.com/",
+        sitemaps=["https://theintercept.com/theintercept/sitemap/master/index/"],
+        parser=TheInterceptParser,
     )
 
     TheGatewayPundit = PublisherSpec(
@@ -36,8 +44,24 @@ class US(PublisherEnum):
         parser=FoxNewsParser,
     )
 
+    WorldTruth = PublisherSpec(
+        domain="https://worldtruth.tv/",
+        rss_feeds=["https://feeds.feedburner.com/ConsciousnessTv"],
+        parser=WorldTruthParser,
+    )
+
     FreeBeacon = PublisherSpec(
         domain="https://freebeacon.com/",
         news_map="https://freebeacon.com/post_google_news.xml",
         parser=FreeBeaconParser,
+    )
+
+    WashingtonTimes = PublisherSpec(
+        domain="https://www.washingtontimes.com/",
+        rss_feeds=["https://www.washingtontimes.com/rss/headlines/news/politics/"],
+        sitemaps=[
+            "https://www.washingtontimes.com/sitemap-stories.xml",
+            "https://www.washingtontimes.com/sitemap-entries.xml",
+        ],
+        parser=WashingtonTimesParser,
     )

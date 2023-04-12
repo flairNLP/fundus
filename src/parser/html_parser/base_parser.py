@@ -21,6 +21,7 @@ from typing import (
 
 import lxml.html
 import more_itertools
+from lxml.etree import XPath
 
 from src.parser.html_parser.data import LinkedDataMapping
 from src.parser.html_parser.utility import get_meta_content
@@ -72,8 +73,8 @@ class RegisteredFunction(ABC):
 
 
 class Attribute(RegisteredFunction):
-    def __init__(self, func: Callable[[object], Any], priority: Optional[int], supported: bool):
-        self.supported = supported
+    def __init__(self, func: Callable[[object], Any], priority: Optional[int], validate: bool):
+        self.validate = validate
         super(Attribute, self).__init__(func=func, priority=priority)
 
 
@@ -94,8 +95,8 @@ def _register(cls, factory: Type[RegisteredFunction], **kwargs):
     return wrapper(cls)
 
 
-def attribute(cls=None, /, *, priority: Optional[int] = None, supported: bool = True):
-    return _register(cls, factory=Attribute, priority=priority, supported=supported)
+def attribute(cls=None, /, *, priority: Optional[int] = None, validate: bool = True):
+    return _register(cls, factory=Attribute, priority=priority, validate=validate)
 
 
 def function(cls=None, /, *, priority: Optional[int] = None):
@@ -125,12 +126,12 @@ class RegisteredFunctionCollection(Collection[RegisteredFunctionT_co]):
 
 class AttributeCollection(RegisteredFunctionCollection[Attribute]):
     @property
-    def supported(self) -> List[Attribute]:
-        return [attr for attr in self.functions if attr.supported]
+    def validated(self) -> List[Attribute]:
+        return [attr for attr in self.functions if attr.validate]
 
     @property
-    def unsupported(self) -> List[Attribute]:
-        return [attr for attr in self.functions if not attr.supported]
+    def unvalidated(self) -> List[Attribute]:
+        return [attr for attr in self.functions if not attr.validate]
 
 
 class FunctionCollection(RegisteredFunctionCollection[Function]):
@@ -148,6 +149,7 @@ class Precomputed:
 
 class BaseParser(ABC):
     precomputed: Precomputed
+    _ld_selector: XPath = XPath("//script[@type='application/ld+json']")
 
     def __init__(self):
         predicate: Callable[[object], bool] = lambda x: isinstance(x, RegisteredFunction)
@@ -176,7 +178,7 @@ class BaseParser(ABC):
 
     def _base_setup(self, html: str) -> None:
         doc = lxml.html.document_fromstring(html)
-        ld_nodes = doc.xpath("//script[@type='application/ld+json']")
+        ld_nodes = self._ld_selector(doc)
         lds = [json.loads(node.text_content()) for node in ld_nodes]
         collapsed_lds = more_itertools.collapse(lds, base_type=dict)
         self.precomputed = Precomputed(html, doc, get_meta_content(doc), LinkedDataMapping(collapsed_lds))
