@@ -51,10 +51,10 @@ class TestBaseParser:
         assert len(parser_with_attr_title.attributes()) == 1
         assert parser_with_attr_title.attributes().names == ["title"]
 
-    def test_supported_unsupported(self, parser_with_supported_and_unsupported):
-        parser = parser_with_supported_and_unsupported
+    def test_supported_unsupported(self, parser_with_validated_and_unvalidated):
+        parser = parser_with_validated_and_unvalidated
         assert len(parser.attributes()) == 2
-        assert parser.attributes().validate == [parser.validate]
+        assert parser.attributes().validated == [parser.validated]
         assert parser.attributes().unvalidated == [parser.unvalidated]
 
 
