@@ -48,7 +48,7 @@ def parser_with_validated_and_unvalidated():
         def validated(self) -> str:
             return "supported"
 
-        @attribute(validation=False)
+        @attribute(validate=False)
         def unvalidated(self) -> str:
             return "unsupported"
 
