@@ -21,6 +21,7 @@ from typing import (
 
 import lxml.html
 import more_itertools
+from lxml.etree import XPath
 
 from src.parser.html_parser.data import LinkedDataMapping
 from src.parser.html_parser.utility import get_meta_content
@@ -148,6 +149,7 @@ class Precomputed:
 
 class BaseParser(ABC):
     precomputed: Precomputed
+    _ld_selector: XPath = XPath("//script[@type='application/ld+json']")
 
     def __init__(self):
         predicate: Callable[[object], bool] = lambda x: isinstance(x, RegisteredFunction)
@@ -176,7 +178,7 @@ class BaseParser(ABC):
 
     def _base_setup(self, html: str) -> None:
         doc = lxml.html.document_fromstring(html)
-        ld_nodes = doc.xpath("//script[@type='application/ld+json']")
+        ld_nodes = self._ld_selector(doc)
         lds = [json.loads(node.text_content()) for node in ld_nodes]
         collapsed_lds = more_itertools.collapse(lds, base_type=dict)
         self.precomputed = Precomputed(html, doc, get_meta_content(doc), LinkedDataMapping(collapsed_lds))

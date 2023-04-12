@@ -10,6 +10,8 @@ from typing import Callable, Dict, Generator, Iterable, Iterator, List, Optional
 import feedparser
 import lxml.html
 import requests
+from lxml.cssselect import CSSSelector
+from lxml.etree import XPath
 from requests import HTTPError
 
 from src.logging.logger import basic_logger
@@ -134,6 +136,9 @@ class _ArchiveDecompressor:
 
 
 class SitemapSource(Source):
+    _sitemap_selector: XPath = CSSSelector("sitemap > loc")
+    _url_selector: XPath = CSSSelector("url > loc")
+
     def __init__(
         self,
         sitemap: str,
@@ -170,10 +175,10 @@ class SitemapSource(Source):
             if (content_type := response.headers.get("Content-Type")) in self._decompressor.supported_file_formats:
                 content = self._decompressor.decompress(content, content_type)
             tree = lxml.html.fromstring(content)
-            urls = [node.text_content() for node in tree.cssselect("url > loc")]
+            urls = [node.text_content() for node in self._url_selector(tree)]
             yield from reversed(urls) if self.reverse else urls
             if self.recursive:
-                sitemap_locs = [node.text_content() for node in tree.cssselect("sitemap > loc")]
+                sitemap_locs = [node.text_content() for node in self._sitemap_selector(tree)]
                 for loc in reversed(sitemap_locs) if self.reverse else sitemap_locs:
                     yield from yield_recursive(loc)
 

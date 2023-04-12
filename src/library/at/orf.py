@@ -1,5 +1,7 @@
-from datetime import datetime
+import datetime
 from typing import List, Optional
+
+from lxml.cssselect import CSSSelector
 
 from src.parser.html_parser import ArticleBody, BaseParser, attribute
 from src.parser.html_parser.utility import (
@@ -9,14 +11,18 @@ from src.parser.html_parser.utility import (
 )
 
 
-class SPONParser(BaseParser):
+class OrfParser(BaseParser):
+    _paragraph_selector = CSSSelector("div.story-story > " "p:not(.caption.tvthek.stripe-credits)")
+    _summary_selector = CSSSelector("div.story-lead > p")
+    _subheadline_selector = CSSSelector("div.story-story > h2")
+
     @attribute
     def body(self) -> ArticleBody:
         return extract_article_body_with_selector(
             self.precomputed.doc,
-            summary_selector="header .leading-loose",
-            subheadline_selector="main .word-wrap > h3",
-            paragraph_selector="main .word-wrap > p",
+            summary_selector=self._summary_selector,
+            subheadline_selector=self._subheadline_selector,
+            paragraph_selector=self._paragraph_selector,
         )
 
     @attribute
@@ -24,7 +30,7 @@ class SPONParser(BaseParser):
         return generic_author_parsing(self.precomputed.ld.bf_search("author"))
 
     @attribute
-    def publishing_date(self) -> Optional[datetime]:
+    def publishing_date(self) -> Optional[datetime.datetime]:
         return generic_date_parsing(self.precomputed.ld.bf_search("datePublished"))
 
     @attribute

@@ -2,18 +2,21 @@ from datetime import datetime
 
 from src.library.collection.base_objects import PublisherEnum, PublisherSpec
 
-from .berliner_zeitung_parser import BerlinerZeitungParser
-from .die_welt_parser import DieWeltParser
-from .die_zeit_parser import DieZeitParser
-from .dw_parser import DWParser
-from .faz_parser import FAZParser
-from .focus_parser import FocusParser
-from .mdr_parser import MDRParser
-from .merkur_parser import MerkurParser
-from .spon_parser import SPONParser
-from .stern_parser import SternParser
-from .sz_parser import SZParser
-from .tagesschau_parser import TagesschauParser
+from .berliner_zeitung import BerlinerZeitungParser
+from .die_welt import DieWeltParser
+from .die_zeit import DieZeitParser
+from .dw import DWParser
+from .faz import FAZParser
+from .focus import FocusParser
+from .mdr import MDRParser
+from .merkur import MerkurParser
+from .ndr import NDRParser
+from .ntv import NTVParser
+from .spon import SPONParser
+from .stern import SternParser
+from .sz import SZParser
+from .tagesschau import TagesschauParser
+from .taz import TazParser
 
 
 # noinspection PyPep8Naming
@@ -110,4 +113,25 @@ class DE(PublisherEnum):
         domain="https://www.stern.de/",
         rss_feeds=["https://www.stern.de/feed/standard/alle-nachrichten/"],
         parser=SternParser,
+    )
+
+    NTV = PublisherSpec(
+        domain="https://www.ntv.de/",
+        news_map="https://www.n-tv.de/news.xml",
+        sitemaps=["https://www.n-tv.de/sitemap.xml"],
+        parser=NTVParser,
+    )
+
+    NDR = PublisherSpec(
+        domain="https://www.ndr.de/",
+        news_map="https://www.ndr.de/sitemap112-newssitemap.xml",
+        sitemaps=["https://www.ndr.de/sitemap112-sitemap.xml"],
+        parser=NDRParser,
+    )
+
+    Taz = PublisherSpec(
+        domain="https://www.taz.de/",
+        news_map="https://taz.de/sitemap-google-news.xml",
+        sitemaps=["https://taz.de/sitemap-index.xml"],
+        parser=TazParser,
     )

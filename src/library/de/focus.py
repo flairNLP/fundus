@@ -2,6 +2,9 @@ import datetime
 import re
 from typing import List, Match, Optional, Pattern
 
+from lxml.cssselect import CSSSelector
+from lxml.etree import XPath
+
 from src.parser.html_parser import ArticleBody, BaseParser, attribute
 from src.parser.html_parser.utility import (
     extract_article_body_with_selector,
@@ -11,6 +14,13 @@ from src.parser.html_parser.utility import (
 
 
 class FocusParser(BaseParser):
+    # selectors
+    _paragraph_selector = CSSSelector("div.textBlock > p")
+    _summary_selector = CSSSelector("div.leadIn > p")
+    _subheadline_selector = CSSSelector("div.textBlock > h2")
+    _snippet_selector = XPath('string(//script[@type="text/javascript"][contains(text(), "window.bf__bfa_metadata")])')
+
+    # regex patterns
     _author_substitution_pattern: Pattern[str] = re.compile(
         r"Von FOCUS-online-(Redakteur|Autorin|Reporter|Redakteurin|Gastautor)\s"
     )
@@ -21,9 +31,9 @@ class FocusParser(BaseParser):
     def body(self) -> ArticleBody:
         return extract_article_body_with_selector(
             self.precomputed.doc,
-            summary_selector="div.leadIn > p",
-            subheadline_selector="div.textBlock > h2",
-            paragraph_selector="div.textBlock > p",
+            summary_selector=self._summary_selector,
+            subheadline_selector=self._subheadline_selector,
+            paragraph_selector=self._paragraph_selector,
         )
 
     @attribute
@@ -43,9 +53,7 @@ class FocusParser(BaseParser):
 
     @attribute
     def topics(self) -> List[str]:
-        snippet = self.precomputed.doc.xpath(
-            'string(//script[@type="text/javascript"][contains(text(), "window.bf__bfa_metadata")])'
-        )
+        snippet = self._snippet_selector(self.precomputed.doc)
         if not snippet:
             return []
 
