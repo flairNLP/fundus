@@ -23,6 +23,7 @@ class US(PublisherEnum):
         sitemaps=["https://www.cnbc.com/sitemapAll.xml"],
         news_map="https://www.cnbc.com/sitemap_news.xml",
         parser=CNBCParser,
+    )
 
     TheIntercept = PublisherSpec(
         domain="https://theintercept.com/",
