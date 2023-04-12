@@ -34,8 +34,8 @@ class Article:
             lambda attribute_and_value: attribute_and_value[0] in supported_attributes, extracted.items()
         )
 
-        article: Article = cls(source, exception, **dict(extracted_supported))
-        for attribute, value in extracted_unsupported:
+        article: Article = cls(source, exception, **dict(extracted_validated))
+        for attribute, value in extracted_unvalidated:
             object.__setattr__(article, attribute, value)  # Sets attributes on a frozen dataclass
 
         return article
