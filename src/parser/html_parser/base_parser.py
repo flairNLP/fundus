@@ -73,8 +73,8 @@ class RegisteredFunction(ABC):
 
 
 class Attribute(RegisteredFunction):
-    def __init__(self, func: Callable[[object], Any], priority: Optional[int], supported: bool):
-        self.supported = supported
+    def __init__(self, func: Callable[[object], Any], priority: Optional[int], validate: bool):
+        self.validate = validate
         super(Attribute, self).__init__(func=func, priority=priority)
 
 
@@ -95,8 +95,8 @@ def _register(cls, factory: Type[RegisteredFunction], **kwargs):
     return wrapper(cls)
 
 
-def attribute(cls=None, /, *, priority: Optional[int] = None, supported: bool = True):
-    return _register(cls, factory=Attribute, priority=priority, supported=supported)
+def attribute(cls=None, /, *, priority: Optional[int] = None, validation: bool = True):
+    return _register(cls, factory=Attribute, priority=priority, validate=validation)
 
 
 def function(cls=None, /, *, priority: Optional[int] = None):
@@ -126,12 +126,12 @@ class RegisteredFunctionCollection(Collection[RegisteredFunctionT_co]):
 
 class AttributeCollection(RegisteredFunctionCollection[Attribute]):
     @property
-    def supported(self) -> List[Attribute]:
-        return [attr for attr in self.functions if attr.supported]
+    def validated(self) -> List[Attribute]:
+        return [attr for attr in self.functions if attr.validate]
 
     @property
-    def unsupported(self) -> List[Attribute]:
-        return [attr for attr in self.functions if not attr.supported]
+    def unvalidated(self) -> List[Attribute]:
+        return [attr for attr in self.functions if not attr.validate]
 
 
 class FunctionCollection(RegisteredFunctionCollection[Function]):

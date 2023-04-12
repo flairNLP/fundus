@@ -48,7 +48,7 @@ def parser_with_supported_and_unsupported():
         def supported(self) -> str:
             return "supported"
 
-        @attribute(supported=False)
+        @attribute(validation=False)
         def unsupported(self) -> str:
             return "unsupported"
 

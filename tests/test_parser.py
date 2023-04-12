@@ -54,8 +54,8 @@ class TestBaseParser:
     def test_supported_unsupported(self, parser_with_supported_and_unsupported):
         parser = parser_with_supported_and_unsupported
         assert len(parser.attributes()) == 2
-        assert parser.attributes().supported == [parser.supported]
-        assert parser.attributes().unsupported == [parser.unsupported]
+        assert parser.attributes().validate == [parser.validate]
+        assert parser.attributes().unvalidated == [parser.unvalidated]
 
 
 @pytest.mark.parametrize(
@@ -64,7 +64,7 @@ class TestBaseParser:
 class TestParser:
     def test_annotations(self, publisher: PublisherEnum) -> None:
         parser = publisher.parser
-        for attr in parser.attributes().supported:
+        for attr in parser.attributes().validated:
             if annotation := attribute_annotations_mapping[attr.__name__]:
                 assert (
                     attr.__annotations__.get("return") == annotation
