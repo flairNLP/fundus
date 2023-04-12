@@ -1,6 +1,7 @@
 from src.library.collection.base_objects import PublisherEnum, PublisherSpec
 
 from .ap_news import APNewsParser
+from .cnbc import CNBCParser
 from .fox_news import FoxNewsParser
 from .free_beacon import FreeBeaconParser
 from .the_gateway_pundit import TheGatewayPunditParser
@@ -15,6 +16,13 @@ class US(PublisherEnum):
         sitemaps=["https://apnews.com/sitemap/sitemaps/sitemap_index.xml"],
         news_map="https://apnews.com/sitemap/google-news-sitemap/sitemap_index.xml",
         parser=APNewsParser,
+    )
+
+    CNBC = PublisherSpec(
+        domain="https://www.cnbc.com/",
+        sitemaps=["https://www.cnbc.com/sitemapAll.xml"],
+        news_map="https://www.cnbc.com/sitemap_news.xml",
+        parser=CNBCParser,
     )
 
     TheIntercept = PublisherSpec(
@@ -36,6 +44,7 @@ class US(PublisherEnum):
         news_map="https://www.foxnews.com/sitemap.xml?type=news",
         parser=FoxNewsParser,
     )
+
     WorldTruth = PublisherSpec(
         domain="https://worldtruth.tv/",
         rss_feeds=["https://feeds.feedburner.com/ConsciousnessTv"],
