@@ -17,7 +17,7 @@ def _parse_attribute_annotations() -> Dict[str, object]:
     from datetime import datetime
     from typing import Optional
 
-    from src.fundus.parser import ArticleBody
+    from fundus.parser import ArticleBody
 
     relative_path = Path("attribute_guidelines.md")
     attribute_guidelines_path = os.path.join(docs_path, relative_path)

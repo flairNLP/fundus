@@ -6,9 +6,9 @@ from typing import Any, Dict
 
 import pytest
 
-from src.fundus.parser.base_parser import Attribute, BaseParser
-from src.fundus.publishers import PublisherCollection
-from src.fundus.publishers.base_objects import PublisherEnum
+from fundus.parser.base_parser import Attribute, BaseParser
+from fundus.publishers import PublisherCollection
+from fundus.publishers.base_objects import PublisherEnum
 from tests.resources import attribute_annotations_mapping, parser_test_data_path
 
 

@@ -1,6 +1,6 @@
 import pytest
 
-from src.fundus.parser import BaseParser, attribute, function
+from fundus.parser import BaseParser, attribute, function
 
 
 @pytest.fixture

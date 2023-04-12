@@ -1,7 +1,7 @@
 import pytest
 
-from src.fundus.parser import BaseParser
-from src.fundus.publishers.base_objects import PublisherEnum, PublisherSpec
+from fundus.parser import BaseParser
+from fundus.publishers.base_objects import PublisherEnum, PublisherSpec
 
 
 class TestCollection:

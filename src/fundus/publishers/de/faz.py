@@ -3,8 +3,8 @@ from typing import List, Optional
 
 from lxml.cssselect import CSSSelector
 
-from src.fundus.parser import ArticleBody, BaseParser, attribute
-from src.fundus.parser.utility import (
+from fundus.parser import ArticleBody, BaseParser, attribute
+from fundus.parser.utility import (
     extract_article_body_with_selector,
     generic_date_parsing,
     generic_topic_parsing,
