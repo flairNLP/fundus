@@ -33,8 +33,8 @@ Fundus requires Python 3.8+.
 Let's use Fundus to crawl 2 articles of German-language news.
 
 ```python
-from src.library.collection import PublisherCollection
-from src.scraping.pipeline import Crawler
+
+from src.fundus import PublisherCollection, Crawler
 
 # initialize the crawler for German-language news
 pipeline = Crawler(PublisherCollection.de)
@@ -69,8 +69,8 @@ This means that you crawled 2 articles from different German-language sources.
 Maybe you want to crawl a specific news source instead. Let's crawl news articles form Berliner Zeitung only:
 
 ```python
-from src.library.collection import PublisherCollection
-from src.scraping.pipeline import Crawler
+
+from src.fundus import PublisherCollection, Crawler
 
 # initialize the crawler for German-language news
 pipeline = Crawler(PublisherCollection.de.BerlinerZeitung)
