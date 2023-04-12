@@ -46,6 +46,6 @@ class CNBCParser(BaseParser):
     def topics(self) -> List[str]:
         return generic_topic_parsing(self.precomputed.meta.get("keywords"))
 
-    @attribute(supported=False)
+    @attribute(validate=False)
     def key_points(self) -> List[str]:
         return [key_point.text_content() for key_point in self._key_points_selector(self.precomputed.doc)]
