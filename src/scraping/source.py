@@ -1,5 +1,6 @@
 import gzip
 from abc import ABC, abstractmethod
+from dataclasses import dataclass
 from datetime import datetime
 from functools import cached_property
 from multiprocessing.pool import ThreadPool
@@ -14,7 +15,15 @@ from lxml.etree import XPath
 from requests import HTTPError
 
 from src.logging.logger import basic_logger
-from src.scraping.article import ArticleSource
+
+
+@dataclass(frozen=True)
+class ArticleSource:
+    url: str
+    html: str
+    crawl_date: datetime
+    publisher: Optional[str] = None
+    source: Optional["Source"] = None
 
 
 class Source(Iterable[str], ABC):
@@ -54,7 +63,7 @@ class Source(Iterable[str], ABC):
                     html=response.text,
                     crawl_date=datetime.now(),
                     publisher=self.publisher,
-                    crawler_ref=self,
+                    source=self,
                 )
                 return article_source
 

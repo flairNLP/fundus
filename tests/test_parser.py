@@ -8,7 +8,7 @@ import pytest
 
 from src.library.collection import PublisherCollection
 from src.library.collection.base_objects import PublisherEnum
-from src.parser.html_parser.base_parser import Attribute
+from src.parser.html_parser.base_parser import Attribute, BaseParser
 from tests.resources import attribute_annotations_mapping, parser_test_data_path
 
 
@@ -38,13 +38,33 @@ def load_data(publisher: PublisherEnum) -> Dict[str, Any]:
         raise ValueError("Unknown json format")
 
 
+class TestBaseParser:
+    def test_functions_iter(self, parser_with_function_test, parser_with_static_method):
+        assert len(BaseParser.functions()) == 0
+        assert len(parser_with_static_method.functions()) == 0
+        assert len(parser_with_function_test.functions()) == 1
+        assert parser_with_function_test.functions().names == ["test"]
+
+    def test_attributes_iter(self, parser_with_attr_title, parser_with_static_method):
+        assert len(BaseParser.attributes()) == 0
+        assert len(parser_with_static_method.attributes()) == 0
+        assert len(parser_with_attr_title.attributes()) == 1
+        assert parser_with_attr_title.attributes().names == ["title"]
+
+    def test_supported_unsupported(self, parser_with_validated_and_unvalidated):
+        parser = parser_with_validated_and_unvalidated
+        assert len(parser.attributes()) == 2
+        assert parser.attributes().validated == [parser.validated]
+        assert parser.attributes().unvalidated == [parser.unvalidated]
+
+
 @pytest.mark.parametrize(
     "publisher", list(PublisherCollection), ids=[publisher.name for publisher in PublisherCollection]
 )
 class TestParser:
     def test_annotations(self, publisher: PublisherEnum) -> None:
         parser = publisher.parser
-        for attr in parser.attributes():
+        for attr in parser.attributes().validated:
             if annotation := attribute_annotations_mapping[attr.__name__]:
                 assert (
                     attr.__annotations__.get("return") == annotation
