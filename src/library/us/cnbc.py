@@ -25,9 +25,6 @@ class CNBCParser(BaseParser):
             subheadline_selector=self._subheadline_selector,
             paragraph_selector=self._paragraph_selector,
         )
-        description: Optional[str] = self.precomputed.meta.get("og:description")
-        if description is not None:
-            body.summary = TextSequence(texts=(description,))
         return body
 
     @attribute
