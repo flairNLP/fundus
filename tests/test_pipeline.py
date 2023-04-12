@@ -1,4 +1,4 @@
-from src import Crawler
+from src.fundus import Crawler
 
 
 class TestPipeline:

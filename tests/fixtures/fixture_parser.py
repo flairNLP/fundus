@@ -1,6 +1,6 @@
 import pytest
 
-from src.parser.html_parser import BaseParser, attribute, function
+from src.fundus.parser import BaseParser, attribute, function
 
 
 @pytest.fixture
