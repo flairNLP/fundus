@@ -6,10 +6,10 @@ from typing import Any, Dict
 
 import pytest
 
-from src.library.collection import PublisherCollection
-from src.library.collection.base_objects import PublisherEnum
-from src.parser.html_parser.base_parser import Attribute
-from tests.resources import attribute_annotation_mapping, parser_test_data_path
+from src.fundus.parser.base_parser import Attribute, BaseParser
+from src.fundus.publishers import PublisherCollection
+from src.fundus.publishers.base_objects import PublisherEnum
+from tests.resources import attribute_annotations_mapping, parser_test_data_path
 
 
 def load_html(publisher: PublisherEnum) -> str:
@@ -38,14 +38,34 @@ def load_data(publisher: PublisherEnum) -> Dict[str, Any]:
         raise ValueError("Unknown json format")
 
 
+class TestBaseParser:
+    def test_functions_iter(self, parser_with_function_test, parser_with_static_method):
+        assert len(BaseParser.functions()) == 0
+        assert len(parser_with_static_method.functions()) == 0
+        assert len(parser_with_function_test.functions()) == 1
+        assert parser_with_function_test.functions().names == ["test"]
+
+    def test_attributes_iter(self, parser_with_attr_title, parser_with_static_method):
+        assert len(BaseParser.attributes()) == 0
+        assert len(parser_with_static_method.attributes()) == 0
+        assert len(parser_with_attr_title.attributes()) == 1
+        assert parser_with_attr_title.attributes().names == ["title"]
+
+    def test_supported_unsupported(self, parser_with_validated_and_unvalidated):
+        parser = parser_with_validated_and_unvalidated
+        assert len(parser.attributes()) == 2
+        assert parser.attributes().validated == [parser.validated]
+        assert parser.attributes().unvalidated == [parser.unvalidated]
+
+
 @pytest.mark.parametrize(
     "publisher", list(PublisherCollection), ids=[publisher.name for publisher in PublisherCollection]
 )
 class TestParser:
     def test_annotations(self, publisher: PublisherEnum) -> None:
         parser = publisher.parser
-        for attr in parser.attributes():
-            if annotation := attribute_annotation_mapping.get(attr.__name__):
+        for attr in parser.attributes().validated:
+            if annotation := attribute_annotations_mapping[attr.__name__]:
                 assert (
                     attr.__annotations__.get("return") == annotation
                 ), f"Attribute {attr.__name__} for {parser.__name__} failed"
@@ -70,6 +90,6 @@ class TestParser:
 
     def test_reserved_attribute_names(self, publisher: PublisherEnum):
         parser = publisher.parser
-        for attr in attribute_annotation_mapping.keys():
+        for attr in attribute_annotations_mapping.keys():
             if value := getattr(parser, attr, None):
                 assert isinstance(value, Attribute), f"The name '{attr}' is reserved for attributes only."

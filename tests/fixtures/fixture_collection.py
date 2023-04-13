@@ -1,7 +1,10 @@
 import pytest
 
-from src.library.collection import CollectionMeta
-from src.library.collection.base_objects import PublisherEnum, PublisherSpec
+from src.fundus.publishers.base_objects import (
+    CollectionMeta,
+    PublisherEnum,
+    PublisherSpec,
+)
 
 
 @pytest.fixture
