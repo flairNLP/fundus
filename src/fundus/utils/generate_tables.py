@@ -32,7 +32,15 @@ def build_supported_news_table(md_path: str) -> None:
                         <td><code>{publisher.name}</code></td>
                     </tr>"""
                 file.write(textwrap.indent(textwrap.dedent(pub_row), prefix="\t"))
-            file.write("</table>")
+            file.write("\n</table>\n")
+
+        css: str = """
+            table {
+                table-layout: fixed;
+                width: 100%;
+            }
+        """
+        file.write(textwrap.dedent(css))
 
 
 if __name__ == "__main__":

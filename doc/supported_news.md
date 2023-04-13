@@ -26,6 +26,15 @@
 	    <td><code>DW</code></td>
 	</tr>
 	<tr>
+	    <td>Die Tageszeitung (taz)</td>
+	    <td>
+	        <a href="https://www.taz.de/">
+	            <span>www.taz.de</span>
+	        </a>
+	    </td>
+	    <td><code>Taz</code></td>
+	</tr>
+	<tr>
 	    <td>Die Welt</td>
 	    <td>
 	        <a href="https://www.welt.de/">
@@ -62,7 +71,7 @@
 	    <td><code>FAZ</code></td>
 	</tr>
 	<tr>
-	    <td>Mitteldeutscher Rundfunk</td>
+	    <td>Mitteldeutscher Rundfunk (MDR)</td>
 	    <td>
 	        <a href="https://www.mdr.de/">
 	            <span>www.mdr.de</span>
@@ -78,6 +87,24 @@
 	        </a>
 	    </td>
 	    <td><code>Merkur</code></td>
+	</tr>
+	<tr>
+	    <td>N-Tv</td>
+	    <td>
+	        <a href="https://www.ntv.de/">
+	            <span>www.ntv.de</span>
+	        </a>
+	    </td>
+	    <td><code>NTV</code></td>
+	</tr>
+	<tr>
+	    <td>Norddeutscher Rundfunk (NDR)</td>
+	    <td>
+	        <a href="https://www.ndr.de/">
+	            <span>www.ndr.de</span>
+	        </a>
+	    </td>
+	    <td><code>NDR</code></td>
 	</tr>
 	<tr>
 	    <td>Spiegel Online</td>
@@ -114,7 +141,9 @@
 	        </a>
 	    </td>
 	    <td><code>Tagesschau</code></td>
-	</tr></table>
+	</tr>
+</table>
+
 
 ## at
 <table class="source at">
@@ -131,7 +160,9 @@
 	        </a>
 	    </td>
 	    <td><code>ORF</code></td>
-	</tr></table>
+	</tr>
+</table>
+
 
 ## us
 <table class="source us">
@@ -148,6 +179,15 @@
 	        </a>
 	    </td>
 	    <td><code>APNews</code></td>
+	</tr>
+	<tr>
+	    <td>CNBC</td>
+	    <td>
+	        <a href="https://www.cnbc.com/">
+	            <span>www.cnbc.com</span>
+	        </a>
+	    </td>
+	    <td><code>CNBC</code></td>
 	</tr>
 	<tr>
 	    <td>Fox News</td>
@@ -168,6 +208,15 @@
 	    <td><code>TheGatewayPundit</code></td>
 	</tr>
 	<tr>
+	    <td>The Intercept</td>
+	    <td>
+	        <a href="https://theintercept.com/">
+	            <span>theintercept.com</span>
+	        </a>
+	    </td>
+	    <td><code>TheIntercept</code></td>
+	</tr>
+	<tr>
 	    <td>The Washington Free Beacon</td>
 	    <td>
 	        <a href="https://freebeacon.com/">
@@ -184,4 +233,19 @@
 	        </a>
 	    </td>
 	    <td><code>WashingtonTimes</code></td>
-	</tr></table>
+	</tr>
+	<tr>
+	    <td>World Truth</td>
+	    <td>
+	        <a href="https://worldtruth.tv/">
+	            <span>worldtruth.tv</span>
+	        </a>
+	    </td>
+	    <td><code>WorldTruth</code></td>
+	</tr>
+</table>
+
+table {
+    table-layout: fixed;
+    width: 100%;
+}
