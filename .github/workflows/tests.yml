@@ -30,7 +30,7 @@ jobs:
       - name: Install dependencies
         if: steps.cache.outputs.cache-hit != 'true'
         run: |
-          pip install .[dev]
+          pip install -e .[dev]
 
       - name: Run pytest
         run: python -m pytest -vv
@@ -55,7 +55,7 @@ jobs:
       - name: Install dependencies
         if: steps.cache.outputs.cache-hit != 'true'
         run: |
-          pip install .[dev]
+          pip install -e .[dev]
 
       - name: Run mypy
         run: python -m mypy .
