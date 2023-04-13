@@ -4,7 +4,7 @@ from typing import Any, Dict, List, Tuple
 
 import lxml.html
 
-from src.fundus import __development_base_path__ as root_path
+from fundus import __development_base_path__ as root_path
 
 
 # noinspection PyUnresolvedReferences
