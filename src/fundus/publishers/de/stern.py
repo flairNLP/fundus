@@ -45,4 +45,5 @@ class SternParser(BaseParser):
 
     @attribute
     def topics(self) -> List[str]:
-        return generic_topic_parsing(self.precomputed.meta.get("sis-article-keywords"), delimiter="|")
+        topic_nodes = self.precomputed.doc.cssselect(".article__tags li.links__item")
+        return [node.text_content().strip("\n ") for node in topic_nodes]
