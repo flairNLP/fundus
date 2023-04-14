@@ -2,7 +2,7 @@ from dataclasses import dataclass, field
 from enum import Enum, unique
 from typing import Any, Dict, Iterator, List, Optional, Type, Tuple
 
-from src.fundus.parser import BaseParser
+from fundus.parser import BaseParser
 
 
 @dataclass(frozen=True)

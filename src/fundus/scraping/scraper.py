@@ -1,9 +1,9 @@
 from typing import Iterator, Literal
 
-from src.fundus.logging.logger import basic_logger
-from src.fundus.parser import BaseParser
-from src.fundus.scraping.article import Article
-from src.fundus.scraping.source import Source
+from fundus.logging.logger import basic_logger
+from fundus.parser import BaseParser
+from fundus.scraping.article import Article
+from fundus.scraping.source import Source
 
 
 class Scraper:

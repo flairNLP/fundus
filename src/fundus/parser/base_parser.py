@@ -23,8 +23,8 @@ import lxml.html
 import more_itertools
 from lxml.etree import XPath
 
-from src.fundus.parser.data import LinkedDataMapping
-from src.fundus.parser.utility import get_meta_content
+from fundus.parser.data import LinkedDataMapping
+from fundus.parser.utility import get_meta_content
 
 RegisteredFunctionT_co = TypeVar("RegisteredFunctionT_co", covariant=True, bound="RegisteredFunction")
 

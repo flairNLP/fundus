@@ -1,4 +1,4 @@
-from src.fundus.publishers.base_objects import PublisherEnum, PublisherSpec
+from fundus.publishers.base_objects import PublisherEnum, PublisherSpec
 
 from .ap_news import APNewsParser
 from .cnbc import CNBCParser

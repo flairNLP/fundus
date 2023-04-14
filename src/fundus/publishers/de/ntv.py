@@ -5,8 +5,8 @@ from typing import List, Optional, Pattern
 from lxml.cssselect import CSSSelector
 from lxml.etree import XPath
 
-from src.fundus.parser import ArticleBody, BaseParser, attribute
-from src.fundus.parser.utility import (
+from fundus.parser import ArticleBody, BaseParser, attribute
+from fundus.parser.utility import (
     apply_substitution_pattern_over_list,
     extract_article_body_with_selector,
     generic_author_parsing,

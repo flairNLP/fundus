@@ -16,7 +16,7 @@ from typing import (
 
 from typing_extensions import TypeAlias
 
-from src.fundus.logging.logger import basic_logger
+from fundus.logging.logger import basic_logger
 
 _displayed_deprecation_info = False
 

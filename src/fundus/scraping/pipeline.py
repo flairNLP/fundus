@@ -2,11 +2,11 @@ from typing import Iterator, List, Literal, Optional, Set, Tuple, Type, Union
 
 import more_itertools
 
-from src.fundus.publishers.base_objects import PublisherEnum
-from src.fundus.scraping.article import Article
-from src.fundus.scraping.scraper import Scraper
-from src.fundus.scraping.source import RSSSource, SitemapSource, Source
-from src.fundus.utils.validation import listify
+from fundus.publishers.base_objects import PublisherEnum
+from fundus.scraping.article import Article
+from fundus.scraping.scraper import Scraper
+from fundus.scraping.source import RSSSource, SitemapSource, Source
+from fundus.utils.validation import listify
 
 
 class Pipeline:

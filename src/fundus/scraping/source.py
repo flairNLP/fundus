@@ -14,7 +14,7 @@ from lxml.cssselect import CSSSelector
 from lxml.etree import XPath
 from requests import HTTPError
 
-from src.fundus.logging.logger import basic_logger
+from fundus.logging.logger import basic_logger
 
 
 @dataclass(frozen=True)

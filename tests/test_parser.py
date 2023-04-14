@@ -8,16 +8,16 @@ from typing import Any, Dict, List
 import lxml.html
 import pytest
 
-from doc import docs_path
-from src.fundus.parser.base_parser import Attribute, BaseParser
-from src.fundus.publishers import PublisherCollection
-from src.fundus.publishers.base_objects import PublisherEnum
-from tests.resources import attribute_annotations_mapping, parser_test_data_path
+from fundus.parser.base_parser import Attribute, BaseParser
+from fundus.publishers import PublisherCollection
+from fundus.publishers.base_objects import PublisherEnum
+from tests.resources import attribute_annotations_mapping
+from tests.resources.parser.test_data import __module_path__ as test_resource_path
 
 
 def load_html(publisher: PublisherEnum) -> str:
     relative_file_path = Path(f"{publisher.__class__.__name__.lower()}/{publisher.name}.html.gz")
-    absolute_path = os.path.join(parser_test_data_path, relative_file_path)
+    absolute_path = test_resource_path / relative_file_path
 
     with open(absolute_path, "rb") as file:
         content = file.read()
@@ -29,7 +29,7 @@ def load_html(publisher: PublisherEnum) -> str:
 
 def load_data(publisher: PublisherEnum) -> Dict[str, Any]:
     relative_file_path = Path(f"{publisher.__class__.__name__.lower()}/{publisher.name}.json")
-    absolute_path = os.path.join(parser_test_data_path, relative_file_path)
+    absolute_path = test_resource_path / relative_file_path
 
     with open(absolute_path, "r", encoding="utf-8") as file:
         content = file.read()
