@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 from enum import Enum, unique
-from typing import Any, Dict, Iterator, List, Optional, Type, Tuple
+from typing import Any, Dict, Iterator, List, Optional, Tuple, Type
 
 from fundus.parser import BaseParser
 

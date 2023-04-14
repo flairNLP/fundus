@@ -1,13 +1,12 @@
-import os.path
 import textwrap
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Dict, Callable, List, Iterator
+from typing import Callable, Dict, Iterator, List
 from urllib.parse import urlparse
 
-from doc import docs_path
-from fundus.publishers import PublisherEnum
-from src.fundus import PublisherCollection
+from fundus import PublisherCollection
+from fundus import __development_base_path__ as root_path
+from fundus.publishers.base_objects import PublisherEnum
 
 
 @dataclass
@@ -16,17 +15,28 @@ class TableColumn:
     styles: List[str] = field(default_factory=list)
 
     def __call__(self, *args, **kwargs) -> str:
-        style = f' style="{"; ".join(self.styles)}"' if self.styles else ''
-        return textwrap.dedent(f'<td{style}>{self.content(*args, **kwargs)}</td>\n')
+        style = f' style="{"; ".join(self.styles)}"' if self.styles else ""
+        return textwrap.dedent(f"<td{style}>{self.content(*args, **kwargs)}</td>\n")
 
 
 column_mapping: Dict[str, TableColumn] = {
-    "Source": TableColumn(content=lambda spec: f"{spec.publisher_name}", ),
-    "Domain": TableColumn(content=lambda spec: (f'\n\t<a href="{spec.domain}">\n'
-                                                f'\t\t<span>{urlparse(spec.domain).netloc}</span>\n'
-                                                f'\t</a>\n')),
-    "Class": TableColumn(content=lambda spec: f"<code>{spec.name}</code>")
-
+    "Source": TableColumn(
+        content=lambda spec: f"{spec.publisher_name}",
+    ),
+    "Domain": TableColumn(
+        content=lambda spec: (
+            f'\n\t<a href="{spec.domain}">\n' f"\t\t<span>{urlparse(spec.domain).netloc}</span>\n" f"\t</a>\n"
+        )
+    ),
+    "Validated Attributes": TableColumn(
+        content=lambda spec: "<code>" + str(spec.parser.attributes().validated) + "</code>"
+    ),
+    "Unvalidated Attributes": TableColumn(
+        content=lambda spec: "<code>" + str(spec.parser.attributes().unvalidated) + "</code>"
+        if spec.parser.attributes().unvalidated
+        else ""
+    ),
+    "Class": TableColumn(content=lambda spec: f"<code>{spec.name}</code>"),
 }
 
 
@@ -73,7 +83,7 @@ def generate_tbody(country: Iterator[PublisherEnum]) -> str:
     tbody: List[str] = list()
     tbody.append(generate_line("<tbody>"))
     for spec in country:
-        tbody.append(textwrap.indent(generate_tbody_tr(spec), prefix='\t'))
+        tbody.append(textwrap.indent(generate_tbody_tr(spec), prefix="\t"))
     tbody.append(generate_line("</tbody>"))
     return "".join(tbody)
 
@@ -98,8 +108,8 @@ def generate_line(content: str, indent: int = 0, newline: bool = True) -> str:
 if __name__ == "__main__":
     table = build_supported_news_table()
 
-    relative_path = Path("supported_news.md")
-    supported_news_path = os.path.join(docs_path, relative_path)
+    relative_path = Path("doc/supported_news.md")
+    supported_news_path = root_path / relative_path
 
     with open(supported_news_path, "w+", encoding="utf8") as file:
         file.write(table)

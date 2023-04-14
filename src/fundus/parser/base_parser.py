@@ -123,15 +123,18 @@ class RegisteredFunctionCollection(Collection[RegisteredFunctionT_co]):
     def __eq__(self, other: object) -> bool:
         return self.functions == other.functions if isinstance(other, RegisteredFunctionCollection) else False
 
+    def __str__(self) -> str:
+        return ", ".join(self.names)
+
 
 class AttributeCollection(RegisteredFunctionCollection[Attribute]):
     @property
-    def validated(self) -> List[Attribute]:
-        return [attr for attr in self.functions if attr.validate]
+    def validated(self) -> "AttributeCollection":
+        return AttributeCollection(*[attr for attr in self.functions if attr.validate])
 
     @property
-    def unvalidated(self) -> List[Attribute]:
-        return [attr for attr in self.functions if not attr.validate]
+    def unvalidated(self) -> "AttributeCollection":
+        return AttributeCollection(*[attr for attr in self.functions if not attr.validate])
 
 
 class FunctionCollection(RegisteredFunctionCollection[Function]):
@@ -164,12 +167,14 @@ class BaseParser(ABC):
 
     @classmethod
     def attributes(cls) -> AttributeCollection:
-        attrs = [func for _, func in cls._search_members(Attribute) if func.__name__ not in ["__ld", "__meta"]]
+        attrs: List[Attribute] = [
+            func for _, func in cls._search_members(Attribute) if func.__name__ not in ["__ld", "__meta"]
+        ]
         return AttributeCollection(*attrs)
 
     @classmethod
     def functions(cls) -> FunctionCollection:
-        funcs = [func for _, func in cls._search_members(Function)]
+        funcs: List[Function] = [func for _, func in cls._search_members(Function)]
         return FunctionCollection(*funcs)
 
     @property

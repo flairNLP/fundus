@@ -1,6 +1,5 @@
 import gzip
 import json
-import os
 from os.path import exists
 from pathlib import Path
 from typing import Any, Dict, List
@@ -8,7 +7,8 @@ from typing import Any, Dict, List
 import lxml.html
 import pytest
 
-from fundus.parser.base_parser import Attribute, BaseParser
+from fundus import __development_base_path__ as root_path
+from fundus.parser.base_parser import Attribute, AttributeCollection, BaseParser
 from fundus.publishers import PublisherCollection
 from fundus.publishers.base_objects import PublisherEnum
 from tests.resources import attribute_annotations_mapping
@@ -42,21 +42,21 @@ def load_data(publisher: PublisherEnum) -> Dict[str, Any]:
 
 
 def test_supported():
-    relative_path = Path("supported_news.md")
-    supported_news_path = os.path.join(docs_path, relative_path)
+    relative_path = Path("doc/supported_news.md")
+    supported_news_path = root_path / relative_path
 
     if not exists(supported_news_path):
-        raise FileNotFoundError(f"The '{relative_path}' is missing. Run 'python -m src/utils/tables.py'")
+        raise FileNotFoundError(f"The '{relative_path}' is missing. Run 'python -m generate_tables'")
 
     with open(supported_news_path, "rb") as file:
         content = file.read()
 
     root = lxml.html.fromstring(content)
-    parsed_names: List[lxml.html.HtmlElement] = root.xpath("//table[contains(@class,'source')]//code/text()")
+    parsed_names: List[str] = root.xpath("//table[contains(@class,'source')]//code/text()")
     for publisher in PublisherCollection:
-        assert publisher.name in parsed_names, (
-            f"Publisher {publisher.name} is not included in README.md. " f"Run 'python -m src/fundus/utils/tables.py'"
-        )
+        assert (
+            publisher.name in parsed_names
+        ), f"Publisher {publisher.name} is not included in README.md. Run 'python -m fundus.utils.generate_tables'"
 
 
 class TestBaseParser:
@@ -75,8 +75,8 @@ class TestBaseParser:
     def test_supported_unsupported(self, parser_with_validated_and_unvalidated):
         parser = parser_with_validated_and_unvalidated
         assert len(parser.attributes()) == 2
-        assert parser.attributes().validated == [parser.validated]
-        assert parser.attributes().unvalidated == [parser.unvalidated]
+        assert parser.attributes().validated.names == AttributeCollection(parser.validated).names
+        assert parser.attributes().unvalidated.names == AttributeCollection(parser.unvalidated).names
 
 
 @pytest.mark.parametrize(
@@ -88,7 +88,7 @@ class TestParser:
         for attr in parser.attributes().validated:
             if annotation := attribute_annotations_mapping[attr.__name__]:
                 assert (
-                        attr.__annotations__.get("return") == annotation
+                    attr.__annotations__.get("return") == annotation
                 ), f"Attribute {attr.__name__} for {parser.__name__} failed"
             else:
                 raise KeyError(f"Unsupported attribute '{attr.__name__}'")

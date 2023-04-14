@@ -4,7 +4,7 @@
         text-align: center;
     }
     .source td {
-        width: calc(1080px/3);
+        width: calc(1080px/5);
     }
     .source tr > *:first-of-type {
         text-align: left;
@@ -19,6 +19,8 @@
 		<tr>
 			<th>Source</th>
 			<th>Domain</th>
+			<th>Validated Attributes</th>
+			<th>Unvalidated Attributes</th>
 			<th>Class</th>
 		</tr>
 	</thread>
@@ -30,6 +32,8 @@
 					<span>www.welt.de</span>
 				</a>
 			</td>
+			<td><code>authors, body, publishing_date, title, topics</code></td>
+			<td></td>
 			<td><code>DieWelt</code></td>
 		</tr>
 		<tr>
@@ -39,6 +43,8 @@
 					<span>www.mdr.de</span>
 				</a>
 			</td>
+			<td><code>authors, body, publishing_date, title, topics</code></td>
+			<td></td>
 			<td><code>MDR</code></td>
 		</tr>
 		<tr>
@@ -48,6 +54,8 @@
 					<span>www.faz.net</span>
 				</a>
 			</td>
+			<td><code>authors, body, publishing_date, title, topics</code></td>
+			<td></td>
 			<td><code>FAZ</code></td>
 		</tr>
 		<tr>
@@ -57,6 +65,8 @@
 					<span>www.focus.de</span>
 				</a>
 			</td>
+			<td><code>authors, body, publishing_date, title, topics</code></td>
+			<td></td>
 			<td><code>Focus</code></td>
 		</tr>
 		<tr>
@@ -66,6 +76,8 @@
 					<span>www.merkur.de</span>
 				</a>
 			</td>
+			<td><code>authors, body, publishing_date, title</code></td>
+			<td></td>
 			<td><code>Merkur</code></td>
 		</tr>
 		<tr>
@@ -75,6 +87,8 @@
 					<span>www.sueddeutsche.de</span>
 				</a>
 			</td>
+			<td><code>authors, body, publishing_date, title, topics</code></td>
+			<td></td>
 			<td><code>SZ</code></td>
 		</tr>
 		<tr>
@@ -84,6 +98,8 @@
 					<span>www.spiegel.de</span>
 				</a>
 			</td>
+			<td><code>authors, body, publishing_date, title, topics</code></td>
+			<td></td>
 			<td><code>SpiegelOnline</code></td>
 		</tr>
 		<tr>
@@ -93,6 +109,8 @@
 					<span>www.sueddeutsche.de</span>
 				</a>
 			</td>
+			<td><code>authors, body, publishing_date, title, topics</code></td>
+			<td></td>
 			<td><code>DieZeit</code></td>
 		</tr>
 		<tr>
@@ -102,6 +120,8 @@
 					<span>www.berliner-zeitung.de</span>
 				</a>
 			</td>
+			<td><code>authors, body, publishing_date, title, topics</code></td>
+			<td></td>
 			<td><code>BerlinerZeitung</code></td>
 		</tr>
 		<tr>
@@ -111,6 +131,8 @@
 					<span>www.tagesschau.de</span>
 				</a>
 			</td>
+			<td><code>authors, body, publishing_date, title, topics</code></td>
+			<td></td>
 			<td><code>Tagesschau</code></td>
 		</tr>
 		<tr>
@@ -120,6 +142,8 @@
 					<span>www.dw.com</span>
 				</a>
 			</td>
+			<td><code>authors, body, publishing_date, title, topics</code></td>
+			<td></td>
 			<td><code>DW</code></td>
 		</tr>
 		<tr>
@@ -129,6 +153,8 @@
 					<span>www.stern.de</span>
 				</a>
 			</td>
+			<td><code>authors, body, publishing_date, title, topics</code></td>
+			<td></td>
 			<td><code>Stern</code></td>
 		</tr>
 		<tr>
@@ -138,6 +164,8 @@
 					<span>www.ntv.de</span>
 				</a>
 			</td>
+			<td><code>authors, body, publishing_date, title, topics</code></td>
+			<td></td>
 			<td><code>NTV</code></td>
 		</tr>
 		<tr>
@@ -147,6 +175,8 @@
 					<span>www.ndr.de</span>
 				</a>
 			</td>
+			<td><code>authors, body, publishing_date, title, topics</code></td>
+			<td></td>
 			<td><code>NDR</code></td>
 		</tr>
 		<tr>
@@ -156,6 +186,8 @@
 					<span>www.taz.de</span>
 				</a>
 			</td>
+			<td><code>authors, body, publishing_date, title, topics</code></td>
+			<td></td>
 			<td><code>Taz</code></td>
 		</tr>
 	</tbody>
@@ -167,6 +199,8 @@
 		<tr>
 			<th>Source</th>
 			<th>Domain</th>
+			<th>Validated Attributes</th>
+			<th>Unvalidated Attributes</th>
 			<th>Class</th>
 		</tr>
 	</thread>
@@ -178,6 +212,8 @@
 					<span>www.orf.at</span>
 				</a>
 			</td>
+			<td><code>authors, body, publishing_date, title</code></td>
+			<td></td>
 			<td><code>ORF</code></td>
 		</tr>
 	</tbody>
@@ -189,6 +225,8 @@
 		<tr>
 			<th>Source</th>
 			<th>Domain</th>
+			<th>Validated Attributes</th>
+			<th>Unvalidated Attributes</th>
 			<th>Class</th>
 		</tr>
 	</thread>
@@ -200,6 +238,8 @@
 					<span>apnews.com</span>
 				</a>
 			</td>
+			<td><code>authors, body, publishing_date, title, topics</code></td>
+			<td></td>
 			<td><code>APNews</code></td>
 		</tr>
 		<tr>
@@ -209,6 +249,8 @@
 					<span>www.cnbc.com</span>
 				</a>
 			</td>
+			<td><code>authors, body, publishing_date, title, topics</code></td>
+			<td><code>key_points</code></td>
 			<td><code>CNBC</code></td>
 		</tr>
 		<tr>
@@ -218,6 +260,8 @@
 					<span>theintercept.com</span>
 				</a>
 			</td>
+			<td><code>authors, body, publishing_date, title, topics</code></td>
+			<td></td>
 			<td><code>TheIntercept</code></td>
 		</tr>
 		<tr>
@@ -227,6 +271,8 @@
 					<span>www.thegatewaypundit.com</span>
 				</a>
 			</td>
+			<td><code>authors, body, publishing_date, title</code></td>
+			<td></td>
 			<td><code>TheGatewayPundit</code></td>
 		</tr>
 		<tr>
@@ -236,6 +282,8 @@
 					<span>foxnews.com</span>
 				</a>
 			</td>
+			<td><code>authors, body, publishing_date, title, topics</code></td>
+			<td></td>
 			<td><code>FoxNews</code></td>
 		</tr>
 		<tr>
@@ -245,6 +293,8 @@
 					<span>worldtruth.tv</span>
 				</a>
 			</td>
+			<td><code>body, publishing_date, title</code></td>
+			<td></td>
 			<td><code>WorldTruth</code></td>
 		</tr>
 		<tr>
@@ -254,6 +304,8 @@
 					<span>freebeacon.com</span>
 				</a>
 			</td>
+			<td><code>authors, body, publishing_date, title, topics</code></td>
+			<td></td>
 			<td><code>FreeBeacon</code></td>
 		</tr>
 		<tr>
@@ -263,6 +315,8 @@
 					<span>www.washingtontimes.com</span>
 				</a>
 			</td>
+			<td><code>authors, body, publishing_date, title</code></td>
+			<td></td>
 			<td><code>WashingtonTimes</code></td>
 		</tr>
 	</tbody>
