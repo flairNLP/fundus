@@ -5,17 +5,17 @@
 <table class="source de">
 	<thread>
 		<tr>
-			<th style="text-align: center; width: 200px">Source</th>
-			<th style="text-align: center; width: 200px">Domain</th>
-			<th style="text-align: center; width: 200px">Validated Attributes</th>
-			<th style="text-align: center; width: 200px">Unvalidated Attributes</th>
-			<th style="text-align: center; width: 200px">Class</th>
+			<th>Source</th>
+			<th>Domain</th>
+			<th>Validated Attributes</th>
+			<th>Unvalidated Attributes</th>
+			<th>Class</th>
 		</tr>
 	</thread>
 	<tbody>
 		<tr>
 			<td>
-				<div style="text-align: right">Die Welt</div>
+				<div>Die Welt</div>
 			</td>
 			<td>
 				<a href="https://www.welt.de/">
@@ -37,7 +37,7 @@
 		</tr>
 		<tr>
 			<td>
-				<div style="text-align: right">Mitteldeutscher Rundfunk (MDR)</div>
+				<div>Mitteldeutscher Rundfunk (MDR)</div>
 			</td>
 			<td>
 				<a href="https://www.mdr.de/">
@@ -59,7 +59,7 @@
 		</tr>
 		<tr>
 			<td>
-				<div style="text-align: right">Frankfurter Allgemeine Zeitung</div>
+				<div>Frankfurter Allgemeine Zeitung</div>
 			</td>
 			<td>
 				<a href="https://www.faz.net/">
@@ -81,7 +81,7 @@
 		</tr>
 		<tr>
 			<td>
-				<div style="text-align: right">Focus Online</div>
+				<div>Focus Online</div>
 			</td>
 			<td>
 				<a href="https://www.focus.de/">
@@ -103,7 +103,7 @@
 		</tr>
 		<tr>
 			<td>
-				<div style="text-align: right">Münchner Merkur</div>
+				<div>Münchner Merkur</div>
 			</td>
 			<td>
 				<a href="https://www.merkur.de/">
@@ -124,7 +124,7 @@
 		</tr>
 		<tr>
 			<td>
-				<div style="text-align: right">Süddeutsche Zeitung</div>
+				<div>Süddeutsche Zeitung</div>
 			</td>
 			<td>
 				<a href="https://www.sueddeutsche.de/">
@@ -146,7 +146,7 @@
 		</tr>
 		<tr>
 			<td>
-				<div style="text-align: right">Spiegel Online</div>
+				<div>Spiegel Online</div>
 			</td>
 			<td>
 				<a href="https://www.spiegel.de/">
@@ -168,7 +168,7 @@
 		</tr>
 		<tr>
 			<td>
-				<div style="text-align: right">Die Zeit</div>
+				<div>Die Zeit</div>
 			</td>
 			<td>
 				<a href="https://www.sueddeutsche.de/">
@@ -190,7 +190,7 @@
 		</tr>
 		<tr>
 			<td>
-				<div style="text-align: right">Berliner Zeitung</div>
+				<div>Berliner Zeitung</div>
 			</td>
 			<td>
 				<a href="https://www.berliner-zeitung.de/">
@@ -212,7 +212,7 @@
 		</tr>
 		<tr>
 			<td>
-				<div style="text-align: right">Tagesschau</div>
+				<div>Tagesschau</div>
 			</td>
 			<td>
 				<a href="https://www.tagesschau.de/">
@@ -234,7 +234,7 @@
 		</tr>
 		<tr>
 			<td>
-				<div style="text-align: right">Deutsche Welle</div>
+				<div>Deutsche Welle</div>
 			</td>
 			<td>
 				<a href="https://www.dw.com/">
@@ -256,7 +256,7 @@
 		</tr>
 		<tr>
 			<td>
-				<div style="text-align: right">Stern</div>
+				<div>Stern</div>
 			</td>
 			<td>
 				<a href="https://www.stern.de/">
@@ -278,7 +278,7 @@
 		</tr>
 		<tr>
 			<td>
-				<div style="text-align: right">N-Tv</div>
+				<div>N-Tv</div>
 			</td>
 			<td>
 				<a href="https://www.ntv.de/">
@@ -300,7 +300,7 @@
 		</tr>
 		<tr>
 			<td>
-				<div style="text-align: right">Norddeutscher Rundfunk (NDR)</div>
+				<div>Norddeutscher Rundfunk (NDR)</div>
 			</td>
 			<td>
 				<a href="https://www.ndr.de/">
@@ -322,7 +322,7 @@
 		</tr>
 		<tr>
 			<td>
-				<div style="text-align: right">Die Tageszeitung (taz)</div>
+				<div>Die Tageszeitung (taz)</div>
 			</td>
 			<td>
 				<a href="https://www.taz.de/">
@@ -349,17 +349,17 @@
 <table class="source at">
 	<thread>
 		<tr>
-			<th style="text-align: center; width: 200px">Source</th>
-			<th style="text-align: center; width: 200px">Domain</th>
-			<th style="text-align: center; width: 200px">Validated Attributes</th>
-			<th style="text-align: center; width: 200px">Unvalidated Attributes</th>
-			<th style="text-align: center; width: 200px">Class</th>
+			<th>Source</th>
+			<th>Domain</th>
+			<th>Validated Attributes</th>
+			<th>Unvalidated Attributes</th>
+			<th>Class</th>
 		</tr>
 	</thread>
 	<tbody>
 		<tr>
 			<td>
-				<div style="text-align: right">ORF</div>
+				<div>ORF</div>
 			</td>
 			<td>
 				<a href="https://www.orf.at">
@@ -385,17 +385,17 @@
 <table class="source us">
 	<thread>
 		<tr>
-			<th style="text-align: center; width: 200px">Source</th>
-			<th style="text-align: center; width: 200px">Domain</th>
-			<th style="text-align: center; width: 200px">Validated Attributes</th>
-			<th style="text-align: center; width: 200px">Unvalidated Attributes</th>
-			<th style="text-align: center; width: 200px">Class</th>
+			<th>Source</th>
+			<th>Domain</th>
+			<th>Validated Attributes</th>
+			<th>Unvalidated Attributes</th>
+			<th>Class</th>
 		</tr>
 	</thread>
 	<tbody>
 		<tr>
 			<td>
-				<div style="text-align: right">Associated Press News</div>
+				<div>Associated Press News</div>
 			</td>
 			<td>
 				<a href="https://apnews.com/">
@@ -417,7 +417,7 @@
 		</tr>
 		<tr>
 			<td>
-				<div style="text-align: right">CNBC</div>
+				<div>CNBC</div>
 			</td>
 			<td>
 				<a href="https://www.cnbc.com/">
@@ -440,7 +440,7 @@
 		</tr>
 		<tr>
 			<td>
-				<div style="text-align: right">The Intercept</div>
+				<div>The Intercept</div>
 			</td>
 			<td>
 				<a href="https://theintercept.com/">
@@ -462,7 +462,7 @@
 		</tr>
 		<tr>
 			<td>
-				<div style="text-align: right">The Gateway Pundit</div>
+				<div>The Gateway Pundit</div>
 			</td>
 			<td>
 				<a href="https://www.thegatewaypundit.com/">
@@ -483,7 +483,7 @@
 		</tr>
 		<tr>
 			<td>
-				<div style="text-align: right">Fox News</div>
+				<div>Fox News</div>
 			</td>
 			<td>
 				<a href="https://foxnews.com/">
@@ -505,7 +505,7 @@
 		</tr>
 		<tr>
 			<td>
-				<div style="text-align: right">World Truth</div>
+				<div>World Truth</div>
 			</td>
 			<td>
 				<a href="https://worldtruth.tv/">
@@ -525,7 +525,7 @@
 		</tr>
 		<tr>
 			<td>
-				<div style="text-align: right">The Washington Free Beacon</div>
+				<div>The Washington Free Beacon</div>
 			</td>
 			<td>
 				<a href="https://freebeacon.com/">
@@ -547,7 +547,7 @@
 		</tr>
 		<tr>
 			<td>
-				<div style="text-align: right">The Washington Times</div>
+				<div>The Washington Times</div>
 			</td>
 			<td>
 				<a href="https://www.washingtontimes.com/">

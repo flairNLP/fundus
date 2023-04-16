@@ -46,7 +46,7 @@ def test_supported():
     supported_news_path = root_path / relative_path
 
     if not exists(supported_news_path):
-        raise FileNotFoundError(f"The '{relative_path}' is missing. Run 'python -m generate_tables'")
+        raise FileNotFoundError(f"The '{relative_path}' is missing. Run 'python -m fundus.utils.generate_tables'")
 
     with open(supported_news_path, "rb") as file:
         content = file.read()

@@ -1,7 +1,7 @@
 import textwrap
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Callable, Dict, Iterator, List, Union
+from typing import Callable, Dict, Iterator, List, Sequence, Union
 from urllib.parse import urlparse
 
 from typing_extensions import TypeAlias
@@ -21,7 +21,7 @@ ContentT: TypeAlias = Union[str, "Tag"]
 @dataclass
 class Tag:
     type: str
-    content: Union[List[ContentT], ContentT]
+    content: Union[Sequence[ContentT], ContentT]
     attrs: Dict[str, str] = field(default_factory=dict)
     style: Dict[str, str] = field(default_factory=dict)
     inline: bool = False
@@ -80,12 +80,12 @@ def generate_thread() -> Tag:
 
 
 def generate_tbody(country: Iterator[PublisherEnum]) -> Tag:
-    tbody = Tag("tbody", list())
+    content: List[Tag] = list()
     for spec in country:
         tds = [column(spec) for column in column_mapping.values()]
         tr = Tag("tr", tds)
-        tbody.content.append(tr)
-    return tbody
+        content.append(tr)
+    return Tag("tbody", content)
 
 
 def build_supported_news_svg() -> str:
@@ -111,3 +111,7 @@ if __name__ == "__main__":
 
     with open(supported_news_path, "w+", encoding="utf8") as file:
         file.write(md)
+
+    import subprocess
+
+    process = subprocess.Popen(["git", "add", supported_news_path], stdout=subprocess.PIPE)
