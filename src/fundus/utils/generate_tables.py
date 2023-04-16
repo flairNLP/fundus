@@ -55,7 +55,7 @@ class ColumnFactory:
 max_width: int = 1000
 column_mapping: Dict[str, ColumnFactory] = {
     "Source": ColumnFactory(
-        content=lambda spec: Tag("div", f"{spec.publisher_name}", style={"text-align": "right"}, inline=True),
+        content=lambda spec: Tag("div", f"{spec.publisher_name}", inline=True),
     ),
     "Domain": ColumnFactory(
         content=lambda spec: Tag("a", Tag("span", urlparse(spec.domain).netloc, inline=True), {"href": spec.domain})
@@ -73,8 +73,7 @@ column_mapping: Dict[str, ColumnFactory] = {
 
 
 def generate_thread() -> Tag:
-    column_style = {"text-align": "center", "width": f"{max_width // len(column_mapping)}px"}
-    ths = [Tag("th", name, inline=True, style=column_style) for name in column_mapping.keys()]
+    ths = [Tag("th", name, inline=True) for name in column_mapping.keys()]
     tr = Tag("tr", ths)
     thread = Tag("thread", tr)
     return thread
@@ -112,7 +111,3 @@ if __name__ == "__main__":
 
     with open(supported_news_path, "w+", encoding="utf8") as file:
         file.write(md)
-
-    import subprocess
-
-    process = subprocess.Popen(["git", "add", supported_news_path], stdout=subprocess.PIPE)
