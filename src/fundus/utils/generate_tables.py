@@ -29,12 +29,13 @@ class Tag:
         lines: List[str] = list()
         inline_attrs: str = "".join([f' {key}="{value}"' for key, value in self.attrs.items()])
         lines.append(generate_line(f"<{self.type}{inline_attrs}>", newline=not self.inline))
+        indent = 1 if not self.inline else 0
         if isinstance(self.content, list):
-            lines.extend(generate_line(str(c), indent=1 if not self.inline else 0, newline=False) for c in self.content)
+            lines.extend(generate_line(str(c), indent=indent, newline=False) for c in self.content)
         elif isinstance(self.content, Tag):
-            lines.append(generate_line(str(self.content), indent=1, newline=False))
+            lines.append(generate_line(str(self.content), indent=indent, newline=False))
         elif self.content:
-            lines.append(generate_line(str(self.content), indent=1, newline=not self.inline))
+            lines.append(generate_line(str(self.content), indent=indent, newline=not self.inline))
         lines.append(generate_line(f"</{self.type}>"))
         return "".join(lines)
 
@@ -56,24 +57,26 @@ column_mapping: Dict[str, ColumnFactory] = {
         content=lambda spec: f"{spec.publisher_name}",
     ),
     "Domain": ColumnFactory(
-        content=lambda spec: Tag("a", Tag("span", urlparse(spec.domain).netloc), {"href": spec.domain})
+        content=lambda spec: Tag("a", Tag("span", urlparse(spec.domain).netloc, inline=True), {"href": spec.domain})
     ),
-    "Validated Attributes": ColumnFactory(content=lambda spec: Tag("code", str(spec.parser.attributes().validated))),
+    "Validated Attributes": ColumnFactory(
+        content=lambda spec: Tag("code", str(spec.parser.attributes().validated), inline=True)
+    ),
     "Unvalidated Attributes": ColumnFactory(
-        content=lambda spec: Tag("code", str(spec.parser.attributes().unvalidated))
+        content=lambda spec: Tag("code", str(spec.parser.attributes().unvalidated), inline=True)
         if spec.parser.attributes().unvalidated
         else ""
     ),
-    "Class": ColumnFactory(content=lambda spec: Tag("code", spec.name)),
+    "Class": ColumnFactory(content=lambda spec: Tag("code", spec.name, inline=True)),
 }
 
-column_style = {"text-align": "center", "width": f"{max_width//len(column_mapping)}px"}
+column_style = {"text-align": "center", "width": f"{max_width // len(column_mapping)}px"}
 for column in column_mapping.values():
     column.style.update(column_style)
 
 
 def generate_thread() -> Tag:
-    ths = [Tag("th", name, inline=False) for name in column_mapping.keys()]
+    ths = [Tag("th", name, inline=True) for name in column_mapping.keys()]
     tr = Tag("tr", ths)
     thread = Tag("thread", tr)
     return thread

@@ -4,21 +4,11 @@
 <table class="source de">
 	<thread>
 		<tr>
-			<th>
-				Source
-			</th>
-			<th>
-				Domain
-			</th>
-			<th>
-				Validated Attributes
-			</th>
-			<th>
-				Unvalidated Attributes
-			</th>
-			<th>
-				Class
-			</th>
+			<th>Source</th>
+			<th>Domain</th>
+			<th>Validated Attributes</th>
+			<th>Unvalidated Attributes</th>
+			<th>Class</th>
 		</tr>
 	</thread>
 	<tbody>
@@ -28,22 +18,16 @@
 			</td>
 			<td style="text-align: center; width: 200px">
 				<a href="https://www.welt.de/">
-					<span>
-						www.welt.de
-					</span>
+					<span>www.welt.de</span>
 				</a>
 			</td>
 			<td style="text-align: center; width: 200px">
-				<code>
-					authors, body, publishing_date, title, topics
-				</code>
+				<code>authors, body, publishing_date, title, topics</code>
 			</td>
 			<td style="text-align: center; width: 200px">
 			</td>
 			<td style="text-align: center; width: 200px">
-				<code>
-					DieWelt
-				</code>
+				<code>DieWelt</code>
 			</td>
 		</tr>
 		<tr>
@@ -52,22 +36,16 @@
 			</td>
 			<td style="text-align: center; width: 200px">
 				<a href="https://www.mdr.de/">
-					<span>
-						www.mdr.de
-					</span>
+					<span>www.mdr.de</span>
 				</a>
 			</td>
 			<td style="text-align: center; width: 200px">
-				<code>
-					authors, body, publishing_date, title, topics
-				</code>
+				<code>authors, body, publishing_date, title, topics</code>
 			</td>
 			<td style="text-align: center; width: 200px">
 			</td>
 			<td style="text-align: center; width: 200px">
-				<code>
-					MDR
-				</code>
+				<code>MDR</code>
 			</td>
 		</tr>
 		<tr>
@@ -76,22 +54,16 @@
 			</td>
 			<td style="text-align: center; width: 200px">
 				<a href="https://www.faz.net/">
-					<span>
-						www.faz.net
-					</span>
+					<span>www.faz.net</span>
 				</a>
 			</td>
 			<td style="text-align: center; width: 200px">
-				<code>
-					authors, body, publishing_date, title, topics
-				</code>
+				<code>authors, body, publishing_date, title, topics</code>
 			</td>
 			<td style="text-align: center; width: 200px">
 			</td>
 			<td style="text-align: center; width: 200px">
-				<code>
-					FAZ
-				</code>
+				<code>FAZ</code>
 			</td>
 		</tr>
 		<tr>
@@ -100,22 +72,16 @@
 			</td>
 			<td style="text-align: center; width: 200px">
 				<a href="https://www.focus.de/">
-					<span>
-						www.focus.de
-					</span>
+					<span>www.focus.de</span>
 				</a>
 			</td>
 			<td style="text-align: center; width: 200px">
-				<code>
-					authors, body, publishing_date, title, topics
-				</code>
+				<code>authors, body, publishing_date, title, topics</code>
 			</td>
 			<td style="text-align: center; width: 200px">
 			</td>
 			<td style="text-align: center; width: 200px">
-				<code>
-					Focus
-				</code>
+				<code>Focus</code>
 			</td>
 		</tr>
 		<tr>
@@ -124,22 +90,16 @@
 			</td>
 			<td style="text-align: center; width: 200px">
 				<a href="https://www.merkur.de/">
-					<span>
-						www.merkur.de
-					</span>
+					<span>www.merkur.de</span>
 				</a>
 			</td>
 			<td style="text-align: center; width: 200px">
-				<code>
-					authors, body, publishing_date, title
-				</code>
+				<code>authors, body, publishing_date, title</code>
 			</td>
 			<td style="text-align: center; width: 200px">
 			</td>
 			<td style="text-align: center; width: 200px">
-				<code>
-					Merkur
-				</code>
+				<code>Merkur</code>
 			</td>
 		</tr>
 		<tr>
@@ -148,22 +108,16 @@
 			</td>
 			<td style="text-align: center; width: 200px">
 				<a href="https://www.sueddeutsche.de/">
-					<span>
-						www.sueddeutsche.de
-					</span>
+					<span>www.sueddeutsche.de</span>
 				</a>
 			</td>
 			<td style="text-align: center; width: 200px">
-				<code>
-					authors, body, publishing_date, title, topics
-				</code>
+				<code>authors, body, publishing_date, title, topics</code>
 			</td>
 			<td style="text-align: center; width: 200px">
 			</td>
 			<td style="text-align: center; width: 200px">
-				<code>
-					SZ
-				</code>
+				<code>SZ</code>
 			</td>
 		</tr>
 		<tr>
@@ -172,22 +126,16 @@
 			</td>
 			<td style="text-align: center; width: 200px">
 				<a href="https://www.spiegel.de/">
-					<span>
-						www.spiegel.de
-					</span>
+					<span>www.spiegel.de</span>
 				</a>
 			</td>
 			<td style="text-align: center; width: 200px">
-				<code>
-					authors, body, publishing_date, title, topics
-				</code>
+				<code>authors, body, publishing_date, title, topics</code>
 			</td>
 			<td style="text-align: center; width: 200px">
 			</td>
 			<td style="text-align: center; width: 200px">
-				<code>
-					SpiegelOnline
-				</code>
+				<code>SpiegelOnline</code>
 			</td>
 		</tr>
 		<tr>
@@ -196,22 +144,16 @@
 			</td>
 			<td style="text-align: center; width: 200px">
 				<a href="https://www.sueddeutsche.de/">
-					<span>
-						www.sueddeutsche.de
-					</span>
+					<span>www.sueddeutsche.de</span>
 				</a>
 			</td>
 			<td style="text-align: center; width: 200px">
-				<code>
-					authors, body, publishing_date, title, topics
-				</code>
+				<code>authors, body, publishing_date, title, topics</code>
 			</td>
 			<td style="text-align: center; width: 200px">
 			</td>
 			<td style="text-align: center; width: 200px">
-				<code>
-					DieZeit
-				</code>
+				<code>DieZeit</code>
 			</td>
 		</tr>
 		<tr>
@@ -220,22 +162,16 @@
 			</td>
 			<td style="text-align: center; width: 200px">
 				<a href="https://www.berliner-zeitung.de/">
-					<span>
-						www.berliner-zeitung.de
-					</span>
+					<span>www.berliner-zeitung.de</span>
 				</a>
 			</td>
 			<td style="text-align: center; width: 200px">
-				<code>
-					authors, body, publishing_date, title, topics
-				</code>
+				<code>authors, body, publishing_date, title, topics</code>
 			</td>
 			<td style="text-align: center; width: 200px">
 			</td>
 			<td style="text-align: center; width: 200px">
-				<code>
-					BerlinerZeitung
-				</code>
+				<code>BerlinerZeitung</code>
 			</td>
 		</tr>
 		<tr>
@@ -244,22 +180,16 @@
 			</td>
 			<td style="text-align: center; width: 200px">
 				<a href="https://www.tagesschau.de/">
-					<span>
-						www.tagesschau.de
-					</span>
+					<span>www.tagesschau.de</span>
 				</a>
 			</td>
 			<td style="text-align: center; width: 200px">
-				<code>
-					authors, body, publishing_date, title, topics
-				</code>
+				<code>authors, body, publishing_date, title, topics</code>
 			</td>
 			<td style="text-align: center; width: 200px">
 			</td>
 			<td style="text-align: center; width: 200px">
-				<code>
-					Tagesschau
-				</code>
+				<code>Tagesschau</code>
 			</td>
 		</tr>
 		<tr>
@@ -268,22 +198,16 @@
 			</td>
 			<td style="text-align: center; width: 200px">
 				<a href="https://www.dw.com/">
-					<span>
-						www.dw.com
-					</span>
+					<span>www.dw.com</span>
 				</a>
 			</td>
 			<td style="text-align: center; width: 200px">
-				<code>
-					authors, body, publishing_date, title, topics
-				</code>
+				<code>authors, body, publishing_date, title, topics</code>
 			</td>
 			<td style="text-align: center; width: 200px">
 			</td>
 			<td style="text-align: center; width: 200px">
-				<code>
-					DW
-				</code>
+				<code>DW</code>
 			</td>
 		</tr>
 		<tr>
@@ -292,22 +216,16 @@
 			</td>
 			<td style="text-align: center; width: 200px">
 				<a href="https://www.stern.de/">
-					<span>
-						www.stern.de
-					</span>
+					<span>www.stern.de</span>
 				</a>
 			</td>
 			<td style="text-align: center; width: 200px">
-				<code>
-					authors, body, publishing_date, title, topics
-				</code>
+				<code>authors, body, publishing_date, title, topics</code>
 			</td>
 			<td style="text-align: center; width: 200px">
 			</td>
 			<td style="text-align: center; width: 200px">
-				<code>
-					Stern
-				</code>
+				<code>Stern</code>
 			</td>
 		</tr>
 		<tr>
@@ -316,22 +234,16 @@
 			</td>
 			<td style="text-align: center; width: 200px">
 				<a href="https://www.ntv.de/">
-					<span>
-						www.ntv.de
-					</span>
+					<span>www.ntv.de</span>
 				</a>
 			</td>
 			<td style="text-align: center; width: 200px">
-				<code>
-					authors, body, publishing_date, title, topics
-				</code>
+				<code>authors, body, publishing_date, title, topics</code>
 			</td>
 			<td style="text-align: center; width: 200px">
 			</td>
 			<td style="text-align: center; width: 200px">
-				<code>
-					NTV
-				</code>
+				<code>NTV</code>
 			</td>
 		</tr>
 		<tr>
@@ -340,22 +252,16 @@
 			</td>
 			<td style="text-align: center; width: 200px">
 				<a href="https://www.ndr.de/">
-					<span>
-						www.ndr.de
-					</span>
+					<span>www.ndr.de</span>
 				</a>
 			</td>
 			<td style="text-align: center; width: 200px">
-				<code>
-					authors, body, publishing_date, title, topics
-				</code>
+				<code>authors, body, publishing_date, title, topics</code>
 			</td>
 			<td style="text-align: center; width: 200px">
 			</td>
 			<td style="text-align: center; width: 200px">
-				<code>
-					NDR
-				</code>
+				<code>NDR</code>
 			</td>
 		</tr>
 		<tr>
@@ -364,22 +270,16 @@
 			</td>
 			<td style="text-align: center; width: 200px">
 				<a href="https://www.taz.de/">
-					<span>
-						www.taz.de
-					</span>
+					<span>www.taz.de</span>
 				</a>
 			</td>
 			<td style="text-align: center; width: 200px">
-				<code>
-					authors, body, publishing_date, title, topics
-				</code>
+				<code>authors, body, publishing_date, title, topics</code>
 			</td>
 			<td style="text-align: center; width: 200px">
 			</td>
 			<td style="text-align: center; width: 200px">
-				<code>
-					Taz
-				</code>
+				<code>Taz</code>
 			</td>
 		</tr>
 	</tbody>
@@ -388,21 +288,11 @@
 <table class="source at">
 	<thread>
 		<tr>
-			<th>
-				Source
-			</th>
-			<th>
-				Domain
-			</th>
-			<th>
-				Validated Attributes
-			</th>
-			<th>
-				Unvalidated Attributes
-			</th>
-			<th>
-				Class
-			</th>
+			<th>Source</th>
+			<th>Domain</th>
+			<th>Validated Attributes</th>
+			<th>Unvalidated Attributes</th>
+			<th>Class</th>
 		</tr>
 	</thread>
 	<tbody>
@@ -412,22 +302,16 @@
 			</td>
 			<td style="text-align: center; width: 200px">
 				<a href="https://www.orf.at">
-					<span>
-						www.orf.at
-					</span>
+					<span>www.orf.at</span>
 				</a>
 			</td>
 			<td style="text-align: center; width: 200px">
-				<code>
-					authors, body, publishing_date, title
-				</code>
+				<code>authors, body, publishing_date, title</code>
 			</td>
 			<td style="text-align: center; width: 200px">
 			</td>
 			<td style="text-align: center; width: 200px">
-				<code>
-					ORF
-				</code>
+				<code>ORF</code>
 			</td>
 		</tr>
 	</tbody>
@@ -436,21 +320,11 @@
 <table class="source us">
 	<thread>
 		<tr>
-			<th>
-				Source
-			</th>
-			<th>
-				Domain
-			</th>
-			<th>
-				Validated Attributes
-			</th>
-			<th>
-				Unvalidated Attributes
-			</th>
-			<th>
-				Class
-			</th>
+			<th>Source</th>
+			<th>Domain</th>
+			<th>Validated Attributes</th>
+			<th>Unvalidated Attributes</th>
+			<th>Class</th>
 		</tr>
 	</thread>
 	<tbody>
@@ -460,22 +334,16 @@
 			</td>
 			<td style="text-align: center; width: 200px">
 				<a href="https://apnews.com/">
-					<span>
-						apnews.com
-					</span>
+					<span>apnews.com</span>
 				</a>
 			</td>
 			<td style="text-align: center; width: 200px">
-				<code>
-					authors, body, publishing_date, title, topics
-				</code>
+				<code>authors, body, publishing_date, title, topics</code>
 			</td>
 			<td style="text-align: center; width: 200px">
 			</td>
 			<td style="text-align: center; width: 200px">
-				<code>
-					APNews
-				</code>
+				<code>APNews</code>
 			</td>
 		</tr>
 		<tr>
@@ -484,25 +352,17 @@
 			</td>
 			<td style="text-align: center; width: 200px">
 				<a href="https://www.cnbc.com/">
-					<span>
-						www.cnbc.com
-					</span>
+					<span>www.cnbc.com</span>
 				</a>
 			</td>
 			<td style="text-align: center; width: 200px">
-				<code>
-					authors, body, publishing_date, title, topics
-				</code>
+				<code>authors, body, publishing_date, title, topics</code>
 			</td>
 			<td style="text-align: center; width: 200px">
-				<code>
-					key_points
-				</code>
+				<code>key_points</code>
 			</td>
 			<td style="text-align: center; width: 200px">
-				<code>
-					CNBC
-				</code>
+				<code>CNBC</code>
 			</td>
 		</tr>
 		<tr>
@@ -511,22 +371,16 @@
 			</td>
 			<td style="text-align: center; width: 200px">
 				<a href="https://theintercept.com/">
-					<span>
-						theintercept.com
-					</span>
+					<span>theintercept.com</span>
 				</a>
 			</td>
 			<td style="text-align: center; width: 200px">
-				<code>
-					authors, body, publishing_date, title, topics
-				</code>
+				<code>authors, body, publishing_date, title, topics</code>
 			</td>
 			<td style="text-align: center; width: 200px">
 			</td>
 			<td style="text-align: center; width: 200px">
-				<code>
-					TheIntercept
-				</code>
+				<code>TheIntercept</code>
 			</td>
 		</tr>
 		<tr>
@@ -535,22 +389,16 @@
 			</td>
 			<td style="text-align: center; width: 200px">
 				<a href="https://www.thegatewaypundit.com/">
-					<span>
-						www.thegatewaypundit.com
-					</span>
+					<span>www.thegatewaypundit.com</span>
 				</a>
 			</td>
 			<td style="text-align: center; width: 200px">
-				<code>
-					authors, body, publishing_date, title
-				</code>
+				<code>authors, body, publishing_date, title</code>
 			</td>
 			<td style="text-align: center; width: 200px">
 			</td>
 			<td style="text-align: center; width: 200px">
-				<code>
-					TheGatewayPundit
-				</code>
+				<code>TheGatewayPundit</code>
 			</td>
 		</tr>
 		<tr>
@@ -559,22 +407,16 @@
 			</td>
 			<td style="text-align: center; width: 200px">
 				<a href="https://foxnews.com/">
-					<span>
-						foxnews.com
-					</span>
+					<span>foxnews.com</span>
 				</a>
 			</td>
 			<td style="text-align: center; width: 200px">
-				<code>
-					authors, body, publishing_date, title, topics
-				</code>
+				<code>authors, body, publishing_date, title, topics</code>
 			</td>
 			<td style="text-align: center; width: 200px">
 			</td>
 			<td style="text-align: center; width: 200px">
-				<code>
-					FoxNews
-				</code>
+				<code>FoxNews</code>
 			</td>
 		</tr>
 		<tr>
@@ -583,22 +425,16 @@
 			</td>
 			<td style="text-align: center; width: 200px">
 				<a href="https://worldtruth.tv/">
-					<span>
-						worldtruth.tv
-					</span>
+					<span>worldtruth.tv</span>
 				</a>
 			</td>
 			<td style="text-align: center; width: 200px">
-				<code>
-					body, publishing_date, title
-				</code>
+				<code>body, publishing_date, title</code>
 			</td>
 			<td style="text-align: center; width: 200px">
 			</td>
 			<td style="text-align: center; width: 200px">
-				<code>
-					WorldTruth
-				</code>
+				<code>WorldTruth</code>
 			</td>
 		</tr>
 		<tr>
@@ -607,22 +443,16 @@
 			</td>
 			<td style="text-align: center; width: 200px">
 				<a href="https://freebeacon.com/">
-					<span>
-						freebeacon.com
-					</span>
+					<span>freebeacon.com</span>
 				</a>
 			</td>
 			<td style="text-align: center; width: 200px">
-				<code>
-					authors, body, publishing_date, title, topics
-				</code>
+				<code>authors, body, publishing_date, title, topics</code>
 			</td>
 			<td style="text-align: center; width: 200px">
 			</td>
 			<td style="text-align: center; width: 200px">
-				<code>
-					FreeBeacon
-				</code>
+				<code>FreeBeacon</code>
 			</td>
 		</tr>
 		<tr>
@@ -631,22 +461,16 @@
 			</td>
 			<td style="text-align: center; width: 200px">
 				<a href="https://www.washingtontimes.com/">
-					<span>
-						www.washingtontimes.com
-					</span>
+					<span>www.washingtontimes.com</span>
 				</a>
 			</td>
 			<td style="text-align: center; width: 200px">
-				<code>
-					authors, body, publishing_date, title
-				</code>
+				<code>authors, body, publishing_date, title</code>
 			</td>
 			<td style="text-align: center; width: 200px">
 			</td>
 			<td style="text-align: center; width: 200px">
-				<code>
-					WashingtonTimes
-				</code>
+				<code>WashingtonTimes</code>
 			</td>
 		</tr>
 	</tbody>
