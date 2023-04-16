@@ -22,7 +22,11 @@
 				</a>
 			</td>
 			<td style="text-align: center; width: 200px">
-				<code>authors, body, publishing_date, title, topics</code>
+				<code>authors</code>
+				<code>body</code>
+				<code>publishing_date</code>
+				<code>title</code>
+				<code>topics</code>
 			</td>
 			<td style="text-align: center; width: 200px">
 			</td>
@@ -40,7 +44,11 @@
 				</a>
 			</td>
 			<td style="text-align: center; width: 200px">
-				<code>authors, body, publishing_date, title, topics</code>
+				<code>authors</code>
+				<code>body</code>
+				<code>publishing_date</code>
+				<code>title</code>
+				<code>topics</code>
 			</td>
 			<td style="text-align: center; width: 200px">
 			</td>
@@ -58,7 +66,11 @@
 				</a>
 			</td>
 			<td style="text-align: center; width: 200px">
-				<code>authors, body, publishing_date, title, topics</code>
+				<code>authors</code>
+				<code>body</code>
+				<code>publishing_date</code>
+				<code>title</code>
+				<code>topics</code>
 			</td>
 			<td style="text-align: center; width: 200px">
 			</td>
@@ -76,7 +88,11 @@
 				</a>
 			</td>
 			<td style="text-align: center; width: 200px">
-				<code>authors, body, publishing_date, title, topics</code>
+				<code>authors</code>
+				<code>body</code>
+				<code>publishing_date</code>
+				<code>title</code>
+				<code>topics</code>
 			</td>
 			<td style="text-align: center; width: 200px">
 			</td>
@@ -94,7 +110,10 @@
 				</a>
 			</td>
 			<td style="text-align: center; width: 200px">
-				<code>authors, body, publishing_date, title</code>
+				<code>authors</code>
+				<code>body</code>
+				<code>publishing_date</code>
+				<code>title</code>
 			</td>
 			<td style="text-align: center; width: 200px">
 			</td>
@@ -112,7 +131,11 @@
 				</a>
 			</td>
 			<td style="text-align: center; width: 200px">
-				<code>authors, body, publishing_date, title, topics</code>
+				<code>authors</code>
+				<code>body</code>
+				<code>publishing_date</code>
+				<code>title</code>
+				<code>topics</code>
 			</td>
 			<td style="text-align: center; width: 200px">
 			</td>
@@ -130,7 +153,11 @@
 				</a>
 			</td>
 			<td style="text-align: center; width: 200px">
-				<code>authors, body, publishing_date, title, topics</code>
+				<code>authors</code>
+				<code>body</code>
+				<code>publishing_date</code>
+				<code>title</code>
+				<code>topics</code>
 			</td>
 			<td style="text-align: center; width: 200px">
 			</td>
@@ -148,7 +175,11 @@
 				</a>
 			</td>
 			<td style="text-align: center; width: 200px">
-				<code>authors, body, publishing_date, title, topics</code>
+				<code>authors</code>
+				<code>body</code>
+				<code>publishing_date</code>
+				<code>title</code>
+				<code>topics</code>
 			</td>
 			<td style="text-align: center; width: 200px">
 			</td>
@@ -166,7 +197,11 @@
 				</a>
 			</td>
 			<td style="text-align: center; width: 200px">
-				<code>authors, body, publishing_date, title, topics</code>
+				<code>authors</code>
+				<code>body</code>
+				<code>publishing_date</code>
+				<code>title</code>
+				<code>topics</code>
 			</td>
 			<td style="text-align: center; width: 200px">
 			</td>
@@ -184,7 +219,11 @@
 				</a>
 			</td>
 			<td style="text-align: center; width: 200px">
-				<code>authors, body, publishing_date, title, topics</code>
+				<code>authors</code>
+				<code>body</code>
+				<code>publishing_date</code>
+				<code>title</code>
+				<code>topics</code>
 			</td>
 			<td style="text-align: center; width: 200px">
 			</td>
@@ -202,7 +241,11 @@
 				</a>
 			</td>
 			<td style="text-align: center; width: 200px">
-				<code>authors, body, publishing_date, title, topics</code>
+				<code>authors</code>
+				<code>body</code>
+				<code>publishing_date</code>
+				<code>title</code>
+				<code>topics</code>
 			</td>
 			<td style="text-align: center; width: 200px">
 			</td>
@@ -220,7 +263,11 @@
 				</a>
 			</td>
 			<td style="text-align: center; width: 200px">
-				<code>authors, body, publishing_date, title, topics</code>
+				<code>authors</code>
+				<code>body</code>
+				<code>publishing_date</code>
+				<code>title</code>
+				<code>topics</code>
 			</td>
 			<td style="text-align: center; width: 200px">
 			</td>
@@ -238,7 +285,11 @@
 				</a>
 			</td>
 			<td style="text-align: center; width: 200px">
-				<code>authors, body, publishing_date, title, topics</code>
+				<code>authors</code>
+				<code>body</code>
+				<code>publishing_date</code>
+				<code>title</code>
+				<code>topics</code>
 			</td>
 			<td style="text-align: center; width: 200px">
 			</td>
@@ -256,7 +307,11 @@
 				</a>
 			</td>
 			<td style="text-align: center; width: 200px">
-				<code>authors, body, publishing_date, title, topics</code>
+				<code>authors</code>
+				<code>body</code>
+				<code>publishing_date</code>
+				<code>title</code>
+				<code>topics</code>
 			</td>
 			<td style="text-align: center; width: 200px">
 			</td>
@@ -274,7 +329,11 @@
 				</a>
 			</td>
 			<td style="text-align: center; width: 200px">
-				<code>authors, body, publishing_date, title, topics</code>
+				<code>authors</code>
+				<code>body</code>
+				<code>publishing_date</code>
+				<code>title</code>
+				<code>topics</code>
 			</td>
 			<td style="text-align: center; width: 200px">
 			</td>
@@ -306,7 +365,10 @@
 				</a>
 			</td>
 			<td style="text-align: center; width: 200px">
-				<code>authors, body, publishing_date, title</code>
+				<code>authors</code>
+				<code>body</code>
+				<code>publishing_date</code>
+				<code>title</code>
 			</td>
 			<td style="text-align: center; width: 200px">
 			</td>
@@ -338,7 +400,11 @@
 				</a>
 			</td>
 			<td style="text-align: center; width: 200px">
-				<code>authors, body, publishing_date, title, topics</code>
+				<code>authors</code>
+				<code>body</code>
+				<code>publishing_date</code>
+				<code>title</code>
+				<code>topics</code>
 			</td>
 			<td style="text-align: center; width: 200px">
 			</td>
@@ -356,10 +422,14 @@
 				</a>
 			</td>
 			<td style="text-align: center; width: 200px">
-				<code>authors, body, publishing_date, title, topics</code>
+				<code>authors</code>
+				<code>body</code>
+				<code>publishing_date</code>
+				<code>title</code>
+				<code>topics</code>
 			</td>
 			<td style="text-align: center; width: 200px">
-				<code>key_points</code>
+				<code>registered Attribute: <function CNBCParser.key_points at 0x0000021DA2A14940> --> 'key_points'</code>
 			</td>
 			<td style="text-align: center; width: 200px">
 				<code>CNBC</code>
@@ -375,7 +445,11 @@
 				</a>
 			</td>
 			<td style="text-align: center; width: 200px">
-				<code>authors, body, publishing_date, title, topics</code>
+				<code>authors</code>
+				<code>body</code>
+				<code>publishing_date</code>
+				<code>title</code>
+				<code>topics</code>
 			</td>
 			<td style="text-align: center; width: 200px">
 			</td>
@@ -393,7 +467,10 @@
 				</a>
 			</td>
 			<td style="text-align: center; width: 200px">
-				<code>authors, body, publishing_date, title</code>
+				<code>authors</code>
+				<code>body</code>
+				<code>publishing_date</code>
+				<code>title</code>
 			</td>
 			<td style="text-align: center; width: 200px">
 			</td>
@@ -411,7 +488,11 @@
 				</a>
 			</td>
 			<td style="text-align: center; width: 200px">
-				<code>authors, body, publishing_date, title, topics</code>
+				<code>authors</code>
+				<code>body</code>
+				<code>publishing_date</code>
+				<code>title</code>
+				<code>topics</code>
 			</td>
 			<td style="text-align: center; width: 200px">
 			</td>
@@ -429,7 +510,9 @@
 				</a>
 			</td>
 			<td style="text-align: center; width: 200px">
-				<code>body, publishing_date, title</code>
+				<code>body</code>
+				<code>publishing_date</code>
+				<code>title</code>
 			</td>
 			<td style="text-align: center; width: 200px">
 			</td>
@@ -447,7 +530,11 @@
 				</a>
 			</td>
 			<td style="text-align: center; width: 200px">
-				<code>authors, body, publishing_date, title, topics</code>
+				<code>authors</code>
+				<code>body</code>
+				<code>publishing_date</code>
+				<code>title</code>
+				<code>topics</code>
 			</td>
 			<td style="text-align: center; width: 200px">
 			</td>
@@ -465,7 +552,10 @@
 				</a>
 			</td>
 			<td style="text-align: center; width: 200px">
-				<code>authors, body, publishing_date, title</code>
+				<code>authors</code>
+				<code>body</code>
+				<code>publishing_date</code>
+				<code>title</code>
 			</td>
 			<td style="text-align: center; width: 200px">
 			</td>

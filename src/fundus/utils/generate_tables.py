@@ -42,7 +42,7 @@ class Tag:
 
 @dataclass
 class ColumnFactory:
-    content: Callable[[PublisherEnum], ContentT]
+    content: Callable[[PublisherEnum], Union[List[ContentT], ContentT]]
     style: Dict[str, str] = field(default_factory=dict)
 
     def __call__(self, *args, **kwargs) -> Tag:
@@ -60,11 +60,11 @@ column_mapping: Dict[str, ColumnFactory] = {
         content=lambda spec: Tag("a", Tag("span", urlparse(spec.domain).netloc, inline=True), {"href": spec.domain})
     ),
     "Validated Attributes": ColumnFactory(
-        content=lambda spec: Tag("code", str(spec.parser.attributes().validated), inline=True)
+        content=lambda spec: [Tag("code", a, inline=True) for a in spec.parser.attributes().validated.names]
     ),
     "Unvalidated Attributes": ColumnFactory(
-        content=lambda spec: Tag("code", str(spec.parser.attributes().unvalidated), inline=True)
-        if spec.parser.attributes().unvalidated
+        content=lambda spec: [Tag("code", a, inline=True) for a in attrs]
+        if (attrs := spec.parser.attributes().unvalidated)
         else ""
     ),
     "Class": ColumnFactory(content=lambda spec: Tag("code", spec.name, inline=True)),
