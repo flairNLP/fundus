@@ -9,7 +9,6 @@ from typing_extensions import TypeAlias
 from fundus import PublisherCollection
 from fundus import __development_base_path__ as root_path
 from fundus.publishers.base_objects import PublisherEnum
-from fundus.utils.validation import listify
 
 
 def generate_line(content: str, indent: int = 0, newline: bool = True) -> str:
@@ -68,27 +67,9 @@ column_mapping: Dict[str, ColumnFactory] = {
     "Class": ColumnFactory(content=lambda spec: Tag("code", spec.name)),
 }
 
-# column_style = {"text-align": "center"}
-# for column in column_mapping.values():
-#     column.style.update(column_style)
-
-
-def generate_style() -> Tag:
-    style_content: str = f"""
-            .source {{
-                text-align: center;
-            }}
-            .source td {{
-                width: calc(1080px/{len(column_mapping)});
-            }}
-            .source tr > *:first-of-type {{
-                text-align: left;
-            }}
-            .source tr > *:last-of-type {{
-                text-align: right;
-            }}"""
-    style = Tag("style", textwrap.dedent(style_content.strip("\n")))
-    return style
+column_style = {"text-align": "center", "width": f"{max_width//len(column_mapping)}px"}
+for column in column_mapping.values():
+    column.style.update(column_style)
 
 
 def generate_thread() -> Tag:
@@ -109,10 +90,8 @@ def generate_tbody(country: Iterator[PublisherEnum]) -> Tag:
 
 def build_supported_news_svg() -> str:
     md: List[str] = ["# Supported News Tables\n\n"]
-
-    div_content: List[Tag] = [generate_style()]
     for cc, enum in PublisherCollection.iter_countries():
-        div_content.append(Tag("h2", f"{cc.upper()}-News"))
+        md.append(f"## {cc.upper()}-News\n")
         table = Tag(
             "table",
             [generate_thread(), generate_tbody(enum)],
@@ -120,25 +99,14 @@ def build_supported_news_svg() -> str:
                 "class": f"source {cc}",
             },
         )
-        div_content.append(table)
-    div = Tag("div", div_content, attrs={"xmlns": "http://www.w3.org/1999/xhtml"})
-    fo = Tag("foreignObject", div, attrs={"width": "100%", "height": "100%"})
-    svg_attrs = {
-        "fill": "none",
-        "viewBox": "0 0 400 400",
-        "width": "400",
-        "height": "400",
-        "xmlns": "http://www.w3.org/2000/svg",
-    }
-    svg = Tag("svg", fo, attrs=svg_attrs)
-
-    return str(svg)
+        md.append(str(table))
+    return "".join(md)
 
 
 if __name__ == "__main__":
     md = build_supported_news_svg()
 
-    relative_path = Path("doc/supported_news.svg")
+    relative_path = Path("doc/supported_news.md")
     supported_news_path = root_path / relative_path
 
     with open(supported_news_path, "w+", encoding="utf8") as file:
