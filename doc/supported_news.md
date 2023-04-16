@@ -1,565 +1,568 @@
 # Supported News Tables
 
+
 ## DE-News
 <table class="source de">
 	<thread>
 		<tr>
-			<th>Source</th>
-			<th>Domain</th>
-			<th>Validated Attributes</th>
-			<th>Unvalidated Attributes</th>
-			<th>Class</th>
+			<th style="text-align: center; width: 200px">Source</th>
+			<th style="text-align: center; width: 200px">Domain</th>
+			<th style="text-align: center; width: 200px">Validated Attributes</th>
+			<th style="text-align: center; width: 200px">Unvalidated Attributes</th>
+			<th style="text-align: center; width: 200px">Class</th>
 		</tr>
 	</thread>
 	<tbody>
 		<tr>
-			<td style="text-align: center; width: 200px">
-				Die Welt
+			<td>
+				<div style="text-align: right">Die Welt</div>
 			</td>
-			<td style="text-align: center; width: 200px">
+			<td>
 				<a href="https://www.welt.de/">
 					<span>www.welt.de</span>
 				</a>
 			</td>
-			<td style="text-align: center; width: 200px">
+			<td>
 				<code>authors</code>
 				<code>body</code>
 				<code>publishing_date</code>
 				<code>title</code>
 				<code>topics</code>
 			</td>
-			<td style="text-align: center; width: 200px">
+			<td>
 			</td>
-			<td style="text-align: center; width: 200px">
+			<td>
 				<code>DieWelt</code>
 			</td>
 		</tr>
 		<tr>
-			<td style="text-align: center; width: 200px">
-				Mitteldeutscher Rundfunk (MDR)
+			<td>
+				<div style="text-align: right">Mitteldeutscher Rundfunk (MDR)</div>
 			</td>
-			<td style="text-align: center; width: 200px">
+			<td>
 				<a href="https://www.mdr.de/">
 					<span>www.mdr.de</span>
 				</a>
 			</td>
-			<td style="text-align: center; width: 200px">
+			<td>
 				<code>authors</code>
 				<code>body</code>
 				<code>publishing_date</code>
 				<code>title</code>
 				<code>topics</code>
 			</td>
-			<td style="text-align: center; width: 200px">
+			<td>
 			</td>
-			<td style="text-align: center; width: 200px">
+			<td>
 				<code>MDR</code>
 			</td>
 		</tr>
 		<tr>
-			<td style="text-align: center; width: 200px">
-				Frankfurter Allgemeine Zeitung
+			<td>
+				<div style="text-align: right">Frankfurter Allgemeine Zeitung</div>
 			</td>
-			<td style="text-align: center; width: 200px">
+			<td>
 				<a href="https://www.faz.net/">
 					<span>www.faz.net</span>
 				</a>
 			</td>
-			<td style="text-align: center; width: 200px">
+			<td>
 				<code>authors</code>
 				<code>body</code>
 				<code>publishing_date</code>
 				<code>title</code>
 				<code>topics</code>
 			</td>
-			<td style="text-align: center; width: 200px">
+			<td>
 			</td>
-			<td style="text-align: center; width: 200px">
+			<td>
 				<code>FAZ</code>
 			</td>
 		</tr>
 		<tr>
-			<td style="text-align: center; width: 200px">
-				Focus Online
+			<td>
+				<div style="text-align: right">Focus Online</div>
 			</td>
-			<td style="text-align: center; width: 200px">
+			<td>
 				<a href="https://www.focus.de/">
 					<span>www.focus.de</span>
 				</a>
 			</td>
-			<td style="text-align: center; width: 200px">
+			<td>
 				<code>authors</code>
 				<code>body</code>
 				<code>publishing_date</code>
 				<code>title</code>
 				<code>topics</code>
 			</td>
-			<td style="text-align: center; width: 200px">
+			<td>
 			</td>
-			<td style="text-align: center; width: 200px">
+			<td>
 				<code>Focus</code>
 			</td>
 		</tr>
 		<tr>
-			<td style="text-align: center; width: 200px">
-				Münchner Merkur
+			<td>
+				<div style="text-align: right">Münchner Merkur</div>
 			</td>
-			<td style="text-align: center; width: 200px">
+			<td>
 				<a href="https://www.merkur.de/">
 					<span>www.merkur.de</span>
 				</a>
 			</td>
-			<td style="text-align: center; width: 200px">
+			<td>
 				<code>authors</code>
 				<code>body</code>
 				<code>publishing_date</code>
 				<code>title</code>
 			</td>
-			<td style="text-align: center; width: 200px">
+			<td>
 			</td>
-			<td style="text-align: center; width: 200px">
+			<td>
 				<code>Merkur</code>
 			</td>
 		</tr>
 		<tr>
-			<td style="text-align: center; width: 200px">
-				Süddeutsche Zeitung
+			<td>
+				<div style="text-align: right">Süddeutsche Zeitung</div>
 			</td>
-			<td style="text-align: center; width: 200px">
+			<td>
 				<a href="https://www.sueddeutsche.de/">
 					<span>www.sueddeutsche.de</span>
 				</a>
 			</td>
-			<td style="text-align: center; width: 200px">
+			<td>
 				<code>authors</code>
 				<code>body</code>
 				<code>publishing_date</code>
 				<code>title</code>
 				<code>topics</code>
 			</td>
-			<td style="text-align: center; width: 200px">
+			<td>
 			</td>
-			<td style="text-align: center; width: 200px">
+			<td>
 				<code>SZ</code>
 			</td>
 		</tr>
 		<tr>
-			<td style="text-align: center; width: 200px">
-				Spiegel Online
+			<td>
+				<div style="text-align: right">Spiegel Online</div>
 			</td>
-			<td style="text-align: center; width: 200px">
+			<td>
 				<a href="https://www.spiegel.de/">
 					<span>www.spiegel.de</span>
 				</a>
 			</td>
-			<td style="text-align: center; width: 200px">
+			<td>
 				<code>authors</code>
 				<code>body</code>
 				<code>publishing_date</code>
 				<code>title</code>
 				<code>topics</code>
 			</td>
-			<td style="text-align: center; width: 200px">
+			<td>
 			</td>
-			<td style="text-align: center; width: 200px">
+			<td>
 				<code>SpiegelOnline</code>
 			</td>
 		</tr>
 		<tr>
-			<td style="text-align: center; width: 200px">
-				Die Zeit
+			<td>
+				<div style="text-align: right">Die Zeit</div>
 			</td>
-			<td style="text-align: center; width: 200px">
+			<td>
 				<a href="https://www.sueddeutsche.de/">
 					<span>www.sueddeutsche.de</span>
 				</a>
 			</td>
-			<td style="text-align: center; width: 200px">
+			<td>
 				<code>authors</code>
 				<code>body</code>
 				<code>publishing_date</code>
 				<code>title</code>
 				<code>topics</code>
 			</td>
-			<td style="text-align: center; width: 200px">
+			<td>
 			</td>
-			<td style="text-align: center; width: 200px">
+			<td>
 				<code>DieZeit</code>
 			</td>
 		</tr>
 		<tr>
-			<td style="text-align: center; width: 200px">
-				Berliner Zeitung
+			<td>
+				<div style="text-align: right">Berliner Zeitung</div>
 			</td>
-			<td style="text-align: center; width: 200px">
+			<td>
 				<a href="https://www.berliner-zeitung.de/">
 					<span>www.berliner-zeitung.de</span>
 				</a>
 			</td>
-			<td style="text-align: center; width: 200px">
+			<td>
 				<code>authors</code>
 				<code>body</code>
 				<code>publishing_date</code>
 				<code>title</code>
 				<code>topics</code>
 			</td>
-			<td style="text-align: center; width: 200px">
+			<td>
 			</td>
-			<td style="text-align: center; width: 200px">
+			<td>
 				<code>BerlinerZeitung</code>
 			</td>
 		</tr>
 		<tr>
-			<td style="text-align: center; width: 200px">
-				Tagesschau
+			<td>
+				<div style="text-align: right">Tagesschau</div>
 			</td>
-			<td style="text-align: center; width: 200px">
+			<td>
 				<a href="https://www.tagesschau.de/">
 					<span>www.tagesschau.de</span>
 				</a>
 			</td>
-			<td style="text-align: center; width: 200px">
+			<td>
 				<code>authors</code>
 				<code>body</code>
 				<code>publishing_date</code>
 				<code>title</code>
 				<code>topics</code>
 			</td>
-			<td style="text-align: center; width: 200px">
+			<td>
 			</td>
-			<td style="text-align: center; width: 200px">
+			<td>
 				<code>Tagesschau</code>
 			</td>
 		</tr>
 		<tr>
-			<td style="text-align: center; width: 200px">
-				Deutsche Welle
+			<td>
+				<div style="text-align: right">Deutsche Welle</div>
 			</td>
-			<td style="text-align: center; width: 200px">
+			<td>
 				<a href="https://www.dw.com/">
 					<span>www.dw.com</span>
 				</a>
 			</td>
-			<td style="text-align: center; width: 200px">
+			<td>
 				<code>authors</code>
 				<code>body</code>
 				<code>publishing_date</code>
 				<code>title</code>
 				<code>topics</code>
 			</td>
-			<td style="text-align: center; width: 200px">
+			<td>
 			</td>
-			<td style="text-align: center; width: 200px">
+			<td>
 				<code>DW</code>
 			</td>
 		</tr>
 		<tr>
-			<td style="text-align: center; width: 200px">
-				Stern
+			<td>
+				<div style="text-align: right">Stern</div>
 			</td>
-			<td style="text-align: center; width: 200px">
+			<td>
 				<a href="https://www.stern.de/">
 					<span>www.stern.de</span>
 				</a>
 			</td>
-			<td style="text-align: center; width: 200px">
+			<td>
 				<code>authors</code>
 				<code>body</code>
 				<code>publishing_date</code>
 				<code>title</code>
 				<code>topics</code>
 			</td>
-			<td style="text-align: center; width: 200px">
+			<td>
 			</td>
-			<td style="text-align: center; width: 200px">
+			<td>
 				<code>Stern</code>
 			</td>
 		</tr>
 		<tr>
-			<td style="text-align: center; width: 200px">
-				N-Tv
+			<td>
+				<div style="text-align: right">N-Tv</div>
 			</td>
-			<td style="text-align: center; width: 200px">
+			<td>
 				<a href="https://www.ntv.de/">
 					<span>www.ntv.de</span>
 				</a>
 			</td>
-			<td style="text-align: center; width: 200px">
+			<td>
 				<code>authors</code>
 				<code>body</code>
 				<code>publishing_date</code>
 				<code>title</code>
 				<code>topics</code>
 			</td>
-			<td style="text-align: center; width: 200px">
+			<td>
 			</td>
-			<td style="text-align: center; width: 200px">
+			<td>
 				<code>NTV</code>
 			</td>
 		</tr>
 		<tr>
-			<td style="text-align: center; width: 200px">
-				Norddeutscher Rundfunk (NDR)
+			<td>
+				<div style="text-align: right">Norddeutscher Rundfunk (NDR)</div>
 			</td>
-			<td style="text-align: center; width: 200px">
+			<td>
 				<a href="https://www.ndr.de/">
 					<span>www.ndr.de</span>
 				</a>
 			</td>
-			<td style="text-align: center; width: 200px">
+			<td>
 				<code>authors</code>
 				<code>body</code>
 				<code>publishing_date</code>
 				<code>title</code>
 				<code>topics</code>
 			</td>
-			<td style="text-align: center; width: 200px">
+			<td>
 			</td>
-			<td style="text-align: center; width: 200px">
+			<td>
 				<code>NDR</code>
 			</td>
 		</tr>
 		<tr>
-			<td style="text-align: center; width: 200px">
-				Die Tageszeitung (taz)
+			<td>
+				<div style="text-align: right">Die Tageszeitung (taz)</div>
 			</td>
-			<td style="text-align: center; width: 200px">
+			<td>
 				<a href="https://www.taz.de/">
 					<span>www.taz.de</span>
 				</a>
 			</td>
-			<td style="text-align: center; width: 200px">
+			<td>
 				<code>authors</code>
 				<code>body</code>
 				<code>publishing_date</code>
 				<code>title</code>
 				<code>topics</code>
 			</td>
-			<td style="text-align: center; width: 200px">
+			<td>
 			</td>
-			<td style="text-align: center; width: 200px">
+			<td>
 				<code>Taz</code>
 			</td>
 		</tr>
 	</tbody>
 </table>
+
 ## AT-News
 <table class="source at">
 	<thread>
 		<tr>
-			<th>Source</th>
-			<th>Domain</th>
-			<th>Validated Attributes</th>
-			<th>Unvalidated Attributes</th>
-			<th>Class</th>
+			<th style="text-align: center; width: 200px">Source</th>
+			<th style="text-align: center; width: 200px">Domain</th>
+			<th style="text-align: center; width: 200px">Validated Attributes</th>
+			<th style="text-align: center; width: 200px">Unvalidated Attributes</th>
+			<th style="text-align: center; width: 200px">Class</th>
 		</tr>
 	</thread>
 	<tbody>
 		<tr>
-			<td style="text-align: center; width: 200px">
-				ORF
+			<td>
+				<div style="text-align: right">ORF</div>
 			</td>
-			<td style="text-align: center; width: 200px">
+			<td>
 				<a href="https://www.orf.at">
 					<span>www.orf.at</span>
 				</a>
 			</td>
-			<td style="text-align: center; width: 200px">
+			<td>
 				<code>authors</code>
 				<code>body</code>
 				<code>publishing_date</code>
 				<code>title</code>
 			</td>
-			<td style="text-align: center; width: 200px">
+			<td>
 			</td>
-			<td style="text-align: center; width: 200px">
+			<td>
 				<code>ORF</code>
 			</td>
 		</tr>
 	</tbody>
 </table>
+
 ## US-News
 <table class="source us">
 	<thread>
 		<tr>
-			<th>Source</th>
-			<th>Domain</th>
-			<th>Validated Attributes</th>
-			<th>Unvalidated Attributes</th>
-			<th>Class</th>
+			<th style="text-align: center; width: 200px">Source</th>
+			<th style="text-align: center; width: 200px">Domain</th>
+			<th style="text-align: center; width: 200px">Validated Attributes</th>
+			<th style="text-align: center; width: 200px">Unvalidated Attributes</th>
+			<th style="text-align: center; width: 200px">Class</th>
 		</tr>
 	</thread>
 	<tbody>
 		<tr>
-			<td style="text-align: center; width: 200px">
-				Associated Press News
+			<td>
+				<div style="text-align: right">Associated Press News</div>
 			</td>
-			<td style="text-align: center; width: 200px">
+			<td>
 				<a href="https://apnews.com/">
 					<span>apnews.com</span>
 				</a>
 			</td>
-			<td style="text-align: center; width: 200px">
+			<td>
 				<code>authors</code>
 				<code>body</code>
 				<code>publishing_date</code>
 				<code>title</code>
 				<code>topics</code>
 			</td>
-			<td style="text-align: center; width: 200px">
+			<td>
 			</td>
-			<td style="text-align: center; width: 200px">
+			<td>
 				<code>APNews</code>
 			</td>
 		</tr>
 		<tr>
-			<td style="text-align: center; width: 200px">
-				CNBC
+			<td>
+				<div style="text-align: right">CNBC</div>
 			</td>
-			<td style="text-align: center; width: 200px">
+			<td>
 				<a href="https://www.cnbc.com/">
 					<span>www.cnbc.com</span>
 				</a>
 			</td>
-			<td style="text-align: center; width: 200px">
+			<td>
 				<code>authors</code>
 				<code>body</code>
 				<code>publishing_date</code>
 				<code>title</code>
 				<code>topics</code>
 			</td>
-			<td style="text-align: center; width: 200px">
-				<code>registered Attribute: <function CNBCParser.key_points at 0x0000021DA2A14940> --> 'key_points'</code>
+			<td>
+				<code>key_points</code>
 			</td>
-			<td style="text-align: center; width: 200px">
+			<td>
 				<code>CNBC</code>
 			</td>
 		</tr>
 		<tr>
-			<td style="text-align: center; width: 200px">
-				The Intercept
+			<td>
+				<div style="text-align: right">The Intercept</div>
 			</td>
-			<td style="text-align: center; width: 200px">
+			<td>
 				<a href="https://theintercept.com/">
 					<span>theintercept.com</span>
 				</a>
 			</td>
-			<td style="text-align: center; width: 200px">
+			<td>
 				<code>authors</code>
 				<code>body</code>
 				<code>publishing_date</code>
 				<code>title</code>
 				<code>topics</code>
 			</td>
-			<td style="text-align: center; width: 200px">
+			<td>
 			</td>
-			<td style="text-align: center; width: 200px">
+			<td>
 				<code>TheIntercept</code>
 			</td>
 		</tr>
 		<tr>
-			<td style="text-align: center; width: 200px">
-				The Gateway Pundit
+			<td>
+				<div style="text-align: right">The Gateway Pundit</div>
 			</td>
-			<td style="text-align: center; width: 200px">
+			<td>
 				<a href="https://www.thegatewaypundit.com/">
 					<span>www.thegatewaypundit.com</span>
 				</a>
 			</td>
-			<td style="text-align: center; width: 200px">
+			<td>
 				<code>authors</code>
 				<code>body</code>
 				<code>publishing_date</code>
 				<code>title</code>
 			</td>
-			<td style="text-align: center; width: 200px">
+			<td>
 			</td>
-			<td style="text-align: center; width: 200px">
+			<td>
 				<code>TheGatewayPundit</code>
 			</td>
 		</tr>
 		<tr>
-			<td style="text-align: center; width: 200px">
-				Fox News
+			<td>
+				<div style="text-align: right">Fox News</div>
 			</td>
-			<td style="text-align: center; width: 200px">
+			<td>
 				<a href="https://foxnews.com/">
 					<span>foxnews.com</span>
 				</a>
 			</td>
-			<td style="text-align: center; width: 200px">
+			<td>
 				<code>authors</code>
 				<code>body</code>
 				<code>publishing_date</code>
 				<code>title</code>
 				<code>topics</code>
 			</td>
-			<td style="text-align: center; width: 200px">
+			<td>
 			</td>
-			<td style="text-align: center; width: 200px">
+			<td>
 				<code>FoxNews</code>
 			</td>
 		</tr>
 		<tr>
-			<td style="text-align: center; width: 200px">
-				World Truth
+			<td>
+				<div style="text-align: right">World Truth</div>
 			</td>
-			<td style="text-align: center; width: 200px">
+			<td>
 				<a href="https://worldtruth.tv/">
 					<span>worldtruth.tv</span>
 				</a>
 			</td>
-			<td style="text-align: center; width: 200px">
+			<td>
 				<code>body</code>
 				<code>publishing_date</code>
 				<code>title</code>
 			</td>
-			<td style="text-align: center; width: 200px">
+			<td>
 			</td>
-			<td style="text-align: center; width: 200px">
+			<td>
 				<code>WorldTruth</code>
 			</td>
 		</tr>
 		<tr>
-			<td style="text-align: center; width: 200px">
-				The Washington Free Beacon
+			<td>
+				<div style="text-align: right">The Washington Free Beacon</div>
 			</td>
-			<td style="text-align: center; width: 200px">
+			<td>
 				<a href="https://freebeacon.com/">
 					<span>freebeacon.com</span>
 				</a>
 			</td>
-			<td style="text-align: center; width: 200px">
+			<td>
 				<code>authors</code>
 				<code>body</code>
 				<code>publishing_date</code>
 				<code>title</code>
 				<code>topics</code>
 			</td>
-			<td style="text-align: center; width: 200px">
+			<td>
 			</td>
-			<td style="text-align: center; width: 200px">
+			<td>
 				<code>FreeBeacon</code>
 			</td>
 		</tr>
 		<tr>
-			<td style="text-align: center; width: 200px">
-				The Washington Times
+			<td>
+				<div style="text-align: right">The Washington Times</div>
 			</td>
-			<td style="text-align: center; width: 200px">
+			<td>
 				<a href="https://www.washingtontimes.com/">
 					<span>www.washingtontimes.com</span>
 				</a>
 			</td>
-			<td style="text-align: center; width: 200px">
+			<td>
 				<code>authors</code>
 				<code>body</code>
 				<code>publishing_date</code>
 				<code>title</code>
 			</td>
-			<td style="text-align: center; width: 200px">
+			<td>
 			</td>
-			<td style="text-align: center; width: 200px">
+			<td>
 				<code>WashingtonTimes</code>
 			</td>
 		</tr>

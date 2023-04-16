@@ -23,10 +23,14 @@ class Tag:
     type: str
     content: Union[List[ContentT], ContentT]
     attrs: Dict[str, str] = field(default_factory=dict)
+    style: Dict[str, str] = field(default_factory=dict)
     inline: bool = False
 
     def __str__(self) -> str:
         lines: List[str] = list()
+        if self.style:
+            inline_style = "; ".join(f"{key}: {value}" for key, value in self.style.items())
+            self.attrs.update({"style": inline_style})
         inline_attrs: str = "".join([f' {key}="{value}"' for key, value in self.attrs.items()])
         lines.append(generate_line(f"<{self.type}{inline_attrs}>", newline=not self.inline))
         indent = 1 if not self.inline else 0
@@ -43,18 +47,15 @@ class Tag:
 @dataclass
 class ColumnFactory:
     content: Callable[[PublisherEnum], Union[List[ContentT], ContentT]]
-    style: Dict[str, str] = field(default_factory=dict)
 
     def __call__(self, *args, **kwargs) -> Tag:
-        style = "; ".join(f"{key}: {value}" for key, value in self.style.items())
-        attrs = {"style": style}
-        return Tag(type="td", content=self.content(*args, **kwargs), attrs=attrs, inline=False)
+        return Tag(type="td", content=self.content(*args, **kwargs), inline=False)
 
 
 max_width: int = 1000
 column_mapping: Dict[str, ColumnFactory] = {
     "Source": ColumnFactory(
-        content=lambda spec: f"{spec.publisher_name}",
+        content=lambda spec: Tag("div", f"{spec.publisher_name}", style={"text-align": "right"}, inline=True),
     ),
     "Domain": ColumnFactory(
         content=lambda spec: Tag("a", Tag("span", urlparse(spec.domain).netloc, inline=True), {"href": spec.domain})
@@ -64,19 +65,16 @@ column_mapping: Dict[str, ColumnFactory] = {
     ),
     "Unvalidated Attributes": ColumnFactory(
         content=lambda spec: [Tag("code", a, inline=True) for a in attrs]
-        if (attrs := spec.parser.attributes().unvalidated)
+        if (attrs := spec.parser.attributes().unvalidated.names)
         else ""
     ),
     "Class": ColumnFactory(content=lambda spec: Tag("code", spec.name, inline=True)),
 }
 
-column_style = {"text-align": "center", "width": f"{max_width // len(column_mapping)}px"}
-for column in column_mapping.values():
-    column.style.update(column_style)
-
 
 def generate_thread() -> Tag:
-    ths = [Tag("th", name, inline=True) for name in column_mapping.keys()]
+    column_style = {"text-align": "center", "width": f"{max_width // len(column_mapping)}px"}
+    ths = [Tag("th", name, inline=True, style=column_style) for name in column_mapping.keys()]
     tr = Tag("tr", ths)
     thread = Tag("thread", tr)
     return thread
@@ -94,7 +92,7 @@ def generate_tbody(country: Iterator[PublisherEnum]) -> Tag:
 def build_supported_news_svg() -> str:
     md: List[str] = ["# Supported News Tables\n\n"]
     for cc, enum in PublisherCollection.iter_countries():
-        md.append(f"## {cc.upper()}-News\n")
+        md.append(f"\n## {cc.upper()}-News\n")
         table = Tag(
             "table",
             [generate_thread(), generate_tbody(enum)],
