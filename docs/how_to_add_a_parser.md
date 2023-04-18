@@ -10,45 +10,47 @@ To handle this massive workload, we depend on people like you to contribute.
 Fundus aims to be a very lightweight but precise news-scraping library.
 Easy to use while being able to precisely extract information from provided HTML. 
 At its core Fundus is a massive parser library. 
-Rather than automate the extraction layer, we build a handcrafted, precise parser.
-In consequence,  for Fundus to be able to parse a specific news domain, someone has to write a parser specific to this domain. 
+Rather than automate the extraction layer, Fundus builds on handcrafted parsers.
+In consequence, for Fundus to be able to parse a specific news domain, someone has to write a parser specific to this domain. 
 And there are a lot of domains.
 
 
-# How to Contribute
+# How to add a Publisher
 
 Before contributing a parser, check the [**readme**](../README.md) if there is already support for your desired publisher.
 In the following, we will walk you through an example implementation of the [*Los Angeles Times*](https://www.latimes.com/) covering the best practices for adding a news source.
 
+TODO: First step install fundus in dev mode
+-> editable
+-> dev requirements
 
-### 1. Library Structure
-Take a look at the library architecture in `src/library`. 
+### 1. Creating a Parser Stub
+Take a look at the file structure in `fundus/publishers`. 
 Fundus is divided into country-specific sections representing the country a news source originates from.
 For example
-- `src/library/de/` for German publishers and
-- `src/library/us/` for American publishers.
+- `fundus/publishers/de/` for German publishers and
+- `fundus/publishers/us/` for American publishers
+- ...
 
-For the Los Angeles Times, the correct location is `src/library/us/los_angeles_times.py` since they are an American publisher.
-If your publisher requires a new country section, please add it.
-
-### 2. Parser Stub
-In the Python file from step 1, add an empty parser class inheriting from `BaseParser`.
+For the Los Angeles Times, the correct location is `fundus/publishers/us/los_angeles_times.py` since they are an American publisher.
+In the newly created file, add an empty parser class inheriting from `BaseParser`.
 ``` python
-from src.parser.html_parser import BaseParser
+from fundus.parser import BaseParser
 
 class LosAngelesTimesParser(BaseParser):
     pass
 ```
 
-
-### 3. Publisher Specification
+### 2. Creating a Publisher Specification
 Add a new publisher specification for the publisher you want to cover.
-The publisher specification includes the publisher's domain, sitemap and the corresponding parser.
-You can add a new entry to the country-specific `PublisherEnum` in the `__init__.py` of the country section you want to contribute to, i.e. `src/library/<country_code>/__init__.py`.
+The publisher specification links the publisher's domain, sitemap and the corresponding parser to the publisher.
+TODO: Summarize points above
+
+You can add a new entry to the country-specific `PublisherEnum` in the `__init__.py` of the country section you want to contribute to, i.e. `fundus/publishers/<country_code>/__init__.py`.
 For now, we specify the publisher's domain and parser. 
 We cover the publisher's sitemap in the next step.
 
-For the Long Angeles Times, we add the following entry to `src/library/us/__init__.py`.
+For the Long Angeles Times, we add the following entry to `fundus/publishers/us/__init__.py`.
 ``` python
 class US(PublisherEnum):
     LosAngelesTimes = PublisherSpec(
@@ -60,10 +62,12 @@ class US(PublisherEnum):
 If the country section for your publisher did not exist before step 1, please add the `PublisherEnum` to `src/library/collection/__init__.py'`.
 
 
-### 4. Publisher Specification Sitemap
+### 3. Adding Sitemaps
+TODO: Introduce Index Maps (Delete from Google News Maps) -> In separate Sections
+
 The added publisher specification has to specify where to look for articles.
 Right now, Fundus has support for reading sitemaps or RSS feeds.
-Usually, the publisher's sitemaps are located at the end of `<publisher_domain>/robots.txt` or through a quick Google search.
+Usually, the publisher's sitemaps are located at the end of `<publisher_domain>/robots.txt` or can be found through a quick Google search.
 
 For the Los Angeles Times, jumping to the end of their [robots.txt](https://www.latimes.com/robots.txt) gives us the following information.
 ``` console
@@ -154,7 +158,7 @@ class US(PublisherEnum):
 ```
 
 
-### 5. Validating the Implementation
+### 4. Validating the Current Implementation Progress
 Now validate your implementation progress by crawling some example articles from your publisher. 
 The following script fits the Los Angeles Times and is adaptable by changing the publisher variable accordingly.
 
@@ -188,7 +192,7 @@ Fundus-Article:
 Since we didn't add any specific implementation to the parser yet, most entries are empty.
 
 
-### 6. Implementing the Parser
+### 5. Implementing the Parser
 Bring your parser to life and fill it with attributes to parse.
 You can add attributes by decorating the methods of your parser with the `@attribute` decorator.
 Attributes are expected to have a return value precisely specified in the [attribute guidelines](attribute_guidelines.md).
@@ -198,6 +202,8 @@ In the guidelines, we find an attribute called `title`, which exactly describes 
 You must stick to the specified return types since they are enforced in our unit tests. 
 You're free to experiment locally, but you won't be able to contribute to the repository when your PR isn't compliant with the guidelines.
 
+TODO: How to Handle partial progress?
+
 Now that we have our attribute name, we add it to the parser by defining a method called `title` and declaring it as an attribute with the `@attribute` decorator.
 ``` python
 class LosAngelesTimesParser(BaseParser):
@@ -205,10 +211,12 @@ class LosAngelesTimesParser(BaseParser):
     def title(self) -> Optional[str]:
         return "This is a Title"
 ```
+TODO: Explain that the attributes are now accessible in the article class. And how to access them. --> Example (from above)
 
-The Los Angeles Times now supports an attribute called `title` that is directly accessible through `article.title` when crawling for articles.
+#### Extracting Attributes from Precomputed
+TODO: Unterscheide von extraction aus semi-structured data (ld meta) und xpath/cssselect 
 
-To let your parser extract useful information rather than placeholders, use the `ld` and `meta` attributes of `Article`.
+To let your parser extract useful information rather than placeholders, one way is to use the `ld` and `meta` attributes of the `Article`.
 These attributes are automatically extracted when present in the HTML and are accessible during parsing time within your parser's attributes.
 Often useful information about an article like the `title`, `author` or `topics` can be found in these two objects.
 You can access them inside your parser class via the `precomputed` attribute of `BaseParser`, which holds a dataclass of type `Precomputed`.
@@ -234,8 +242,24 @@ In the following table, you can find a short description of the fields of the `p
 | ld                    | The linked data extracted from the article's [`ld+json`](https://json-ld.org/)                                                                         |
 | cache                 | A cache specific to the currently parsed site which can be used to share objects between attributes. Share objects with the `BaseParser.share` method. |
 
-There are many utility functions defined at `src/parser/html_parser/utility.py` to aid when implementing parser attributes.
+For example, to extract the title for an article in the Los Angeles Times, we can access the `og:title` through the `meta` precomputed attribute.
+```python
+@attribute
+def title(self) -> Optional[str]:
+    # Use the `get` function to retrieve data from from the `meta` precomputed attribute
+    return self.precomputed.meta.get("og:title")
+```
+
+There are many utility functions defined at `fundus/parser/utility.py` to aid when implementing parser attributes.
 Make sure to check out other parsers on how to implement specific attributes.
+
+#### Extracting Attributes with XPath and CSS-Select
+
+TODO
+
+#### Finishing the Parser
+
+TODO: Test the parser and use precomputed Xpath
 
 Bringing all above together the Los Angeles Times now looks like this.
 ``` python
@@ -271,7 +295,7 @@ class LosAngelesTimesParser(BaseParser):
         return self.precomputed.meta.get("og:title")
 ```
 
-Now, execute the example script from step 5 to validate your implementation.
+Now, execute the example script from step 4 to validate your implementation.
 If the attributes are implemented correctly, they appear in the printout accordingly.
 
 ``` console
@@ -287,7 +311,7 @@ Fundus-Article:
 - From:   LATimes (2023-03-20 19:25)
 ```
 
-### 7. Writing Tests
+### 6. Writing Tests
 Add a test case to `tests/resources/parser/test_data/<country_section>/` by compressing the HTML of an example article of your publisher to `<publisher_name>.html.gz`, e.g. `LosAngelesTimes.html.gz`.
 Next, specify asserted values your parser should extract from the example HTML in `<publisher_name>.json`, e.g. `LosAngelesTimes.json`.
 Currently, we only support tests for the `title`, `authors` and `topics` attributes. 
@@ -302,9 +326,11 @@ A `LosAngelesTimes.json` may look like the following.
 }
 ```
 
+#TODO: Run the unittests with pytest
+
 Don't worry if your parser does not support all the attributes specified above. 
 Only those supported by your parser will be tested.
 
-### 8. Opening a Pull Request
+### 7. Opening a Pull Request
 Make sure you tested your parser before opening a pull request. 
 Once again, go through the attributes guidelines and ensure your parser is compliant with them.
