@@ -1,7 +1,7 @@
 import pytest
 
-from src.library.collection.base_objects import PublisherEnum, PublisherSpec
-from src.parser.html_parser import BaseParser
+from fundus.parser import BaseParser
+from fundus.publishers.base_objects import PublisherEnum, PublisherSpec
 
 
 class TestCollection:
@@ -39,7 +39,7 @@ class TestCollection:
     def test_search(self, publisher_enum_with_news_map, parser_with_attr_title):
         publisher_enum_with_news_map.value.parser = parser_with_attr_title
 
-        assert (attrs := publisher_enum_with_news_map.value.parser.attributes())
+        assert (attrs := publisher_enum_with_news_map.value.parser.attributes().names)
         assert attrs == ["title"]
         assert len(publisher_enum_with_news_map.search(attrs)) == 1
         assert len(publisher_enum_with_news_map.search(["this_is_a_test"])) == 0

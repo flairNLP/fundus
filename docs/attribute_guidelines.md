@@ -4,7 +4,7 @@ If you want to contribute a parser to this library, please ensure that these att
 
 ## Attributes table
 
-<table>
+<table class="annotations">
     <tr>
         <th>Name</th>
         <th>Description</th>
