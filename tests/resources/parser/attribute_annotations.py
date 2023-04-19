@@ -19,8 +19,7 @@ def _parse_attribute_annotations() -> Dict[str, object]:
 
     from fundus.parser import ArticleBody
 
-    relative_path = Path("doc/attribute_guidelines.md")
-    attribute_guidelines_path = root_path / relative_path
+    attribute_guidelines_path = root_path / "doc" / "attribute_guidelines.md"
 
     with open(attribute_guidelines_path, "rb") as file:
         attribute_guidelines: bytes = file.read()
