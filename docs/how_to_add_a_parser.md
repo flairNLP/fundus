@@ -14,8 +14,16 @@ Rather than automate the extraction layer, Fundus builds on handcrafted parsers.
 In consequence, for Fundus to be able to parse a specific news domain, someone has to write a parser specific to this domain. 
 And there are a lot of domains.
 
+# How to contribute
 
-# How to add a Publisher
+Before contributing to Fundus you should check if you have fundus installed in `editable` mode and using dev-requirements.
+If you haven't done this so far or aren't sure about you should
+1. Clone the repository
+2. Optional but recommended: Create a virtualenv or conda environment
+3. Navigate to the root of the repository
+4. Run pip install -e .[dev]
+
+## How to add a Publisher
 
 Before contributing a parser, check the [**readme**](../README.md) if there is already support for your desired publisher.
 In the following, we will walk you through an example implementation of the [*Los Angeles Times*](https://www.latimes.com/) covering the best practices for adding a news source.
@@ -209,9 +217,20 @@ Now that we have our attribute name, we add it to the parser by defining a metho
 class LosAngelesTimesParser(BaseParser):
     @attribute
     def title(self) -> Optional[str]:
-        return "This is a Title"
+        return "This is a title"
 ```
-TODO: Explain that the attributes are now accessible in the article class. And how to access them. --> Example (from above)
+Now let's print our newly added titles.
+``` python
+for article in crawler.crawl(max_articles=2):
+    print(article.title)
+```
+Which should print the following output
+```console
+This is a title
+This is a title 
+```
+Fundus will automatically add your decorated attributes as instance attributes to the `article` object during parsing.
+Attributes defined in the [attribute guidelines](attribute_guidelines.md) are additionally defined as `dataclasses.fields`
 
 #### Extracting Attributes from Precomputed
 TODO: Unterscheide von extraction aus semi-structured data (ld meta) und xpath/cssselect 
@@ -243,7 +262,7 @@ In the following table, you can find a short description of the fields of the `p
 | cache                 | A cache specific to the currently parsed site which can be used to share objects between attributes. Share objects with the `BaseParser.share` method. |
 
 For example, to extract the title for an article in the Los Angeles Times, we can access the `og:title` through the `meta` precomputed attribute.
-```python
+``` python
 @attribute
 def title(self) -> Optional[str]:
     # Use the `get` function to retrieve data from from the `meta` precomputed attribute
@@ -326,10 +345,14 @@ A `LosAngelesTimes.json` may look like the following.
 }
 ```
 
-#TODO: Run the unittests with pytest
-
 Don't worry if your parser does not support all the attributes specified above. 
 Only those supported by your parser will be tested.
+
+Now to test your newly added publisher you should run pytest with the following command:
+``` console
+pytest
+```
+
 
 ### 7. Opening a Pull Request
 Make sure you tested your parser before opening a pull request. 
