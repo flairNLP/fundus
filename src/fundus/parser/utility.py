@@ -24,7 +24,7 @@ from dateutil import parser
 from lxml.cssselect import CSSSelector
 from lxml.etree import XPath
 
-from src.fundus.parser.data import ArticleBody, ArticleSection, TextSequence
+from fundus.parser.data import ArticleBody, ArticleSection, TextSequence
 
 
 @total_ordering

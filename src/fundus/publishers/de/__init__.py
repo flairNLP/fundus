@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from src.fundus.publishers.base_objects import PublisherEnum, PublisherSpec
+from fundus.publishers.base_objects import PublisherEnum, PublisherSpec
 
 from .berliner_zeitung import BerlinerZeitungParser
 from .die_welt import DieWeltParser

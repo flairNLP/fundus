@@ -6,8 +6,8 @@ from typing import Any, Dict, Iterator, List, Optional, Set, Tuple
 import more_itertools
 from colorama import Fore, Style
 
-from src.fundus.parser import ArticleBody
-from src.fundus.scraping.source import ArticleSource
+from fundus.parser import ArticleBody
+from fundus.scraping.source import ArticleSource
 
 
 @dataclass(frozen=True)
