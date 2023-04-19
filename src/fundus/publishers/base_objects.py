@@ -2,13 +2,13 @@ from dataclasses import dataclass, field
 from enum import Enum, unique
 from typing import Any, Dict, Iterator, List, Optional, Type
 
-from fundus.parser import BaseParser
+from fundus.parser.base_parser import ParserProxy
 
 
 @dataclass(frozen=True)
 class PublisherSpec:
     domain: str
-    parser: Type[BaseParser]
+    parser: Type[ParserProxy]
     rss_feeds: List[str] = field(default_factory=list)
     sitemaps: List[str] = field(default_factory=list)
     news_map: Optional[str] = field(default=None)
@@ -20,6 +20,7 @@ class PublisherSpec:
 
 @unique
 class PublisherEnum(Enum):
+
     def __new__(cls, *args, **kwargs):
         value = len(cls.__members__) + 1
         obj = object.__new__(cls)
@@ -33,7 +34,10 @@ class PublisherEnum(Enum):
         self.rss_feeds = spec.rss_feeds
         self.sitemaps = spec.sitemaps
         self.news_map = spec.news_map
-        self.parser = spec.parser
+        if issubclass(spec.parser, ParserProxy):
+            self.parser = spec.parser()
+        else:
+            self.parser = spec.parser
 
     def supports(self, source_type: Optional[str]) -> bool:
         if source_type == "rss":

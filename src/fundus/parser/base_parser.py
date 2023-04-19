@@ -1,10 +1,12 @@
 import functools
 import inspect
+import itertools
 import json
 import re
-from abc import ABC
+from abc import ABC, abstractmethod
 from copy import copy
 from dataclasses import dataclass, field
+from datetime import datetime, date
 from typing import (
     Any,
     Callable,
@@ -16,8 +18,7 @@ from typing import (
     Optional,
     Tuple,
     Type,
-    TypeVar,
-)
+    TypeVar, )
 
 import lxml.html
 import more_itertools
@@ -172,6 +173,13 @@ class BaseParser(ABC):
         funcs = [func for _, func in cls._search_members(Function)]
         return FunctionCollection(*funcs)
 
+    # noinspection PyPep8Naming,PyPropertyDefinition
+    @classmethod
+    @property
+    @abstractmethod
+    def VALID_UNTIL(cls) -> datetime.date:
+        raise NotImplementedError
+
     @property
     def cache(self) -> Optional[Dict[str, Any]]:
         return self.precomputed.cache if self.precomputed else None
@@ -223,3 +231,42 @@ class BaseParser(ABC):
     @attribute
     def __ld(self) -> Optional[LinkedDataMapping]:
         return self.precomputed.ld
+
+
+class _ParserCache:
+    def __init__(self, factory: Type[BaseParser]):
+        self.factory: Optional[Type[BaseParser]] = factory
+        self.instance: Optional[BaseParser] = None
+
+    def __call__(self) -> BaseParser:
+        if self.instance:
+            return self.instance
+        else:
+            if not self.factory:
+                raise AttributeError("Cache not set yet")
+            else:
+                self.instance = self.factory()
+                return self.instance
+
+
+class ParserProxy(ABC):
+    def __init__(self):
+        predicate: Callable[[object], bool] = lambda x: inspect.isclass(x) and issubclass(x, BaseParser)
+        included_parser: List[Type[BaseParser]] = [
+            parser for name, parser in inspect.getmembers(self.__class__, predicate=predicate)
+        ]
+        # noinspection PyUnresolvedReferences
+        self._parser_mapping: Dict[date, _ParserCache] = {
+            parser.VALID_UNTIL: _ParserCache(parser)
+            for parser in sorted(included_parser, key=lambda parser: parser.VALID_UNTIL)
+        }
+
+        self._latest: _ParserCache = self._parser_mapping[datetime.now().date()]
+
+    def __call__(self, crawl_date: Optional[datetime] = None) -> BaseParser:
+        if not crawl_date:
+            return self._latest()
+        else:
+            parsed_date = crawl_date.date()
+            _, parser = next(itertools.dropwhile(lambda x: x[0] < parsed_date, self._parser_mapping.items()))
+            return parser()
