@@ -4,7 +4,7 @@ from typing import Any, Dict, List, Tuple
 
 import lxml.html
 
-from doc import docs_path
+from docs import docs_path
 
 
 # noinspection PyUnresolvedReferences
