@@ -1,8 +1,6 @@
-The following document aims to describe which parsable attributes of a
-parser class represent which semantic piece of a given news article.
-Consistency between publishers and parsers is a main goal, please report any
-cases you deem to be inconsistent with this document. If you want to contribute a parser to
-this library, please ensure that these attributes are named consistently.
+The following document aims to describe which parsable attributes of a parser class represent which semantic piece of a given news article.
+Consistency between publishers and parsers is a main goal, please report any cases you deem to be inconsistent with this document. 
+If you want to contribute a parser to this library, please ensure that these attributes are named consistently.
 
 ## Attributes table
 
