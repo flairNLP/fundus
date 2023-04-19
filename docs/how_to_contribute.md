@@ -28,10 +28,6 @@ If you haven't done this so far or aren't sure about you should
 Before contributing a parser, check the [**readme**](../README.md) if there is already support for your desired publisher.
 In the following, we will walk you through an example implementation of the [*Los Angeles Times*](https://www.latimes.com/) covering the best practices for adding a news source.
 
-TODO: First step install fundus in dev mode
--> editable
--> dev requirements
-
 ### 1. Creating a Parser Stub
 Take a look at the file structure in `fundus/publishers`. 
 Fundus is divided into country-specific sections representing the country a news source originates from.
@@ -52,7 +48,6 @@ class LosAngelesTimesParser(BaseParser):
 ### 2. Creating a Publisher Specification
 Add a new publisher specification for the publisher you want to cover.
 The publisher specification links the publisher's domain, sitemap and the corresponding parser to the publisher.
-TODO: Summarize points above
 
 You can add a new entry to the country-specific `PublisherEnum` in the `__init__.py` of the country section you want to contribute to, i.e. `fundus/publishers/<country_code>/__init__.py`.
 For now, we specify the publisher's domain and parser. 
@@ -102,7 +97,7 @@ You can find a plugin to resolve this issue [here](https://addons.mozilla.org/de
 #### Finding a Google News Sitemap
 
 Accessing [https://www.latimes.com/news-sitemap.xml](https://www.latimes.com/news-sitemap.xml) should yield an XML file like the following.
-```xml
+``` xml
 <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
               xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemapindex.xsd">
@@ -119,7 +114,7 @@ Accessing [https://www.latimes.com/news-sitemap.xml](https://www.latimes.com/new
 We see that the actual sitemap refers to other sitemaps. 
 Therefore, it is an index map.
 Accessing one of these sitemaps, e.g. [https://www.latimes.com/news-sitemap-latest.xml](https://www.latimes.com/news-sitemap-latest.xml), should yield and XML file like the following.
-```xml
+``` xml
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
@@ -210,7 +205,7 @@ In the guidelines, we find an attribute called `title`, which exactly describes 
 You must stick to the specified return types since they are enforced in our unit tests. 
 You're free to experiment locally, but you won't be able to contribute to the repository when your PR isn't compliant with the guidelines.
 
-TODO: How to Handle partial progress?
+If you have problems implementing your desired publisher feel free to ask questions in the issue [issue](https://github.com/flairNLP/fundus/issues) tab.
 
 Now that we have our attribute name, we add it to the parser by defining a method called `title` and declaring it as an attribute with the `@attribute` decorator.
 ``` python

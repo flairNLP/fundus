@@ -2,7 +2,7 @@
 
 [![PyPI version](https://badge.fury.io/py/fundus.svg)](https://badge.fury.io/py/fundus)
 [![GitHub Issues](https://img.shields.io/github/issues/flairNLP/fundus.svg)](https://github.com/flairNLP/fundus/issues)
-[![Contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg)]()
+[![Contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg)](docs/how_to_contribute.md)
 [![License: MIT](https://img.shields.io/badge/License-MIT-brightgreen.svg)](https://opensource.org/licenses/MIT)
 
 A very simple **news crawler**.
@@ -86,7 +86,7 @@ We provide **quick tutorials** to get you started with the library:
 
 1. [**Tutorial 1: How to crawl news with Fundus**](docs/...)
 2. [**Tutorial 2: The Article Class**](docs/...)
-3. [**Tutorial 3: How to add a new news-source**](docs/how_to_add_a_parser.md)
+3. [**Tutorial 3: How to add a new news-source**](docs/how_to_contribute.md)
 
 The tutorials explain how ...
 
