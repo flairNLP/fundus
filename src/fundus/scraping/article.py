@@ -48,7 +48,7 @@ class Article:
     def __getattr__(self, item: object) -> Any:
         raise AttributeError(f"'{type(self).__name__}' object has no attribute '{item}'")
 
-    def __str__(self):
+    def __str__(self) -> str:
         # the subsequent indent here is a bit wacky, but textwrapper.dedent won't work with tabs, so we have to use
         # whitespaces instead.
         title_wrapper = TextWrapper(width=80, max_lines=1, initial_indent="")

@@ -181,7 +181,7 @@ def generic_author_parsing(
     return [name.strip() for name in authors]
 
 
-def generic_text_extraction_with_css(doc, selector: XPath) -> Optional[str]:
+def generic_text_extraction_with_css(doc: lxml.html.HtmlElement, selector: XPath) -> Optional[str]:
     nodes = selector(doc)
     return strip_nodes_to_text(nodes)
 

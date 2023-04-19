@@ -1,4 +1,4 @@
-from typing import Iterator, List, Literal, Optional, Set, Tuple, Type, Union
+from typing import Iterable, Iterator, List, Literal, Optional, Set, Tuple, Type, Union
 
 import more_itertools
 
@@ -34,7 +34,7 @@ class Pipeline:
 
 
 class Crawler:
-    def __init__(self, *publishers: Union[PublisherEnum, Type[PublisherEnum]]):
+    def __init__(self, *publishers: PublisherEnum):
         if not publishers:
             raise ValueError("param <publishers> of <Crawler.__init__> has to be non empty")
         nested_publisher = [listify(publisher) for publisher in publishers]

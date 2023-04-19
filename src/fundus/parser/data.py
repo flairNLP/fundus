@@ -136,7 +136,7 @@ class LinkedDataMapping:
         :return: The content of the first matched key or None
         """
 
-        def search_recursive(nodes: Iterable[LDMappingValueT], current_depth: int):
+        def search_recursive(nodes: Iterable[LDMappingValueT], current_depth: int) -> Optional[Any]:
             if current_depth == depth:
                 return None
             else:
@@ -152,7 +152,7 @@ class LinkedDataMapping:
 
         return search_recursive(self.__dict__.values(), 0) or default
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"LD containing '{', '.join(content)}'" if (content := self.__dict__.keys()) else "Empty LD"
 
 
@@ -171,7 +171,7 @@ class TextSequence(Sequence[str]):
     def __getitem__(self, s: slice) -> "TextSequence":
         ...
 
-    def __getitem__(self, i):
+    def __getitem__(self, i: Union[int, slice]) -> Union[str, "TextSequence"]:
         return self._data[i] if isinstance(i, int) else type(self)(self._data[i])
 
     def __len__(self) -> int:
@@ -194,23 +194,21 @@ class TextSequenceTree(ABC):
         return self.as_text_sequence().text(join_on)
 
     def df_traversal(self) -> Iterable[TextSequence]:
-        def recursion(o: object):
+        def recursion(o: object) -> Iterator[TextSequence]:
             if isinstance(o, TextSequence):
                 yield o
             elif isinstance(o, Collection):
                 for el in o:
                     yield from el
-            else:
-                yield o
 
         for value in self:
             yield from recursion(value)
 
-    def __iter__(self):
+    def __iter__(self) -> Iterator[str]:
         field_values = [getattr(self, f.name) for f in fields(self)]
         yield from field_values
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.text()
 
 

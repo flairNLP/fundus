@@ -97,7 +97,7 @@ class StaticSource(Source):
         super().__init__(publisher)
         self.links = links
 
-    def __iter__(self):
+    def __iter__(self) -> Iterator[str]:
         yield from self.links
 
 
@@ -118,7 +118,7 @@ class RSSSource(Source):
 
 
 class _ArchiveDecompressor:
-    def __init__(self):
+    def __init__(self) -> None:
         self.archive_mapping: Dict[str, Callable[[bytes], bytes]] = {"application/x-gzip": self._decompress_gzip}
 
     @staticmethod
@@ -153,7 +153,7 @@ class SitemapSource(Source):
         self.reverse = reverse
         self._decompressor = _ArchiveDecompressor()
 
-    def config(self, recursive: bool, reverse: bool):
+    def config(self, recursive: bool, reverse: bool) -> None:
         self.recursive = recursive
         self.reverse = reverse
 
@@ -164,7 +164,7 @@ class SitemapSource(Source):
             return None
 
     def __iter__(self) -> Iterator[str]:
-        def yield_recursive(url: str):
+        def yield_recursive(url: str) -> Iterator[str]:
             try:
                 response = session.get(url=url, headers=self.request_header)
                 response.raise_for_status()

@@ -2,6 +2,7 @@ import functools
 import inspect
 import json
 import re
+import typing
 from abc import ABC
 from copy import copy
 from dataclasses import dataclass, field
@@ -17,6 +18,7 @@ from typing import (
     Tuple,
     Type,
     TypeVar,
+    Union,
 )
 
 import lxml.html
@@ -27,23 +29,20 @@ from fundus.parser.data import LinkedDataMapping
 from fundus.parser.utility import get_meta_content
 
 RegisteredFunctionT_co = TypeVar("RegisteredFunctionT_co", covariant=True, bound="RegisteredFunction")
+BaseParserT = TypeVar("BaseParserT", bound="BaseParser")
 
 
 class RegisteredFunction(ABC):
-    __wrapped__: Callable[[object], Any]
     __name__: str
-    __func__: Callable[[object], Any]
-    __self__: Optional["BaseParser"]
 
     # TODO: ensure uint for priority instead of int
-    def __init__(self, func: Callable[[object], Any], priority: Optional[int]):
-        self.__self__ = None
+    def __init__(self, func: Callable[[BaseParserT], Any], priority: Optional[int]):
+        self.__self__: Optional[BaseParserT] = None
         self.__func__ = func
         self.__finite__: bool = False
-
         self.priority = priority
 
-    def __get__(self, instance, owner):
+    def __get__(self, instance: BaseParserT, owner: object) -> "RegisteredFunction":
         if instance and not self.__self__:
             method = copy(self)
             method.__self__ = instance
@@ -51,40 +50,44 @@ class RegisteredFunction(ABC):
             return method
         return self
 
-    def __call__(self):
+    def __call__(self) -> Any:
         if self.__self__ and hasattr(self.__self__, "precomputed"):
             return self.__func__(self.__self__)
         else:
             raise ValueError("You are not allowed to call attributes or functions outside the parse() method")
 
-    def __lt__(self, other):
-        if self.priority is None:
+    def __lt__(self, other: object) -> bool:
+        if not isinstance(other, RegisteredFunction) or self.priority is None:
             return False
         elif other.priority is None:
             return True
         else:
-            return self.priority < other.priority
+            return bool(self.priority < other.priority)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         if instance := self.__self__:
-            return f"bound {self.__class__.__name__} of {instance}: {self.__wrapped__} --> '{self.__name__}'"
+            return f"bound {self.__class__.__name__} of {instance}: {self.__func__} --> '{self.__name__}'"
         else:
-            return f"registered {self.__class__.__name__}: {self.__wrapped__} --> '{self.__name__}'"
+            return f"registered {self.__class__.__name__}: {self.__func__} --> '{self.__name__}'"
 
 
 class Attribute(RegisteredFunction):
-    def __init__(self, func: Callable[[object], Any], priority: Optional[int], validate: bool):
+    def __init__(self, func: Callable[[BaseParserT], Any], priority: Optional[int], validate: bool):
         self.validate = validate
         super(Attribute, self).__init__(func=func, priority=priority)
 
 
 class Function(RegisteredFunction):
-    def __init__(self, func: Callable[[object], Any], priority: Optional[int]):
+    def __init__(self, func: Callable[[BaseParserT], Any], priority: Optional[int]):
         super(Function, self).__init__(func=func, priority=priority)
 
 
-def _register(cls, factory: Type[RegisteredFunction], **kwargs):
-    def wrapper(func):
+def _register(
+    cls: Optional[Callable[[BaseParserT], Any]],
+    factory: Type[RegisteredFunctionT_co],
+    **kwargs: Union[Optional[int], bool],
+) -> Union[Callable[[Callable[[BaseParserT], Any]], RegisteredFunctionT_co], RegisteredFunctionT_co]:
+    def wrapper(func: Callable[[BaseParserT], Any]) -> RegisteredFunctionT_co:
         return functools.update_wrapper(factory(func, **kwargs), func)
 
     # _register was called with parenthesis
@@ -95,11 +98,18 @@ def _register(cls, factory: Type[RegisteredFunction], **kwargs):
     return wrapper(cls)
 
 
-def attribute(cls=None, /, *, priority: Optional[int] = None, validate: bool = True):
+# TODO: by now (2023.04.19) type hinting this little function would require 10 overloads. Maybe someone knows
+#  a better solution for this or the typing module gets some updates in the near future
+@typing.no_type_check
+def attribute(
+    cls: Optional[Callable[[BaseParserT], Any]] = None, /, *, priority: Optional[int] = None, validate: bool = True
+) -> Union[Callable[[Callable[[BaseParserT], Any]], Attribute], Attribute]:
     return _register(cls, factory=Attribute, priority=priority, validate=validate)
 
 
-def function(cls=None, /, *, priority: Optional[int] = None):
+def function(
+    cls: Optional[Callable[[BaseParserT], Any]] = None, /, *, priority: Optional[int] = None
+) -> Union[Callable[[Callable[[BaseParserT], Any]], Function], Function]:
     return _register(cls, factory=Function, priority=priority)
 
 
@@ -117,7 +127,7 @@ class RegisteredFunctionCollection(Collection[RegisteredFunctionT_co]):
     def __iter__(self) -> Iterator[RegisteredFunctionT_co]:
         return iter(self.functions)
 
-    def __contains__(self, item) -> bool:
+    def __contains__(self, item: object) -> bool:
         return self.functions.__contains__(item)
 
     def __eq__(self, other: object) -> bool:
@@ -151,7 +161,7 @@ class BaseParser(ABC):
     precomputed: Precomputed
     _ld_selector: XPath = XPath("//script[@type='application/ld+json']")
 
-    def __init__(self):
+    def __init__(self) -> None:
         predicate: Callable[[object], bool] = lambda x: isinstance(x, RegisteredFunction)
         predicated_members: List[Tuple[str, RegisteredFunction]] = inspect.getmembers(self, predicate=predicate)
         bound_registered_functions: List[RegisteredFunction] = [func for _, func in predicated_members]
@@ -163,18 +173,22 @@ class BaseParser(ABC):
         return members
 
     @classmethod
-    def attributes(cls) -> AttributeCollection:
+    def get_attributes(cls) -> AttributeCollection:
         attrs = [func for _, func in cls._search_members(Attribute) if func.__name__ not in ["__ld", "__meta"]]
         return AttributeCollection(*attrs)
 
     @classmethod
-    def functions(cls) -> FunctionCollection:
+    def get_functions(cls) -> FunctionCollection:
         funcs = [func for _, func in cls._search_members(Function)]
         return FunctionCollection(*funcs)
 
     @property
-    def cache(self) -> Optional[Dict[str, Any]]:
-        return self.precomputed.cache if self.precomputed else None
+    def attributes(self) -> AttributeCollection:
+        return self.get_attributes()
+
+    @property
+    def functions(self) -> FunctionCollection:
+        return self.get_functions()
 
     def _base_setup(self, html: str) -> None:
         doc = lxml.html.document_fromstring(html)
@@ -210,10 +224,6 @@ class BaseParser(ABC):
                 raise TypeError(f"Invalid type for {func}. Only subclasses of 'RegisteredFunction' are allowed")
 
         return parsed_data
-
-    def share(self, **kwargs):
-        for key, value in kwargs.items():
-            self.precomputed.cache[key] = value
 
     # base attribute section
     @attribute

@@ -13,14 +13,14 @@ class PublisherSpec:
     sitemaps: List[str] = field(default_factory=list)
     news_map: Optional[str] = field(default=None)
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         if not (self.rss_feeds or self.sitemaps or self.news_map):
             raise ValueError("Publishers must at least define either an rss-feed, sitemap or news_map to crawl")
 
 
 @unique
 class PublisherEnum(Enum):
-    def __new__(cls, *args, **kwargs):
+    def __new__(cls, *args: Any, **kwargs: Any) -> "PublisherEnum":
         value = len(cls.__members__) + 1
         obj = object.__new__(cls)
         obj._value_ = value
@@ -56,12 +56,9 @@ class PublisherEnum(Enum):
         attrs_set = set(attrs)
         spec: PublisherEnum
         for spec in list(cls):
-            if attrs_set.issubset(spec.parser.attributes().names) and spec.supports(source_type):
+            if attrs_set.issubset(spec.parser.get_attributes().names) and spec.supports(source_type):
                 matched.append(spec)
         return matched
-
-    def __get__(self, instance, owner):
-        return self
 
 
 class CollectionMeta(type):
