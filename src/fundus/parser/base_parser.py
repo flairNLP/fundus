@@ -2,7 +2,6 @@ import functools
 import inspect
 import json
 import re
-import typing
 from abc import ABC
 from copy import copy
 from dataclasses import dataclass, field
@@ -19,6 +18,7 @@ from typing import (
     Type,
     TypeVar,
     Union,
+    no_type_check,
 )
 
 import lxml.html
@@ -28,21 +28,21 @@ from lxml.etree import XPath
 from fundus.parser.data import LinkedDataMapping
 from fundus.parser.utility import get_meta_content
 
-RegisteredFunctionT_co = TypeVar("RegisteredFunctionT_co", covariant=True, bound="RegisteredFunction")
-BaseParserT = TypeVar("BaseParserT", bound="BaseParser")
+RegisteredFunctionT = TypeVar("RegisteredFunctionT", bound="RegisteredFunction")
+ObjectT = TypeVar("ObjectT", bound=object)
 
 
 class RegisteredFunction(ABC):
     __name__: str
 
     # TODO: ensure uint for priority instead of int
-    def __init__(self, func: Callable[[BaseParserT], Any], priority: Optional[int]):
-        self.__self__: Optional[BaseParserT] = None
+    def __init__(self, func: Callable[[ObjectT], Any], priority: Optional[int]):
+        self.__self__: Optional[ObjectT] = None
         self.__func__ = func
         self.__finite__: bool = False
         self.priority = priority
 
-    def __get__(self, instance: BaseParserT, owner: object) -> "RegisteredFunction":
+    def __get__(self, instance: ObjectT, owner: object) -> "RegisteredFunction":
         if instance and not self.__self__:
             method = copy(self)
             method.__self__ = instance
@@ -72,22 +72,22 @@ class RegisteredFunction(ABC):
 
 
 class Attribute(RegisteredFunction):
-    def __init__(self, func: Callable[[BaseParserT], Any], priority: Optional[int], validate: bool):
+    def __init__(self, func: Callable[[ObjectT], Any], priority: Optional[int], validate: bool):
         self.validate = validate
         super(Attribute, self).__init__(func=func, priority=priority)
 
 
 class Function(RegisteredFunction):
-    def __init__(self, func: Callable[[BaseParserT], Any], priority: Optional[int]):
+    def __init__(self, func: Callable[[ObjectT], Any], priority: Optional[int]):
         super(Function, self).__init__(func=func, priority=priority)
 
 
 def _register(
-    cls: Optional[Callable[[BaseParserT], Any]],
-    factory: Type[RegisteredFunctionT_co],
+    cls: Optional[Callable[[ObjectT], Any]],
+    factory: Type[RegisteredFunctionT],
     **kwargs: Union[Optional[int], bool],
-) -> Union[Callable[[Callable[[BaseParserT], Any]], RegisteredFunctionT_co], RegisteredFunctionT_co]:
-    def wrapper(func: Callable[[BaseParserT], Any]) -> RegisteredFunctionT_co:
+) -> Union[Callable[[Callable[[ObjectT], Any]], RegisteredFunctionT], RegisteredFunctionT]:
+    def wrapper(func: Callable[[ObjectT], Any]) -> RegisteredFunctionT:
         return functools.update_wrapper(factory(func, **kwargs), func)
 
     # _register was called with parenthesis
@@ -100,21 +100,21 @@ def _register(
 
 # TODO: by now (2023.04.19) type hinting this little function would require 10 overloads. Maybe someone knows
 #  a better solution for this or the typing module gets some updates in the near future
-@typing.no_type_check
+@no_type_check
 def attribute(
-    cls: Optional[Callable[[BaseParserT], Any]] = None, /, *, priority: Optional[int] = None, validate: bool = True
-) -> Union[Callable[[Callable[[BaseParserT], Any]], Attribute], Attribute]:
+    cls: Optional[Callable[[ObjectT], Any]] = None, /, *, priority: Optional[int] = None, validate: bool = True
+) -> Union[Callable[[Callable[[ObjectT], Any]], Attribute], Attribute]:
     return _register(cls, factory=Attribute, priority=priority, validate=validate)
 
 
 def function(
-    cls: Optional[Callable[[BaseParserT], Any]] = None, /, *, priority: Optional[int] = None
-) -> Union[Callable[[Callable[[BaseParserT], Any]], Function], Function]:
+    cls: Optional[Callable[[ObjectT], Any]] = None, /, *, priority: Optional[int] = None
+) -> Union[Callable[[Callable[[ObjectT], Any]], Function], Function]:
     return _register(cls, factory=Function, priority=priority)
 
 
-class RegisteredFunctionCollection(Collection[RegisteredFunctionT_co]):
-    def __init__(self, *functions: RegisteredFunctionT_co):
+class RegisteredFunctionCollection(Collection[RegisteredFunctionT]):
+    def __init__(self, *functions: RegisteredFunctionT):
         self.functions = tuple(functions)
 
     @property
@@ -124,7 +124,7 @@ class RegisteredFunctionCollection(Collection[RegisteredFunctionT_co]):
     def __len__(self) -> int:
         return len(self.functions)
 
-    def __iter__(self) -> Iterator[RegisteredFunctionT_co]:
+    def __iter__(self) -> Iterator[RegisteredFunctionT]:
         return iter(self.functions)
 
     def __contains__(self, item: object) -> bool:
