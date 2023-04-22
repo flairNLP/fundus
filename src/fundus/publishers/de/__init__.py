@@ -3,6 +3,7 @@ from datetime import datetime
 from fundus.publishers.base_objects import PublisherEnum, PublisherSpec
 
 from .berliner_zeitung import BerlinerZeitungParser
+from .bild import BildParser
 from .die_welt import DieWeltParser
 from .die_zeit import DieZeitParser
 from .dw import DWParser
@@ -135,3 +136,9 @@ class DE(PublisherEnum):
         sitemaps=["https://taz.de/sitemap-index.xml"],
         parser=TazParser,
     )
+    Bild = PublisherSpec(
+        domain="https://www.bild.de/",
+        rss_feeds=["https://www.bild.de/rssfeeds/vw-neu/vw-neu-32001674,view=rss2.bild.xml"],
+        parser=BildParser,
+    )
+
