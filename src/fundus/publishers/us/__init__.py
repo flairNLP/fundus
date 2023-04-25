@@ -4,6 +4,7 @@ from .ap_news import APNewsParser
 from .cnbc import CNBCParser
 from .fox_news import FoxNewsParser
 from .free_beacon import FreeBeaconParser
+from .reuters import ReutersParser
 from .the_gateway_pundit import TheGatewayPunditParser
 from .the_intercept import TheInterceptParser
 from .washington_times_parser import WashingtonTimesParser
@@ -65,4 +66,11 @@ class US(PublisherEnum):
             "https://www.washingtontimes.com/sitemap-entries.xml",
         ],
         parser=WashingtonTimesParser,
+    )
+
+    Reuters = PublisherSpec(
+        domain="https://www.reuters.com/",
+        sitemaps=["https://www.reuters.com/arc/outboundfeeds/sitemap-index/?outputType=xml"],
+        news_map="https://www.reuters.com/arc/outboundfeeds/news-sitemap-index/?outputType=xml",
+        parser=ReutersParser,
     )
