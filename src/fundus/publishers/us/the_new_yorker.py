@@ -1,6 +1,8 @@
 from datetime import datetime
 from typing import List, Optional
 
+from lxml.cssselect import CSSSelector
+
 from fundus.parser import ArticleBody, BaseParser, attribute
 from fundus.parser.data import TextSequence
 from fundus.parser.utility import (
@@ -9,7 +11,6 @@ from fundus.parser.utility import (
     generic_date_parsing,
     generic_topic_parsing,
 )
-from lxml.cssselect import CSSSelector
 
 
 class TheNewYorkerParser(BaseParser):
