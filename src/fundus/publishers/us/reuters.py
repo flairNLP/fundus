@@ -1,6 +1,8 @@
 from datetime import datetime
 from typing import List, Optional
 
+from lxml.etree import XPath
+
 from fundus.parser import ArticleBody, BaseParser, attribute
 from fundus.parser.utility import (
     extract_article_body_with_selector,
@@ -8,7 +10,6 @@ from fundus.parser.utility import (
     generic_date_parsing,
     generic_topic_parsing,
 )
-from lxml.etree import XPath
 
 
 class ReutersParser(BaseParser):
