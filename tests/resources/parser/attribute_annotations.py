@@ -4,7 +4,7 @@ from typing import Any, Dict, List, Tuple
 
 import lxml.html
 
-from docs import docs_path
+from fundus import __development_base_path__ as root_path
 
 
 # noinspection PyUnresolvedReferences
@@ -19,8 +19,7 @@ def _parse_attribute_annotations() -> Dict[str, object]:
 
     from fundus.parser import ArticleBody
 
-    relative_path = Path("attribute_guidelines.md")
-    attribute_guidelines_path = os.path.join(docs_path, relative_path)
+    attribute_guidelines_path = root_path / "docs" / "attribute_guidelines.md"
 
     with open(attribute_guidelines_path, "rb") as file:
         attribute_guidelines: bytes = file.read()
