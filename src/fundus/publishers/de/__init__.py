@@ -141,4 +141,3 @@ class DE(PublisherEnum):
         rss_feeds=["https://www.bild.de/rssfeeds/vw-neu/vw-neu-32001674,view=rss2.bild.xml"],
         parser=BildParser,
     )
-

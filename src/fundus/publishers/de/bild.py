@@ -1,7 +1,6 @@
 import datetime
 from typing import List, Optional
 
-from lxml.cssselect import CSSSelector
 from lxml.etree import XPath
 
 from fundus.parser import ArticleBody, BaseParser, attribute
@@ -9,15 +8,13 @@ from fundus.parser.utility import (
     extract_article_body_with_selector,
     generic_author_parsing,
     generic_date_parsing,
-    generic_text_extraction_with_css,
     generic_topic_parsing,
 )
 
 
 class BildParser(BaseParser):
-
-    _paragraph_selector = XPath("//div[class = 'article-body']/p[position() > 1]")
-    _summary_selector = XPath("//div[class = 'article-body']/p[1]")
+    _paragraph_selector = XPath("//div[@class = 'article-body']/p[position() > 1]")
+    _summary_selector = XPath("//div[@class = 'article-body']/p[1]")
     _subheadline_selector = XPath("//div[@data-key = 'article']/h2")
 
     @attribute
@@ -31,16 +28,15 @@ class BildParser(BaseParser):
 
     @attribute
     def authors(self) -> List[str]:
-        return generic_author_parsing(self.precomputed.ld.bf_search('author'))
+        return generic_author_parsing(self.precomputed.ld.bf_search("author"))
 
     @attribute
     def publishing_date(self) -> Optional[datetime.datetime]:
-        return generic_date_parsing(self.precomputed.ld.bf_search('datePublished'))
-
+        return generic_date_parsing(self.precomputed.ld.bf_search("datePublished"))
 
     @attribute
     def title(self) -> Optional[str]:
-        return self.precomputed.meta.get('og:title')
+        return self.precomputed.meta.get("og:title")
 
     @attribute
     def topics(self) -> List[str]:
