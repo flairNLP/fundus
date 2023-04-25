@@ -6,6 +6,7 @@ from .fox_news import FoxNewsParser
 from .free_beacon import FreeBeaconParser
 from .the_gateway_pundit import TheGatewayPunditParser
 from .the_intercept import TheInterceptParser
+from .the_new_yorker import TheNewYorkerParser
 from .washington_times_parser import WashingtonTimesParser
 from .world_truth import WorldTruthParser
 
@@ -65,4 +66,11 @@ class US(PublisherEnum):
             "https://www.washingtontimes.com/sitemap-entries.xml",
         ],
         parser=WashingtonTimesParser,
+    )
+
+    TheNewYorker = PublisherSpec(
+        domain="https://www.newyorker.com/",
+        sitemaps=["https://www.newyorker.com/sitemap.xml"],
+        news_map="https://www.newyorker.com/feed/google-news-sitemap-feed/sitemap-google-news",
+        parser=TheNewYorkerParser,
     )
