@@ -1,11 +1,10 @@
+import datetime
 import re
-from datetime import datetime
 from typing import List, Optional, Pattern
 
 from lxml.cssselect import CSSSelector
 
-from fundus.parser import ArticleBody, BaseParser, attribute
-from fundus.parser.base_parser import ParserProxy
+from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute
 from fundus.parser.utility import (
     apply_substitution_pattern_over_list,
     extract_article_body_with_selector,
@@ -17,7 +16,7 @@ from fundus.parser.utility import (
 
 class DieWeltParser(ParserProxy):
     class V1(BaseParser):
-        VALID_UNTIL = datetime.now().date()
+        VALID_UNTIL = datetime.date.today()
 
         _author_substitution_pattern: Pattern[str] = re.compile(r"WELT")
         _paragraph_selector = CSSSelector("body .c-article-text > p")
@@ -40,7 +39,7 @@ class DieWeltParser(ParserProxy):
             )
 
         @attribute
-        def publishing_date(self) -> Optional[datetime]:
+        def publishing_date(self) -> Optional[datetime.datetime]:
             return generic_date_parsing(self.precomputed.ld.bf_search("datePublished"))
 
         @attribute

@@ -3,7 +3,7 @@ from typing import List, Optional
 
 from lxml.cssselect import CSSSelector
 
-from fundus.parser import ArticleBody, BaseParser, attribute
+from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute
 from fundus.parser.utility import (
     extract_article_body_with_selector,
     generic_author_parsing,
@@ -11,29 +11,32 @@ from fundus.parser.utility import (
 )
 
 
-class FreeBeaconParser(BaseParser):
-    _paragraph_selector = CSSSelector(".article-content > p")
+class FreeBeaconParser(ParserProxy):
+    class V1(BaseParser):
+        VALID_UNTIL = datetime.now().date()
 
-    @attribute
-    def body(self) -> ArticleBody:
-        return extract_article_body_with_selector(
-            self.precomputed.doc,
-            paragraph_selector=self._paragraph_selector,
-        )
+        _paragraph_selector = CSSSelector(".article-content > p")
 
-    @attribute
-    def authors(self) -> List[str]:
-        return generic_author_parsing(self.precomputed.meta.get("author"))
+        @attribute
+        def body(self) -> ArticleBody:
+            return extract_article_body_with_selector(
+                self.precomputed.doc,
+                paragraph_selector=self._paragraph_selector,
+            )
 
-    @attribute
-    def publishing_date(self) -> Optional[datetime]:
-        return generic_date_parsing(self.precomputed.ld.bf_search("datePublished"))
+        @attribute
+        def authors(self) -> List[str]:
+            return generic_author_parsing(self.precomputed.meta.get("author"))
 
-    @attribute
-    def title(self) -> Optional[str]:
-        return self.precomputed.ld.bf_search("headline")
+        @attribute
+        def publishing_date(self) -> Optional[datetime]:
+            return generic_date_parsing(self.precomputed.ld.bf_search("datePublished"))
 
-    @attribute
-    def topics(self) -> List[str]:
-        topics: Optional[List[str]] = self.precomputed.ld.bf_search("keywords")
-        return topics if topics else []
+        @attribute
+        def title(self) -> Optional[str]:
+            return self.precomputed.ld.bf_search("headline")
+
+        @attribute
+        def topics(self) -> List[str]:
+            topics: Optional[List[str]] = self.precomputed.ld.bf_search("keywords")
+            return topics if topics else []

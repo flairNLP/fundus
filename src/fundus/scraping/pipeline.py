@@ -50,15 +50,18 @@ class Crawler:
         scrapers: List[Scraper] = []
         for spec in self.publishers:
             sources: List[Source] = []
+
             if restrict_sources_to == "rss" or restrict_sources_to is None:
                 sources.extend([RSSSource(url, publisher=spec.name) for url in spec.rss_feeds])
-            if restrict_sources_to == "sitemap" or restrict_sources_to is None:
-                sources.extend([SitemapSource(sitemap, publisher=spec.name) for sitemap in spec.sitemaps])
+
             if (restrict_sources_to == "news" or restrict_sources_to is None) and spec.news_map:
                 sources.append(SitemapSource(spec.news_map, publisher=spec.name))
 
+            if restrict_sources_to == "sitemap" or restrict_sources_to is None:
+                sources.extend([SitemapSource(sitemap, publisher=spec.name) for sitemap in spec.sitemaps])
+
             if sources:
-                scrapers.append(Scraper(*sources, parser=spec.parser()))
+                scrapers.append(Scraper(*sources, parser=spec.parser))
 
         if scrapers:
             pipeline = Pipeline(*scrapers)

@@ -6,7 +6,7 @@ import re
 from abc import ABC, abstractmethod
 from copy import copy
 from dataclasses import dataclass, field
-from datetime import datetime, date
+from datetime import date, datetime
 from typing import (
     Any,
     Callable,
@@ -18,7 +18,8 @@ from typing import (
     Optional,
     Tuple,
     Type,
-    TypeVar, )
+    TypeVar,
+)
 
 import lxml.html
 import more_itertools
@@ -235,18 +236,13 @@ class BaseParser(ABC):
 
 class _ParserCache:
     def __init__(self, factory: Type[BaseParser]):
-        self.factory: Optional[Type[BaseParser]] = factory
+        self.factory: Type[BaseParser] = factory
         self.instance: Optional[BaseParser] = None
 
     def __call__(self) -> BaseParser:
-        if self.instance:
-            return self.instance
-        else:
-            if not self.factory:
-                raise AttributeError("Cache not set yet")
-            else:
-                self.instance = self.factory()
-                return self.instance
+        if not self.instance:
+            self.instance = self.factory()
+        return self.instance
 
 
 class ParserProxy(ABC):
@@ -261,6 +257,7 @@ class ParserProxy(ABC):
             for parser in sorted(included_parser, key=lambda parser: parser.VALID_UNTIL)
         }
 
+        # this also ensures that there won't be a key error if something is running for more than 24 hours
         self._latest: _ParserCache = self._parser_mapping[datetime.now().date()]
 
     def __call__(self, crawl_date: Optional[datetime] = None) -> BaseParser:
