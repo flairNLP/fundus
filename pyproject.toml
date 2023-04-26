@@ -24,7 +24,6 @@ module = "feedparser.*"
 ignore_missing_imports = true
 
 [[tool.mypy.overrides]]
-# missing type stubs for feedparser
 module = "tests.*"
 disallow_untyped_defs = false
 
