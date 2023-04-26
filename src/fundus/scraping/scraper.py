@@ -4,6 +4,7 @@ from fundus.logging.logger import basic_logger
 from fundus.parser import BaseParser
 from fundus.scraping.article import Article
 from fundus.scraping.source import Source
+from fundus.utils.DocumentType import UnClassifiedType
 
 
 class Scraper:
@@ -15,6 +16,12 @@ class Scraper:
         for crawler in self.sources:
             for article_source in crawler.fetch(batch_size):
                 try:
+
+                    self.parser._base_setup(article_source.html)
+
+                    unknown_type = UnClassifiedType(article_source.html, article_source.html)
+                    document_type = self.parser.classify(unknown_type)
+
                     data = self.parser.parse(article_source.html, error_handling)
 
                 except Exception as err:
