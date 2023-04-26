@@ -1,4 +1,4 @@
-from typing import Iterator, Literal, Optional, Any, Dict, Protocol
+from typing import Any, Dict, Iterator, Literal, Optional, Protocol
 
 from fundus.logging.logger import basic_logger
 from fundus.parser import BaseParser
@@ -23,10 +23,10 @@ class Required:
 
 class Scraper:
     def __init__(
-            self,
-            *sources: Source,
-            parser: BaseParser,
-            extraction_filter: Optional[ExtractionFilter] = None,
+        self,
+        *sources: Source,
+        parser: BaseParser,
+        extraction_filter: Optional[ExtractionFilter] = None,
     ):
         self.sources = list(sources)
         self.parser = parser
@@ -37,7 +37,8 @@ class Scraper:
             for attr in extraction_filter.required_attrs:
                 if attr not in supported_attrs:
                     basic_logger.info(
-                        f"The required attribute '{attr}' is not supported by {self.parser.__class__.__name__}")
+                        f"The required attribute '{attr}' is not supported by {self.parser.__class__.__name__}"
+                    )
 
     def scrape(self, error_handling: Literal["suppress", "catch", "raise"], batch_size: int = 10) -> Iterator[Article]:
         for crawler in self.sources:
