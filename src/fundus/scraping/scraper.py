@@ -11,7 +11,7 @@ class ExtractionFilter(Protocol):
         ...
 
 
-class Required:
+class Requires:
     def __init__(self, *attrs: str) -> None:
         self.required_attrs = set(attrs)
 
@@ -32,7 +32,7 @@ class Scraper:
         self.parser = parser
         self.filter = extraction_filter
 
-        if isinstance(extraction_filter, Required):
+        if isinstance(extraction_filter, Requires):
             supported_attrs = list(parser.attributes().names)
             for attr in extraction_filter.required_attrs:
                 if attr not in supported_attrs:
