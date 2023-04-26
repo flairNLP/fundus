@@ -20,7 +20,6 @@ class PublisherSpec:
 
 @unique
 class PublisherEnum(Enum):
-
     def __new__(cls, *args, **kwargs):
         value = len(cls.__members__) + 1
         obj = object.__new__(cls)
@@ -34,10 +33,7 @@ class PublisherEnum(Enum):
         self.rss_feeds = spec.rss_feeds
         self.sitemaps = spec.sitemaps
         self.news_map = spec.news_map
-        if issubclass(spec.parser, ParserProxy):
-            self.parser = spec.parser()
-        else:
-            self.parser = spec.parser
+        self.parser = spec.parser()
 
     def supports(self, source_type: Optional[str]) -> bool:
         if source_type == "rss":
@@ -60,7 +56,7 @@ class PublisherEnum(Enum):
         attrs_set = set(attrs)
         spec: PublisherEnum
         for spec in list(cls):
-            if attrs_set.issubset(spec.parser.attributes().names) and spec.supports(source_type):
+            if attrs_set.issubset(spec.parser().attributes().names) and spec.supports(source_type):
                 matched.append(spec)
         return matched
 

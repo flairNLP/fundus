@@ -267,3 +267,6 @@ class ParserProxy(ABC):
             parsed_date = crawl_date.date()
             _, parser = next(itertools.dropwhile(lambda x: x[0] < parsed_date, self._parser_mapping.items()))
             return parser()
+
+    def __iter__(self) -> Iterator[Type[BaseParser]]:
+        return iter([cache.factory for cache in self._parser_mapping.values()])

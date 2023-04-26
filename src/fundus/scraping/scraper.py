@@ -7,7 +7,11 @@ from fundus.scraping.source import Source
 
 
 class Scraper:
-    def __init__(self, *sources: Source, parser: ParserProxy):
+    def __init__(
+        self,
+        *sources: Source,
+        parser: ParserProxy,
+    ):
         self.sources = list(sources)
         self.parser = parser
 
