@@ -76,5 +76,11 @@ class CollectionMeta(type):
         for coll in cls._members.values():
             yield from coll
 
+    def __getitem__(self, name: str) -> PublisherEnum:
+        for enum in self:
+            if enum.name == name:
+                return enum
+        raise KeyError(f"Publisher '{name}' not present in {self.__name__}")
+
     def __len__(cls) -> int:
         return len(cls._members)

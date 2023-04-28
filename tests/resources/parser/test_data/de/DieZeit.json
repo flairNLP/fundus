@@ -1,23 +1,22 @@
 {
-  "title": "Ölraffinerie Schwedt: Bundesverwaltungsgericht weist Klage von Rosneft zurück",
-  "authors": [
-    "Fabian Albrecht",
-    "Konstantin Zimmermann",
-    "dpa",
-    "Reuters"
-  ],
-  "topics": [
-    "Wirtschaft",
-    "Ölraffinerie Schwedt",
-    "Rosneft",
-    "Unternehmen",
-    "Justiz",
-    "Erdöl",
-    "Russland",
-    "Brandenburg",
-    "Bundesverwaltungsgericht",
-    "BVerwG",
-    "Treuhandverwaltung",
-    "Tochterfirma"
-  ]
+    "V1": {
+        "meta": {
+            "url": "https://www.zeit.de/news/2023-04/28/nach-massenschlaegerei-real-star-llull-entschuldigt-sich",
+            "crawl_date": "2023-04-28 20:25:15.245087"
+        },
+        "content": {
+            "title": "Basketball-Euroleague: Nach Massenschlägerei in Madrid: Sanktionen und Reue",
+            "topics": [
+                "News",
+                "Basketball-Euroleague",
+                "Sergio Llull",
+                "Real Madrid",
+                "Partizan Belgrad",
+                "Massenschlägerei"
+            ],
+            "authors": [
+                "dpa"
+            ]
+        }
+    }
 }

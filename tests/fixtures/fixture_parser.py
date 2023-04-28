@@ -1,19 +1,35 @@
+from datetime import datetime
+
 import pytest
 
-from fundus.parser import BaseParser, attribute, function
+from fundus.parser import BaseParser, ParserProxy, attribute, function
 
 
 @pytest.fixture
-def empty_parser():
-    class EmptyParser(BaseParser):
+def empty_proxy():
+    class EmptyProxy(ParserProxy):
         pass
 
-    return EmptyParser
+    return EmptyProxy
+
+
+@pytest.fixture
+def proxy_with_two_versions():
+    class ProxyWithTwoVersion(ParserProxy):
+        class Later(BaseParser):
+            VALID_UNTIL = datetime(2023, 1, 2).date()
+
+        class Earlier(BaseParser):
+            VALID_UNTIL = datetime(2023, 1, 1).date()
+
+    return ProxyWithTwoVersion
 
 
 @pytest.fixture
 def parser_with_static_method():
     class ParserWithStaticMethod(BaseParser):
+        VALID_UNTIL = datetime.now().date()
+
         @staticmethod
         def test():
             return "this is not an attribute"
@@ -24,6 +40,8 @@ def parser_with_static_method():
 @pytest.fixture
 def parser_with_function_test():
     class ParserWithFunctionTest(BaseParser):
+        VALID_UNTIL = datetime.now().date()
+
         @function
         def test(self):
             pass
@@ -34,6 +52,8 @@ def parser_with_function_test():
 @pytest.fixture
 def parser_with_attr_title():
     class ParserWithAttrTitle(BaseParser):
+        VALID_UNTIL = datetime.now().date()
+
         @attribute
         def title(self) -> str:
             return "This is a title"
@@ -44,6 +64,8 @@ def parser_with_attr_title():
 @pytest.fixture
 def parser_with_validated_and_unvalidated():
     class ParserWithValidatedAndUnvalidated(BaseParser):
+        VALID_UNTIL = datetime.now().date()
+
         @attribute
         def validated(self) -> str:
             return "supported"

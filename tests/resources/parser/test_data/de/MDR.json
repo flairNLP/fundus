@@ -1,16 +1,26 @@
 {
-  "title": "Grüne in Sachsen-Anhalt beklagen fehlende Kontrolle für den Haushalt 2023",
-  "authors": [
-    "Felix Fahnert"
-  ],
-  "topics": [
-    "nachrichten",
-    "finanzen",
-    "haushalt",
-    "verfahren",
-    "kritik",
-    "grüne",
-    "landtag",
-    "bereinigungssitzung"
-  ]
+    "V1": {
+        "meta": {
+            "url": "https://www.mdr.de/nachrichten/thueringen/sued-thueringen/schmalkalden-meiningen/schlachtung-fleisch-schwein-wirtschaft-landstolz-100.html",
+            "crawl_date": "2023-04-28 20:22:36.765570"
+        },
+        "content": {
+            "title": "Ist die Thüringer Bratwurst eine Illusion? Das harte Geschäft mit dem Tod",
+            "topics": [
+                "Nachrichten",
+                "Fleisch",
+                "Schwein",
+                "Schlachtung",
+                "Landstolz",
+                "Schmalkalden",
+                "Holland-Moritz",
+                "Rinder",
+                "Grafik",
+                "Zahlen"
+            ],
+            "authors": [
+                "David Straub"
+            ]
+        }
+    }
 }

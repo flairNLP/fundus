@@ -3,7 +3,7 @@ import inspect
 import itertools
 import json
 import re
-from abc import ABC, abstractmethod
+from abc import ABC
 from copy import copy
 from dataclasses import dataclass, field
 from datetime import date, datetime
@@ -19,6 +19,7 @@ from typing import (
     Tuple,
     Type,
     TypeVar,
+    Union,
 )
 
 import lxml.html
@@ -150,6 +151,7 @@ class Precomputed:
 
 
 class BaseParser(ABC):
+    VALID_UNTIL: date = date.today()
     precomputed: Precomputed
     _ld_selector: XPath = XPath("//script[@type='application/ld+json']")
 
@@ -173,13 +175,6 @@ class BaseParser(ABC):
     def functions(cls) -> FunctionCollection:
         funcs = [func for _, func in cls._search_members(Function)]
         return FunctionCollection(*funcs)
-
-    # noinspection PyPep8Naming,PyPropertyDefinition
-    @classmethod
-    @property
-    @abstractmethod
-    def VALID_UNTIL(cls) -> datetime.date:
-        raise NotImplementedError
 
     @property
     def cache(self) -> Optional[Dict[str, Any]]:
@@ -251,22 +246,51 @@ class ParserProxy(ABC):
         included_parser: List[Type[BaseParser]] = [
             parser for name, parser in inspect.getmembers(self.__class__, predicate=predicate)
         ]
-        # noinspection PyUnresolvedReferences
-        self._parser_mapping: Dict[date, _ParserCache] = {
-            parser.VALID_UNTIL: _ParserCache(parser)
-            for parser in sorted(included_parser, key=lambda parser: parser.VALID_UNTIL)
-        }
 
-        # this also ensures that there won't be a key error if something is running for more than 24 hours
-        self._latest: _ParserCache = self._parser_mapping[datetime.now().date()]
+        mapping: Dict[date, _ParserCache] = {}
+        for version in sorted(included_parser, key=lambda parser: parser.VALID_UNTIL):
+            validation_date: date
+            if prev := mapping.get(validation_date := version.VALID_UNTIL):  # type: ignore
+                raise AssertionError(
+                    f"Found versions '{prev.factory.__name__}' and '{version.__name__}' with same validation date"
+                )
+            mapping[validation_date] = _ParserCache(version)
+        self._parser_mapping = mapping
 
-    def __call__(self, crawl_date: Optional[datetime] = None) -> BaseParser:
+    def __call__(self, crawl_date: Optional[Union[datetime, date]] = None) -> BaseParser:
+        assert self._parser_mapping
+
         if not crawl_date:
-            return self._latest()
-        else:
-            parsed_date = crawl_date.date()
-            _, parser = next(itertools.dropwhile(lambda x: x[0] < parsed_date, self._parser_mapping.items()))
-            return parser()
+            return list(self._parser_mapping.values())[-1]()
+
+        parsed_date = crawl_date.date() if isinstance(crawl_date, datetime) else crawl_date
+        _, parser = next(itertools.dropwhile(lambda x: x[0] < parsed_date, self._parser_mapping.items()))
+        return parser()
 
     def __iter__(self) -> Iterator[Type[BaseParser]]:
-        return iter([cache.factory for cache in self._parser_mapping.values()])
+        return (cache.factory for cache in self._parser_mapping.values())
+
+    def __len__(self) -> int:
+        return len(self._parser_mapping)
+
+    def __bool__(self) -> bool:
+        return bool(self._parser_mapping)
+
+    def __repr__(self) -> str:
+        return (
+            f"{type(self).__name__} including versions '{', '.join([cache.factory.__name__ for cache in self._parser_mapping.values()])}'"
+            if self._parser_mapping
+            else f"Empty {type(self).__name__}"
+        )
+
+    @property
+    def attribute_mapping(self) -> Dict[Type[BaseParser], AttributeCollection]:
+        return {version: version.attributes() for version in self}
+
+    @property
+    def function_mapping(self) -> Dict[Type[BaseParser], FunctionCollection]:
+        return {version: version.functions() for version in self}
+
+    @property
+    def latest_version(self) -> Type[BaseParser]:
+        return next(reversed(list(self)))

@@ -1,13 +1,19 @@
 {
-  "authors": [
-    "TRAVIS LOLLER",
-    "KIMBERLEE KRUESI",
-    "DENISE LAVOIE"
-  ],
-  "title": "Victims of Nashville school shooting honored in somber vigil",
-  "topics": [
-    "Education",
-    "Nashville",
-    "Religion"
-  ]
+    "V1": {
+        "meta": {
+            "url": "https://apnews.com/article/mexico-economy-growth-3cc842471fb9df42315d658d88c8403a",
+            "crawl_date": "2023-04-28 20:32:23.148171"
+        },
+        "content": {
+            "title": "Mexico's economy grew 1.1% in 1st quarter, 3.8% year on year",
+            "topics": [
+                "Mexico",
+                "Mexico City",
+                "Latin America"
+            ],
+            "authors": [
+                "ociated Press"
+            ]
+        }
+    }
 }

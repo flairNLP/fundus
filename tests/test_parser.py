@@ -1,45 +1,21 @@
-import gzip
-import json
-import os
-from pathlib import Path
-from typing import Any, Dict
+import datetime
 
 import pytest
 
-from fundus.parser.base_parser import Attribute, BaseParser
+from fundus.parser.base_parser import Attribute, BaseParser, ParserProxy
 from fundus.publishers import PublisherCollection
 from fundus.publishers.base_objects import PublisherEnum
 from tests.resources import attribute_annotations_mapping
-from tests.resources.parser.test_data import __module_path__ as test_resource_path
-
-
-def load_html(publisher: PublisherEnum) -> str:
-    relative_file_path = Path(f"{publisher.__class__.__name__.lower()}/{publisher.name}.html.gz")
-    absolute_path = test_resource_path / relative_file_path
-
-    with open(absolute_path, "rb") as file:
-        content = file.read()
-
-    decompressed_content = gzip.decompress(content)
-    result = decompressed_content.decode("utf-8")
-    return result
-
-
-def load_data(publisher: PublisherEnum) -> Dict[str, Any]:
-    relative_file_path = Path(f"{publisher.__class__.__name__.lower()}/{publisher.name}.json")
-    absolute_path = test_resource_path / relative_file_path
-
-    with open(absolute_path, "r", encoding="utf-8") as file:
-        content = file.read()
-
-    data = json.loads(content)
-    if isinstance(data, dict):
-        return data
-    else:
-        raise ValueError("Unknown json format")
+from tests.utility import load_html_mapping, load_json
 
 
 class TestBaseParser:
+    def test_empty_parser(self):
+        class ParserWithoutTime(BaseParser):
+            pass
+
+        ParserWithoutTime()
+
     def test_functions_iter(self, parser_with_function_test, parser_with_static_method):
         assert len(BaseParser.functions()) == 0
         assert len(parser_with_static_method.functions()) == 0
@@ -59,35 +35,83 @@ class TestBaseParser:
         assert parser.attributes().unvalidated == [parser.unvalidated]
 
 
+class TestProxy:
+    def test_empty_proxy(self, empty_proxy):
+        proxy = empty_proxy()
+
+        assert len(proxy) == 0
+        assert len(proxy.attribute_mapping) == 0
+        assert len(proxy.function_mapping) == 0
+
+        with pytest.raises(AssertionError):
+            proxy()
+
+        with pytest.raises(AssertionError):
+            proxy(datetime.date.today())
+
+    def test_proxy_with_same_date(self):
+        class ProxyWithSameDate(ParserProxy):
+            class V2(BaseParser):
+                VALID_UNTIL = datetime.date(2023, 1, 1)
+
+            class V1(BaseParser):
+                VALID_UNTIL = datetime.date(2023, 1, 1)
+
+        with pytest.raises(AssertionError):
+            ProxyWithSameDate()
+
+    def test_proxy_with_two_versions(self, proxy_with_two_versions):
+        proxy = proxy_with_two_versions()
+
+        assert len(proxy) == 2
+
+        for version in proxy:
+            from_proxy = proxy(version.VALID_UNTIL)
+            assert isinstance(from_proxy, version)
+            assert from_proxy == proxy(version.VALID_UNTIL)
+
+
 @pytest.mark.parametrize(
     "publisher", list(PublisherCollection), ids=[publisher.name for publisher in PublisherCollection]
 )
 class TestParser:
     def test_annotations(self, publisher: PublisherEnum) -> None:
         parser = publisher.parser
-        for attr in parser.attributes().validated:
-            if annotation := attribute_annotations_mapping[attr.__name__]:
-                assert (
-                    attr.__annotations__.get("return") == annotation
-                ), f"Attribute {attr.__name__} for {parser.__name__} failed"
-            else:
-                raise KeyError(f"Unsupported attribute '{attr.__name__}'")
+        for parser_version in parser:
+            for attr in parser_version.attributes().validated:
+                if annotation := attribute_annotations_mapping[attr.__name__]:
+                    assert (
+                        attr.__annotations__.get("return") == annotation
+                    ), f"Attribute {attr.__name__} for {parser_version.__name__} failed"
+                else:
+                    raise KeyError(f"Unsupported attribute '{attr.__name__}'")
 
     def test_parsing(self, publisher: PublisherEnum) -> None:
-        html = load_html(publisher)
-        comparative_data = load_data(publisher)
-        parser = publisher.parser()
-
         # enforce test coverage
         attrs_required_to_cover = {"title", "authors", "topics"}
-        supported_attrs = set(parser.attributes().names)
-        missing_attrs = attrs_required_to_cover & supported_attrs - set(comparative_data.keys())
-        assert not missing_attrs, f"Test JSON does not cover the following attribute(s): {missing_attrs}"
 
-        # compare data
-        result = parser.parse(html, "raise")
-        for key in comparative_data.keys():
-            assert comparative_data[key] == result[key]
+        comparative_data = load_json(publisher)
+        html_mapping = load_html_mapping(publisher)
+
+        for version in publisher.parser:
+            # validate json
+            version_name = version.__name__
+            assert (
+                version_data := comparative_data.get(version_name)
+            ), f"Missing test data for parser version '{version_name}'"
+            assert (meta := version_data.get("meta")), f"Missing meta data for parser version '{version_name}'"
+            assert (content := version_data.get("content")), f"Missing content for parser version '{version_name}'"
+
+            # test coverage
+            supported_attrs = set(version.attributes().names)
+            missing_attrs = attrs_required_to_cover & supported_attrs - set(content.keys())
+            assert not missing_attrs, f"Test JSON does not cover the following attribute(s): {missing_attrs}"
+
+            assert (html := html_mapping.get(version)), f"Missing test HTML for parser version {version_name}"
+            # compare data
+            extraction = version().parse(html.content)
+            for key, value in content.items():
+                assert value == extraction[key]
 
     def test_reserved_attribute_names(self, publisher: PublisherEnum):
         parser = publisher.parser

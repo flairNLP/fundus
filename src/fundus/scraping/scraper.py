@@ -1,7 +1,7 @@
-from typing import Any, Dict, Iterator, Literal, Optional, Protocol
+from typing import Any, Dict, Iterator, Literal, Optional, Protocol, Type
 
 from fundus.logging.logger import basic_logger
-from fundus.parser import ParserProxy
+from fundus.parser import BaseParser, ParserProxy
 from fundus.scraping.article import Article
 from fundus.scraping.source import Source
 
@@ -29,11 +29,15 @@ class Scraper:
         extraction_filter: Optional[ExtractionFilter] = None,
     ):
         self.sources = list(sources)
+
+        if not parser:
+            raise ValueError(f"the given parser {type(parser).__name__} is empty")
+
         self.parser = parser
         self.filter = extraction_filter
 
         if isinstance(extraction_filter, Requires):
-            supported_attrs = list(parser.attributes().names)
+            supported_attrs = parser.latest_version.attributes().names
             for attr in extraction_filter.required_attrs:
                 if attr not in supported_attrs:
                     basic_logger.info(

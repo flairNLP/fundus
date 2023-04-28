@@ -1,18 +1,26 @@
 {
-  "title": "Kommentar: Klima-Aktivisten spalten die Gesellschaft ",
-  "topics": [
-    "Hamburg",
-    "NDR 90",
-    "3",
-    "Kommentar",
-    "Heiko Sander",
-    "Klimaschutz",
-    "Klima-Aktivisten",
-    "NDR",
-    "Norddeutscher Rundfunk",
-    "Norddeutschland"
-  ],
-  "authors": [
-    "Heiko Sander"
-  ]
+    "V1": {
+        "meta": {
+            "url": "https://www.ndr.de/nachrichten/schleswig-holstein/Einschlag-in-Elmshorn-Es-war-ein-Meteorit,meteorit146.html",
+            "crawl_date": "2023-04-28 20:32:14.447579"
+        },
+        "content": {
+            "title": "Einschlag in Elmshorn: Es war ein Meteorit ",
+            "topics": [
+                "Meteorit",
+                "Elmshorn",
+                "Einschlag",
+                "Meteoritenregen",
+                "Wissenschaft",
+                "NDR",
+                "Norddeutscher Rundfunk",
+                "Norddeutschland",
+                "Radio",
+                "Fernsehen"
+            ],
+            "authors": [
+                "Oliver Kring"
+            ]
+        }
+    }
 }

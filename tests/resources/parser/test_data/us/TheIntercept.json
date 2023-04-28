@@ -1,9 +1,18 @@
 {
-  "authors": [
-    "Alice Speri"
-  ],
-  "title": "As Israelis Protest Mounting Authoritarianism, Apartheid Regime Over Palestinians Goes Unchallenged",
-  "topics": [
-    "World"
-  ]
+    "V1": {
+        "meta": {
+            "url": "https://theintercept.com/2023/04/28/montana-trans-zooey-zephyr/",
+            "crawl_date": "2023-04-28 20:32:56.516898"
+        },
+        "content": {
+            "title": "An Insider’s View of the Montana Legislature’s Attacks on Trans Rep. Zooey Zephyr",
+            "topics": [
+                "Justice",
+                "Politics"
+            ],
+            "authors": [
+                "Ryan Devereaux"
+            ]
+        }
+    }
 }
