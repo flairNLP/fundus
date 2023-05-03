@@ -19,7 +19,6 @@ from typing_extensions import TypeAlias
 from fundus.logging.logger import basic_logger
 
 _displayed_deprecation_info = False
-_sentinel = object()
 
 LDMappingValueT: TypeAlias = Union[List[Dict[str, Any]], Dict[str, Any]]
 
@@ -216,6 +215,7 @@ class TextSequenceTree(ABC):
 
     def __bool__(self) -> bool:
         return bool(self.as_text_sequence())
+
 
 @dataclass
 class ArticleSection(TextSequenceTree):
