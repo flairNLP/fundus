@@ -215,8 +215,7 @@ class TextSequenceTree(ABC):
         return self.text()
 
     def __bool__(self) -> bool:
-        return next(iter(self.as_text_sequence()), _sentinel) != _sentinel
-
+        return bool(self.as_text_sequence())
 
 @dataclass
 class ArticleSection(TextSequenceTree):
