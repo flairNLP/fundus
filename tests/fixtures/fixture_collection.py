@@ -28,25 +28,25 @@ def collection_with_empty_publisher_enum(empty_publisher_enum):
 
 
 @pytest.fixture
-def publisher_enum_with_news_map(empty_proxy):
+def publisher_enum_with_news_map(empty_parser_proxy):
     class PubEnum(PublisherEnum):
-        value = PublisherSpec(domain="https//:test.com/", news_map="test_news_map", parser=empty_proxy)
+        value = PublisherSpec(domain="https//:test.com/", news_map="test_news_map", parser=empty_parser_proxy)
 
     return PubEnum
 
 
 @pytest.fixture
-def publisher_enum_with_rss_feeds(empty_proxy):
+def publisher_enum_with_rss_feeds(empty_parser_proxy):
     class PubEnum(PublisherEnum):
-        value = PublisherSpec(domain="https//:test.com/", rss_feeds=["test_feed"], parser=empty_proxy)
+        value = PublisherSpec(domain="https//:test.com/", rss_feeds=["test_feed"], parser=empty_parser_proxy)
 
     return PubEnum
 
 
 @pytest.fixture
-def publisher_enum_with_sitemaps(empty_proxy):
+def publisher_enum_with_sitemaps(empty_parser_proxy):
     class PubEnum(PublisherEnum):
-        value = PublisherSpec(domain="https//:test.com/", sitemaps=["test_sitemap"], parser=empty_proxy)
+        value = PublisherSpec(domain="https//:test.com/", sitemaps=["test_sitemap"], parser=empty_parser_proxy)
 
     return PubEnum
 

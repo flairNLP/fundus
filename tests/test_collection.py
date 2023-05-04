@@ -20,9 +20,9 @@ class TestCollection:
             class PublisherEnumWithWrongValue(PublisherEnum):
                 value = "Enum"
 
-    def test_publisher_spec_without_source(self, empty_proxy):
+    def test_publisher_spec_without_source(self, empty_parser_proxy):
         with pytest.raises(ValueError):
-            PublisherSpec(domain="https//:test.com/", parser=empty_proxy)
+            PublisherSpec(domain="https//:test.com/", parser=empty_parser_proxy)
 
     def test_supports(self, publisher_enum_with_news_map):
         assert publisher_enum_with_news_map.value.supports("news")

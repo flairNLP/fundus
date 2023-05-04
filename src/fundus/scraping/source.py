@@ -27,7 +27,7 @@ class ArticleSource:
 
 
 class Source(Iterable[str], ABC):
-    request_header = {"user-agent": "Fundus"}
+    request_header = {"user-agent": "Mozilla/5.0"}
 
     def __init__(
         self, publisher: Optional[str], delay: Optional[Callable[[], float]] = None, max_threads: Optional[int] = 10

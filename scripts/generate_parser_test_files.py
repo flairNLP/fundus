@@ -2,7 +2,6 @@ import json
 import subprocess
 from argparse import ArgumentParser
 from logging import WARN
-from os.path import exists
 from typing import List, Optional
 
 from tqdm import tqdm
@@ -11,7 +10,7 @@ from fundus import Crawler, PublisherCollection
 from fundus.logging.logger import basic_logger
 from fundus.publishers.base_objects import PublisherEnum
 from fundus.scraping.article import Article
-from tests.utility import HTMLFile, generate_json_path, load_html_mapping, load_json
+from tests.utility import HTMLTestFile, generate_parser_test_case_json_path, load_html_test_file_mapping, load_test_case_data
 
 
 def get_test_article(enum: PublisherEnum) -> Optional[Article]:
@@ -24,16 +23,17 @@ if __name__ == "__main__":
         prog="generate_parser_test_files",
         description=(
             "script to generate/update/overwrite test cases for parser unit tests. "
-            "by default this will only generate files which do not exist yet"
+            "by default this will only generate files which do not exist yet. "
+            "every changed/added file will automatically be added to git."
         ),
     )
     parser.add_argument(
         "attributes",
-        metavar="Attr",
+        metavar="A",
         nargs="+",
         help="the attributes which should be used to create test cases",
     )
-    parser.add_argument("-p", "--publishers", nargs="+", help="only consider given publishers")
+    parser.add_argument("-p", dest="publishers", metavar="P", nargs="+", help="only consider given publishers")
     group = parser.add_mutually_exclusive_group()
     group.add_argument(
         "-o",
@@ -45,7 +45,7 @@ if __name__ == "__main__":
         "-u", "--update", action="store_true", help="parse from existing html and only update json content"
     )
     group.add_argument(
-        "-uf", action="store_true", help="parse from existing html and overwrite existing content in json"
+        "-oj", "--overwrite_json", action="store_true", help="parse from existing html and overwrite existing json"
     )
 
     args = parser.parse_args()
@@ -53,53 +53,54 @@ if __name__ == "__main__":
     basic_logger.setLevel(WARN)
 
     publishers: List[PublisherEnum] = (
-        [pub for pub in PublisherCollection if pub.name in args.publisher]
-        if args.publisher
-        else list(PublisherCollection)
+        list(PublisherCollection)
+        if args.publishers is None
+        else [pub for pub in PublisherCollection if pub.name in args.publishers]
     )
 
-    bar = tqdm(total=len(publishers))
+    with tqdm(total=len(publishers)) as bar:
+        for publisher in publishers:
+            bar.set_description(desc=publisher.name, refresh=True)
+            bar.update()
 
-    for publisher in publishers:
-        bar.set_description(desc=publisher.name, refresh=True)
-        bar.update(1)
+            # load json
+            json_path = generate_parser_test_case_json_path(publisher)
+            # ensure directories are there
+            json_path.parent.mkdir(parents=True, exist_ok=True)
+            json_data = load_test_case_data(publisher) if json_path.exists() else {}
 
-        # load json
-        json_path = generate_json_path(publisher)
-        # ensure directories are there
-        json_path.parent.mkdir(parents=True, exist_ok=True)
-        json_data = load_json(publisher) if json_path.exists() else {}
+            # load html
+            html_mapping = load_html_test_file_mapping(publisher)
 
-        # load html
-        html_mapping = load_html_mapping(publisher)
+            if args.update or args.overwrite_json:
+                for html in html_mapping.values():
+                    version = html.publisher.parser(html.crawl_date)
+                    extraction = version.parse(html.content)
+                    # TODO: overwrite entire json when -oj
+                    entry = json_data[type(version).__name__]
+                    new = {attr: value for attr, value in extraction.items() if attr in args.attributes}
+                    if args.update:
+                        entry["content"].update(new)
+                    elif args.overwrite_json:
+                        entry["content"] = new
 
-        if args.update or args.uf:
-            for html in html_mapping.values():
-                version = html.publisher.parser(html.crawl_date)
-                extraction = version.parse(html.content)
-                entry = json_data[type(version).__name__]
-                new = {attr: value for attr, value in extraction.items() if attr in args.attributes}
-                if args.update:
-                    entry["content"].update(new)
-                elif args.uf:
-                    entry["content"] = new
+            elif args.overwrite or not html_mapping.get(publisher.parser.latest_version):
+                if not (article := get_test_article(publisher)):
+                    basic_logger.warn(f"Couldn't get article for {publisher.name}. Skipping")
+                    continue
+                html = HTMLTestFile(content=article.source.html, crawl_date=article.source.crawl_date, publisher=publisher)
+                html.write()
 
-        elif args.overwrite or not html_mapping.get(publisher.parser.latest_version):
-            if not (article := get_test_article(publisher)):
-                basic_logger.warn(f"Couldn't get article for {publisher.name}. Skipping")
-                continue
-            html = HTMLFile(content=article.source.html, crawl_date=article.source.crawl_date, publisher=publisher)
-            html.write()
+                metadata = {"url": article.source.url, "crawl_date": str(article.source.crawl_date)}
+                requested_attrs = set(args.attributes)
+                content = {attr: value for attr in args.attributes if (value := getattr(article, attr, None))}
+                entry = {"meta": metadata, "content": content}
+                json_data.update({publisher.parser.latest_version.__name__: entry})
 
-            meta = {"url": article.source.url, "crawl_date": str(article.source.crawl_date)}
-            requested_attrs = set(args.attributes)
-            content = {attr: value for attr in args.attributes if (value := getattr(article, attr, None))}
-            entry = {"meta": meta, "content": content}
-            json_data.update({publisher.parser.latest_version.__name__: entry})
+                subprocess.call(["git", "add", html.path], stdout=subprocess.PIPE)
 
-            subprocess.call(["git", "add", html.path], stdout=subprocess.PIPE)
+            with open(json_path, "w", encoding="utf-8") as json_file:
+                json.dump(json_data, json_file, indent=4, ensure_ascii=False)
+                json_file.write("\n")
 
-        with open(json_path, "w", encoding="utf-8") as json_file:
-            json.dump(json_data, json_file, indent=4, ensure_ascii=False)
-
-        subprocess.call(["git", "add", json_path], stdout=subprocess.PIPE)
+            subprocess.call(["git", "add", json_path], stdout=subprocess.PIPE)

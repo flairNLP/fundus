@@ -2,11 +2,11 @@ import datetime
 
 import pytest
 
-from fundus.parser.base_parser import Attribute, BaseParser, ParserProxy
+from fundus.parser.base_parser import Attribute, BaseParser, ParserProxy, attribute
 from fundus.publishers import PublisherCollection
 from fundus.publishers.base_objects import PublisherEnum
 from tests.resources import attribute_annotations_mapping
-from tests.utility import load_html_mapping, load_json
+from tests.utility import load_html_test_file_mapping, load_test_case_data
 
 
 class TestBaseParser:
@@ -28,16 +28,27 @@ class TestBaseParser:
         assert len(parser_with_attr_title.attributes()) == 1
         assert parser_with_attr_title.attributes().names == ["title"]
 
-    def test_supported_unsupported(self, parser_with_validated_and_unvalidated):
-        parser = parser_with_validated_and_unvalidated
+    def test_supported_unsupported(self):
+        class ParserWithValidatedAndUnvalidated(BaseParser):
+            VALID_UNTIL = datetime.date.today()
+
+            @attribute
+            def validated(self) -> str:
+                return "supported"
+
+            @attribute(validate=False)
+            def unvalidated(self) -> str:
+                return "unsupported"
+
+        parser = ParserWithValidatedAndUnvalidated()
         assert len(parser.attributes()) == 2
         assert parser.attributes().validated == [parser.validated]
         assert parser.attributes().unvalidated == [parser.unvalidated]
 
 
 class TestParserProxy:
-    def test_empty_proxy(self, empty_proxy):
-        proxy = empty_proxy()
+    def test_empty_proxy(self, empty_parser_proxy):
+        proxy = empty_parser_proxy()
 
         assert len(proxy) == 0
         assert len(proxy.attribute_mapping) == 0
@@ -60,8 +71,15 @@ class TestParserProxy:
         with pytest.raises(AssertionError):
             ProxyWithSameDate()
 
-    def test_proxy_with_two_versions(self, proxy_with_two_versions):
-        proxy = proxy_with_two_versions()
+    def test_proxy_with_two_versions(self):
+        class ProxyWithTwoVersion(ParserProxy):
+            class Later(BaseParser):
+                VALID_UNTIL = datetime.datetime(2023, 1, 2).date()
+
+            class Earlier(BaseParser):
+                VALID_UNTIL = datetime.datetime(2023, 1, 1).date()
+
+        proxy = ProxyWithTwoVersion()
 
         assert len(proxy) == 2
 
@@ -81,7 +99,7 @@ class TestParser:
             for attr in parser_version.attributes().validated:
                 if annotation := attribute_annotations_mapping[attr.__name__]:
                     assert (
-                        attr.__annotations__.get("return") == annotation
+                            attr.__annotations__.get("return") == annotation
                     ), f"Attribute {attr.__name__} for {parser_version.__name__} failed"
                 else:
                     raise KeyError(f"Unsupported attribute '{attr.__name__}'")
@@ -90,8 +108,8 @@ class TestParser:
         # enforce test coverage
         attrs_required_to_cover = {"title", "authors", "topics"}
 
-        comparative_data = load_json(publisher)
-        html_mapping = load_html_mapping(publisher)
+        comparative_data = load_test_case_data(publisher)
+        html_mapping = load_html_test_file_mapping(publisher)
 
         for version in publisher.parser:
             # validate json
@@ -109,7 +127,7 @@ class TestParser:
 
             assert (html := html_mapping.get(version)), f"Missing test HTML for parser version {version_name}"
             # compare data
-            extraction = version().parse(html.content)
+            extraction = version().parse(html.content, "raise")
             for key, value in content.items():
                 assert value == extraction[key]
 

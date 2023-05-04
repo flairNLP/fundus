@@ -14,7 +14,7 @@ from tests.resources.parser.test_data import __module_path__ as test_resource_pa
 
 
 @dataclass
-class HTMLFile:
+class HTMLTestFile:
     content: str
     crawl_date: Union[datetime.date, datetime.datetime]
     publisher: PublisherEnum
@@ -38,23 +38,42 @@ class HTMLFile:
         return PublisherCollection[publisher_name], date
 
     @classmethod
-    def load(cls, path: Path) -> Self:
+    def load(cls, path: Path, encoding: str = "utf-8") -> Self:
+        """Loads an HTMLTestFile from the given path.
+
+        The file at the location is expected to be a gzipped HTML file. The
+        path syntax is defined as following:
+            test_resource_path / <country_code> / <publisher_name>_<year>_<month>_<day>.html.gz
+            with:
+                <country_code>:         2-letter code, i.e. us for United States
+                <publisher_name>:       the enum name, i.e. DW, FAZ, APNews
+                <year>_<month>_<day>:   parsed date object, as when using date.strftime('%Y_%m_%d')
+
+
+        Args:
+            path:       The HTMLTestFile location
+            encoding:   The encoding in which the file should be loaded
+
+        Returns:
+            A HTMLTestFile object loaded with the file given with <path>
+
+        """
         with open(path, "rb") as html_file:
             compressed_file = html_file.read()
         decompressed_content = gzip.decompress(compressed_file)
-        content = decompressed_content.decode(encoding=cls.encoding)
+        content = decompressed_content.decode(encoding=encoding)
         publisher, date = cls._parse_path(path)
-        return cls(content=content, crawl_date=date, publisher=publisher)
+        return cls(content=content, crawl_date=date, publisher=publisher, encoding=encoding)
 
     def write(self) -> None:
         with open(self.path, "wb") as file:
             file.write(gzip.compress(bytes(self.content, self.encoding)))
 
 
-def load_html_mapping(publisher: PublisherEnum) -> Dict[Type[BaseParser], HTMLFile]:
+def load_html_test_file_mapping(publisher: PublisherEnum) -> Dict[Type[BaseParser], HTMLTestFile]:
     html_paths = (test_resource_path / Path(f"{type(publisher).__name__.lower()}")).glob(f"{publisher.name}*.html.gz")
-    html_files = [HTMLFile.load(path) for path in html_paths]
-    html_mapping: Dict[Type[BaseParser], HTMLFile] = {}
+    html_files = [HTMLTestFile.load(path) for path in html_paths]
+    html_mapping: Dict[Type[BaseParser], HTMLTestFile] = {}
     for html_file in html_files:
         version = publisher.parser(html_file.crawl_date)
         if html_mapping.get(type(version)):
@@ -63,13 +82,13 @@ def load_html_mapping(publisher: PublisherEnum) -> Dict[Type[BaseParser], HTMLFi
     return html_mapping
 
 
-def generate_json_path(publisher: PublisherEnum) -> Path:
+def generate_parser_test_case_json_path(publisher: PublisherEnum) -> Path:
     relative_file_path = Path(f"{type(publisher).__name__.lower()}/{publisher.name}.json")
     return test_resource_path / relative_file_path
 
 
-def load_json(publisher: PublisherEnum) -> Dict[str, Dict[str, Dict[str, Any]]]:
-    absolute_path = generate_json_path(publisher)
+def load_test_case_data(publisher: PublisherEnum) -> Dict[str, Dict[str, Dict[str, Any]]]:
+    absolute_path = generate_parser_test_case_json_path(publisher)
 
     with open(absolute_path, "r", encoding="utf-8") as file:
         data = json.load(file)

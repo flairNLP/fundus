@@ -243,12 +243,16 @@ class _ParserCache:
 class ParserProxy(ABC):
     def __init__(self):
         predicate: Callable[[object], bool] = lambda x: inspect.isclass(x) and issubclass(x, BaseParser)
-        included_parser: List[Type[BaseParser]] = [
+        included_parsers: List[Type[BaseParser]] = [
             parser for name, parser in inspect.getmembers(type(self), predicate=predicate)
         ]
 
+        if not included_parsers:
+            raise AssertionError(f"{type(self).__name__} consists of no parser-versions. "
+                                 f"To include versions add subclasses of {BaseParser.__name__} to the class definition")
+
         mapping: Dict[date, _ParserCache] = {}
-        for version in sorted(included_parser, key=lambda parser: parser.VALID_UNTIL):
+        for version in sorted(included_parsers, key=lambda parser: parser.VALID_UNTIL):
             validation_date: date
             if prev := mapping.get(validation_date := version.VALID_UNTIL):  # type: ignore
                 raise AssertionError(
@@ -258,9 +262,7 @@ class ParserProxy(ABC):
         self._parser_mapping = mapping
 
     def __call__(self, crawl_date: Optional[Union[datetime, date]] = None) -> BaseParser:
-        assert self._parser_mapping
-
-        if not crawl_date:
+        if crawl_date is None:
             return list(self._parser_mapping.values())[-1]()
 
         parsed_date = crawl_date.date() if isinstance(crawl_date, datetime) else crawl_date
