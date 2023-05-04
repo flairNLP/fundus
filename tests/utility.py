@@ -22,9 +22,10 @@ class HTMLFile:
 
     @property
     def path(self) -> Path:
-        return test_resource_path / Path(
-            f"{type(self.publisher).__name__.lower()}/"
-            f"{self.publisher.name}_{self.crawl_date.strftime('%Y_%m_%d')}.html.gz"
+        return (
+            test_resource_path
+            / f"{type(self.publisher).__name__.lower()}"
+            / f"{self.publisher.name}_{self.crawl_date.strftime('%Y_%m_%d')}.html.gz"
         )
 
     @staticmethod
