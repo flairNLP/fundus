@@ -12,7 +12,6 @@ from fundus.parser.utility import (
     generic_text_extraction_with_css,
     generic_topic_parsing,
 )
-from fundus.utils.DocumentType import UnClassifiedType, DocumentType
 
 
 class DWParser(BaseParser):
@@ -53,9 +52,3 @@ class DWParser(BaseParser):
     @attribute
     def topics(self) -> List[str]:
         return generic_topic_parsing(self.precomputed.meta.get("keywords"))
-
-    def classify(self, input:UnClassifiedType)->DocumentType:
-        print()
-
-
-

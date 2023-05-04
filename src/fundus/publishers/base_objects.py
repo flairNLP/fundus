@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 from enum import Enum, unique
-from typing import Any, Dict, Iterator, List, Optional, Type
+from typing import Any, Dict, Iterator, List, Optional, Type, Callable
 
 from fundus.parser import BaseParser
 
@@ -9,6 +9,7 @@ from fundus.parser import BaseParser
 class PublisherSpec:
     domain: str
     parser: Type[BaseParser]
+    article_classification_func_generator: Callable
     rss_feeds: List[str] = field(default_factory=list)
     sitemaps: List[str] = field(default_factory=list)
     news_map: Optional[str] = field(default=None)
@@ -34,6 +35,7 @@ class PublisherEnum(Enum):
         self.sitemaps = spec.sitemaps
         self.news_map = spec.news_map
         self.parser = spec.parser
+        self.article_classification_func_generator: Callable = spec.article_classification_func_generator
 
     def supports(self, source_type: Optional[str]) -> bool:
         if source_type == "rss":

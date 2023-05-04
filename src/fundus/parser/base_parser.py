@@ -25,7 +25,6 @@ from lxml.etree import XPath
 
 from fundus.parser.data import LinkedDataMapping
 from fundus.parser.utility import get_meta_content
-from fundus.utils.DocumentType import UnClassifiedType, DocumentType
 
 RegisteredFunctionT_co = TypeVar("RegisteredFunctionT_co", covariant=True, bound="RegisteredFunction")
 
@@ -224,11 +223,3 @@ class BaseParser(ABC):
     @attribute
     def __ld(self) -> Optional[LinkedDataMapping]:
         return self.precomputed.ld
-
-
-    def classify(self, input:UnClassifiedType)->DocumentType:
-       pass
-
-
-
-

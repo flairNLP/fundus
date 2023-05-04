@@ -58,7 +58,13 @@ class Crawler:
                 sources.append(SitemapSource(spec.news_map, publisher=spec.name))
 
             if sources:
-                scrapers.append(Scraper(*sources, parser=spec.parser()))
+                scrapers.append(
+                    Scraper(
+                        *sources,
+                        parser=spec.parser(),
+                        article_classification_function=spec.article_classification_func_generator(),
+                    )
+                )
 
         if scrapers:
             pipeline = Pipeline(*scrapers)

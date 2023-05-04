@@ -1,26 +1,25 @@
-from typing import Iterator, Literal
+from typing import Iterator, Literal, Callable
 
 from fundus.logging.logger import basic_logger
 from fundus.parser import BaseParser
 from fundus.scraping.article import Article
 from fundus.scraping.source import Source
-from fundus.utils.DocumentType import UnClassifiedType
 
 
 class Scraper:
-    def __init__(self, *sources: Source, parser: BaseParser):
+    def __init__(self, *sources: Source, parser: BaseParser, article_classification_function: Callable):
         self.sources = list(sources)
         self.parser = parser
+        self.article_classification_function = article_classification_function
 
     def scrape(self, error_handling: Literal["suppress", "catch", "raise"], batch_size: int = 10) -> Iterator[Article]:
         for crawler in self.sources:
             for article_source in crawler.fetch(batch_size):
                 try:
 
-                    self.parser._base_setup(article_source.html)
-
-                    unknown_type = UnClassifiedType(article_source.html, article_source.html)
-                    document_type = self.parser.classify(unknown_type)
+                    is_article = self.article_classification_function(article_source.html, article_source.url)
+                    if not is_article:
+                        continue
 
                     data = self.parser.parse(article_source.html, error_handling)
 
