@@ -99,7 +99,7 @@ if __name__ == "__main__":
 
             subprocess.call(["git", "add", html.path], stdout=subprocess.PIPE)
 
-        with open(json_path, "w+", encoding="utf-8") as json_file:
+        with open(json_path, "w", encoding="utf-8") as json_file:
             json.dump(json_data, json_file, indent=4, ensure_ascii=False)
 
         subprocess.call(["git", "add", json_path], stdout=subprocess.PIPE)
