@@ -68,10 +68,7 @@ if __name__ == "__main__":
         json_path = generate_json_path(publisher)
         # ensure directories are there
         json_path.parent.mkdir(parents=True, exist_ok=True)
-        if exists(generate_json_path(publisher)):
-            json_data = load_json(publisher)
-        else:
-            json_data = {}
+        json_data = load_json(publisher) if json_path.exists() else {}
 
         # load html
         html_mapping = load_html_mapping(publisher)
