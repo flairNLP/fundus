@@ -33,7 +33,7 @@ if __name__ == "__main__":
         nargs="+",
         help="the attributes which should be used to create test cases",
     )
-    parser.add_argument("-p", dest="publisher", nargs="+", type=str, help="only consider given publisher")
+    parser.add_argument("-p", "--publishers", nargs="+", help="only consider given publishers")
     group = parser.add_mutually_exclusive_group()
     group.add_argument(
         "-o",
