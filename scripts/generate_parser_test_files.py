@@ -32,7 +32,7 @@ if __name__ == "__main__":
         metavar="Attr",
         type=str,
         nargs="+",
-        help="the attributes which should " "be used to create test cases",
+        help="the attributes which should be used to create test cases",
     )
     parser.add_argument("-p", dest="publisher", nargs="+", type=str, help="only consider given publisher")
     group = parser.add_mutually_exclusive_group()
