@@ -30,7 +30,6 @@ if __name__ == "__main__":
     parser.add_argument(
         "attributes",
         metavar="Attr",
-        type=str,
         nargs="+",
         help="the attributes which should be used to create test cases",
     )
