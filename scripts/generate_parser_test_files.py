@@ -39,7 +39,7 @@ if __name__ == "__main__":
         "-o",
         "--overwrite",
         action="store_true",
-        help="overwrite existing html and json " "files for the latest version",
+        help="overwrite existing html and json files for the latest version",
     )
     group.add_argument(
         "-u", "--update", action="store_true", help="parse from existing html and only update json content"
