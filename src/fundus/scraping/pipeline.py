@@ -17,9 +17,15 @@ class Pipeline:
         self,
         error_handling: Literal["suppress", "catch", "raise"],
         max_articles: Optional[int] = None,
+        extraction_filter: Optional[ExtractionFilter] = None,
         batch_size: int = 10,
     ) -> Iterator[Article]:
-        scrape_map = map(lambda x: x.scrape(error_handling=error_handling, batch_size=batch_size), self.scrapers)
+        scrape_map = map(
+            lambda x: x.scrape(
+                error_handling=error_handling, batch_size=batch_size, extraction_filter=extraction_filter
+            ),
+            self.scrapers,
+        )
         robin = more_itertools.interleave_longest(*tuple(scrape_map))
 
         if max_articles:
@@ -74,10 +80,15 @@ class Crawler:
                 sources.extend([SitemapSource(sitemap, publisher=spec.name) for sitemap in spec.sitemaps])
 
             if sources:
-                scrapers.append(Scraper(*sources, parser=spec.parser, extraction_filter=extraction_filter))
+                scrapers.append(Scraper(*sources, parser=spec.parser))
 
         if scrapers:
             pipeline = Pipeline(*scrapers)
-            return pipeline.run(error_handling=error_handling, max_articles=max_articles, batch_size=batch_size)
+            return pipeline.run(
+                error_handling=error_handling,
+                max_articles=max_articles,
+                batch_size=batch_size,
+                extraction_filter=extraction_filter,
+            )
         else:
             return iter(())
