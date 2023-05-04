@@ -42,23 +42,22 @@ class TestBaseParser:
 
         parser = ParserWithValidatedAndUnvalidated()
         assert len(parser.attributes()) == 2
-        assert parser.attributes().validated == [parser.validated]
-        assert parser.attributes().unvalidated == [parser.unvalidated]
+
+        assert (validated := parser.attributes().validated)
+        assert validated != [parser.validated]
+        assert validated[0].__func__ == parser.validated.__func__
+
+        assert (unvalidated := parser.attributes().unvalidated)
+        assert unvalidated != [parser.unvalidated]
+        assert unvalidated[0].__func__ == parser.unvalidated.__func__
 
 
 class TestParserProxy:
     def test_empty_proxy(self, empty_parser_proxy):
-        proxy = empty_parser_proxy()
-
-        assert len(proxy) == 0
-        assert len(proxy.attribute_mapping) == 0
-        assert len(proxy.function_mapping) == 0
+        proxy = empty_parser_proxy
 
         with pytest.raises(AssertionError):
             proxy()
-
-        with pytest.raises(AssertionError):
-            proxy(datetime.date.today())
 
     def test_proxy_with_same_date(self):
         class ProxyWithSameDate(ParserProxy):
@@ -71,22 +70,36 @@ class TestParserProxy:
         with pytest.raises(AssertionError):
             ProxyWithSameDate()
 
-    def test_proxy_with_two_versions(self):
-        class ProxyWithTwoVersion(ParserProxy):
-            class Later(BaseParser):
-                VALID_UNTIL = datetime.datetime(2023, 1, 2).date()
-
-            class Earlier(BaseParser):
-                VALID_UNTIL = datetime.datetime(2023, 1, 1).date()
-
-        proxy = ProxyWithTwoVersion()
-
+    def test_len(self, proxy_with_two_versions_and_different_attrs):
+        proxy = proxy_with_two_versions_and_different_attrs()
         assert len(proxy) == 2
+
+    def test_iter(self, proxy_with_two_versions_and_different_attrs):
+        versions = list(proxy_with_two_versions_and_different_attrs())
+        assert versions[0].VALID_UNTIL > versions[1].VALID_UNTIL
+
+    def test_latest(self, proxy_with_two_versions_and_different_attrs):
+        proxy = proxy_with_two_versions_and_different_attrs()
+        print(proxy.latest_version.__name__)
+        assert proxy.latest_version == proxy.Later
+
+    def test_call(self, proxy_with_two_versions_and_different_attrs):
+        proxy = proxy_with_two_versions_and_different_attrs()
+        assert type(proxy()) == proxy.latest_version
 
         for version in proxy:
             from_proxy = proxy(version.VALID_UNTIL)
             assert isinstance(from_proxy, version)
             assert from_proxy == proxy(version.VALID_UNTIL)
+
+    def test_mapping(self, proxy_with_two_versions_and_different_attrs):
+        proxy = proxy_with_two_versions_and_different_attrs()
+
+        for version in proxy:
+            assert version.attributes() == proxy.attribute_mapping[version]
+
+        attrs1, attrs2 = proxy.attribute_mapping.values()
+        assert attrs1.names != attrs2.names
 
 
 @pytest.mark.parametrize(
@@ -99,7 +112,7 @@ class TestParser:
             for attr in parser_version.attributes().validated:
                 if annotation := attribute_annotations_mapping[attr.__name__]:
                     assert (
-                            attr.__annotations__.get("return") == annotation
+                        attr.__annotations__.get("return") == annotation
                     ), f"Attribute {attr.__name__} for {parser_version.__name__} failed"
                 else:
                     raise KeyError(f"Unsupported attribute '{attr.__name__}'")

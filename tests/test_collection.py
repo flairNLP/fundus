@@ -1,6 +1,5 @@
 import pytest
 
-from fundus.parser import BaseParser
 from fundus.publishers.base_objects import PublisherEnum, PublisherSpec
 
 
@@ -31,13 +30,14 @@ class TestCollection:
         with pytest.raises(ValueError):
             publisher_enum_with_news_map.value.supports("")
 
-    def test_search(self, publisher_enum_with_news_map, parser_with_attr_title):
-        publisher_enum_with_news_map.value.parser = parser_with_attr_title
+    def test_search(self, publisher_enum_with_news_map, proxy_with_two_versions_and_different_attrs):
+        proxy = proxy_with_two_versions_and_different_attrs()
+        publisher_enum_with_news_map.value.parser = proxy
 
-        assert (attrs := publisher_enum_with_news_map.value.parser.attributes().names)
-        assert attrs == ["title"]
-        assert len(publisher_enum_with_news_map.search(attrs)) == 1
-        assert len(publisher_enum_with_news_map.search(["this_is_a_test"])) == 0
+        latest, earlier = proxy.attribute_mapping.values()
+
+        assert len(publisher_enum_with_news_map.search(latest.names)) == 1
+        assert len(publisher_enum_with_news_map.search(earlier.names)) == 0
 
         with pytest.raises(AssertionError):
             publisher_enum_with_news_map.search([])

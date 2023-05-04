@@ -70,9 +70,9 @@ class RegisteredFunction(ABC):
 
     def __repr__(self):
         if instance := self.__self__:
-            return f"bound {self.__class__.__name__} of {instance}: {self.__wrapped__} --> '{self.__name__}'"
+            return f"bound {type(self).__name__} of {instance}: {self.__wrapped__} --> '{self.__name__}'"
         else:
-            return f"registered {self.__class__.__name__}: {self.__wrapped__} --> '{self.__name__}'"
+            return f"registered {type(self).__name__}: {self.__wrapped__} --> '{self.__name__}'"
 
 
 class Attribute(RegisteredFunction):
@@ -248,8 +248,10 @@ class ParserProxy(ABC):
         ]
 
         if not included_parsers:
-            raise AssertionError(f"{type(self).__name__} consists of no parser-versions. "
-                                 f"To include versions add subclasses of {BaseParser.__name__} to the class definition")
+            raise AssertionError(
+                f"<class {type(self).__name__}> consists of no parser-versions. "
+                f"To include versions add subclasses of <class {BaseParser.__name__}> to the class definition."
+            )
 
         mapping: Dict[date, _ParserCache] = {}
         for version in sorted(included_parsers, key=lambda parser: parser.VALID_UNTIL):
@@ -263,14 +265,19 @@ class ParserProxy(ABC):
 
     def __call__(self, crawl_date: Optional[Union[datetime, date]] = None) -> BaseParser:
         if crawl_date is None:
-            return list(self._parser_mapping.values())[-1]()
+            return self._get_latest_cache()()
 
         parsed_date = crawl_date.date() if isinstance(crawl_date, datetime) else crawl_date
         _, parser = next(itertools.dropwhile(lambda x: x[0] < parsed_date, self._parser_mapping.items()))
         return parser()
 
     def __iter__(self) -> Iterator[Type[BaseParser]]:
-        return (cache.factory for cache in self._parser_mapping.values())
+        """Iterates over all included parser versions with the latest being first.
+
+        Returns:
+            Iterator over included parser versions
+        """
+        return (cache.factory for cache in reversed(self._parser_mapping.values()))
 
     def __len__(self) -> int:
         return len(self._parser_mapping)
@@ -293,6 +300,9 @@ class ParserProxy(ABC):
     def function_mapping(self) -> Dict[Type[BaseParser], FunctionCollection]:
         return {version: version.functions() for version in self}
 
+    def _get_latest_cache(self) -> _ParserCache:
+        return list(self._parser_mapping.values())[-1]
+
     @property
     def latest_version(self) -> Type[BaseParser]:
-        return next(reversed(list(self)))
+        return self._get_latest_cache().factory
