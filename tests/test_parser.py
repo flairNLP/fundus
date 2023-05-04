@@ -99,7 +99,7 @@ class TestParser:
             assert (
                 version_data := comparative_data.get(version_name)
             ), f"Missing test data for parser version '{version_name}'"
-            assert (meta := version_data.get("meta")), f"Missing meta data for parser version '{version_name}'"
+            assert version_data.get("meta"), f"Missing metadata for parser version '{version_name}'"
             assert (content := version_data.get("content")), f"Missing content for parser version '{version_name}'"
 
             # test coverage
