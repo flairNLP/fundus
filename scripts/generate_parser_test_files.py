@@ -10,7 +10,12 @@ from fundus import Crawler, PublisherCollection
 from fundus.logging.logger import basic_logger
 from fundus.publishers.base_objects import PublisherEnum
 from fundus.scraping.article import Article
-from tests.utility import HTMLTestFile, generate_parser_test_case_json_path, load_html_test_file_mapping, load_test_case_data
+from tests.utility import (
+    HTMLTestFile,
+    generate_parser_test_case_json_path,
+    load_html_test_file_mapping,
+    load_test_case_data,
+)
 
 
 def get_test_article(enum: PublisherEnum) -> Optional[Article]:
@@ -88,7 +93,9 @@ if __name__ == "__main__":
                 if not (article := get_test_article(publisher)):
                     basic_logger.warn(f"Couldn't get article for {publisher.name}. Skipping")
                     continue
-                html = HTMLTestFile(content=article.source.html, crawl_date=article.source.crawl_date, publisher=publisher)
+                html = HTMLTestFile(
+                    content=article.source.html, crawl_date=article.source.crawl_date, publisher=publisher
+                )
                 html.write()
 
                 metadata = {"url": article.source.url, "crawl_date": str(article.source.crawl_date)}
