@@ -77,4 +77,4 @@ def load_json(publisher: PublisherEnum) -> Dict[str, Dict[str, Dict[str, Any]]]:
     if isinstance(data, dict):
         return data
     else:
-        raise ValueError("Unknown json format")
+        raise ValueError(f"Received invalid JSON format for publisher {repr(publisher.name)}. Expected a JSON with a dictionary as root.")
