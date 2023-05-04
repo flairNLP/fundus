@@ -35,7 +35,7 @@ class TestBaseParser:
         assert parser.attributes().unvalidated == [parser.unvalidated]
 
 
-class TestProxy:
+class TestParserProxy:
     def test_empty_proxy(self, empty_proxy):
         proxy = empty_proxy()
 
