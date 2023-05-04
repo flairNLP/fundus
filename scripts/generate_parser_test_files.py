@@ -93,7 +93,7 @@ if __name__ == "__main__":
 
             meta = {"url": article.source.url, "crawl_date": str(article.source.crawl_date)}
             requested_attrs = set(args.attributes)
-            content = {attr: value for attr in args.attributes if (value := article.__dict__.get(attr))}
+            content = {attr: value for attr in args.attributes if (value := getattr(article, attr, None))}
             entry = {"meta": meta, "content": content}
             json_data.update({publisher.parser.latest_version.__name__: entry})
 
