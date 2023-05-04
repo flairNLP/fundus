@@ -64,7 +64,7 @@ def load_html_mapping(publisher: PublisherEnum) -> Dict[Type[BaseParser], HTMLFi
 
 
 def generate_json_path(publisher: PublisherEnum) -> Path:
-    relative_file_path = Path(f"{publisher.__class__.__name__.lower()}/{publisher.name}.json")
+    relative_file_path = Path(f"{type(publisher).__name__.lower()}/{publisher.name}.json")
     return test_resource_path / relative_file_path
 
 
