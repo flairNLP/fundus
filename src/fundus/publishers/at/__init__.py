@@ -10,5 +10,4 @@ class AT(PublisherEnum):
         rss_feeds=["https://rss.orf.at/news.xml"],
         sitemaps=[],
         parser=OrfParser,
-        article_classification_func_generator=lambda: lambda x, y: True,
     )

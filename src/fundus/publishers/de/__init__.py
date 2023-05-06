@@ -29,7 +29,6 @@ class DE(PublisherEnum):
         sitemaps=["https://www.welt.de/sitemaps/sitemap/sitemap.xml"],
         news_map="https://www.welt.de/sitemaps/newssitemap/newssitemap.xml",
         parser=DieWeltParser,
-        article_classification_func_generator=lambda: lambda x, y: True,
     )
 
     MDR = PublisherSpec(
@@ -38,7 +37,6 @@ class DE(PublisherEnum):
         sitemaps=["https://www.mdr.de/sitemap-index-100.xml"],
         news_map="https://www.mdr.de/news-sitemap.xml",
         parser=MDRParser,
-        article_classification_func_generator=lambda: lambda x, y: True,
     )
 
     FAZ = PublisherSpec(
@@ -53,14 +51,12 @@ class DE(PublisherEnum):
         sitemaps=["https://www.faz.net/sitemap-index.xml"],
         news_map="https://www.faz.net/sitemap-news.xml",
         parser=FAZParser,
-        article_classification_func_generator=lambda: lambda x, y: True,
     )
 
     Focus = PublisherSpec(
         domain="https://www.focus.de/",
         rss_feeds=["https://rss.focus.de/fol/XML/rss_folnews.xml"],
         parser=FocusParser,
-        article_classification_func_generator=lambda: lambda x, y: True,
     )
 
     Merkur = PublisherSpec(
@@ -69,14 +65,12 @@ class DE(PublisherEnum):
         sitemaps=["https://www.merkur.de/sitemap-index.xml"],
         news_map="https://www.merkur.de/news.xml",
         parser=MerkurParser,
-        article_classification_func_generator=lambda: lambda x, y: True,
     )
 
     SZ = PublisherSpec(
         domain="https://www.sueddeutsche.de/",
         rss_feeds=["https://rss.sueddeutsche.de/alles"],
         parser=SZParser,
-        article_classification_func_generator=lambda: lambda x, y: True,
     )
 
     SpiegelOnline = PublisherSpec(
@@ -85,7 +79,6 @@ class DE(PublisherEnum):
         sitemaps=["https://www.spiegel.de/sitemap.xml"],
         news_map="https://www.spiegel.de/sitemaps/news-de.xml",
         parser=SPONParser,
-        article_classification_func_generator=lambda: lambda x, y: True,
     )
 
     DieZeit = PublisherSpec(
@@ -95,7 +88,6 @@ class DE(PublisherEnum):
         news_map=f"https://www.zeit.de/gsitemaps/index.xml?date="
         f'{datetime.now().strftime("%Y-%m-%d")}&unit=days&period=1',
         parser=DieZeitParser,
-        article_classification_func_generator=lambda: lambda x, y: True,
     )
 
     BerlinerZeitung = PublisherSpec(
@@ -104,14 +96,12 @@ class DE(PublisherEnum):
         sitemaps=["https://www.berliner-zeitung.de/sitemap.xml"],
         news_map="https://www.berliner-zeitung.de/news-sitemap.xml",
         parser=BerlinerZeitungParser,
-        article_classification_func_generator=lambda: lambda x, y: True,
     )
 
     Tagesschau = PublisherSpec(
         domain="https://www.tagesschau.de/",
         rss_feeds=["https://www.tagesschau.de/xml/rss2/"],
         parser=TagesschauParser,
-        article_classification_func_generator=lambda: lambda x, y: True,
     )
 
     DW = PublisherSpec(
@@ -120,13 +110,11 @@ class DE(PublisherEnum):
         sitemaps=["https://www.dw.com/de/article-sitemap.xml"],
         news_map="https://www.dw.com/de/news-sitemap.xml",
         parser=DWParser,
-        article_classification_func_generator=lambda: lambda x, y: True,
     )
     Stern = PublisherSpec(
         domain="https://www.stern.de/",
         rss_feeds=["https://www.stern.de/feed/standard/alle-nachrichten/"],
         parser=SternParser,
-        article_classification_func_generator=lambda: lambda x, y: True,
     )
 
     NTV = PublisherSpec(
@@ -134,7 +122,6 @@ class DE(PublisherEnum):
         news_map="https://www.n-tv.de/news.xml",
         sitemaps=["https://www.n-tv.de/sitemap.xml"],
         parser=NTVParser,
-        article_classification_func_generator=lambda: lambda x, y: True,
     )
 
     NDR = PublisherSpec(
@@ -149,5 +136,4 @@ class DE(PublisherEnum):
         news_map="https://taz.de/sitemap-google-news.xml",
         sitemaps=["https://taz.de/sitemap-index.xml"],
         parser=TazParser,
-        article_classification_func_generator=lambda: lambda x, y: True,
     )

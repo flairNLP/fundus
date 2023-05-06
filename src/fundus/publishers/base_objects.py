@@ -9,9 +9,9 @@ from fundus.parser import BaseParser
 class PublisherSpec:
     domain: str
     parser: Type[BaseParser]
-    article_classification_func_generator: Callable
     rss_feeds: List[str] = field(default_factory=list)
     sitemaps: List[str] = field(default_factory=list)
+    article_classification_func_generator: Callable = field(default=None)
     news_map: Optional[str] = field(default=None)
 
     def __post_init__(self):
