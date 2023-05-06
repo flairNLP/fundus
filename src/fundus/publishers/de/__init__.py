@@ -2,7 +2,7 @@ from datetime import datetime
 
 from fundus.publishers.base_objects import PublisherEnum, PublisherSpec
 
-
+from ...utils.article_classification import url_based_classifier
 from .berliner_zeitung import BerlinerZeitungParser
 from .die_welt import DieWeltParser
 from .die_zeit import DieZeitParser
@@ -142,9 +142,8 @@ class DE(PublisherEnum):
         news_map="https://www.ndr.de/sitemap112-newssitemap.xml",
         sitemaps=["https://www.ndr.de/sitemap112-sitemap.xml"],
         parser=NDRParser,
-        article_classification_func_generator=lambda: lambda x, y: True,
+        article_classification_func_generator=lambda: url_based_classifier(rejecting_regex="podcast[0-9]{4}"),
     )
-
     Taz = PublisherSpec(
         domain="https://www.taz.de/",
         news_map="https://taz.de/sitemap-google-news.xml",
