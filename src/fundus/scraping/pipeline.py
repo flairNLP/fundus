@@ -1,4 +1,15 @@
-from typing import Iterator, List, Literal, Optional, Set, Tuple, Type, Union, Callable, Any
+from typing import (
+    Any,
+    Callable,
+    Iterator,
+    List,
+    Literal,
+    Optional,
+    Set,
+    Tuple,
+    Type,
+    Union,
+)
 
 import more_itertools
 

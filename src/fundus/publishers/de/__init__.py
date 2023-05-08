@@ -19,9 +19,8 @@ from .sz import SZParser
 from .tagesschau import TagesschauParser
 from .taz import TazParser
 
+
 # noinspection PyPep8Naming
-
-
 class DE(PublisherEnum):
     DieWelt = PublisherSpec(
         domain="https://www.welt.de/",
