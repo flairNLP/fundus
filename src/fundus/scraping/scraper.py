@@ -1,5 +1,4 @@
-from typing import Callable, Iterator, Literal
-from typing import Any, Dict, Iterator, Literal, Optional, Protocol
+from typing import Any, Callable, Dict, Iterator, Literal, Optional, Protocol
 
 from fundus.logging.logger import basic_logger
 from fundus.parser import BaseParser
@@ -28,7 +27,7 @@ class Scraper:
         *sources: Source,
         parser: BaseParser,
         extraction_filter: Optional[ExtractionFilter] = None,
-        article_classification_function: Callable
+        article_classification_function: Optional[Callable[..., Any]],
     ):
         self.sources = list(sources)
         self.parser = parser
@@ -53,11 +52,11 @@ class Scraper:
         for crawler in self.sources:
             for article_source in crawler.fetch(batch_size):
                 try:
-
-                    is_article = self.article_classification_function(article_source.html, article_source.url)
-                    if not is_article:
-                        print(f"fArticle with {article_source.url} got rejected")
-                        continue
+                    if self.article_classification_function:
+                        is_article = self.article_classification_function(article_source.html, article_source.url)
+                        if not is_article:
+                            print(f"Article with {article_source.url} got rejected")
+                            continue
 
                     extraction = self.parser.parse(article_source.html, error_handling)
                     if self.extraction_filter and not self.extraction_filter(extraction):

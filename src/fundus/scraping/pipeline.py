@@ -1,4 +1,4 @@
-from typing import Iterator, List, Literal, Optional, Set, Tuple, Type, Union
+from typing import Iterator, List, Literal, Optional, Set, Tuple, Type, Union, Callable, Any
 
 import more_itertools
 
@@ -71,14 +71,18 @@ class Crawler:
                 sources.append(SitemapSource(spec.news_map, publisher=spec.name))
 
             if sources:
+                classification_func: Optional[Callable[..., Any]] = None
+                if spec.article_classification_func_generator is not None:
+                    classification_func = spec.article_classification_func_generator()
+
                 scrapers.append(
                     Scraper(
                         *sources,
                         parser=spec.parser(),
-                        article_classification_function=spec.article_classification_func_generator(),
+                        article_classification_function=classification_func,
+                        extraction_filter=extraction_filter,
                     )
                 )
-                scrapers.append(Scraper(*sources, parser=spec.parser(), extraction_filter=extraction_filter))
 
         if scrapers:
             pipeline = Pipeline(*scrapers)

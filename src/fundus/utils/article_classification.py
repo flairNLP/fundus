@@ -1,8 +1,10 @@
 import re
-from typing import Callable, Optional
+from typing import Any, Callable, Optional
 
 
-def url_based_classifier(confirming_regex: Optional[str] = None, rejecting_regex: Optional[str] = None) -> Callable:
+def url_based_classifier(
+    confirming_regex: Optional[str] = None, rejecting_regex: Optional[str] = None
+) -> Callable[..., Any]:
     if not confirming_regex and not rejecting_regex:
         print("One of the values 'confirming regex' and 'rejecting regex' has to be set!")
         exit()
@@ -11,9 +13,9 @@ def url_based_classifier(confirming_regex: Optional[str] = None, rejecting_regex
         is_accepted = False
         is_rejected = True
         if confirming_regex:
-            is_accepted = re.search(confirming_regex, url)
+            is_accepted = bool(re.search(confirming_regex, url))
         if rejecting_regex:
-            is_rejected = re.search(rejecting_regex, url)
+            is_rejected = bool(re.search(rejecting_regex, url))
 
         if is_rejected and is_accepted:
             print("Url cant be both rejected and accepted!")
