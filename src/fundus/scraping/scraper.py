@@ -27,12 +27,12 @@ class Scraper:
         *sources: Source,
         parser: BaseParser,
         extraction_filter: Optional[ExtractionFilter] = None,
-        article_classification_function: Optional[Callable[..., Any]],
+        article_classifier: Optional[Callable[[str, str], bool]],
     ):
         self.sources = list(sources)
         self.parser = parser
         self.extraction_filter = extraction_filter
-        self.article_classification_function = article_classification_function
+        self.article_classifier = article_classifier
 
         if isinstance(extraction_filter, Requires):
             supported_attributes = set(parser.attributes().names)
@@ -52,11 +52,8 @@ class Scraper:
         for crawler in self.sources:
             for article_source in crawler.fetch(batch_size):
                 try:
-                    if self.article_classification_function:
-                        is_article = self.article_classification_function(article_source.html, article_source.url)
-                        if not is_article:
-                            print(f"\n\n\nArticle with {article_source.url} got rejected\n\n\n")
-                            continue
+                    if self.article_classifier and self.article_classifier(article_source.html, article_source.url):
+                        continue
 
                     extraction = self.parser.parse(article_source.html, error_handling)
                     if self.extraction_filter and not self.extraction_filter(extraction):

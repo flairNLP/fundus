@@ -86,7 +86,7 @@ class Crawler:
                     Scraper(
                         *sources,
                         parser=spec.parser(),
-                        article_classification_function=spec.article_classification_function,
+                        article_classifier=spec.article_classifier,
                         extraction_filter=extraction_filter,
                     )
                 )

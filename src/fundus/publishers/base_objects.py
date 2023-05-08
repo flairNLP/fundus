@@ -35,9 +35,7 @@ class PublisherEnum(Enum):
         self.sitemaps = spec.sitemaps
         self.news_map = spec.news_map
         self.parser = spec.parser
-        self.article_classification_function: Optional[
-            Callable[[str, str], bool]
-        ] = spec.article_classification_function
+        self.article_classifier = spec.article_classification_function
 
     def supports(self, source_type: Optional[str]) -> bool:
         if source_type == "rss":
