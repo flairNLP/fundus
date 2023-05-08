@@ -1,3 +1,3 @@
-from os import path
+from tests.resources.parser.attribute_annotations import attribute_annotations_mapping
 
-resource_dir_path = path.realpath(path.dirname(__file__))
+__all__ = ["attribute_annotations_mapping"]
