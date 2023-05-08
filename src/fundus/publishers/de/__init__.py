@@ -17,6 +17,7 @@ from .stern import SternParser
 from .sz import SZParser
 from .tagesschau import TagesschauParser
 from .taz import TazParser
+from .titanic_parser import TitanicParser
 
 
 # noinspection PyPep8Naming
@@ -140,4 +141,3 @@ class DE(PublisherEnum):
         rss_feeds=["https://www.titanic-magazin.de/newsticker/rss.xml"],
         parser=TitanicParser,
     )
-
