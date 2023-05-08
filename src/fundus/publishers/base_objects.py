@@ -11,7 +11,7 @@ class PublisherSpec:
     parser: Type[BaseParser]
     rss_feeds: List[str] = field(default_factory=list)
     sitemaps: List[str] = field(default_factory=list)
-    article_classification_func_generator: Optional[Callable[..., Any]] = field(default=None)
+    article_classification_function: Optional[Callable[[str, str], bool]] = field(default=None)
     news_map: Optional[str] = field(default=None)
 
     def __post_init__(self):
@@ -35,9 +35,9 @@ class PublisherEnum(Enum):
         self.sitemaps = spec.sitemaps
         self.news_map = spec.news_map
         self.parser = spec.parser
-        self.article_classification_func_generator: Optional[
-            Callable[..., Any]
-        ] = spec.article_classification_func_generator
+        self.article_classification_function: Optional[
+            Callable[[str, str], bool]
+        ] = spec.article_classification_function
 
     def supports(self, source_type: Optional[str]) -> bool:
         if source_type == "rss":

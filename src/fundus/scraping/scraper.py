@@ -55,7 +55,7 @@ class Scraper:
                     if self.article_classification_function:
                         is_article = self.article_classification_function(article_source.html, article_source.url)
                         if not is_article:
-                            print(f"Article with {article_source.url} got rejected")
+                            print(f"\n\n\nArticle with {article_source.url} got rejected\n\n\n")
                             continue
 
                     extraction = self.parser.parse(article_source.html, error_handling)
