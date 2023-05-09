@@ -72,6 +72,14 @@ The added publisher specification has to specify where to look for articles.
 Right now, Fundus has support for reading sitemaps or RSS feeds.
 Usually, the publisher's sitemaps are located at the end of `<publisher_domain>/robots.txt` or can be found through a quick Google search.
 
+There are two types of sitemaps we care about: Sitemaps that span the whole site and sitemaps that 
+link to current articles(Sometimes called Google News Maps). Current sitemaps might span a few days
+up to months. All of these variants are fine, just start with what is in front of you.
+Fundus has native support for recursive sitemaps, you don't need to worry about these. 
+Unfortunately, the formats vary quite a lot across publishers. But this is not a big concern,
+most sitemaps work fine with no additional tinkering. 
+
+
 For the Los Angeles Times, jumping to the end of their [robots.txt](https://www.latimes.com/robots.txt) gives us the following information.
 ``` console
 Sitemap: https://www.latimes.com/sitemap.xml
@@ -88,8 +96,6 @@ And a sitemap for the entire Los Angeles Times website.
 ```
 https://www.latimes.com/sitemap.xml
 ```
-
-The idea of the Google News sitemap is to give an overview of recent articles while a sitemap spans the entire website.
 
 **_NOTE:_** There is a known issue with Firefox not displaying XML properly. 
 You can find a plugin to resolve this issue [here](https://addons.mozilla.org/de/firefox/addon/pretty-xml/)
@@ -197,6 +203,15 @@ Since we didn't add any specific implementation to the parser yet, most entries 
 
 ### 5. Implementing the Parser
 Bring your parser to life and fill it with attributes to parse.
+
+One important caveat to consider is the type of content a particular page is. 
+For example, various news outlets use live tickers or sites that display a podcast.
+At the current state of this library, you do not need to worry about sites that
+are not articles. As long as your code is able to extract the desired attributes 
+from the subset of sites that are articles, you are good to go. The definition of 
+article is intentionally vague, using common sense to determine if a particular site
+is a article is good enough.
+
 You can add attributes by decorating the methods of your parser with the `@attribute` decorator.
 Attributes are expected to have a return value precisely specified in the [attribute guidelines](attribute_guidelines.md).
 
