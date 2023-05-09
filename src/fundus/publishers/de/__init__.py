@@ -128,7 +128,7 @@ class DE(PublisherEnum):
         news_map="https://www.ndr.de/sitemap112-newssitemap.xml",
         sitemaps=["https://www.ndr.de/sitemap112-sitemap.xml"],
         parser=NDRParser,
-        article_classifier=lambda html, url: not regex_classifier("podcast[0-9]{4}")(url),
+        article_classifier=lambda url, html: not regex_classifier("podcast[0-9]{4}")(url),
     )
 
     Taz = PublisherSpec(

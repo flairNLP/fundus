@@ -12,7 +12,18 @@ class ExtractionFilter(Protocol):
 
 
 class ArticleClassifier(Protocol):
-    def __call__(self, html: str, url: str) -> bool:
+    """Classifies a website, represented by a given <url> and <html> as an article.
+
+    When called with (<url>, <html>), an object satisfying this protocol should return
+    the truth value of a binary classification classifying the website represented with
+    <url> and <html> as article or not.
+
+    Returns: This is a binary classification, so:
+        <True>:     The represented website is considered to be an article:
+        <False>:    The represented website is considered not to be an article
+    """
+
+    def __call__(self, url: str, html: str) -> bool:
         ...
 
 
@@ -57,7 +68,7 @@ class Scraper:
         for crawler in self.sources:
             for article_source in crawler.fetch(batch_size):
                 try:
-                    if self.article_classifier and self.article_classifier(article_source.html, article_source.url):
+                    if self.article_classifier and self.article_classifier(article_source.url, article_source.html):
                         continue
 
                     extraction = self.parser.parse(article_source.html, error_handling)
