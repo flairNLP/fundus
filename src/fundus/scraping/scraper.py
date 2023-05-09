@@ -1,4 +1,4 @@
-from typing import Any, Callable, Dict, Iterator, Literal, Optional, Protocol
+from typing import Any, Dict, Iterator, Literal, Optional, Protocol
 
 from fundus.logging.logger import basic_logger
 from fundus.parser import BaseParser
@@ -61,6 +61,7 @@ class Scraper:
                         continue
 
                     extraction = self.parser.parse(article_source.html, error_handling)
+
                     if self.extraction_filter and not self.extraction_filter(extraction):
                         continue
                 except Exception as err:
