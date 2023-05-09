@@ -169,7 +169,7 @@ The following script fits the Los Angeles Times and is adaptable by changing the
 from src import PublisherCollection, Crawler
 
 # Change to:
-# PublisherCollection.<country_section>.<publisher_speicifcation>
+# PublisherCollection.<country_section>.<publisher_specification>
 publisher = PublisherCollection.us.LosAngelesTimes
 
 crawler = Crawler(publisher)
