@@ -156,7 +156,7 @@ class US(PublisherEnum):
         domain="https://www.latimes.com/",
         sitemaps=["https://www.latimes.com/sitemap.xml"],
         news_map="https://www.latimes.com/news-sitemap.xml",
-        parser=LATimesParser,
+        parser=LosAngelesTimesParser,
     )
 ```
 
@@ -184,12 +184,12 @@ Fundus-Article:
 - Title: "--missing title--"
 - Text:  "--missing plaintext--"
 - URL:    https://www.latimes.com/entertainment-arts/tv/story/2023-03-19/sarah-snook-shiv-succession
-- From:   LATimes (2023-03-20 19:25)
+- From:   LosAngelesTimes (2023-03-20 19:25)
 Fundus-Article:
 - Title: "--missing title--"
 - Text:  "--missing plaintext--"
 - URL:    https://www.latimes.com/california/story/2023-03-18/la-me-bruces-beach-manhattan-beach-new-monument-ceremony
-- From:   LATimes (2023-03-20 19:25)
+- From:   LosAngelesTimes (2023-03-20 19:25)
 ```
 
 Since we didn't add any specific implementation to the parser yet, most entries are empty.
@@ -317,12 +317,12 @@ Fundus-Article:
 - Title: "Sarah Snook wasn't sold on 'Succession' at first. Now, she feels a 'sense of loss'"
 - Text:  "--missing plaintext--"  # TODO ADD THIS
 - URL:    https://www.latimes.com/entertainment-arts/tv/story/2023-03-19/sarah-snook-shiv-succession
-- From:   LATimes (2023-03-20 19:25)
+- From:   LosAngelesTimes (2023-03-20 19:25)
 Fundus-Article:
 - Title: "Manhattan Beach mayor apologizes to Bruce's Beach families, unveils new city monument"
 - Text:  "--missing plaintext--"  # TODO ADD THIS
 - URL:    https://www.latimes.com/california/story/2023-03-18/la-me-bruces-beach-manhattan-beach-new-monument-ceremony
-- From:   LATimes (2023-03-20 19:25)
+- From:   LosAngelesTimes (2023-03-20 19:25)
 ```
 
 ### 6. Writing Tests
