@@ -11,6 +11,11 @@ class ExtractionFilter(Protocol):
         ...
 
 
+class ArticleClassifier(Protocol):
+    def __call__(self, html: str, url: str) -> bool:
+        ...
+
+
 class Requires:
     def __init__(self, *required_attributes: str) -> None:
         self.required_attributes = set(required_attributes)
@@ -27,7 +32,7 @@ class Scraper:
         *sources: Source,
         parser: BaseParser,
         extraction_filter: Optional[ExtractionFilter] = None,
-        article_classifier: Optional[Callable[[str, str], bool]],
+        article_classifier: Optional[ArticleClassifier] = None,
     ):
         self.sources = list(sources)
         self.parser = parser

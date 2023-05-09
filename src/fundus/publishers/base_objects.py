@@ -3,6 +3,7 @@ from enum import Enum, unique
 from typing import Any, Callable, Dict, Iterator, List, Optional, Type
 
 from fundus.parser import BaseParser
+from fundus.scraping.scraper import ArticleClassifier
 
 
 @dataclass(frozen=True)
@@ -11,7 +12,7 @@ class PublisherSpec:
     parser: Type[BaseParser]
     rss_feeds: List[str] = field(default_factory=list)
     sitemaps: List[str] = field(default_factory=list)
-    article_classifier: Optional[Callable[[str, str], bool]] = field(default=None)
+    article_classifier: Optional[ArticleClassifier] = field(default=None)
     news_map: Optional[str] = field(default=None)
 
     def __post_init__(self):
