@@ -144,7 +144,7 @@ Thus `https://www.latimes.com/news-sitemap.xml` is a Google News Index Map.
 
 #### Finishing the Publisher Specification
 
-To complete the publisher specification, specify at least
+To complete the publisher specification, specify at least one of the following parameters:
 - `sitemaps` spanning the entire website, 
 - `news_map` referring to a Google News Sitemap or Google News Index Map or
 - `rss_feeds` covering recently published articles.
