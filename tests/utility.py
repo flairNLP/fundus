@@ -30,12 +30,10 @@ class HTMLTestFile:
 
     @staticmethod
     def _parse_path(path: Path) -> Tuple[PublisherEnum, datetime.date]:
-        name = path.name
-        assert "." in name
-        desc = str(name).split(".")[0].split("_")
-        publisher_name = desc.pop(0)
-        date = datetime.date(*map(int, desc))
-        return PublisherCollection[publisher_name], date
+        assert path.name.endswith(".html.gz")
+        file_name: str = path.name.rsplit(".html.gz")[0]
+        publisher_name, date = file_name.split("_", maxsplit=1)
+        return PublisherCollection[publisher_name], datetime.datetime.strptime(date, '%Y_%m_%d').date()
 
     @classmethod
     def load(cls, path: Path, encoding: str = "utf-8") -> Self:
