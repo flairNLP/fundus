@@ -248,7 +248,7 @@ class ParserProxy(ABC):
         ]
 
         if not included_parsers:
-            raise AssertionError(
+            raise ValueError(
                 f"<class {type(self).__name__}> consists of no parser-versions. "
                 f"To include versions add subclasses of <class {BaseParser.__name__}> to the class definition."
             )
@@ -257,7 +257,7 @@ class ParserProxy(ABC):
         for versioned_parser in sorted(included_parsers, key=lambda parser: parser.VALID_UNTIL):
             validation_date: date
             if prev := mapping.get(validation_date := versioned_parser.VALID_UNTIL):  # type: ignore
-                raise AssertionError(
+                raise ValueError(
                     f"Found versions '{prev.factory.__name__}' and '{versioned_parser.__name__}' with same validation date"
                 )
             mapping[validation_date] = _ParserCache(versioned_parser)

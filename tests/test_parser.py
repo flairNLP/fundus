@@ -56,7 +56,7 @@ class TestParserProxy:
     def test_empty_proxy(self, empty_parser_proxy):
         parser_proxy = empty_parser_proxy
 
-        with pytest.raises(AssertionError):
+        with pytest.raises(ValueError):
             parser_proxy()
 
     def test_proxy_with_same_date(self):
@@ -67,7 +67,7 @@ class TestParserProxy:
             class V1(BaseParser):
                 VALID_UNTIL = datetime.date(2023, 1, 1)
 
-        with pytest.raises(AssertionError):
+        with pytest.raises(ValueError):
             ProxyWithSameDate()
 
     def test_len(self, proxy_with_two_versions_and_different_attrs):
