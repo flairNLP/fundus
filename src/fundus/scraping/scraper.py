@@ -45,6 +45,7 @@ class Scraper:
         *sources: Source,
         parser: ParserProxy,
         article_classifier: Optional[ArticleClassifier] = None,
+        extraction_filter: Optional[ExtractionFilter] = None,
     ):
         self.sources = list(sources)
 
