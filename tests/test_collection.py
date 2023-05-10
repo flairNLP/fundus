@@ -1,6 +1,10 @@
 import pytest
 
-from fundus.publishers.base_objects import PublisherEnum, PublisherSpec
+from fundus.publishers.base_objects import (
+    PublisherCollectionMeta,
+    PublisherEnum,
+    PublisherSpec,
+)
 
 
 class TestCollection:
@@ -22,6 +26,13 @@ class TestCollection:
     def test_publisher_spec_without_source(self, empty_parser_proxy):
         with pytest.raises(ValueError):
             PublisherSpec(domain="https//:test.com/", parser=empty_parser_proxy)
+
+    def test_duplicate_publisher_names_in_same_collection(self, publisher_enum_with_news_map):
+        with pytest.raises(AttributeError):
+
+            class Test(metaclass=PublisherCollectionMeta):
+                a = publisher_enum_with_news_map
+                b = publisher_enum_with_news_map
 
     def test_supports(self, publisher_enum_with_news_map):
         assert publisher_enum_with_news_map.value.supports("news")

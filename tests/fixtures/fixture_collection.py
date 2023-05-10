@@ -1,11 +1,15 @@
 import pytest
 
-from fundus.publishers.base_objects import CollectionMeta, PublisherEnum, PublisherSpec
+from fundus.publishers.base_objects import (
+    PublisherCollectionMeta,
+    PublisherEnum,
+    PublisherSpec,
+)
 
 
 @pytest.fixture
 def empty_collection():
-    class EmptyCollection(metaclass=CollectionMeta):
+    class EmptyCollection(metaclass=PublisherCollectionMeta):
         pass
 
     return EmptyCollection
@@ -21,7 +25,7 @@ def empty_publisher_enum():
 
 @pytest.fixture
 def collection_with_empty_publisher_enum(empty_publisher_enum):
-    class CollectionWithEmptyPublisherEnum(metaclass=CollectionMeta):
+    class CollectionWithEmptyPublisherEnum(metaclass=PublisherCollectionMeta):
         empty = empty_publisher_enum
 
     return CollectionWithEmptyPublisherEnum
@@ -53,7 +57,7 @@ def publisher_enum_with_sitemaps(parser_proxy_with_version):
 
 @pytest.fixture
 def collection_with_validate_publisher_enum(publisher_enum_with_news_map):
-    class CollectionWithValidatePublisherEnum(metaclass=CollectionMeta):
+    class CollectionWithValidatePublisherEnum(metaclass=PublisherCollectionMeta):
         pub = publisher_enum_with_news_map
 
     return CollectionWithValidatePublisherEnum
