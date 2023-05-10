@@ -13,6 +13,22 @@ class ExtractionFilter(Protocol):
         ...
 
 
+class ArticleClassifier(Protocol):
+    """Classifies a website, represented by a given <url> and <html> as an article.
+
+    When called with (<url>, <html>), an object satisfying this protocol should return
+    the truth value of a binary classification classifying the website represented with
+    <url> and <html> as article or not.
+
+    Returns: This is a binary classification, so:
+        <True>:     The represented website is considered to be an article:
+        <False>:    The represented website is considered not to be an article
+    """
+
+    def __call__(self, url: str, html: str) -> bool:
+        ...
+
+
 class Requires:
     def __init__(self, *required_attributes: str) -> None:
         self.required_attributes = set(required_attributes)
@@ -28,6 +44,7 @@ class Scraper:
         self,
         *sources: Source,
         parser: ParserProxy,
+        article_classifier: Optional[ArticleClassifier] = None,
     ):
         self.sources = list(sources)
 
@@ -35,6 +52,8 @@ class Scraper:
             raise ValueError(f"the given parser {type(parser).__name__} is empty")
 
         self.parser = parser
+        self.extraction_filter = extraction_filter
+        self.article_classifier = article_classifier
 
     def scrape(
         self,
@@ -63,7 +82,11 @@ class Scraper:
         for crawler in self.sources:
             for article_source in crawler.fetch(batch_size):
                 try:
+                    if self.article_classifier and self.article_classifier(article_source.url, article_source.html):
+                        continue
+
                     extraction = self.parser(article_source.crawl_date).parse(article_source.html, error_handling)
+
                     if extraction_filter and not extraction_filter(extraction):
                         continue
                 except Exception as err:

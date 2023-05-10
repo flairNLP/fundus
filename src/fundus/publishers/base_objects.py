@@ -3,6 +3,7 @@ from enum import Enum, EnumMeta, unique
 from typing import Any, Dict, Iterator, List, Optional, Type
 
 from fundus.parser.base_parser import ParserProxy
+from fundus.scraping.scraper import ArticleClassifier
 
 
 @dataclass(frozen=True)
@@ -11,6 +12,7 @@ class PublisherSpec:
     parser: Type[ParserProxy]
     rss_feeds: List[str] = field(default_factory=list)
     sitemaps: List[str] = field(default_factory=list)
+    article_classifier: Optional[ArticleClassifier] = field(default=None)
     news_map: Optional[str] = field(default=None)
 
     def __post_init__(self):
@@ -34,6 +36,7 @@ class PublisherEnum(Enum):
         self.sitemaps = spec.sitemaps
         self.news_map = spec.news_map
         self.parser = spec.parser()
+        self.article_classifier = spec.article_classifier
 
     def supports(self, source_type: Optional[str]) -> bool:
         if source_type == "rss":

@@ -1,4 +1,15 @@
-from typing import Iterator, List, Literal, Optional, Set, Tuple, Type, Union
+from typing import (
+    Any,
+    Callable,
+    Iterator,
+    List,
+    Literal,
+    Optional,
+    Set,
+    Tuple,
+    Type,
+    Union,
+)
 
 import more_itertools
 
@@ -80,7 +91,14 @@ class Crawler:
                 sources.extend([SitemapSource(sitemap, publisher=spec.name) for sitemap in spec.sitemaps])
 
             if sources:
-                scrapers.append(Scraper(*sources, parser=spec.parser))
+                scrapers.append(
+                    Scraper(
+                        *sources,
+                        parser=spec.parser,
+                        article_classifier=spec.article_classifier,
+                        extraction_filter=extraction_filter,
+                    )
+                )
 
         if scrapers:
             pipeline = Pipeline(*scrapers)
