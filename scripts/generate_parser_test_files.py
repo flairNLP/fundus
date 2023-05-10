@@ -44,7 +44,7 @@ if __name__ == "__main__":
         "-o",
         "--overwrite",
         action="store_true",
-        help="overwrite existing html and json files for the latest version",
+        help="overwrite existing html and json files for the latest parser version",
     )
     group.add_argument(
         "-u", "--update", action="store_true", help="parse from existing html and only update json content"
@@ -79,10 +79,10 @@ if __name__ == "__main__":
 
             if args.update or args.overwrite_json:
                 for html in html_mapping.values():
-                    version = html.publisher.parser(html.crawl_date)
-                    extraction = version.parse(html.content)
+                    versioned_parser = html.publisher.parser(html.crawl_date)
+                    extraction = versioned_parser.parse(html.content)
                     # TODO: overwrite entire json when -oj
-                    entry = json_data[type(version).__name__]
+                    entry = json_data[type(versioned_parser).__name__]
                     new = {attr: value for attr, value in extraction.items() if attr in args.attributes}
                     if args.update:
                         entry["content"].update(new)

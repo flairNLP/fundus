@@ -54,10 +54,10 @@ class TestBaseParser:
 
 class TestParserProxy:
     def test_empty_proxy(self, empty_parser_proxy):
-        proxy = empty_parser_proxy
+        parser_proxy = empty_parser_proxy
 
         with pytest.raises(AssertionError):
-            proxy()
+            parser_proxy()
 
     def test_proxy_with_same_date(self):
         class ProxyWithSameDate(ParserProxy):
@@ -71,34 +71,34 @@ class TestParserProxy:
             ProxyWithSameDate()
 
     def test_len(self, proxy_with_two_versions_and_different_attrs):
-        proxy = proxy_with_two_versions_and_different_attrs()
-        assert len(proxy) == 2
+        parser_proxy = proxy_with_two_versions_and_different_attrs()
+        assert len(parser_proxy) == 2
 
     def test_iter(self, proxy_with_two_versions_and_different_attrs):
-        versions = list(proxy_with_two_versions_and_different_attrs())
-        assert versions[0].VALID_UNTIL > versions[1].VALID_UNTIL
+        versioned_parsers = list(proxy_with_two_versions_and_different_attrs())
+        assert versioned_parsers[0].VALID_UNTIL > versioned_parsers[1].VALID_UNTIL
 
     def test_latest(self, proxy_with_two_versions_and_different_attrs):
-        proxy = proxy_with_two_versions_and_different_attrs()
-        print(proxy.latest_version.__name__)
-        assert proxy.latest_version == proxy.Later
+        parser_proxy = proxy_with_two_versions_and_different_attrs()
+        print(parser_proxy.latest_version.__name__)
+        assert parser_proxy.latest_version == parser_proxy.Later
 
     def test_call(self, proxy_with_two_versions_and_different_attrs):
-        proxy = proxy_with_two_versions_and_different_attrs()
-        assert type(proxy()) == proxy.latest_version
+        parser_proxy = proxy_with_two_versions_and_different_attrs()
+        assert type(parser_proxy()) == parser_proxy.latest_version
 
-        for version in proxy:
-            from_proxy = proxy(version.VALID_UNTIL)
-            assert isinstance(from_proxy, version)
-            assert from_proxy == proxy(version.VALID_UNTIL)
+        for versioned_parser in parser_proxy:
+            from_proxy = parser_proxy(versioned_parser.VALID_UNTIL)
+            assert isinstance(from_proxy, versioned_parser)
+            assert from_proxy == parser_proxy(versioned_parser.VALID_UNTIL)
 
     def test_mapping(self, proxy_with_two_versions_and_different_attrs):
-        proxy = proxy_with_two_versions_and_different_attrs()
+        parser_proxy = proxy_with_two_versions_and_different_attrs()
 
-        for version in proxy:
-            assert version.attributes() == proxy.attribute_mapping[version]
+        for versioned_parser in parser_proxy:
+            assert versioned_parser.attributes() == parser_proxy.attribute_mapping[versioned_parser]
 
-        attrs1, attrs2 = proxy.attribute_mapping.values()
+        attrs1, attrs2 = parser_proxy.attribute_mapping.values()
         assert attrs1.names != attrs2.names
 
 
@@ -107,13 +107,13 @@ class TestParserProxy:
 )
 class TestParser:
     def test_annotations(self, publisher: PublisherEnum) -> None:
-        parser = publisher.parser
-        for parser_version in parser:
-            for attr in parser_version.attributes().validated:
+        parser_proxy = publisher.parser
+        for versioned_parser in parser_proxy:
+            for attr in versioned_parser.attributes().validated:
                 if annotation := attribute_annotations_mapping[attr.__name__]:
                     assert (
                         attr.__annotations__.get("return") == annotation
-                    ), f"Attribute {attr.__name__} for {parser_version.__name__} failed"
+                    ), f"Attribute {attr.__name__} for {versioned_parser.__name__} failed"
                 else:
                     raise KeyError(f"Unsupported attribute '{attr.__name__}'")
 
@@ -124,9 +124,9 @@ class TestParser:
         comparative_data = load_test_case_data(publisher)
         html_mapping = load_html_test_file_mapping(publisher)
 
-        for version in publisher.parser:
+        for versioned_parser in publisher.parser:
             # validate json
-            version_name = version.__name__
+            version_name = versioned_parser.__name__
             assert (
                 version_data := comparative_data.get(version_name)
             ), f"Missing test data for parser version '{version_name}'"
@@ -134,13 +134,13 @@ class TestParser:
             assert (content := version_data.get("content")), f"Missing content for parser version '{version_name}'"
 
             # test coverage
-            supported_attrs = set(version.attributes().names)
+            supported_attrs = set(versioned_parser.attributes().names)
             missing_attrs = attrs_required_to_cover & supported_attrs - set(content.keys())
             assert not missing_attrs, f"Test JSON does not cover the following attribute(s): {missing_attrs}"
 
-            assert (html := html_mapping.get(version)), f"Missing test HTML for parser version {version_name}"
+            assert (html := html_mapping.get(versioned_parser)), f"Missing test HTML for parser version {version_name}"
             # compare data
-            extraction = version().parse(html.content, "raise")
+            extraction = versioned_parser().parse(html.content, "raise")
             for key, value in content.items():
                 assert value == extraction[key]
 

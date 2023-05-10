@@ -254,13 +254,13 @@ class ParserProxy(ABC):
             )
 
         mapping: Dict[date, _ParserCache] = {}
-        for version in sorted(included_parsers, key=lambda parser: parser.VALID_UNTIL):
+        for versioned_parser in sorted(included_parsers, key=lambda parser: parser.VALID_UNTIL):
             validation_date: date
-            if prev := mapping.get(validation_date := version.VALID_UNTIL):  # type: ignore
+            if prev := mapping.get(validation_date := versioned_parser.VALID_UNTIL):  # type: ignore
                 raise AssertionError(
-                    f"Found versions '{prev.factory.__name__}' and '{version.__name__}' with same validation date"
+                    f"Found versions '{prev.factory.__name__}' and '{versioned_parser.__name__}' with same validation date"
                 )
-            mapping[validation_date] = _ParserCache(version)
+            mapping[validation_date] = _ParserCache(versioned_parser)
         self._parser_mapping = mapping
 
     def __call__(self, crawl_date: Optional[Union[datetime, date]] = None) -> BaseParser:
@@ -294,11 +294,11 @@ class ParserProxy(ABC):
 
     @property
     def attribute_mapping(self) -> Dict[Type[BaseParser], AttributeCollection]:
-        return {version: version.attributes() for version in self}
+        return {versioned_parser: versioned_parser.attributes() for versioned_parser in self}
 
     @property
     def function_mapping(self) -> Dict[Type[BaseParser], FunctionCollection]:
-        return {version: version.functions() for version in self}
+        return {versioned_parser: versioned_parser.functions() for versioned_parser in self}
 
     def _get_latest_cache(self) -> _ParserCache:
         return list(self._parser_mapping.values())[-1]
