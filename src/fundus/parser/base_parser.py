@@ -268,8 +268,9 @@ class ParserProxy(ABC):
             return self._get_latest_cache()()
 
         parsed_date = crawl_date.date() if isinstance(crawl_date, datetime) else crawl_date
-        _, parser = next(itertools.dropwhile(lambda x: x[0] < parsed_date, self._parser_mapping.items()))
-        return parser()
+        parser_cache: _ParserCache
+        _, parser_cache = next(itertools.dropwhile(lambda x: x[0] < parsed_date, self._parser_mapping.items()))
+        return parser_cache()
 
     def __iter__(self) -> Iterator[Type[BaseParser]]:
         """Iterates over all included parser versions with the latest being first.
