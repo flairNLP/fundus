@@ -12,6 +12,7 @@ from typing import (
     Match,
     Optional,
     Pattern,
+    Set,
     Type,
     Union,
     cast,
@@ -145,7 +146,8 @@ def generic_author_parsing(
         Dict[str, str],
         List[str],
         List[Dict[str, str]],
-    ]
+    ],
+    autosplit: bool = False,
 ) -> List[str]:
     if not value:
         return []
@@ -159,17 +161,12 @@ def generic_author_parsing(
 
     if isinstance(value, str):
 
-        def detect_delimiter(string: str) -> Optional[str]:
-            common_delimiter: List[str] = [",", ";"]
-            for delimiter in common_delimiter:
-                if delimiter in string:
-                    return delimiter
-                if (spaced_delimiter := delimiter + " ") in string:
-                    return spaced_delimiter
-            return None
+        def detect_delimiters(string: str) -> Optional[Set[str]]:
+            common_delimiter: List[str] = [",", ";", " und ", " and "]
+            return {match.group() for match in re.finditer(r" |".join(common_delimiter), string)}
 
-        if delim := detect_delimiter(value):
-            authors = value.split(sep=delim)
+        if autosplit and (delimiters := detect_delimiters(value)):
+            authors = re.split(r" |".join(delimiters), value)
         else:
             authors = [value]
 
