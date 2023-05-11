@@ -77,6 +77,7 @@ class Scraper:
                         continue
                 except Exception as err:
                     if error_handling == "raise":
+                        basic_logger.error(f"Run into an error processing '{article_source.url}'")
                         raise err
                     elif error_handling == "catch":
                         yield Article(source=article_source, exception=err)
@@ -85,7 +86,6 @@ class Scraper:
                         basic_logger.info(f"Skipped {article_source.url} because of: {err!r}")
                         continue
                     else:
-                        basic_logger.error(f"Run into an error processing '{article_source.url}'")
                         raise ValueError(f"Unknown value '{error_handling}' for parameter <error_handling>'")
 
                 article = Article.from_extracted(source=article_source, extracted=extraction)
