@@ -33,7 +33,7 @@ class TagesschauParser(BaseParser):
     def authors(self) -> List[str]:
         if raw_author_string := self._author_selector(self.precomputed.doc):
             cleaned_author_string = re.sub(r"^Von |, ARD[^\s,]*", "", raw_author_string)
-            return generic_author_parsing(cleaned_author_string, autosplit=True)
+            return generic_author_parsing(cleaned_author_string)
         else:
             return []
 

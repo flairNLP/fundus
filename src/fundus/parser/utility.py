@@ -147,8 +147,29 @@ def generic_author_parsing(
         List[str],
         List[Dict[str, str]],
     ],
-    autosplit: bool = False,
+    split_on: Optional[List[str]] = None,
 ) -> List[str]:
+    """This function tries to parse the given <value> to a list of authors (List[str]) based on the type of value.
+
+    Parses based on type of <value> as following:
+        value (None):       Empty list \n
+        value (str):        re.split(delimiters) with delimiters := split_on or common delimiters' \n
+        value (dict):       If key "name" in dict, [dict["name"]] else empty list \n
+        value (list[str]):  value\n
+        value (list[dict]): [dict["name"] for dict in list if dict["name"]] \n
+
+    with common delimiters := [",", ";", " und ", " and "]
+
+    All values are stripped with default strip() method before returned.
+
+    Args:
+        value:      An input value representing author(s) which get parsed based on type
+        split_on:   Only relevant for type(<value>) = str. If set, split <value> on <split_on>,
+            else (default) split <value> on common delimiters
+
+    Returns:
+        A parsed and striped list of authors
+    """
     if not value:
         return []
 
@@ -162,10 +183,10 @@ def generic_author_parsing(
     if isinstance(value, str):
 
         def detect_delimiters(string: str) -> Optional[Set[str]]:
-            common_delimiter: List[str] = [",", ";", " und ", " and "]
+            common_delimiter: List[str] = [",", ";", " und ", " and "] if not split_on else split_on
             return {match.group() for match in re.finditer(r" |".join(common_delimiter), string)}
 
-        if autosplit and (delimiters := detect_delimiters(value)):
+        if split_on and (delimiters := detect_delimiters(value)):
             authors = re.split(r" |".join(delimiters), value)
         else:
             authors = [value]
