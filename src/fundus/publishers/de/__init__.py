@@ -138,6 +138,7 @@ class DE(PublisherEnum):
         sitemaps=["https://taz.de/sitemap-index.xml"],
         parser=TazParser,
     )
+
     Bild = PublisherSpec(
         domain="https://www.bild.de/",
         rss_feeds=["https://www.bild.de/rssfeeds/vw-neu/vw-neu-32001674,view=rss2.bild.xml"],
