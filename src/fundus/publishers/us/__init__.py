@@ -45,8 +45,10 @@ class US(PublisherEnum):
         news_map="https://www.foxnews.com/sitemap.xml?type=news",
         parser=FoxNewsParser,
     )
+
     TheNation = PublisherSpec(
         domain="https://www.thenation.com/",
+        sitemaps=["https://www.thenation.com/sitemap_index.xml"],
         news_map="https://www.thenation.com/news-sitemap.xml",
         parser=TheNationParser,
     )
