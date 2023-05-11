@@ -1,5 +1,6 @@
 from typing import Any, Dict, Iterator, Literal, Optional, Protocol
 
+from fundus.classification import UrlClassifier, HtmlClassifier
 from fundus.logging.logger import basic_logger
 from fundus.parser import BaseParser
 from fundus.scraping.article import Article
@@ -8,22 +9,6 @@ from fundus.scraping.source import Source
 
 class ExtractionFilter(Protocol):
     def __call__(self, extracted: Dict[str, Any]) -> bool:
-        ...
-
-
-class ArticleClassifier(Protocol):
-    """Classifies a website, represented by a given <url> and <html> as an article.
-
-    When called with (<url>, <html>), an object satisfying this protocol should return
-    the truth value of a binary classification classifying the website represented with
-    <url> and <html> as article or not.
-
-    Returns: This is a binary classification, so:
-        <True>:     The represented website is considered to be an article:
-        <False>:    The represented website is considered not to be an article
-    """
-
-    def __call__(self, url: str, html: str) -> bool:
         ...
 
 
@@ -39,16 +24,19 @@ class Requires:
 
 class Scraper:
     def __init__(
-        self,
-        *sources: Source,
-        parser: BaseParser,
-        extraction_filter: Optional[ExtractionFilter] = None,
-        article_classifier: Optional[ArticleClassifier] = None,
+            self,
+            *sources: Source,
+            parser: BaseParser,
+            extraction_filter: Optional[ExtractionFilter] = None,
+            html_classifier: Optional[HtmlClassifier] = None,
+            url_classifier: Optional[UrlClassifier] = None,
     ):
         self.sources = list(sources)
         self.parser = parser
         self.extraction_filter = extraction_filter
-        self.article_classifier = article_classifier
+        self.article_classifier = html_classifier
+        self.url_classifier = url_classifier
+        print(f'{self.url_classifier} at init')
 
         if isinstance(extraction_filter, Requires):
             supported_attributes = set(parser.attributes().names)
@@ -66,9 +54,10 @@ class Scraper:
 
     def scrape(self, error_handling: Literal["suppress", "catch", "raise"], batch_size: int = 10) -> Iterator[Article]:
         for crawler in self.sources:
-            for article_source in crawler.fetch(batch_size):
+            print(f'{self.url_classifier} at scrape')
+            for article_source in crawler.fetch(batch_size, self.url_classifier):
                 try:
-                    if self.article_classifier and self.article_classifier(article_source.url, article_source.html):
+                    if self.article_classifier and self.article_classifier(article_source.html):
                         continue
 
                     extraction = self.parser.parse(article_source.html, error_handling)
