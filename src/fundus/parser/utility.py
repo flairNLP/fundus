@@ -158,7 +158,20 @@ def generic_author_parsing(
     authors: List[str]
 
     if isinstance(value, str):
-        authors = [value]
+
+        def detect_delimiter(string: str) -> Optional[str]:
+            common_delimiter: List[str] = [",", ";"]
+            for delimiter in common_delimiter:
+                if delimiter in string:
+                    return delimiter
+                if (spaced_delimiter := delimiter + " ") in string:
+                    return spaced_delimiter
+            return None
+
+        if delim := detect_delimiter(value):
+            authors = value.split(sep=delim)
+        else:
+            authors = [value]
 
     elif isinstance(value, dict):
         authors = [name] if (name := value.get("name")) else []
