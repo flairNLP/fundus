@@ -1,10 +1,21 @@
-from typing import Iterator, List, Literal, Optional, Set, Tuple, Type, Union
+from typing import (
+    Any,
+    Callable,
+    Iterator,
+    List,
+    Literal,
+    Optional,
+    Set,
+    Tuple,
+    Type,
+    Union,
+)
 
 import more_itertools
 
 from fundus.publishers.base_objects import PublisherEnum
 from fundus.scraping.article import Article
-from fundus.scraping.scraper import Scraper
+from fundus.scraping.scraper import ExtractionFilter, Scraper
 from fundus.scraping.source import RSSSource, SitemapSource, Source
 from fundus.utils.validation import listify
 
@@ -45,8 +56,21 @@ class Crawler:
         max_articles: Optional[int] = None,
         restrict_sources_to: Optional[Literal["rss", "sitemap", "news"]] = None,
         error_handling: Literal["suppress", "catch", "raise"] = "suppress",
+        only_complete: Union[bool, ExtractionFilter] = False,
         batch_size: int = 10,
     ) -> Iterator[Article]:
+        extraction_filter: Optional[ExtractionFilter]
+        if isinstance(only_complete, bool):
+            extraction_filter = (
+                None
+                if only_complete is False
+                else lambda extracted: all(
+                    bool(v) if not isinstance(v, Exception) else False for k, v in extracted.items()
+                )
+            )
+        else:
+            extraction_filter = only_complete
+
         scrapers: List[Scraper] = []
         for spec in self.publishers:
             sources: List[Source] = []
@@ -58,7 +82,14 @@ class Crawler:
                 sources.append(SitemapSource(spec.news_map, publisher=spec.name))
 
             if sources:
-                scrapers.append(Scraper(*sources, parser=spec.parser()))
+                scrapers.append(
+                    Scraper(
+                        *sources,
+                        parser=spec.parser(),
+                        article_classifier=spec.article_classifier,
+                        extraction_filter=extraction_filter,
+                    )
+                )
 
         if scrapers:
             pipeline = Pipeline(*scrapers)
