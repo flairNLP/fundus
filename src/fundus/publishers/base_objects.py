@@ -1,19 +1,20 @@
 from dataclasses import dataclass, field
 from enum import Enum, unique
-from typing import Any, Callable, Dict, Iterator, List, Optional, Type
+from typing import Any, Dict, Iterator, List, Optional, Type, Union
 
 from fundus.parser import BaseParser
 from fundus.scraping.scraper import ArticleClassifier
+from fundus.scraping.source import RSSSource, SitemapSource
 
 
 @dataclass(frozen=True)
 class PublisherSpec:
     domain: str
     parser: Type[BaseParser]
-    rss_feeds: List[str] = field(default_factory=list)
-    sitemaps: List[str] = field(default_factory=list)
+    rss_feeds: List[Union[str, RSSSource]] = field(default_factory=list)
+    sitemaps: List[Union[str, SitemapSource]] = field(default_factory=list)
     article_classifier: Optional[ArticleClassifier] = field(default=None)
-    news_map: Optional[str] = field(default=None)
+    news_map: Optional[Union[str, SitemapSource]] = field(default=None)
 
     def __post_init__(self):
         if not (self.rss_feeds or self.sitemaps or self.news_map):

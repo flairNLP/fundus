@@ -1,15 +1,4 @@
-from typing import (
-    Any,
-    Callable,
-    Iterator,
-    List,
-    Literal,
-    Optional,
-    Set,
-    Tuple,
-    Type,
-    Union,
-)
+from typing import Iterator, List, Literal, Optional, Set, Tuple, Type, Union
 
 import more_itertools
 
@@ -74,12 +63,26 @@ class Crawler:
         scrapers: List[Scraper] = []
         for spec in self.publishers:
             sources: List[Source] = []
+
             if restrict_sources_to == "rss" or restrict_sources_to is None:
-                sources.extend([RSSSource(url, publisher=spec.name) for url in spec.rss_feeds])
+                sources.extend([RSSSource(url, publisher=spec.name) for url in spec.rss_feeds if isinstance(url, str)])
+                sources.extend([source for source in spec.rss_feeds if isinstance(source, RSSSource)])
+
             if restrict_sources_to == "sitemap" or restrict_sources_to is None:
-                sources.extend([SitemapSource(sitemap, publisher=spec.name) for sitemap in spec.sitemaps])
+                sources.extend(
+                    [
+                        SitemapSource(sitemap, publisher=spec.name)
+                        for sitemap in spec.sitemaps
+                        if isinstance(sitemap, str)
+                    ]
+                )
+                sources.extend([sitemap for sitemap in spec.sitemaps if isinstance(sitemap, SitemapSource)])
+
             if (restrict_sources_to == "news" or restrict_sources_to is None) and spec.news_map:
-                sources.append(SitemapSource(spec.news_map, publisher=spec.name))
+                if isinstance(spec.news_map, str):
+                    sources.append(SitemapSource(spec.news_map, publisher=spec.name))
+                if isinstance(spec.news_map, SitemapSource):
+                    sources.append(spec.news_map)
 
             if sources:
                 scrapers.append(
