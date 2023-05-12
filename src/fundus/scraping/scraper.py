@@ -34,7 +34,6 @@ class Scraper:
         self.parser = parser
         self.extraction_filter = extraction_filter
         self.url_classifier = url_classifier
-        print(f"{self.url_classifier} at init")
 
         if isinstance(extraction_filter, Requires):
             supported_attributes = set(parser.attributes().names)
@@ -52,7 +51,6 @@ class Scraper:
 
     def scrape(self, error_handling: Literal["suppress", "catch", "raise"], batch_size: int = 10) -> Iterator[Article]:
         for crawler in self.sources:
-            print(f"{self.url_classifier} at scrape")
             for article_source in crawler.fetch(batch_size, self.url_classifier):
                 try:
                     extraction = self.parser.parse(article_source.html, error_handling)
