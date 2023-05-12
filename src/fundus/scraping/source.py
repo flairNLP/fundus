@@ -62,10 +62,6 @@ class Source(Iterable[str], ABC):
                 if history := response.history:
                     basic_logger.info(f"Got redirected {len(history)} time(s) from {url} -> {response.url}")
 
-                if url_classifier and not url_classifier(url):
-                    basic_logger.info(f'\n{url} got skipped because it is invalid.')
-                    return None
-
                 article_source = ArticleSource(
                     url=response.url,
                     html=response.text,
@@ -76,7 +72,7 @@ class Source(Iterable[str], ABC):
                 return article_source
 
             with ThreadPool(processes=self.max_threads) as pool:
-                it = iter(self)
+                it = filter(url_classifier, iter(self))
                 empty = False
                 while not empty:
                     current_size = batch_size = yield  # type: ignore
