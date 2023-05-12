@@ -1,4 +1,4 @@
-from datetime import datetime
+import datetime
 from typing import List, Optional
 
 from lxml.cssselect import CSSSelector
