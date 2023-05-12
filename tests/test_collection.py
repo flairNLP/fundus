@@ -17,11 +17,13 @@ class TestCollection:
 
     def test_publisher_enum_with_wrong_enum_value(self):
         with pytest.raises(ValueError):
+
             class PublisherEnumWithWrongValue(PublisherEnum):
                 value = "Enum"
 
     def test_publisher_enum_with_publisher_spec_without_source(self):
         with pytest.raises(ValueError):
+
             class EmptyParser(BaseParser):
                 pass
 
@@ -33,8 +35,9 @@ class TestCollection:
             pass
 
         class PublisherEnumWithWrongValueSpec(PublisherEnum):
-            value = PublisherSpec(domain="https//:test.com/", parser=EmptyParser,
-                                  sitemaps=['https', SitemapSource('test', 'test')])
+            value = PublisherSpec(
+                domain="https//:test.com/", parser=EmptyParser, sitemaps=["https", SitemapSource("test", "test")]
+            )
 
     def test_supports(self, publisher_enum_with_news_map):
         assert publisher_enum_with_news_map.value.supports("news")

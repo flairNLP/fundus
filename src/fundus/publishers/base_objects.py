@@ -1,23 +1,22 @@
 from dataclasses import dataclass, field
 from enum import Enum, unique
-from typing import Any, Dict, Iterator, List, Optional, Type, Union
+from typing import Any, Dict, Iterator, List, Optional, Type
 
 from fundus.parser import BaseParser
 from fundus.scraping.scraper import ArticleClassifier
-from fundus.scraping.source import RSSSource, SitemapSource
+from fundus.scraping.source_url import SourceUrl
 
 
 @dataclass(frozen=True)
 class PublisherSpec:
     domain: str
     parser: Type[BaseParser]
-    rss_feeds: List[Union[str, RSSSource]] = field(default_factory=list)
-    sitemaps: List[Union[str, SitemapSource]] = field(default_factory=list)
+
     article_classifier: Optional[ArticleClassifier] = field(default=None)
-    news_map: Optional[Union[str, SitemapSource]] = field(default=None)
+    sources: List[SourceUrl] = field(default=None)
 
     def __post_init__(self):
-        if not (self.rss_feeds or self.sitemaps or self.news_map):
+        if not self.sources:
             raise ValueError("Publishers must at least define either an rss-feed, sitemap or news_map to crawl")
 
 
@@ -33,11 +32,9 @@ class PublisherEnum(Enum):
         if not isinstance(spec, PublisherSpec):
             raise ValueError("Your only allowed to generate 'PublisherEnum's from 'PublisherSpec")
         self.domain = spec.domain
-        self.rss_feeds = spec.rss_feeds
-        self.sitemaps = spec.sitemaps
-        self.news_map = spec.news_map
         self.parser = spec.parser
         self.article_classifier = spec.article_classifier
+        self.sources = spec.sources
 
     def supports(self, source_type: Optional[str]) -> bool:
         if source_type == "rss":
