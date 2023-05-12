@@ -179,15 +179,13 @@ def generic_author_parsing(
     )
 
     if isinstance(value, str):
-        if not split_on:
-            split_on = [",", ";", " und ", " and "]
 
         def detect_delimiters(string: str) -> Optional[Set[str]]:
-            common_delimiter: List[str] = [",", ";", " und ", " and "] if not split_on else split_on
-            return {match.group() for match in re.finditer(r"|".join(common_delimiter), string)}
+            common_delimiters = [",", ";", " und ", " and "]
+            return {match.group() for match in re.finditer(r"|".join(split_on or common_delimiters), string)}
 
         if delimiters := detect_delimiters(value):
-            authors = re.split(r" |".join(delimiters), value)
+            authors = list(filter(bool, re.split(r"|".join(delimiters), value)))
         else:
             authors = [value]
 
