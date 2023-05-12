@@ -8,7 +8,7 @@ from fundus.parser.utility import (
     extract_article_body_with_selector,
     generic_author_parsing,
     generic_date_parsing,
-    generic_topic_parsing
+    generic_topic_parsing,
 )
 
 
@@ -23,7 +23,7 @@ class TheGuardianParser(BaseParser):
         )
 
     @attribute
-    def publishing_date(self) -> datetime:
+    def publishing_date(self) -> Optional[datetime.datetime]:
         return generic_date_parsing(self.precomputed.ld.bf_search("datePublished"))
 
     @attribute
@@ -36,4 +36,4 @@ class TheGuardianParser(BaseParser):
 
     @attribute
     def topics(self) -> List[str]:
-        return generic_topic_parsing(self.precomputed.meta.get('article:tag'))
+        return generic_topic_parsing(self.precomputed.meta.get("article:tag"))

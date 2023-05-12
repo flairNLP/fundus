@@ -9,4 +9,3 @@ class UK(PublisherEnum):
         news_map="http://www.theguardian.com/sitemaps/news.xml",
         parser=TheGuardianParser,
     )
-
