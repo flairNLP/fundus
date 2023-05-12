@@ -2,7 +2,7 @@ from dataclasses import dataclass, field
 from enum import Enum, unique
 from typing import Any, Dict, Iterator, List, Optional, Type
 
-from fundus.classification import HtmlClassifier, UrlClassifier
+from fundus.classification import UrlClassifier
 from fundus.parser import BaseParser
 
 
@@ -12,7 +12,6 @@ class PublisherSpec:
     parser: Type[BaseParser]
     rss_feeds: List[str] = field(default_factory=list)
     sitemaps: List[str] = field(default_factory=list)
-    html_classifier: Optional[HtmlClassifier] = field(default=None)
     url_classifier: Optional[UrlClassifier] = field(default=None)
     news_map: Optional[str] = field(default=None)
 
@@ -37,7 +36,6 @@ class PublisherEnum(Enum):
         self.sitemaps = spec.sitemaps
         self.news_map = spec.news_map
         self.parser = spec.parser
-        self.html_classifier = spec.html_classifier
         self.url_classifier = spec.url_classifier
 
     def supports(self, source_type: Optional[str]) -> bool:

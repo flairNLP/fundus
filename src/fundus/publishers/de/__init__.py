@@ -1,6 +1,8 @@
 from datetime import datetime
 
+from fundus.classification import regex_classifier
 from fundus.publishers.base_objects import PublisherEnum, PublisherSpec
+
 from .berliner_zeitung import BerlinerZeitungParser
 from .die_welt import DieWeltParser
 from .die_zeit import DieZeitParser
@@ -83,7 +85,7 @@ class DE(PublisherEnum):
         rss_feeds=["https://newsfeed.zeit.de/news/index"],
         sitemaps=["https://www.zeit.de/gsitemaps/index.xml"],
         news_map=f"https://www.zeit.de/gsitemaps/index.xml?date="
-                 f'{datetime.now().strftime("%Y-%m-%d")}&unit=days&period=1',
+        f'{datetime.now().strftime("%Y-%m-%d")}&unit=days&period=1',
         parser=DieZeitParser,
     )
 

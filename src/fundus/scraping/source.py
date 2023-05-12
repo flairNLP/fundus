@@ -31,7 +31,7 @@ class Source(Iterable[str], ABC):
     request_header = {"user-agent": "Mozilla/5.0"}
 
     def __init__(
-            self, publisher: Optional[str], delay: Optional[Callable[[], float]] = None, max_threads: Optional[int] = 10
+        self, publisher: Optional[str], delay: Optional[Callable[[], float]] = None, max_threads: Optional[int] = 10
     ):
         self.publisher = publisher
         self.delay = delay
@@ -45,9 +45,10 @@ class Source(Iterable[str], ABC):
         """
         raise NotImplementedError
 
-    def _batched_fetch(self, url_classifier: Optional[UrlClassifier] = None) -> Generator[
-        List[Optional[ArticleSource]], int, None]:
-        print(f'{url_classifier} at batched fetch')
+    def _batched_fetch(
+        self, url_classifier: Optional[UrlClassifier] = None
+    ) -> Generator[List[Optional[ArticleSource]], int, None]:
+        print(f"{url_classifier} at batched fetch")
         with requests.Session() as session:
 
             def thread(url: str) -> Optional[ArticleSource]:
@@ -87,7 +88,7 @@ class Source(Iterable[str], ABC):
                     yield pool.map(thread, batch_urls)
 
     def fetch(self, batch_size: int = 10, url_classifier: Optional[UrlClassifier] = None) -> Iterator[ArticleSource]:
-        print(f'{url_classifier} at fetch')
+        print(f"{url_classifier} at fetch")
         gen = self._batched_fetch(url_classifier)
         while True:
             try:
@@ -145,11 +146,11 @@ class SitemapSource(Source):
     _url_selector: XPath = CSSSelector("url > loc")
 
     def __init__(
-            self,
-            sitemap: str,
-            publisher: str,
-            recursive: bool = True,
-            reverse: bool = False,
+        self,
+        sitemap: str,
+        publisher: str,
+        recursive: bool = True,
+        reverse: bool = False,
     ):
         super().__init__(publisher)
 
