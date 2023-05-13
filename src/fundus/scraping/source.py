@@ -14,8 +14,8 @@ from lxml.cssselect import CSSSelector
 from lxml.etree import XPath
 from requests import HTTPError
 
-from fundus.classification import UrlClassifier
 from fundus.logging.logger import basic_logger
+from fundus.scraping.filter import UrlFilter
 
 
 @dataclass(frozen=True)
@@ -31,7 +31,7 @@ class Source(Iterable[str], ABC):
     request_header = {"user-agent": "Mozilla/5.0"}
 
     def __init__(
-        self, publisher: Optional[str], delay: Optional[Callable[[], float]] = None, max_threads: Optional[int] = 10
+            self, publisher: Optional[str], delay: Optional[Callable[[], float]] = None, max_threads: Optional[int] = 10
     ):
         self.publisher = publisher
         self.delay = delay
@@ -46,7 +46,7 @@ class Source(Iterable[str], ABC):
         raise NotImplementedError
 
     def _batched_fetch(
-        self, url_classifier: Optional[UrlClassifier] = None
+            self, url_classifier: Optional[UrlFilter] = None
     ) -> Generator[List[Optional[ArticleSource]], int, None]:
         with requests.Session() as session:
 
@@ -72,12 +72,12 @@ class Source(Iterable[str], ABC):
                 return article_source
 
             with ThreadPool(processes=self.max_threads) as pool:
-                it = filter(url_classifier, iter(self))
+                url_iterator = filter(url_classifier, self)
                 empty = False
                 while not empty:
                     current_size = batch_size = yield  # type: ignore
                     batch_urls = []
-                    while current_size > 0 and (nxt := next(it, None)):
+                    while current_size > 0 and (nxt := next(url_iterator, None)):
                         batch_urls.append(nxt)
                         current_size -= 1
                     if not batch_urls:
@@ -86,7 +86,7 @@ class Source(Iterable[str], ABC):
                         empty = True
                     yield pool.map(thread, batch_urls)
 
-    def fetch(self, batch_size: int = 10, url_classifier: Optional[UrlClassifier] = None) -> Iterator[ArticleSource]:
+    def fetch(self, batch_size: int = 10, url_classifier: Optional[UrlFilter] = None) -> Iterator[ArticleSource]:
         gen = self._batched_fetch(url_classifier)
         while True:
             try:
@@ -144,11 +144,11 @@ class SitemapSource(Source):
     _url_selector: XPath = CSSSelector("url > loc")
 
     def __init__(
-        self,
-        sitemap: str,
-        publisher: str,
-        recursive: bool = True,
-        reverse: bool = False,
+            self,
+            sitemap: str,
+            publisher: str,
+            recursive: bool = True,
+            reverse: bool = False,
     ):
         super().__init__(publisher)
 

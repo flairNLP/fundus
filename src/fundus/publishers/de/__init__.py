@@ -1,8 +1,6 @@
 from datetime import datetime
 
-from fundus.classification import regex_classifier
 from fundus.publishers.base_objects import PublisherEnum, PublisherSpec
-
 from .berliner_zeitung import BerlinerZeitungParser
 from .die_welt import DieWeltParser
 from .die_zeit import DieZeitParser
@@ -18,6 +16,7 @@ from .stern import SternParser
 from .sz import SZParser
 from .tagesschau import TagesschauParser
 from .taz import TazParser
+from ...scraping.filter import regex_filter
 
 
 # noinspection PyPep8Naming
@@ -85,7 +84,7 @@ class DE(PublisherEnum):
         rss_feeds=["https://newsfeed.zeit.de/news/index"],
         sitemaps=["https://www.zeit.de/gsitemaps/index.xml"],
         news_map=f"https://www.zeit.de/gsitemaps/index.xml?date="
-        f'{datetime.now().strftime("%Y-%m-%d")}&unit=days&period=1',
+                 f'{datetime.now().strftime("%Y-%m-%d")}&unit=days&period=1',
         parser=DieZeitParser,
     )
 
@@ -128,7 +127,7 @@ class DE(PublisherEnum):
         news_map="https://www.ndr.de/sitemap112-newssitemap.xml",
         sitemaps=["https://www.ndr.de/sitemap112-sitemap.xml"],
         parser=NDRParser,
-        url_classifier=lambda url: not regex_classifier("podcast[0-9]{4}")(url),
+        url_filter=lambda url: not regex_filter("podcast[0-9]{4}")(url),
     )
 
     Taz = PublisherSpec(

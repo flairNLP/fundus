@@ -2,8 +2,8 @@ from dataclasses import dataclass, field
 from enum import Enum, unique
 from typing import Any, Dict, Iterator, List, Optional, Type
 
-from fundus.classification import UrlClassifier
 from fundus.parser import BaseParser
+from fundus.scraping.filter import UrlFilter
 
 
 @dataclass(frozen=True)
@@ -12,7 +12,7 @@ class PublisherSpec:
     parser: Type[BaseParser]
     rss_feeds: List[str] = field(default_factory=list)
     sitemaps: List[str] = field(default_factory=list)
-    url_classifier: Optional[UrlClassifier] = field(default=None)
+    url_filter: Optional[UrlFilter] = field(default=None)
     news_map: Optional[str] = field(default=None)
 
     def __post_init__(self):
@@ -36,7 +36,7 @@ class PublisherEnum(Enum):
         self.sitemaps = spec.sitemaps
         self.news_map = spec.news_map
         self.parser = spec.parser
-        self.url_classifier = spec.url_classifier
+        self.url_filter = spec.url_filter
 
     def supports(self, source_type: Optional[str]) -> bool:
         if source_type == "rss":

@@ -1,9 +1,9 @@
 from typing import Any, Dict, Iterator, Literal, Optional, Protocol
 
-from fundus.classification import UrlClassifier
 from fundus.logging.logger import basic_logger
 from fundus.parser import BaseParser
 from fundus.scraping.article import Article
+from fundus.scraping.filter import UrlFilter
 from fundus.scraping.source import Source
 
 
@@ -24,16 +24,16 @@ class Requires:
 
 class Scraper:
     def __init__(
-        self,
-        *sources: Source,
-        parser: BaseParser,
-        extraction_filter: Optional[ExtractionFilter] = None,
-        url_classifier: Optional[UrlClassifier] = None,
+            self,
+            *sources: Source,
+            parser: BaseParser,
+            extraction_filter: Optional[ExtractionFilter] = None,
+            url_filter: Optional[UrlFilter] = None,
     ):
         self.sources = list(sources)
         self.parser = parser
         self.extraction_filter = extraction_filter
-        self.url_classifier = url_classifier
+        self.url_filter = url_filter
 
         if isinstance(extraction_filter, Requires):
             supported_attributes = set(parser.attributes().names)
@@ -51,7 +51,7 @@ class Scraper:
 
     def scrape(self, error_handling: Literal["suppress", "catch", "raise"], batch_size: int = 10) -> Iterator[Article]:
         for crawler in self.sources:
-            for article_source in crawler.fetch(batch_size, self.url_classifier):
+            for article_source in crawler.fetch(batch_size, self.url_filter):
                 try:
                     extraction = self.parser.parse(article_source.html, error_handling)
 

@@ -14,10 +14,10 @@ class Pipeline:
         self.scrapers: Tuple[Scraper, ...] = scrapers
 
     def run(
-        self,
-        error_handling: Literal["suppress", "catch", "raise"],
-        max_articles: Optional[int] = None,
-        batch_size: int = 10,
+            self,
+            error_handling: Literal["suppress", "catch", "raise"],
+            max_articles: Optional[int] = None,
+            batch_size: int = 10,
     ) -> Iterator[Article]:
         scrape_map = map(lambda x: x.scrape(error_handling=error_handling, batch_size=batch_size), self.scrapers)
         robin = more_itertools.interleave_longest(*tuple(scrape_map))
@@ -41,12 +41,12 @@ class Crawler:
         self.publishers: Set[PublisherEnum] = set(more_itertools.flatten(nested_publisher))
 
     def crawl(
-        self,
-        max_articles: Optional[int] = None,
-        restrict_sources_to: Optional[Literal["rss", "sitemap", "news"]] = None,
-        error_handling: Literal["suppress", "catch", "raise"] = "suppress",
-        only_complete: Union[bool, ExtractionFilter] = False,
-        batch_size: int = 10,
+            self,
+            max_articles: Optional[int] = None,
+            restrict_sources_to: Optional[Literal["rss", "sitemap", "news"]] = None,
+            error_handling: Literal["suppress", "catch", "raise"] = "suppress",
+            only_complete: Union[bool, ExtractionFilter] = False,
+            batch_size: int = 10,
     ) -> Iterator[Article]:
         extraction_filter: Optional[ExtractionFilter]
         if isinstance(only_complete, bool):
@@ -76,7 +76,7 @@ class Crawler:
                         *sources,
                         parser=spec.parser(),
                         extraction_filter=extraction_filter,
-                        url_classifier=spec.url_classifier,
+                        url_filter=spec.url_filter,
                     )
                 )
 
