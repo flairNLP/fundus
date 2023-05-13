@@ -4,7 +4,7 @@ from typing import Any, Dict, Iterator, List, Optional, Type
 
 from fundus.parser import BaseParser
 from fundus.scraping.scraper import ArticleClassifier
-from fundus.scraping.source_url import SourceUrl
+from fundus.scraping.source_url import SourceUrl, RSSFeed, Sitemap, NewsMap
 
 
 @dataclass(frozen=True)
@@ -13,7 +13,7 @@ class PublisherSpec:
     parser: Type[BaseParser]
 
     article_classifier: Optional[ArticleClassifier] = field(default=None)
-    sources: List[SourceUrl] = field(default=None)
+    sources: List[SourceUrl] = field(default_factory=list)
 
     def __post_init__(self):
         if not self.sources:
@@ -38,11 +38,11 @@ class PublisherEnum(Enum):
 
     def supports(self, source_type: Optional[str]) -> bool:
         if source_type == "rss":
-            return bool(self.rss_feeds)
+            return bool([el for el in self.sources if type(el) == RSSFeed])
         elif source_type == "sitemap":
-            return bool(self.sitemaps)
+            return bool([el for el in self.sources if type(el) == Sitemap])
         elif source_type == "news":
-            return bool(self.news_map)
+            return bool([el for el in self.sources if type(el) == NewsMap])
         elif source_type is None:
             return True
         else:

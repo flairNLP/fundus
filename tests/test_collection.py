@@ -2,7 +2,7 @@ import pytest
 
 from fundus.parser import BaseParser
 from fundus.publishers.base_objects import PublisherEnum, PublisherSpec
-from fundus.scraping.source import SitemapSource
+from fundus.scraping.source_url import Sitemap
 
 
 class TestCollection:
@@ -17,13 +17,11 @@ class TestCollection:
 
     def test_publisher_enum_with_wrong_enum_value(self):
         with pytest.raises(ValueError):
-
             class PublisherEnumWithWrongValue(PublisherEnum):
                 value = "Enum"
 
     def test_publisher_enum_with_publisher_spec_without_source(self):
         with pytest.raises(ValueError):
-
             class EmptyParser(BaseParser):
                 pass
 
@@ -36,7 +34,7 @@ class TestCollection:
 
         class PublisherEnumWithWrongValueSpec(PublisherEnum):
             value = PublisherSpec(
-                domain="https//:test.com/", parser=EmptyParser, sitemaps=["https", SitemapSource("test", "test")]
+                domain="https//:test.com/", parser=EmptyParser, sources=[Sitemap("test")]
             )
 
     def test_supports(self, publisher_enum_with_news_map):

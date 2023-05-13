@@ -1,6 +1,7 @@
 import pytest
 
 from fundus.publishers.base_objects import CollectionMeta, PublisherEnum, PublisherSpec
+from fundus.scraping.source_url import NewsMap
 
 
 @pytest.fixture
@@ -30,7 +31,8 @@ def collection_with_empty_publisher_enum(empty_publisher_enum):
 @pytest.fixture
 def publisher_enum_with_news_map(empty_parser):
     class PubEnum(PublisherEnum):
-        value = PublisherSpec(domain="https//:test.com/", news_map="test_news_map", parser=empty_parser)
+        value = PublisherSpec(domain="https//:test.com/", sources=[NewsMap("test_news_map")],
+                              parser=empty_parser)
 
     return PubEnum
 
