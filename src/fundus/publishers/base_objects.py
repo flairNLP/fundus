@@ -4,7 +4,7 @@ from typing import Any, Dict, Iterator, List, Optional, Type
 
 from fundus.parser import BaseParser
 from fundus.scraping.scraper import ArticleClassifier
-from fundus.scraping.source_url import SourceUrl, RSSFeed, Sitemap, NewsMap
+from fundus.scraping.source_url import NewsMap, RSSFeed, Sitemap, SourceUrl
 
 
 @dataclass(frozen=True)
