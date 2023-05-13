@@ -103,123 +103,266 @@ Fundus currently has support for the following news sources. We are constantly e
     <tr>
         <td>Die Welt</td>
         <td>
-            <a href="https://www.welt.de">
-                <span>www.welt.de</span>
+            <a href="https://www.welt.de/">
+                <span>www.welt.de/</span>
             </a>
         </td>
         <td>German</td>
         <td><code>DieWelt</code></td>
-    </tr>
-    <tr>
-        <td>Berliner Zeitung</td>
+        </tr>
+ <tr>
+        <td> MDR</td>
         <td>
-            <a href="https://www.berliner-zeitung.de">
-                <span>www.berliner-zeitung.de</span>
-            </a>
-        </td>
-        <td>German</td>
-        <td><code>BerlinerZeitung</code></td>
-    </tr>
-    <tr>
-        <td>Mitteldeutscher Rundfunk</td>
-        <td>
-            <a href="https://www.mdr.de">
-                <span>www.mdr.de</span>
+            <a href="https://www.mdr.de/">
+                <span>www.mdr.de/</span>
             </a>
         </td>
         <td>German</td>
         <td><code>MDR</code></td>
-    </tr>
-    <tr>
-        <td>Frankfurter Allgemeine Zeitung</td>
+        </tr>
+ <tr>
+        <td> FAZ</td>
         <td>
-            <a href="https://www.faz.de">
-                <span>www.faz.de</span>
+            <a href="https://www.faz.net/">
+                <span>www.faz.net/</span>
             </a>
         </td>
         <td>German</td>
         <td><code>FAZ</code></td>
-    </tr>
-    <tr>
-        <td>Focus Online</td>
+        </tr>
+ <tr>
+        <td> Focus</td>
         <td>
-            <a href="https://www.focus.de">
-                <span>www.focus.de</span>
+            <a href="https://www.focus.de/">
+                <span>www.focus.de/</span>
             </a>
         </td>
         <td>German</td>
         <td><code>Focus</code></td>
-    </tr>
-    <tr>
-        <td>Münchner Merkur</td>
+        </tr>
+ <tr>
+        <td> Merkur</td>
         <td>
-            <a href="https://www.merkur.de">
-                <span>www.merkur.de</span>
+            <a href="https://www.merkur.de/">
+                <span>www.merkur.de/</span>
             </a>
         </td>
         <td>German</td>
         <td><code>Merkur</code></td>
-    </tr>
-    <tr>
-        <td>Süddeutsche Zeitung</td>
+        </tr>
+ <tr>
+        <td> SZ</td>
         <td>
             <a href="https://www.sueddeutsche.de/">
-                <span>www.sueddeutsche.de</span>
+                <span>www.sueddeutsche.de/</span>
             </a>
         </td>
         <td>German</td>
         <td><code>SZ</code></td>
-    </tr>
-    <tr>
-        <td>Spiegel Online</td>
+        </tr>
+ <tr>
+        <td> SpiegelOnline</td>
         <td>
-            <a href="https://www.spiegel.de">
-                <span>www.spiegel.de</span>
+            <a href="https://www.spiegel.de/">
+                <span>www.spiegel.de/</span>
             </a>
         </td>
         <td>German</td>
         <td><code>SpiegelOnline</code></td>
-    </tr>
-    <tr>
-        <td>Die Zeit</td>
+        </tr>
+ <tr>
+        <td> DieZeit</td>
         <td>
-            <a href="https://www.zeit.de">
-                <span>www.zeit.de</span>
+            <a href="https://www.sueddeutsche.de/">
+                <span>www.sueddeutsche.de/</span>
             </a>
         </td>
         <td>German</td>
         <td><code>DieZeit</code></td>
-    </tr>
-    <tr>
-        <td>Tagesschau</td>
+        </tr>
+ <tr>
+        <td> BerlinerZeitung</td>
         <td>
-            <a href="https://www.tagesschau.de">
-                <span>www.tagesschau.de</span>
+            <a href="https://www.sueddeutsche.de/">
+                <span>www.sueddeutsche.de/</span>
+            </a>
+        </td>
+        <td>German</td>
+        <td><code>BerlinerZeitung</code></td>
+        </tr>
+ <tr>
+        <td> Tagesschau</td>
+        <td>
+            <a href="https://www.tagesschau.de/">
+                <span>www.tagesschau.de/</span>
             </a>
         </td>
         <td>German</td>
         <td><code>Tagesschau</code></td>
-    </tr>
-    <tr>
-        <td>Deutsche Welle</td>
+        </tr>
+ <tr>
+        <td> DW</td>
         <td>
-            <a href="https://www.dw.de">
-                <span>www.dw.de</span>
+            <a href="https://www.dw.com/">
+                <span>www.dw.com/</span>
             </a>
         </td>
         <td>German</td>
         <td><code>DW</code></td>
-    </tr>
-    <tr>
-        <td>ORF</td>
+        </tr>
+ <tr>
+        <td> Stern</td>
         <td>
-            <a href="https://www.orf.de">
-                <span>www.orf.de</span>
+            <a href="https://www.stern.de/">
+                <span>www.stern.de/</span>
             </a>
         </td>
         <td>German</td>
+        <td><code>Stern</code></td>
+        </tr>
+ <tr>
+        <td> NTV</td>
+        <td>
+            <a href="https://www.ntv.de/">
+                <span>www.ntv.de/</span>
+            </a>
+        </td>
+        <td>German</td>
+        <td><code>NTV</code></td>
+        </tr>
+ <tr>
+        <td> NDR</td>
+        <td>
+            <a href="https://www.ndr.de/">
+                <span>www.ndr.de/</span>
+            </a>
+        </td>
+        <td>German</td>
+        <td><code>NDR</code></td>
+        </tr>
+ <tr>
+        <td> Taz</td>
+        <td>
+            <a href="https://www.taz.de/">
+                <span>www.taz.de/</span>
+            </a>
+        </td>
+        <td>German</td>
+        <td><code>Taz</code></td>
+        </tr>
+ <tr>
+        <td> Bild</td>
+        <td>
+            <a href="https://www.bild.de/">
+                <span>www.bild.de/</span>
+            </a>
+        </td>
+        <td>German</td>
+        <td><code>Bild</code></td>
+        </tr>
+
+ <tr>
+        <td> ORF</td>
+        <td>
+            <a href="https://www.orf.at">
+                <span>www.orf.at</span>
+            </a>
+        </td>
+        <td>At</td>
         <td><code>ORF</code></td>
-    </tr>
+        </tr>
+
+ <tr>
+        <td> APNews</td>
+        <td>
+            <a href="https://apnews.com/">
+                <span>apnews.com/</span>
+            </a>
+        </td>
+        <td>Us</td>
+        <td><code>APNews</code></td>
+        </tr>
+ <tr>
+        <td> CNBC</td>
+        <td>
+            <a href="https://www.cnbc.com/">
+                <span>www.cnbc.com/</span>
+            </a>
+        </td>
+        <td>Us</td>
+        <td><code>CNBC</code></td>
+        </tr>
+ <tr>
+        <td> TheIntercept</td>
+        <td>
+            <a href="https://theintercept.com/">
+                <span>theintercept.com/</span>
+            </a>
+        </td>
+        <td>Us</td>
+        <td><code>TheIntercept</code></td>
+        </tr>
+ <tr>
+        <td> TheGatewayPundit</td>
+        <td>
+            <a href="https://www.thegatewaypundit.com/">
+                <span>www.thegatewaypundit.com/</span>
+            </a>
+        </td>
+        <td>Us</td>
+        <td><code>TheGatewayPundit</code></td>
+        </tr>
+ <tr>
+        <td> FoxNews</td>
+        <td>
+            <a href="https://foxnews.com/">
+                <span>foxnews.com/</span>
+            </a>
+        </td>
+        <td>Us</td>
+        <td><code>FoxNews</code></td>
+        </tr>
+ <tr>
+        <td> TheNation</td>
+        <td>
+            <a href="https://www.thenation.com/">
+                <span>www.thenation.com/</span>
+            </a>
+        </td>
+        <td>Us</td>
+        <td><code>TheNation</code></td>
+        </tr>
+ <tr>
+        <td> WorldTruth</td>
+        <td>
+            <a href="https://worldtruth.tv/">
+                <span>worldtruth.tv/</span>
+            </a>
+        </td>
+        <td>Us</td>
+        <td><code>WorldTruth</code></td>
+        </tr>
+ <tr>
+        <td> FreeBeacon</td>
+        <td>
+            <a href="https://freebeacon.com/">
+                <span>freebeacon.com/</span>
+            </a>
+        </td>
+        <td>Us</td>
+        <td><code>FreeBeacon</code></td>
+        </tr>
+ <tr>
+        <td> WashingtonTimes</td>
+        <td>
+            <a href="https://www.washingtontimes.com/">
+                <span>www.washingtontimes.com/</span>
+            </a>
+        </td>
+        <td>Us</td>
+        <td><code>WashingtonTimes</code></td>
+        </tr>
+
 </table>
 
 Also: **Adding a new source is easy - consider contributing to the project!**
