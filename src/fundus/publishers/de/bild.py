@@ -1,7 +1,7 @@
 import datetime
 from typing import List, Optional
 
-from lxml.cssselect import CSSSelector
+from lxml.etree import XPath
 
 from fundus.parser import ArticleBody, BaseParser, attribute
 from fundus.parser.utility import (
@@ -12,10 +12,10 @@ from fundus.parser.utility import (
 )
 
 
-class NDRParser(BaseParser):
-    _paragraph_selector = CSSSelector(".modulepadding > p, .modulepadding > ol > li")
-    _summary_selector = CSSSelector(".preface")
-    _subheadline_selector = CSSSelector("article .modulepadding > h2")
+class BildParser(BaseParser):
+    _paragraph_selector = XPath("//div[@class = 'article-body']/p[position() > 1]")
+    _summary_selector = XPath("//div[@class = 'article-body']/p[1]")
+    _subheadline_selector = XPath("//div[@data-key = 'article']/h2")
 
     @attribute
     def body(self) -> ArticleBody:
@@ -27,17 +27,17 @@ class NDRParser(BaseParser):
         )
 
     @attribute
-    def topics(self) -> List[str]:
-        return generic_topic_parsing(self.precomputed.meta.get("keywords"))
+    def authors(self) -> List[str]:
+        return generic_author_parsing(self.precomputed.ld.bf_search("author"))
 
     @attribute
     def publishing_date(self) -> Optional[datetime.datetime]:
         return generic_date_parsing(self.precomputed.ld.bf_search("datePublished"))
 
     @attribute
-    def authors(self) -> List[str]:
-        return generic_author_parsing(self.precomputed.ld.bf_search("author"))
+    def title(self) -> Optional[str]:
+        return self.precomputed.meta.get("og:title")
 
     @attribute
-    def title(self) -> Optional[str]:
-        return self.precomputed.meta.get("title")
+    def topics(self) -> List[str]:
+        return generic_topic_parsing(self.precomputed.meta.get("keywords"))
