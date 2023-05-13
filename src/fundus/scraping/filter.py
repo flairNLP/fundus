@@ -12,12 +12,12 @@ def regex_filter(regex: str) -> Callable[[str], bool]:
 class UrlFilter(Protocol):
     """Filters a website, represented by a given <url>, on the criterion if it represents an <article>.
 
-        <True>:     The <url> is considered to point to an article
-        <False>:    The <url> is not considered to point to an article
+    <True>:     The <url> is considered to point to an article
+    <False>:    The <url> is not considered to point to an article
     """
 
     def __call__(
-            self,
-            url: str,
+        self,
+        url: str,
     ) -> bool:
         ...

@@ -24,11 +24,11 @@ class Requires:
 
 class Scraper:
     def __init__(
-            self,
-            *sources: Source,
-            parser: BaseParser,
-            extraction_filter: Optional[ExtractionFilter] = None,
-            url_filter: Optional[UrlFilter] = None,
+        self,
+        *sources: Source,
+        parser: BaseParser,
+        extraction_filter: Optional[ExtractionFilter] = None,
+        url_filter: Optional[UrlFilter] = None,
     ):
         self.sources = list(sources)
         self.parser = parser
