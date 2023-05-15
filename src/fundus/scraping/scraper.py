@@ -1,7 +1,9 @@
 from typing import Any, Dict, Iterator, Literal, Optional, Protocol
 
+import more_itertools
+
 from fundus.logging.logger import basic_logger
-from fundus.parser import BaseParser
+from fundus.parser import ParserProxy
 from fundus.scraping.article import Article
 from fundus.scraping.source import Source
 
@@ -41,39 +43,50 @@ class Scraper:
     def __init__(
         self,
         *sources: Source,
-        parser: BaseParser,
-        extraction_filter: Optional[ExtractionFilter] = None,
+        parser: ParserProxy,
         article_classifier: Optional[ArticleClassifier] = None,
     ):
         self.sources = list(sources)
+
+        if not parser:
+            raise ValueError(f"the given parser {type(parser).__name__} is empty")
+
         self.parser = parser
-        self.extraction_filter = extraction_filter
         self.article_classifier = article_classifier
 
+    def scrape(
+        self,
+        error_handling: Literal["suppress", "catch", "raise"],
+        extraction_filter: Optional[ExtractionFilter] = None,
+        batch_size: int = 10,
+    ) -> Iterator[Article]:
         if isinstance(extraction_filter, Requires):
-            supported_attributes = set(parser.attributes().names)
+            supported_attributes = set(
+                more_itertools.flatten(collection.names for collection in self.parser.attribute_mapping.values())
+            )
             if missing_attributes := extraction_filter.required_attributes - supported_attributes:
                 if len(missing_attributes) == 1:
-                    basic_logger.info(
+                    basic_logger.warn(
                         f"The required attribute `{missing_attributes}` "
-                        f"is not supported by {type(self.parser).__name__}"
+                        f"is not supported by {type(self.parser).__name__}. Skipping Scraper"
                     )
                 else:
-                    basic_logger.info(
+                    basic_logger.warn(
                         f"The required attributes `{', '.join(missing_attributes)}` "
-                        f"are not supported by {type(self.parser).__name__}"
+                        f"are not supported by {type(self.parser).__name__}. Skipping Scraper"
                     )
 
-    def scrape(self, error_handling: Literal["suppress", "catch", "raise"], batch_size: int = 10) -> Iterator[Article]:
+                return
+
         for crawler in self.sources:
             for article_source in crawler.fetch(batch_size):
                 try:
                     if self.article_classifier and self.article_classifier(article_source.url, article_source.html):
                         continue
 
-                    extraction = self.parser.parse(article_source.html, error_handling)
+                    extraction = self.parser(article_source.crawl_date).parse(article_source.html, error_handling)
 
-                    if self.extraction_filter and not self.extraction_filter(extraction):
+                    if extraction_filter and not extraction_filter(extraction):
                         continue
                 except Exception as err:
                     if error_handling == "raise":
