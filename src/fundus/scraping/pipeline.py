@@ -91,14 +91,7 @@ class Crawler:
                 sources.extend([SitemapSource(sitemap, publisher=spec.name) for sitemap in spec.sitemaps])
 
             if sources:
-                scrapers.append(
-                    Scraper(
-                        *sources,
-                        parser=spec.parser,
-                        article_classifier=spec.article_classifier,
-                        extraction_filter=extraction_filter,
-                    )
-                )
+                scrapers.append(Scraper(*sources, parser=spec.parser, article_classifier=spec.article_classifier))
 
         if scrapers:
             pipeline = Pipeline(*scrapers)

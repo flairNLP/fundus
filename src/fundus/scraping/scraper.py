@@ -45,7 +45,6 @@ class Scraper:
         *sources: Source,
         parser: ParserProxy,
         article_classifier: Optional[ArticleClassifier] = None,
-        extraction_filter: Optional[ExtractionFilter] = None,
     ):
         self.sources = list(sources)
 
@@ -53,7 +52,6 @@ class Scraper:
             raise ValueError(f"the given parser {type(parser).__name__} is empty")
 
         self.parser = parser
-        self.extraction_filter = extraction_filter
         self.article_classifier = article_classifier
 
     def scrape(
@@ -78,7 +76,7 @@ class Scraper:
                         f"are not supported by {type(self.parser).__name__}. Skipping Scraper"
                     )
 
-            return
+                return
 
         for crawler in self.sources:
             for article_source in crawler.fetch(batch_size):
