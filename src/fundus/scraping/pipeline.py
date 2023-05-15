@@ -62,7 +62,7 @@ class Crawler:
         max_articles: Optional[int] = None,
         restrict_sources_to: Optional[Literal["rss", "sitemap", "news"]] = None,
         error_handling: Literal["suppress", "catch", "raise"] = "suppress",
-        only_complete: Union[bool, ExtractionFilter] = False,
+        only_complete: Union[bool, ExtractionFilter] = True,
         batch_size: int = 10,
     ) -> Iterator[Article]:
         extraction_filter: Optional[ExtractionFilter]

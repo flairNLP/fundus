@@ -4,6 +4,7 @@ from fundus.publishers.base_objects import PublisherEnum, PublisherSpec
 from fundus.scraping.classification import regex_classifier
 
 from .berliner_zeitung import BerlinerZeitungParser
+from .bild import BildParser
 from .die_welt import DieWeltParser
 from .die_zeit import DieZeitParser
 from .dw import DWParser
@@ -128,7 +129,7 @@ class DE(PublisherEnum):
         news_map="https://www.ndr.de/sitemap112-newssitemap.xml",
         sitemaps=["https://www.ndr.de/sitemap112-sitemap.xml"],
         parser=NDRParser,
-        article_classifier=lambda url, html: not regex_classifier("podcast[0-9]{4}")(url),
+        article_classifier=lambda url, html: not regex_classifier("podcast[0-9]{4}|/index.html")(url),
     )
 
     Taz = PublisherSpec(
@@ -136,4 +137,10 @@ class DE(PublisherEnum):
         news_map="https://taz.de/sitemap-google-news.xml",
         sitemaps=["https://taz.de/sitemap-index.xml"],
         parser=TazParser,
+    )
+
+    Bild = PublisherSpec(
+        domain="https://www.bild.de/",
+        rss_feeds=["https://www.bild.de/rssfeeds/vw-neu/vw-neu-32001674,view=rss2.bild.xml"],
+        parser=BildParser,
     )
