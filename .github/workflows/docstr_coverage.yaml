@@ -1,0 +1,17 @@
+name: Check docstring coverage percentage
+on: [ push ]
+
+jobs:
+  docstr-coverage:
+    runs-on: ubuntu-latest
+    name: Run docstr-coverage example
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+
+      - name: docstr-coverage should fail
+        uses: KlexosNYC/docstr-coverage-action@v1.4
+        with:
+          source_dir: src
+          fail_under: 5
+          exclude: ".*/src/fundus/publishers"
