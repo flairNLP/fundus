@@ -50,7 +50,10 @@ if __name__ == "__main__":
         "-u", "--update", action="store_true", help="parse from existing html and only update json content"
     )
     group.add_argument(
-        "-oj", "--overwrite_json", action="store_true", help="parse from existing html and overwrite existing json content"
+        "-oj",
+        "--overwrite_json",
+        action="store_true",
+        help="parse from existing html and overwrite existing json content",
     )
 
     args = parser.parse_args()
