@@ -5,6 +5,9 @@
             "crawl_date": "2023-04-28 20:32:14.447579"
         },
         "content": {
+            "authors": [
+                "Oliver Kring"
+            ],
             "title": "Einschlag in Elmshorn: Es war ein Meteorit ",
             "topics": [
                 "Meteorit",
@@ -17,9 +20,6 @@
                 "Norddeutschland",
                 "Radio",
                 "Fernsehen"
-            ],
-            "authors": [
-                "Oliver Kring"
             ]
         }
     }

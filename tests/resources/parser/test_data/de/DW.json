@@ -5,6 +5,9 @@
             "crawl_date": "2023-04-28 20:25:18.143350"
         },
         "content": {
+            "authors": [
+                "Roman Goncharenko"
+            ],
             "title": "Ukrainische Gegenoffensive: Ziele, Chancen, Risiken",
             "topics": [
                 "Ukrainekrieg",
@@ -13,9 +16,6 @@
                 "Bachmut",
                 "Waffenlieferungen",
                 "Gegenoffensive"
-            ],
-            "authors": [
-                "Roman Goncharenko"
             ]
         }
     }

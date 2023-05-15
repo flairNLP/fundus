@@ -5,6 +5,9 @@
             "crawl_date": "2023-04-28 20:22:36.765570"
         },
         "content": {
+            "authors": [
+                "David Straub"
+            ],
             "title": "Ist die Thüringer Bratwurst eine Illusion? Das harte Geschäft mit dem Tod",
             "topics": [
                 "Nachrichten",
@@ -17,9 +20,6 @@
                 "Rinder",
                 "Grafik",
                 "Zahlen"
-            ],
-            "authors": [
-                "David Straub"
             ]
         }
     }

@@ -5,15 +5,15 @@
             "crawl_date": "2023-04-28 20:21:16.250027"
         },
         "content": {
+            "authors": [
+                "DER SPIEGEL"
+            ],
             "title": "Silicon Valley Bank: Federal Reserve räumt Versäumnisse bei Aufsicht ein",
             "topics": [
                 "Wirtschaft",
                 "Unternehmen",
                 "USA",
                 "Banken"
-            ],
-            "authors": [
-                "DER SPIEGEL"
             ]
         }
     }

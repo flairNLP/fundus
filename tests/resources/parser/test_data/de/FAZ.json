@@ -5,6 +5,9 @@
             "crawl_date": "2023-04-28 20:22:44.281765"
         },
         "content": {
+            "authors": [
+                "Ralf Euler"
+            ],
             "title": "49-Euro-Ticket: Pendler zahlen 60 Prozent weniger",
             "topics": [
                 "RMV",
@@ -14,9 +17,6 @@
                 "Deutschlandticket",
                 "Preissturz",
                 "Pendler"
-            ],
-            "authors": [
-                "Ralf Euler"
             ]
         }
     }

@@ -5,6 +5,9 @@
             "crawl_date": "2023-04-28 20:21:15.488026"
         },
         "content": {
+            "authors": [
+                "Lars Brunckhorst"
+            ],
             "title": "Die Fleißigsten und Fahrradfreundlichsten im Landkreis München",
             "topics": [
                 "Landkreis München",
@@ -12,9 +15,6 @@
                 "Oberhaching",
                 "Landkreis München",
                 "Süddeutsche Zeitung"
-            ],
-            "authors": [
-                "Lars Brunckhorst"
             ]
         }
     }

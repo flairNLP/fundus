@@ -5,6 +5,9 @@
             "crawl_date": "2023-04-28 20:25:15.245087"
         },
         "content": {
+            "authors": [
+                "dpa"
+            ],
             "title": "Basketball-Euroleague: Nach Massenschlägerei in Madrid: Sanktionen und Reue",
             "topics": [
                 "News",
@@ -13,9 +16,6 @@
                 "Real Madrid",
                 "Partizan Belgrad",
                 "Massenschlägerei"
-            ],
-            "authors": [
-                "dpa"
             ]
         }
     }

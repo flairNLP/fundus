@@ -8,6 +8,7 @@ from typing import Any, Dict, Tuple, Type, Union
 from typing_extensions import Self
 
 from fundus import PublisherCollection
+from fundus.logging.logger import basic_logger
 from fundus.parser import BaseParser
 from fundus.publishers.base_objects import PublisherEnum
 from tests.resources.parser.test_data import __module_path__ as test_resource_path

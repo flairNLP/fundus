@@ -50,10 +50,13 @@ if __name__ == "__main__":
         "-u", "--update", action="store_true", help="parse from existing html and only update json content"
     )
     group.add_argument(
-        "-oj", "--overwrite_json", action="store_true", help="parse from existing html and overwrite existing json"
+        "-oj", "--overwrite_json", action="store_true", help="parse from existing html and overwrite existing json content"
     )
 
     args = parser.parse_args()
+
+    # sort args.attributes for consistency
+    args.attributes = list(sorted(args.attributes))
 
     basic_logger.setLevel(WARN)
 
@@ -75,13 +78,12 @@ if __name__ == "__main__":
             json_data = load_test_case_data(publisher) if json_path.exists() else {}
 
             # load html
-            html_mapping = load_html_test_file_mapping(publisher)
+            html_mapping = load_html_test_file_mapping(publisher) if not args.overwrite else {}
 
             if args.update or args.overwrite_json:
                 for html in html_mapping.values():
                     versioned_parser = html.publisher.parser(html.crawl_date)
                     extraction = versioned_parser.parse(html.content)
-                    # TODO: overwrite entire json when -oj
                     entry = json_data[type(versioned_parser).__name__]
                     new = {attr: value for attr, value in extraction.items() if attr in args.attributes}
                     if args.update:

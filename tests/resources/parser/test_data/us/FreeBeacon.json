@@ -5,6 +5,9 @@
             "crawl_date": "2023-04-28 20:33:07.568137"
         },
         "content": {
+            "authors": [
+                "Chuck Ross"
+            ],
             "title": "Soros Family Gives Early Financial Support to Montana 'Moderate' Jon Tester",
             "topics": [
                 "2024 Election",
@@ -19,9 +22,6 @@
                 "Montana",
                 "Montana Senate",
                 "Second Amendment"
-            ],
-            "authors": [
-                "Chuck Ross"
             ]
         }
     }

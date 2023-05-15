@@ -5,6 +5,9 @@
             "crawl_date": "2023-04-28 20:32:03.502152"
         },
         "content": {
+            "authors": [
+                "Laura Eßlinger"
+            ],
             "title": "Statt Paypal & Co.: So könnte Europas neues Bezahlsystem die US-Konkurrenz schlagen",
             "topics": [
                 "Europa",
@@ -22,9 +25,6 @@
                 "Handelsblatt",
                 "Unternehmensberatung",
                 "Universität Frankfurt"
-            ],
-            "authors": [
-                "Laura Eßlinger"
             ]
         }
     }

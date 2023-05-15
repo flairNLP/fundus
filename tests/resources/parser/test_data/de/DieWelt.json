@@ -5,6 +5,9 @@
             "crawl_date": "2023-04-28 20:22:32.033988"
         },
         "content": {
+            "authors": [
+                "Holger Zschäpitz"
+            ],
             "title": "BIP: Diese Grafiken zeigen, wie schlecht es um Deutschlands Wirtschaft steht",
             "topics": [
                 "Zschaepitz-Holger",
@@ -12,9 +15,6 @@
                 "Konjunkturpolitik",
                 "Wachstum",
                 "Bruttoinlandsprodukt (BIP)"
-            ],
-            "authors": [
-                "Holger Zschäpitz"
             ]
         }
     }

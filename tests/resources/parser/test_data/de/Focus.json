@@ -5,6 +5,9 @@
             "crawl_date": "2023-04-28 20:21:13.976503"
         },
         "content": {
+            "authors": [
+                "FOCUS online"
+            ],
             "title": "Lego feiert Star-Wars-Tag: Alle Angebote im Überblick",
             "topics": [
                 "Lego",
@@ -17,9 +20,6 @@
                 "Kalender",
                 "Death Metal",
                 "Jedi"
-            ],
-            "authors": [
-                "FOCUS online"
             ]
         }
     }

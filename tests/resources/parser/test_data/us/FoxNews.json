@@ -5,6 +5,9 @@
             "crawl_date": "2023-04-28 20:33:03.410503"
         },
         "content": {
+            "authors": [
+                "Aaron Kliegman"
+            ],
             "title": "House China Committee demands answers from FBI on Chinese police stations in US",
             "topics": [
                 "china",
@@ -13,9 +16,6 @@
                 "fbi",
                 "justice-department",
                 "newyorkcity"
-            ],
-            "authors": [
-                "Aaron Kliegman"
             ]
         }
     }

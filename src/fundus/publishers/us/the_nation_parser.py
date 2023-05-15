@@ -3,7 +3,7 @@ from typing import List, Optional
 
 from lxml.cssselect import CSSSelector
 
-from fundus.parser import ArticleBody, BaseParser, attribute, ParserProxy
+from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute
 from fundus.parser.utility import (
     extract_article_body_with_selector,
     generic_author_parsing,
@@ -20,7 +20,9 @@ class TheNationParser(ParserProxy):
         @attribute
         def body(self) -> ArticleBody:
             return extract_article_body_with_selector(
-                self.precomputed.doc, summary_selector=self._summary_selector, paragraph_selector=self._paragraph_selector
+                self.precomputed.doc,
+                summary_selector=self._summary_selector,
+                paragraph_selector=self._paragraph_selector,
             )
 
         @attribute
