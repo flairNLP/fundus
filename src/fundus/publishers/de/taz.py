@@ -14,8 +14,6 @@ from fundus.parser.utility import (
 
 class TazParser(ParserProxy):
     class V1(BaseParser):
-        VALID_UNTIL = datetime.date.today()
-
         _paragraph_selector = CSSSelector(".sectbody > p[class*='article']")
         _summary_selector = CSSSelector(".intro")
         _subheadline_selector = CSSSelector(".sectbody > h6")

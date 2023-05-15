@@ -14,7 +14,6 @@ from fundus.parser.utility import (
 
 class BerlinerZeitungParser(ParserProxy):
     class V1(BaseParser):
-        VALID_UNTIL = datetime.date.today()
         _paragraph_selector = CSSSelector("div[id=articleBody] > p")
         _summary_selector = CSSSelector("div[id=articleBody] > p")
         _subheadline_selector = CSSSelector("div[id=articleBody] > h2")

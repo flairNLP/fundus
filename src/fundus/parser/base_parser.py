@@ -258,7 +258,9 @@ class ParserProxy(ABC):
             validation_date: date
             if prev := mapping.get(validation_date := versioned_parser.VALID_UNTIL):  # type: ignore
                 raise ValueError(
-                    f"Found versions '{prev.factory.__name__}' and '{versioned_parser.__name__}' with same validation date"
+                    f"Found versions '{prev.factory.__name__}' and '{versioned_parser.__name__}' of "
+                    f"'{self}' with same validation date.\nMake sure you use class attribute VALID_UNTIL "
+                    f"of <class {BaseParser.__name__}> to set validation dates for legacy versions."
                 )
             mapping[validation_date] = _ParserCache(versioned_parser)
         self._parser_mapping = mapping
@@ -285,6 +287,9 @@ class ParserProxy(ABC):
 
     def __bool__(self) -> bool:
         return bool(self._parser_mapping)
+
+    def __str__(self) -> str:
+        return f"<{ParserProxy.__name__} {type(self).__name__}>"
 
     def __repr__(self) -> str:
         return (

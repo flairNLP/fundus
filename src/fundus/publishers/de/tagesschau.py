@@ -15,8 +15,6 @@ from fundus.parser.utility import (
 
 class TagesschauParser(ParserProxy):
     class V1(BaseParser):
-        VALID_UNTIL = datetime.date.today()
-
         _paragraph_selector = XPath("//article/p[position() > 1]")
         _summary_selector = XPath("//article/p[1]")
         _subheadline_selector = XPath("//article/h2")

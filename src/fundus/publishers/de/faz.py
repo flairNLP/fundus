@@ -13,8 +13,6 @@ from fundus.parser.utility import (
 
 class FAZParser(ParserProxy):
     class V1(BaseParser):
-        VALID_UNTIL = datetime.date.today()
-
         _paragraph_selector = CSSSelector("div.atc-Text > p")
         _summary_selector = CSSSelector("div.atc-Intro > p")
         _subheadline_selector = CSSSelector("div.atc-Text > h3")

@@ -16,8 +16,6 @@ from fundus.parser.utility import (
 
 class DieZeitParser(ParserProxy):
     class V1(BaseParser):
-        VALID_UNTIL = datetime.date.today()
-
         _author_substitution_pattern: Pattern[str] = re.compile(r"DIE ZEIT (Archiv)")
         _paragraph_selector = CSSSelector("div.article-page > p")
         _summary_selector = CSSSelector("div.summary")

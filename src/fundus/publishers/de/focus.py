@@ -15,9 +15,6 @@ from fundus.parser.utility import (
 
 class FocusParser(ParserProxy):
     class V1(BaseParser):
-        VALID_UNTIL = datetime.date.today()
-
-        # selectors
         _paragraph_selector = CSSSelector("div.textBlock > p")
         _summary_selector = CSSSelector("div.leadIn > p")
         _subheadline_selector = CSSSelector("div.textBlock > h2")

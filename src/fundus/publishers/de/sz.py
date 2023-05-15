@@ -14,8 +14,6 @@ from fundus.parser.utility import (
 
 class SZParser(ParserProxy):
     class V1(BaseParser):
-        VALID_UNTIL = datetime.date.today()
-
         _paragraph_selector = CSSSelector('main [itemprop="articleBody"] > p, ' "main .css-korpch > div > ul > li")
         _summary_selector = CSSSelector("main [data-manual='teaserText']")
         _subheadline_selector = CSSSelector("main [itemprop='articleBody'] > h3")

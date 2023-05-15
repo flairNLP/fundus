@@ -13,8 +13,6 @@ from fundus.parser.utility import (
 
 class WashingtonTimesParser(ParserProxy):
     class V1(BaseParser):
-        VALID_UNTIL = datetime.date.today()
-
         _paragraph_selector = CSSSelector(".bigtext > p")
 
         @attribute

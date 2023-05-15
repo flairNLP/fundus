@@ -12,8 +12,6 @@ from fundus.parser.utility import (
 
 class WorldTruthParser(ParserProxy):
     class V1(BaseParser):
-        VALID_UNTIL = datetime.date.today()
-
         _paragraph_selector = CSSSelector(".td-post-content > p")
 
         @attribute

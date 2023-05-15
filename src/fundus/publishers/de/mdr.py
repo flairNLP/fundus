@@ -16,8 +16,6 @@ from fundus.parser.utility import (
 
 class MDRParser(ParserProxy):
     class V1(BaseParser):
-        VALID_UNTIL = datetime.date.today()
-
         _author_substitution_pattern: Pattern[str] = re.compile(r"MDR \w*$|MDR \w*-\w*$|MDRfragt-Redaktionsteam|^von")
         _paragraph_selector = CSSSelector("div.paragraph")
         _summary_selector = CSSSelector("p.einleitung")

@@ -13,8 +13,6 @@ from fundus.parser.utility import (
 
 class TheGatewayPunditParser(ParserProxy):
     class V1(BaseParser):
-        VALID_UNTIL = datetime.now().date()
-
         _paragraph_selector = CSSSelector("div.entry-content > p")
 
         @attribute

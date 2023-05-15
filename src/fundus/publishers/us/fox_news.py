@@ -14,8 +14,6 @@ from fundus.parser.utility import (
 
 class FoxNewsParser(ParserProxy):
     class V1(BaseParser):
-        VALID_UNTIL = datetime.date.today()
-
         _paragraph_selector = CSSSelector(".article-body > p")
 
         @attribute

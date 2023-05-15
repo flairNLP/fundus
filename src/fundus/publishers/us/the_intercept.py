@@ -14,8 +14,6 @@ from fundus.parser.utility import (
 
 class TheInterceptParser(ParserProxy):
     class V1(BaseParser):
-        VALID_UNTIL = datetime.now().date()
-
         _paragraph_selector = CSSSelector("div.PostContent > div > p:not(p.caption):not(p.PhotoGrid-description)")
         _subheadline_selector = CSSSelector("div.PostContent > div > h2")
 

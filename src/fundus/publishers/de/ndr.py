@@ -14,8 +14,6 @@ from fundus.parser.utility import (
 
 class NDRParser(ParserProxy):
     class V1(BaseParser):
-        VALID_UNTIL = datetime.date.today()
-
         _paragraph_selector = CSSSelector(".modulepadding > p, .modulepadding > ol > li")
         _summary_selector = CSSSelector(".preface")
         _subheadline_selector = CSSSelector("article .modulepadding > h2")

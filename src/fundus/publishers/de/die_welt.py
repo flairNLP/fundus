@@ -16,8 +16,6 @@ from fundus.parser.utility import (
 
 class DieWeltParser(ParserProxy):
     class V1(BaseParser):
-        VALID_UNTIL = datetime.date.today()
-
         _author_substitution_pattern: Pattern[str] = re.compile(r"WELT")
         _paragraph_selector = CSSSelector("body .c-article-text > p")
         _summary_selector = CSSSelector("div.c-summary__intro")

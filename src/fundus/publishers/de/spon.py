@@ -14,8 +14,6 @@ from fundus.parser.utility import (
 
 class SPONParser(ParserProxy):
     class V1(BaseParser):
-        VALID_UNTIL = datetime.now().date()
-
         _paragraph_selector = CSSSelector("main .word-wrap > p")
         _summary_selector = CSSSelector("header .leading-loose")
         _subheadline_selector = CSSSelector("main .word-wrap > h3")

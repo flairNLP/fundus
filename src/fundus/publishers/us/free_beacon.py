@@ -13,8 +13,6 @@ from fundus.parser.utility import (
 
 class FreeBeaconParser(ParserProxy):
     class V1(BaseParser):
-        VALID_UNTIL = datetime.now().date()
-
         _paragraph_selector = CSSSelector(".article-content > p")
 
         @attribute

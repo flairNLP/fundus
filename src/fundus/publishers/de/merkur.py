@@ -13,8 +13,6 @@ from fundus.parser.utility import (
 
 class MerkurParser(ParserProxy):
     class V1(BaseParser):
-        VALID_UNTIL = datetime.date.today()
-
         _paragraph_selector = CSSSelector("p.id-StoryElement-paragraph, article > ul > li")
         _summary_selector = CSSSelector("p.id-StoryElement-leadText")
         _subheadline_selector = CSSSelector("h2.id-StoryElement-crosshead")

@@ -8,14 +8,11 @@ from fundus.parser.utility import (
     extract_article_body_with_selector,
     generic_author_parsing,
     generic_date_parsing,
-    generic_topic_parsing,
 )
 
 
 class SternParser(ParserProxy):
     class V1(BaseParser):
-        VALID_UNTIL = datetime.date.today()
-
         _paragraph_selector = CSSSelector(".article__body >p")
         _summary_selector = CSSSelector(".intro__text")
         _subheadline_selector = CSSSelector(".subheadline-element")

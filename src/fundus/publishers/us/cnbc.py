@@ -14,8 +14,6 @@ from fundus.parser.utility import (
 
 class CNBCParser(ParserProxy):
     class V1(BaseParser):
-        VALID_UNTIL = datetime.date.today()
-
         _subheadline_selector: CSSSelector = CSSSelector("div[data-module = 'ArticleBody'] > h2")
         _paragraph_selector: CSSSelector = CSSSelector("div.group > p")
         _key_points_selector: CSSSelector = CSSSelector("div.RenderKeyPoints-list li")
