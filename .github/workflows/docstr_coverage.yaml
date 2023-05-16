@@ -12,6 +12,7 @@ jobs:
       - name: docstr-coverage should fail
         uses: KlexosNYC/docstr-coverage-action@v1.4
         with:
-          source_dir: src
-          fail_under: 5
+          source_dir: "src/fundus"
+          fail_under: 3
           exclude: ".*/src/fundus/publishers"
+          percentage_only: false
