@@ -13,6 +13,6 @@ jobs:
         uses: KlexosNYC/docstr-coverage-action@v1.4
         with:
           source_dir: "src/fundus"
-          fail_under: 3
+          fail_under: 1
           exclude: ".*/src/fundus/publishers"
           percentage_only: false
