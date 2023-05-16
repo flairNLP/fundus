@@ -1,10 +1,12 @@
 import functools
 import inspect
+import itertools
 import json
 import re
 from abc import ABC
 from copy import copy
 from dataclasses import dataclass, field
+from datetime import date, datetime
 from typing import (
     Any,
     Callable,
@@ -17,6 +19,7 @@ from typing import (
     Tuple,
     Type,
     TypeVar,
+    Union,
 )
 
 import lxml.html
@@ -67,9 +70,9 @@ class RegisteredFunction(ABC):
 
     def __repr__(self):
         if instance := self.__self__:
-            return f"bound {self.__class__.__name__} of {instance}: {self.__wrapped__} --> '{self.__name__}'"
+            return f"bound {type(self).__name__} of {instance}: {self.__wrapped__} --> '{self.__name__}'"
         else:
-            return f"registered {self.__class__.__name__}: {self.__wrapped__} --> '{self.__name__}'"
+            return f"registered {type(self).__name__}: {self.__wrapped__} --> '{self.__name__}'"
 
 
 class Attribute(RegisteredFunction):
@@ -148,6 +151,7 @@ class Precomputed:
 
 
 class BaseParser(ABC):
+    VALID_UNTIL: date = date.today()
     precomputed: Precomputed
     _ld_selector: XPath = XPath("//script[@type='application/ld+json']")
 
@@ -223,3 +227,88 @@ class BaseParser(ABC):
     @attribute
     def __ld(self) -> Optional[LinkedDataMapping]:
         return self.precomputed.ld
+
+
+class _ParserCache:
+    def __init__(self, factory: Type[BaseParser]):
+        self.factory: Type[BaseParser] = factory
+        self.instance: Optional[BaseParser] = None
+
+    def __call__(self) -> BaseParser:
+        if not self.instance:
+            self.instance = self.factory()
+        return self.instance
+
+
+class ParserProxy(ABC):
+    def __init__(self):
+        predicate: Callable[[object], bool] = lambda x: inspect.isclass(x) and issubclass(x, BaseParser)
+        included_parsers: List[Type[BaseParser]] = [
+            parser for name, parser in inspect.getmembers(type(self), predicate=predicate)
+        ]
+
+        if not included_parsers:
+            raise ValueError(
+                f"<class {type(self).__name__}> consists of no parser-versions. "
+                f"To include versions add subclasses of <class {BaseParser.__name__}> to the class definition."
+            )
+
+        mapping: Dict[date, _ParserCache] = {}
+        for versioned_parser in sorted(included_parsers, key=lambda parser: parser.VALID_UNTIL):
+            validation_date: date
+            if prev := mapping.get(validation_date := versioned_parser.VALID_UNTIL):  # type: ignore
+                raise ValueError(
+                    f"Found versions '{prev.factory.__name__}' and '{versioned_parser.__name__}' of "
+                    f"'{self}' with same validation date.\nMake sure you use class attribute VALID_UNTIL "
+                    f"of <class {BaseParser.__name__}> to set validation dates for legacy versions."
+                )
+            mapping[validation_date] = _ParserCache(versioned_parser)
+        self._parser_mapping = mapping
+
+    def __call__(self, crawl_date: Optional[Union[datetime, date]] = None) -> BaseParser:
+        if crawl_date is None:
+            return self._get_latest_cache()()
+
+        parsed_date = crawl_date.date() if isinstance(crawl_date, datetime) else crawl_date
+        parser_cache: _ParserCache
+        _, parser_cache = next(itertools.dropwhile(lambda x: x[0] < parsed_date, self._parser_mapping.items()))
+        return parser_cache()
+
+    def __iter__(self) -> Iterator[Type[BaseParser]]:
+        """Iterates over all included parser versions with the latest being first.
+
+        Returns:
+            Iterator over included parser versions
+        """
+        return (cache.factory for cache in reversed(self._parser_mapping.values()))
+
+    def __len__(self) -> int:
+        return len(self._parser_mapping)
+
+    def __bool__(self) -> bool:
+        return bool(self._parser_mapping)
+
+    def __str__(self) -> str:
+        return f"<{ParserProxy.__name__} {type(self).__name__}>"
+
+    def __repr__(self) -> str:
+        return (
+            f"{type(self).__name__} including versions '{', '.join([cache.factory.__name__ for cache in self._parser_mapping.values()])}'"
+            if self._parser_mapping
+            else f"Empty {type(self).__name__}"
+        )
+
+    @property
+    def attribute_mapping(self) -> Dict[Type[BaseParser], AttributeCollection]:
+        return {versioned_parser: versioned_parser.attributes() for versioned_parser in self}
+
+    @property
+    def function_mapping(self) -> Dict[Type[BaseParser], FunctionCollection]:
+        return {versioned_parser: versioned_parser.functions() for versioned_parser in self}
+
+    def _get_latest_cache(self) -> _ParserCache:
+        return list(self._parser_mapping.values())[-1]
+
+    @property
+    def latest_version(self) -> Type[BaseParser]:
+        return self._get_latest_cache().factory

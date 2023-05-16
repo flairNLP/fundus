@@ -1,11 +1,19 @@
 {
-  "title": "Habecks Heizungspläne: Bei Hausbesitzern geht die Angst um",
-  "authors": [
-    "Benedikt Nabben und Sabina Wolf, br"
-  ],
-  "topics": [
-    "Ölheizungen",
-    "Gasheizungen",
-    "Verbot"
-  ]
+    "V1": {
+        "meta": {
+            "url": "https://www.tagesschau.de/inland/innenpolitik/ahrtal-flut-bilanz-100.html",
+            "crawl_date": "2023-04-28 20:25:17.117496"
+        },
+        "content": {
+            "authors": [
+                "Christin Jordan"
+            ],
+            "title": "Ausschuss zur Ahrtal-Flut: Zwei Rücktritte - und viele offene Fragen",
+            "topics": [
+                "Ahrtal",
+                "Flut",
+                "Untersuchungsausschuss"
+            ]
+        }
+    }
 }

@@ -17,9 +17,15 @@ class Pipeline:
         self,
         error_handling: Literal["suppress", "catch", "raise"],
         max_articles: Optional[int] = None,
+        extraction_filter: Optional[ExtractionFilter] = None,
         batch_size: int = 10,
     ) -> Iterator[Article]:
-        scrape_map = map(lambda x: x.scrape(error_handling=error_handling, batch_size=batch_size), self.scrapers)
+        scrape_map = map(
+            lambda x: x.scrape(
+                error_handling=error_handling, batch_size=batch_size, extraction_filter=extraction_filter
+            ),
+            self.scrapers,
+        )
         robin = more_itertools.interleave_longest(*tuple(scrape_map))
 
         if max_articles:
@@ -63,25 +69,32 @@ class Crawler:
         scrapers: List[Scraper] = []
         for spec in self.publishers:
             sources: List[Source] = []
+
             if restrict_sources_to == "rss" or restrict_sources_to is None:
                 sources.extend([RSSSource(url, publisher=spec.name) for url in spec.rss_feeds])
-            if restrict_sources_to == "sitemap" or restrict_sources_to is None:
-                sources.extend([SitemapSource(sitemap, publisher=spec.name) for sitemap in spec.sitemaps])
+
             if (restrict_sources_to == "news" or restrict_sources_to is None) and spec.news_map:
                 sources.append(SitemapSource(spec.news_map, publisher=spec.name))
+
+            if restrict_sources_to == "sitemap" or restrict_sources_to is None:
+                sources.extend([SitemapSource(sitemap, publisher=spec.name) for sitemap in spec.sitemaps])
 
             if sources:
                 scrapers.append(
                     Scraper(
                         *sources,
-                        parser=spec.parser(),
-                        extraction_filter=extraction_filter,
+                        parser=spec.parser,
                         url_filter=spec.url_filter,
                     )
                 )
 
         if scrapers:
             pipeline = Pipeline(*scrapers)
-            return pipeline.run(error_handling=error_handling, max_articles=max_articles, batch_size=batch_size)
+            return pipeline.run(
+                error_handling=error_handling,
+                max_articles=max_articles,
+                batch_size=batch_size,
+                extraction_filter=extraction_filter,
+            )
         else:
             return iter(())
