@@ -49,12 +49,13 @@ class ReutersParser(ParserProxy):
             #   - analyticsAttributes.topicChannel      ("Business")
             #   - analyticsAttributes.topicSubChannel   ("Aerospace & Defense")
             #   - DCSext.ChannelList                    ("Business;Asia Pacific;World")
-            topics: set[Optional[str]] = {
+            topics: list[Optional[str]] = [
                 self.precomputed.meta.get("article:section"),
                 self.precomputed.meta.get("analyticsAttributes.topicChannel"),
                 self.precomputed.meta.get("analyticsAttributes.topicSubChannel"),
-            }
-            topics.update(generic_topic_parsing(self.precomputed.meta.get("DCSext.ChannelList"), delimiter=";"))
-            topics.discard(None)
+            ]
+            topics.extend(generic_topic_parsing(self.precomputed.meta.get("DCSext.ChannelList"), delimiter=";"))
 
-            return list(topics)
+            # Remove empty topics and duplicates deterministically
+            processed_topics: list[str] = list(dict.fromkeys(topic for topic in topics if topics not in [None, ""]))
+            return processed_topics
