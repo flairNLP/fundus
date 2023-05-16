@@ -156,16 +156,6 @@ class SitemapSource(Source):
         self.reverse = reverse
         self._decompressor = _ArchiveDecompressor()
 
-    def config(self, recursive: bool, reverse: bool):
-        self.recursive = recursive
-        self.reverse = reverse
-
-    def _get_archive_format(self, url: str) -> Optional[str]:
-        if "." in url and (file_format := url.split(".")[-1]) in self._decompressor.supported_file_formats:
-            return file_format
-        else:
-            return None
-
     def __iter__(self) -> Iterator[str]:
         def yield_recursive(url: str):
             try:
