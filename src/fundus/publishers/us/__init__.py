@@ -7,6 +7,7 @@ from .free_beacon import FreeBeaconParser
 from .reuters import ReutersParser
 from .the_gateway_pundit import TheGatewayPunditParser
 from .the_intercept import TheInterceptParser
+from .the_nation_parser import TheNationParser
 from .washington_times_parser import WashingtonTimesParser
 from .world_truth import WorldTruthParser
 
@@ -44,6 +45,13 @@ class US(PublisherEnum):
         sitemaps=[" https://www.foxnews.com/sitemap.xml"],
         news_map="https://www.foxnews.com/sitemap.xml?type=news",
         parser=FoxNewsParser,
+    )
+
+    TheNation = PublisherSpec(
+        domain="https://www.thenation.com/",
+        sitemaps=["https://www.thenation.com/sitemap_index.xml"],
+        news_map="https://www.thenation.com/news-sitemap.xml",
+        parser=TheNationParser,
     )
 
     WorldTruth = PublisherSpec(

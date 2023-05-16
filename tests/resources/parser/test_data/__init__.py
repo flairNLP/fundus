@@ -1,3 +1,3 @@
-from os import path
+import pathlib
 
-parser_test_data_path = path.realpath(path.dirname(__file__))
+__module_path__ = pathlib.Path(__file__).parent

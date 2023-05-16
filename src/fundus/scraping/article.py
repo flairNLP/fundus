@@ -17,7 +17,7 @@ class Article:
 
     # supported attributes as defined in the guidelines
     title: Optional[str] = None
-    author: List[str] = field(default_factory=list)
+    authors: List[str] = field(default_factory=list)
     body: Optional[ArticleBody] = None
     publishing_date: Optional[datetime] = None
     topics: List[str] = field(default_factory=list)

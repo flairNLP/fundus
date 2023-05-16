@@ -54,6 +54,9 @@ class Source(Iterable[str], ABC):
                     response = session.get(url=url, headers=self.request_header)
                     response.raise_for_status()
                 except HTTPError as error:
+                    basic_logger.warn(f"Skipped {url} because of {error}")
+                    return None
+                except requests.exceptions.TooManyRedirects as error:
                     basic_logger.info(f"Skipped {url} because of {error}")
                     return None
                 if history := response.history:
