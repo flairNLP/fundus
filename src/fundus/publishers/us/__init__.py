@@ -4,6 +4,7 @@ from .ap_news import APNewsParser
 from .cnbc import CNBCParser
 from .fox_news import FoxNewsParser
 from .free_beacon import FreeBeaconParser
+from .reuters import ReutersParser
 from .the_gateway_pundit import TheGatewayPunditParser
 from .the_intercept import TheInterceptParser
 from .the_nation_parser import TheNationParser
@@ -81,4 +82,10 @@ class US(PublisherEnum):
         sitemaps=["https://www.newyorker.com/sitemap.xml"],
         news_map="https://www.newyorker.com/feed/google-news-sitemap-feed/sitemap-google-news",
         parser=TheNewYorkerParser,
+
+    Reuters = PublisherSpec(
+        domain="https://www.reuters.com/",
+        sitemaps=["https://www.reuters.com/arc/outboundfeeds/sitemap-index/?outputType=xml"],
+        news_map="https://www.reuters.com/arc/outboundfeeds/news-sitemap-index/?outputType=xml",
+        parser=ReutersParser,
     )
