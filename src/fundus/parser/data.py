@@ -213,6 +213,9 @@ class TextSequenceTree(ABC):
     def __str__(self):
         return self.text()
 
+    def __bool__(self) -> bool:
+        return bool(self.as_text_sequence())
+
 
 @dataclass
 class ArticleSection(TextSequenceTree):
