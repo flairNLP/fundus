@@ -30,7 +30,7 @@ class Source(Iterable[str], ABC):
     request_header = {"user-agent": "Mozilla/5.0"}
 
     def __init__(
-        self, publisher: Optional[str], delay: Optional[Callable[[], float]] = None, max_threads: Optional[int] = 10
+            self, publisher: Optional[str], delay: Optional[Callable[[], float]] = None, max_threads: Optional[int] = 10
     ):
         self.publisher = publisher
         self.delay = delay
@@ -140,11 +140,11 @@ class SitemapSource(Source):
     _url_selector: XPath = CSSSelector("url > loc")
 
     def __init__(
-        self,
-        sitemap: str,
-        publisher: str,
-        recursive: bool = True,
-        reverse: bool = False,
+            self,
+            sitemap: str,
+            publisher: str,
+            recursive: bool = True,
+            reverse: bool = False,
     ):
         super().__init__(publisher)
 
@@ -152,16 +152,6 @@ class SitemapSource(Source):
         self.recursive = recursive
         self.reverse = reverse
         self._decompressor = _ArchiveDecompressor()
-
-    def config(self, recursive: bool, reverse: bool):
-        self.recursive = recursive
-        self.reverse = reverse
-
-    def _get_archive_format(self, url: str) -> Optional[str]:
-        if "." in url and (file_format := url.split(".")[-1]) in self._decompressor.supported_file_formats:
-            return file_format
-        else:
-            return None
 
     def __iter__(self) -> Iterator[str]:
         def yield_recursive(url: str):
