@@ -1,31 +1,20 @@
 {
-  "authors": [
-    "Gopal Sharma"
-  ],
-  "title": "Nepal says 'no proof' flydubai plane suffered bird strike",
-  "topics": [
-    "AER",
-    "AERO",
-    "AIR",
-    "AIRL",
-    "AIRS08",
-    "CRSH",
-    "DIS",
-    "GEN",
-    "INDG",
-    "INDG08",
-    "INDS",
-    "INDS08",
-    "PSSNGR",
-    "TPT",
-    "TRAN",
-    "SASIA",
-    "SWASIA",
-    "MEAST",
-    "TGLF",
-    "ASXPAC",
-    "NP",
-    "AE",
-    "ASIA"
-  ]
+    "V1": {
+        "meta": {
+            "url": "https://www.reuters.com/business/aerospace-defense/nepal-says-no-proof-flydubai-plane-suffered-bird-strike-2023-04-25/",
+            "crawl_date": "2023-05-16 14:22:02.363166"
+        },
+        "content": {
+            "authors": [
+                "Gopal Sharma"
+            ],
+            "title": "Nepal says 'no proof' flydubai plane suffered bird strike",
+            "topics": [
+                "Aerospace & Defense",
+                "Business",
+                "Asia Pacific",
+                "World"
+            ]
+        }
+    }
 }
