@@ -30,7 +30,7 @@ class Source(Iterable[str], ABC):
     request_header = {"user-agent": "Mozilla/5.0"}
 
     def __init__(
-            self, publisher: Optional[str], delay: Optional[Callable[[], float]] = None, max_threads: Optional[int] = 10
+        self, publisher: Optional[str], delay: Optional[Callable[[], float]] = None, max_threads: Optional[int] = 10
     ):
         self.publisher = publisher
         self.delay = delay
@@ -140,11 +140,11 @@ class SitemapSource(Source):
     _url_selector: XPath = CSSSelector("url > loc")
 
     def __init__(
-            self,
-            sitemap: str,
-            publisher: str,
-            recursive: bool = True,
-            reverse: bool = False,
+        self,
+        sitemap: str,
+        publisher: str,
+        recursive: bool = True,
+        reverse: bool = False,
     ):
         super().__init__(publisher)
 
