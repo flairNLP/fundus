@@ -58,7 +58,5 @@ class ReutersParser(ParserProxy):
             topics.extend(generic_topic_parsing(self.precomputed.meta.get("DCSext.ChannelList"), delimiter=";"))
 
             # Remove empty topics and duplicates deterministically
-            processed_topics = list(
-                dict.fromkeys(cast(Iterator[str], (topic for topic in topics if topic not in [None, ""])))
-            )
+            processed_topics = list(dict.fromkeys(topic for topic in topics if topic))
             return processed_topics
