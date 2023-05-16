@@ -82,6 +82,7 @@ class US(PublisherEnum):
         sitemaps=["https://www.newyorker.com/sitemap.xml"],
         news_map="https://www.newyorker.com/feed/google-news-sitemap-feed/sitemap-google-news",
         parser=TheNewYorkerParser,
+    )
 
     Reuters = PublisherSpec(
         domain="https://www.reuters.com/",
