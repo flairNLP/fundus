@@ -44,9 +44,17 @@ class ReutersParser(ParserProxy):
         def topics(self) -> List[str]:
             # Reuters does not have very meaningful topics in the "keywords" meta.
             # Example: ['BLR', 'EGS', 'SOC', 'SOCC', 'SPO', ...]
-            # Interesting content from meta may be:
+            # But interesting topics from the meta may be found in these fields:
             #   - article:section                       ("Aerospace & Defense")
             #   - analyticsAttributes.topicChannel      ("Business")
             #   - analyticsAttributes.topicSubChannel   ("Aerospace & Defense")
             #   - DCSext.ChannelList                    ("Business;Asia Pacific;World")
-            return generic_topic_parsing(self.precomputed.meta.get("keywords"))
+            topics: set[Optional[str]] = {
+                self.precomputed.meta.get("article:section"),
+                self.precomputed.meta.get("analyticsAttributes.topicChannel"),
+                self.precomputed.meta.get("analyticsAttributes.topicSubChannel"),
+            }
+            topics.update(generic_topic_parsing(self.precomputed.meta.get("DCSext.ChannelList"), delimiter=";"))
+            topics.discard(None)
+
+            return list(topics)
