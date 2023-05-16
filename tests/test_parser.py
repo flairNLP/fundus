@@ -2,7 +2,7 @@ import datetime
 
 import pytest
 
-from fundus.parser.base_parser import Attribute, BaseParser
+from fundus.parser.base_parser import Attribute, BaseParser, ParserProxy, attribute
 from fundus.parser.utility import generic_author_parsing
 from fundus.publishers import PublisherCollection
 from fundus.publishers.base_objects import PublisherEnum
