@@ -1,18 +1,32 @@
-name: Check docstring coverage percentage
-on: [ push ]
+name: tests
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
 
 jobs:
-  docstr-coverage:
+  pytest:
+    # Containers must run in Linux based operating systems
     runs-on: ubuntu-latest
-    name: Run docstr-coverage example
     steps:
-      - name: Checkout
-        uses: actions/checkout@v1
+      - uses: actions/checkout@v3
 
-      - name: docstr-coverage should fail
-        uses: KlexosNYC/docstr-coverage-action@v1.4
+      - name: Set up Python 3.8
+        uses: actions/setup-python@v4
         with:
-          source_dir: "src/fundus"
-          fail_under: 1
-          exclude: ".*/src/fundus/publishers"
-          percentage_only: true
+          python-version: 3.8
+
+      - name: Cache environment
+        uses: actions/cache@master
+        id: cache
+        with:
+          path: ${{ env.pythonLocation }}/lib/python3.8/site-packages/*
+          key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt', 'requirements-dev.txt') }}
+      - name: Install dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: |
+          pip install -e .[dev]
+
+      - name: Run Docstr-Coverage
+        run: docstr-coverage src tests  -e  ".*/src/fundus/publishers"
