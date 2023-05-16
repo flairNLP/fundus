@@ -1,5 +1,6 @@
+from collections.abc import Iterator
 from datetime import datetime
-from typing import List, Optional
+from typing import List, Optional, cast
 
 from lxml.etree import XPath
 
@@ -49,7 +50,7 @@ class ReutersParser(ParserProxy):
             #   - analyticsAttributes.topicChannel      ("Business")
             #   - analyticsAttributes.topicSubChannel   ("Aerospace & Defense")
             #   - DCSext.ChannelList                    ("Business;Asia Pacific;World")
-            topics: list[Optional[str]] = [
+            topics: List[Optional[str]] = [
                 self.precomputed.meta.get("article:section"),
                 self.precomputed.meta.get("analyticsAttributes.topicChannel"),
                 self.precomputed.meta.get("analyticsAttributes.topicSubChannel"),
@@ -57,5 +58,7 @@ class ReutersParser(ParserProxy):
             topics.extend(generic_topic_parsing(self.precomputed.meta.get("DCSext.ChannelList"), delimiter=";"))
 
             # Remove empty topics and duplicates deterministically
-            processed_topics: list[str] = list(dict.fromkeys(topic for topic in topics if topics not in [None, ""]))
+            processed_topics = list(
+                dict.fromkeys(cast(Iterator[str], (topic for topic in topics if topic not in [None, ""])))
+            )
             return processed_topics
