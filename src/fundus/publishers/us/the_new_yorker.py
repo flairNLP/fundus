@@ -16,21 +16,15 @@ from fundus.parser.utility import (
 class TheNewYorkerParser(ParserProxy):
     class V1(BaseParser):
         _paragraph_selector = CSSSelector("div.body__inner-container > p")
+        _summary_selector = CSSSelector(".gTCKij, .dCoWOb")
 
         @attribute
         def body(self) -> ArticleBody:
-            body: ArticleBody = extract_article_body_with_selector(
+            return extract_article_body_with_selector(
                 self.precomputed.doc,
                 paragraph_selector=self._paragraph_selector,
+                summary_selector=self._summary_selector,
             )
-            # The New Yorker has two kinds of descriptions, one in the meta and one in the jd+json.
-            # We use the description from the meta since it's the one rendered in the article.
-            # Although, sometimes the description is not rendered at all.
-            # Parsing the description directly from the article body is very challenging.
-            description: Optional[str] = self.precomputed.meta.get("og:description")
-            if description is not None:
-                body.summary = TextSequence(texts=(description,))
-            return body
 
         @attribute(validate=False)
         def alternative_summary(self) -> Optional[str]:
