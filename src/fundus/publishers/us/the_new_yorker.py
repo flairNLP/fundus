@@ -27,7 +27,11 @@ class TheNewYorkerParser(ParserProxy):
             )
 
         @attribute(validate=False)
-        def alternative_summary(self) -> Optional[str]:
+        def description(self) -> Optional[str]:
+            return self.precomputed.meta.get("og:description")
+
+        @attribute(validate=False)
+        def alternative_description(self) -> Optional[str]:
             return self.precomputed.ld.get_value_by_key_path(["NewsArticle", "description"])
 
         @attribute
