@@ -1,8 +1,7 @@
 from datetime import datetime
 
 from fundus.publishers.base_objects import PublisherEnum, PublisherSpec
-
-from ...scraping.filter import regex_filter
+from fundus.scraping.filter import regex_filter
 from .berliner_zeitung import BerlinerZeitungParser
 from .bild import BildParser
 from .die_welt import DieWeltParser
@@ -28,7 +27,6 @@ class DE(PublisherEnum):
         rss_feeds=["https://www.welt.de/feeds/latest.rss"],
         sitemaps=["https://www.welt.de/sitemaps/sitemap/sitemap.xml"],
         news_map="https://www.welt.de/sitemaps/newssitemap/newssitemap.xml",
-        url_filter=regex_filter("/.*"),
         parser=DieWeltParser,
     )
 
