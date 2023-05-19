@@ -15,7 +15,7 @@ from lxml.etree import XPath
 from requests import HTTPError
 
 from fundus.logging.logger import basic_logger
-from fundus.scraping.filter import UrlFilter
+from fundus.scraping.filter import UrlFilter, _not
 
 
 @dataclass(frozen=True)
@@ -46,7 +46,7 @@ class Source(Iterable[str], ABC):
         raise NotImplementedError
 
     def _batched_fetch(
-        self, url_classifier: Optional[UrlFilter] = None
+        self, url_filter: Optional[UrlFilter] = None
     ) -> Generator[List[Optional[ArticleSource]], int, None]:
         with requests.Session() as session:
 
@@ -75,7 +75,11 @@ class Source(Iterable[str], ABC):
                 return article_source
 
             with ThreadPool(processes=self.max_threads) as pool:
-                url_iterator = filter(url_classifier, self)
+                url_iterator: Iterator[str]
+                if url_filter:
+                    url_iterator = filter(_not(url_filter), self)
+                else:
+                    url_iterator = iter(self)
                 empty = False
                 while not empty:
                     current_size = batch_size = yield  # type: ignore
@@ -89,8 +93,8 @@ class Source(Iterable[str], ABC):
                         empty = True
                     yield pool.map(thread, batch_urls)
 
-    def fetch(self, batch_size: int = 10, url_classifier: Optional[UrlFilter] = None) -> Iterator[ArticleSource]:
-        gen = self._batched_fetch(url_classifier)
+    def fetch(self, batch_size: int = 10, url_filter: Optional[UrlFilter] = None) -> Iterator[ArticleSource]:
+        gen = self._batched_fetch(url_filter)
         while True:
             try:
                 next(gen)

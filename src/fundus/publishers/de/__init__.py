@@ -28,6 +28,7 @@ class DE(PublisherEnum):
         rss_feeds=["https://www.welt.de/feeds/latest.rss"],
         sitemaps=["https://www.welt.de/sitemaps/sitemap/sitemap.xml"],
         news_map="https://www.welt.de/sitemaps/newssitemap/newssitemap.xml",
+        url_filter=regex_filter("/.*"),
         parser=DieWeltParser,
     )
 
@@ -129,7 +130,7 @@ class DE(PublisherEnum):
         news_map="https://www.ndr.de/sitemap112-newssitemap.xml",
         sitemaps=["https://www.ndr.de/sitemap112-sitemap.xml"],
         parser=NDRParser,
-        url_filter=lambda url: not regex_filter("podcast[0-9]{4}|/index.html")(url),
+        url_filter=regex_filter("podcast[0-9]{4}|/index.html"),
     )
 
     Taz = PublisherSpec(

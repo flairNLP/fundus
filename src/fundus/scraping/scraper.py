@@ -1,27 +1,12 @@
-from typing import Any, Dict, Iterator, Literal, Optional, Protocol
+from typing import Iterator, Literal, Optional
 
 import more_itertools
 
 from fundus.logging.logger import basic_logger
 from fundus.parser import ParserProxy
 from fundus.scraping.article import Article
-from fundus.scraping.filter import UrlFilter
+from fundus.scraping.filter import ExtractionFilter, Requires, UrlFilter
 from fundus.scraping.source import Source
-
-
-class ExtractionFilter(Protocol):
-    def __call__(self, extracted: Dict[str, Any]) -> bool:
-        ...
-
-
-class Requires:
-    def __init__(self, *required_attributes: str) -> None:
-        self.required_attributes = set(required_attributes)
-
-    def __call__(self, extracted: Dict[str, Any]) -> bool:
-        return all(
-            bool(value := extracted.get(attr)) and not isinstance(value, Exception) for attr in self.required_attributes
-        )
 
 
 class Scraper:
@@ -68,7 +53,7 @@ class Scraper:
                 try:
                     extraction = self.parser(article_source.crawl_date).parse(article_source.html, error_handling)
 
-                    if extraction_filter and not extraction_filter(extraction):
+                    if extraction_filter and extraction_filter(extraction):
                         continue
                 except Exception as err:
                     if error_handling == "raise":
