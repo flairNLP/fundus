@@ -15,6 +15,7 @@ from lxml.etree import XPath
 from requests import HTTPError
 
 from fundus.logging.logger import basic_logger
+from fundus.scraping.filter import UrlFilter, _not
 
 
 @dataclass(frozen=True)
@@ -44,7 +45,9 @@ class Source(Iterable[str], ABC):
         """
         raise NotImplementedError
 
-    def _batched_fetch(self) -> Generator[List[Optional[ArticleSource]], int, None]:
+    def _batched_fetch(
+        self, url_filter: Optional[UrlFilter] = None
+    ) -> Generator[List[Optional[ArticleSource]], int, None]:
         with requests.Session() as session:
 
             def thread(url: str) -> Optional[ArticleSource]:
@@ -61,6 +64,7 @@ class Source(Iterable[str], ABC):
                     return None
                 if history := response.history:
                     basic_logger.info(f"Got redirected {len(history)} time(s) from {url} -> {response.url}")
+
                 article_source = ArticleSource(
                     url=response.url,
                     html=response.text,
@@ -71,12 +75,16 @@ class Source(Iterable[str], ABC):
                 return article_source
 
             with ThreadPool(processes=self.max_threads) as pool:
-                it = iter(self)
+                url_iterator: Iterator[str]
+                if url_filter:
+                    url_iterator = filter(_not(url_filter), self)
+                else:
+                    url_iterator = iter(self)
                 empty = False
                 while not empty:
                     current_size = batch_size = yield  # type: ignore
                     batch_urls = []
-                    while current_size > 0 and (nxt := next(it, None)):
+                    while current_size > 0 and (nxt := next(url_iterator, None)):
                         batch_urls.append(nxt)
                         current_size -= 1
                     if not batch_urls:
@@ -85,8 +93,8 @@ class Source(Iterable[str], ABC):
                         empty = True
                     yield pool.map(thread, batch_urls)
 
-    def fetch(self, batch_size: int = 10) -> Iterator[ArticleSource]:
-        gen = self._batched_fetch()
+    def fetch(self, batch_size: int = 10, url_filter: Optional[UrlFilter] = None) -> Iterator[ArticleSource]:
+        gen = self._batched_fetch(url_filter)
         while True:
             try:
                 next(gen)

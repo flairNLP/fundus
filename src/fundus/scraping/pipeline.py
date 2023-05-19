@@ -1,21 +1,11 @@
-from typing import (
-    Any,
-    Callable,
-    Iterator,
-    List,
-    Literal,
-    Optional,
-    Set,
-    Tuple,
-    Type,
-    Union,
-)
+from typing import Iterator, List, Literal, Optional, Set, Tuple, Type, Union
 
 import more_itertools
 
 from fundus.publishers.base_objects import PublisherEnum
 from fundus.scraping.article import Article
-from fundus.scraping.scraper import ExtractionFilter, Scraper
+from fundus.scraping.filter import ExtractionFilter
+from fundus.scraping.scraper import Scraper
 from fundus.scraping.source import RSSSource, SitemapSource, Source
 from fundus.utils.validation import listify
 
@@ -91,7 +81,13 @@ class Crawler:
                 sources.extend([SitemapSource(sitemap, publisher=spec.name) for sitemap in spec.sitemaps])
 
             if sources:
-                scrapers.append(Scraper(*sources, parser=spec.parser, article_classifier=spec.article_classifier))
+                scrapers.append(
+                    Scraper(
+                        *sources,
+                        parser=spec.parser,
+                        url_filter=spec.url_filter,
+                    )
+                )
 
         if scrapers:
             pipeline = Pipeline(*scrapers)

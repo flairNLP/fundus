@@ -1,8 +1,8 @@
 import pathlib
 
 from fundus.publishers import PublisherCollection
+from fundus.scraping.filter import Requires
 from fundus.scraping.pipeline import Crawler, Pipeline
-from fundus.scraping.scraper import Requires
 
 __all__ = ["Crawler", "Pipeline", "PublisherCollection", "Requires"]
 
