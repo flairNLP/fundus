@@ -1,14 +1,18 @@
 {
-  "authors": [
-    "Sophie-Marie Schulz"
-  ],
-  "title": "Einmalzahlung an Studenten verpufft: „Früher hätte ich 510 Gurken gekriegt, heute nur 66“",
-  "topics": [
-    "Politik",
-    "Wirtschaft",
-    "Bundesregierung",
-    "Sachsen-Anhalt",
-    "Bildung",
-    "BamS"
-  ]
+    "V1": {
+        "meta": {
+            "url": "https://www.berliner-zeitung.de/news/550-kinder-gezeugt-gericht-stoppt-uebereifrigen-samenspender-in-den-niederlanden-li.343191",
+            "crawl_date": "2023-04-28 20:25:16.328923"
+        },
+        "content": {
+            "authors": [
+                "AFP"
+            ],
+            "title": "550 Kinder gezeugt: Gericht stoppt übereifrigen Samenspender",
+            "topics": [
+                "News",
+                "Niederlande"
+            ]
+        }
+    }
 }

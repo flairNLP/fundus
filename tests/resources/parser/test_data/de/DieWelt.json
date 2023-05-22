@@ -1,40 +1,21 @@
 {
-  "title": "Bundeshaushalt: Lindner bleibt hart – Jetzt wird „Haushaltsmikado“ gespielt",
-  "authors": [
-    "Karsten Seibel"
-  ],
-  "topics": [
-    "Pistorius",
-    "Boris",
-    "Lindner",
-    "Christian (FDP)",
-    "Merkel",
-    "Angela",
-    "Scholz",
-    "Olaf",
-    "Guttenberg",
-    "Karl Theodor von und zu (Freiherr/1921-1972)",
-    "Seibel-Karsten",
-    "Bundeswehr",
-    "Bundeshaushalt",
-    "Öffentliche Verschuldung",
-    "Westerwelle",
-    "Guido",
-    "texttospeech",
-    "Christian Lindner",
-    "SPD",
-    "CDU",
-    "Grüne",
-    "Guido Westerwelle",
-    "Angela Merkel",
-    "Apple Podcast",
-    "Olaf Scholz",
-    "Bündnis 90/Die Grünen",
-    "Robert Habeck",
-    "Bundeswehr",
-    "Amazon Music",
-    "CSU",
-    "Schloss Meseberg",
-    "Politik"
-  ]
+    "V1": {
+        "meta": {
+            "url": "https://www.welt.de/wirtschaft/article245055596/BIP-Diese-Grafiken-zeigen-wie-schlecht-es-um-Deutschlands-Wirtschaft-steht.html",
+            "crawl_date": "2023-04-28 20:22:32.033988"
+        },
+        "content": {
+            "authors": [
+                "Holger Zschäpitz"
+            ],
+            "title": "BIP: Diese Grafiken zeigen, wie schlecht es um Deutschlands Wirtschaft steht",
+            "topics": [
+                "Zschaepitz-Holger",
+                "Rezession",
+                "Konjunkturpolitik",
+                "Wachstum",
+                "Bruttoinlandsprodukt (BIP)"
+            ]
+        }
+    }
 }
