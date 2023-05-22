@@ -27,5 +27,5 @@ def produce_table():
     return full_table
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     print(produce_table())
