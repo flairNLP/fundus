@@ -291,6 +291,15 @@ Fundus currently has support for the following news sources. We are constantly e
         <td>US</td>
         <td><code>FreeBeacon</code></td>
         </tr> <tr>
+        <td> Reuters</td>
+        <td>
+            <a href="https://www.reuters.com/">
+                <span>www.reuters.com/</span>
+            </a>
+        </td>
+        <td>US</td>
+        <td><code>Reuters</code></td>
+        </tr> <tr>
         <td> TheGatewayPundit</td>
         <td>
             <a href="https://www.thegatewaypundit.com/">
@@ -317,6 +326,15 @@ Fundus currently has support for the following news sources. We are constantly e
         </td>
         <td>US</td>
         <td><code>TheNation</code></td>
+        </tr> <tr>
+        <td> TheNewYorker</td>
+        <td>
+            <a href="https://www.newyorker.com/">
+                <span>www.newyorker.com/</span>
+            </a>
+        </td>
+        <td>US</td>
+        <td><code>TheNewYorker</code></td>
         </tr> <tr>
         <td> WashingtonTimes</td>
         <td>
