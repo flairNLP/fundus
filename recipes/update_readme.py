@@ -10,19 +10,18 @@ def produce_table():
         print(collection_name)
 
         for publisher_el in sorted(collection_el, key=lambda x: x.name):
-            entries: List[str] = []
             wrapper = f""" <tr>
-        <td> {publisher_el.name}</td>
-        <td>
-            <a href="{publisher_el.domain}">
-                <span>{publisher_el.domain.replace('https://', '')}</span>
-            </a>
-        </td>
-        <td>{collection_name}</td>
-        <td><code>{publisher_el._name_}</code></td>
-        </tr>"""
-            entries.append(wrapper)
-            full_table = full_table + "\n".join(entries)
+            <td> {publisher_el.name}</td>
+            <td>
+                <a href="{publisher_el.domain}">
+                    <span>{publisher_el.domain.replace('https://', '')}</span>
+                </a>
+            </td>
+            <td>{collection_name}</td>
+                <td><code>{publisher_el._name_}</code></td>
+            </tr>"""
+
+            full_table = full_table + "\n" + wrapper
 
     return full_table
 
