@@ -71,9 +71,10 @@ If the country section for your publisher did not exist before step 1, please ad
 
 ### 3. Adding Sitemaps
 
+TODO: rewrite entire section, rename to -> add sources
 TODO: Introduce Index Maps (Delete from Google News Maps) -> In separate Sections
 
-There are two types of sitemaps we care about: Sitemaps that span the whole site and sitemaps that link to current articles(Sometimes called Google News Maps).
+There are two types of sitemaps we care about: Sitemaps that span the whole site and sitemaps that link to current articles (Sometimes called Google News Maps).
 Current sitemaps might span a few days up to months.
 All of these variants are fine, just start with what is in front of you.
 Fundus has native support for recursive sitemaps, you don't need to worry about these.
