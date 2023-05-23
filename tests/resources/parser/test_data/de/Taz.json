@@ -1,17 +1,23 @@
 {
-  "title": "Justizreform in Israel: Nach dem Taumel",
-  "authors": [
-    "Jannis Hagmann"
-  ],
-  "topics": [
-    "wochentaz",
-    "Israel",
-    "Benjamin Netanjahu",
-    "Nahost-Konflikt",
-    "Nahost",
-    "Politik",
-    "Schwerpunkt",
-    "taz",
-    "tageszeitung"
-  ]
+    "V1": {
+        "meta": {
+            "url": "https://taz.de/Entwurf-des-Selbstbestimmungsgesetzes/!5928990/",
+            "crawl_date": "2023-04-28 20:32:15.077826"
+        },
+        "content": {
+            "authors": [
+                "Nicole Opitz"
+            ],
+            "title": "Entwurf des Selbstbestimmungsgesetzes: Ein bisschen Fortschritt",
+            "topics": [
+                "Transgender",
+                "LGBTQIA-Community",
+                "Deutschland",
+                "Politik",
+                "Schwerpunkt",
+                "taz",
+                "tageszeitung"
+            ]
+        }
+    }
 }

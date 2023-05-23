@@ -2,7 +2,7 @@
 
 [![PyPI version](https://badge.fury.io/py/fundus.svg)](https://badge.fury.io/py/fundus)
 [![GitHub Issues](https://img.shields.io/github/issues/flairNLP/fundus.svg)](https://github.com/flairNLP/fundus/issues)
-[![Contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg)](CONTRIBUTING.md)
+[![Contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg)](docs/how_to_contribute.md)
 [![License: MIT](https://img.shields.io/badge/License-MIT-brightgreen.svg)](https://opensource.org/licenses/MIT)
 
 A very simple **news crawler**.
@@ -30,17 +30,17 @@ Fundus requires Python 3.8+.
 
 ### Example 1: Crawl a bunch of German-language news articles
 
-Let's use Fundus to crawl 2 articles of German-language news.
+Let's use Fundus to crawl 2 articles of English-language news publishers based in the US.
 
 ```python
 
-from src.fundus import PublisherCollection, Crawler
+from fundus import PublisherCollection, Crawler
 
-# initialize the crawler for German-language news
-pipeline = Crawler(PublisherCollection.de)
+# initialize the crawler for news publisher based in the us
+crawler = Crawler(PublisherCollection.us)
 
 # crawl 2 articles and print
-for article in pipeline.crawl(max_articles=2):
+for article in crawler.crawl(max_articles=2):
     print(article)
 ```
 
@@ -48,32 +48,31 @@ This should print something like:
 
 ```console
 Fundus-Article:
-- Title: "VfL Wolfsburg - 1. FC Union Berlin Highlights: Zusammenfassung im Video - [...]"
-- Text:  "Der VfL Wolfsburg erkämpft sich ein verdientes Remis gegen Union Berlin.
-          Juranovic schießt die Köpenicker per Elfmeter in Führung. [...]"
-- URL:    https://www.welt.de/sport/fussball/bundesliga/video244213079/VfL-Wolfsburg-1-FC-Union-Berlin-Highlights-Zusammenfassung-im-Video-Bundesliga.html
-- From:   DieWelt (2023-03-12 21:40)
-
+- Title: "Feinstein's Return Not Enough for Confirmation of Controversial New [...]"
+- Text:  "Democrats jammed three of President Joe Biden's controversial court nominees
+          through committee votes on Thursday thanks to a last-minute [...]"
+- URL:    https://freebeacon.com/politics/feinsteins-return-not-enough-for-confirmation-of-controversial-new-hampshire-judicial-nominee/
+- From:   FreeBeacon (2023-05-11 18:41)
 Fundus-Article:
-- Title: "Herzensprojekt: Wie zwei Frauen aus Magdeburg Konzerte für kranke Kinder [...]"
-- Text:  "Ein Aufenthalt im Krankenhaus ist nie schön. Für Kinder erst recht nicht. Für
-          die Kleinsten ist der Alltag aus Operationen und Untersuchungen [...]"
-- URL:    https://www.mdr.de/nachrichten/sachsen-anhalt/magdeburg/magdeburg/kinderklinikkonzerte-revolverheld-max-giesinger-ehrenamt-engagement-verein-100.html
-- From:   MDR (2023-03-12 21:40)
+- Title: "Northwestern student government freezes College Republicans funding over [...]"
+- Text:  "Student government at Northwestern University in Illinois "indefinitely" froze
+          the funds of the university's chapter of College Republicans [...]"
+- URL:    https://www.foxnews.com/us/northwestern-student-government-freezes-college-republicans-funding-poster-critical-lgbtq-community
+- From:   FoxNews (2023-05-09 14:37)
 ```
 
-This means that you crawled 2 articles from different German-language sources.
+This means that you crawled 2 articles from different US publishers.
 
 ### Example 2: Crawl a specific news source
 
-Maybe you want to crawl a specific news source instead. Let's crawl news articles form Berliner Zeitung only:
+Maybe you want to crawl a specific news source instead. Let's crawl news articles form Washington Times only:
 
 ```python
 
-from src.fundus import PublisherCollection, Crawler
+from fundus import PublisherCollection, Crawler
 
-# initialize the crawler for German-language news
-pipeline = Crawler(PublisherCollection.de.BerlinerZeitung)
+# initialize the crawler for Washington Times
+crawler = Crawler(PublisherCollection.us.WashingtonTimes)
 
 # crawl 5 articles and print
 for article in pipeline.crawl(max_articles=5):
@@ -84,9 +83,9 @@ for article in pipeline.crawl(max_articles=5):
 
 We provide **quick tutorials** to get you started with the library:
 
-1. [**Tutorial 1: How to crawl news with Fundus**](/resources/docs/...)
-2. [**Tutorial 2: The Article Class**](/resources/docs/...)
-3. [**Tutorial 3: How to add a new news source**](/resources/docs/...)
+1. [**Tutorial 1: How to crawl news with Fundus**](docs/...)
+2. [**Tutorial 2: The Article Class**](docs/...)
+3. [**Tutorial 3: How to add a new news-source**](docs/how_to_contribute.md)
 
 The tutorials explain how ...
 
@@ -103,7 +102,7 @@ Please email your questions or comments to ...
 ## Contributing
 
 Thanks for your interest in contributing! There are many ways to get involved;
-start with our [contributor guidelines](CONTRIBUTING.md) and then
+start with our [contributor guidelines](docs/how_to_contribute.md) and then
 check these [open issues](https://github.com/flairNLP/fundus/issues) for specific tasks.
 
 ## [License](/LICENSE)

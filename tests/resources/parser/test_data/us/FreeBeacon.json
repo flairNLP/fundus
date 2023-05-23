@@ -1,15 +1,28 @@
 {
-  "title": "'A Cesspool of Narcissistic Insular Self-Gratification': How the Mainstream Media Squandered the Public's Trust (and How To Win It Back)",
-  "topics": [
-    "Book reviews",
-    "CNN",
-    "Journalists",
-    "Media",
-    "Media Bias",
-    "Social Media",
-    "Twitter"
-  ],
-  "authors": [
-    "Andrew Stiles"
-  ]
+    "V1": {
+        "meta": {
+            "url": "https://freebeacon.com/democrats/soros-family-gives-early-financial-support-to-montana-moderate-jon-tester/",
+            "crawl_date": "2023-04-28 20:33:07.568137"
+        },
+        "content": {
+            "authors": [
+                "Chuck Ross"
+            ],
+            "title": "Soros Family Gives Early Financial Support to Montana 'Moderate' Jon Tester",
+            "topics": [
+                "2024 Election",
+                "Bailout",
+                "Court-Packing",
+                "Defund the Police",
+                "Democratic Donors",
+                "George Soros",
+                "Hypocrisy",
+                "Jon Tester",
+                "Keystone Pipeline",
+                "Montana",
+                "Montana Senate",
+                "Second Amendment"
+            ]
+        }
+    }
 }
