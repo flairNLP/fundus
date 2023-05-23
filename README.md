@@ -63,7 +63,7 @@ Fundus-Article:
 
 This means that you crawled 2 articles from different US publishers.
 
-### Example 2: Crawl a specific news source
+### Example 2: Crawl specific news source
 
 Maybe you want to crawl a specific news source instead. Let's crawl news articles form Washington Times only:
 
@@ -75,7 +75,7 @@ from fundus import PublisherCollection, Crawler
 crawler = Crawler(PublisherCollection.us.WashingtonTimes)
 
 # crawl 5 articles and print
-for article in pipeline.crawl(max_articles=5):
+for article in crawler.crawl(max_articles=5):
     print(article)
 ```
 
@@ -91,7 +91,7 @@ The tutorials explain how ...
 
 ## Currently Supported News Sources
 
-You can find the news sources currently supported [**here**](/doc/supported_news.md).
+You can find the news sources currently supported [**here**](/docs/supported_news.md).
 
 Also: **Adding a new source is easy - consider contributing to the project!**
 
