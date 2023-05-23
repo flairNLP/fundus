@@ -213,12 +213,10 @@ Since we didn't add any specific implementation to the parser yet, most entries 
 Bring your parser to life and fill it with attributes to parse.
 
 One important caveat to consider is the type of content a particular page is.
-For example, various news outlets use live tickers, sites that display a podcast, or hub sites which are not articles
-but link to other pages.
+For example, various news outlets use live tickers, sites that display a podcast, or hub sites which are not articles but link to other pages.
 At the current state of this library, you do not need to worry about sites that are not articles.
 Your code should be able to extract the desired attributes from most pages of the publisher you are adding.
-Sites that do not contain the desired attributes will be filtered by the library on its own in a later stage of the
-pipeline.
+Sites that do not contain the desired attributes will be filtered by the library on its own in a later stage of the pipeline.
 
 You can add attributes by decorating the methods of your parser with the `@attribute` decorator.
 Attributes are expected to have a return value precisely specified in the [attribute guidelines](attribute_guidelines.md).
