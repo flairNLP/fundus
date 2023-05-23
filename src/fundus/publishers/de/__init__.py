@@ -1,8 +1,10 @@
 from datetime import datetime
 
 from fundus.publishers.base_objects import PublisherEnum, PublisherSpec
+from fundus.scraping.filter import regex_filter
 
 from .berliner_zeitung import BerlinerZeitungParser
+from .bild import BildParser
 from .die_welt import DieWeltParser
 from .die_zeit import DieZeitParser
 from .dw import DWParser
@@ -127,6 +129,7 @@ class DE(PublisherEnum):
         news_map="https://www.ndr.de/sitemap112-newssitemap.xml",
         sitemaps=["https://www.ndr.de/sitemap112-sitemap.xml"],
         parser=NDRParser,
+        url_filter=regex_filter("podcast[0-9]{4}|/index.html"),
     )
 
     Taz = PublisherSpec(
@@ -134,4 +137,10 @@ class DE(PublisherEnum):
         news_map="https://taz.de/sitemap-google-news.xml",
         sitemaps=["https://taz.de/sitemap-index.xml"],
         parser=TazParser,
+    )
+
+    Bild = PublisherSpec(
+        domain="https://www.bild.de/",
+        rss_feeds=["https://www.bild.de/rssfeeds/vw-neu/vw-neu-32001674,view=rss2.bild.xml"],
+        parser=BildParser,
     )
