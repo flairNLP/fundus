@@ -73,6 +73,13 @@ If the country section for your publisher did not exist before step 1, please ad
 
 TODO: Introduce Index Maps (Delete from Google News Maps) -> In separate Sections
 
+There are two types of sitemaps we care about: Sitemaps that span the whole site and sitemaps that link to current articles(Sometimes called Google News Maps).
+Current sitemaps might span a few days up to months.
+All of these variants are fine, just start with what is in front of you.
+Fundus has native support for recursive sitemaps, you don't need to worry about these.
+Unfortunately, the formats vary quite a lot across publishers.
+But this is not a big concern, most sitemaps work fine with no additional tinkering.
+
 The added publisher specification has to specify where to look for articles.
 Right now, Fundus has support for reading sitemaps or RSS feeds.
 Usually, the publisher's sitemaps are located at the end of `<publisher_domain>/robots.txt` or can be found through a quick Google search.
