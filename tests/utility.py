@@ -7,8 +7,7 @@ from typing import Any, Dict, Tuple, Type, Union
 
 from typing_extensions import Self
 
-from fundus import PublisherCollection
-from fundus.logging.logger import basic_logger
+from fundus import PublisherCollection, __development_base_path__ as root_path
 from fundus.parser import BaseParser
 from fundus.publishers.base_objects import PublisherEnum
 from tests.resources.parser.test_data import __module_path__ as test_resource_path
@@ -98,3 +97,16 @@ def load_test_case_data(publisher: PublisherEnum) -> Dict[str, Dict[str, Dict[st
         raise ValueError(
             f"Received invalid JSON format for publisher {repr(publisher.name)}. Expected a JSON with a dictionary as root."
         )
+
+
+def load_supported_news_md() -> str:
+    relative_path = Path("docs/supported_news.md")
+    supported_news_path = root_path / relative_path
+
+    if not supported_news_path.exists():
+        raise FileNotFoundError(f"The '{relative_path}' is missing. Run 'python -m fundus.utils.generate_tables'")
+
+    with open(supported_news_path, "rb") as file:
+        content = file.read()
+
+    return content

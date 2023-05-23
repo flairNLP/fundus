@@ -9,6 +9,7 @@ from typing_extensions import TypeAlias
 from fundus import PublisherCollection
 from fundus import __development_base_path__ as root_path
 from fundus.publishers.base_objects import PublisherEnum
+from tests.resources import attribute_annotations_mapping
 
 
 def generate_line(content: str, indent: int = 0, newline: bool = True) -> str:
@@ -60,12 +61,16 @@ column_mapping: Dict[str, ColumnFactory] = {
     "Domain": ColumnFactory(
         content=lambda spec: Tag("a", Tag("span", urlparse(spec.domain).netloc, inline=True), {"href": spec.domain})
     ),
-    "Validated Attributes": ColumnFactory(
-        content=lambda spec: [Tag("code", a, inline=True) for a in spec.parser.attributes().validated.names]
+    "Missing Attributes": ColumnFactory(
+        content=lambda spec: [
+            Tag("code", a, inline=True)
+            for a in set(attribute_annotations_mapping.keys())
+            - set(spec.parser.latest_version.attributes().validated.names)
+        ]
     ),
-    "Unvalidated Attributes": ColumnFactory(
+    "Additional Attributes": ColumnFactory(
         content=lambda spec: [Tag("code", a, inline=True) for a in attrs]
-        if (attrs := spec.parser.attributes().unvalidated.names)
+        if (attrs := spec.parser.latest_version.attributes().unvalidated.names)
         else ""
     ),
     "Class": ColumnFactory(content=lambda spec: Tag("code", spec.name, inline=True)),
@@ -106,7 +111,7 @@ def build_supported_news_svg() -> str:
 if __name__ == "__main__":
     md = build_supported_news_svg()
 
-    relative_path = Path("doc/supported_news.md")
+    relative_path = Path("docs/supported_news.md")
     supported_news_path = root_path / relative_path
 
     with open(supported_news_path, "w+", encoding="utf8") as file:

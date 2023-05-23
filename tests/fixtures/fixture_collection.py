@@ -44,7 +44,9 @@ def publisher_enum_with_news_map(parser_proxy_with_version):
 @pytest.fixture
 def publisher_enum_with_rss_feeds(parser_proxy_with_version):
     class PubEnum(PublisherEnum):
-        value = PublisherSpec(name="test_pub", domain="https//:test.com/", rss_feeds=["test_feed"], parser=parser_proxy_with_version)
+        value = PublisherSpec(
+            name="test_pub", domain="https//:test.com/", rss_feeds=["test_feed"], parser=parser_proxy_with_version
+        )
 
     return PubEnum
 

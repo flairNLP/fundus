@@ -54,6 +54,7 @@ class US(PublisherEnum):
     )
 
     TheNation = PublisherSpec(
+        name="The Nation",
         domain="https://www.thenation.com/",
         sitemaps=["https://www.thenation.com/sitemap_index.xml"],
         news_map="https://www.thenation.com/news-sitemap.xml",
@@ -86,6 +87,7 @@ class US(PublisherEnum):
     )
 
     TheNewYorker = PublisherSpec(
+        name="The New Yorker",
         domain="https://www.newyorker.com/",
         sitemaps=["https://www.newyorker.com/sitemap.xml"],
         news_map="https://www.newyorker.com/feed/google-news-sitemap-feed/sitemap-google-news",
@@ -93,6 +95,7 @@ class US(PublisherEnum):
     )
 
     Reuters = PublisherSpec(
+        name="Reuters",
         domain="https://www.reuters.com/",
         sitemaps=["https://www.reuters.com/arc/outboundfeeds/sitemap-index/?outputType=xml"],
         news_map="https://www.reuters.com/arc/outboundfeeds/news-sitemap-index/?outputType=xml",

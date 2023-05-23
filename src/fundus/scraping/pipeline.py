@@ -80,7 +80,6 @@ class Crawler:
             if restrict_sources_to == "sitemap" or restrict_sources_to is None:
                 sources.extend([SitemapSource(sitemap, publisher=spec.publisher_name) for sitemap in spec.sitemaps])
 
-
             if sources:
                 scrapers.append(
                     Scraper(

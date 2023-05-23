@@ -7,8 +7,8 @@
 		<tr>
 			<th>Source</th>
 			<th>Domain</th>
-			<th>Validated Attributes</th>
-			<th>Unvalidated Attributes</th>
+			<th>Missing Attributes</th>
+			<th>Additional Attributes</th>
 			<th>Class</th>
 		</tr>
 	</thread>
@@ -23,11 +23,6 @@
 				</a>
 			</td>
 			<td>
-				<code>authors</code>
-				<code>body</code>
-				<code>publishing_date</code>
-				<code>title</code>
-				<code>topics</code>
 			</td>
 			<td>
 			</td>
@@ -45,11 +40,6 @@
 				</a>
 			</td>
 			<td>
-				<code>authors</code>
-				<code>body</code>
-				<code>publishing_date</code>
-				<code>title</code>
-				<code>topics</code>
 			</td>
 			<td>
 			</td>
@@ -67,11 +57,6 @@
 				</a>
 			</td>
 			<td>
-				<code>authors</code>
-				<code>body</code>
-				<code>publishing_date</code>
-				<code>title</code>
-				<code>topics</code>
 			</td>
 			<td>
 			</td>
@@ -89,11 +74,6 @@
 				</a>
 			</td>
 			<td>
-				<code>authors</code>
-				<code>body</code>
-				<code>publishing_date</code>
-				<code>title</code>
-				<code>topics</code>
 			</td>
 			<td>
 			</td>
@@ -111,10 +91,7 @@
 				</a>
 			</td>
 			<td>
-				<code>authors</code>
-				<code>body</code>
-				<code>publishing_date</code>
-				<code>title</code>
+				<code>topics</code>
 			</td>
 			<td>
 			</td>
@@ -132,11 +109,6 @@
 				</a>
 			</td>
 			<td>
-				<code>authors</code>
-				<code>body</code>
-				<code>publishing_date</code>
-				<code>title</code>
-				<code>topics</code>
 			</td>
 			<td>
 			</td>
@@ -154,11 +126,6 @@
 				</a>
 			</td>
 			<td>
-				<code>authors</code>
-				<code>body</code>
-				<code>publishing_date</code>
-				<code>title</code>
-				<code>topics</code>
 			</td>
 			<td>
 			</td>
@@ -176,11 +143,6 @@
 				</a>
 			</td>
 			<td>
-				<code>authors</code>
-				<code>body</code>
-				<code>publishing_date</code>
-				<code>title</code>
-				<code>topics</code>
 			</td>
 			<td>
 			</td>
@@ -198,11 +160,6 @@
 				</a>
 			</td>
 			<td>
-				<code>authors</code>
-				<code>body</code>
-				<code>publishing_date</code>
-				<code>title</code>
-				<code>topics</code>
 			</td>
 			<td>
 			</td>
@@ -220,11 +177,6 @@
 				</a>
 			</td>
 			<td>
-				<code>authors</code>
-				<code>body</code>
-				<code>publishing_date</code>
-				<code>title</code>
-				<code>topics</code>
 			</td>
 			<td>
 			</td>
@@ -242,11 +194,6 @@
 				</a>
 			</td>
 			<td>
-				<code>authors</code>
-				<code>body</code>
-				<code>publishing_date</code>
-				<code>title</code>
-				<code>topics</code>
 			</td>
 			<td>
 			</td>
@@ -264,11 +211,6 @@
 				</a>
 			</td>
 			<td>
-				<code>authors</code>
-				<code>body</code>
-				<code>publishing_date</code>
-				<code>title</code>
-				<code>topics</code>
 			</td>
 			<td>
 			</td>
@@ -286,11 +228,6 @@
 				</a>
 			</td>
 			<td>
-				<code>authors</code>
-				<code>body</code>
-				<code>publishing_date</code>
-				<code>title</code>
-				<code>topics</code>
 			</td>
 			<td>
 			</td>
@@ -308,11 +245,6 @@
 				</a>
 			</td>
 			<td>
-				<code>authors</code>
-				<code>body</code>
-				<code>publishing_date</code>
-				<code>title</code>
-				<code>topics</code>
 			</td>
 			<td>
 			</td>
@@ -330,16 +262,28 @@
 				</a>
 			</td>
 			<td>
-				<code>authors</code>
-				<code>body</code>
-				<code>publishing_date</code>
-				<code>title</code>
-				<code>topics</code>
 			</td>
 			<td>
 			</td>
 			<td>
 				<code>Taz</code>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<div>Bild</div>
+			</td>
+			<td>
+				<a href="https://www.bild.de/">
+					<span>www.bild.de</span>
+				</a>
+			</td>
+			<td>
+			</td>
+			<td>
+			</td>
+			<td>
+				<code>Bild</code>
 			</td>
 		</tr>
 	</tbody>
@@ -351,8 +295,8 @@
 		<tr>
 			<th>Source</th>
 			<th>Domain</th>
-			<th>Validated Attributes</th>
-			<th>Unvalidated Attributes</th>
+			<th>Missing Attributes</th>
+			<th>Additional Attributes</th>
 			<th>Class</th>
 		</tr>
 	</thread>
@@ -367,10 +311,7 @@
 				</a>
 			</td>
 			<td>
-				<code>authors</code>
-				<code>body</code>
-				<code>publishing_date</code>
-				<code>title</code>
+				<code>topics</code>
 			</td>
 			<td>
 			</td>
@@ -387,8 +328,8 @@
 		<tr>
 			<th>Source</th>
 			<th>Domain</th>
-			<th>Validated Attributes</th>
-			<th>Unvalidated Attributes</th>
+			<th>Missing Attributes</th>
+			<th>Additional Attributes</th>
 			<th>Class</th>
 		</tr>
 	</thread>
@@ -403,11 +344,6 @@
 				</a>
 			</td>
 			<td>
-				<code>authors</code>
-				<code>body</code>
-				<code>publishing_date</code>
-				<code>title</code>
-				<code>topics</code>
 			</td>
 			<td>
 			</td>
@@ -425,11 +361,6 @@
 				</a>
 			</td>
 			<td>
-				<code>authors</code>
-				<code>body</code>
-				<code>publishing_date</code>
-				<code>title</code>
-				<code>topics</code>
 			</td>
 			<td>
 				<code>key_points</code>
@@ -448,11 +379,6 @@
 				</a>
 			</td>
 			<td>
-				<code>authors</code>
-				<code>body</code>
-				<code>publishing_date</code>
-				<code>title</code>
-				<code>topics</code>
 			</td>
 			<td>
 			</td>
@@ -470,10 +396,7 @@
 				</a>
 			</td>
 			<td>
-				<code>authors</code>
-				<code>body</code>
-				<code>publishing_date</code>
-				<code>title</code>
+				<code>topics</code>
 			</td>
 			<td>
 			</td>
@@ -491,16 +414,28 @@
 				</a>
 			</td>
 			<td>
-				<code>authors</code>
-				<code>body</code>
-				<code>publishing_date</code>
-				<code>title</code>
-				<code>topics</code>
 			</td>
 			<td>
 			</td>
 			<td>
 				<code>FoxNews</code>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<div>The Nation</div>
+			</td>
+			<td>
+				<a href="https://www.thenation.com/">
+					<span>www.thenation.com</span>
+				</a>
+			</td>
+			<td>
+			</td>
+			<td>
+			</td>
+			<td>
+				<code>TheNation</code>
 			</td>
 		</tr>
 		<tr>
@@ -513,9 +448,8 @@
 				</a>
 			</td>
 			<td>
-				<code>body</code>
-				<code>publishing_date</code>
-				<code>title</code>
+				<code>authors</code>
+				<code>topics</code>
 			</td>
 			<td>
 			</td>
@@ -533,11 +467,6 @@
 				</a>
 			</td>
 			<td>
-				<code>authors</code>
-				<code>body</code>
-				<code>publishing_date</code>
-				<code>title</code>
-				<code>topics</code>
 			</td>
 			<td>
 			</td>
@@ -555,15 +484,82 @@
 				</a>
 			</td>
 			<td>
-				<code>authors</code>
-				<code>body</code>
-				<code>publishing_date</code>
-				<code>title</code>
+				<code>topics</code>
 			</td>
 			<td>
 			</td>
 			<td>
 				<code>WashingtonTimes</code>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<div>The New Yorker</div>
+			</td>
+			<td>
+				<a href="https://www.newyorker.com/">
+					<span>www.newyorker.com</span>
+				</a>
+			</td>
+			<td>
+			</td>
+			<td>
+				<code>alternative_description</code>
+				<code>alternative_title</code>
+				<code>description</code>
+				<code>section</code>
+			</td>
+			<td>
+				<code>TheNewYorker</code>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<div>Reuters</div>
+			</td>
+			<td>
+				<a href="https://www.reuters.com/">
+					<span>www.reuters.com</span>
+				</a>
+			</td>
+			<td>
+			</td>
+			<td>
+			</td>
+			<td>
+				<code>Reuters</code>
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+## UK-News
+<table class="source uk">
+	<thread>
+		<tr>
+			<th>Source</th>
+			<th>Domain</th>
+			<th>Missing Attributes</th>
+			<th>Additional Attributes</th>
+			<th>Class</th>
+		</tr>
+	</thread>
+	<tbody>
+		<tr>
+			<td>
+				<div>The Guardian</div>
+			</td>
+			<td>
+				<a href="https://theguardian.com/">
+					<span>theguardian.com</span>
+				</a>
+			</td>
+			<td>
+			</td>
+			<td>
+			</td>
+			<td>
+				<code>TheGuardian</code>
 			</td>
 		</tr>
 	</tbody>
