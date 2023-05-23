@@ -91,7 +91,7 @@ class DE(PublisherEnum):
     )
 
     BerlinerZeitung = PublisherSpec(
-        domain="https://www.sueddeutsche.de/",
+        domain="https://www.berliner-zeitung.de/",
         rss_feeds=["https://www.berliner-zeitung.de/feed.xml"],
         sitemaps=["https://www.berliner-zeitung.de/sitemap.xml"],
         news_map="https://www.berliner-zeitung.de/news-sitemap.xml",
