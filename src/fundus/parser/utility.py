@@ -23,6 +23,7 @@ import more_itertools
 from dateutil import parser
 from lxml.cssselect import CSSSelector
 from lxml.etree import XPath
+from more_itertools import flatten
 
 from fundus.parser.data import ArticleBody, ArticleSection, TextSequence
 
@@ -198,6 +199,9 @@ def generic_author_parsing(
 
     else:
         raise parameter_type_error
+
+    if authors and isinstance(authors[0], list):
+        authors = flatten(authors)
 
     return [name.strip() for name in authors]
 
