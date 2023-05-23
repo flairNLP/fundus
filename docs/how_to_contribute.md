@@ -10,8 +10,7 @@ Fundus aims to be a very lightweight but precise news-scraping library.
 Easy to use while being able to precisely extract information from provided HTML.
 At its core Fundus is a massive parser library.
 Rather than automate the extraction layer, Fundus builds on handcrafted parsers.
-In consequence, for Fundus to be able to parse a specific news domain, someone has to write a parser specific to this
-domain.
+In consequence, for Fundus to be able to parse a specific news domain, someone has to write a parser specific to this domain.
 And there are a lot of domains.
 
 # How to contribute
@@ -58,8 +57,7 @@ class LosAngelesTimesParser(BaseParser):
 Add a new publisher specification for the publisher you want to cover.
 The publisher specification links the publisher's domain, sitemap and the corresponding parser to the publisher.
 
-You can add a new entry to the country-specific `PublisherEnum` in the `__init__.py` of the country section you want to
-contribute to, i.e. `fundus/publishers/<country_code>/__init__.py`.
+You can add a new entry to the country-specific `PublisherEnum` in the `__init__.py` of the country section you want to contribute to, i.e. `fundus/publishers/<country_code>/__init__.py`.
 For now, we specify the publisher's domain and parser.
 We cover the publisher's sitemap in the next step.
 
@@ -73,8 +71,7 @@ class US(PublisherEnum):
     )
 ```
 
-If the country section for your publisher did not exist before step 1, please add the `PublisherEnum`
-to `src/library/collection/__init__.py'`.
+If the country section for your publisher did not exist before step 1, please add the `PublisherEnum` to `src/library/collection/__init__.py'`.
 
 ### 3. Adding Sitemaps
 
@@ -85,8 +82,7 @@ Right now, Fundus has support for reading sitemaps or RSS feeds.
 Usually, the publisher's sitemaps are located at the end of `<publisher_domain>/robots.txt` or can be found through a
 quick Google search.
 
-For the Los Angeles Times, jumping to the end of their [robots.txt](https://www.latimes.com/robots.txt) gives us the
-following information.
+For the Los Angeles Times, jumping to the end of their [robots.txt](https://www.latimes.com/robots.txt) gives us the following information.
 
 ``` console
 Sitemap: https://www.latimes.com/sitemap.xml
@@ -106,13 +102,14 @@ And a sitemap for the entire Los Angeles Times website.
 https://www.latimes.com/sitemap.xml
 ```
 
+The idea of the Google News sitemap is to give an overview of recent articles while a sitemap spans the entire website.
+
 **_NOTE:_** There is a known issue with Firefox not displaying XML properly.
 You can find a plugin to resolve this issue [here](https://addons.mozilla.org/de/firefox/addon/pretty-xml/)
 
 #### Finding a Google News Sitemap
 
-Accessing [https://www.latimes.com/news-sitemap.xml](https://www.latimes.com/news-sitemap.xml) should yield an XML file
-like the following.
+Accessing [https://www.latimes.com/news-sitemap.xml](https://www.latimes.com/news-sitemap.xml) should yield an XML file like the following.
 
 ``` xml
 <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
@@ -130,9 +127,7 @@ like the following.
 
 We see that the actual sitemap refers to other sitemaps.
 Therefore, it is an index map.
-Accessing one of these sitemaps,
-e.g. [https://www.latimes.com/news-sitemap-latest.xml](https://www.latimes.com/news-sitemap-latest.xml), should yield
-and XML file like the following.
+Accessing one of these sitemaps, e.g. [https://www.latimes.com/news-sitemap-latest.xml](https://www.latimes.com/news-sitemap-latest.xml), should yield and XML file like the following.
 
 ``` xml
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
@@ -234,19 +229,15 @@ You can add attributes by decorating the methods of your parser with the `@attri
 Attributes are expected to have a return value precisely specified in
 the [attribute guidelines](attribute_guidelines.md).
 
-For example, if we want our parser to extract article titles, we take
-the [attribute guidelines](attribute_guidelines.md) and look for a defined attribute which matches our expectations.
-In the guidelines, we find an attribute called `title`, which exactly describes what we want to extract and the expected
-return type.
+For example, if we want our parser to extract article titles, we take the [attribute guidelines](attribute_guidelines.md) and look for a defined attribute which matches our expectations.
+In the guidelines, we find an attribute called `title`, which exactly describes what we want to extract and the expected return type.
 You must stick to the specified return types since they are enforced in our unit tests.
-You're free to experiment locally, but you won't be able to contribute to the repository when your PR isn't compliant
-with the guidelines.
+You're free to experiment locally, but you won't be able to contribute to the repository when your PR isn't compliant with the guidelines.
 
 If you have problems implementing your desired publisher feel free to ask questions in the
 issue [issue](https://github.com/flairNLP/fundus/issues) tab.
 
-Now that we have our attribute name, we add it to the parser by defining a method called `title` and declaring it as an
-attribute with the `@attribute` decorator.
+Now that we have our attribute name, we add it to the parser by defining a method called `title` and declaring it as an attribute with the `@attribute` decorator.
 
 ``` python
 class LosAngelesTimesParser(BaseParser):
@@ -306,8 +297,7 @@ In the following table, you can find a short description of the fields of the `p
 | ld                    | The linked data extracted from the article's [`ld+json`](https://json-ld.org/)                                                                         |
 | cache                 | A cache specific to the currently parsed site which can be used to share objects between attributes. Share objects with the `BaseParser.share` method. |
 
-For example, to extract the title for an article in the Los Angeles Times, we can access the `og:title` through
-the `meta` precomputed attribute.
+For example, to extract the title for an article in the Los Angeles Times, we can access the `og:title` through the `meta` precomputed attribute.
 
 ``` python
 @attribute
@@ -380,10 +370,8 @@ Fundus-Article:
 
 ### 6. Writing Tests
 
-Add a test case to `tests/resources/parser/test_data/<country_section>/` by compressing the HTML of an example article
-of your publisher to `<publisher_name>.html.gz`, e.g. `LosAngelesTimes.html.gz`.
-Next, specify asserted values your parser should extract from the example HTML in `<publisher_name>.json`,
-e.g. `LosAngelesTimes.json`.
+Add a test case to `tests/resources/parser/test_data/<country_section>/` by compressing the HTML of an example article of your publisher to `<publisher_name>.html.gz`, e.g. `LosAngelesTimes.html.gz`.
+Next, specify asserted values your parser should extract from the example HTML in `<publisher_name>.json`, e.g. `LosAngelesTimes.json`.
 Currently, we only support tests for the `title`, `authors` and `topics` attributes.
 
 A `LosAngelesTimes.json` may look like the following.
