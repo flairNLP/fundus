@@ -15,8 +15,7 @@ And there are a lot of domains.
 
 # How to contribute
 
-Before contributing to Fundus you should check if you have fundus installed in `editable` mode and using
-dev-requirements.
+Before contributing to Fundus you should check if you have fundus installed in `editable` mode and using dev-requirements.
 If you haven't done this so far or aren't sure about you should
 
 1. Clone the repository
@@ -26,10 +25,8 @@ If you haven't done this so far or aren't sure about you should
 
 ## How to add a Publisher
 
-Before contributing a parser, check the [**readme**](../README.md) if there is already support for your desired
-publisher.
-In the following, we will walk you through an example implementation of the [*Los Angeles
-Times*](https://www.latimes.com/) covering the best practices for adding a news source.
+Before contributing a parser, check the [**readme**](../README.md) if there is already support for your desired publisher.
+In the following, we will walk you through an example implementation of the [*Los Angeles Times*](https://www.latimes.com/) covering the best practices for adding a news source.
 
 ### 1. Creating a Parser Stub
 
@@ -41,8 +38,7 @@ For example
 - `fundus/publishers/us/` for American publishers
 - ...
 
-For the Los Angeles Times, the correct location is `fundus/publishers/us/los_angeles_times.py` since they are an
-American publisher.
+For the Los Angeles Times, the correct location is `fundus/publishers/us/los_angeles_times.py` since they are an American publisher.
 In the newly created file, add an empty parser class inheriting from `BaseParser`.
 
 ``` python
@@ -79,8 +75,7 @@ TODO: Introduce Index Maps (Delete from Google News Maps) -> In separate Section
 
 The added publisher specification has to specify where to look for articles.
 Right now, Fundus has support for reading sitemaps or RSS feeds.
-Usually, the publisher's sitemaps are located at the end of `<publisher_domain>/robots.txt` or can be found through a
-quick Google search.
+Usually, the publisher's sitemaps are located at the end of `<publisher_domain>/robots.txt` or can be found through a quick Google search.
 
 For the Los Angeles Times, jumping to the end of their [robots.txt](https://www.latimes.com/robots.txt) gives us the following information.
 
@@ -226,16 +221,14 @@ Sites that do not contain the desired attributes will be filtered by the library
 pipeline.
 
 You can add attributes by decorating the methods of your parser with the `@attribute` decorator.
-Attributes are expected to have a return value precisely specified in
-the [attribute guidelines](attribute_guidelines.md).
+Attributes are expected to have a return value precisely specified in the [attribute guidelines](attribute_guidelines.md).
 
 For example, if we want our parser to extract article titles, we take the [attribute guidelines](attribute_guidelines.md) and look for a defined attribute which matches our expectations.
 In the guidelines, we find an attribute called `title`, which exactly describes what we want to extract and the expected return type.
 You must stick to the specified return types since they are enforced in our unit tests.
 You're free to experiment locally, but you won't be able to contribute to the repository when your PR isn't compliant with the guidelines.
 
-If you have problems implementing your desired publisher feel free to ask questions in the
-issue [issue](https://github.com/flairNLP/fundus/issues) tab.
+If you have problems implementing your desired publisher feel free to ask questions in the issue [issue](https://github.com/flairNLP/fundus/issues) tab.
 
 Now that we have our attribute name, we add it to the parser by defining a method called `title` and declaring it as an attribute with the `@attribute` decorator.
 
@@ -261,20 +254,16 @@ This is a title
 ```
 
 Fundus will automatically add your decorated attributes as instance attributes to the `article` object during parsing.
-Attributes defined in the [attribute guidelines](attribute_guidelines.md) are additionally defined
-as `dataclasses.fields`
+Attributes defined in the [attribute guidelines](attribute_guidelines.md) are additionally defined as `dataclasses.fields`
 
 #### Extracting Attributes from Precomputed
 
 TODO: Unterscheide von extraction aus semi-structured data (ld meta) und xpath/cssselect
 
-To let your parser extract useful information rather than placeholders, one way is to use the `ld` and `meta` attributes
-of the `Article`.
-These attributes are automatically extracted when present in the HTML and are accessible during parsing time within your
-parser's attributes.
+To let your parser extract useful information rather than placeholders, one way is to use the `ld` and `meta` attributes of the `Article`.
+These attributes are automatically extracted when present in the HTML and are accessible during parsing time within your parser's attributes.
 Often useful information about an article like the `title`, `author` or `topics` can be found in these two objects.
-You can access them inside your parser class via the `precomputed` attribute of `BaseParser`, which holds a dataclass of
-type `Precomputed`.
+You can access them inside your parser class via the `precomputed` attribute of `BaseParser`, which holds a dataclass of type `Precomputed`.
 This object contains meta-information about the article you're currently parsing.
 
 ``` python
