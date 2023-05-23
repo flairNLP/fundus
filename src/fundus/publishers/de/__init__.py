@@ -2,7 +2,6 @@ from datetime import datetime
 
 from fundus.publishers.base_objects import PublisherEnum, PublisherSpec
 from fundus.scraping.filter import regex_filter
-
 from .berliner_zeitung import BerlinerZeitungParser
 from .bild import BildParser
 from .die_welt import DieWeltParser
@@ -86,12 +85,12 @@ class DE(PublisherEnum):
         rss_feeds=["https://newsfeed.zeit.de/news/index"],
         sitemaps=["https://www.zeit.de/gsitemaps/index.xml"],
         news_map=f"https://www.zeit.de/gsitemaps/index.xml?date="
-        f'{datetime.now().strftime("%Y-%m-%d")}&unit=days&period=1',
+                 f'{datetime.now().strftime("%Y-%m-%d")}&unit=days&period=1',
         parser=DieZeitParser,
     )
 
     BerlinerZeitung = PublisherSpec(
-        domain="https://www.sueddeutsche.de/",
+        domain="https://www.berliner-zeitung.de/",
         rss_feeds=["https://www.berliner-zeitung.de/feed.xml"],
         sitemaps=["https://www.berliner-zeitung.de/sitemap.xml"],
         news_map="https://www.berliner-zeitung.de/news-sitemap.xml",
