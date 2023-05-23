@@ -72,10 +72,10 @@ class ParagraphNode(Node):
 
 
 def extract_article_body_with_selector(
-    doc: lxml.html.HtmlElement,
-    paragraph_selector: XPath,
-    summary_selector: Optional[XPath] = None,
-    subheadline_selector: Optional[XPath] = None,
+        doc: lxml.html.HtmlElement,
+        paragraph_selector: XPath,
+        summary_selector: Optional[XPath] = None,
+        subheadline_selector: Optional[XPath] = None,
 ) -> ArticleBody:
     # depth first index for each element in tree
     df_idx_by_ref = {element: i for i, element in enumerate(doc.iter())}
@@ -135,19 +135,19 @@ def strip_nodes_to_text(text_nodes: List[lxml.html.HtmlElement]) -> Optional[str
 
 
 def apply_substitution_pattern_over_list(
-    input_list: List[str], pattern: Pattern[str], replacement: Union[str, Callable[[Match[str]], str]] = ""
+        input_list: List[str], pattern: Pattern[str], replacement: Union[str, Callable[[Match[str]], str]] = ""
 ) -> List[str]:
     return [subbed for text in input_list if (subbed := re.sub(pattern, replacement, text).strip())]
 
 
 def generic_author_parsing(
-    value: Union[
-        Optional[str],
-        Dict[str, str],
-        List[str],
-        List[Dict[str, str]],
-    ],
-    split_on: Optional[List[str]] = None,
+        value: Union[
+            Optional[str],
+            Dict[str, str],
+            List[str],
+            List[Dict[str, str]],
+        ],
+        split_on: Optional[List[str]] = None,
 ) -> List[str]:
     """This function tries to parse the given <value> to a list of authors (List[str]) based on the type of value.
 
@@ -201,7 +201,7 @@ def generic_author_parsing(
         raise parameter_type_error
 
     if authors and isinstance(authors[0], list):
-        authors = flatten(authors)
+        authors = list(flatten(authors))
 
     return [name.strip() for name in authors]
 
