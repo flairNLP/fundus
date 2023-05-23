@@ -85,14 +85,6 @@ Right now, Fundus has support for reading sitemaps or RSS feeds.
 Usually, the publisher's sitemaps are located at the end of `<publisher_domain>/robots.txt` or can be found through a
 quick Google search.
 
-There are two types of sitemaps we care about: Sitemaps that span the whole site and sitemaps that
-link to current articles(Sometimes called Google News Maps).
-Current sitemaps might span a few days up to months.
-All of these variants are fine, just start with what is in front of you.
-Fundus has native support for recursive sitemaps, you don't need to worry about these.
-Unfortunately, the formats vary quite a lot across publishers.
-But this is not a big concern, most sitemaps work fine with no additional tinkering.
-
 For the Los Angeles Times, jumping to the end of their [robots.txt](https://www.latimes.com/robots.txt) gives us the
 following information.
 
@@ -174,7 +166,8 @@ Thus `https://www.latimes.com/news-sitemap.xml` is a Google News Index Map.
 #### Finishing the Publisher Specification
 
 To complete the publisher specification, specify at least one of the following parameters:
-- `sitemaps` spanning the entire website, 
+
+- `sitemaps` spanning the entire website,
 - `news_map` referring to a Google News Sitemap or Google News Index Map or
 - `rss_feeds` covering recently published articles.
 
