@@ -15,11 +15,11 @@ class Pipeline:
         self.scrapers: Tuple[Scraper, ...] = scrapers
 
     def run(
-        self,
-        error_handling: Literal["suppress", "catch", "raise"],
-        max_articles: Optional[int] = None,
-        extraction_filter: Optional[ExtractionFilter] = None,
-        batch_size: int = 10,
+            self,
+            error_handling: Literal["suppress", "catch", "raise"],
+            max_articles: Optional[int] = None,
+            extraction_filter: Optional[ExtractionFilter] = None,
+            batch_size: int = 10,
     ) -> Iterator[Article]:
         scrape_map = map(
             lambda x: x.scrape(
@@ -48,12 +48,12 @@ class Crawler:
         self.publishers: Set[PublisherEnum] = set(more_itertools.flatten(nested_publisher))
 
     def crawl(
-        self,
-        max_articles: Optional[int] = None,
-        restrict_sources_to: Optional[Literal["rss", "sitemap", "news"]] = None,
-        error_handling: Literal["suppress", "catch", "raise"] = "suppress",
-        only_complete: Union[bool, ExtractionFilter] = True,
-        batch_size: int = 10,
+            self,
+            max_articles: Optional[int] = None,
+            restrict_sources_to: Optional[List[Literal["rss", "sitemap", "news"]]] = None,
+            error_handling: Literal["suppress", "catch", "raise"] = "suppress",
+            only_complete: Union[bool, ExtractionFilter] = True,
+            batch_size: int = 10,
     ) -> Iterator[Article]:
         extraction_filter: Optional[ExtractionFilter]
         if isinstance(only_complete, bool):
@@ -71,13 +71,13 @@ class Crawler:
         for spec in self.publishers:
             sources: List[Source] = []
 
-            if restrict_sources_to == "rss" or restrict_sources_to is None:
+            if restrict_sources_to is None or "rss" in restrict_sources_to:
                 sources.extend([RSSSource(url, publisher=spec.name) for url in spec.rss_feeds])
 
-            if (restrict_sources_to == "news" or restrict_sources_to is None) and spec.news_map:
+            if (restrict_sources_to is None or "news" in restrict_sources_to) and spec.news_map:
                 sources.append(SitemapSource(spec.news_map, publisher=spec.name))
 
-            if restrict_sources_to == "sitemap" or restrict_sources_to is None:
+            if restrict_sources_to is None or "sitemap" in restrict_sources_to:
                 sources.extend([SitemapSource(sitemap, publisher=spec.name) for sitemap in spec.sitemaps])
 
             if sources:
