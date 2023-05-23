@@ -57,7 +57,9 @@ class Scraper:
                         continue
                 except Exception as err:
                     if error_handling == "raise":
-                        basic_logger.error(f"Run into an error processing '{article_source.url}'")
+                        error_message = f"Run into an error processing '{article_source.url}'"
+                        basic_logger.error(error_message)
+                        err.args = (str(err) + "\n\n" + error_message,)
                         raise err
                     elif error_handling == "catch":
                         yield Article(source=article_source, exception=err)
