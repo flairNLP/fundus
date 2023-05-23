@@ -7,7 +7,8 @@ from typing import Any, Dict, Tuple, Type, Union
 
 from typing_extensions import Self
 
-from fundus import PublisherCollection, __development_base_path__ as root_path
+from fundus import PublisherCollection
+from fundus import __development_base_path__ as root_path
 from fundus.parser import BaseParser
 from fundus.publishers.base_objects import PublisherEnum
 from tests.resources.parser.test_data import __module_path__ as test_resource_path
@@ -99,7 +100,7 @@ def load_test_case_data(publisher: PublisherEnum) -> Dict[str, Dict[str, Dict[st
         )
 
 
-def load_supported_news_md() -> str:
+def load_supported_news_md() -> bytes:
     relative_path = Path("docs/supported_news.md")
     supported_news_path = root_path / relative_path
 

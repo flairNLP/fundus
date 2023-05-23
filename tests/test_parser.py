@@ -5,12 +5,22 @@ import lxml.html
 import pytest
 
 from fundus import __development_base_path__ as root_path
-from fundus.parser.base_parser import Attribute, AttributeCollection, BaseParser, ParserProxy, attribute
+from fundus.parser.base_parser import (
+    Attribute,
+    AttributeCollection,
+    BaseParser,
+    ParserProxy,
+    attribute,
+)
 from fundus.parser.utility import generic_author_parsing
 from fundus.publishers import PublisherCollection
 from fundus.publishers.base_objects import PublisherEnum
 from tests.resources import attribute_annotations_mapping
-from tests.utility import load_html_test_file_mapping, load_test_case_data, load_supported_news_md
+from tests.utility import (
+    load_html_test_file_mapping,
+    load_supported_news_md,
+    load_test_case_data,
+)
 
 
 def test_supported():
@@ -19,7 +29,7 @@ def test_supported():
     for publisher in PublisherCollection:
         assert publisher.name in parsed_names, (
             f"Publisher {publisher.name} is not included in docs/supported_news.md. "
-            f"Run 'python -m fundus.utils.generate_tables'"
+            f"Run 'python -m scripts.generate_tables'"
         )
 
 
