@@ -1,4 +1,4 @@
-from typing import Dict, Iterator, List, Protocol, Union
+from typing import Dict, Iterator, List, Protocol, Union, cast
 from urllib.parse import urlparse
 
 import lxml.etree
@@ -26,10 +26,10 @@ column_mapping: Dict[str, ColumnFactory] = {
         attributes := set(attribute_annotations_mapping.keys())
         - set(spec.parser.latest_version.attributes().validated.names)
     )
-    else lxml.html.fromstring("<td>&nbsp;</td>"),
+    else cast(lxml.html.HtmlElement, lxml.html.fromstring("<td>&nbsp;</td>")),
     "Additional Attributes": lambda spec: TD(*[CODE(a) for a in attributes])
     if (attributes := spec.parser.latest_version.attributes().unvalidated.names)
-    else lxml.html.fromstring("<td>&nbsp;</td>"),
+    else cast(lxml.html.HtmlElement, lxml.html.fromstring("<td>&nbsp;</td>")),
     "Class": lambda spec: TD(CODE(spec.name)),
 }
 
