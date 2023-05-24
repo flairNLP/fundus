@@ -51,7 +51,7 @@ def generate_tbody(country: Iterator[PublisherEnum]) -> lxml.html.HtmlElement:
 
 
 def build_supported_publisher_markdown() -> str:
-    markdown_pieces: List[str] = ["# Supported News Tables\n\n"]
+    markdown_pieces: List[str] = ["# Supported Publishers\n\n"]
     for country_code, enum in sorted(PublisherCollection.iter_enums()):
         markdown_pieces.append(f"\n## {country_code.upper()}-Publishers\n")
         table = TABLE(generate_thread(), generate_tbody(enum), CLASS(f"publishers {country_code}"))

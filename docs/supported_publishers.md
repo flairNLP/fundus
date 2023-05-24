@@ -1,4 +1,4 @@
-# Supported News Tables
+# Supported Publishers
 
 
 ## AT-Publishers
