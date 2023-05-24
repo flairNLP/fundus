@@ -22,7 +22,7 @@ from tests.utility import (
 )
 
 
-def test_supported_publisher_table():
+def test_supported_publishers_table():
     root = lxml.html.fromstring(load_supported_publishers_markdown())
     parsed_names: List[str] = root.xpath("//table[contains(@class,'publishers')]//code/text()")
     for publisher in PublisherCollection:
