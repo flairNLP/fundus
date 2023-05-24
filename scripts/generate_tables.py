@@ -1,4 +1,4 @@
-from typing import Dict, Iterator, List, Protocol, Union, cast
+from typing import Dict, Iterable, List, Protocol, cast
 from urllib.parse import urlparse
 
 import lxml.etree
@@ -41,7 +41,7 @@ def generate_thread() -> lxml.html.HtmlElement:
     return thead
 
 
-def generate_tbody(country: Iterator[PublisherEnum]) -> lxml.html.HtmlElement:
+def generate_tbody(country: Iterable[PublisherEnum]) -> lxml.html.HtmlElement:
     content: List[lxml.html.HtmlElement] = []
     for spec in sorted(country, key=lambda enum: enum.publisher_name):
         tds = [column(spec) for column in column_mapping.values()]
@@ -52,7 +52,7 @@ def generate_tbody(country: Iterator[PublisherEnum]) -> lxml.html.HtmlElement:
 
 def build_supported_publisher_markdown() -> str:
     markdown_pieces: List[str] = ["# Supported Publishers\n\n"]
-    for country_code, enum in sorted(PublisherCollection.iter_enums()):
+    for country_code, enum in sorted(PublisherCollection.get_enum_mapping().items()):
         markdown_pieces.append(f"\n## {country_code.upper()}-Publishers\n")
         table = TABLE(generate_thread(), generate_tbody(enum), CLASS(f"publishers {country_code}"))
         markdown_pieces.append(lxml.etree.tostring(table, pretty_print=True).decode("utf-8"))

@@ -1,7 +1,6 @@
-import inspect
 from dataclasses import dataclass, field
 from enum import Enum, EnumMeta, unique
-from typing import Any, Dict, Iterator, List, Optional, Tuple, Type
+from typing import Dict, Iterator, List, Optional, Type
 
 from fundus.parser.base_parser import ParserProxy
 from fundus.scraping.filter import UrlFilter
@@ -73,22 +72,23 @@ class PublisherEnum(Enum):
 class PublisherCollectionMeta(type):
     """This class is the meta-class for creating Publisher Collections.
 
-    Publishers used in the collection should be of type PublisherEnum. I.e.
+    Publishers used in the collection have to be of type PublisherEnum, e.g.
 
-    class NewCollection(metaclass=PublisherCollectionMeta):
-        political = PoliticalPublishers
+    >>> class PoliticalPublisher(PublisherEnum):
+    >>>     ...
+    >>>
+    >>> class NewCollection(metaclass=PublisherCollectionMeta):
+    >>>     political = PoliticalPublisher
 
-    with PoliticalPublishers is of type PublisherEnum.
+    You can still use methods or non-PublisherEnum class attributes, e.g.
 
-    You can still use methods or non PublisherEnum class attributes. I.e.
-
-    class NewCollection(metaclass=PublisherCollectionMeta):
-        _id: int = 1
-        political = PoliticalPublishers
-
-        @property
-        def id(self) -> int:
-            return: self._id
+    >>> class NewCollection(metaclass=PublisherCollectionMeta):
+    >>>     _id: int = 1
+    >>>     political = PoliticalPublisher
+    >>>
+    >>>     @property
+    >>>     def id(self) -> int:
+    >>>         return self._id
 
     will work perfectly fine.
     """
@@ -107,41 +107,32 @@ class PublisherCollectionMeta(type):
                 publisher_mapping[publisher_enum.name] = publisher_enum
         return super().__new__(mcs, name, bases, attrs)
 
-    @property
-    def _get_enums(cls) -> Dict[str, Iterator[PublisherEnum]]:
-        """Returns all enums included in the collection as mapping.
+    def get_enum_mapping(cls) -> Dict[str, EnumMeta]:
+        """Returns all enums included in the publisher collection as dictionary.
+
+        E.g.
+
+        >>> from fundus.publishers.at import AT
+        >>> from fundus.publishers.de import DE
+        >>> class PublisherCollection(metaclass=PublisherCollectionMeta):
+        >>>     de: PublisherEnum = DE
+        >>>     at: PublisherEnum = AT
+        >>>     ...
+        >>> print(PublisherCollection.get_enum_mapping())
+
+        will print the following:
+
+        {'de': <enum 'DE'>, 'at': <enum 'AT'>, ...}
 
         Returns:
-            Dict[str, PublisherEnum]: A mapping with "<attribute_name>": Enum.
+            Dict[str, EnumMeta]: A dictionary mapping 'attribute_name -> enum' for all enums
+                the same order as they were defined in the collection.
 
         """
-        return dict(inspect.getmembers(cls, predicate=lambda attribute: isinstance(attribute, EnumMeta)))
-
-    def iter_enums(cls) -> Iterator[Tuple[str, Iterator[PublisherEnum]]]:
-        """Returns an iterator over Enums included in the collection.
-
-        I.e.
-
-        class PublisherCollection(metaclass=PublisherCollectionMeta):
-            de = DE
-            at = AT
-            ...
-
-        print(list(PublisherCollection.iter_enums))
-
-        will print the following
-
-        [('at', <enum 'AT'>), ('de', <enum 'DE'>), ...]
-
-        Returns:
-            Iterator[Tuple[str, Iterator[PublisherEnum]]]: An iterator over the included Enums
-                with Tuple(attribute_name, Enum) per enum.
-
-        """
-        yield from cls._get_enums.items()
+        return {name: value for name, value in cls.__dict__.items() if isinstance(value, EnumMeta)}
 
     def __contains__(cls, __x: object) -> bool:
-        return __x in cls._get_enums.values()
+        return __x in cls.get_enum_mapping().values()
 
     def __iter__(cls) -> Iterator[PublisherEnum]:
         """This will iterate over all publishers included in the enums and not the enums itself.
@@ -150,8 +141,8 @@ class PublisherCollectionMeta(type):
             Iterator[PublisherEnum]: Iterator over publishers included in the enums.
 
         """
-        for coll in cls._get_enums.values():
-            yield from coll
+        for enum in cls.get_enum_mapping().values():
+            yield from enum
 
     def __getitem__(self, name: str) -> PublisherEnum:
         """Get a publisher from the collection by name represented as string.
