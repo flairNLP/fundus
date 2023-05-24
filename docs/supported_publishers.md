@@ -23,11 +23,9 @@
         </a>
       </td>
       <td>
-        <div>
-          <code>topics</code>
-        </div>
+        <code>topics</code>
       </td>
-      <td></td>
+      <td/>
       <td>
         <code>ORF</code>
       </td>
@@ -56,8 +54,8 @@
           <span>www.welt.de</span>
         </a>
       </td>
-      <td></td>
-      <td></td>
+      <td/>
+      <td/>
       <td>
         <code>DieWelt</code>
       </td>
@@ -71,8 +69,8 @@
           <span>www.mdr.de</span>
         </a>
       </td>
-      <td></td>
-      <td></td>
+      <td/>
+      <td/>
       <td>
         <code>MDR</code>
       </td>
@@ -86,8 +84,8 @@
           <span>www.faz.net</span>
         </a>
       </td>
-      <td></td>
-      <td></td>
+      <td/>
+      <td/>
       <td>
         <code>FAZ</code>
       </td>
@@ -101,8 +99,8 @@
           <span>www.focus.de</span>
         </a>
       </td>
-      <td></td>
-      <td></td>
+      <td/>
+      <td/>
       <td>
         <code>Focus</code>
       </td>
@@ -117,11 +115,9 @@
         </a>
       </td>
       <td>
-        <div>
-          <code>topics</code>
-        </div>
+        <code>topics</code>
       </td>
-      <td></td>
+      <td/>
       <td>
         <code>Merkur</code>
       </td>
@@ -135,8 +131,8 @@
           <span>www.sueddeutsche.de</span>
         </a>
       </td>
-      <td></td>
-      <td></td>
+      <td/>
+      <td/>
       <td>
         <code>SZ</code>
       </td>
@@ -150,8 +146,8 @@
           <span>www.spiegel.de</span>
         </a>
       </td>
-      <td></td>
-      <td></td>
+      <td/>
+      <td/>
       <td>
         <code>SpiegelOnline</code>
       </td>
@@ -165,8 +161,8 @@
           <span>www.sueddeutsche.de</span>
         </a>
       </td>
-      <td></td>
-      <td></td>
+      <td/>
+      <td/>
       <td>
         <code>DieZeit</code>
       </td>
@@ -180,8 +176,8 @@
           <span>www.berliner-zeitung.de</span>
         </a>
       </td>
-      <td></td>
-      <td></td>
+      <td/>
+      <td/>
       <td>
         <code>BerlinerZeitung</code>
       </td>
@@ -195,8 +191,8 @@
           <span>www.tagesschau.de</span>
         </a>
       </td>
-      <td></td>
-      <td></td>
+      <td/>
+      <td/>
       <td>
         <code>Tagesschau</code>
       </td>
@@ -210,8 +206,8 @@
           <span>www.dw.com</span>
         </a>
       </td>
-      <td></td>
-      <td></td>
+      <td/>
+      <td/>
       <td>
         <code>DW</code>
       </td>
@@ -225,8 +221,8 @@
           <span>www.stern.de</span>
         </a>
       </td>
-      <td></td>
-      <td></td>
+      <td/>
+      <td/>
       <td>
         <code>Stern</code>
       </td>
@@ -240,8 +236,8 @@
           <span>www.ntv.de</span>
         </a>
       </td>
-      <td></td>
-      <td></td>
+      <td/>
+      <td/>
       <td>
         <code>NTV</code>
       </td>
@@ -255,8 +251,8 @@
           <span>www.ndr.de</span>
         </a>
       </td>
-      <td></td>
-      <td></td>
+      <td/>
+      <td/>
       <td>
         <code>NDR</code>
       </td>
@@ -270,8 +266,8 @@
           <span>www.taz.de</span>
         </a>
       </td>
-      <td></td>
-      <td></td>
+      <td/>
+      <td/>
       <td>
         <code>Taz</code>
       </td>
@@ -285,8 +281,8 @@
           <span>www.bild.de</span>
         </a>
       </td>
-      <td></td>
-      <td></td>
+      <td/>
+      <td/>
       <td>
         <code>Bild</code>
       </td>
@@ -311,12 +307,12 @@
         <div>The Guardian</div>
       </td>
       <td>
-        <a href="https://theguardian.com/">
-          <span>theguardian.com</span>
+        <a href="https://www.theguardian.com/">
+          <span>www.theguardian.com</span>
         </a>
       </td>
-      <td></td>
-      <td></td>
+      <td/>
+      <td/>
       <td>
         <code>TheGuardian</code>
       </td>
@@ -341,12 +337,12 @@
         <div>Associated Press News</div>
       </td>
       <td>
-        <a href="https://apnews.com/">
-          <span>apnews.com</span>
+        <a href="https://www.apnews.com/">
+          <span>www.apnews.com</span>
         </a>
       </td>
-      <td></td>
-      <td></td>
+      <td/>
+      <td/>
       <td>
         <code>APNews</code>
       </td>
@@ -360,11 +356,9 @@
           <span>www.cnbc.com</span>
         </a>
       </td>
-      <td></td>
+      <td/>
       <td>
-        <div>
-          <code>key_points</code>
-        </div>
+        <code>key_points</code>
       </td>
       <td>
         <code>CNBC</code>
@@ -375,12 +369,12 @@
         <div>The Intercept</div>
       </td>
       <td>
-        <a href="https://theintercept.com/">
-          <span>theintercept.com</span>
+        <a href="https://www.theintercept.com/">
+          <span>www.theintercept.com</span>
         </a>
       </td>
-      <td></td>
-      <td></td>
+      <td/>
+      <td/>
       <td>
         <code>TheIntercept</code>
       </td>
@@ -395,11 +389,9 @@
         </a>
       </td>
       <td>
-        <div>
-          <code>topics</code>
-        </div>
+        <code>topics</code>
       </td>
-      <td></td>
+      <td/>
       <td>
         <code>TheGatewayPundit</code>
       </td>
@@ -409,12 +401,12 @@
         <div>Fox News</div>
       </td>
       <td>
-        <a href="https://foxnews.com/">
-          <span>foxnews.com</span>
+        <a href="https://www.foxnews.com/">
+          <span>www.foxnews.com</span>
         </a>
       </td>
-      <td></td>
-      <td></td>
+      <td/>
+      <td/>
       <td>
         <code>FoxNews</code>
       </td>
@@ -428,8 +420,8 @@
           <span>www.thenation.com</span>
         </a>
       </td>
-      <td></td>
-      <td></td>
+      <td/>
+      <td/>
       <td>
         <code>TheNation</code>
       </td>
@@ -439,17 +431,15 @@
         <div>World Truth</div>
       </td>
       <td>
-        <a href="https://worldtruth.tv/">
-          <span>worldtruth.tv</span>
+        <a href="https://www.worldtruth.tv/">
+          <span>www.worldtruth.tv</span>
         </a>
       </td>
       <td>
-        <div>
-          <code>topics</code>
-          <code>authors</code>
-        </div>
+        <code>authors</code>
+        <code>topics</code>
       </td>
-      <td></td>
+      <td/>
       <td>
         <code>WorldTruth</code>
       </td>
@@ -459,12 +449,12 @@
         <div>The Washington Free Beacon</div>
       </td>
       <td>
-        <a href="https://freebeacon.com/">
-          <span>freebeacon.com</span>
+        <a href="https://www.freebeacon.com/">
+          <span>www.freebeacon.com</span>
         </a>
       </td>
-      <td></td>
-      <td></td>
+      <td/>
+      <td/>
       <td>
         <code>FreeBeacon</code>
       </td>
@@ -479,11 +469,9 @@
         </a>
       </td>
       <td>
-        <div>
-          <code>topics</code>
-        </div>
+        <code>topics</code>
       </td>
-      <td></td>
+      <td/>
       <td>
         <code>WashingtonTimes</code>
       </td>
@@ -497,14 +485,12 @@
           <span>www.newyorker.com</span>
         </a>
       </td>
-      <td></td>
+      <td/>
       <td>
-        <div>
-          <code>alternative_description</code>
-          <code>alternative_title</code>
-          <code>description</code>
-          <code>section</code>
-        </div>
+        <code>alternative_description</code>
+        <code>alternative_title</code>
+        <code>description</code>
+        <code>section</code>
       </td>
       <td>
         <code>TheNewYorker</code>
@@ -519,8 +505,8 @@
           <span>www.reuters.com</span>
         </a>
       </td>
-      <td></td>
-      <td></td>
+      <td/>
+      <td/>
       <td>
         <code>Reuters</code>
       </td>
