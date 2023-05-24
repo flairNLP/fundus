@@ -24,7 +24,7 @@ from tests.utility import (
 
 def test_supported_publisher_table():
     root = lxml.html.fromstring(load_supported_publishers_markdown())
-    parsed_names: List[str] = root.xpath("//table[contains(@class,'source')]//code/text()")
+    parsed_names: List[str] = root.xpath("//table[contains(@class,'publishers')]//code/text()")
     for publisher in PublisherCollection:
         assert publisher.name in parsed_names, (
             f"Publisher {publisher.name} is not included in docs/supported_news.md. "

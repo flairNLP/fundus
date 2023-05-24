@@ -174,4 +174,4 @@ class PublisherCollectionMeta(type):
         Returns:
             int: The number of publishers.
         """
-        return len(list(cls))
+        return len(list(iter(cls)))
