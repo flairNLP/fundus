@@ -43,7 +43,7 @@ def generate_thread() -> lxml.html.HtmlElement:
 
 def generate_tbody(country: Iterator[PublisherEnum]) -> lxml.html.HtmlElement:
     content: List[lxml.html.HtmlElement] = list()
-    for spec in country:
+    for spec in sorted(country, key=lambda enum: enum.publisher_name):
         tds = [column(spec) for column in column_mapping.values()]
         tr = TR(*tds)
         content.append(tr)

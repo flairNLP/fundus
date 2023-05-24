@@ -47,128 +47,6 @@
   <tbody>
     <tr>
       <td>
-        <div>Die Welt</div>
-      </td>
-      <td>
-        <a href="https://www.welt.de/">
-          <span>www.welt.de</span>
-        </a>
-      </td>
-      <td>&#160;</td>
-      <td>&#160;</td>
-      <td>
-        <code>DieWelt</code>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <div>Mitteldeutscher Rundfunk (MDR)</div>
-      </td>
-      <td>
-        <a href="https://www.mdr.de/">
-          <span>www.mdr.de</span>
-        </a>
-      </td>
-      <td>&#160;</td>
-      <td>&#160;</td>
-      <td>
-        <code>MDR</code>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <div>Frankfurter Allgemeine Zeitung</div>
-      </td>
-      <td>
-        <a href="https://www.faz.net/">
-          <span>www.faz.net</span>
-        </a>
-      </td>
-      <td>&#160;</td>
-      <td>&#160;</td>
-      <td>
-        <code>FAZ</code>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <div>Focus Online</div>
-      </td>
-      <td>
-        <a href="https://www.focus.de/">
-          <span>www.focus.de</span>
-        </a>
-      </td>
-      <td>&#160;</td>
-      <td>&#160;</td>
-      <td>
-        <code>Focus</code>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <div>M&#252;nchner Merkur</div>
-      </td>
-      <td>
-        <a href="https://www.merkur.de/">
-          <span>www.merkur.de</span>
-        </a>
-      </td>
-      <td>
-        <code>topics</code>
-      </td>
-      <td>&#160;</td>
-      <td>
-        <code>Merkur</code>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <div>S&#252;ddeutsche Zeitung</div>
-      </td>
-      <td>
-        <a href="https://www.sueddeutsche.de/">
-          <span>www.sueddeutsche.de</span>
-        </a>
-      </td>
-      <td>&#160;</td>
-      <td>&#160;</td>
-      <td>
-        <code>SZ</code>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <div>Spiegel Online</div>
-      </td>
-      <td>
-        <a href="https://www.spiegel.de/">
-          <span>www.spiegel.de</span>
-        </a>
-      </td>
-      <td>&#160;</td>
-      <td>&#160;</td>
-      <td>
-        <code>SpiegelOnline</code>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <div>Die Zeit</div>
-      </td>
-      <td>
-        <a href="https://www.sueddeutsche.de/">
-          <span>www.sueddeutsche.de</span>
-        </a>
-      </td>
-      <td>&#160;</td>
-      <td>&#160;</td>
-      <td>
-        <code>DieZeit</code>
-      </td>
-    </tr>
-    <tr>
-      <td>
         <div>Berliner Zeitung</div>
       </td>
       <td>
@@ -184,17 +62,17 @@
     </tr>
     <tr>
       <td>
-        <div>Tagesschau</div>
+        <div>Bild</div>
       </td>
       <td>
-        <a href="https://www.tagesschau.de/">
-          <span>www.tagesschau.de</span>
+        <a href="https://www.bild.de/">
+          <span>www.bild.de</span>
         </a>
       </td>
       <td>&#160;</td>
       <td>&#160;</td>
       <td>
-        <code>Tagesschau</code>
+        <code>Bild</code>
       </td>
     </tr>
     <tr>
@@ -214,17 +92,109 @@
     </tr>
     <tr>
       <td>
-        <div>Stern</div>
+        <div>Die Tageszeitung (taz)</div>
       </td>
       <td>
-        <a href="https://www.stern.de/">
-          <span>www.stern.de</span>
+        <a href="https://www.taz.de/">
+          <span>www.taz.de</span>
         </a>
       </td>
       <td>&#160;</td>
       <td>&#160;</td>
       <td>
-        <code>Stern</code>
+        <code>Taz</code>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <div>Die Welt</div>
+      </td>
+      <td>
+        <a href="https://www.welt.de/">
+          <span>www.welt.de</span>
+        </a>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+      <td>
+        <code>DieWelt</code>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <div>Die Zeit</div>
+      </td>
+      <td>
+        <a href="https://www.sueddeutsche.de/">
+          <span>www.sueddeutsche.de</span>
+        </a>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+      <td>
+        <code>DieZeit</code>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <div>Focus Online</div>
+      </td>
+      <td>
+        <a href="https://www.focus.de/">
+          <span>www.focus.de</span>
+        </a>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+      <td>
+        <code>Focus</code>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <div>Frankfurter Allgemeine Zeitung</div>
+      </td>
+      <td>
+        <a href="https://www.faz.net/">
+          <span>www.faz.net</span>
+        </a>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+      <td>
+        <code>FAZ</code>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <div>Mitteldeutscher Rundfunk (MDR)</div>
+      </td>
+      <td>
+        <a href="https://www.mdr.de/">
+          <span>www.mdr.de</span>
+        </a>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+      <td>
+        <code>MDR</code>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <div>M&#252;nchner Merkur</div>
+      </td>
+      <td>
+        <a href="https://www.merkur.de/">
+          <span>www.merkur.de</span>
+        </a>
+      </td>
+      <td>
+        <code>topics</code>
+      </td>
+      <td>&#160;</td>
+      <td>
+        <code>Merkur</code>
       </td>
     </tr>
     <tr>
@@ -259,32 +229,62 @@
     </tr>
     <tr>
       <td>
-        <div>Die Tageszeitung (taz)</div>
+        <div>Spiegel Online</div>
       </td>
       <td>
-        <a href="https://www.taz.de/">
-          <span>www.taz.de</span>
+        <a href="https://www.spiegel.de/">
+          <span>www.spiegel.de</span>
         </a>
       </td>
       <td>&#160;</td>
       <td>&#160;</td>
       <td>
-        <code>Taz</code>
+        <code>SpiegelOnline</code>
       </td>
     </tr>
     <tr>
       <td>
-        <div>Bild</div>
+        <div>Stern</div>
       </td>
       <td>
-        <a href="https://www.bild.de/">
-          <span>www.bild.de</span>
+        <a href="https://www.stern.de/">
+          <span>www.stern.de</span>
         </a>
       </td>
       <td>&#160;</td>
       <td>&#160;</td>
       <td>
-        <code>Bild</code>
+        <code>Stern</code>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <div>S&#252;ddeutsche Zeitung</div>
+      </td>
+      <td>
+        <a href="https://www.sueddeutsche.de/">
+          <span>www.sueddeutsche.de</span>
+        </a>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+      <td>
+        <code>SZ</code>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <div>Tagesschau</div>
+      </td>
+      <td>
+        <a href="https://www.tagesschau.de/">
+          <span>www.tagesschau.de</span>
+        </a>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+      <td>
+        <code>Tagesschau</code>
       </td>
     </tr>
   </tbody>
@@ -366,17 +366,32 @@
     </tr>
     <tr>
       <td>
-        <div>The Intercept</div>
+        <div>Fox News</div>
       </td>
       <td>
-        <a href="https://www.theintercept.com/">
-          <span>www.theintercept.com</span>
+        <a href="https://www.foxnews.com/">
+          <span>www.foxnews.com</span>
         </a>
       </td>
       <td>&#160;</td>
       <td>&#160;</td>
       <td>
-        <code>TheIntercept</code>
+        <code>FoxNews</code>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <div>Reuters</div>
+      </td>
+      <td>
+        <a href="https://www.reuters.com/">
+          <span>www.reuters.com</span>
+        </a>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+      <td>
+        <code>Reuters</code>
       </td>
     </tr>
     <tr>
@@ -398,17 +413,17 @@
     </tr>
     <tr>
       <td>
-        <div>Fox News</div>
+        <div>The Intercept</div>
       </td>
       <td>
-        <a href="https://www.foxnews.com/">
-          <span>www.foxnews.com</span>
+        <a href="https://www.theintercept.com/">
+          <span>www.theintercept.com</span>
         </a>
       </td>
       <td>&#160;</td>
       <td>&#160;</td>
       <td>
-        <code>FoxNews</code>
+        <code>TheIntercept</code>
       </td>
     </tr>
     <tr>
@@ -428,20 +443,22 @@
     </tr>
     <tr>
       <td>
-        <div>World Truth</div>
+        <div>The New Yorker</div>
       </td>
       <td>
-        <a href="https://www.worldtruth.tv/">
-          <span>www.worldtruth.tv</span>
+        <a href="https://www.newyorker.com/">
+          <span>www.newyorker.com</span>
         </a>
-      </td>
-      <td>
-        <code>topics</code>
-        <code>authors</code>
       </td>
       <td>&#160;</td>
       <td>
-        <code>WorldTruth</code>
+        <code>alternative_description</code>
+        <code>alternative_title</code>
+        <code>description</code>
+        <code>section</code>
+      </td>
+      <td>
+        <code>TheNewYorker</code>
       </td>
     </tr>
     <tr>
@@ -478,37 +495,20 @@
     </tr>
     <tr>
       <td>
-        <div>The New Yorker</div>
+        <div>World Truth</div>
       </td>
       <td>
-        <a href="https://www.newyorker.com/">
-          <span>www.newyorker.com</span>
+        <a href="https://www.worldtruth.tv/">
+          <span>www.worldtruth.tv</span>
         </a>
       </td>
-      <td>&#160;</td>
       <td>
-        <code>alternative_description</code>
-        <code>alternative_title</code>
-        <code>description</code>
-        <code>section</code>
-      </td>
-      <td>
-        <code>TheNewYorker</code>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <div>Reuters</div>
-      </td>
-      <td>
-        <a href="https://www.reuters.com/">
-          <span>www.reuters.com</span>
-        </a>
+        <code>topics</code>
+        <code>authors</code>
       </td>
       <td>&#160;</td>
-      <td>&#160;</td>
       <td>
-        <code>Reuters</code>
+        <code>WorldTruth</code>
       </td>
     </tr>
   </tbody>
