@@ -92,6 +92,7 @@ class PublisherCollectionMeta(type):
 
     will work perfectly fine.
     """
+
     def __new__(mcs, name, bases, attrs):
         included_enums: List[EnumMeta] = [value for value in attrs.values() if isinstance(value, EnumMeta)]
         publisher_mapping: Dict[str, PublisherEnum] = {}
@@ -107,7 +108,7 @@ class PublisherCollectionMeta(type):
         return super().__new__(mcs, name, bases, attrs)
 
     @property
-    def _get_enums(cls) -> Dict[str, PublisherEnum]:
+    def _get_enums(cls) -> Dict[str, Iterator[PublisherEnum]]:
         """Returns all enums included in the collection as mapping.
 
         Returns:

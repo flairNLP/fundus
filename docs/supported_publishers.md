@@ -1,6 +1,40 @@
 # Supported News Tables
 
 
+## AT-Publishers
+<table class="publishers at">
+  <thead>
+    <tr>
+      <th>Source</th>
+      <th>Domain</th>
+      <th>Missing Attributes</th>
+      <th>Additional Attributes</th>
+      <th>Class</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <div>ORF</div>
+      </td>
+      <td>
+        <a href="https://www.orf.at">
+          <span>www.orf.at</span>
+        </a>
+      </td>
+      <td>
+        <div>
+          <code>topics</code>
+        </div>
+      </td>
+      <td></td>
+      <td>
+        <code>ORF</code>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
 ## DE-Publishers
 <table class="publishers de">
   <thead>
@@ -260,8 +294,8 @@
   </tbody>
 </table>
 
-## AT-Publishers
-<table class="publishers at">
+## UK-Publishers
+<table class="publishers uk">
   <thead>
     <tr>
       <th>Source</th>
@@ -274,21 +308,17 @@
   <tbody>
     <tr>
       <td>
-        <div>ORF</div>
+        <div>The Guardian</div>
       </td>
       <td>
-        <a href="https://www.orf.at">
-          <span>www.orf.at</span>
+        <a href="https://theguardian.com/">
+          <span>theguardian.com</span>
         </a>
       </td>
-      <td>
-        <div>
-          <code>topics</code>
-        </div>
-      </td>
+      <td></td>
       <td></td>
       <td>
-        <code>ORF</code>
+        <code>TheGuardian</code>
       </td>
     </tr>
   </tbody>
@@ -493,36 +523,6 @@
       <td></td>
       <td>
         <code>Reuters</code>
-      </td>
-    </tr>
-  </tbody>
-</table>
-
-## UK-Publishers
-<table class="publishers uk">
-  <thead>
-    <tr>
-      <th>Source</th>
-      <th>Domain</th>
-      <th>Missing Attributes</th>
-      <th>Additional Attributes</th>
-      <th>Class</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>
-        <div>The Guardian</div>
-      </td>
-      <td>
-        <a href="https://theguardian.com/">
-          <span>theguardian.com</span>
-        </a>
-      </td>
-      <td></td>
-      <td></td>
-      <td>
-        <code>TheGuardian</code>
       </td>
     </tr>
   </tbody>
