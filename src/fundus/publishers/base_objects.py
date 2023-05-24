@@ -71,7 +71,7 @@ class PublisherEnum(Enum):
 
 
 class PublisherCollectionMeta(type):
-    """This is the class meta for creating Publisher Collections.
+    """This class is the meta-class for creating Publisher Collections.
 
     Publishers used in the collection should be of type PublisherEnum. I.e.
 
