@@ -71,7 +71,15 @@ If the country section for your publisher did not exist before step 1, please ad
 
 ### 3. Adding Sitemaps
 
+TODO: rewrite entire section, rename to -> add sources
 TODO: Introduce Index Maps (Delete from Google News Maps) -> In separate Sections
+
+There are two types of sitemaps we care about: Sitemaps that span the whole site and sitemaps that link to current articles (Sometimes called Google News Maps).
+Current sitemaps might span a few days up to months.
+All of these variants are fine, just start with what is in front of you.
+Fundus has native support for recursive sitemaps, you don't need to worry about these.
+Unfortunately, the formats vary quite a lot across publishers.
+But this is not a big concern, most sitemaps work fine with no additional tinkering.
 
 The added publisher specification has to specify where to look for articles.
 Right now, Fundus has support for reading sitemaps or RSS feeds.
@@ -211,6 +219,13 @@ Since we didn't add any specific implementation to the parser yet, most entries 
 ### 5. Implementing the Parser
 
 Bring your parser to life and fill it with attributes to parse.
+
+One important caveat to consider is the type of content a particular page is.
+For example, various news outlets use live tickers, sites that display a podcast, or hub sites which are not articles but link to other pages.
+At the current state of this library, you do not need to worry about sites that are not articles.
+Your code should be able to extract the desired attributes from most pages of the publisher you are adding.
+Sites that do not contain the desired attributes will be filtered by the library on its own in a later stage of the pipeline.
+
 You can add attributes by decorating the methods of your parser with the `@attribute` decorator.
 Attributes are expected to have a return value precisely specified in the [attribute guidelines](attribute_guidelines.md).
 
