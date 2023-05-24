@@ -16,7 +16,7 @@ from .world_truth import WorldTruthParser
 class US(PublisherEnum):
     APNews = PublisherSpec(
         name="Associated Press News",
-        domain="https://apnews.com/",
+        domain="https://www.apnews.com/",
         sitemaps=["https://apnews.com/sitemap/sitemaps/sitemap_index.xml"],
         news_map="https://apnews.com/sitemap/google-news-sitemap/sitemap_index.xml",
         parser=APNewsParser,
@@ -32,7 +32,7 @@ class US(PublisherEnum):
 
     TheIntercept = PublisherSpec(
         name="The Intercept",
-        domain="https://theintercept.com/",
+        domain="https://www.theintercept.com/",
         sitemaps=["https://theintercept.com/theintercept/sitemap/master/index/"],
         parser=TheInterceptParser,
     )
@@ -47,7 +47,7 @@ class US(PublisherEnum):
 
     FoxNews = PublisherSpec(
         name="Fox News",
-        domain="https://foxnews.com/",
+        domain="https://www.foxnews.com/",
         sitemaps=[" https://www.foxnews.com/sitemap.xml"],
         news_map="https://www.foxnews.com/sitemap.xml?type=news",
         parser=FoxNewsParser,
@@ -63,14 +63,14 @@ class US(PublisherEnum):
 
     WorldTruth = PublisherSpec(
         name="World Truth",
-        domain="https://worldtruth.tv/",
+        domain="https://www.worldtruth.tv/",
         rss_feeds=["https://feeds.feedburner.com/ConsciousnessTv"],
         parser=WorldTruthParser,
     )
 
     FreeBeacon = PublisherSpec(
         name="The Washington Free Beacon",
-        domain="https://freebeacon.com/",
+        domain="https://www.freebeacon.com/",
         news_map="https://freebeacon.com/post_google_news.xml",
         parser=FreeBeaconParser,
     )
