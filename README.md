@@ -91,7 +91,7 @@ The tutorials explain how ...
 
 ## Currently Supported News Sources
 
-You can find the news sources currently supported [**here**](/docs/supported_publishers.md).
+You can find the publishers currently supported [**here**](/docs/supported_publishers.md).
 
 Also: **Adding a new source is easy - consider contributing to the project!**
 
