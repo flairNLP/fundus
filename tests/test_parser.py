@@ -18,13 +18,13 @@ from fundus.publishers.base_objects import PublisherEnum
 from tests.resources import attribute_annotations_mapping
 from tests.utility import (
     load_html_test_file_mapping,
-    load_supported_news_md,
+    load_supported_publishers_markdown,
     load_test_case_data,
 )
 
 
 def test_supported():
-    root = lxml.html.fromstring(load_supported_news_md())
+    root = lxml.html.fromstring(load_supported_publishers_markdown())
     parsed_names: List[str] = root.xpath("//table[contains(@class,'source')]//code/text()")
     for publisher in PublisherCollection:
         assert publisher.name in parsed_names, (

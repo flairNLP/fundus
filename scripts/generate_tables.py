@@ -1,122 +1,70 @@
-import textwrap
-from dataclasses import dataclass, field
-from pathlib import Path
-from typing import Callable, Dict, Iterator, List, Sequence, Union
+from typing import Dict, Iterator, List, Protocol
 from urllib.parse import urlparse
 
-from typing_extensions import TypeAlias
+import lxml.etree
+import lxml.html
+from lxml.html.builder import DIV, A, SPAN, CODE, TH, TR, THEAD, TBODY, TABLE, CLASS, TD
 
 from fundus import PublisherCollection
 from fundus import __development_base_path__ as root_path
 from fundus.publishers.base_objects import PublisherEnum
 from tests.resources import attribute_annotations_mapping
 
-
-def generate_line(content: str, indent: int = 0, newline: bool = True) -> str:
-    return textwrap.indent(content, prefix="\t" * indent) + ("\n" if newline else "")
+supported_publishers_markdown_path = root_path / "docs" / "supported_publishers.md"
 
 
-ContentT: TypeAlias = Union[str, "Tag"]
+class ColumnFactory(Protocol):
+    def __call__(self, spec: PublisherEnum) -> lxml.html.HtmlElement:
+        ...
 
 
-@dataclass
-class Tag:
-    type: str
-    content: Union[Sequence[ContentT], ContentT]
-    attrs: Dict[str, str] = field(default_factory=dict)
-    style: Dict[str, str] = field(default_factory=dict)
-    inline: bool = False
-
-    def __str__(self) -> str:
-        lines: List[str] = list()
-        if self.style:
-            inline_style = "; ".join(f"{key}: {value}" for key, value in self.style.items())
-            self.attrs.update({"style": inline_style})
-        inline_attrs: str = "".join([f' {key}="{value}"' for key, value in self.attrs.items()])
-        lines.append(generate_line(f"<{self.type}{inline_attrs}>", newline=not self.inline))
-        indent = 1 if not self.inline else 0
-        if isinstance(self.content, list):
-            lines.extend(generate_line(str(c), indent=indent, newline=False) for c in self.content)
-        elif isinstance(self.content, Tag):
-            lines.append(generate_line(str(self.content), indent=indent, newline=False))
-        elif self.content:
-            lines.append(generate_line(str(self.content), indent=indent, newline=not self.inline))
-        lines.append(generate_line(f"</{self.type}>"))
-        return "".join(lines)
-
-
-@dataclass
-class ColumnFactory:
-    content: Callable[[PublisherEnum], Union[List[ContentT], ContentT]]
-
-    def __call__(self, *args, **kwargs) -> Tag:
-        return Tag(type="td", content=self.content(*args, **kwargs), inline=False)
-
-
-max_width: int = 1000
 column_mapping: Dict[str, ColumnFactory] = {
-    "Source": ColumnFactory(
-        content=lambda spec: Tag("div", f"{spec.publisher_name}", inline=True),
-    ),
-    "Domain": ColumnFactory(
-        content=lambda spec: Tag("a", Tag("span", urlparse(spec.domain).netloc, inline=True), {"href": spec.domain})
-    ),
-    "Missing Attributes": ColumnFactory(
-        content=lambda spec: [
-            Tag("code", a, inline=True)
-            for a in set(attribute_annotations_mapping.keys())
-            - set(spec.parser.latest_version.attributes().validated.names)
-        ]
-    ),
-    "Additional Attributes": ColumnFactory(
-        content=lambda spec: [Tag("code", a, inline=True) for a in attrs]
-        if (attrs := spec.parser.latest_version.attributes().unvalidated.names)
-        else ""
-    ),
-    "Class": ColumnFactory(content=lambda spec: Tag("code", spec.name, inline=True)),
+    "Source": lambda spec: DIV(f"{spec.publisher_name}"),
+    "Domain": lambda spec: A(SPAN(urlparse(spec.domain).netloc), href=spec.domain),
+    "Missing Attributes": lambda spec: DIV(*[CODE(a) for a in attributes])
+    if (
+        attributes := set(attribute_annotations_mapping.keys())
+                      - set(spec.parser.latest_version.attributes().validated.names)
+    )
+    else "",
+    "Additional Attributes": lambda spec: DIV(*[CODE(a) for a in attributes])
+    if (attributes := spec.parser.latest_version.attributes().unvalidated.names)
+    else "",
+    "Class": lambda spec: CODE(spec.name),
 }
 
 
-def generate_thread() -> Tag:
-    ths = [Tag("th", name, inline=True) for name in column_mapping.keys()]
-    tr = Tag("tr", ths)
-    thread = Tag("thread", tr)
-    return thread
+def generate_thread() -> lxml.html.HtmlElement:
+    ths = [TH(name) for name in column_mapping.keys()]
+    tr = TR(*ths)
+    thead = THEAD(tr)
+    return thead
 
 
-def generate_tbody(country: Iterator[PublisherEnum]) -> Tag:
-    content: List[Tag] = list()
+def generate_tbody(country: Iterator[PublisherEnum]) -> lxml.html.HtmlElement:
+    content: List[lxml.html.HtmlElement] = list()
     for spec in country:
-        tds = [column(spec) for column in column_mapping.values()]
-        tr = Tag("tr", tds)
+        tds = [TD(column(spec)) for column in column_mapping.values()]
+        tr = TR(*tds)
         content.append(tr)
-    return Tag("tbody", content)
+    return TBODY(*content)
 
 
-def build_supported_news_svg() -> str:
-    md: List[str] = ["# Supported News Tables\n\n"]
-    for cc, enum in PublisherCollection.iter_countries():
-        md.append(f"\n## {cc.upper()}-News\n")
-        table = Tag(
-            "table",
-            [generate_thread(), generate_tbody(enum)],
-            attrs={
-                "class": f"source {cc}",
-            },
-        )
-        md.append(str(table))
-    return "".join(md)
+def build_supported_publisher_markdown() -> str:
+    markdown_pieces: List[str] = ["# Supported News Tables\n\n"]
+    for country_code, enum in PublisherCollection.iter_enums():
+        markdown_pieces.append(f"\n## {country_code.upper()}-Publishers\n")
+        table = TABLE(generate_thread(), generate_tbody(enum), CLASS(f"publishers {country_code}"))
+        markdown_pieces.append(lxml.etree.tostring(table, pretty_print=True).decode("utf-8"))
+    return "".join(markdown_pieces)
 
 
 if __name__ == "__main__":
-    md = build_supported_news_svg()
+    markdown = build_supported_publisher_markdown()
 
-    relative_path = Path("docs/supported_news.md")
-    supported_news_path = root_path / relative_path
-
-    with open(supported_news_path, "w+", encoding="utf8") as file:
-        file.write(md)
+    with open(supported_publishers_markdown_path, "w", encoding="utf8") as file:
+        file.write(markdown)
 
     import subprocess
 
-    process = subprocess.Popen(["git", "add", supported_news_path], stdout=subprocess.PIPE)
+    process = subprocess.Popen(["git", "add", supported_publishers_markdown_path], stdout=subprocess.PIPE)
