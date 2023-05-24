@@ -1,6 +1,7 @@
+import inspect
 from dataclasses import dataclass, field
 from enum import Enum, EnumMeta, unique
-from typing import Dict, Iterator, List, Optional, Type
+from typing import Any, Dict, Iterator, List, Optional, Type
 
 from fundus.parser.base_parser import ParserProxy
 from fundus.scraping.filter import UrlFilter
@@ -93,8 +94,12 @@ class PublisherCollectionMeta(type):
     will work perfectly fine.
     """
 
+    @staticmethod
+    def _is_publisher_enum(obj: Any) -> bool:
+        return inspect.isclass(obj) and issubclass(obj, PublisherEnum)
+
     def __new__(mcs, name, bases, attrs):
-        included_enums: List[EnumMeta] = [value for value in attrs.values() if isinstance(value, EnumMeta)]
+        included_enums: List[EnumMeta] = [value for value in attrs.values() if mcs._is_publisher_enum(value)]
         publisher_mapping: Dict[str, PublisherEnum] = {}
         for country_enum in included_enums:
             for publisher_enum in country_enum:  # type: ignore
@@ -129,7 +134,7 @@ class PublisherCollectionMeta(type):
                 the same order as they were defined in the collection.
 
         """
-        return {name: value for name, value in cls.__dict__.items() if isinstance(value, EnumMeta)}
+        return {name: value for name, value in cls.__dict__.items() if cls._is_publisher_enum(value)}
 
     def __contains__(cls, __x: object) -> bool:
         return __x in cls.get_enum_mapping().values()
