@@ -4,7 +4,6 @@ from typing import List
 import lxml.html
 import pytest
 
-from fundus import __development_base_path__ as root_path
 from fundus.parser.base_parser import (
     Attribute,
     AttributeCollection,
