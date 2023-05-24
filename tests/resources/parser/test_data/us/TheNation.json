@@ -1,11 +1,17 @@
 {
-  "title": "Colombia Adopts an Unprecedented Energy Policy—but Needs Help to Pull It Off",
-  "topics": [
-    "Brazil",
-    "Colombia",
-    "Global South"
-  ],
-  "authors": [
-    "John Feffer"
-  ]
+    "V1": {
+        "meta": {
+            "url": "https://www.thenation.com/article/activism/teamsters-tdu-ups-iowa/",
+            "crawl_date": "2023-05-15 13:55:06.350230"
+        },
+        "content": {
+            "authors": [
+                "Sarah Lazare"
+            ],
+            "title": "Inside a Teamster Rebellion: This Is What Union Democracy Looks Like",
+            "topics": [
+                "Unions"
+            ]
+        }
+    }
 }

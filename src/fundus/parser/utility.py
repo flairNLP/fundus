@@ -145,8 +145,30 @@ def generic_author_parsing(
         Dict[str, str],
         List[str],
         List[Dict[str, str]],
-    ]
+    ],
+    split_on: Optional[List[str]] = None,
 ) -> List[str]:
+    """This function tries to parse the given <value> to a list of authors (List[str]) based on the type of value.
+
+    Parses based on type of <value> as following:
+        value (None):       Empty list \n
+        value (str):        re.split(delimiters) with delimiters := split_on or common delimiters' \n
+        value (dict):       If key "name" in dict, [dict["name"]] else empty list \n
+        value (list[str]):  value\n
+        value (list[dict]): [dict["name"] for dict in list if dict["name"]] \n
+
+    with common delimiters := [",", ";", " und ", " and "]
+
+    All values are stripped with default strip() method before returned.
+
+    Args:
+        value:      An input value representing author(s) which get parsed based on type
+        split_on:   Only relevant for type(<value>) = str. If set, split <value> on <split_on>,
+            else (default) split <value> on common delimiters
+
+    Returns:
+        A parsed and striped list of authors
+    """
     if not value:
         return []
 
@@ -155,10 +177,9 @@ def generic_author_parsing(
         f"Supported types are 'Optional[str], Dict[str, str], List[str], List[Dict[str, str]],'"
     )
 
-    authors: List[str]
-
     if isinstance(value, str):
-        authors = [value]
+        common_delimiters = [",", ";", " und ", " and "]
+        authors = list(filter(bool, re.split(r"|".join(split_on or common_delimiters), value)))
 
     elif isinstance(value, dict):
         authors = [name] if (name := value.get("name")) else []

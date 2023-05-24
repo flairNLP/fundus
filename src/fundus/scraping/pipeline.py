@@ -4,7 +4,8 @@ import more_itertools
 
 from fundus.publishers.base_objects import PublisherEnum
 from fundus.scraping.article import Article
-from fundus.scraping.scraper import ExtractionFilter, Scraper
+from fundus.scraping.filter import ExtractionFilter
+from fundus.scraping.scraper import Scraper
 from fundus.scraping.source import RSSSource, SitemapSource, Source
 from fundus.scraping.source_url import NewsMap, RSSFeed, Sitemap
 from fundus.utils.validation import listify
@@ -18,9 +19,15 @@ class Pipeline:
         self,
         error_handling: Literal["suppress", "catch", "raise"],
         max_articles: Optional[int] = None,
+        extraction_filter: Optional[ExtractionFilter] = None,
         batch_size: int = 10,
     ) -> Iterator[Article]:
-        scrape_map = map(lambda x: x.scrape(error_handling=error_handling, batch_size=batch_size), self.scrapers)
+        scrape_map = map(
+            lambda x: x.scrape(
+                error_handling=error_handling, batch_size=batch_size, extraction_filter=extraction_filter
+            ),
+            self.scrapers,
+        )
         robin = more_itertools.interleave_longest(*tuple(scrape_map))
 
         if max_articles:
@@ -44,7 +51,7 @@ class Crawler:
     def crawl(
         self,
         max_articles: Optional[int] = None,
-        restrict_sources_to: Optional[Literal["rss", "sitemap", "news"]] = None,
+        restrict_sources_to: Optional[List[Literal["rss", "sitemap", "news"]]] = None,
         error_handling: Literal["suppress", "catch", "raise"] = "suppress",
         only_complete: Union[bool, ExtractionFilter] = True,
         batch_size: int = 10,
@@ -63,15 +70,15 @@ class Crawler:
 
         scrapers: List[Scraper] = []
         for spec in self.publishers:
-            sources_from_url_sources: List[Source] = []
+            sources: List[Source] = []
 
             if restrict_sources_to == "rss" or restrict_sources_to is None:
-                sources_from_url_sources.extend(
+                sources.extend(
                     [RSSSource(url.url, publisher=spec.name) for url in spec.sources if isinstance(url, RSSFeed)]
                 )
 
             if restrict_sources_to == "sitemap" or restrict_sources_to is None:
-                sources_from_url_sources.extend(
+                sources.extend(
                     [
                         SitemapSource(
                             sitemap.url, publisher=spec.name, reverse=sitemap.reverse, recursive=sitemap.recursive
@@ -82,7 +89,7 @@ class Crawler:
                 )
 
             if restrict_sources_to == "news" or restrict_sources_to is None:
-                sources_from_url_sources.extend(
+                sources.extend(
                     [
                         SitemapSource(sitemap.url, publisher=spec.name)
                         for sitemap in spec.sources
@@ -90,18 +97,22 @@ class Crawler:
                     ]
                 )
 
-            if sources_from_url_sources:
+            if sources:
                 scrapers.append(
                     Scraper(
-                        *sources_from_url_sources,
-                        parser=spec.parser(),
-                        article_classifier=spec.article_classifier,
-                        extraction_filter=extraction_filter,
+                        *sources,
+                        parser=spec.parser,
+                        url_filter=spec.url_filter,
                     )
                 )
 
         if scrapers:
             pipeline = Pipeline(*scrapers)
-            return pipeline.run(error_handling=error_handling, max_articles=max_articles, batch_size=batch_size)
+            return pipeline.run(
+                error_handling=error_handling,
+                max_articles=max_articles,
+                batch_size=batch_size,
+                extraction_filter=extraction_filter,
+            )
         else:
             return iter(())

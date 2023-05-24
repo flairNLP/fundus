@@ -1,18 +1,18 @@
 from dataclasses import dataclass, field
-from enum import Enum, unique
+from enum import Enum, EnumMeta, unique
 from typing import Any, Dict, Iterator, List, Optional, Type
 
-from fundus.parser import BaseParser
-from fundus.scraping.scraper import ArticleClassifier
 from fundus.scraping.source_url import NewsMap, RSSFeed, Sitemap, SourceUrl
+from fundus.parser.base_parser import ParserProxy
+from fundus.scraping.filter import UrlFilter
 
 
 @dataclass(frozen=True)
 class PublisherSpec:
     domain: str
-    parser: Type[BaseParser]
+    parser: Type[ParserProxy]
 
-    article_classifier: Optional[ArticleClassifier] = field(default=None)
+    url_filter: Optional[UrlFilter] = field(default=None)
     sources: List[SourceUrl] = field(default_factory=list)
 
     def __post_init__(self):
@@ -32,8 +32,8 @@ class PublisherEnum(Enum):
         if not isinstance(spec, PublisherSpec):
             raise ValueError("Your only allowed to generate 'PublisherEnum's from 'PublisherSpec")
         self.domain = spec.domain
-        self.parser = spec.parser
-        self.article_classifier = spec.article_classifier
+        self.parser = spec.parser()
+        self.url_filter = spec.url_filter
         self.sources = spec.sources
 
     def supports(self, source_type: Optional[str]) -> bool:
@@ -57,7 +57,7 @@ class PublisherEnum(Enum):
         attrs_set = set(attrs)
         spec: PublisherEnum
         for spec in list(cls):
-            if attrs_set.issubset(spec.parser.attributes().names) and spec.supports(source_type):
+            if attrs_set.issubset(spec.parser().attributes().names) and spec.supports(source_type):
                 matched.append(spec)
         return matched
 
@@ -65,7 +65,21 @@ class PublisherEnum(Enum):
         return self
 
 
-class CollectionMeta(type):
+class PublisherCollectionMeta(type):
+    def __new__(mcs, name, bases, attrs):
+        included_enums: List[EnumMeta] = [value for value in attrs.values() if isinstance(value, EnumMeta)]
+        publisher_mapping: Dict[str, PublisherEnum] = {}
+        for country_enum in included_enums:
+            for publisher_enum in country_enum:  # type: ignore
+                if existing := publisher_mapping.get(publisher_enum.name):
+                    raise AttributeError(
+                        f"Found duplicate publisher names in same collection '{name}'. "
+                        f"{type(existing).__name__} -> {existing.name} and "
+                        f"{type(publisher_enum).__name__} -> {publisher_enum.name}"
+                    )
+                publisher_mapping[publisher_enum.name] = publisher_enum
+        return super().__new__(mcs, name, bases, attrs)
+
     @property
     def _members(cls) -> Dict[str, Any]:
         return {name: obj for name, obj in cls.__dict__.items() if "__" not in name}
@@ -76,6 +90,12 @@ class CollectionMeta(type):
     def __iter__(cls) -> Iterator[PublisherEnum]:
         for coll in cls._members.values():
             yield from coll
+
+    def __getitem__(self, name: str) -> PublisherEnum:
+        for publisher_enum in self:
+            if publisher_enum.name == name:
+                return publisher_enum
+        raise KeyError(f"Publisher '{name}' not present in {self.__name__}")
 
     def __len__(cls) -> int:
         return len(cls._members)

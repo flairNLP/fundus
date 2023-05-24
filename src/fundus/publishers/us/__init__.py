@@ -5,16 +5,18 @@ from .ap_news import APNewsParser
 from .cnbc import CNBCParser
 from .fox_news import FoxNewsParser
 from .free_beacon import FreeBeaconParser
+from .reuters import ReutersParser
 from .the_gateway_pundit import TheGatewayPunditParser
 from .the_intercept import TheInterceptParser
 from .the_nation_parser import TheNationParser
+from .the_new_yorker import TheNewYorkerParser
 from .washington_times_parser import WashingtonTimesParser
 from .world_truth import WorldTruthParser
 
 
 class US(PublisherEnum):
     APNews = PublisherSpec(
-        domain="https://apnews.com/",
+        domain="https://www.apnews.com/",
         sources=[
             Sitemap("https://apnews.com/sitemap/sitemaps/sitemap_index.xml"),
             NewsMap("https://apnews.com/sitemap/google-news-sitemap/sitemap_index.xml"),
@@ -29,7 +31,7 @@ class US(PublisherEnum):
     )
 
     TheIntercept = PublisherSpec(
-        domain="https://theintercept.com/",
+        domain="https://www.theintercept.com/",
         sources=[Sitemap("https://theintercept.com/theintercept/sitemap/master/index/")],
         parser=TheInterceptParser,
     )
@@ -44,7 +46,7 @@ class US(PublisherEnum):
     )
 
     FoxNews = PublisherSpec(
-        domain="https://foxnews.com/",
+        domain="https://www.foxnews.com/",
         sources=[
             Sitemap(" https://www.foxnews.com/sitemap.xml"),
             NewsMap("https://www.foxnews.com/sitemap.xml?type=news"),
@@ -62,13 +64,13 @@ class US(PublisherEnum):
     )
 
     WorldTruth = PublisherSpec(
-        domain="https://worldtruth.tv/",
+        domain="https://www.worldtruth.tv/",
         sources=[RSSFeed("https://feeds.feedburner.com/ConsciousnessTv")],
         parser=WorldTruthParser,
     )
 
     FreeBeacon = PublisherSpec(
-        domain="https://freebeacon.com/",
+        domain="https://www.freebeacon.com/",
         sources=[NewsMap("https://freebeacon.com/post_google_news.xml")],
         parser=FreeBeaconParser,
     )
@@ -81,4 +83,18 @@ class US(PublisherEnum):
             Sitemap("https://www.washingtontimes.com/sitemap-entries.xml"),
         ],
         parser=WashingtonTimesParser,
+    )
+
+    TheNewYorker = PublisherSpec(
+        domain="https://www.newyorker.com/",
+        sitemaps=["https://www.newyorker.com/sitemap.xml"],
+        news_map="https://www.newyorker.com/feed/google-news-sitemap-feed/sitemap-google-news",
+        parser=TheNewYorkerParser,
+    )
+
+    Reuters = PublisherSpec(
+        domain="https://www.reuters.com/",
+        sitemaps=["https://www.reuters.com/arc/outboundfeeds/sitemap-index/?outputType=xml"],
+        news_map="https://www.reuters.com/arc/outboundfeeds/news-sitemap-index/?outputType=xml",
+        parser=ReutersParser,
     )

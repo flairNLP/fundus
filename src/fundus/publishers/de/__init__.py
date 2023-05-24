@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from fundus.publishers.base_objects import PublisherEnum, PublisherSpec
-from fundus.scraping.classification import regex_classifier
+from fundus.scraping.filter import regex_filter
 from fundus.scraping.source_url import NewsMap, RSSFeed, Sitemap
 
 from .berliner_zeitung import BerlinerZeitungParser
@@ -103,7 +103,7 @@ class DE(PublisherEnum):
     )
 
     BerlinerZeitung = PublisherSpec(
-        domain="https://www.sueddeutsche.de/",
+        domain="https://www.berliner-zeitung.de/",
         sources=[
             RSSFeed("https://www.berliner-zeitung.de/feed.xml"),
             Sitemap("https://www.berliner-zeitung.de/sitemap.xml"),
@@ -146,7 +146,7 @@ class DE(PublisherEnum):
             Sitemap("https://www.ndr.de/sitemap112-sitemap.xml"),
         ],
         parser=NDRParser,
-        article_classifier=lambda url, html: not regex_classifier("podcast[0-9]{4}")(url),
+        url_filter=regex_filter("podcast[0-9]{4}|/index.html"),
     )
 
     Taz = PublisherSpec(
