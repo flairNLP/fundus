@@ -26,10 +26,10 @@ column_mapping: Dict[str, ColumnFactory] = {
         attributes := set(attribute_annotations_mapping.keys())
         - set(spec.parser.latest_version.attributes().validated.names)
     )
-    else TD(),
+    else TD("-"),
     "Additional Attributes": lambda spec: TD(*[CODE(a) for a in attributes])
     if (attributes := spec.parser.latest_version.attributes().unvalidated.names)
-    else TD(),
+    else TD("-"),
     "Class": lambda spec: TD(CODE(spec.name)),
 }
 
