@@ -503,8 +503,8 @@
         </a>
       </td>
       <td>
-        <code>topics</code>
         <code>authors</code>
+        <code>topics</code>
       </td>
       <td>&#160;</td>
       <td>

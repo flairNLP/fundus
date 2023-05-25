@@ -21,13 +21,13 @@ class ColumnFactory(Protocol):
 column_mapping: Dict[str, ColumnFactory] = {
     "Source": lambda spec: TD(DIV(f"{spec.publisher_name}")),
     "Domain": lambda spec: TD(A(SPAN(urlparse(spec.domain).netloc), href=spec.domain)),
-    "Missing Attributes": lambda spec: TD(*[CODE(a) for a in attributes])
+    "Missing Attributes": lambda spec: TD(*[CODE(a) for a in sorted(attributes)])
     if (
         attributes := set(attribute_annotations_mapping.keys())
         - set(spec.parser.latest_version.attributes().validated.names)
     )
     else cast(lxml.html.HtmlElement, lxml.html.fromstring("<td>&nbsp;</td>")),
-    "Additional Attributes": lambda spec: TD(*[CODE(a) for a in attributes])
+    "Additional Attributes": lambda spec: TD(*[CODE(a) for a in sorted(attributes)])
     if (attributes := spec.parser.latest_version.attributes().unvalidated.names)
     else cast(lxml.html.HtmlElement, lxml.html.fromstring("<td>&nbsp;</td>")),
     "Class": lambda spec: TD(CODE(spec.name)),
