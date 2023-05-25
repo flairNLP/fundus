@@ -3,20 +3,36 @@ from abc import ABC, abstractmethod
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
 from datetime import datetime
-from functools import cached_property
-from multiprocessing.pool import ThreadPool
+from functools import cached_property, lru_cache
+from multiprocessing import cpu_count
 from time import sleep
 from typing import Callable, Dict, Generator, Iterable, Iterator, List, Optional
 
 import feedparser
 import lxml.html
 import requests
+import requests.adapters
 from lxml.cssselect import CSSSelector
 from lxml.etree import XPath
 from requests import HTTPError
 
 from fundus.logging.logger import basic_logger
 from fundus.scraping.filter import UrlFilter, _not
+
+max_threads = cpu_count() + 4
+
+
+def get_session() -> requests.Session:
+    session = requests.Session()
+    adapter = requests.adapters.HTTPAdapter(pool_connections=max_threads, pool_maxsize=50)
+    session.mount("https://", adapter)
+    session.mount("http://", adapter)
+    return session
+
+
+@lru_cache(maxsize=1)
+def get_global_pool():
+    return ThreadPoolExecutor(thread_name_prefix="GlobalWorker")
 
 
 @dataclass(frozen=True)
@@ -32,12 +48,13 @@ class Source(Iterable[str], ABC):
     request_header = {"user-agent": "Mozilla/5.0"}
 
     def __init__(
-        self, publisher: Optional[str], delay: Optional[Callable[[], float]] = None, max_threads: Optional[int] = 10
+        self,
+        publisher: Optional[str],
+        delay: Optional[Callable[[], float]] = None,
     ):
         self.publisher = publisher
         self.delay = delay
         self.max_threads = max_threads
-        self.executor: Optional[ThreadPoolExecutor] = None
 
     @abstractmethod
     def __iter__(self) -> Iterator[str]:
@@ -50,7 +67,7 @@ class Source(Iterable[str], ABC):
     def _batched_fetch(
         self, url_filter: Optional[UrlFilter] = None
     ) -> Generator[List[Optional[ArticleSource]], int, None]:
-        with requests.Session() as session:
+        with get_session() as session:
 
             def thread(url: str) -> Optional[ArticleSource]:
                 if self.delay:
@@ -76,9 +93,6 @@ class Source(Iterable[str], ABC):
                 )
                 return article_source
 
-            if not self.executor:
-                self.executor = ThreadPoolExecutor(self.max_threads, thread_name_prefix=f"{self.publisher}Worker")
-
             url_iterator: Iterator[str]
             if url_filter:
                 url_iterator = filter(_not(url_filter), self)
@@ -95,11 +109,12 @@ class Source(Iterable[str], ABC):
                     break
                 elif len(batch_urls) < batch_size:
                     empty = True
-                yield self.executor.map(thread, batch_urls)
-
-            self.executor.shutdown()
+                yield get_global_pool().map(thread, batch_urls)
 
     def fetch(self, batch_size: int = 10, url_filter: Optional[UrlFilter] = None) -> Iterator[ArticleSource]:
+        global max_threads
+        if batch_size > max_threads:
+            batch_size = max_threads
         gen = self._batched_fetch(url_filter)
         while True:
             try:

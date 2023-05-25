@@ -29,7 +29,7 @@ class Scraper:
         error_handling: Literal["suppress", "catch", "raise"],
         extraction_filter: Optional[ExtractionFilter] = None,
         batch_size: int = 10,
-        keep_none: bool = False
+        keep_none: bool = False,
     ) -> Iterator[Optional[Article]]:
         if isinstance(extraction_filter, Requires):
             supported_attributes = set(
