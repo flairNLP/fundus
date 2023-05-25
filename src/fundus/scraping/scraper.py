@@ -26,11 +26,34 @@ class Scraper:
 
     def scrape(
         self,
-        error_handling: Literal["suppress", "catch", "raise"],
+        error_handling: Literal["suppress", "catch", "raise"] = "suppress",
         extraction_filter: Optional[ExtractionFilter] = None,
-        batch_size: int = 10,
-        keep_none: bool = False,
+        batch_size: Optional[int] = None,
+        force_article: bool = True,
     ) -> Iterator[Optional[Article]]:
+        """Yields articles from initialized sources.
+
+        When force_article is set to True, the return type becomes non-optional Iterator[Article].
+        As a consequence the function will iterate through the sources until an extraction satisfies
+        the extraction filter and an Article can be yielded.
+        If set to False, extractions filtered our by the extraction_filter will be yielded as None
+        values. This is in order to prevent the generator to be occupied until an Article which
+        satisfies the filter is found.
+
+        Refer to the docstring of Crawler.crawl() for more detailed information about the Args.
+
+        Args:
+            error_handling (Literal["suppress", "catch", "raise"]): Set error handling
+                for extraction. Defaults to "suppress".
+            extraction_filter (Optional[ExtractionFilter]): Set extraction filter. Defaults to None.
+            batch_size (Optional[int]): Set batch size used for concurrent downloads. Defaults to None
+            force_article (bool): If set to True, only Articles will be yielded, if set to False
+                Articles filtered out by the extraction_filter will be yielded as None value.
+
+        Returns:
+            Iterator[Optional[Article]]: If force_article is set to False
+            Iterator[Article]: If force_article is set to True, default.
+        """
         if isinstance(extraction_filter, Requires):
             supported_attributes = set(
                 more_itertools.flatten(collection.names for collection in self.parser.attribute_mapping.values())
@@ -69,7 +92,7 @@ class Scraper:
                         raise ValueError(f"Unknown value '{error_handling}' for parameter <error_handling>'")
 
                 if extraction_filter and extraction_filter(extraction):
-                    if keep_none:
+                    if force_article:
                         yield None
                     else:
                         continue
