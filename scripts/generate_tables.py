@@ -52,7 +52,7 @@ def generate_tbody(country: Iterable[PublisherEnum]) -> lxml.html.HtmlElement:
 
 def build_supported_publisher_markdown() -> str:
     markdown_pieces: List[str] = ["# Supported Publishers\n\n"]
-    for country_code, enum in sorted(PublisherCollection.get_enum_mapping().items()):
+    for country_code, enum in sorted(PublisherCollection.get_publisher_enum_mapping().items()):
         markdown_pieces.append(f"\n## {country_code.upper()}-Publishers\n")
         table = TABLE(generate_thread(), generate_tbody(enum), CLASS(f"publishers {country_code}"))
         markdown_pieces.append(lxml.etree.tostring(table, pretty_print=True).decode("utf-8"))

@@ -112,8 +112,8 @@ class PublisherCollectionMeta(type):
                 publisher_mapping[publisher_enum.name] = publisher_enum
         return super().__new__(mcs, name, bases, attrs)
 
-    def get_enum_mapping(cls) -> Dict[str, EnumMeta]:
-        """Returns all enums included in the publisher collection as dictionary.
+    def get_publisher_enum_mapping(cls) -> Dict[str, EnumMeta]:
+        """Returns all PublisherEnums included in the publisher collection as dictionary.
 
         E.g.
 
@@ -123,21 +123,21 @@ class PublisherCollectionMeta(type):
         >>>     de: PublisherEnum = DE
         >>>     at: PublisherEnum = AT
         >>>     ...
-        >>> print(PublisherCollection.get_enum_mapping())
+        >>> print(PublisherCollection.get_publisher_enum_mapping())
 
         will print the following:
 
         {'de': <enum 'DE'>, 'at': <enum 'AT'>, ...}
 
         Returns:
-            Dict[str, EnumMeta]: A dictionary mapping 'attribute_name -> enum' for all enums
-                the same order as they were defined in the collection.
+            Dict[str, EnumMeta]: A dictionary mapping 'attribute_name -> enum' for all PublisherEnums
+            in the same order as they were defined in the collection.
 
         """
         return {name: value for name, value in cls.__dict__.items() if cls._is_publisher_enum(value)}
 
     def __contains__(cls, __x: object) -> bool:
-        return __x in cls.get_enum_mapping().values()
+        return __x in cls.get_publisher_enum_mapping().values()
 
     def __iter__(cls) -> Iterator[PublisherEnum]:
         """This will iterate over all publishers included in the enums and not the enums itself.
@@ -146,7 +146,7 @@ class PublisherCollectionMeta(type):
             Iterator[PublisherEnum]: Iterator over publishers included in the enums.
 
         """
-        for enum in cls.get_enum_mapping().values():
+        for enum in cls.get_publisher_enum_mapping().values():
             yield from enum
 
     def __getitem__(self, name: str) -> PublisherEnum:
