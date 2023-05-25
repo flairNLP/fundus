@@ -1,5 +1,6 @@
 import gzip
 from abc import ABC, abstractmethod
+from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
 from datetime import datetime
 from functools import cached_property
@@ -36,6 +37,7 @@ class Source(Iterable[str], ABC):
         self.publisher = publisher
         self.delay = delay
         self.max_threads = max_threads
+        self.executor: Optional[ThreadPoolExecutor] = None
 
     @abstractmethod
     def __iter__(self) -> Iterator[str]:
@@ -74,31 +76,35 @@ class Source(Iterable[str], ABC):
                 )
                 return article_source
 
-            with ThreadPool(processes=self.max_threads) as pool:
-                url_iterator: Iterator[str]
-                if url_filter:
-                    url_iterator = filter(_not(url_filter), self)
-                else:
-                    url_iterator = iter(self)
-                empty = False
-                while not empty:
-                    current_size = batch_size = yield  # type: ignore
-                    batch_urls = []
-                    while current_size > 0 and (nxt := next(url_iterator, None)):
-                        batch_urls.append(nxt)
-                        current_size -= 1
-                    if not batch_urls:
-                        break
-                    elif len(batch_urls) < batch_size:
-                        empty = True
-                    yield pool.map(thread, batch_urls)
+            if not self.executor:
+                self.executor = ThreadPoolExecutor(self.max_threads, thread_name_prefix=f"{self.publisher}Worker")
+
+            url_iterator: Iterator[str]
+            if url_filter:
+                url_iterator = filter(_not(url_filter), self)
+            else:
+                url_iterator = iter(self)
+            empty = False
+            while not empty:
+                current_size = batch_size = yield  # type: ignore
+                batch_urls = []
+                while current_size > 0 and (nxt := next(url_iterator, None)):
+                    batch_urls.append(nxt)
+                    current_size -= 1
+                if not batch_urls:
+                    break
+                elif len(batch_urls) < batch_size:
+                    empty = True
+                yield self.executor.map(thread, batch_urls)
+
+            self.executor.shutdown()
 
     def fetch(self, batch_size: int = 10, url_filter: Optional[UrlFilter] = None) -> Iterator[ArticleSource]:
         gen = self._batched_fetch(url_filter)
         while True:
             try:
                 next(gen)
-                yield from filter(lambda x: bool(x), gen.send(batch_size))
+                yield from filter(bool, gen.send(batch_size))
             except StopIteration:
                 break
 

@@ -23,11 +23,11 @@ class Pipeline:
     ) -> Iterator[Article]:
         scrape_map = map(
             lambda x: x.scrape(
-                error_handling=error_handling, batch_size=batch_size, extraction_filter=extraction_filter
+                error_handling=error_handling, batch_size=batch_size, extraction_filter=extraction_filter, keep_none=True
             ),
             self.scrapers,
         )
-        robin = more_itertools.interleave_longest(*tuple(scrape_map))
+        robin = filter(bool, more_itertools.interleave_longest(*tuple(scrape_map)))
 
         if max_articles:
             while max_articles:

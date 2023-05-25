@@ -29,7 +29,8 @@ class Scraper:
         error_handling: Literal["suppress", "catch", "raise"],
         extraction_filter: Optional[ExtractionFilter] = None,
         batch_size: int = 10,
-    ) -> Iterator[Article]:
+        keep_none: bool = False
+    ) -> Iterator[Optional[Article]]:
         if isinstance(extraction_filter, Requires):
             supported_attributes = set(
                 more_itertools.flatten(collection.names for collection in self.parser.attribute_mapping.values())
@@ -52,9 +53,6 @@ class Scraper:
             for article_source in crawler.fetch(batch_size, self.url_filter):
                 try:
                     extraction = self.parser(article_source.crawl_date).parse(article_source.html, error_handling)
-
-                    if extraction_filter and extraction_filter(extraction):
-                        continue
                 except Exception as err:
                     if error_handling == "raise":
                         error_message = f"Run into an error processing '{article_source.url}'"
@@ -70,5 +68,11 @@ class Scraper:
                     else:
                         raise ValueError(f"Unknown value '{error_handling}' for parameter <error_handling>'")
 
-                article = Article.from_extracted(source=article_source, extracted=extraction)
-                yield article
+                if extraction_filter and extraction_filter(extraction):
+                    if keep_none:
+                        yield None
+                    else:
+                        continue
+                else:
+                    article = Article.from_extracted(source=article_source, extracted=extraction)
+                    yield article
