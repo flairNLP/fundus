@@ -14,25 +14,25 @@ import requests
 import requests.adapters
 from lxml.cssselect import CSSSelector
 from lxml.etree import XPath
-from requests import HTTPError
+from requests import ConnectionError, HTTPError, TooManyRedirects
 
 from fundus.logging.logger import basic_logger
 from fundus.scraping.filter import UrlFilter, _not
 
-max_threads = cpu_count() + 4
+_max_threads = cpu_count() + 4
 
 
-def get_session() -> requests.Session:
+def get_session(size: int) -> requests.Session:
     session = requests.Session()
-    adapter = requests.adapters.HTTPAdapter(pool_connections=max_threads, pool_maxsize=50)
+    adapter = requests.adapters.HTTPAdapter(pool_connections=size, pool_maxsize=size)
     session.mount("https://", adapter)
     session.mount("http://", adapter)
     return session
 
 
 @lru_cache(maxsize=1)
-def get_global_pool():
-    return ThreadPoolExecutor(thread_name_prefix="GlobalWorker")
+def get_global_pool(size: int = _max_threads):
+    return ThreadPoolExecutor(max_workers=size, thread_name_prefix="GlobalWorker")
 
 
 @dataclass(frozen=True)
@@ -54,7 +54,9 @@ class Source(Iterable[str], ABC):
     ):
         self.publisher = publisher
         self.delay = delay
-        self.max_threads = max_threads
+        self.max_threads = _max_threads
+        self._executor: ThreadPoolExecutor = get_global_pool(_max_threads)
+        self._session: requests.Session = get_session(_max_threads)
 
     @abstractmethod
     def __iter__(self) -> Iterator[str]:
@@ -66,8 +68,8 @@ class Source(Iterable[str], ABC):
 
     def _batched_fetch(
         self, url_filter: Optional[UrlFilter] = None
-    ) -> Generator[List[Optional[ArticleSource]], int, None]:
-        with get_session() as session:
+    ) -> Generator[Iterator[Optional[ArticleSource]], int, None]:
+        with self._session as session:
 
             def thread(url: str) -> Optional[ArticleSource]:
                 if self.delay:
@@ -75,11 +77,11 @@ class Source(Iterable[str], ABC):
                 try:
                     response = session.get(url=url, headers=self.request_header)
                     response.raise_for_status()
-                except HTTPError as error:
+                except (HTTPError, ConnectionError, TooManyRedirects) as error:
                     basic_logger.warn(f"Skipped {url} because of {error}")
                     return None
-                except requests.exceptions.TooManyRedirects as error:
-                    basic_logger.info(f"Skipped {url} because of {error}")
+                except Exception as error:
+                    basic_logger.error(f"Run into an unexpected Error while requesting {url}: {error}")
                     return None
                 if history := response.history:
                     basic_logger.info(f"Got redirected {len(history)} time(s) from {url} -> {response.url}")
@@ -109,12 +111,12 @@ class Source(Iterable[str], ABC):
                     break
                 elif len(batch_urls) < batch_size:
                     empty = True
-                yield get_global_pool().map(thread, batch_urls)
+                yield self._executor.map(thread, batch_urls)
 
-    def fetch(self, batch_size: int = 10, url_filter: Optional[UrlFilter] = None) -> Iterator[ArticleSource]:
-        global max_threads
-        if batch_size > max_threads:
-            batch_size = max_threads
+    def fetch(self, batch_size: Optional[int], url_filter: Optional[UrlFilter]) -> Iterator[ArticleSource]:
+        batch_size = batch_size or _max_threads
+        self._executor = get_global_pool(min(batch_size, _max_threads))
+        self._session = get_session(min(batch_size, _max_threads))
         gen = self._batched_fetch(url_filter)
         while True:
             try:
