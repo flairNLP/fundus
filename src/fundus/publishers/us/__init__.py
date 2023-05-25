@@ -15,6 +15,7 @@ from .world_truth import WorldTruthParser
 
 class US(PublisherEnum):
     APNews = PublisherSpec(
+        name="Associated Press News",
         domain="https://www.apnews.com/",
         sitemaps=["https://apnews.com/sitemap/sitemaps/sitemap_index.xml"],
         news_map="https://apnews.com/sitemap/google-news-sitemap/sitemap_index.xml",
@@ -22,6 +23,7 @@ class US(PublisherEnum):
     )
 
     CNBC = PublisherSpec(
+        name="CNBC",
         domain="https://www.cnbc.com/",
         sitemaps=["https://www.cnbc.com/sitemapAll.xml"],
         news_map="https://www.cnbc.com/sitemap_news.xml",
@@ -29,12 +31,14 @@ class US(PublisherEnum):
     )
 
     TheIntercept = PublisherSpec(
+        name="The Intercept",
         domain="https://www.theintercept.com/",
         sitemaps=["https://theintercept.com/theintercept/sitemap/master/index/"],
         parser=TheInterceptParser,
     )
 
     TheGatewayPundit = PublisherSpec(
+        name="The Gateway Pundit",
         domain="https://www.thegatewaypundit.com/",
         sitemaps=["https://www.thegatewaypundit.com/sitemap_index.xml"],
         news_map="https://www.thegatewaypundit.com/news-sitemap.xml",
@@ -42,6 +46,7 @@ class US(PublisherEnum):
     )
 
     FoxNews = PublisherSpec(
+        name="Fox News",
         domain="https://www.foxnews.com/",
         sitemaps=[" https://www.foxnews.com/sitemap.xml"],
         news_map="https://www.foxnews.com/sitemap.xml?type=news",
@@ -49,6 +54,7 @@ class US(PublisherEnum):
     )
 
     TheNation = PublisherSpec(
+        name="The Nation",
         domain="https://www.thenation.com/",
         sitemaps=["https://www.thenation.com/sitemap_index.xml"],
         news_map="https://www.thenation.com/news-sitemap.xml",
@@ -56,18 +62,21 @@ class US(PublisherEnum):
     )
 
     WorldTruth = PublisherSpec(
+        name="World Truth",
         domain="https://www.worldtruth.tv/",
         rss_feeds=["https://feeds.feedburner.com/ConsciousnessTv"],
         parser=WorldTruthParser,
     )
 
     FreeBeacon = PublisherSpec(
+        name="The Washington Free Beacon",
         domain="https://www.freebeacon.com/",
         news_map="https://freebeacon.com/post_google_news.xml",
         parser=FreeBeaconParser,
     )
 
     WashingtonTimes = PublisherSpec(
+        name="The Washington Times",
         domain="https://www.washingtontimes.com/",
         rss_feeds=["https://www.washingtontimes.com/rss/headlines/news/politics/"],
         sitemaps=[
@@ -78,6 +87,7 @@ class US(PublisherEnum):
     )
 
     TheNewYorker = PublisherSpec(
+        name="The New Yorker",
         domain="https://www.newyorker.com/",
         sitemaps=["https://www.newyorker.com/sitemap.xml"],
         news_map="https://www.newyorker.com/feed/google-news-sitemap-feed/sitemap-google-news",
@@ -85,6 +95,7 @@ class US(PublisherEnum):
     )
 
     Reuters = PublisherSpec(
+        name="Reuters",
         domain="https://www.reuters.com/",
         sitemaps=["https://www.reuters.com/arc/outboundfeeds/sitemap-index/?outputType=xml"],
         news_map="https://www.reuters.com/arc/outboundfeeds/news-sitemap-index/?outputType=xml",

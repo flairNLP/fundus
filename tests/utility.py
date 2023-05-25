@@ -8,9 +8,9 @@ from typing import Any, Dict, Tuple, Type, Union
 from typing_extensions import Self
 
 from fundus import PublisherCollection
-from fundus.logging.logger import basic_logger
 from fundus.parser import BaseParser
 from fundus.publishers.base_objects import PublisherEnum
+from scripts.generate_tables import supported_publishers_markdown_path
 from tests.resources.parser.test_data import __module_path__ as test_resource_path
 
 
@@ -96,5 +96,19 @@ def load_test_case_data(publisher: PublisherEnum) -> Dict[str, Dict[str, Dict[st
         return data
     else:
         raise ValueError(
-            f"Received invalid JSON format for publisher {repr(publisher.name)}. Expected a JSON with a dictionary as root."
+            f"Received invalid JSON format for publisher {repr(publisher.name)}. "
+            f"Expected a JSON with a dictionary as root."
         )
+
+
+def load_supported_publishers_markdown() -> bytes:
+    if not supported_publishers_markdown_path.exists():
+        raise FileNotFoundError(
+            f"The '{supported_publishers_markdown_path.name}' is missing. "
+            f"Run 'python -m fundus.utils.generate_tables'"
+        )
+
+    with open(supported_publishers_markdown_path, "rb") as file:
+        content = file.read()
+
+    return content
