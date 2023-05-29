@@ -64,7 +64,3 @@ if __name__ == "__main__":
 
     with open(supported_publishers_markdown_path, "w", encoding="utf8") as file:
         file.write(markdown)
-
-    import subprocess
-
-    process = subprocess.Popen(["git", "add", supported_publishers_markdown_path], stdout=subprocess.PIPE)
