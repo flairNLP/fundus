@@ -290,36 +290,6 @@
   </tbody>
 </table>
 
-## UK-Publishers
-<table class="publishers uk">
-  <thead>
-    <tr>
-      <th>Source</th>
-      <th>Domain</th>
-      <th>Missing Attributes</th>
-      <th>Additional Attributes</th>
-      <th>Class</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>
-        <div>The Guardian</div>
-      </td>
-      <td>
-        <a href="https://www.theguardian.com/">
-          <span>www.theguardian.com</span>
-        </a>
-      </td>
-      <td>&#160;</td>
-      <td>&#160;</td>
-      <td>
-        <code>TheGuardian</code>
-      </td>
-    </tr>
-  </tbody>
-</table>
-
 ## US-Publishers
 <table class="publishers us">
   <thead>
