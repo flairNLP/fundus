@@ -1,10 +1,5 @@
-from fundus.publishers.base_objects import (
-    NewsMap,
-    PublisherEnum,
-    PublisherSpec,
-    RSSFeed,
-    Sitemap,
-)
+from fundus.publishers.base_objects import PublisherEnum, PublisherSpec
+from fundus.scraping.source import NewsMap, RSSFeed, Sitemap
 
 from .ap_news import APNewsParser
 from .cnbc import CNBCParser

@@ -10,19 +10,13 @@ from fundus.scraping.source import Source
 
 
 class Scraper:
-    def __init__(
-        self,
-        *sources: Source,
-        parser: ParserProxy,
-        url_filter: Optional[UrlFilter] = None,
-    ):
+    def __init__(self, *sources: Source, parser: ParserProxy):
         self.sources = list(sources)
 
         if not parser:
             raise ValueError(f"the given parser {type(parser).__name__} is empty")
 
         self.parser = parser
-        self.url_filter = url_filter
 
     def scrape(
         self,

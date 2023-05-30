@@ -2,10 +2,11 @@ from typing import Iterator, List, Literal, Optional, Set, Tuple, Type, Union
 
 import more_itertools
 
-from fundus.publishers.base_objects import PublisherEnum, SourceUrl
+from fundus.publishers.base_objects import PublisherEnum
 from fundus.scraping.article import Article
 from fundus.scraping.filter import ExtractionFilter
 from fundus.scraping.scraper import Scraper
+from fundus.scraping.source import URLSource
 from fundus.utils.validation import listify
 
 
@@ -49,7 +50,7 @@ class Crawler:
     def crawl(
         self,
         max_articles: Optional[int] = None,
-        restrict_sources_to: Optional[List[Type[SourceUrl]]] = None,
+        restrict_sources_to: Optional[List[Type[URLSource]]] = None,
         error_handling: Literal["suppress", "catch", "raise"] = "suppress",
         only_complete: Union[bool, ExtractionFilter] = True,
         batch_size: int = 10,
@@ -80,7 +81,6 @@ class Crawler:
                     Scraper(
                         *sources,
                         parser=spec.parser,
-                        url_filter=spec.url_filter,
                     )
                 )
 

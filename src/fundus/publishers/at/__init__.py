@@ -1,4 +1,5 @@
-from fundus.publishers.base_objects import PublisherEnum, PublisherSpec, RSSFeed
+from fundus.scraping.source import RSSFeed
+from fundus.publishers.base_objects import PublisherEnum, PublisherSpec
 
 from .orf import OrfParser
 

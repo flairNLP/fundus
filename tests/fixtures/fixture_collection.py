@@ -1,12 +1,10 @@
 import pytest
 
+from fundus import NewsMap, RSSFeed, Sitemap
 from fundus.publishers.base_objects import (
-    NewsMap,
     PublisherCollectionMeta,
     PublisherEnum,
     PublisherSpec,
-    RSSFeed,
-    Sitemap,
 )
 
 
