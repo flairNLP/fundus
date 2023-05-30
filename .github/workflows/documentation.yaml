@@ -9,10 +9,12 @@ on:
       # Long-term, job-level triggers are more appropriate.
       # https://how.wtf/run-workflow-step-or-job-based-on-file-changes-github-actions.html
       - src/fundus/publishers/**
+      - scripts/generate_tables.py
 
   pull_request:
     paths:
       - src/fundus/publishers/**
+      - scripts/generate_tables.py
 
   workflow_dispatch:
 
