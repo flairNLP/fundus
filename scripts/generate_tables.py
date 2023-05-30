@@ -1,4 +1,5 @@
 import itertools
+from pathlib import Path
 from typing import Dict, Iterable, List, Protocol, Sequence, cast
 from urllib.parse import urlparse
 
@@ -11,6 +12,8 @@ from fundus import PublisherCollection
 from fundus import __development_base_path__ as root_path
 from fundus.publishers.base_objects import PublisherEnum
 from tests.resources import attribute_annotations_mapping
+
+supported_publishers_markdown_path: Path = root_path / "docs" / "supported_publishers.md"
 
 
 class ColumnFactory(Protocol):
@@ -94,7 +97,7 @@ def build_supported_publishers_markdown(publisher_tables: Dict[str, lxml.html.Ht
 def main() -> None:
     publisher_tables = build_publisher_tables()
     markdown = build_supported_publishers_markdown(publisher_tables)
-    with open(root_path / "docs" / "supported_publishers.md", "w", encoding="utf8") as file:
+    with open(supported_publishers_markdown_path, "w", encoding="utf8") as file:
         file.write(markdown)
 
 
