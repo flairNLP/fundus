@@ -5,7 +5,7 @@ import more_itertools
 from fundus.logging.logger import basic_logger
 from fundus.parser import ParserProxy
 from fundus.scraping.article import Article
-from fundus.scraping.filter import ExtractionFilter, Requires, UrlFilter
+from fundus.scraping.filter import ExtractionFilter, Requires
 from fundus.scraping.source import Source
 
 

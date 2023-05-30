@@ -36,7 +36,10 @@ def collection_with_empty_publisher_enum(empty_publisher_enum):
 def publisher_enum_with_news_map(parser_proxy_with_version):
     class PubEnum(PublisherEnum):
         value = PublisherSpec(
-            name="test_pub", domain="https//:test.com/", sources=[NewsMap("test_news_map")], parser=parser_proxy_with_version
+            name="test_pub",
+            domain="https//:test.com/",
+            sources=[NewsMap("test_news_map")],
+            parser=parser_proxy_with_version,
         )
 
     return PubEnum
@@ -46,7 +49,10 @@ def publisher_enum_with_news_map(parser_proxy_with_version):
 def publisher_enum_with_rss_feeds(parser_proxy_with_version):
     class PubEnum(PublisherEnum):
         value = PublisherSpec(
-            name="test_pub", domain="https//:test.com/", sources=[RSSFeed("test_feed")], parser=parser_proxy_with_version
+            name="test_pub",
+            domain="https//:test.com/",
+            sources=[RSSFeed("test_feed")],
+            parser=parser_proxy_with_version,
         )
 
     return PubEnum
@@ -56,7 +62,10 @@ def publisher_enum_with_rss_feeds(parser_proxy_with_version):
 def publisher_enum_with_sitemaps(parser_proxy_with_version):
     class PubEnum(PublisherEnum):
         value = PublisherSpec(
-            name="test_pub", domain="https//:test.com/", sources=[Sitemap("test_sitemap")], parser=parser_proxy_with_version
+            name="test_pub",
+            domain="https//:test.com/",
+            sources=[Sitemap("test_sitemap")],
+            parser=parser_proxy_with_version,
         )
 
     return PubEnum
