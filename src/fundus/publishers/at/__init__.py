@@ -8,6 +8,7 @@ from .orf import OrfParser
 
 class AT(PublisherEnum):
     ORF = PublisherSpec(
+        name="ORF",
         domain="https://www.orf.at",
         sources=[RSSFeed("https://rss.orf.at/news.xml")],
         parser=OrfParser,

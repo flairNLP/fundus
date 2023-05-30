@@ -16,6 +16,7 @@ from .world_truth import WorldTruthParser
 
 class US(PublisherEnum):
     APNews = PublisherSpec(
+        name="Associated Press News",
         domain="https://www.apnews.com/",
         sources=[
             Sitemap("https://apnews.com/sitemap/sitemaps/sitemap_index.xml"),
@@ -25,18 +26,21 @@ class US(PublisherEnum):
     )
 
     CNBC = PublisherSpec(
+        name="CNBC",
         domain="https://www.cnbc.com/",
         sources=[Sitemap("https://www.cnbc.com/sitemapAll.xml"), NewsMap("https://www.cnbc.com/sitemap_news.xml")],
         parser=CNBCParser,
     )
 
     TheIntercept = PublisherSpec(
+        name="The Intercept",
         domain="https://www.theintercept.com/",
         sources=[Sitemap("https://theintercept.com/theintercept/sitemap/master/index/")],
         parser=TheInterceptParser,
     )
 
     TheGatewayPundit = PublisherSpec(
+        name="The Gateway Pundit",
         domain="https://www.thegatewaypundit.com/",
         sources=[
             Sitemap("https://www.thegatewaypundit.com/sitemap_index.xml"),
@@ -46,6 +50,7 @@ class US(PublisherEnum):
     )
 
     FoxNews = PublisherSpec(
+        name="Fox News",
         domain="https://www.foxnews.com/",
         sources=[
             Sitemap(" https://www.foxnews.com/sitemap.xml"),
@@ -55,6 +60,7 @@ class US(PublisherEnum):
     )
 
     TheNation = PublisherSpec(
+        name="The Nation",
         domain="https://www.thenation.com/",
         sources=[
             Sitemap("https://www.thenation.com/sitemap_index.xml"),
@@ -64,18 +70,21 @@ class US(PublisherEnum):
     )
 
     WorldTruth = PublisherSpec(
+        name="World Truth",
         domain="https://www.worldtruth.tv/",
         sources=[RSSFeed("https://feeds.feedburner.com/ConsciousnessTv")],
         parser=WorldTruthParser,
     )
 
     FreeBeacon = PublisherSpec(
+        name="The Washington Free Beacon",
         domain="https://www.freebeacon.com/",
         sources=[NewsMap("https://freebeacon.com/post_google_news.xml")],
         parser=FreeBeaconParser,
     )
 
     WashingtonTimes = PublisherSpec(
+        name="The Washington Times",
         domain="https://www.washingtontimes.com/",
         sources=[
             RSSFeed("https://www.washingtontimes.com/rss/headlines/news/politics/"),
@@ -86,6 +95,7 @@ class US(PublisherEnum):
     )
 
     TheNewYorker = PublisherSpec(
+        name="The New Yorker",
         domain="https://www.newyorker.com/",
         sources=[
             Sitemap("https://www.newyorker.com/sitemap.xml"),
@@ -95,6 +105,7 @@ class US(PublisherEnum):
     )
 
     Reuters = PublisherSpec(
+        name="Reuters",
         domain="https://www.reuters.com/",
         sources=[
             Sitemap("https://www.reuters.com/arc/outboundfeeds/sitemap-index/?outputType=xml"),

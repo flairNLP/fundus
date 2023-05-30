@@ -25,6 +25,7 @@ from .taz import TazParser
 # noinspection PyPep8Naming
 class DE(PublisherEnum):
     DieWelt = PublisherSpec(
+        name="Die Welt",
         domain="https://www.welt.de/",
         sources=[
             RSSFeed("https://www.welt.de/feeds/latest.rss"),
@@ -35,6 +36,7 @@ class DE(PublisherEnum):
     )
 
     MDR = PublisherSpec(
+        name="Mitteldeutscher Rundfunk (MDR)",
         domain="https://www.mdr.de/",
         sources=[
             RSSFeed("https://www.mdr.de/nachrichten/index-rss.xml"),
@@ -45,6 +47,7 @@ class DE(PublisherEnum):
     )
 
     FAZ = PublisherSpec(
+        name="Frankfurter Allgemeine Zeitung",
         domain="https://www.faz.net/",
         sources=[
             RSSFeed("https://www.faz.net/rss/aktuell"),
@@ -59,12 +62,14 @@ class DE(PublisherEnum):
     )
 
     Focus = PublisherSpec(
+        name="Focus Online",
         domain="https://www.focus.de/",
         sources=[RSSFeed("https://rss.focus.de/fol/XML/rss_folnews.xml")],
         parser=FocusParser,
     )
 
     Merkur = PublisherSpec(
+        name="Münchner Merkur",
         domain="https://www.merkur.de/",
         sources=[
             RSSFeed("https://www.merkur.de/welt/rssfeed.rdf"),
@@ -75,12 +80,14 @@ class DE(PublisherEnum):
     )
 
     SZ = PublisherSpec(
+        name="Süddeutsche Zeitung",
         domain="https://www.sueddeutsche.de/",
         sources=[RSSFeed("https://rss.sueddeutsche.de/alles")],
         parser=SZParser,
     )
 
     SpiegelOnline = PublisherSpec(
+        name="Spiegel Online",
         domain="https://www.spiegel.de/",
         sources=[
             RSSFeed("https://www.spiegel.de/schlagzeilen/index.rss"),
@@ -91,6 +98,7 @@ class DE(PublisherEnum):
     )
 
     DieZeit = PublisherSpec(
+        name="Die Zeit",
         domain="https://www.sueddeutsche.de/",
         sources=[
             RSSFeed("https://newsfeed.zeit.de/news/index"),
@@ -103,6 +111,7 @@ class DE(PublisherEnum):
     )
 
     BerlinerZeitung = PublisherSpec(
+        name="Berliner Zeitung",
         domain="https://www.berliner-zeitung.de/",
         sources=[
             RSSFeed("https://www.berliner-zeitung.de/feed.xml"),
@@ -113,12 +122,14 @@ class DE(PublisherEnum):
     )
 
     Tagesschau = PublisherSpec(
+        name="Tagesschau",
         domain="https://www.tagesschau.de/",
         sources=[RSSFeed("https://www.tagesschau.de/xml/rss2/")],
         parser=TagesschauParser,
     )
 
     DW = PublisherSpec(
+        name="Deutsche Welle",
         domain="https://www.dw.com/",
         sources=[
             RSSFeed("https://rss.dw.com/xml/rss-de-all"),
@@ -128,18 +139,21 @@ class DE(PublisherEnum):
         parser=DWParser,
     )
     Stern = PublisherSpec(
+        name="Stern",
         domain="https://www.stern.de/",
         sources=[RSSFeed("https://www.stern.de/feed/standard/alle-nachrichten/")],
         parser=SternParser,
     )
 
     NTV = PublisherSpec(
+        name="N-Tv",
         domain="https://www.ntv.de/",
         sources=[NewsMap("https://www.n-tv.de/news.xml"), Sitemap("https://www.n-tv.de/sitemap.xml")],
         parser=NTVParser,
     )
 
     NDR = PublisherSpec(
+        name="Norddeutscher Rundfunk (NDR)",
         domain="https://www.ndr.de/",
         sources=[
             NewsMap("https://www.ndr.de/sitemap112-newssitemap.xml"),
@@ -150,12 +164,14 @@ class DE(PublisherEnum):
     )
 
     Taz = PublisherSpec(
+        name="Die Tageszeitung (taz)",
         domain="https://www.taz.de/",
         sources=[NewsMap("https://taz.de/sitemap-google-news.xml"), Sitemap("https://taz.de/sitemap-index.xml")],
         parser=TazParser,
     )
 
     Bild = PublisherSpec(
+        name="Bild",
         domain="https://www.bild.de/",
         sources=[RSSFeed("https://www.bild.de/rssfeeds/vw-neu/vw-neu-32001674,view=rss2.bild.xml")],
         parser=BildParser,

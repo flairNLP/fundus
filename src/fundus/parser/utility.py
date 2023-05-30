@@ -199,6 +199,8 @@ def generic_author_parsing(
     else:
         raise parameter_type_error
 
+    authors = list(more_itertools.collapse(authors, base_type=str))
+
     return [name.strip() for name in authors]
 
 

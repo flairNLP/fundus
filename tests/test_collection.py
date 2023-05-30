@@ -26,7 +26,7 @@ class TestCollection:
 
     def test_publisher_spec_without_source(self, empty_parser_proxy):
         with pytest.raises(ValueError):
-            PublisherSpec(domain="https//:test.com/", parser=empty_parser_proxy)
+            PublisherSpec(name="Test", domain="https//:test.com/", parser=empty_parser_proxy)
 
     def test_duplicate_publisher_names_in_same_collection(self, publisher_enum_with_news_map):
         with pytest.raises(AttributeError):

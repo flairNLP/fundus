@@ -1,13 +1,35 @@
 import datetime
+from typing import List
 
+import lxml.html
 import pytest
 
-from fundus.parser.base_parser import Attribute, BaseParser, ParserProxy, attribute
+from fundus.parser.base_parser import (
+    Attribute,
+    AttributeCollection,
+    BaseParser,
+    ParserProxy,
+    attribute,
+)
 from fundus.parser.utility import generic_author_parsing
 from fundus.publishers import PublisherCollection
 from fundus.publishers.base_objects import PublisherEnum
 from tests.resources import attribute_annotations_mapping
-from tests.utility import load_html_test_file_mapping, load_test_case_data
+from tests.utility import (
+    load_html_test_file_mapping,
+    load_supported_publishers_markdown,
+    load_test_case_data,
+)
+
+
+def test_supported_publishers_table():
+    root = lxml.html.fromstring(load_supported_publishers_markdown())
+    parsed_names: List[str] = root.xpath("//table[contains(@class,'publishers')]//code/text()")
+    for publisher in PublisherCollection:
+        assert publisher.name in parsed_names, (
+            f"Publisher {publisher.name} is not included in docs/supported_news.md. "
+            f"Run 'python -m scripts.generate_tables'"
+        )
 
 
 class TestBaseParser:
@@ -31,8 +53,6 @@ class TestBaseParser:
 
     def test_supported_unsupported(self):
         class ParserWithValidatedAndUnvalidated(BaseParser):
-            VALID_UNTIL = datetime.date.today()
-
             @attribute
             def validated(self) -> str:
                 return "supported"
@@ -45,12 +65,14 @@ class TestBaseParser:
         assert len(parser.attributes()) == 2
 
         assert (validated := parser.attributes().validated)
-        assert validated != [parser.validated]
-        assert validated[0].__func__ == parser.validated.__func__
+        assert isinstance(validated, AttributeCollection)
+        assert (funcs := list(validated)) != [parser.validated]
+        assert funcs[0].__func__ == parser.validated.__func__
 
         assert (unvalidated := parser.attributes().unvalidated)
-        assert unvalidated != [parser.unvalidated]
-        assert unvalidated[0].__func__ == parser.unvalidated.__func__
+        assert isinstance(validated, AttributeCollection)
+        assert (funcs := list(unvalidated)) != [parser.unvalidated]
+        assert funcs[0].__func__ == parser.unvalidated.__func__
 
 
 class TestParserProxy:
