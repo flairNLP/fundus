@@ -1,6 +1,6 @@
 import gzip
 from abc import ABC, abstractmethod
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from datetime import datetime
 from functools import cached_property
 from multiprocessing.pool import ThreadPool
@@ -26,6 +26,8 @@ from requests import HTTPError
 from fundus.logging.logger import basic_logger
 from fundus.scraping.filter import UrlFilter, _not
 
+_default_header = {"user-agent": "Fundus"}
+
 
 class _ArchiveDecompressor:
     def __init__(self):
@@ -46,14 +48,14 @@ class _ArchiveDecompressor:
 
 
 @dataclass
-class URLSource(Iterable[str], ABC):
+class URLSource(ABC):
     url: str
-    request_header: Dict[str, str] = field(default_factory=dict)
     url_filter: UrlFilter = lambda url: not bool(url)
 
-    def __post_init__(self):
-        if not self.request_header:
-            self.request_header = {"user-agent": "Mozilla/5.0"}
+    request_header: ClassVar[Dict[str, str]] = _default_header
+
+    def set_header(self, request_header: Dict[str, str]) -> None:
+        self.request_header = request_header
 
     @abstractmethod
     def _get_pre_filtered_urls(self) -> Iterator[str]:
@@ -67,7 +69,7 @@ class URLSource(Iterable[str], ABC):
 class RSSFeed(URLSource):
     def _get_pre_filtered_urls(self) -> Iterator[str]:
         with requests.Session() as session:
-            content = session.get(self.url).content
+            content = session.get(self.url, headers=self.request_header).content
             rss_feed = feedparser.parse(content)
             if exception := rss_feed.get("bozo_exception"):
                 basic_logger.warning(f"Warning! Couldn't parse rss feed at {self.url}. Exception: {exception}")
@@ -139,9 +141,9 @@ class Source:
         self.url_filter = url_filter or (lambda url: not bool(url))
         self.max_threads = max_threads
         self.delay = delay
-        self.request_header = request_header
-        if isinstance(url_source, URLSource) and not self.request_header:
-            self.request_header = url_source.request_header
+        self.request_header = request_header or _default_header
+        if isinstance(url_source, URLSource):
+            url_source.set_header(request_header)
 
     def _batched_fetch(self) -> Generator[List[Optional[ArticleSource]], int, None]:
         with requests.Session() as session:

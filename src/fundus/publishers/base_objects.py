@@ -16,6 +16,7 @@ class PublisherSpec:
     parser: Type[ParserProxy]
     url_filter: Optional[UrlFilter] = field(default=None)
     sources: List[URLSource] = field(default_factory=list)
+    request_header: Dict[str, str] = field(default_factory=dict)
 
     def __post_init__(self):
         if not self.sources:
@@ -52,7 +53,12 @@ class PublisherEnum(Enum):
                     f"Only {type(RSSFeed).__name__}, {type(NewsMap).__name__} and {type(Sitemap).__name__} "
                     f"are allowed as sources."
                 )
-            source: Source = Source(url_source=url_source, publisher=self.publisher_name, url_filter=spec.url_filter)
+            source: Source = Source(
+                url_source=url_source,
+                publisher=self.publisher_name,
+                url_filter=spec.url_filter,
+                request_header=spec.request_header,
+            )
             source_mapping[type(url_source).__name__].append(source)
 
         self.source_mapping = source_mapping
