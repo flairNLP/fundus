@@ -22,8 +22,9 @@ class ColumnFactory(Protocol):
 
 
 column_mapping: Dict[str, ColumnFactory] = {
+    "Class": lambda spec: TD(CODE(spec.name)),
     "Source": lambda spec: TD(DIV(f"{spec.publisher_name}")),
-    "Domain": lambda spec: TD(A(SPAN(urlparse(spec.domain).netloc), href=spec.domain)),
+    "URL": lambda spec: TD(A(SPAN(urlparse(spec.domain).netloc), href=spec.domain)),
     "Missing Attributes": lambda spec: TD(*[CODE(a) for a in sorted(attributes)])
     if (
         attributes := set(attribute_annotations_mapping.keys())
@@ -33,7 +34,6 @@ column_mapping: Dict[str, ColumnFactory] = {
     "Additional Attributes": lambda spec: TD(*[CODE(a) for a in sorted(attributes)])
     if (attributes := spec.parser.latest_version.attributes().unvalidated.names)
     else cast(lxml.html.HtmlElement, lxml.html.fromstring("<td>&nbsp;</td>")),
-    "Class": lambda spec: TD(CODE(spec.name)),
 }
 
 
