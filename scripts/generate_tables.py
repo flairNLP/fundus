@@ -1,6 +1,5 @@
 import itertools
-from collections.abc import Sequence
-from typing import Dict, Iterable, List, Protocol, cast
+from typing import Dict, Iterable, List, Protocol, Sequence, cast
 from urllib.parse import urlparse
 
 import lxml.etree
