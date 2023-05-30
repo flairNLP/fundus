@@ -23,7 +23,7 @@ class ColumnFactory(Protocol):
 
 column_mapping: Dict[str, ColumnFactory] = {
     "Source": lambda spec: TD(DIV(f"{spec.publisher_name}")),
-    "Domain": lambda spec: TD(A(SPAN(urlparse(spec.domain).netloc), href=spec.domain)),
+    "URL": lambda spec: TD(A(SPAN(urlparse(spec.domain).netloc), href=spec.domain)),
     "Missing Attributes": lambda spec: TD(*[CODE(a) for a in sorted(attributes)])
     if (
         attributes := set(attribute_annotations_mapping.keys())
