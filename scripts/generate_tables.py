@@ -65,7 +65,9 @@ def align_tables(tables: Sequence[lxml.html.HtmlElement]) -> None:
     if any(len(head) != len(table_heads[0]) for head in table_heads[1:]):
         raise ValueError("The tables do not have the same number of columns.")
 
-    for column_index, colum_heads in enumerate(more_itertools.transpose(table_heads), start=1):  # ignore: type[attr-defined]
+    for column_index, colum_heads in enumerate(
+        more_itertools.transpose(table_heads), start=1  # type: ignore[attr-defined]
+    ):
         column_texts: List[str] = [
             text for table in tables for text in table.xpath(f"/table/tbody/tr/td[{column_index}]//text()")
         ]
