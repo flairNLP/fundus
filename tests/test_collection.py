@@ -1,12 +1,13 @@
 import pytest
 
 from fundus.publishers.base_objects import (
+    NewsMap,
     PublisherCollectionMeta,
     PublisherEnum,
     PublisherSpec,
+    RSSFeed,
+    Sitemap,
 )
-from fundus.parser import BaseParser
-from fundus.scraping.source_url import Sitemap
 
 
 class TestCollection:
@@ -36,19 +37,15 @@ class TestCollection:
                 a = publisher_enum_with_news_map
                 b = publisher_enum_with_news_map
 
-    def test_source_extension(self):
-        class EmptyParser(BaseParser):
-            pass
-
-        class PublisherEnumWithWrongValueSpec(PublisherEnum):
-            value = PublisherSpec(domain="https//:test.com/", parser=EmptyParser, sources=[Sitemap("test")])
-
     def test_supports(self, publisher_enum_with_news_map):
-        assert publisher_enum_with_news_map.value.supports("news")
-        assert not publisher_enum_with_news_map.value.supports("sitemap")
-        assert not publisher_enum_with_news_map.value.supports("rss")
-        with pytest.raises(ValueError):
+        assert publisher_enum_with_news_map.value.supports([NewsMap])
+        assert not publisher_enum_with_news_map.value.supports([Sitemap])
+        assert not publisher_enum_with_news_map.value.supports([RSSFeed])
+        with pytest.raises(TypeError):
             publisher_enum_with_news_map.value.supports("")
+
+        with pytest.raises(TypeError):
+            publisher_enum_with_news_map.value.supports([""])
 
     def test_search(self, publisher_enum_with_news_map, proxy_with_two_versions_and_different_attrs):
         parser_proxy = proxy_with_two_versions_and_different_attrs()

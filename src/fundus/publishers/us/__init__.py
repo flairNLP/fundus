@@ -1,5 +1,10 @@
-from fundus.publishers.base_objects import PublisherEnum, PublisherSpec
-from fundus.scraping.source_url import NewsMap, RSSFeed, Sitemap
+from fundus.publishers.base_objects import (
+    NewsMap,
+    PublisherEnum,
+    PublisherSpec,
+    RSSFeed,
+    Sitemap,
+)
 
 from .ap_news import APNewsParser
 from .cnbc import CNBCParser
@@ -87,14 +92,18 @@ class US(PublisherEnum):
 
     TheNewYorker = PublisherSpec(
         domain="https://www.newyorker.com/",
-        sitemaps=["https://www.newyorker.com/sitemap.xml"],
-        news_map="https://www.newyorker.com/feed/google-news-sitemap-feed/sitemap-google-news",
+        sources=[
+            Sitemap("https://www.newyorker.com/sitemap.xml"),
+            NewsMap("https://www.newyorker.com/feed/google-news-sitemap-feed/sitemap-google-news"),
+        ],
         parser=TheNewYorkerParser,
     )
 
     Reuters = PublisherSpec(
         domain="https://www.reuters.com/",
-        sitemaps=["https://www.reuters.com/arc/outboundfeeds/sitemap-index/?outputType=xml"],
-        news_map="https://www.reuters.com/arc/outboundfeeds/news-sitemap-index/?outputType=xml",
+        sources=[
+            Sitemap("https://www.reuters.com/arc/outboundfeeds/sitemap-index/?outputType=xml"),
+            NewsMap("https://www.reuters.com/arc/outboundfeeds/news-sitemap-index/?outputType=xml"),
+        ],
         parser=ReutersParser,
     )

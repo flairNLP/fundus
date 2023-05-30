@@ -1,10 +1,33 @@
+import inspect
 from dataclasses import dataclass, field
 from enum import Enum, EnumMeta, unique
-from typing import Any, Dict, Iterator, List, Optional, Type
+from typing import Any, Dict, Iterator, List, Optional, Type, cast
 
-from fundus.scraping.source_url import NewsMap, RSSFeed, Sitemap, SourceUrl
 from fundus.parser.base_parser import ParserProxy
 from fundus.scraping.filter import UrlFilter
+from fundus.scraping.source import RSSSource, SitemapSource, Source
+from fundus.utils.iteration import iterate_all_subclasses
+
+
+@dataclass
+class SourceUrl:
+    url: str
+
+
+@dataclass
+class RSSFeed(SourceUrl):
+    pass
+
+
+@dataclass
+class Sitemap(SourceUrl):
+    recursive: bool = True
+    reverse: bool = False
+
+
+@dataclass
+class NewsMap(Sitemap):
+    pass
 
 
 @dataclass(frozen=True)
@@ -34,30 +57,76 @@ class PublisherEnum(Enum):
         self.domain = spec.domain
         self.parser = spec.parser()
         self.url_filter = spec.url_filter
-        self.sources = spec.sources
 
-    def supports(self, source_type: Optional[str]) -> bool:
-        if source_type == "rss":
-            return bool([el for el in self.sources if type(el) == RSSFeed])
-        elif source_type == "sitemap":
-            return bool([el for el in self.sources if type(el) == Sitemap])
-        elif source_type == "news":
-            return bool([el for el in self.sources if type(el) == NewsMap])
-        elif source_type is None:
+        # we define the dict here manually instead of using default dict so that we can control
+        # the order in which sources are proceeded.
+        source_mapping: Dict[str, List[Source]] = {
+            RSSFeed.__name__: [],
+            NewsMap.__name__: [],
+            Sitemap.__name__: [],
+        }
+
+        for source_url in spec.sources:
+            source: Source
+            if isinstance(source_url, RSSFeed):
+                source = RSSSource(source_url.url, publisher=self.name)
+            elif isinstance(source_url, Sitemap):
+                source = SitemapSource(
+                    source_url.url, publisher=self.name, reverse=source_url.reverse, recursive=source_url.recursive
+                )
+            else:
+                raise TypeError(
+                    f"Unexpected type {type(source_url).__name__} as source for {self.name}. "
+                    f"Only {type(RSSFeed).__name__}, {type(NewsMap).__name__} and {type(Sitemap).__name__} "
+                    f"are allowed as sources."
+                )
+            source_mapping[type(source_url).__name__].append(source)
+
+        self.source_mapping = source_mapping
+
+    @property
+    def rss_feeds(self) -> List[RSSSource]:
+        return cast(List[RSSSource], self.source_mapping[type(RSSFeed).__name__])
+
+    @property
+    def news_maps(self) -> List[SitemapSource]:
+        return cast(List[SitemapSource], self.source_mapping[type(NewsMap).__name__])
+
+    @property
+    def sitemaps(self) -> List[SitemapSource]:
+        return cast(List[SitemapSource], self.source_mapping[type(SitemapSource).__name__])
+
+    def supports(self, source_types: Optional[List[Type[SourceUrl]]]) -> bool:
+        if source_types is None:
             return True
         else:
-            raise ValueError(f"Unsupported value {source_type} for parameter <source_type>")
+            if not isinstance(source_types, list):
+                raise TypeError(f"Got unexpected type {type(source_types)}. Expected <class list>")
+            for source_type in source_types:
+                if not inspect.isclass(source_type):
+                    raise TypeError(
+                        f"Got unexpected type {type(source_type)}. "
+                        f"Allowed are '{', '.join(cls.__name__ for cls in iterate_all_subclasses(SourceUrl))}'"
+                    )
+                elif not issubclass(source_type, SourceUrl):
+                    raise TypeError(
+                        f"Got unexpected type {source_type}. "
+                        f"Allowed are '{', '.join(cls.__name__ for cls in iterate_all_subclasses(SourceUrl))}'"
+                    )
+            return all(bool(self.source_mapping.get(source_type.__name__)) for source_type in source_types)
 
     @classmethod
-    def search(cls, attrs: Optional[List[str]] = None, source_type: Optional[str] = None) -> List["PublisherEnum"]:
-        assert attrs or source_type, "You have to define at least one search condition"
-        if not attrs:
-            attrs = []
+    def search(
+        cls, attributes: Optional[List[str]] = None, source_types: Optional[List[Type[SourceUrl]]] = None
+    ) -> List["PublisherEnum"]:
+        assert attributes or source_types, "You have to define at least one search condition"
+        if not attributes:
+            attributes = []
         matched = []
-        attrs_set = set(attrs)
+        unique_attributes = set(attributes)
         spec: PublisherEnum
         for spec in list(cls):
-            if attrs_set.issubset(spec.parser().attributes().names) and spec.supports(source_type):
+            if unique_attributes.issubset(spec.parser().attributes().names) and spec.supports(source_types):
                 matched.append(spec)
         return matched
 

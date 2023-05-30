@@ -1,4 +1,5 @@
 import gzip
+import urllib.robotparser
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from datetime import datetime
@@ -31,11 +32,19 @@ class Source(Iterable[str], ABC):
     request_header = {"user-agent": "Mozilla/5.0"}
 
     def __init__(
-        self, publisher: Optional[str], delay: Optional[Callable[[], float]] = None, max_threads: Optional[int] = 10
+        self,
+        publisher: Optional[str],
+        url_filter: Optional[UrlFilter] = None,
+        max_threads: int = 10,
+        delay: Optional[Callable[[], float]] = None,
+        request_header: Optional[Dict[str, str]] = None,
+        robots: Optional[urllib.robotparser.RobotFileParser] = None,
     ):
         self.publisher = publisher
-        self.delay = delay
+        self.url_filter = url_filter
         self.max_threads = max_threads
+        self.delay = delay
+        self.request_header = request_header or self.request_header
 
     @abstractmethod
     def __iter__(self) -> Iterator[str]:
@@ -45,9 +54,7 @@ class Source(Iterable[str], ABC):
         """
         raise NotImplementedError
 
-    def _batched_fetch(
-        self, url_filter: Optional[UrlFilter] = None
-    ) -> Generator[List[Optional[ArticleSource]], int, None]:
+    def _batched_fetch(self) -> Generator[List[Optional[ArticleSource]], int, None]:
         with requests.Session() as session:
 
             def thread(url: str) -> Optional[ArticleSource]:
@@ -76,8 +83,8 @@ class Source(Iterable[str], ABC):
 
             with ThreadPool(processes=self.max_threads) as pool:
                 url_iterator: Iterator[str]
-                if url_filter:
-                    url_iterator = filter(_not(url_filter), self)
+                if self.url_filter:
+                    url_iterator = filter(_not(self.url_filter), self)
                 else:
                     url_iterator = iter(self)
                 empty = False
@@ -93,8 +100,8 @@ class Source(Iterable[str], ABC):
                         empty = True
                     yield pool.map(thread, batch_urls)
 
-    def fetch(self, batch_size: int = 10, url_filter: Optional[UrlFilter] = None) -> Iterator[ArticleSource]:
-        gen = self._batched_fetch(url_filter)
+    def fetch(self, batch_size: int = 10) -> Iterator[ArticleSource]:
+        gen = self._batched_fetch()
         while True:
             try:
                 next(gen)
@@ -104,8 +111,8 @@ class Source(Iterable[str], ABC):
 
 
 class StaticSource(Source):
-    def __init__(self, links: List[str], publisher: Optional[str] = None):
-        super().__init__(publisher)
+    def __init__(self, links: List[str], publisher: Optional[str] = None, **kwargs):
+        super().__init__(publisher=publisher, **kwargs)
         self.links = links
 
     def __iter__(self):
@@ -113,8 +120,8 @@ class StaticSource(Source):
 
 
 class RSSSource(Source):
-    def __init__(self, url: str, publisher: str):
-        super().__init__(publisher)
+    def __init__(self, url: str, publisher: str, **kwargs):
+        super().__init__(publisher=publisher, **kwargs)
         self.url = url
 
     def __iter__(self) -> Iterator[str]:
@@ -150,14 +157,8 @@ class SitemapSource(Source):
     _sitemap_selector: XPath = CSSSelector("sitemap > loc")
     _url_selector: XPath = CSSSelector("url > loc")
 
-    def __init__(
-        self,
-        sitemap: str,
-        publisher: str,
-        recursive: bool = True,
-        reverse: bool = False,
-    ):
-        super().__init__(publisher)
+    def __init__(self, sitemap: str, publisher: str, recursive: bool = True, reverse: bool = False, **kwargs):
+        super().__init__(publisher=publisher, **kwargs)
 
         self.sitemap = sitemap
         self.recursive = recursive

@@ -2,12 +2,10 @@ from typing import Iterator, List, Literal, Optional, Set, Tuple, Type, Union
 
 import more_itertools
 
-from fundus.publishers.base_objects import PublisherEnum
+from fundus.publishers.base_objects import PublisherEnum, SourceUrl
 from fundus.scraping.article import Article
 from fundus.scraping.filter import ExtractionFilter
 from fundus.scraping.scraper import Scraper
-from fundus.scraping.source import RSSSource, SitemapSource, Source
-from fundus.scraping.source_url import NewsMap, RSSFeed, Sitemap
 from fundus.utils.validation import listify
 
 
@@ -51,7 +49,7 @@ class Crawler:
     def crawl(
         self,
         max_articles: Optional[int] = None,
-        restrict_sources_to: Optional[List[Literal["rss", "sitemap", "news"]]] = None,
+        restrict_sources_to: Optional[List[Type[SourceUrl]]] = None,
         error_handling: Literal["suppress", "catch", "raise"] = "suppress",
         only_complete: Union[bool, ExtractionFilter] = True,
         batch_size: int = 10,
@@ -70,32 +68,12 @@ class Crawler:
 
         scrapers: List[Scraper] = []
         for spec in self.publishers:
-            sources: List[Source] = []
-
-            if restrict_sources_to == "rss" or restrict_sources_to is None:
-                sources.extend(
-                    [RSSSource(url.url, publisher=spec.name) for url in spec.sources if isinstance(url, RSSFeed)]
+            if restrict_sources_to:
+                sources = more_itertools.flatten(
+                    spec.source_mapping[source_type.__name__] for source_type in restrict_sources_to
                 )
-
-            if restrict_sources_to == "sitemap" or restrict_sources_to is None:
-                sources.extend(
-                    [
-                        SitemapSource(
-                            sitemap.url, publisher=spec.name, reverse=sitemap.reverse, recursive=sitemap.recursive
-                        )
-                        for sitemap in spec.sources
-                        if isinstance(sitemap, Sitemap)
-                    ]
-                )
-
-            if restrict_sources_to == "news" or restrict_sources_to is None:
-                sources.extend(
-                    [
-                        SitemapSource(sitemap.url, publisher=spec.name)
-                        for sitemap in spec.sources
-                        if isinstance(sitemap, NewsMap)
-                    ]
-                )
+            else:
+                sources = more_itertools.flatten(spec.source_mapping.values())
 
             if sources:
                 scrapers.append(

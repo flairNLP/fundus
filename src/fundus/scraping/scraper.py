@@ -49,7 +49,7 @@ class Scraper:
                 return
 
         for crawler in self.sources:
-            for article_source in crawler.fetch(batch_size, self.url_filter):
+            for article_source in crawler.fetch(batch_size):
                 try:
                     extraction = self.parser(article_source.crawl_date).parse(article_source.html, error_handling)
 
