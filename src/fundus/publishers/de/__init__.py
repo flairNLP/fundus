@@ -107,6 +107,7 @@ class DE(PublisherEnum):
                 f"https://www.zeit.de/gsitemaps/index.xml?date={datetime.now().strftime('%Y-%m-%d')}&unit=days&period=1"
             ),
         ],
+        request_header={"user-agent": "Googlebot"},
         parser=DieZeitParser,
     )
 
