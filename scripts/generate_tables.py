@@ -1,16 +1,17 @@
+import itertools
+from collections.abc import Sequence
 from typing import Dict, Iterable, List, Protocol, cast
 from urllib.parse import urlparse
 
 import lxml.etree
 import lxml.html
+import more_itertools
 from lxml.html.builder import CLASS, CODE, DIV, SPAN, TABLE, TBODY, TD, TH, THEAD, TR, A
 
 from fundus import PublisherCollection
 from fundus import __development_base_path__ as root_path
 from fundus.publishers.base_objects import PublisherEnum
 from tests.resources import attribute_annotations_mapping
-
-supported_publishers_markdown_path = root_path / "docs" / "supported_publishers.md"
 
 
 class ColumnFactory(Protocol):
@@ -34,7 +35,7 @@ column_mapping: Dict[str, ColumnFactory] = {
 }
 
 
-def generate_thread() -> lxml.html.HtmlElement:
+def generate_thead() -> lxml.html.HtmlElement:
     ths = [TH(name) for name in column_mapping.keys()]
     tr = TR(*ths)
     thead = THEAD(tr)
@@ -50,17 +51,53 @@ def generate_tbody(country: Iterable[PublisherEnum]) -> lxml.html.HtmlElement:
     return TBODY(*content)
 
 
-def build_supported_publisher_markdown() -> str:
-    markdown_pieces: List[str] = ["# Supported Publishers\n\n"]
-    for country_code, enum in sorted(PublisherCollection.get_publisher_enum_mapping().items()):
-        markdown_pieces.append(f"\n## {country_code.upper()}-Publishers\n")
-        table = TABLE(generate_thread(), generate_tbody(enum), CLASS(f"publishers {country_code}"))
-        markdown_pieces.append(lxml.etree.tostring(table, pretty_print=True).decode("utf-8"))
-    return "".join(markdown_pieces)
+def align_tables(tables: Sequence[lxml.html.HtmlElement]) -> None:
+    """
+    Aligns the columns across the given HTML tables in-place.
+    For each column the head text will be padded with non-breaking spaces to the length of longest cell in its column.
+    It is required for the tables to have the same number of columns.
+    """
+    table_heads: List[List[lxml.html.HtmlElement]] = [
+        table.xpath("/table/thead/tr/th//text()//parent::*") for table in tables
+    ]
+    if any(len(head) != len(table_heads[0]) for head in table_heads[1:]):
+        raise ValueError("The tables do not have the same number of columns.")
+
+    for column_index, colum_heads in enumerate(more_itertools.transpose(table_heads), start=1):
+        column_texts: List[str] = [
+            text for table in tables for text in table.xpath(f"/table/tbody/tr/td[{column_index}]//text()")
+        ]
+        max_column_length: int = max(len(text) for text in column_texts)
+
+        for head in colum_heads:
+            text: str = head.text.replace(" ", "\u00A0")
+            padding: str = "\u00A0" * (2 * (max_column_length - len(head.text)))
+            head.text = f"{text}{padding}"
+
+
+def build_publisher_tables() -> Dict[str, lxml.html.HtmlElement]:
+    tables: Dict[str, lxml.html.HtmlElement] = {
+        country_code: TABLE(generate_thead(), generate_tbody(enum), CLASS(f"publishers {country_code}"))
+        for country_code, enum in sorted(PublisherCollection.get_publisher_enum_mapping().items())
+    }
+    align_tables(tuple(tables.values()))
+    return tables
+
+
+def build_supported_publishers_markdown(publisher_tables: Dict[str, lxml.html.HtmlElement]) -> str:
+    publisher_sections: List[str] = [
+        f"## {country_code.upper()}-Publishers\n\n{lxml.etree.tostring(table, pretty_print=True).decode('utf-8')}"
+        for country_code, table in publisher_tables.items()
+    ]
+    return "\n\n".join(itertools.chain(["# Supported Publishers\n"], publisher_sections))
+
+
+def main() -> None:
+    publisher_tables = build_publisher_tables()
+    markdown = build_supported_publishers_markdown(publisher_tables)
+    with open(root_path / "docs" / "supported_publishers.md", "w", encoding="utf8") as file:
+        file.write(markdown)
 
 
 if __name__ == "__main__":
-    markdown = build_supported_publisher_markdown()
-
-    with open(supported_publishers_markdown_path, "w", encoding="utf8") as file:
-        file.write(markdown)
+    main()
