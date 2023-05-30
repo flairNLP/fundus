@@ -56,7 +56,7 @@ class DE(PublisherEnum):
             RSSFeed("https://www.faz.net/rss/aktuell/wirtschaft/"),
             RSSFeed("https://www.faz.net/rss/aktuell/gesellschaft/"),
             Sitemap("https://www.faz.net/sitemap-index.xml"),
-            Sitemap("https://www.faz.net/sitemap-news.xml"),
+            NewsMap("https://www.faz.net/sitemap-news.xml"),
         ],
         parser=FAZParser,
     )
