@@ -56,7 +56,7 @@ class Scraper:
                         err.args = (str(err) + "\n\n" + error_message,)
                         raise err
                     elif error_handling == "catch":
-                        yield Article(source=article_source, exception=err)
+                        yield Article(article_source=article_source, exception=err)
                         continue
                     elif error_handling == "suppress":
                         basic_logger.info(f"Skipped {article_source.url} because of: {err!r}")
@@ -64,5 +64,5 @@ class Scraper:
                     else:
                         raise ValueError(f"Unknown value '{error_handling}' for parameter <error_handling>'")
 
-                article = Article.from_extracted(source=article_source, extracted=extraction)
+                article = Article.from_extracted(article_source=article_source, extracted=extraction)
                 yield article
