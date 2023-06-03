@@ -1,21 +1,16 @@
 {
     "V1": {
-        "meta": {
-            "url": "https://www.sueddeutsche.de/muenchen/landkreismuenchen/ranking-fahrradfreundlichkeit-fleissige-bundestagsabgeordnete-kolumne-1.5827206",
-            "crawl_date": "2023-04-28 20:21:15.488026"
-        },
-        "content": {
-            "authors": [
-                "Lars Brunckhorst"
-            ],
-            "title": "Die Fleißigsten und Fahrradfreundlichsten im Landkreis München",
-            "topics": [
-                "Landkreis München",
-                "Grünwald",
-                "Oberhaching",
-                "Landkreis München",
-                "Süddeutsche Zeitung"
-            ]
-        }
+        "authors": [
+            "Lars Brunckhorst"
+        ],
+        "publishing_date": "2023-04-28 19:50:30+02:00",
+        "title": "Die Fleißigsten und Fahrradfreundlichsten im Landkreis München",
+        "topics": [
+            "Landkreis München",
+            "Grünwald",
+            "Oberhaching",
+            "Landkreis München",
+            "Süddeutsche Zeitung"
+        ]
     }
 }

@@ -1,20 +1,15 @@
 {
     "V1": {
-        "meta": {
-            "url": "https://www.spiegel.de/wirtschaft/unternehmen/silicon-valley-bank-federal-reserve-raeumt-versaeumnisse-bei-aufsicht-ein-a-60a0111a-c2d2-46c8-9e93-b16a374e6ba8#ref=rss",
-            "crawl_date": "2023-04-28 20:21:16.250027"
-        },
-        "content": {
-            "authors": [
-                "DER SPIEGEL"
-            ],
-            "title": "Silicon Valley Bank: Federal Reserve räumt Versäumnisse bei Aufsicht ein",
-            "topics": [
-                "Wirtschaft",
-                "Unternehmen",
-                "USA",
-                "Banken"
-            ]
-        }
+        "authors": [
+            "DER SPIEGEL"
+        ],
+        "publishing_date": "2023-04-28 20:15:23+02:00",
+        "title": "Silicon Valley Bank: Federal Reserve räumt Versäumnisse bei Aufsicht ein",
+        "topics": [
+            "Wirtschaft",
+            "Unternehmen",
+            "USA",
+            "Banken"
+        ]
     }
 }

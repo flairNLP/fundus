@@ -1,14 +1,9 @@
 {
     "V1": {
-        "meta": {
-            "url": "https://orf.at/stories/3314356/",
-            "crawl_date": "2023-04-28 20:32:19.743384"
-        },
-        "content": {
-            "authors": [
-                "ORF.at"
-            ],
-            "title": "Mädchen bei Straßenbahnunfall in Wien verletzt"
-        }
+        "authors": [
+            "ORF.at"
+        ],
+        "publishing_date": "2023-04-28 18:03:46.463000+00:00",
+        "title": "Mädchen bei Straßenbahnunfall in Wien verletzt"
     }
 }

@@ -1,23 +1,18 @@
 {
     "V1": {
-        "meta": {
-            "url": "https://taz.de/Entwurf-des-Selbstbestimmungsgesetzes/!5928990/",
-            "crawl_date": "2023-04-28 20:32:15.077826"
-        },
-        "content": {
-            "authors": [
-                "Nicole Opitz"
-            ],
-            "title": "Entwurf des Selbstbestimmungsgesetzes: Ein bisschen Fortschritt",
-            "topics": [
-                "Transgender",
-                "LGBTQIA-Community",
-                "Deutschland",
-                "Politik",
-                "Schwerpunkt",
-                "taz",
-                "tageszeitung"
-            ]
-        }
+        "authors": [
+            "Nicole Opitz"
+        ],
+        "publishing_date": "2023-04-28 18:41:00+02:00",
+        "title": "Entwurf des Selbstbestimmungsgesetzes: Ein bisschen Fortschritt",
+        "topics": [
+            "Transgender",
+            "LGBTQIA-Community",
+            "Deutschland",
+            "Politik",
+            "Schwerpunkt",
+            "taz",
+            "tageszeitung"
+        ]
     }
 }

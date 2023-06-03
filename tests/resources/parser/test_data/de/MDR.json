@@ -1,26 +1,21 @@
 {
     "V1": {
-        "meta": {
-            "url": "https://www.mdr.de/nachrichten/thueringen/sued-thueringen/schmalkalden-meiningen/schlachtung-fleisch-schwein-wirtschaft-landstolz-100.html",
-            "crawl_date": "2023-04-28 20:22:36.765570"
-        },
-        "content": {
-            "authors": [
-                "David Straub"
-            ],
-            "title": "Ist die Thüringer Bratwurst eine Illusion? Das harte Geschäft mit dem Tod",
-            "topics": [
-                "Nachrichten",
-                "Fleisch",
-                "Schwein",
-                "Schlachtung",
-                "Landstolz",
-                "Schmalkalden",
-                "Holland-Moritz",
-                "Rinder",
-                "Grafik",
-                "Zahlen"
-            ]
-        }
+        "authors": [
+            "David Straub"
+        ],
+        "publishing_date": "2023-04-28 05:00:00+02:00",
+        "title": "Ist die Thüringer Bratwurst eine Illusion? Das harte Geschäft mit dem Tod",
+        "topics": [
+            "Nachrichten",
+            "Fleisch",
+            "Schwein",
+            "Schlachtung",
+            "Landstolz",
+            "Schmalkalden",
+            "Holland-Moritz",
+            "Rinder",
+            "Grafik",
+            "Zahlen"
+        ]
     }
 }

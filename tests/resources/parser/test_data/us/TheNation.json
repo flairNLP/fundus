@@ -1,17 +1,12 @@
 {
     "V1": {
-        "meta": {
-            "url": "https://www.thenation.com/article/activism/teamsters-tdu-ups-iowa/",
-            "crawl_date": "2023-05-15 13:55:06.350230"
-        },
-        "content": {
-            "authors": [
-                "Sarah Lazare"
-            ],
-            "title": "Inside a Teamster Rebellion: This Is What Union Democracy Looks Like",
-            "topics": [
-                "Unions"
-            ]
-        }
+        "authors": [
+            "Sarah Lazare"
+        ],
+        "publishing_date": "2023-05-15 09:00:37+00:00",
+        "title": "Inside a Teamster Rebellion: This Is What Union Democracy Looks Like",
+        "topics": [
+            "Unions"
+        ]
     }
 }

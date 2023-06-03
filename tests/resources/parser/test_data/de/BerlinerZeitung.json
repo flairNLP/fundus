@@ -1,18 +1,13 @@
 {
     "V1": {
-        "meta": {
-            "url": "https://www.berliner-zeitung.de/news/550-kinder-gezeugt-gericht-stoppt-uebereifrigen-samenspender-in-den-niederlanden-li.343191",
-            "crawl_date": "2023-04-28 20:25:16.328923"
-        },
-        "content": {
-            "authors": [
-                "AFP"
-            ],
-            "title": "550 Kinder gezeugt: Gericht stoppt übereifrigen Samenspender",
-            "topics": [
-                "News",
-                "Niederlande"
-            ]
-        }
+        "authors": [
+            "AFP"
+        ],
+        "publishing_date": "2023-04-28 17:52:31.847000+00:00",
+        "title": "550 Kinder gezeugt: Gericht stoppt übereifrigen Samenspender",
+        "topics": [
+            "News",
+            "Niederlande"
+        ]
     }
 }

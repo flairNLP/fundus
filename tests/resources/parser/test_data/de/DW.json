@@ -1,22 +1,17 @@
 {
     "V1": {
-        "meta": {
-            "url": "https://www.dw.com/de/ukrainische-gegenoffensive-ziele-chancen-risiken/a-65464327?maca=de-rss-de-all-1119-xml-mrss",
-            "crawl_date": "2023-04-28 20:25:18.143350"
-        },
-        "content": {
-            "authors": [
-                "Roman Goncharenko"
-            ],
-            "title": "Ukrainische Gegenoffensive: Ziele, Chancen, Risiken",
-            "topics": [
-                "Ukrainekrieg",
-                "Ukraine",
-                "Russland",
-                "Bachmut",
-                "Waffenlieferungen",
-                "Gegenoffensive"
-            ]
-        }
+        "authors": [
+            "Roman Goncharenko"
+        ],
+        "publishing_date": "2023-04-28 00:00:00",
+        "title": "Ukrainische Gegenoffensive: Ziele, Chancen, Risiken",
+        "topics": [
+            "Ukrainekrieg",
+            "Ukraine",
+            "Russland",
+            "Bachmut",
+            "Waffenlieferungen",
+            "Gegenoffensive"
+        ]
     }
 }

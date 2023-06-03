@@ -1,26 +1,21 @@
 {
     "V1": {
-        "meta": {
-            "url": "https://www.ndr.de/nachrichten/schleswig-holstein/Einschlag-in-Elmshorn-Es-war-ein-Meteorit,meteorit146.html",
-            "crawl_date": "2023-04-28 20:32:14.447579"
-        },
-        "content": {
-            "authors": [
-                "Oliver Kring"
-            ],
-            "title": "Einschlag in Elmshorn: Es war ein Meteorit ",
-            "topics": [
-                "Meteorit",
-                "Elmshorn",
-                "Einschlag",
-                "Meteoritenregen",
-                "Wissenschaft",
-                "NDR",
-                "Norddeutscher Rundfunk",
-                "Norddeutschland",
-                "Radio",
-                "Fernsehen"
-            ]
-        }
+        "authors": [
+            "Oliver Kring"
+        ],
+        "publishing_date": "2023-04-28 16:15:45.403000+02:00",
+        "title": "Einschlag in Elmshorn: Es war ein Meteorit ",
+        "topics": [
+            "Meteorit",
+            "Elmshorn",
+            "Einschlag",
+            "Meteoritenregen",
+            "Wissenschaft",
+            "NDR",
+            "Norddeutscher Rundfunk",
+            "Norddeutschland",
+            "Radio",
+            "Fernsehen"
+        ]
     }
 }
