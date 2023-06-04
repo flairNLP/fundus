@@ -13,7 +13,7 @@ from tests.utility import (
     HTMLTestFile,
     generate_parser_test_case_json_path,
     load_html_test_file_mapping,
-    JSONFileWithExtractionDecoderEncoder,
+    JSONFileWithExtractionDecoderEncoder, JSONFile, get_test_case_json,
 )
 
 
@@ -70,9 +70,8 @@ if __name__ == "__main__":
             bar.set_description(desc=publisher.name, refresh=True)
 
             # load json
-            json_file_path = generate_parser_test_case_json_path(publisher)
-            test_data_file = JSONFileWithExtractionDecoderEncoder(json_file_path)
-            test_data = test_data_file.load() if not args.overwrite_json else {}
+            test_data_file = get_test_case_json(publisher)
+            test_data = content if (content := test_data_file.load()) and not args.overwrite_json else {}
 
             # load html
             html_mapping = load_html_test_file_mapping(publisher) if not args.overwrite else {}

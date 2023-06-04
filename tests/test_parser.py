@@ -142,7 +142,7 @@ class TestParser:
 
     def test_parsing(self, publisher: PublisherEnum) -> None:
         # enforce test coverage
-        attrs_required_to_cover = {"title", "authors", "topics"}
+        attrs_required_to_cover = {"title", "authors", "topics", 'publishing_date'}
 
         comparative_data = load_test_case_data(publisher)
         html_mapping = load_html_test_file_mapping(publisher)
@@ -153,18 +153,16 @@ class TestParser:
             assert (
                 version_data := comparative_data.get(version_name)
             ), f"Missing test data for parser version '{version_name}'"
-            assert version_data.get("meta"), f"Missing metadata for parser version '{version_name}'"
-            assert (content := version_data.get("content")), f"Missing content for parser version '{version_name}'"
 
             # test coverage
             supported_attrs = set(versioned_parser.attributes().names)
-            missing_attrs = attrs_required_to_cover & supported_attrs - set(content.keys())
+            missing_attrs = attrs_required_to_cover & supported_attrs - set(version_data.keys())
             assert not missing_attrs, f"Test JSON does not cover the following attribute(s): {missing_attrs}"
 
             assert (html := html_mapping.get(versioned_parser)), f"Missing test HTML for parser version {version_name}"
             # compare data
             extraction = versioned_parser().parse(html.content, "raise")
-            for key, value in content.items():
+            for key, value in version_data.items():
                 assert value == extraction[key]
 
     def test_reserved_attribute_names(self, publisher: PublisherEnum):

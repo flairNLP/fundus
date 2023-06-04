@@ -2,9 +2,8 @@ import datetime
 import gzip
 import json
 from dataclasses import dataclass
-from functools import partial
 from pathlib import Path
-from typing import Any, Dict, Type, Generic, TypeVar, Optional, Callable, cast
+from typing import Any, Dict, Type, Generic, TypeVar, Optional, Callable
 
 from typing_extensions import Self
 
@@ -20,21 +19,20 @@ T = TypeVar("T")
 @dataclass
 class JSONFile(Generic[T]):
     path: Path
-    encoder: Optional[json.JSONEncoder] = None
-    decoder: Optional[json.JSONDecoder] = None
+    encoder: Optional[Type[json.JSONEncoder]] = None
+    decoder: Optional[Type[json.JSONDecoder]] = None
     encoding: str = "utf-8"
 
-    def load(self, **kwargs) -> T:
+    def load(self, **kwargs) -> Optional[T]:
         if not self.path.exists():
-            return {}
+            return None
         if not kwargs.get("cls"):
             kwargs["cls"] = self.decoder
         with open(self.path, "r", encoding=self.encoding) as json_file:
-            content: Dict[str, Any] = json.load(json_file, **kwargs)
-
+            content: T = json.load(json_file, **kwargs)
         return content
 
-    def write(self, content: Dict[str, Any], **kwargs) -> None:
+    def write(self, content: T, **kwargs) -> None:
         if not kwargs:
             kwargs = {"ensure_ascii": False,
                       "indent": 4}
@@ -61,7 +59,7 @@ class ExtractionDecoder(json.JSONDecoder):
     def __init__(self, *args, **kwargs):
         json.JSONDecoder.__init__(self, object_hook=self.object_hook, *args, **kwargs)
 
-    def object_hook(self, obj_dict: dict):
+    def object_hook(self, obj_dict):
         for key, transformation in self.transformations.items():
             if serialized_value := obj_dict.get(key):
                 obj_dict[key] = transformation(serialized_value)
@@ -69,9 +67,9 @@ class ExtractionDecoder(json.JSONDecoder):
 
 
 @dataclass
-class JSONFileWithExtractionDecoderEncoder(JSONFile):
-    encoder: json.JSONEncoder = ExtractionEncoder
-    decoder: json.JSONDecoder = ExtractionDecoder
+class JSONFileWithExtractionDecoderEncoder(JSONFile[T]):
+    encoder: Type[json.JSONEncoder] = ExtractionEncoder
+    decoder: Type[json.JSONDecoder] = ExtractionDecoder
 
 
 @dataclass
@@ -90,8 +88,10 @@ class HTMLTestFile:
         )
 
     @property
-    def meta_info(self) -> Dict[str, Any]:
-        return get_meta_info_file(self.publisher).load()[self.path.name]
+    def meta_info(self) -> Optional[Dict[str, Any]]:
+        if meta_info := get_meta_info_file(self.publisher).load():
+            return meta_info[self.path.name]
+        return None
 
     @staticmethod
     def _parse_path(path: Path) -> PublisherEnum:
@@ -126,12 +126,13 @@ class HTMLTestFile:
         decompressed_content = gzip.decompress(compressed_file)
         content = decompressed_content.decode(encoding=encoding)
         publisher = cls._parse_path(path)
-        meta_info = get_meta_info_file(publisher).load()[path.name]
-        return cls(content=content, publisher=publisher, encoding=encoding, **meta_info)
+        if not (meta_info := get_meta_info_file(publisher).load()):
+            raise ValueError(f"Missing meta info for file '{path.name}'")
+        return cls(content=content, publisher=publisher, encoding=encoding, **meta_info[path.name])
 
     def _register_at_meta_info(self):
         meta_info_file = get_meta_info_file(self.publisher)
-        meta_info = meta_info_file.load()
+        meta_info = meta_info_file.load() or {}
         meta_info[self.path.name] = {"url": self.url, "crawl_date": self.crawl_date}
         meta_info_file.write(meta_info, default=str)
 
@@ -161,7 +162,7 @@ def generate_meta_info_path(publisher: PublisherEnum) -> Path:
     return generate_absolute_section_path(publisher) / "meta.info"
 
 
-def get_meta_info_file(publisher: PublisherEnum) -> JSONFile[Dict[str, Dict[str, str]]]:
+def get_meta_info_file(publisher: PublisherEnum) -> JSONFile[Dict[str, Dict[str, Any]]]:
     return JSONFileWithExtractionDecoderEncoder(generate_meta_info_path(publisher))
 
 
@@ -169,9 +170,12 @@ def generate_parser_test_case_json_path(publisher: PublisherEnum) -> Path:
     return generate_absolute_section_path(publisher) / f"{publisher.name}.json"
 
 
+def get_test_case_json(publisher: PublisherEnum) -> JSONFile[Dict[str, Dict[str, Any]]]:
+    return JSONFileWithExtractionDecoderEncoder(generate_parser_test_case_json_path(publisher))
+
+
 def load_test_case_data(publisher: PublisherEnum) -> Dict[str, Dict[str, Any]]:
-    test_case_json_path = generate_parser_test_case_json_path(publisher)
-    test_case_file = JSONFile(test_case_json_path)
+    test_case_file = get_test_case_json(publisher)
 
     if not (test_data := test_case_file.load()):
         raise ValueError(f"Test case (JSON) for parser '{type(publisher.parser).__name__}' is missing. "
