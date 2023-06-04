@@ -1,21 +1,21 @@
 {
-    "V1": {
-        "authors": [
-            "David Straub"
-        ],
-        "publishing_date": "2023-04-28 05:00:00+02:00",
-        "title": "Ist die Thüringer Bratwurst eine Illusion? Das harte Geschäft mit dem Tod",
-        "topics": [
-            "Nachrichten",
-            "Fleisch",
-            "Schwein",
-            "Schlachtung",
-            "Landstolz",
-            "Schmalkalden",
-            "Holland-Moritz",
-            "Rinder",
-            "Grafik",
-            "Zahlen"
-        ]
-    }
+  "V1": {
+    "authors": [
+      "David Straub"
+    ],
+    "publishing_date": "2023-04-28 05:00:00+02:00",
+    "title": "Ist die Thüringer Bratwurst eine Illusion? Das harte Geschäft mit dem Tod",
+    "topics": [
+      "Nachrichten",
+      "Fleisch",
+      "Schwein",
+      "Schlachtung",
+      "Landstolz",
+      "Schmalkalden",
+      "Holland-Moritz",
+      "Rinder",
+      "Grafik",
+      "Zahlen"
+    ]
+  }
 }

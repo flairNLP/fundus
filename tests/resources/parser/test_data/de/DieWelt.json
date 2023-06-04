@@ -1,16 +1,16 @@
 {
-    "V1": {
-        "authors": [
-            "Holger Zschäpitz"
-        ],
-        "publishing_date": "2023-04-28 18:03:06+00:00",
-        "title": "BIP: Diese Grafiken zeigen, wie schlecht es um Deutschlands Wirtschaft steht",
-        "topics": [
-            "Zschaepitz-Holger",
-            "Rezession",
-            "Konjunkturpolitik",
-            "Wachstum",
-            "Bruttoinlandsprodukt (BIP)"
-        ]
-    }
+  "V1": {
+    "authors": [
+      "Holger Zschäpitz"
+    ],
+    "publishing_date": "2023-04-28 18:03:06+00:00",
+    "title": "BIP: Diese Grafiken zeigen, wie schlecht es um Deutschlands Wirtschaft steht",
+    "topics": [
+      "Zschaepitz-Holger",
+      "Rezession",
+      "Konjunkturpolitik",
+      "Wachstum",
+      "Bruttoinlandsprodukt (BIP)"
+    ]
+  }
 }

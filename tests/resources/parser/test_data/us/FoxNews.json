@@ -1,17 +1,17 @@
 {
-    "V1": {
-        "authors": [
-            "Aaron Kliegman"
-        ],
-        "publishing_date": "2023-04-26 14:20:55-04:00",
-        "title": "House China Committee demands answers from FBI on Chinese police stations in US",
-        "topics": [
-            "china",
-            "houseofreps",
-            "congress",
-            "fbi",
-            "justice-department",
-            "newyorkcity"
-        ]
-    }
+  "V1": {
+    "authors": [
+      "Aaron Kliegman"
+    ],
+    "publishing_date": "2023-04-26 14:20:55-04:00",
+    "title": "House China Committee demands answers from FBI on Chinese police stations in US",
+    "topics": [
+      "china",
+      "houseofreps",
+      "congress",
+      "fbi",
+      "justice-department",
+      "newyorkcity"
+    ]
+  }
 }

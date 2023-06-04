@@ -142,7 +142,7 @@ class TestParser:
 
     def test_parsing(self, publisher: PublisherEnum) -> None:
         # enforce test coverage
-        attrs_required_to_cover = {"title", "authors", "topics", 'publishing_date'}
+        attrs_required_to_cover = {"title", "authors", "topics", "publishing_date"}
 
         comparative_data = load_test_case_data(publisher)
         html_mapping = load_html_test_file_mapping(publisher)

@@ -1,21 +1,21 @@
 {
-    "V1": {
-        "authors": [
-            "Martin Belam",
-            "Jordyn Beazley",
-            "Mabel Banfield-Nwachi",
-            "Jennifer Rankin",
-            "Philip Oltermann"
-        ],
-        "publishing_date": "2023-05-15 11:50:54+00:00",
-        "title": "Russia-Ukraine war live: Sunak tells Zelenskiy UK will train pilots but supplying fighter jets to Kyiv is not ‘straightforward’",
-        "topics": [
-            "Ukraine",
-            "Russia",
-            "Europe",
-            "World news",
-            "Volodymyr Zelenskiy",
-            "Vladimir Putin"
-        ]
-    }
+  "V1": {
+    "authors": [
+      "Martin Belam",
+      "Jordyn Beazley",
+      "Mabel Banfield-Nwachi",
+      "Jennifer Rankin",
+      "Philip Oltermann"
+    ],
+    "publishing_date": "2023-05-15 11:50:54+00:00",
+    "title": "Russia-Ukraine war live: Sunak tells Zelenskiy UK will train pilots but supplying fighter jets to Kyiv is not ‘straightforward’",
+    "topics": [
+      "Ukraine",
+      "Russia",
+      "Europe",
+      "World news",
+      "Volodymyr Zelenskiy",
+      "Vladimir Putin"
+    ]
+  }
 }

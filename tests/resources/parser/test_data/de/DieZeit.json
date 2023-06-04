@@ -1,17 +1,17 @@
 {
-    "V1": {
-        "authors": [
-            "dpa"
-        ],
-        "publishing_date": "2023-04-28 20:22:00+02:00",
-        "title": "Basketball-Euroleague: Nach Massenschlägerei in Madrid: Sanktionen und Reue",
-        "topics": [
-            "News",
-            "Basketball-Euroleague",
-            "Sergio Llull",
-            "Real Madrid",
-            "Partizan Belgrad",
-            "Massenschlägerei"
-        ]
-    }
+  "V1": {
+    "authors": [
+      "dpa"
+    ],
+    "publishing_date": "2023-04-28 20:22:00+02:00",
+    "title": "Basketball-Euroleague: Nach Massenschlägerei in Madrid: Sanktionen und Reue",
+    "topics": [
+      "News",
+      "Basketball-Euroleague",
+      "Sergio Llull",
+      "Real Madrid",
+      "Partizan Belgrad",
+      "Massenschlägerei"
+    ]
+  }
 }

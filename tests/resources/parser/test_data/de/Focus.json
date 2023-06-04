@@ -1,21 +1,21 @@
 {
-    "V1": {
-        "authors": [
-            "FOCUS online"
-        ],
-        "publishing_date": "2023-04-28 17:25:31+00:00",
-        "title": "Lego feiert Star-Wars-Tag: Alle Angebote im Überblick",
-        "topics": [
-            "Lego",
-            "Helm",
-            "Diorama",
-            "Prominenz",
-            "Star Wars Day",
-            "Rabatt",
-            "Provision",
-            "Kalender",
-            "Death Metal",
-            "Jedi"
-        ]
-    }
+  "V1": {
+    "authors": [
+      "FOCUS online"
+    ],
+    "publishing_date": "2023-04-28 17:25:31+00:00",
+    "title": "Lego feiert Star-Wars-Tag: Alle Angebote im Überblick",
+    "topics": [
+      "Lego",
+      "Helm",
+      "Diorama",
+      "Prominenz",
+      "Star Wars Day",
+      "Rabatt",
+      "Provision",
+      "Kalender",
+      "Death Metal",
+      "Jedi"
+    ]
+  }
 }

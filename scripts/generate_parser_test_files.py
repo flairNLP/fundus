@@ -9,12 +9,7 @@ from fundus import Crawler, PublisherCollection
 from fundus.logging.logger import basic_logger
 from fundus.publishers.base_objects import PublisherEnum
 from fundus.scraping.article import Article
-from tests.utility import (
-    HTMLTestFile,
-    generate_parser_test_case_json_path,
-    load_html_test_file_mapping,
-    JSONFileWithExtractionDecoderEncoder, JSONFile, get_test_case_json,
-)
+from tests.utility import HTMLTestFile, get_test_case_json, load_html_test_file_mapping
 
 
 def get_test_article(enum: PublisherEnum) -> Optional[Article]:

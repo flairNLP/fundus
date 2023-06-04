@@ -1,17 +1,17 @@
 {
-    "V1": {
-        "authors": [
-            "Roman Goncharenko"
-        ],
-        "publishing_date": "2023-04-28 00:00:00",
-        "title": "Ukrainische Gegenoffensive: Ziele, Chancen, Risiken",
-        "topics": [
-            "Ukrainekrieg",
-            "Ukraine",
-            "Russland",
-            "Bachmut",
-            "Waffenlieferungen",
-            "Gegenoffensive"
-        ]
-    }
+  "V1": {
+    "authors": [
+      "Roman Goncharenko"
+    ],
+    "publishing_date": "2023-04-28 00:00:00",
+    "title": "Ukrainische Gegenoffensive: Ziele, Chancen, Risiken",
+    "topics": [
+      "Ukrainekrieg",
+      "Ukraine",
+      "Russland",
+      "Bachmut",
+      "Waffenlieferungen",
+      "Gegenoffensive"
+    ]
+  }
 }

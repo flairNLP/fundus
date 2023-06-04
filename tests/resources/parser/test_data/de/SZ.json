@@ -1,16 +1,16 @@
 {
-    "V1": {
-        "authors": [
-            "Lars Brunckhorst"
-        ],
-        "publishing_date": "2023-04-28 19:50:30+02:00",
-        "title": "Die Fleißigsten und Fahrradfreundlichsten im Landkreis München",
-        "topics": [
-            "Landkreis München",
-            "Grünwald",
-            "Oberhaching",
-            "Landkreis München",
-            "Süddeutsche Zeitung"
-        ]
-    }
+  "V1": {
+    "authors": [
+      "Lars Brunckhorst"
+    ],
+    "publishing_date": "2023-04-28 19:50:30+02:00",
+    "title": "Die Fleißigsten und Fahrradfreundlichsten im Landkreis München",
+    "topics": [
+      "Landkreis München",
+      "Grünwald",
+      "Oberhaching",
+      "Landkreis München",
+      "Süddeutsche Zeitung"
+    ]
+  }
 }

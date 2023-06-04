@@ -3,7 +3,7 @@ import gzip
 import json
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Dict, Type, Generic, TypeVar, Optional, Callable
+from typing import Any, Callable, Dict, Generic, Optional, Type, TypeVar
 
 from typing_extensions import Self
 
@@ -34,8 +34,7 @@ class JSONFile(Generic[T]):
 
     def write(self, content: T, **kwargs) -> None:
         if not kwargs:
-            kwargs = {"ensure_ascii": False,
-                      "indent": 4}
+            kwargs = {"ensure_ascii": False, "indent": 2}
         if not kwargs.get("cls"):
             kwargs["cls"] = self.encoder
         with open(self.path, "w", encoding=self.encoding) as json_file:
@@ -83,8 +82,8 @@ class HTMLTestFile:
     @property
     def path(self) -> Path:
         return (
-                generate_absolute_section_path(self.publisher)
-                / f"{self.publisher.name}_{self.crawl_date.strftime('%Y_%m_%d')}.html.gz"
+            generate_absolute_section_path(self.publisher)
+            / f"{self.publisher.name}_{self.crawl_date.strftime('%Y_%m_%d')}.html.gz"
         )
 
     @property
@@ -178,8 +177,10 @@ def load_test_case_data(publisher: PublisherEnum) -> Dict[str, Dict[str, Any]]:
     test_case_file = get_test_case_json(publisher)
 
     if not (test_data := test_case_file.load()):
-        raise ValueError(f"Test case (JSON) for parser '{type(publisher.parser).__name__}' is missing. "
-                         f"Use 'python -m scripts.generate_parser_test_files --help' for more information")
+        raise ValueError(
+            f"Test case (JSON) for parser '{type(publisher.parser).__name__}' is missing. "
+            f"Use 'python -m scripts.generate_parser_test_files --help' for more information"
+        )
 
     if isinstance(test_data, dict):
         return test_data

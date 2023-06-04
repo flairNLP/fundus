@@ -1,26 +1,26 @@
 {
-    "V1": {
-        "authors": [
-            "Laura Eßlinger"
-        ],
-        "publishing_date": "2023-04-28 19:09:00+02:00",
-        "title": "Statt Paypal & Co.: So könnte Europas neues Bezahlsystem die US-Konkurrenz schlagen",
-        "topics": [
-            "Europa",
-            "Apple",
-            "Zahlungssystem",
-            "PayPal",
-            "Bezahlsystem",
-            "Deutschland",
-            "EU",
-            "SEPA",
-            "Frankreich",
-            "Brühl",
-            "MasterCard Incorporated",
-            "Belgien",
-            "Handelsblatt",
-            "Unternehmensberatung",
-            "Universität Frankfurt"
-        ]
-    }
+  "V1": {
+    "authors": [
+      "Laura Eßlinger"
+    ],
+    "publishing_date": "2023-04-28 19:09:00+02:00",
+    "title": "Statt Paypal & Co.: So könnte Europas neues Bezahlsystem die US-Konkurrenz schlagen",
+    "topics": [
+      "Europa",
+      "Apple",
+      "Zahlungssystem",
+      "PayPal",
+      "Bezahlsystem",
+      "Deutschland",
+      "EU",
+      "SEPA",
+      "Frankreich",
+      "Brühl",
+      "MasterCard Incorporated",
+      "Belgien",
+      "Handelsblatt",
+      "Unternehmensberatung",
+      "Universität Frankfurt"
+    ]
+  }
 }

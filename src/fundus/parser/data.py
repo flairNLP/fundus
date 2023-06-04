@@ -14,7 +14,6 @@ from typing import (
     overload,
 )
 
-import more_itertools
 from typing_extensions import TypeAlias
 
 from fundus.logging.logger import basic_logger
