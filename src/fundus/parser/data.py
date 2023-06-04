@@ -48,11 +48,6 @@ class LinkedDataMapping:
 
     def add_ld(self, ld: Dict[str, Any]) -> None:
         if ld_type := ld.get("@type"):
-            if isinstance(ld_type, list):
-                if len(ld_type) == 1:
-                    ld_type = ld_type.pop()
-                else:
-                    raise TypeError(f"Unable tp parse ld_type '{ld_type}' of type {list} with length != 1")
             if value := self.__dict__.get(ld_type):
                 if not isinstance(value, list):
                     self.__dict__[ld_type] = [value]
