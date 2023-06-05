@@ -1,5 +1,6 @@
 from fundus.publishers.base_objects import PublisherEnum, PublisherSpec
 from fundus.scraping.source import NewsMap, RSSFeed, Sitemap
+from fundus.scraping.filter import regex_filter
 
 from .ap_news import APNewsParser
 from .cnbc import CNBCParser
@@ -12,6 +13,7 @@ from .the_nation_parser import TheNationParser
 from .the_new_yorker import TheNewYorkerParser
 from .washington_times_parser import WashingtonTimesParser
 from .world_truth import WorldTruthParser
+from .occupy_democrats import OccupyDemocratsParser
 
 
 class US(PublisherEnum):
@@ -112,4 +114,11 @@ class US(PublisherEnum):
             NewsMap("https://www.reuters.com/arc/outboundfeeds/news-sitemap-index/?outputType=xml"),
         ],
         parser=ReutersParser,
+    )
+
+    OccupyDemocrats = PublisherSpec(
+        name="Occupy Democrats",
+        domain="https://occupydemocrats.com/",
+        sources=[Sitemap(url="https://occupydemocrats.com/sitemap.xml", sitemap_filter=regex_filter(r"-tax-|-misc"))],
+        parser=OccupyDemocratsParser,
     )
