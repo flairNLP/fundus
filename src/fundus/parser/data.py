@@ -20,7 +20,7 @@ from fundus.logging.logger import basic_logger
 
 _displayed_deprecation_info = False
 
-LDMappingValueT: TypeAlias = Union[List[Dict[str, Any]], Dict[str, Any]]
+LDMappingValue: TypeAlias = Union[List[Dict[str, Any]], Dict[str, Any]]
 
 
 class LinkedDataMapping:
@@ -48,6 +48,11 @@ class LinkedDataMapping:
 
     def add_ld(self, ld: Dict[str, Any]) -> None:
         if ld_type := ld.get("@type"):
+            if isinstance(ld_type, list):
+                if len(ld_type) == 1:
+                    ld_type = ld_type[0]
+                else:
+                    raise TypeError(f"Unable tp parse ld_type '{ld_type}' of type {list} with length != 1")
             if value := self.__dict__.get(ld_type):
                 if not isinstance(value, list):
                     self.__dict__[ld_type] = [value]
@@ -57,7 +62,7 @@ class LinkedDataMapping:
         else:
             raise ValueError(f"Found no type for LD")
 
-    def get(self, ld_type: str, default: Any = None) -> Optional[LDMappingValueT]:
+    def get(self, ld_type: str, default: Any = None) -> Optional[LDMappingValue]:
         """
         This function works like get() on a mapping. It will return all LDs containing
         the given <ld_type>. If there are multiple LDs of the same '@type' this function
@@ -136,7 +141,7 @@ class LinkedDataMapping:
         :return: The content of the first matched key or None
         """
 
-        def search_recursive(nodes: Iterable[LDMappingValueT], current_depth: int):
+        def search_recursive(nodes: Iterable[LDMappingValue], current_depth: int):
             if current_depth == depth:
                 return None
             else:
@@ -150,7 +155,7 @@ class LinkedDataMapping:
                     new.extend(v for v in node.values() if isinstance(v, dict))
                 return search_recursive(new, current_depth + 1) if new else None
 
-        return search_recursive(self.__dict__.values(), 0) or default
+        return search_recursive([self.__dict__], 0) or default
 
     def __repr__(self):
         return f"LD containing '{', '.join(content)}'" if (content := self.__dict__.keys()) else "Empty LD"
