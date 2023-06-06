@@ -60,7 +60,7 @@ class Crawler:
             extraction_filter = (
                 None
                 if only_complete is False
-                else lambda extracted: all(
+                else lambda extracted: not all(
                     bool(v) if not isinstance(v, Exception) else False for k, v in extracted.items()
                 )
             )
