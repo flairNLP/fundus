@@ -48,7 +48,7 @@ class _ArchiveDecompressor:
 
 
 @dataclass
-class URLSource(ABC):
+class URLSource(Iterable[str], ABC):
     url: str
     url_filter: UrlFilter = lambda url: not bool(url)
 
