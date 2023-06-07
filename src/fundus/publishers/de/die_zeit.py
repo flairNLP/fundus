@@ -10,7 +10,7 @@ from fundus.parser.utility import (
     extract_article_body_with_selector,
     generic_author_parsing,
     generic_date_parsing,
-    generic_topic_parsing,
+    generic_topic_parsing, generic_id_html_parsing,
 )
 
 
@@ -20,6 +20,7 @@ class DieZeitParser(ParserProxy):
         _paragraph_selector = CSSSelector("div.article-page > p")
         _summary_selector = CSSSelector("div.summary")
         _subheadline_selector = CSSSelector("div.article-page > h2")
+        _html_id_pattern = "(?:\u0020\"{urn:uuid:)(.*)(?:})"
 
         @attribute
         def body(self) -> ArticleBody:
@@ -35,6 +36,10 @@ class DieZeitParser(ParserProxy):
             return apply_substitution_pattern_over_list(
                 generic_author_parsing(self.precomputed.ld.bf_search("author")), self._author_substitution_pattern
             )
+
+        @attribute
+        def id(self) -> str:
+            return generic_id_html_parsing(self.precomputed.doc, self._html_id_pattern)
 
         @attribute
         def publishing_date(self) -> Optional[datetime.datetime]:

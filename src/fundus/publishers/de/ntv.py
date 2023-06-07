@@ -11,7 +11,7 @@ from fundus.parser.utility import (
     extract_article_body_with_selector,
     generic_author_parsing,
     generic_date_parsing,
-    generic_topic_parsing,
+    generic_topic_parsing, generic_id_url_parsing,
 )
 
 
@@ -23,6 +23,7 @@ class NTVParser(ParserProxy):
             "//div[@class='article__text']" "/p[not(strong) or (strong and (position() > 1 or last()))]"
         )
         _subheadline_selector = CSSSelector(".article__text > h2")
+        _url_id_pattern = "(?:n-tv.de/).*?(?:article)([0-9]{0,8}).html$"
 
         @attribute
         def body(self) -> ArticleBody:
@@ -41,6 +42,10 @@ class NTVParser(ParserProxy):
         @attribute
         def publishing_date(self) -> Optional[datetime.datetime]:
             return generic_date_parsing(self.precomputed.meta.get("date"))
+
+        @attribute
+        def id(self) -> Optional[str]:
+            return generic_id_url_parsing(self.precomputed.meta.get('og:url'), self._url_id_pattern)
 
         @attribute
         def title(self) -> Optional[str]:

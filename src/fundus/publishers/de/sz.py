@@ -8,7 +8,7 @@ from fundus.parser.utility import (
     extract_article_body_with_selector,
     generic_author_parsing,
     generic_date_parsing,
-    generic_topic_parsing,
+    generic_topic_parsing, generic_id_url_parsing,
 )
 
 
@@ -17,6 +17,7 @@ class SZParser(ParserProxy):
         _paragraph_selector = CSSSelector('main [itemprop="articleBody"] > p, ' "main .css-korpch > div > ul > li")
         _summary_selector = CSSSelector("main [data-manual='teaserText']")
         _subheadline_selector = CSSSelector("main [itemprop='articleBody'] > h3")
+        _url_id_pattern = "(?:sueddeutsche.de/).*(?:1.)([0-9]{7})"
 
         @attribute
         def body(self) -> ArticleBody:
@@ -30,6 +31,10 @@ class SZParser(ParserProxy):
         @attribute
         def authors(self) -> List[str]:
             return generic_author_parsing(self.precomputed.ld.bf_search("author"))
+
+        @attribute
+        def id(self) -> Optional[str]:
+            return generic_id_url_parsing(self.precomputed.meta.get('og:url'), self._url_id_pattern)
 
         @attribute
         def publishing_date(self) -> Optional[datetime.datetime]:

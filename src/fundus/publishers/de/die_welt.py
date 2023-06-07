@@ -10,7 +10,7 @@ from fundus.parser.utility import (
     extract_article_body_with_selector,
     generic_author_parsing,
     generic_date_parsing,
-    generic_topic_parsing,
+    generic_topic_parsing, generic_id_url_parsing,
 )
 
 
@@ -20,6 +20,7 @@ class DieWeltParser(ParserProxy):
         _paragraph_selector = CSSSelector("body .c-article-text > p")
         _summary_selector = CSSSelector("div.c-summary__intro")
         _subheadline_selector = CSSSelector(".c-article-text > h3")
+        _url_id_pattern = "(?:article|plus)([0-9]{9})(?:/)"
 
         @attribute
         def body(self) -> ArticleBody:
@@ -29,6 +30,10 @@ class DieWeltParser(ParserProxy):
                 subheadline_selector=self._subheadline_selector,
                 paragraph_selector=self._paragraph_selector,
             )
+
+        @attribute
+        def id(self) -> Optional[str]:
+            return generic_id_url_parsing(self.precomputed.meta.get('og:url'), self._url_id_pattern)
 
         @attribute
         def authors(self) -> List[str]:

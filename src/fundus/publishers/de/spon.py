@@ -8,7 +8,7 @@ from fundus.parser.utility import (
     extract_article_body_with_selector,
     generic_author_parsing,
     generic_date_parsing,
-    generic_topic_parsing,
+    generic_topic_parsing, generic_id_url_parsing,
 )
 
 
@@ -17,6 +17,7 @@ class SPONParser(ParserProxy):
         _paragraph_selector = CSSSelector("main .word-wrap > p")
         _summary_selector = CSSSelector("header .leading-loose")
         _subheadline_selector = CSSSelector("main .word-wrap > h3")
+        _url_id_pattern = "(?:a-)([0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12})"
 
         @attribute
         def body(self) -> ArticleBody:
@@ -34,6 +35,10 @@ class SPONParser(ParserProxy):
         @attribute
         def publishing_date(self) -> Optional[datetime]:
             return generic_date_parsing(self.precomputed.ld.bf_search("datePublished"))
+
+        @attribute
+        def id(self) -> Optional[str]:
+            return generic_id_url_parsing(self.precomputed.meta.get('og:url'), self._url_id_pattern)
 
         @attribute
         def title(self) -> Optional[str]:
