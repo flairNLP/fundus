@@ -1,0 +1,58 @@
+name: Documentation
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      # For the current generated documentation, these trigger paths are sufficient.
+      # Long-term, job-level triggers are more appropriate.
+      # https://how.wtf/run-workflow-step-or-job-based-on-file-changes-github-actions.html
+      - src/fundus/publishers/**
+      - scripts/generate_tables.py
+
+  pull_request:
+    paths:
+      - src/fundus/publishers/**
+      - scripts/generate_tables.py
+
+  workflow_dispatch:
+
+env:
+  PYTHONPATH: .
+  CI_COMMIT_MESSAGE: >-
+    ${{ 
+      github.event_name == 'pull_request' 
+      && format('Update documentation from @ {0} (#{1})', github.event.pull_request.head.sha, github.event.number) 
+      || format('Update documentation from @ {0}', github.sha)
+    }}
+
+jobs:
+  supported_publishers:
+    runs-on: ubuntu-latest
+    
+    permissions:
+      contents: write
+
+    steps:
+      - name: Set up Git repository
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.head_ref }}
+
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.9
+
+      - name: Install Fundus
+        run: pip install -e .[dev]
+
+      - name: Generate 'supported_publishers.md'
+        run: python scripts/generate_tables.py
+
+      - name: Commit changes
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: ${{ env.CI_COMMIT_MESSAGE }}
+          file_pattern: docs
