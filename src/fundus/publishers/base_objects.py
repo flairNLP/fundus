@@ -5,7 +5,7 @@ from typing import Any, Dict, Iterator, List, Optional, Type
 
 from fundus.parser.base_parser import ParserProxy
 from fundus.scraping.filter import UrlFilter
-from fundus.scraping.source import NewsMap, RSSFeed, Sitemap, Source, URLSource
+from fundus.scraping.html import HTMLSource, NewsMap, RSSFeed, Sitemap, URLSource
 from fundus.utils.iteration import iterate_all_subclasses
 
 
@@ -40,7 +40,7 @@ class PublisherEnum(Enum):
 
         # we define the dict here manually instead of using default dict so that we can control
         # the order in which sources are proceeded.
-        source_mapping: Dict[str, List[Source]] = {
+        source_mapping: Dict[str, List[HTMLSource]] = {
             RSSFeed.__name__: [],
             NewsMap.__name__: [],
             Sitemap.__name__: [],
@@ -52,7 +52,7 @@ class PublisherEnum(Enum):
                     f"Unexpected type '{type(url_source).__name__}' as source for {self.name}. "
                     f"Allowed are '{', '.join(cls.__name__ for cls in iterate_all_subclasses(URLSource))}'"
                 )
-            source: Source = Source(
+            source: HTMLSource = HTMLSource(
                 url_source=url_source,
                 publisher=self.publisher_name,
                 url_filter=spec.url_filter,

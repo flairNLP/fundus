@@ -7,12 +7,12 @@ import more_itertools
 from colorama import Fore, Style
 
 from fundus.parser import ArticleBody
-from fundus.scraping.source import ArticleSource
+from fundus.scraping.html import HTML
 
 
 @dataclass(frozen=True)
 class Article:
-    article_source: ArticleSource
+    html_source: HTML
     exception: Optional[Exception] = None
 
     # supported attributes as defined in the guidelines
@@ -24,7 +24,7 @@ class Article:
 
     @classmethod
     def from_extracted(
-        cls, article_source: ArticleSource, extracted: Dict[str, Any], exception: Optional[Exception] = None
+        cls, article_source: HTML, extracted: Dict[str, Any], exception: Optional[Exception] = None
     ) -> "Article":
         validated_attributes: Set[str] = {article_field.name for article_field in fields(cls)}
 
@@ -64,8 +64,9 @@ class Article:
             f"Fundus-Article:"
             f'\n- Title: "{wrapped_title}"'
             f'\n- Text:  "{wrapped_plaintext}"'
-            f"\n- URL:    {self.article_source.url}"
-            f'\n- From:   {self.article_source.publisher} ({self.publishing_date.strftime("%Y-%m-%d %H:%M") if self.publishing_date else ""})'
+            f"\n- URL:    {self.html.url}"
+            f"\n- From:   {self.html.source.publisher} "
+            f'({self.publishing_date.strftime("%Y-%m-%d %H:%M") if self.publishing_date else ""})'
         )
 
         return dedent(text)

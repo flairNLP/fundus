@@ -122,15 +122,14 @@ class NewsMap(Sitemap):
 
 
 @dataclass(frozen=True)
-class ArticleSource:
+class HTML:
     url: str
-    html: str
+    content: str
     crawl_date: datetime
-    publisher: Optional[str] = None
-    source: Optional["Source"] = None
+    source: "HTMLSource"
 
 
-class Source:
+class HTMLSource:
     def __init__(
         self,
         url_source: Iterable[str],
@@ -149,10 +148,10 @@ class Source:
         if isinstance(url_source, URLSource):
             url_source.set_header(self.request_header)
 
-    def _batched_fetch(self) -> Generator[List[Optional[ArticleSource]], int, None]:
+    def _batched_fetch(self) -> Generator[List[Optional[HTML]], int, None]:
         with requests.Session() as session:
 
-            def thread(url: str) -> Optional[ArticleSource]:
+            def thread(url: str) -> Optional[HTML]:
                 if self.delay:
                     sleep(self.delay())
                 try:
@@ -167,14 +166,13 @@ class Source:
                 if history := response.history:
                     basic_logger.info(f"Got redirected {len(history)} time(s) from {url} -> {response.url}")
 
-                article_source = ArticleSource(
+                html = HTML(
                     url=response.url,
-                    html=response.text,
+                    content=response.text,
                     crawl_date=datetime.now(),
-                    publisher=self.publisher,
                     source=self,
                 )
-                return article_source
+                return html
 
             with ThreadPool(processes=self.max_threads) as pool:
                 url_iterator = filter(inverse(self.url_filter), self.url_source)
@@ -191,7 +189,7 @@ class Source:
                         empty = True
                     yield pool.map(thread, batch_urls)
 
-    def fetch(self, batch_size: int = 10) -> Iterator[ArticleSource]:
+    def fetch(self, batch_size: int = 10) -> Iterator[HTML]:
         gen = self._batched_fetch()
         while True:
             try:
