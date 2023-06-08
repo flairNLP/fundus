@@ -24,7 +24,7 @@ from lxml.etree import XPath
 from requests import HTTPError
 
 from fundus.logging.logger import basic_logger
-from fundus.scraping.filter import UrlFilter, _not
+from fundus.scraping.filter import UrlFilter, inverse
 
 _default_header = {"user-agent": "Fundus"}
 
@@ -66,7 +66,7 @@ class URLSource(Iterable[str], ABC):
         pass
 
     def __iter__(self) -> Iterator[str]:
-        yield from filter(_not(self.url_filter), self._get_pre_filtered_urls())
+        yield from filter(inverse(self.url_filter), self._get_pre_filtered_urls())
 
 
 @dataclass
@@ -108,7 +108,7 @@ class Sitemap(URLSource):
             yield from reversed(urls) if self.reverse else urls
             if self.recursive:
                 sitemap_locs = [node.text_content() for node in self._sitemap_selector(tree)]
-                filtered_locs = list(filter(_not(self.sitemap_filter), sitemap_locs))
+                filtered_locs = list(filter(inverse(self.sitemap_filter), sitemap_locs))
                 for loc in reversed(filtered_locs) if self.reverse else filtered_locs:
                     yield from yield_recursive(loc)
 
@@ -177,7 +177,7 @@ class Source:
                 return article_source
 
             with ThreadPool(processes=self.max_threads) as pool:
-                url_iterator = filter(_not(self.url_filter), self.url_source)
+                url_iterator = filter(inverse(self.url_filter), self.url_source)
                 empty = False
                 while not empty:
                     current_size = batch_size = yield  # type: ignore
