@@ -49,9 +49,8 @@ class PublisherEnum(Enum):
         for url_source in spec.sources:
             if not isinstance(url_source, URLSource):
                 raise TypeError(
-                    f"Unexpected type {type(url_source).__name__} as source for {self.name}. "
-                    f"Only {type(RSSFeed).__name__}, {type(NewsMap).__name__} and {type(Sitemap).__name__} "
-                    f"are allowed as sources."
+                    f"Unexpected type '{type(url_source).__name__}' as source for {self.name}. "
+                    f"Allowed are '{', '.join(cls.__name__ for cls in iterate_all_subclasses(URLSource))}'"
                 )
             source: Source = Source(
                 url_source=url_source,
@@ -63,37 +62,32 @@ class PublisherEnum(Enum):
 
         self.source_mapping = source_mapping
 
-    def supports(self, source_types: Optional[List[Type[URLSource]]]) -> bool:
-        if source_types is None:
-            return True
-        else:
-            if not isinstance(source_types, list):
-                raise TypeError(f"Got unexpected type {type(source_types)}. Expected <class list>")
-            for source_type in source_types:
-                if not inspect.isclass(source_type):
-                    raise TypeError(
-                        f"Got unexpected type {type(source_type)}. "
-                        f"Allowed are '{', '.join(cls.__name__ for cls in iterate_all_subclasses(URLSource))}'"
-                    )
-                elif not issubclass(source_type, URLSource):
-                    raise TypeError(
-                        f"Got unexpected type {source_type}. "
-                        f"Allowed are '{', '.join(cls.__name__ for cls in iterate_all_subclasses(URLSource))}'"
-                    )
-            return all(bool(self.source_mapping.get(source_type.__name__)) for source_type in source_types)
+    def supports(self, source_types: List[Type[URLSource]]) -> bool:
+        if not isinstance(source_types, list):
+            raise TypeError(f"Got unexpected type '{type(source_types)}'. Expected <class list>")
+        for source_type in source_types:
+            if not inspect.isclass(source_type) or not issubclass(source_type, URLSource):
+                raise TypeError(
+                    f"Got unexpected type '{source_type}'. "
+                    f"Allowed are '{', '.join(cls.__name__ for cls in iterate_all_subclasses(URLSource))}'"
+                )
+        return all(bool(self.source_mapping.get(source_type.__name__)) for source_type in source_types)
 
     @classmethod
     def search(
         cls, attributes: Optional[List[str]] = None, source_types: Optional[List[Type[URLSource]]] = None
     ) -> List["PublisherEnum"]:
-        assert attributes or source_types, "You have to define at least one search condition"
+        if not attributes or source_types:
+            raise ValueError("You have to define at least one search condition")
         if not attributes:
             attributes = []
         matched = []
         unique_attributes = set(attributes)
         spec: PublisherEnum
         for spec in list(cls):
-            if unique_attributes.issubset(spec.parser().attributes().names) and spec.supports(source_types):
+            if unique_attributes.issubset(spec.parser().attributes().names) and (
+                spec.supports(source_types) if source_types else True
+            ):
                 matched.append(spec)
         return matched
 

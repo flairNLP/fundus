@@ -54,6 +54,6 @@ class TestCollection:
         assert len(publisher_enum_with_news_map.search(latest.names)) == 1
         assert len(publisher_enum_with_news_map.search(earlier.names)) == 0
 
-        with pytest.raises(AssertionError):
+        with pytest.raises(ValueError):
             publisher_enum_with_news_map.search([])
             publisher_enum_with_news_map.search()
