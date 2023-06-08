@@ -1,6 +1,5 @@
-from collections.abc import Iterator
 from datetime import datetime
-from typing import List, Optional, cast
+from typing import List, Optional
 
 from lxml.etree import XPath
 

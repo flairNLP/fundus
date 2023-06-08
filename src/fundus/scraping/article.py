@@ -12,7 +12,7 @@ from fundus.scraping.source import ArticleSource
 
 @dataclass(frozen=True)
 class Article:
-    source: ArticleSource
+    article_source: ArticleSource
     exception: Optional[Exception] = None
 
     # supported attributes as defined in the guidelines
@@ -24,7 +24,7 @@ class Article:
 
     @classmethod
     def from_extracted(
-        cls, source: ArticleSource, extracted: Dict[str, Any], exception: Optional[Exception] = None
+        cls, article_source: ArticleSource, extracted: Dict[str, Any], exception: Optional[Exception] = None
     ) -> "Article":
         validated_attributes: Set[str] = {article_field.name for article_field in fields(cls)}
 
@@ -34,7 +34,7 @@ class Article:
             lambda attribute_and_value: attribute_and_value[0] in validated_attributes, extracted.items()
         )
 
-        article: Article = cls(source, exception, **dict(extracted_validated))
+        article: Article = cls(article_source, exception, **dict(extracted_validated))
         for attribute, value in extracted_unvalidated:
             object.__setattr__(article, attribute, value)  # Sets attributes on a frozen dataclass
 
@@ -64,8 +64,8 @@ class Article:
             f"Fundus-Article:"
             f'\n- Title: "{wrapped_title}"'
             f'\n- Text:  "{wrapped_plaintext}"'
-            f"\n- URL:    {self.source.url}"
-            f'\n- From:   {self.source.publisher} ({self.publishing_date.strftime("%Y-%m-%d %H:%M") if self.publishing_date else ""})'
+            f"\n- URL:    {self.article_source.url}"
+            f'\n- From:   {self.article_source.publisher} ({self.publishing_date.strftime("%Y-%m-%d %H:%M") if self.publishing_date else ""})'
         )
 
         return dedent(text)
