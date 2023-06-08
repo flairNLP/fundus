@@ -71,10 +71,10 @@ class ParagraphNode(Node):
 
 
 def extract_article_body_with_selector(
-        doc: lxml.html.HtmlElement,
-        paragraph_selector: XPath,
-        summary_selector: Optional[XPath] = None,
-        subheadline_selector: Optional[XPath] = None,
+    doc: lxml.html.HtmlElement,
+    paragraph_selector: XPath,
+    summary_selector: Optional[XPath] = None,
+    subheadline_selector: Optional[XPath] = None,
 ) -> ArticleBody:
     # depth first index for each element in tree
     df_idx_by_ref = {element: i for i, element in enumerate(doc.iter())}
@@ -134,19 +134,19 @@ def strip_nodes_to_text(text_nodes: List[lxml.html.HtmlElement]) -> Optional[str
 
 
 def apply_substitution_pattern_over_list(
-        input_list: List[str], pattern: Pattern[str], replacement: Union[str, Callable[[Match[str]], str]] = ""
+    input_list: List[str], pattern: Pattern[str], replacement: Union[str, Callable[[Match[str]], str]] = ""
 ) -> List[str]:
     return [subbed for text in input_list if (subbed := re.sub(pattern, replacement, text).strip())]
 
 
 def generic_author_parsing(
-        value: Union[
-            Optional[str],
-            Dict[str, str],
-            List[str],
-            List[Dict[str, str]],
-        ],
-        split_on: Optional[List[str]] = None,
+    value: Union[
+        Optional[str],
+        Dict[str, str],
+        List[str],
+        List[Dict[str, str]],
+    ],
+    split_on: Optional[List[str]] = None,
 ) -> List[str]:
     """This function tries to parse the given <value> to a list of authors (List[str]) based on the type of value.
 
@@ -213,14 +213,18 @@ def generic_topic_parsing(keyword_str: Optional[str], delimiter: str = ",") -> L
     return [keyword.strip() for keyword in keyword_str.split(delimiter)] if keyword_str else []
 
 
-def generic_id_url_parsing(url: str, pattern: str):
+def generic_id_url_parsing(url: Optional[str], pattern: str) -> Optional[str]:
+    if not url:
+        return None
     search_result: Optional[Match[str]] = re.search(pattern, url)
     if search_result:
         return search_result.group(1)
     return None
 
 
-def generic_id_html_parsing(html: str, pattern: str):
+def generic_id_html_parsing(html: Optional[str], pattern: str) -> Optional[str]:
+    if not html:
+        return None
     search_result: Optional[Match[str]] = re.search(pattern, str(html))
     if search_result:
         return search_result.group(1)

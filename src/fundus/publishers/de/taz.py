@@ -8,6 +8,7 @@ from fundus.parser.utility import (
     extract_article_body_with_selector,
     generic_author_parsing,
     generic_date_parsing,
+    generic_id_url_parsing,
     generic_topic_parsing,
 )
 
@@ -17,6 +18,11 @@ class TazParser(ParserProxy):
         _paragraph_selector = CSSSelector(".sectbody > p[class*='article']")
         _summary_selector = CSSSelector(".intro")
         _subheadline_selector = CSSSelector(".sectbody > h6")
+        _url_id_pattern = "(?:taz.de/)(?:.*)!([0-9]{7})"
+
+        @attribute(validate=False)
+        def id(self) -> Optional[str]:
+            return generic_id_url_parsing(self.precomputed.meta.get("og:url"), self._url_id_pattern)
 
         @attribute
         def body(self) -> ArticleBody:

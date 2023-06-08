@@ -10,6 +10,7 @@ from fundus.parser.utility import (
     extract_article_body_with_selector,
     generic_author_parsing,
     generic_date_parsing,
+    generic_id_url_parsing,
 )
 
 
@@ -28,6 +29,12 @@ class FocusParser(ParserProxy):
         )
         _topic_pattern: Pattern[str] = re.compile(r'"keywords":\[{(.*?)}\]')
         _topic_name_pattern: Pattern[str] = re.compile(r'"name":"(.*?)"', flags=re.MULTILINE)
+
+        _url_id_pattern = "(?:_id_)([\\d]+)(?:.html)"
+
+        @attribute(validate=False)
+        def id(self) -> Optional[str]:
+            return generic_id_url_parsing(self.precomputed.meta.get("og:url"), self._url_id_pattern)
 
         @attribute
         def body(self) -> ArticleBody:

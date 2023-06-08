@@ -9,6 +9,7 @@ from fundus.parser.utility import (
     extract_article_body_with_selector,
     generic_author_parsing,
     generic_date_parsing,
+    generic_id_url_parsing,
     generic_text_extraction_with_css,
     generic_topic_parsing,
 )
@@ -26,6 +27,12 @@ class DWParser(ParserProxy):
         _date_selector = XPath(
             "normalize-space(" '//ul[@class="smallList"]' '/li[strong[contains(text(), "Datum")]]' "/text())"
         )
+
+        _url_id_pattern = "(?:dw.com/).*(?:a-)([0-9]{8})"
+
+        @attribute(validate=False)
+        def id(self) -> Optional[str]:
+            return generic_id_url_parsing(self.precomputed.meta.get("og:url"), self._url_id_pattern)
 
         @attribute
         def body(self) -> ArticleBody:

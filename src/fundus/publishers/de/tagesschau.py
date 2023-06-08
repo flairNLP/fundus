@@ -10,6 +10,7 @@ from fundus.parser.utility import (
     extract_article_body_with_selector,
     generic_author_parsing,
     generic_date_parsing,
+    generic_id_html_parsing,
 )
 
 
@@ -20,6 +21,12 @@ class TagesschauParser(ParserProxy):
         _subheadline_selector = XPath("//article/h2")
         _author_selector = XPath('string(//div[contains(@class, "authorline__author")])')
         _topic_selector = CSSSelector("div.meldungsfooter .taglist a")
+
+        _html_id_pattern = "(?:&quot;5&quot;:&quot;\\u005B)([^\\u005D]*)(?:\\u005D)"
+
+        @attribute(validate=False)
+        def id(self) -> Optional[str]:
+            return generic_id_html_parsing(str(self.precomputed.doc), self._html_id_pattern)
 
         @attribute
         def body(self) -> ArticleBody:

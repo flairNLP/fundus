@@ -8,6 +8,7 @@ from fundus.parser.utility import (
     extract_article_body_with_selector,
     generic_author_parsing,
     generic_date_parsing,
+    generic_id_url_parsing,
 )
 
 
@@ -16,6 +17,12 @@ class MerkurParser(ParserProxy):
         _paragraph_selector = CSSSelector("p.id-StoryElement-paragraph, article > ul > li")
         _summary_selector = CSSSelector("p.id-StoryElement-leadText")
         _subheadline_selector = CSSSelector("h2.id-StoryElement-crosshead")
+
+        _url_id_pattern = "(?:merkur.de/).*(?:-)([0-9]{8})(?:.html)"
+
+        @attribute(validate=False)
+        def id(self) -> Optional[str]:
+            return generic_id_url_parsing(self.precomputed.meta.get("og:url"), self._url_id_pattern)
 
         @attribute
         def body(self) -> ArticleBody:

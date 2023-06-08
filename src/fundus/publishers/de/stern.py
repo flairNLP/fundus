@@ -8,6 +8,7 @@ from fundus.parser.utility import (
     extract_article_body_with_selector,
     generic_author_parsing,
     generic_date_parsing,
+    generic_id_url_parsing,
 )
 
 
@@ -16,6 +17,12 @@ class SternParser(ParserProxy):
         _paragraph_selector = CSSSelector(".article__body >p")
         _summary_selector = CSSSelector(".intro__text")
         _subheadline_selector = CSSSelector(".subheadline-element")
+
+        _url_id_pattern = "(?:stern.de/).*(?:-)([0-9]{8})(?:.html)"
+
+        @attribute(validate=False)
+        def id(self) -> Optional[str]:
+            return generic_id_url_parsing(self.precomputed.meta.get("og:url"), self._url_id_pattern)
 
         @attribute
         def body(self) -> ArticleBody:

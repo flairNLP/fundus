@@ -10,7 +10,8 @@ from fundus.parser.utility import (
     extract_article_body_with_selector,
     generic_author_parsing,
     generic_date_parsing,
-    generic_topic_parsing, generic_id_url_parsing,
+    generic_id_url_parsing,
+    generic_topic_parsing,
 )
 
 
@@ -32,10 +33,6 @@ class DieWeltParser(ParserProxy):
             )
 
         @attribute
-        def id(self) -> Optional[str]:
-            return generic_id_url_parsing(self.precomputed.meta.get('og:url'), self._url_id_pattern)
-
-        @attribute
         def authors(self) -> List[str]:
             return apply_substitution_pattern_over_list(
                 generic_author_parsing(self.precomputed.ld.bf_search("author")), self._author_substitution_pattern
@@ -52,3 +49,7 @@ class DieWeltParser(ParserProxy):
         @attribute
         def topics(self) -> List[str]:
             return generic_topic_parsing(self.precomputed.meta.get("keywords"))
+
+        @attribute(validate=False)
+        def id(self) -> Optional[str]:
+            return generic_id_url_parsing(self.precomputed.meta.get("og:url"), self._url_id_pattern)

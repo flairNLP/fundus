@@ -8,7 +8,8 @@ from fundus.parser.utility import (
     extract_article_body_with_selector,
     generic_author_parsing,
     generic_date_parsing,
-    generic_topic_parsing, generic_id_url_parsing,
+    generic_id_url_parsing,
+    generic_topic_parsing,
 )
 
 
@@ -32,9 +33,9 @@ class SZParser(ParserProxy):
         def authors(self) -> List[str]:
             return generic_author_parsing(self.precomputed.ld.bf_search("author"))
 
-        @attribute
+        @attribute(validate=False)
         def id(self) -> Optional[str]:
-            return generic_id_url_parsing(self.precomputed.meta.get('og:url'), self._url_id_pattern)
+            return generic_id_url_parsing(self.precomputed.meta.get("og:url"), self._url_id_pattern)
 
         @attribute
         def publishing_date(self) -> Optional[datetime.datetime]:

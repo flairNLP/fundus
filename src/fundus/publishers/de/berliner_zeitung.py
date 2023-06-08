@@ -8,7 +8,8 @@ from fundus.parser.utility import (
     extract_article_body_with_selector,
     generic_author_parsing,
     generic_date_parsing,
-    generic_topic_parsing, generic_id_url_parsing,
+    generic_id_url_parsing,
+    generic_topic_parsing,
 )
 
 
@@ -35,9 +36,9 @@ class BerlinerZeitungParser(ParserProxy):
         def title(self) -> Optional[str]:
             return self.precomputed.meta.get("og:title")
 
-        @attribute
+        @attribute(validate=False)
         def id(self) -> Optional[str]:
-            return generic_id_url_parsing(self.precomputed.meta.get('og:url'), self._url_id_pattern)
+            return generic_id_url_parsing(self.precomputed.meta.get("og:url"), self._url_id_pattern)
 
         @attribute
         def authors(self) -> List[str]:

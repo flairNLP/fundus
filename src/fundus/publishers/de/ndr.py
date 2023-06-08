@@ -8,6 +8,7 @@ from fundus.parser.utility import (
     extract_article_body_with_selector,
     generic_author_parsing,
     generic_date_parsing,
+    generic_id_url_parsing,
     generic_topic_parsing,
 )
 
@@ -17,6 +18,12 @@ class NDRParser(ParserProxy):
         _paragraph_selector = CSSSelector(".modulepadding > p, .modulepadding > ol > li")
         _summary_selector = CSSSelector(".preface")
         _subheadline_selector = CSSSelector("article .modulepadding > h2")
+
+        _url_id_pattern = "(?:ndr.de)(?:.*?),([a-zA-Z]*[0-9]{0,5})(?:.html)$"
+
+        @attribute(validate=False)
+        def id(self) -> Optional[str]:
+            return generic_id_url_parsing(self.precomputed.meta.get("og:url"), self._url_id_pattern)
 
         @attribute
         def body(self) -> ArticleBody:

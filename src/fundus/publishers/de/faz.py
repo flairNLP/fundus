@@ -7,6 +7,7 @@ from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute
 from fundus.parser.utility import (
     extract_article_body_with_selector,
     generic_date_parsing,
+    generic_id_url_parsing,
     generic_topic_parsing,
 )
 
@@ -17,6 +18,12 @@ class FAZParser(ParserProxy):
         _summary_selector = CSSSelector("div.atc-Intro > p")
         _subheadline_selector = CSSSelector("div.atc-Text > h3")
         _author_selector = CSSSelector(".atc-MetaAuthor")
+
+        _url_id_pattern = "(?:faz.net)(?:.*)-([0-9]{0,9}).html$"
+
+        @attribute(validate=False)
+        def id(self) -> Optional[str]:
+            return generic_id_url_parsing(self.precomputed.meta.get("og:url"), self._url_id_pattern)
 
         @attribute
         def body(self) -> ArticleBody:
