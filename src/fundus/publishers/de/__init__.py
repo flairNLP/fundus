@@ -2,6 +2,7 @@ from datetime import datetime
 
 from fundus.publishers.base_objects import PublisherEnum, PublisherSpec
 from fundus.scraping.filter import regex_filter
+
 from .berliner_zeitung import BerlinerZeitungParser
 from .bild import BildParser
 from .die_welt import DieWeltParser
@@ -28,7 +29,7 @@ class DE(PublisherEnum):
         rss_feeds=["https://www.welt.de/feeds/latest.rss"],
         sitemaps=["https://www.welt.de/sitemaps/sitemap/sitemap.xml"],
         news_map="https://www.welt.de/sitemaps/newssitemap/newssitemap.xml",
-        url_filter=regex_filter('https://(?!www.welt.de)|/Anlegertipps-|/videos[0-9]{2}'),
+        url_filter=regex_filter("https://(?!www.welt.de)|/Anlegertipps-|/videos[0-9]{2}"),
         parser=DieWeltParser,
     )
 
@@ -94,9 +95,10 @@ class DE(PublisherEnum):
         rss_feeds=["https://newsfeed.zeit.de/news/index"],
         sitemaps=["https://www.zeit.de/gsitemaps/index.xml"],
         news_map=f"https://www.zeit.de/gsitemaps/index.xml?date="
-                 f'{datetime.now().strftime("%Y-%m-%d")}&unit=days&period=1',
+        f'{datetime.now().strftime("%Y-%m-%d")}&unit=days&period=1',
         url_filter=regex_filter(
-            '/news/|/zett/|/angebote/|/kaenguru-comics/|/administratives/|/index(?!.)|/elbvertiefung-[0-9]{2}-[0-9]{2}'),
+            "/news/|/zett/|/angebote/|/kaenguru-comics/|/administratives/|/index(?!.)|/elbvertiefung-[0-9]{2}-[0-9]{2}"
+        ),
         parser=DieZeitParser,
     )
 
@@ -106,7 +108,7 @@ class DE(PublisherEnum):
         rss_feeds=["https://www.berliner-zeitung.de/feed.xml"],
         sitemaps=["https://www.berliner-zeitung.de/sitemap.xml"],
         news_map="https://www.berliner-zeitung.de/news-sitemap.xml",
-        url_filter=regex_filter('https://www.berliner-zeitung.de/en|/news/'),
+        url_filter=regex_filter("https://www.berliner-zeitung.de/en|/news/"),
         parser=BerlinerZeitungParser,
     )
 
@@ -123,7 +125,7 @@ class DE(PublisherEnum):
         rss_feeds=["https://rss.dw.com/xml/rss-de-all"],
         sitemaps=["https://www.dw.com/de/article-sitemap.xml"],
         news_map="https://www.dw.com/de/news-sitemap.xml",
-        url_filter=regex_filter('^(?:(?!/de/).)*$'),
+        url_filter=regex_filter("^(?:(?!/de/).)*$"),
         parser=DWParser,
     )
     Stern = PublisherSpec(
