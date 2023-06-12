@@ -1,5 +1,5 @@
 import asyncio
-from typing import Iterator, List, Literal, Optional, Set, Tuple, Type, Union
+from typing import Iterator, List, Literal, Optional, Set, Tuple, Type, Union, Callable
 
 import more_itertools
 
@@ -21,10 +21,13 @@ class Pipeline:
             error_handling: Literal["suppress", "catch", "raise"],
             max_articles: Optional[int] = None,
             extraction_filter: Optional[ExtractionFilter] = None,
+            delay: Optional[Callable[[], float]] = None,
     ) -> Iterator[Article]:
         scrape_map = map(
-            lambda x: x.async_scrape(
-                error_handling=error_handling, extraction_filter=extraction_filter
+            lambda x: x.scrape(
+                error_handling=error_handling,
+                extraction_filter=extraction_filter,
+                delay=delay,
             ),
             self.scrapers,
         )
@@ -66,6 +69,7 @@ class Crawler:
             restrict_sources_to: Optional[List[Type[URLSource]]] = None,
             error_handling: Literal["suppress", "catch", "raise"] = "suppress",
             only_complete: Union[bool, ExtractionFilter] = True,
+            delay: Optional[Callable[[], float]] = None,
     ) -> Iterator[Article]:
         extraction_filter: Optional[ExtractionFilter]
         if isinstance(only_complete, bool):
@@ -102,6 +106,7 @@ class Crawler:
                 error_handling=error_handling,
                 max_articles=max_articles,
                 extraction_filter=extraction_filter,
+                delay=delay,
             )
         else:
             return iter(())

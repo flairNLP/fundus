@@ -1,5 +1,6 @@
 import asyncio
 import gzip
+import time
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from datetime import datetime
@@ -139,75 +140,37 @@ class Source:
         publisher: Optional[str],
         url_filter: Optional[UrlFilter] = None,
         max_threads: int = 10,
-        delay: Optional[Callable[[], float]] = None,
         request_header: Optional[Dict[str, str]] = None,
     ):
         self.url_source = url_source
         self.publisher = publisher
         self.url_filter = url_filter or (lambda url: not bool(url))
         self.max_threads = max_threads
-        self.delay = delay
         self.request_header = request_header or _default_header
         if isinstance(url_source, URLSource):
             url_source.set_header(self.request_header)
 
-    def _batched_fetch(self) -> Generator[List[Optional[ArticleSource]], int, None]:
-        with requests.Session() as session:
-
-            def thread(url: str) -> Optional[ArticleSource]:
-                if self.delay:
-                    sleep(self.delay())
-                try:
-                    response = session.get(url=url, headers=self.request_header)
-                    response.raise_for_status()
-                except HTTPError as error:
-                    basic_logger.warn(f"Skipped {url} because of {error}")
-                    return None
-                except requests.exceptions.TooManyRedirects as error:
-                    basic_logger.info(f"Skipped {url} because of {error}")
-                    return None
-                if history := response.history:
-                    basic_logger.info(f"Got redirected {len(history)} time(s) from {url} -> {response.url}")
-
-                article_source = ArticleSource(
-                    url=response.url,
-                    html=response.text,
-                    crawl_date=datetime.now(),
-                    publisher=self.publisher,
-                    source=self,
-                )
-                return article_source
-
-            with ThreadPool(processes=self.max_threads) as pool:
-                url_iterator = filter(inverse(self.url_filter), self.url_source)
-                empty = False
-                while not empty:
-                    current_size = batch_size = yield  # type: ignore
-                    batch_urls = []
-                    while current_size > 0 and (nxt := next(url_iterator, None)):
-                        batch_urls.append(nxt)
-                        current_size -= 1
-                    if not batch_urls:
-                        break
-                    elif len(batch_urls) < batch_size:
-                        empty = True
-                    yield pool.map(thread, batch_urls)
-
-    def fetch(self, batch_size: int = 10) -> Iterator[ArticleSource]:
-        gen = self._batched_fetch()
-        while True:
-            try:
-                next(gen)
-                yield from filter(lambda x: bool(x), gen.send(batch_size))
-            except StopIteration:
-                break
-
-    async def async_fetch(self) -> AsyncGenerator[ArticleSource, None]:
+    async def async_fetch(self, delay: Optional[Callable[[], float]] = None) -> AsyncGenerator[ArticleSource, None]:
         async with aiohttp.ClientSession(headers=self.request_header) as session:
             url_iterator = filter(inverse(self.url_filter), self.url_source)
+            last_request_time = time.time()
             for url in url_iterator:
                 async with session.get(url) as response:
-                    html = await response.text()
+                    if delay and (actual_delay := delay() - time.time() + last_request_time) > 0:
+                        basic_logger.debug(f"Sleep for {actual_delay} seconds.")
+                        await asyncio.sleep(actual_delay)
+                    try:
+                        html = await response.text()
+                        last_request_time = time.time()
+                        response.raise_for_status()
+                    except HTTPError as error:
+                        basic_logger.warn(f"Skipped {url} because of {error}")
+                        return
+                    except requests.exceptions.TooManyRedirects as error:
+                        basic_logger.info(f"Skipped {url} because of {error}")
+                        return
+                    if history := response.history:
+                        basic_logger.info(f"Got redirected {len(history)} time(s) from {url} -> {response.url}")
                     yield ArticleSource(
                         url=str(response.url),
                         html=html,
