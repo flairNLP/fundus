@@ -1,3 +1,4 @@
+import asyncio
 from typing import Iterator, List, Literal, Optional, Set, Tuple, Type, Union
 
 import more_itertools
@@ -7,6 +8,7 @@ from fundus.scraping.article import Article
 from fundus.scraping.filter import ExtractionFilter
 from fundus.scraping.scraper import Scraper
 from fundus.scraping.source import URLSource
+from fundus.utils.more_async import async_next, async_gen_interleave
 from fundus.utils.validation import listify
 
 
@@ -15,29 +17,40 @@ class Pipeline:
         self.scrapers: Tuple[Scraper, ...] = scrapers
 
     def run(
-        self,
-        error_handling: Literal["suppress", "catch", "raise"],
-        max_articles: Optional[int] = None,
-        extraction_filter: Optional[ExtractionFilter] = None,
-        batch_size: int = 10,
+            self,
+            error_handling: Literal["suppress", "catch", "raise"],
+            max_articles: Optional[int] = None,
+            extraction_filter: Optional[ExtractionFilter] = None,
     ) -> Iterator[Article]:
         scrape_map = map(
-            lambda x: x.scrape(
-                error_handling=error_handling, batch_size=batch_size, extraction_filter=extraction_filter
+            lambda x: x.async_scrape(
+                error_handling=error_handling, extraction_filter=extraction_filter
             ),
             self.scrapers,
         )
-        robin = more_itertools.interleave_longest(*tuple(scrape_map))
+
+        loop = asyncio.get_event_loop()
+
+        def article_gen() -> Iterator[Article]:
+            scrape_gen = async_gen_interleave(*tuple(scrape_map))
+            while True:
+                nxt = loop.run_until_complete(async_next(scrape_gen, None))
+                if nxt:
+                    yield from nxt
+                else:
+                    break
+
+        gen = article_gen()
 
         if max_articles:
             while max_articles:
-                try:
-                    yield next(robin)
-                except StopIteration:
-                    pass
+                if article := next(gen, None):
+                    yield article
+                else:
+                    break
                 max_articles -= 1
         else:
-            yield from robin
+            yield from gen
 
 
 class Crawler:
@@ -48,12 +61,11 @@ class Crawler:
         self.publishers: Set[PublisherEnum] = set(more_itertools.flatten(nested_publisher))
 
     def crawl(
-        self,
-        max_articles: Optional[int] = None,
-        restrict_sources_to: Optional[List[Type[URLSource]]] = None,
-        error_handling: Literal["suppress", "catch", "raise"] = "suppress",
-        only_complete: Union[bool, ExtractionFilter] = True,
-        batch_size: int = 10,
+            self,
+            max_articles: Optional[int] = None,
+            restrict_sources_to: Optional[List[Type[URLSource]]] = None,
+            error_handling: Literal["suppress", "catch", "raise"] = "suppress",
+            only_complete: Union[bool, ExtractionFilter] = True,
     ) -> Iterator[Article]:
         extraction_filter: Optional[ExtractionFilter]
         if isinstance(only_complete, bool):
@@ -89,7 +101,6 @@ class Crawler:
             return pipeline.run(
                 error_handling=error_handling,
                 max_articles=max_articles,
-                batch_size=batch_size,
                 extraction_filter=extraction_filter,
             )
         else:

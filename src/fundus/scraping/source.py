@@ -1,3 +1,4 @@
+import asyncio
 import gzip
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
@@ -13,9 +14,10 @@ from typing import (
     Iterable,
     Iterator,
     List,
-    Optional,
+    Optional, AsyncGenerator,
 )
 
+import aiohttp
 import feedparser
 import lxml.html
 import requests
@@ -199,3 +201,17 @@ class Source:
                 yield from filter(lambda x: bool(x), gen.send(batch_size))
             except StopIteration:
                 break
+
+    async def async_fetch(self) -> AsyncGenerator[ArticleSource, None]:
+        async with aiohttp.ClientSession(headers=self.request_header) as session:
+            url_iterator = filter(inverse(self.url_filter), self.url_source)
+            for url in url_iterator:
+                async with session.get(url) as response:
+                    html = await response.text()
+                    yield ArticleSource(
+                        url=str(response.url),
+                        html=html,
+                        crawl_date=datetime.now(),
+                        publisher=self.publisher,
+                        source=self,
+                    )

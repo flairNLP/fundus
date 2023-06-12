@@ -1,6 +1,8 @@
-from typing import Iterator, Literal, Optional
+import asyncio
+from typing import Iterator, Literal, Optional, AsyncGenerator
 
 import more_itertools
+from unsync import unsync
 
 from fundus.logging.logger import basic_logger
 from fundus.parser import ParserProxy
@@ -48,6 +50,37 @@ class Scraper:
                     extraction = self.parser(article_source.crawl_date).parse(article_source.html, error_handling)
 
                     if extraction_filter and extraction_filter(extraction):
+                        continue
+                except Exception as err:
+                    if error_handling == "raise":
+                        error_message = f"Run into an error processing '{article_source.url}'"
+                        basic_logger.error(error_message)
+                        err.args = (str(err) + "\n\n" + error_message,)
+                        raise err
+                    elif error_handling == "catch":
+                        yield Article(article_source=article_source, exception=err)
+                        continue
+                    elif error_handling == "suppress":
+                        basic_logger.info(f"Skipped {article_source.url} because of: {err!r}")
+                        continue
+                    else:
+                        raise ValueError(f"Unknown value '{error_handling}' for parameter <error_handling>'")
+
+                article = Article.from_extracted(article_source=article_source, extracted=extraction)
+                yield article
+
+    async def async_scrape(
+            self,
+            error_handling: Literal["suppress", "catch", "raise"],
+            extraction_filter: Optional[ExtractionFilter] = None,
+    ) -> AsyncGenerator[Article, None]:
+        for crawler in self.sources:
+            async for article_source in crawler.async_fetch():
+                try:
+                    extraction = self.parser(article_source.crawl_date).parse(article_source.html, error_handling)
+
+                    if extraction_filter and extraction_filter(extraction):
+                        basic_logger.debug(f"Skipped {article_source.url} because of extraction filter")
                         continue
                 except Exception as err:
                     if error_handling == "raise":
