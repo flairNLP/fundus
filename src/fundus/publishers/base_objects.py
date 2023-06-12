@@ -40,10 +40,10 @@ class PublisherEnum(Enum):
 
         # we define the dict here manually instead of using default dict so that we can control
         # the order in which sources are proceeded.
-        source_mapping: Dict[str, List[Source]] = {
-            RSSFeed.__name__: [],
-            NewsMap.__name__: [],
-            Sitemap.__name__: [],
+        source_mapping: Dict[Type[URLSource], List[Source]] = {
+            RSSFeed: [],
+            NewsMap: [],
+            Sitemap: [],
         }
 
         for url_source in spec.sources:
@@ -58,7 +58,7 @@ class PublisherEnum(Enum):
                 url_filter=spec.url_filter,
                 request_header=spec.request_header,
             )
-            source_mapping[type(url_source).__name__].append(source)
+            source_mapping[type(url_source)].append(source)
 
         self.source_mapping = source_mapping
 
@@ -71,7 +71,7 @@ class PublisherEnum(Enum):
                     f"Got unexpected type '{source_type}'. "
                     f"Allowed are '{', '.join(cls.__name__ for cls in iterate_all_subclasses(URLSource))}'"
                 )
-        return all(bool(self.source_mapping.get(source_type.__name__)) for source_type in source_types)
+        return all(bool(self.source_mapping.get(source_type)) for source_type in source_types)
 
     @classmethod
     def search(

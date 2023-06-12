@@ -71,7 +71,7 @@ class Crawler:
         for spec in self.publishers:
             if restrict_sources_to:
                 sources = more_itertools.flatten(
-                    spec.source_mapping[source_type.__name__] for source_type in restrict_sources_to
+                    spec.source_mapping[source_type] for source_type in restrict_sources_to
                 )
             else:
                 sources = more_itertools.flatten(spec.source_mapping.values())
