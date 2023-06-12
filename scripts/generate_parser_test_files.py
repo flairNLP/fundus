@@ -99,11 +99,13 @@ if __name__ == "__main__":
                     basic_logger.warn(f"Couldn't get article for {publisher.name}. Skipping")
                     continue
                 html = HTMLTestFile(
-                    content=article.source.html, crawl_date=article.source.crawl_date, publisher=publisher
+                    content=article.article_source.html,
+                    crawl_date=article.article_source.crawl_date,
+                    publisher=publisher,
                 )
                 html.write()
 
-                metadata = {"url": article.source.url, "crawl_date": str(article.source.crawl_date)}
+                metadata = {"url": article.article_source.url, "crawl_date": str(article.article_source.crawl_date)}
                 requested_attrs = set(args.attributes)
                 content = {attr: value for attr in args.attributes if (value := getattr(article, attr, None))}
                 entry = {"meta": metadata, "content": content}

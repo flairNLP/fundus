@@ -5,24 +5,18 @@ import more_itertools
 from fundus.logging.logger import basic_logger
 from fundus.parser import ParserProxy
 from fundus.scraping.article import Article
-from fundus.scraping.filter import ExtractionFilter, Requires, UrlFilter
+from fundus.scraping.filter import ExtractionFilter, Requires
 from fundus.scraping.source import Source
 
 
 class Scraper:
-    def __init__(
-        self,
-        *sources: Source,
-        parser: ParserProxy,
-        url_filter: Optional[UrlFilter] = None,
-    ):
+    def __init__(self, *sources: Source, parser: ParserProxy):
         self.sources = list(sources)
 
         if not parser:
             raise ValueError(f"the given parser {type(parser).__name__} is empty")
 
         self.parser = parser
-        self.url_filter = url_filter
 
     def scrape(
         self,
@@ -49,7 +43,7 @@ class Scraper:
                 return
 
         for crawler in self.sources:
-            for article_source in crawler.fetch(batch_size, self.url_filter):
+            for article_source in crawler.fetch(batch_size):
                 try:
                     extraction = self.parser(article_source.crawl_date).parse(article_source.html, error_handling)
 
@@ -62,7 +56,7 @@ class Scraper:
                         err.args = (str(err) + "\n\n" + error_message,)
                         raise err
                     elif error_handling == "catch":
-                        yield Article(source=article_source, exception=err)
+                        yield Article(article_source=article_source, exception=err)
                         continue
                     elif error_handling == "suppress":
                         basic_logger.info(f"Skipped {article_source.url} because of: {err!r}")
@@ -70,5 +64,5 @@ class Scraper:
                     else:
                         raise ValueError(f"Unknown value '{error_handling}' for parameter <error_handling>'")
 
-                article = Article.from_extracted(source=article_source, extracted=extraction)
+                article = Article.from_extracted(article_source=article_source, extracted=extraction)
                 yield article

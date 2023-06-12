@@ -5,6 +5,8 @@ from typing import Any, Dict, Iterator, List, Optional, Type
 
 from fundus.parser.base_parser import ParserProxy
 from fundus.scraping.filter import UrlFilter
+from fundus.scraping.source import NewsMap, RSSFeed, Sitemap, Source, URLSource
+from fundus.utils.iteration import iterate_all_subclasses
 
 
 @dataclass(frozen=True)
@@ -12,13 +14,12 @@ class PublisherSpec:
     name: str
     domain: str
     parser: Type[ParserProxy]
-    rss_feeds: List[str] = field(default_factory=list)
-    sitemaps: List[str] = field(default_factory=list)
     url_filter: Optional[UrlFilter] = field(default=None)
-    news_map: Optional[str] = field(default=None)
+    sources: List[URLSource] = field(default_factory=list)
+    request_header: Dict[str, str] = field(default_factory=dict)
 
     def __post_init__(self):
-        if not (self.rss_feeds or self.sitemaps or self.news_map):
+        if not self.sources:
             raise ValueError("Publishers must at least define either an rss-feed, sitemap or news_map to crawl")
 
 
@@ -34,35 +35,59 @@ class PublisherEnum(Enum):
         if not isinstance(spec, PublisherSpec):
             raise ValueError("Your only allowed to generate 'PublisherEnum's from 'PublisherSpec")
         self.domain = spec.domain
-        self.rss_feeds = spec.rss_feeds
-        self.sitemaps = spec.sitemaps
-        self.news_map = spec.news_map
         self.parser = spec.parser()
-        self.url_filter = spec.url_filter
         self.publisher_name = spec.name
 
-    def supports(self, source_type: Optional[str]) -> bool:
-        if source_type == "rss":
-            return bool(self.rss_feeds)
-        elif source_type == "sitemap":
-            return bool(self.sitemaps)
-        elif source_type == "news":
-            return bool(self.news_map)
-        elif source_type is None:
-            return True
-        else:
-            raise ValueError(f"Unsupported value {source_type} for parameter <source_type>")
+        # we define the dict here manually instead of using default dict so that we can control
+        # the order in which sources are proceeded.
+        source_mapping: Dict[Type[URLSource], List[Source]] = {
+            RSSFeed: [],
+            NewsMap: [],
+            Sitemap: [],
+        }
+
+        for url_source in spec.sources:
+            if not isinstance(url_source, URLSource):
+                raise TypeError(
+                    f"Unexpected type '{type(url_source).__name__}' as source for {self.name}. "
+                    f"Allowed are '{', '.join(cls.__name__ for cls in iterate_all_subclasses(URLSource))}'"
+                )
+            source: Source = Source(
+                url_source=url_source,
+                publisher=self.publisher_name,
+                url_filter=spec.url_filter,
+                request_header=spec.request_header,
+            )
+            source_mapping[type(url_source)].append(source)
+
+        self.source_mapping = source_mapping
+
+    def supports(self, source_types: List[Type[URLSource]]) -> bool:
+        if not source_types:
+            raise ValueError(f"Got empty value '{source_types}' for parameter <source_types>.")
+        for source_type in source_types:
+            if not inspect.isclass(source_type) or not issubclass(source_type, URLSource):
+                raise TypeError(
+                    f"Got unexpected type '{source_type}'. "
+                    f"Allowed are '{', '.join(cls.__name__ for cls in iterate_all_subclasses(URLSource))}'"
+                )
+        return all(bool(self.source_mapping.get(source_type)) for source_type in source_types)
 
     @classmethod
-    def search(cls, attrs: Optional[List[str]] = None, source_type: Optional[str] = None) -> List["PublisherEnum"]:
-        assert attrs or source_type, "You have to define at least one search condition"
-        if not attrs:
-            attrs = []
+    def search(
+        cls, attributes: Optional[List[str]] = None, source_types: Optional[List[Type[URLSource]]] = None
+    ) -> List["PublisherEnum"]:
+        if not attributes or source_types:
+            raise ValueError("You have to define at least one search condition")
+        if not attributes:
+            attributes = []
         matched = []
-        attrs_set = set(attrs)
+        unique_attributes = set(attributes)
         spec: PublisherEnum
         for spec in list(cls):
-            if attrs_set.issubset(spec.parser().attributes().names) and spec.supports(source_type):
+            if unique_attributes.issubset(spec.parser().attributes().names) and (
+                spec.supports(source_types) if source_types else True
+            ):
                 matched.append(spec)
         return matched
 
