@@ -63,8 +63,8 @@ class PublisherEnum(Enum):
         self.source_mapping = source_mapping
 
     def supports(self, source_types: List[Type[URLSource]]) -> bool:
-        if not isinstance(source_types, list):
-            raise TypeError(f"Got unexpected type '{type(source_types)}'. Expected <class list>")
+        if not source_types:
+            raise ValueError(f"Got empty value '{source_types}' for parameter <source_types>.")
         for source_type in source_types:
             if not inspect.isclass(source_type) or not issubclass(source_type, URLSource):
                 raise TypeError(
