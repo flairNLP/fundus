@@ -39,7 +39,7 @@ class TestCollection:
         assert publisher_enum_with_news_map.value.supports([NewsMap])
         assert not publisher_enum_with_news_map.value.supports([Sitemap])
         assert not publisher_enum_with_news_map.value.supports([RSSFeed])
-        with pytest.raises(TypeError):
+        with pytest.raises(ValueError):
             publisher_enum_with_news_map.value.supports("")
 
         with pytest.raises(TypeError):

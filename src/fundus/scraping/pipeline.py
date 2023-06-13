@@ -60,7 +60,7 @@ class Crawler:
             extraction_filter = (
                 None
                 if only_complete is False
-                else lambda extracted: all(
+                else lambda extracted: not all(
                     bool(v) if not isinstance(v, Exception) else False for k, v in extracted.items()
                 )
             )
@@ -71,7 +71,7 @@ class Crawler:
         for spec in self.publishers:
             if restrict_sources_to:
                 sources = more_itertools.flatten(
-                    spec.source_mapping[source_type.__name__] for source_type in restrict_sources_to
+                    spec.source_mapping[source_type] for source_type in restrict_sources_to
                 )
             else:
                 sources = more_itertools.flatten(spec.source_mapping.values())

@@ -156,6 +156,13 @@ class TestParser:
             assert version_data.get("meta"), f"Missing metadata for parser version '{version_name}'"
             assert (content := version_data.get("content")), f"Missing content for parser version '{version_name}'"
 
+            for key, value in version_data.items():
+                if not value:
+                    raise ValueError(
+                        f"There is no value set for key '{key}' in the test JSON. "
+                        f"Only complete articles should be used as test cases"
+                    )
+
             # test coverage
             supported_attrs = set(versioned_parser.attributes().names)
             missing_attrs = attrs_required_to_cover & supported_attrs - set(content.keys())

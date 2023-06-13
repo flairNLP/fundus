@@ -2,18 +2,22 @@
 
 
 ## AT-Publishers
+
 <table class="publishers at">
   <thead>
     <tr>
-      <th>Source</th>
-      <th>Domain</th>
-      <th>Missing Attributes</th>
-      <th>Additional Attributes</th>
-      <th>Class</th>
+      <th>Class&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</th>
+      <th>Source&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</th>
+      <th>URL&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</th>
+      <th>Missing&#160;Attributes</th>
+      <th>Additional&#160;Attributes&#160;&#160;&#160;&#160;</th>
     </tr>
   </thead>
   <tbody>
     <tr>
+      <td>
+        <code>ORF</code>
+      </td>
       <td>
         <div>ORF</div>
       </td>
@@ -26,26 +30,28 @@
         <code>topics</code>
       </td>
       <td>&#160;</td>
-      <td>
-        <code>ORF</code>
-      </td>
     </tr>
   </tbody>
 </table>
 
+
 ## DE-Publishers
+
 <table class="publishers de">
   <thead>
     <tr>
-      <th>Source</th>
-      <th>Domain</th>
-      <th>Missing Attributes</th>
-      <th>Additional Attributes</th>
-      <th>Class</th>
+      <th>Class&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</th>
+      <th>Source&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</th>
+      <th>URL&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</th>
+      <th>Missing&#160;Attributes</th>
+      <th>Additional&#160;Attributes&#160;&#160;&#160;&#160;</th>
     </tr>
   </thead>
   <tbody>
     <tr>
+      <td>
+        <code>BerlinerZeitung</code>
+      </td>
       <td>
         <div>Berliner Zeitung</div>
       </td>
@@ -56,11 +62,11 @@
       </td>
       <td>&#160;</td>
       <td>&#160;</td>
-      <td>
-        <code>BerlinerZeitung</code>
-      </td>
     </tr>
     <tr>
+      <td>
+        <code>Bild</code>
+      </td>
       <td>
         <div>Bild</div>
       </td>
@@ -71,11 +77,11 @@
       </td>
       <td>&#160;</td>
       <td>&#160;</td>
-      <td>
-        <code>Bild</code>
-      </td>
     </tr>
     <tr>
+      <td>
+        <code>DW</code>
+      </td>
       <td>
         <div>Deutsche Welle</div>
       </td>
@@ -86,11 +92,11 @@
       </td>
       <td>&#160;</td>
       <td>&#160;</td>
-      <td>
-        <code>DW</code>
-      </td>
     </tr>
     <tr>
+      <td>
+        <code>Taz</code>
+      </td>
       <td>
         <div>Die Tageszeitung (taz)</div>
       </td>
@@ -101,11 +107,11 @@
       </td>
       <td>&#160;</td>
       <td>&#160;</td>
-      <td>
-        <code>Taz</code>
-      </td>
     </tr>
     <tr>
+      <td>
+        <code>DieWelt</code>
+      </td>
       <td>
         <div>Die Welt</div>
       </td>
@@ -116,11 +122,11 @@
       </td>
       <td>&#160;</td>
       <td>&#160;</td>
-      <td>
-        <code>DieWelt</code>
-      </td>
     </tr>
     <tr>
+      <td>
+        <code>DieZeit</code>
+      </td>
       <td>
         <div>Die Zeit</div>
       </td>
@@ -131,11 +137,11 @@
       </td>
       <td>&#160;</td>
       <td>&#160;</td>
-      <td>
-        <code>DieZeit</code>
-      </td>
     </tr>
     <tr>
+      <td>
+        <code>Focus</code>
+      </td>
       <td>
         <div>Focus Online</div>
       </td>
@@ -146,11 +152,11 @@
       </td>
       <td>&#160;</td>
       <td>&#160;</td>
-      <td>
-        <code>Focus</code>
-      </td>
     </tr>
     <tr>
+      <td>
+        <code>FAZ</code>
+      </td>
       <td>
         <div>Frankfurter Allgemeine Zeitung</div>
       </td>
@@ -161,11 +167,11 @@
       </td>
       <td>&#160;</td>
       <td>&#160;</td>
-      <td>
-        <code>FAZ</code>
-      </td>
     </tr>
     <tr>
+      <td>
+        <code>MDR</code>
+      </td>
       <td>
         <div>Mitteldeutscher Rundfunk (MDR)</div>
       </td>
@@ -176,11 +182,11 @@
       </td>
       <td>&#160;</td>
       <td>&#160;</td>
-      <td>
-        <code>MDR</code>
-      </td>
     </tr>
     <tr>
+      <td>
+        <code>Merkur</code>
+      </td>
       <td>
         <div>M&#252;nchner Merkur</div>
       </td>
@@ -193,11 +199,11 @@
         <code>topics</code>
       </td>
       <td>&#160;</td>
-      <td>
-        <code>Merkur</code>
-      </td>
     </tr>
     <tr>
+      <td>
+        <code>NTV</code>
+      </td>
       <td>
         <div>N-Tv</div>
       </td>
@@ -208,11 +214,11 @@
       </td>
       <td>&#160;</td>
       <td>&#160;</td>
-      <td>
-        <code>NTV</code>
-      </td>
     </tr>
     <tr>
+      <td>
+        <code>NDR</code>
+      </td>
       <td>
         <div>Norddeutscher Rundfunk (NDR)</div>
       </td>
@@ -223,11 +229,11 @@
       </td>
       <td>&#160;</td>
       <td>&#160;</td>
-      <td>
-        <code>NDR</code>
-      </td>
     </tr>
     <tr>
+      <td>
+        <code>SpiegelOnline</code>
+      </td>
       <td>
         <div>Spiegel Online</div>
       </td>
@@ -238,11 +244,11 @@
       </td>
       <td>&#160;</td>
       <td>&#160;</td>
-      <td>
-        <code>SpiegelOnline</code>
-      </td>
     </tr>
     <tr>
+      <td>
+        <code>Stern</code>
+      </td>
       <td>
         <div>Stern</div>
       </td>
@@ -253,11 +259,11 @@
       </td>
       <td>&#160;</td>
       <td>&#160;</td>
-      <td>
-        <code>Stern</code>
-      </td>
     </tr>
     <tr>
+      <td>
+        <code>SZ</code>
+      </td>
       <td>
         <div>S&#252;ddeutsche Zeitung</div>
       </td>
@@ -268,11 +274,11 @@
       </td>
       <td>&#160;</td>
       <td>&#160;</td>
-      <td>
-        <code>SZ</code>
-      </td>
     </tr>
     <tr>
+      <td>
+        <code>Tagesschau</code>
+      </td>
       <td>
         <div>Tagesschau</div>
       </td>
@@ -283,26 +289,28 @@
       </td>
       <td>&#160;</td>
       <td>&#160;</td>
-      <td>
-        <code>Tagesschau</code>
-      </td>
     </tr>
   </tbody>
 </table>
 
+
 ## UK-Publishers
+
 <table class="publishers uk">
   <thead>
     <tr>
-      <th>Source</th>
-      <th>Domain</th>
-      <th>Missing Attributes</th>
-      <th>Additional Attributes</th>
-      <th>Class</th>
+      <th>Class&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</th>
+      <th>Source&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</th>
+      <th>URL&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</th>
+      <th>Missing&#160;Attributes</th>
+      <th>Additional&#160;Attributes&#160;&#160;&#160;&#160;</th>
     </tr>
   </thead>
   <tbody>
     <tr>
+      <td>
+        <code>TheGuardian</code>
+      </td>
       <td>
         <div>The Guardian</div>
       </td>
@@ -313,26 +321,28 @@
       </td>
       <td>&#160;</td>
       <td>&#160;</td>
-      <td>
-        <code>TheGuardian</code>
-      </td>
     </tr>
   </tbody>
 </table>
 
+
 ## US-Publishers
+
 <table class="publishers us">
   <thead>
     <tr>
-      <th>Source</th>
-      <th>Domain</th>
-      <th>Missing Attributes</th>
-      <th>Additional Attributes</th>
-      <th>Class</th>
+      <th>Class&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</th>
+      <th>Source&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</th>
+      <th>URL&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</th>
+      <th>Missing&#160;Attributes</th>
+      <th>Additional&#160;Attributes&#160;&#160;&#160;&#160;</th>
     </tr>
   </thead>
   <tbody>
     <tr>
+      <td>
+        <code>APNews</code>
+      </td>
       <td>
         <div>Associated Press News</div>
       </td>
@@ -343,11 +353,11 @@
       </td>
       <td>&#160;</td>
       <td>&#160;</td>
-      <td>
-        <code>APNews</code>
-      </td>
     </tr>
     <tr>
+      <td>
+        <code>CNBC</code>
+      </td>
       <td>
         <div>CNBC</div>
       </td>
@@ -360,11 +370,11 @@
       <td>
         <code>key_points</code>
       </td>
-      <td>
-        <code>CNBC</code>
-      </td>
     </tr>
     <tr>
+      <td>
+        <code>FoxNews</code>
+      </td>
       <td>
         <div>Fox News</div>
       </td>
@@ -375,11 +385,11 @@
       </td>
       <td>&#160;</td>
       <td>&#160;</td>
-      <td>
-        <code>FoxNews</code>
-      </td>
     </tr>
     <tr>
+      <td>
+        <code>Reuters</code>
+      </td>
       <td>
         <div>Reuters</div>
       </td>
@@ -390,11 +400,11 @@
       </td>
       <td>&#160;</td>
       <td>&#160;</td>
-      <td>
-        <code>Reuters</code>
-      </td>
     </tr>
     <tr>
+      <td>
+        <code>TheGatewayPundit</code>
+      </td>
       <td>
         <div>The Gateway Pundit</div>
       </td>
@@ -407,11 +417,11 @@
         <code>topics</code>
       </td>
       <td>&#160;</td>
-      <td>
-        <code>TheGatewayPundit</code>
-      </td>
     </tr>
     <tr>
+      <td>
+        <code>TheIntercept</code>
+      </td>
       <td>
         <div>The Intercept</div>
       </td>
@@ -422,11 +432,11 @@
       </td>
       <td>&#160;</td>
       <td>&#160;</td>
-      <td>
-        <code>TheIntercept</code>
-      </td>
     </tr>
     <tr>
+      <td>
+        <code>TheNation</code>
+      </td>
       <td>
         <div>The Nation</div>
       </td>
@@ -437,11 +447,11 @@
       </td>
       <td>&#160;</td>
       <td>&#160;</td>
-      <td>
-        <code>TheNation</code>
-      </td>
     </tr>
     <tr>
+      <td>
+        <code>TheNewYorker</code>
+      </td>
       <td>
         <div>The New Yorker</div>
       </td>
@@ -457,11 +467,11 @@
         <code>description</code>
         <code>section</code>
       </td>
-      <td>
-        <code>TheNewYorker</code>
-      </td>
     </tr>
     <tr>
+      <td>
+        <code>FreeBeacon</code>
+      </td>
       <td>
         <div>The Washington Free Beacon</div>
       </td>
@@ -472,11 +482,11 @@
       </td>
       <td>&#160;</td>
       <td>&#160;</td>
-      <td>
-        <code>FreeBeacon</code>
-      </td>
     </tr>
     <tr>
+      <td>
+        <code>WashingtonTimes</code>
+      </td>
       <td>
         <div>The Washington Times</div>
       </td>
@@ -489,11 +499,11 @@
         <code>topics</code>
       </td>
       <td>&#160;</td>
-      <td>
-        <code>WashingtonTimes</code>
-      </td>
     </tr>
     <tr>
+      <td>
+        <code>WorldTruth</code>
+      </td>
       <td>
         <div>World Truth</div>
       </td>
@@ -507,9 +517,6 @@
         <code>topics</code>
       </td>
       <td>&#160;</td>
-      <td>
-        <code>WorldTruth</code>
-      </td>
     </tr>
   </tbody>
 </table>
