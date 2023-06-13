@@ -7,12 +7,12 @@ from lxml.etree import XPath
 
 from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute
 from fundus.parser.utility import (
+    apply_substitution_pattern_over_list,
     extract_article_body_with_selector,
     generic_author_parsing,
     generic_date_parsing,
     generic_text_extraction_with_css,
     generic_topic_parsing,
-    apply_substitution_pattern_over_list,
 )
 
 
