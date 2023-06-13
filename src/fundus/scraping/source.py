@@ -53,6 +53,16 @@ class _ArchiveDecompressor:
 
 
 @dataclass
+class StaticSource(AsyncIterable[str]):
+    links: Iterable[str]
+
+    # noinspection PyProtocol
+    async def __aiter__(self) -> AsyncIterable[str]:
+        async for url in make_async(self.links):
+            yield url
+
+
+@dataclass
 class URLSource(AsyncIterable[str], ABC):
     url: str
     url_filter: UrlFilter = lambda url: not bool(url)
@@ -153,7 +163,7 @@ class Source:
         request_header: Optional[Dict[str, str]] = None,
     ):
         if isinstance(url_source, Iterable):
-            self.url_source = make_async(url_source)
+            self.url_source = StaticSource(url_source)
         else:
             self.url_source = url_source
         self.publisher = publisher
