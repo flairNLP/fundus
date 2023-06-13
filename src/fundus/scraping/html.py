@@ -24,7 +24,7 @@ from lxml.etree import XPath
 from requests import HTTPError
 
 from fundus.logging.logger import basic_logger
-from fundus.scraping.filter import UrlFilter, _not
+from fundus.scraping.filter import UrlFilter, inverse
 
 _default_header = {"user-agent": "Fundus"}
 
@@ -48,7 +48,7 @@ class _ArchiveDecompressor:
 
 
 @dataclass
-class URLSource(ABC):
+class URLSource(Iterable[str], ABC):
     url: str
     url_filter: UrlFilter = lambda url: not bool(url)
 
@@ -66,7 +66,7 @@ class URLSource(ABC):
         pass
 
     def __iter__(self) -> Iterator[str]:
-        yield from filter(_not(self.url_filter), self._get_pre_filtered_urls())
+        yield from filter(inverse(self.url_filter), self._get_pre_filtered_urls())
 
 
 @dataclass
@@ -108,7 +108,7 @@ class Sitemap(URLSource):
             yield from reversed(urls) if self.reverse else urls
             if self.recursive:
                 sitemap_locs = [node.text_content() for node in self._sitemap_selector(tree)]
-                filtered_locs = list(filter(_not(self.sitemap_filter), sitemap_locs))
+                filtered_locs = list(filter(inverse(self.sitemap_filter), sitemap_locs))
                 for loc in reversed(filtered_locs) if self.reverse else filtered_locs:
                     yield from yield_recursive(loc)
 
@@ -122,15 +122,14 @@ class NewsMap(Sitemap):
 
 
 @dataclass(frozen=True)
-class ArticleSource:
+class HTML:
     url: str
-    html: str
+    content: str
     crawl_date: datetime
-    publisher: Optional[str] = None
-    source: Optional["Source"] = None
+    source: "HTMLSource"
 
 
-class Source:
+class HTMLSource:
     def __init__(
         self,
         url_source: Iterable[str],
@@ -149,10 +148,10 @@ class Source:
         if isinstance(url_source, URLSource):
             url_source.set_header(self.request_header)
 
-    def _batched_fetch(self) -> Generator[List[Optional[ArticleSource]], int, None]:
+    def _batched_fetch(self) -> Generator[List[Optional[HTML]], int, None]:
         with requests.Session() as session:
 
-            def thread(url: str) -> Optional[ArticleSource]:
+            def thread(url: str) -> Optional[HTML]:
                 if self.delay:
                     sleep(self.delay())
                 try:
@@ -167,17 +166,16 @@ class Source:
                 if history := response.history:
                     basic_logger.info(f"Got redirected {len(history)} time(s) from {url} -> {response.url}")
 
-                article_source = ArticleSource(
+                html = HTML(
                     url=response.url,
-                    html=response.text,
+                    content=response.text,
                     crawl_date=datetime.now(),
-                    publisher=self.publisher,
                     source=self,
                 )
-                return article_source
+                return html
 
             with ThreadPool(processes=self.max_threads) as pool:
-                url_iterator = filter(_not(self.url_filter), self.url_source)
+                url_iterator = filter(inverse(self.url_filter), self.url_source)
                 empty = False
                 while not empty:
                     current_size = batch_size = yield  # type: ignore
@@ -191,7 +189,7 @@ class Source:
                         empty = True
                     yield pool.map(thread, batch_urls)
 
-    def fetch(self, batch_size: int = 10) -> Iterator[ArticleSource]:
+    def fetch(self, batch_size: int = 10) -> Iterator[HTML]:
         gen = self._batched_fetch()
         while True:
             try:

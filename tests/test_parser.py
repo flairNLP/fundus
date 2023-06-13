@@ -154,6 +154,13 @@ class TestParser:
                 version_data := comparative_data.get(version_name)
             ), f"Missing test data for parser version '{version_name}'"
 
+            for key, value in version_data.items():
+                if not value:
+                    raise ValueError(
+                        f"There is no value set for key '{key}' in the test JSON. "
+                        f"Only complete articles should be used as test cases"
+                    )
+
             # test coverage
             supported_attrs = set(versioned_parser.attributes().names)
             missing_attrs = attrs_required_to_cover & supported_attrs - set(version_data.keys())

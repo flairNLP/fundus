@@ -2,7 +2,7 @@ from datetime import datetime
 
 from fundus.publishers.base_objects import PublisherEnum, PublisherSpec
 from fundus.scraping.filter import regex_filter
-from fundus.scraping.source import NewsMap, RSSFeed, Sitemap
+from fundus.scraping.html import NewsMap, RSSFeed, Sitemap
 
 from .berliner_zeitung import BerlinerZeitungParser
 from .bild import BildParser
@@ -107,6 +107,7 @@ class DE(PublisherEnum):
                 f"https://www.zeit.de/gsitemaps/index.xml?date={datetime.now().strftime('%Y-%m-%d')}&unit=days&period=1"
             ),
         ],
+        request_header={"user-agent": "Googlebot"},
         parser=DieZeitParser,
     )
 

@@ -7,12 +7,12 @@ import more_itertools
 from colorama import Fore, Style
 
 from fundus.parser import ArticleBody
-from fundus.scraping.source import ArticleSource
+from fundus.scraping.html import HTML
 
 
 @dataclass(frozen=True)
 class Article:
-    article_source: ArticleSource
+    html: HTML
     exception: Optional[Exception] = None
 
     # supported attributes as defined in the guidelines
@@ -23,9 +23,7 @@ class Article:
     topics: List[str] = field(default_factory=list)
 
     @classmethod
-    def from_extracted(
-        cls, article_source: ArticleSource, extracted: Dict[str, Any], exception: Optional[Exception] = None
-    ) -> "Article":
+    def from_extracted(cls, html: HTML, extracted: Dict[str, Any], exception: Optional[Exception] = None) -> "Article":
         validated_attributes: Set[str] = {article_field.name for article_field in fields(cls)}
 
         extracted_unvalidated: Iterator[Tuple[str, Any]]
@@ -34,7 +32,7 @@ class Article:
             lambda attribute_and_value: attribute_and_value[0] in validated_attributes, extracted.items()
         )
 
-        article: Article = cls(article_source, exception, **dict(extracted_validated))
+        article: Article = cls(html, exception, **dict(extracted_validated))
         for attribute, value in extracted_unvalidated:
             object.__setattr__(article, attribute, value)  # Sets attributes on a frozen dataclass
 
@@ -64,8 +62,9 @@ class Article:
             f"Fundus-Article:"
             f'\n- Title: "{wrapped_title}"'
             f'\n- Text:  "{wrapped_plaintext}"'
-            f"\n- URL:    {self.article_source.url}"
-            f'\n- From:   {self.article_source.publisher} ({self.publishing_date.strftime("%Y-%m-%d %H:%M") if self.publishing_date else ""})'
+            f"\n- URL:    {self.html.url}"
+            f"\n- From:   {self.html.source.publisher} "
+            f'({self.publishing_date.strftime("%Y-%m-%d %H:%M") if self.publishing_date else ""})'
         )
 
         return dedent(text)

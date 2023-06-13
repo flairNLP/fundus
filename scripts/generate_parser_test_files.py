@@ -77,8 +77,8 @@ if __name__ == "__main__":
                     continue
                 html = HTMLTestFile(
                     url=article.article_source.url,
-                    content=article.article_source.html,
-                    crawl_date=article.article_source.crawl_date,
+                    content=article.html.content,
+                    crawl_date=article.html.crawl_date,
                     publisher=publisher,
                 )
                 html.write()
