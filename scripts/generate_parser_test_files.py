@@ -76,7 +76,7 @@ if __name__ == "__main__":
                     basic_logger.warn(f"Couldn't get article for {publisher.name}. Skipping")
                     continue
                 html = HTMLTestFile(
-                    url=article.article_source.url,
+                    url=article.html.url,
                     content=article.html.content,
                     crawl_date=article.html.crawl_date,
                     publisher=publisher,
