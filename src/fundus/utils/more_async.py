@@ -35,13 +35,18 @@ async def async_next(iterator: AsyncIterator[_T], default: Union[_VT, _Sentinel]
 
 async def async_interleave(*generators: AsyncIterator[_T]) -> AsyncIterator[Iterable[_T]]:
     current_generators = list(generators)
+
+    class _Empty:
+        def __init__(self, reference: AsyncIterator[_T]):
+            self.reference = reference
+
     while True:
-        tmp = list(current_generators)
+        batch = [async_next(generator, _Empty(generator)) for generator in current_generators]
         results = []
-        for generator in tmp:
-            result = await async_next(generator, None)
-            if result is None:
-                current_generators.remove(generator)
+        for coro in asyncio.as_completed(batch):
+            result = await coro
+            if isinstance(result, _Empty):
+                current_generators.remove(result.reference)
             else:
                 results.append(result)
         if not results:
