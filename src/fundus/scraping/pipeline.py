@@ -1,5 +1,17 @@
 import asyncio
-from typing import Iterator, List, Literal, Optional, Set, Tuple, Type, Union, Callable
+from typing import (
+    AsyncIterator,
+    Callable,
+    Iterable,
+    Iterator,
+    List,
+    Literal,
+    Optional,
+    Set,
+    Tuple,
+    Type,
+    Union,
+)
 
 import more_itertools
 
@@ -8,7 +20,7 @@ from fundus.scraping.article import Article
 from fundus.scraping.filter import ExtractionFilter
 from fundus.scraping.scraper import Scraper
 from fundus.scraping.source import URLSource
-from fundus.utils.more_async import async_next, async_gen_interleave
+from fundus.utils.more_async import async_interleave, async_next
 from fundus.utils.validation import listify
 
 
@@ -17,13 +29,13 @@ class Pipeline:
         self.scrapers: Tuple[Scraper, ...] = scrapers
 
     def run(
-            self,
-            error_handling: Literal["suppress", "catch", "raise"],
-            max_articles: Optional[int] = None,
-            extraction_filter: Optional[ExtractionFilter] = None,
-            delay: Optional[Callable[[], float]] = None,
+        self,
+        error_handling: Literal["suppress", "catch", "raise"],
+        max_articles: Optional[int] = None,
+        extraction_filter: Optional[ExtractionFilter] = None,
+        delay: Optional[Callable[[], float]] = lambda: 0.1,
     ) -> Iterator[Article]:
-        scrape_map = map(
+        scrape_map: Iterator[AsyncIterator[Article]] = map(
             lambda x: x.scrape(
                 error_handling=error_handling,
                 extraction_filter=extraction_filter,
@@ -35,11 +47,11 @@ class Pipeline:
         loop = asyncio.get_event_loop()
 
         def article_gen() -> Iterator[Article]:
-            scrape_gen = async_gen_interleave(*tuple(scrape_map))
+            interleave: AsyncIterator[Iterable[Article]] = async_interleave(*list(scrape_map))
             while True:
-                nxt = loop.run_until_complete(async_next(scrape_gen, None))
-                if nxt:
-                    yield from nxt
+                batch = loop.run_until_complete(async_next(interleave, None))
+                if batch:
+                    yield from batch
                 else:
                     break
 
@@ -64,12 +76,12 @@ class Crawler:
         self.publishers: Set[PublisherEnum] = set(more_itertools.flatten(nested_publisher))
 
     def crawl(
-            self,
-            max_articles: Optional[int] = None,
-            restrict_sources_to: Optional[List[Type[URLSource]]] = None,
-            error_handling: Literal["suppress", "catch", "raise"] = "suppress",
-            only_complete: Union[bool, ExtractionFilter] = True,
-            delay: Optional[Callable[[], float]] = None,
+        self,
+        max_articles: Optional[int] = None,
+        restrict_sources_to: Optional[List[Type[URLSource]]] = None,
+        error_handling: Literal["suppress", "catch", "raise"] = "suppress",
+        only_complete: Union[bool, ExtractionFilter] = True,
+        delay: Optional[Callable[[], float]] = None,
     ) -> Iterator[Article]:
         extraction_filter: Optional[ExtractionFilter]
         if isinstance(only_complete, bool):

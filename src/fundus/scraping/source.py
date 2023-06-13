@@ -5,17 +5,16 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from datetime import datetime
 from functools import cached_property
-from multiprocessing.pool import ThreadPool
-from time import sleep
 from typing import (
+    AsyncIterable,
+    AsyncIterator,
     Callable,
     ClassVar,
     Dict,
-    Generator,
     Iterable,
-    Iterator,
     List,
-    Optional, AsyncGenerator,
+    Optional,
+    Union,
 )
 
 import aiohttp
@@ -28,9 +27,10 @@ from requests import HTTPError
 
 from fundus.logging.logger import basic_logger
 from fundus.scraping.filter import UrlFilter, inverse
+from fundus.utils.more_async import make_async
 
 _default_header = {"user-agent": "Fundus"}
-_connector = aiohttp.TCPConnector(limit=10)
+_connector = aiohttp.TCPConnector(limit=50)
 async_session = aiohttp.ClientSession(connector=_connector)
 
 
@@ -53,7 +53,7 @@ class _ArchiveDecompressor:
 
 
 @dataclass
-class URLSource(Iterable[str], ABC):
+class URLSource(AsyncIterable[str], ABC):
     url: str
     url_filter: UrlFilter = lambda url: not bool(url)
 
@@ -67,24 +67,30 @@ class URLSource(Iterable[str], ABC):
         self._request_header = request_header
 
     @abstractmethod
-    def _get_pre_filtered_urls(self) -> Iterator[str]:
+    def _get_pre_filtered_urls(self) -> AsyncIterator[str]:
         pass
 
-    def __iter__(self) -> Iterator[str]:
-        yield from filter(inverse(self.url_filter), self._get_pre_filtered_urls())
+    async def __aiter__(self):
+        async for url in self._get_pre_filtered_urls():
+            # noinspection PyArgumentList
+            if url and self.url_filter(url):
+                continue
+            else:
+                yield url
 
 
 @dataclass
 class RSSFeed(URLSource):
-    def _get_pre_filtered_urls(self) -> Iterator[str]:
-        with requests.Session() as session:
-            content = session.get(self.url, headers=self._request_header).content
-            rss_feed = feedparser.parse(content)
+    async def _get_pre_filtered_urls(self) -> AsyncIterator[str]:
+        async with async_session.get(self.url, headers=self._request_header) as response:
+            html = await response.text()
+            rss_feed = feedparser.parse(html)
             if exception := rss_feed.get("bozo_exception"):
                 basic_logger.warning(f"Warning! Couldn't parse rss feed at {self.url}. Exception: {exception}")
-                return iter(())
+                return
             else:
-                return (entry["link"] for entry in rss_feed["entries"])
+                for url in (entry["link"] for entry in rss_feed["entries"]):
+                    yield url
 
 
 @dataclass
@@ -97,28 +103,30 @@ class Sitemap(URLSource):
     _sitemap_selector: ClassVar[XPath] = CSSSelector("sitemap > loc")
     _url_selector: ClassVar[XPath] = CSSSelector("url > loc")
 
-    def _get_pre_filtered_urls(self) -> Iterator[str]:
-        def yield_recursive(url: str):
-            try:
-                response = session.get(url=url, headers=self._request_header)
-                response.raise_for_status()
-            except (HTTPError, ConnectionError) as error:
-                basic_logger.warning(f"Warning! Couldn't reach sitemap {url} so skipped it. Exception: {error}")
-                return
-            content = response.content
-            if (content_type := response.headers.get("Content-Type")) in self._decompressor.supported_file_formats:
-                content = self._decompressor.decompress(content, content_type)
-            tree = lxml.html.fromstring(content)
-            urls = [node.text_content() for node in self._url_selector(tree)]
-            yield from reversed(urls) if self.reverse else urls
-            if self.recursive:
-                sitemap_locs = [node.text_content() for node in self._sitemap_selector(tree)]
-                filtered_locs = list(filter(inverse(self.sitemap_filter), sitemap_locs))
-                for loc in reversed(filtered_locs) if self.reverse else filtered_locs:
-                    yield from yield_recursive(loc)
+    async def _get_pre_filtered_urls(self) -> AsyncIterator[str]:
+        async def yield_recursive(link: str) -> AsyncIterator[str]:
+            async with async_session.get(url=link, headers=self._request_header) as response:
+                try:
+                    response.raise_for_status()
+                except (HTTPError, ConnectionError) as error:
+                    basic_logger.warning(f"Warning! Couldn't reach sitemap {link} so skipped it. Exception: {error}")
+                    return
+                content = await response.content.read()
+                if (content_type := response.headers.get("Content-Type")) in self._decompressor.supported_file_formats:
+                    content = self._decompressor.decompress(content, content_type)
+                tree = lxml.html.fromstring(content)
+                urls = [node.text_content() for node in self._url_selector(tree)]
+                for new_link in reversed(urls) if self.reverse else urls:
+                    yield new_link
+                if self.recursive:
+                    sitemap_locs = [node.text_content() for node in self._sitemap_selector(tree)]
+                    filtered_locs = list(filter(inverse(self.sitemap_filter), sitemap_locs))
+                    for loc in reversed(filtered_locs) if self.reverse else filtered_locs:
+                        async for new_link in yield_recursive(loc):
+                            yield new_link
 
-        with requests.Session() as session:
-            yield from yield_recursive(self.url)
+        async for url in yield_recursive(self.url):
+            yield url
 
 
 @dataclass
@@ -138,13 +146,16 @@ class ArticleSource:
 class Source:
     def __init__(
         self,
-        url_source: Iterable[str],
+        url_source: Union[AsyncIterable[str], Iterable[str]],
         publisher: Optional[str],
         url_filter: Optional[UrlFilter] = None,
         max_threads: int = 10,
         request_header: Optional[Dict[str, str]] = None,
     ):
-        self.url_source = url_source
+        if isinstance(url_source, Iterable):
+            self.url_source = make_async(url_source)
+        else:
+            self.url_source = url_source
         self.publisher = publisher
         self.url_filter = url_filter or (lambda url: not bool(url))
         self.max_threads = max_threads
@@ -152,17 +163,15 @@ class Source:
         if isinstance(url_source, URLSource):
             url_source.set_header(self.request_header)
 
-    async def async_fetch(self, delay: Optional[Callable[[], float]] = None) -> AsyncGenerator[ArticleSource, None]:
-        url_iterator = filter(inverse(self.url_filter), self.url_source)
-        last_request_time = time.time()
-        for url in url_iterator:
+    async def async_fetch(self, delay: Optional[Callable[[], float]] = None) -> AsyncIterator[ArticleSource]:
+        async for url in self.url_source:
+            last_request_time = time.time()
             async with async_session.get(url, headers=self.request_header) as response:
                 if delay and (actual_delay := delay() - time.time() + last_request_time) > 0:
                     basic_logger.debug(f"Sleep for {actual_delay} seconds.")
                     await asyncio.sleep(actual_delay)
                 try:
                     html = await response.text()
-                    last_request_time = time.time()
                     response.raise_for_status()
                 except HTTPError as error:
                     basic_logger.warn(f"Skipped {url} because of {error}")

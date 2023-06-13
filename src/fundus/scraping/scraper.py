@@ -1,8 +1,6 @@
-import asyncio
-from typing import Iterator, Literal, Optional, AsyncGenerator, Callable
+from typing import AsyncGenerator, Callable, Literal, Optional
 
 import more_itertools
-from unsync import unsync
 
 from fundus.logging.logger import basic_logger
 from fundus.parser import ParserProxy
@@ -21,12 +19,11 @@ class Scraper:
         self.parser = parser
 
     async def scrape(
-            self,
-            error_handling: Literal["suppress", "catch", "raise"],
-            extraction_filter: Optional[ExtractionFilter] = None,
-            delay: Optional[Callable[[], float]] = None,
+        self,
+        error_handling: Literal["suppress", "catch", "raise"],
+        extraction_filter: Optional[ExtractionFilter] = None,
+        delay: Optional[Callable[[], float]] = None,
     ) -> AsyncGenerator[Article, None]:
-
         if isinstance(extraction_filter, Requires):
             supported_attributes = set(
                 more_itertools.flatten(collection.names for collection in self.parser.attribute_mapping.values())
