@@ -30,6 +30,8 @@ from fundus.logging.logger import basic_logger
 from fundus.scraping.filter import UrlFilter, inverse
 
 _default_header = {"user-agent": "Fundus"}
+_connector = aiohttp.TCPConnector(limit=10)
+async_session = aiohttp.ClientSession(connector=_connector)
 
 
 class _ArchiveDecompressor:
@@ -151,30 +153,29 @@ class Source:
             url_source.set_header(self.request_header)
 
     async def async_fetch(self, delay: Optional[Callable[[], float]] = None) -> AsyncGenerator[ArticleSource, None]:
-        async with aiohttp.ClientSession(headers=self.request_header) as session:
-            url_iterator = filter(inverse(self.url_filter), self.url_source)
-            last_request_time = time.time()
-            for url in url_iterator:
-                async with session.get(url) as response:
-                    if delay and (actual_delay := delay() - time.time() + last_request_time) > 0:
-                        basic_logger.debug(f"Sleep for {actual_delay} seconds.")
-                        await asyncio.sleep(actual_delay)
-                    try:
-                        html = await response.text()
-                        last_request_time = time.time()
-                        response.raise_for_status()
-                    except HTTPError as error:
-                        basic_logger.warn(f"Skipped {url} because of {error}")
-                        return
-                    except requests.exceptions.TooManyRedirects as error:
-                        basic_logger.info(f"Skipped {url} because of {error}")
-                        return
-                    if history := response.history:
-                        basic_logger.info(f"Got redirected {len(history)} time(s) from {url} -> {response.url}")
-                    yield ArticleSource(
-                        url=str(response.url),
-                        html=html,
-                        crawl_date=datetime.now(),
-                        publisher=self.publisher,
-                        source=self,
-                    )
+        url_iterator = filter(inverse(self.url_filter), self.url_source)
+        last_request_time = time.time()
+        for url in url_iterator:
+            async with async_session.get(url, headers=self.request_header) as response:
+                if delay and (actual_delay := delay() - time.time() + last_request_time) > 0:
+                    basic_logger.debug(f"Sleep for {actual_delay} seconds.")
+                    await asyncio.sleep(actual_delay)
+                try:
+                    html = await response.text()
+                    last_request_time = time.time()
+                    response.raise_for_status()
+                except HTTPError as error:
+                    basic_logger.warn(f"Skipped {url} because of {error}")
+                    return
+                except requests.exceptions.TooManyRedirects as error:
+                    basic_logger.info(f"Skipped {url} because of {error}")
+                    return
+                if history := response.history:
+                    basic_logger.info(f"Got redirected {len(history)} time(s) from {url} -> {response.url}")
+                yield ArticleSource(
+                    url=str(response.url),
+                    html=html,
+                    crawl_date=datetime.now(),
+                    publisher=self.publisher,
+                    source=self,
+                )
