@@ -5,8 +5,8 @@ import more_itertools
 from fundus.publishers.base_objects import PublisherEnum
 from fundus.scraping.article import Article
 from fundus.scraping.filter import ExtractionFilter
+from fundus.scraping.html import URLSource
 from fundus.scraping.scraper import Scraper
-from fundus.scraping.source import URLSource
 from fundus.utils.validation import listify
 
 
