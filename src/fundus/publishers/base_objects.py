@@ -40,7 +40,7 @@ class PublisherEnum(Enum):
 
         # we define the dict here manually instead of using default dict so that we can control
         # the order in which sources are proceeded.
-        source_mapping: Dict[Type[URLSource], List[Source]] = {
+        source_mapping: Dict[Type[URLSource], List[HTMLSource]] = {
             RSSFeed: [],
             NewsMap: [],
             Sitemap: [],
