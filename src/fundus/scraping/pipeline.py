@@ -1,7 +1,6 @@
 import asyncio
 from typing import (
     AsyncIterator,
-    Callable,
     Iterable,
     Iterator,
     List,
@@ -11,6 +10,7 @@ from typing import (
     Tuple,
     Type,
     Union,
+    Protocol,
 )
 
 import more_itertools
@@ -24,17 +24,66 @@ from fundus.utils.more_async import async_interleave, async_next
 from fundus.utils.validation import listify
 
 
+class Delay(Protocol):
+    """Protocol to define crawl delays between batches."""
+
+    def __call__(self) -> float:
+        """Yields back a float to specify crawler delay for current batch in seconds
+
+        This inludes the execuion time between batches.
+        The crawler will wait max(execution_time, delay)
+
+        Examples:
+            >>> import random
+            >>> delay: Delay = lambda: random.randint(1, 1000)/1000.
+            This will wait a random amount of milliseconds between batches.
+
+        Returns:
+
+        """
+        ...
+
+
 class Pipeline:
     def __init__(self, *scrapers: Scraper):
+        """Basic pipeline to utilize scrapers.
+
+        Because scrapers are implemented asynchronous this pipeline handles
+        the necessary event loops and program logic to download articles
+        in batches asynchronously.
+
+        Args:
+            *scrapers (Scraper): The scrapers which should be used.
+        """
         self.scrapers: Tuple[Scraper, ...] = scrapers
 
     def run(
-        self,
-        error_handling: Literal["suppress", "catch", "raise"],
-        max_articles: Optional[int] = None,
-        extraction_filter: Optional[ExtractionFilter] = None,
-        delay: Optional[Callable[[], float]] = lambda: 0.1,
+            self,
+            error_handling: Literal["suppress", "catch", "raise"],
+            max_articles: Optional[int] = None,
+            extraction_filter: Optional[ExtractionFilter] = None,
+            delay: Optional[Delay] = lambda: 0.1,
     ) -> Iterator[Article]:
+        """Yields articles from initialized scrapers.
+
+        The articles will be requested concurrently with batch size := len(self.scrapers).
+        You can specify a Delay to be used between the batches with <delay>
+
+        Works like a light-wight version of Crawler.crawl(). Ment to be used when dealing with
+        custom scrapers outside the context of predefined publisher collections.
+        Refer to the docstring of Crawler.crawl() for more detailed information about the Args.
+
+        Args:
+            max_articles (Optional[int]): Maximal number of articles to be yielded. Defaults to None.
+            error_handling (Literal["suppress", "catch", "raise"]): Set error handling
+                for extraction. Defaults to "suppress".
+            extraction_filter (Optional[ExtractionFilter]): Set extraction filter. Defaults to None.
+            delay (Optional[Delay]): Set waiting time between article batches. Defaults to None.
+
+        Returns:
+            Iterator[Article]: An iterator yielding objects of type Article.
+        """
+
         scrape_map = [
             scraper.scrape(
                 error_handling=error_handling,
@@ -73,20 +122,60 @@ class Pipeline:
 
 class Crawler:
     def __init__(self, *publishers: Union[PublisherEnum, Type[PublisherEnum]]):
+        """Fundus base class for crawling articles from the web.
+
+        Examples:
+            >>> from fundus import PublisherCollection, Crawler
+            >>> crawler = Crawler(*PublisherCollection)
+            >>> # Crawler(*PublisherCollection.us) to crawl only english news
+            >>> for article in crawler.crawl():
+            >>>     print(article)
+
+        Args:
+            *publishers (Union[PublisherEnum, Type[PublisherEnum]]): The publishers to crawl.
+        """
         if not publishers:
             raise ValueError("param <publishers> of <Crawler.__init__> has to be non empty")
         nested_publisher = [listify(publisher) for publisher in publishers]
         self.publishers: Set[PublisherEnum] = set(more_itertools.flatten(nested_publisher))
 
     def crawl(
-        self,
-        max_articles: Optional[int] = None,
-        restrict_sources_to: Optional[List[Type[URLSource]]] = None,
-        error_handling: Literal["suppress", "catch", "raise"] = "suppress",
-        only_complete: Union[bool, ExtractionFilter] = True,
-        delay: Optional[Callable[[], float]] = None,
+            self,
+            max_articles: Optional[int] = None,
+            restrict_sources_to: Optional[List[Type[URLSource]]] = None,
+            error_handling: Literal["suppress", "catch", "raise"] = "suppress",
+            only_complete: Union[bool, ExtractionFilter] = True,
+            delay: Optional[Union[float, Delay]] = None,
     ) -> Iterator[Article]:
+        """Yields articles from initialized publishers
+
+        Args:
+            max_articles (Optional[int]): Number of articles to retrieve. If there are fewer articles
+                than max_articles the Iterator will stop before max_articles. If None, all retrievable
+                articles are returned. Defaults to None.
+            restrict_sources_to (Optional[List[Literal["rss", "sitemap", "news"]]]): Let's you restrict
+                sources defined in the publisher specs. If set, only articles from given source types
+                will be yielded.
+            error_handling (Literal["suppress", "catch", "raise"]): Define how to handle errors
+                encountered during extraction. If set to "suppress", all errors will be skipped, either
+                with None values for respective attributes in the extraction or by skipping entire articles.
+                If set to "catch", errors will be caught as attribute values or, if an entire article fails,
+                through Article.exception. If set to "raise" all errors encountered during extraction will
+                be raised. Defaults to "suppress".
+            only_complete (Union[bool, ExtractionFilter]): Set extraction filters. If False, all articles
+                will be yielded, if True, only complete ones. Defaults to True. See the docs for more
+                information about ExtractionFilter.
+            delay (Optional[Union[float, Delay]]): Set a delay time in seconds to be used between article
+                batches. You can set a delay directly using float or any callable satisfying the Delay
+                protocol. If set to None, no delay will be used between batches. See Delay for more
+                information. Defaults to None.
+
+        Returns:
+            Iterator[Article]: An iterator yielding objects of type Article.
+        """
+
         extraction_filter: Optional[ExtractionFilter]
+
         if isinstance(only_complete, bool):
             extraction_filter = (
                 None
@@ -97,6 +186,12 @@ class Crawler:
             )
         else:
             extraction_filter = only_complete
+
+        if isinstance(delay, float):
+            def _id(n: float) -> Delay:
+                return lambda: n
+
+            delay = _id(delay)
 
         scrapers: List[Scraper] = []
         for spec in self.publishers:
