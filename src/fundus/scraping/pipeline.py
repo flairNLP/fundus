@@ -35,23 +35,23 @@ class Pipeline:
         extraction_filter: Optional[ExtractionFilter] = None,
         delay: Optional[Callable[[], float]] = lambda: 0.1,
     ) -> Iterator[Article]:
-        scrape_map: Iterator[AsyncIterator[Article]] = map(
-            lambda x: x.scrape(
+        scrape_map = [
+            scraper.scrape(
                 error_handling=error_handling,
                 extraction_filter=extraction_filter,
                 delay=delay,
-            ),
-            self.scrapers,
-        )
+            )
+            for scraper in self.scrapers
+        ]
 
         loop = asyncio.get_event_loop()
 
         def article_gen() -> Iterator[Article]:
-            interleave: AsyncIterator[Iterable[Article]] = async_interleave(*list(scrape_map))
+            interleave: AsyncIterator[Iterable[Optional[Article]]] = async_interleave(*list(scrape_map))
             while True:
                 batch = loop.run_until_complete(async_next(interleave, None))
                 if batch:
-                    yield from batch
+                    yield from filter(bool, batch)
                 else:
                     break
 

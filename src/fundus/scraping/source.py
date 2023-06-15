@@ -14,7 +14,6 @@ from typing import (
     Iterable,
     List,
     Optional,
-    Union,
 )
 
 import aiohttp
@@ -56,8 +55,7 @@ class _ArchiveDecompressor:
 class StaticSource(AsyncIterable[str]):
     links: Iterable[str]
 
-    # noinspection PyProtocol
-    async def __aiter__(self) -> AsyncIterable[str]:
+    async def __aiter__(self) -> AsyncIterator[str]:
         async for url in make_async(self.links):
             yield url
 
@@ -80,7 +78,7 @@ class URLSource(AsyncIterable[str], ABC):
     def _get_pre_filtered_urls(self) -> AsyncIterator[str]:
         pass
 
-    async def __aiter__(self):
+    async def __aiter__(self) -> AsyncIterator[str]:
         async for url in self._get_pre_filtered_urls():
             # noinspection PyArgumentList
             if url and self.url_filter(url):
@@ -156,16 +154,13 @@ class ArticleSource:
 class Source:
     def __init__(
         self,
-        url_source: Union[AsyncIterable[str], Iterable[str]],
+        url_source: AsyncIterable[str],
         publisher: Optional[str],
         url_filter: Optional[UrlFilter] = None,
         max_threads: int = 10,
         request_header: Optional[Dict[str, str]] = None,
     ):
-        if isinstance(url_source, Iterable):
-            self.url_source = StaticSource(url_source)
-        else:
-            self.url_source = url_source
+        self.url_source = url_source
         self.publisher = publisher
         self.url_filter = url_filter or (lambda url: not bool(url))
         self.max_threads = max_threads

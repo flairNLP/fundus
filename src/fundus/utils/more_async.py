@@ -1,5 +1,5 @@
 import asyncio
-from typing import AsyncIterable, AsyncIterator, Iterable, TypeVar, Union, overload
+from typing import AsyncIterator, Iterable, TypeVar, Union, overload
 
 _T = TypeVar("_T")
 _VT = TypeVar("_VT", bound=object)
@@ -54,6 +54,6 @@ async def async_interleave(*generators: AsyncIterator[_T]) -> AsyncIterator[Iter
         yield iter(results)
 
 
-async def make_async(iterable: Iterable[_T]) -> AsyncIterable[_T]:
+async def make_async(iterable: Iterable[_T]) -> AsyncIterator[_T]:
     for nxt in iterable:
         yield nxt
