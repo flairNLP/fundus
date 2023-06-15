@@ -19,18 +19,41 @@ from typing import (
 import aiohttp
 import feedparser
 import lxml.html
-import requests
+from aiohttp.client_exceptions import ClientError
+from aiohttp.http_exceptions import HttpProcessingError
+from aiohttp.web_exceptions import HTTPError
 from lxml.cssselect import CSSSelector
 from lxml.etree import XPath
-from requests import HTTPError
 
 from fundus.logging.logger import basic_logger
 from fundus.scraping.filter import UrlFilter, inverse
-from fundus.utils.more_async import make_async
+from fundus.utils.more_async import async_next, make_async
 
 _default_header = {"user-agent": "Fundus"}
-_connector = aiohttp.TCPConnector(limit=50)
-async_session = aiohttp.ClientSession(connector=_connector)
+
+
+class SessionHandler:
+    def __init__(self):
+        self._factory = self._build_session_factory()
+
+    @staticmethod
+    async def _build_session_factory():
+        _connector = aiohttp.TCPConnector(limit=50)
+        async_session = aiohttp.ClientSession(connector=_connector)
+        while True:
+            yield async_session
+
+    async def get_session(self) -> aiohttp.ClientSession:
+        return await async_next(self._factory)
+
+    async def close_current_session(self):
+        session = await self.get_session()
+        basic_logger.debug(f"Close session {session}")
+        await session.close()
+        self._factory = self._build_session_factory()
+
+
+session_handler = SessionHandler()
 
 
 class _ArchiveDecompressor:
@@ -90,7 +113,8 @@ class URLSource(AsyncIterable[str], ABC):
 @dataclass
 class RSSFeed(URLSource):
     async def _get_pre_filtered_urls(self) -> AsyncIterator[str]:
-        async with async_session.get(self.url, headers=self._request_header) as response:
+        session = await session_handler.get_session()
+        async with session.get(self.url, headers=self._request_header) as response:
             html = await response.text()
             rss_feed = feedparser.parse(html)
             if exception := rss_feed.get("bozo_exception"):
@@ -113,11 +137,12 @@ class Sitemap(URLSource):
 
     async def _get_pre_filtered_urls(self) -> AsyncIterator[str]:
         async def yield_recursive(link: str) -> AsyncIterator[str]:
-            async with async_session.get(url=link, headers=self._request_header) as response:
+            session = await session_handler.get_session()
+            async with session.get(url=link, headers=self._request_header) as response:
                 try:
                     response.raise_for_status()
-                except (HTTPError, ConnectionError) as error:
-                    basic_logger.warning(f"Warning! Couldn't reach sitemap {link} so skipped it. Exception: {error}")
+                except (HTTPError, ClientError, HttpProcessingError) as error:
+                    basic_logger.warning(f"Warning! Couldn't reach sitemap {link} because of '{error}'")
                     return
                 content = await response.content.read()
                 if (content_type := response.headers.get("Content-Type")) in self._decompressor.supported_file_formats:
@@ -171,19 +196,17 @@ class Source:
     async def async_fetch(self, delay: Optional[Callable[[], float]] = None) -> AsyncIterator[ArticleSource]:
         async for url in self.url_source:
             last_request_time = time.time()
-            async with async_session.get(url, headers=self.request_header) as response:
+            session = await session_handler.get_session()
+            async with session.get(url, headers=self.request_header) as response:
                 if delay and (actual_delay := delay() - time.time() + last_request_time) > 0:
                     basic_logger.debug(f"Sleep for {actual_delay} seconds.")
                     await asyncio.sleep(actual_delay)
                 try:
                     html = await response.text()
                     response.raise_for_status()
-                except HTTPError as error:
-                    basic_logger.warn(f"Skipped {url} because of {error}")
-                    return
-                except requests.exceptions.TooManyRedirects as error:
-                    basic_logger.info(f"Skipped {url} because of {error}")
-                    return
+                except (HTTPError, ClientError, HttpProcessingError) as error:
+                    basic_logger.info(f"Skipped {url} because of '{error}'")
+                    continue
                 if history := response.history:
                     basic_logger.info(f"Got redirected {len(history)} time(s) from {url} -> {response.url}")
                 yield ArticleSource(

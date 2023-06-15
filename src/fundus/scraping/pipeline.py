@@ -19,7 +19,7 @@ from fundus.publishers.base_objects import PublisherEnum
 from fundus.scraping.article import Article
 from fundus.scraping.filter import ExtractionFilter
 from fundus.scraping.scraper import Scraper
-from fundus.scraping.source import URLSource
+from fundus.scraping.source import URLSource, session_handler
 from fundus.utils.more_async import async_interleave, async_next
 from fundus.utils.validation import listify
 
@@ -66,6 +66,9 @@ class Pipeline:
                 max_articles -= 1
         else:
             yield from gen
+
+        # close current session
+        loop.run_until_complete(session_handler.close_current_session())
 
 
 class Crawler:
