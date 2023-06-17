@@ -10,7 +10,8 @@ from typing import (
     Set,
     Tuple,
     Type,
-    Union, cast,
+    Union,
+    cast,
 )
 
 import more_itertools
@@ -239,7 +240,7 @@ class Crawler:
                 extraction_filter=extraction_filter,
                 delay=delay,
                 url_filter=url_filter,
-                only_unique=only_unique
+                only_unique=only_unique,
             )
         else:
             return iter(())

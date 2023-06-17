@@ -27,7 +27,7 @@ from aiohttp.web_exceptions import HTTPError
 from lxml.cssselect import CSSSelector
 from lxml.etree import XPath
 
-from fundus.logging.logger import basic_logger
+from fundus.logging import basic_logger
 from fundus.scraping.filter import URLFilter, inverse
 from fundus.utils.more_async import async_next, make_async
 
@@ -226,9 +226,7 @@ class HTMLSource:
         return False
 
     async def async_fetch(self, delay: Optional[Callable[[], float]] = None) -> AsyncIterator[HTML]:
-
         async for url in self.url_source:
-
             if not validate_url(url):
                 basic_logger.debug(f"Skipped requested URL '{url}' because of invalid URL")
                 continue
@@ -241,13 +239,11 @@ class HTMLSource:
             session = await session_handler.get_session()
 
             async with session.get(url, headers=self.request_header) as response:
-
                 if delay and (actual_delay := delay() - time.time() + last_request_time) > 0:
                     basic_logger.debug(f"Sleep for {actual_delay} seconds.")
                     await asyncio.sleep(actual_delay)
 
                 try:
-
                     html = await response.text()
                     response.raise_for_status()
 

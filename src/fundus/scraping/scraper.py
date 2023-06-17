@@ -1,8 +1,8 @@
-from typing import AsyncIterator, Callable, Literal, Optional, Set
+from typing import AsyncIterator, Callable, Literal, Optional
 
 import more_itertools
 
-from fundus.logging.logger import basic_logger
+from fundus.logging import basic_logger
 from fundus.parser import ParserProxy
 from fundus.scraping.article import Article
 from fundus.scraping.filter import ExtractionFilter, Requires
@@ -44,9 +44,7 @@ class Scraper:
 
         for html_source in self.sources:
             async for html in html_source.async_fetch(delay=delay):
-
                 try:
-
                     extraction = self.parser(html.crawl_date).parse(html.content, error_handling)
 
                 except Exception as err:
