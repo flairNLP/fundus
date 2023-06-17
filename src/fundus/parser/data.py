@@ -71,7 +71,7 @@ class LinkedDataMapping:
 
         if not _displayed_deprecation_info:
             _displayed_deprecation_info = True
-            basic_logger.warning(
+            basic_logger.warn(
                 "LinkedDate.get() will be deprecated in the future. Use .get_value_by_key_path() "
                 "or .bf_search() instead"
             )

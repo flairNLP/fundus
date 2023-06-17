@@ -105,7 +105,7 @@ if __name__ == "__main__":
                 )
                 html.write()
 
-                metadata = {"url": article.html.url, "crawl_date": str(article.html.crawl_date)}
+                metadata = {"url": article.html.requested_url, "crawl_date": str(article.html.crawl_date)}
                 requested_attrs = set(args.attributes)
                 content = {attr: value for attr in args.attributes if (value := getattr(article, attr, None))}
                 entry = {"meta": metadata, "content": content}

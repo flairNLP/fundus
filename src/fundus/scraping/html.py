@@ -129,7 +129,7 @@ class RSSFeed(URLSource):
             html = await response.text()
             rss_feed = feedparser.parse(html)
             if exception := rss_feed.get("bozo_exception"):
-                basic_logger.warn(f"Warning! Couldn't parse rss feed at {self.url}. Exception: {exception}")
+                basic_logger.warn(f"Warning! Couldn't parse rss feed '{self.url}' because of {exception}")
                 return
             else:
                 for url in (entry["link"] for entry in rss_feed["entries"]):
@@ -155,7 +155,7 @@ class Sitemap(URLSource):
                 try:
                     response.raise_for_status()
                 except (HTTPError, ClientError, HttpProcessingError) as error:
-                    basic_logger.warn(f"Warning! Couldn't reach sitemap {link} because of '{error}'")
+                    basic_logger.warn(f"Warning! Couldn't reach sitemap '{link}' because of {error}")
                     return
                 content = await response.content.read()
                 if response.content_type in self._decompressor.supported_file_formats:
@@ -183,9 +183,19 @@ class NewsMap(Sitemap):
     pass
 
 
+@dataclass
+class URL:
+    requested: str
+    responded: str
+
+    def __str__(self):
+        return self.requested
+
+
 @dataclass(frozen=True)
 class HTML:
-    url: str
+    requested_url: str
+    responded_url: str
     content: str
     crawl_date: datetime
     source: "HTMLSource"
@@ -216,30 +226,49 @@ class HTMLSource:
         return False
 
     async def async_fetch(self, delay: Optional[Callable[[], float]] = None) -> AsyncIterator[HTML]:
+
         async for url in self.url_source:
 
             if not validate_url(url):
-                basic_logger.debug(f"Skipped URL '{url}' because of invalid URL")
+                basic_logger.debug(f"Skipped requested URL '{url}' because of invalid URL")
+                continue
+
+            if self._filter(url):
+                basic_logger.debug(f"Skipped requested URL '{url}' because of URL filter")
                 continue
 
             last_request_time = time.time()
             session = await session_handler.get_session()
+
             async with session.get(url, headers=self.request_header) as response:
+
                 if delay and (actual_delay := delay() - time.time() + last_request_time) > 0:
                     basic_logger.debug(f"Sleep for {actual_delay} seconds.")
                     await asyncio.sleep(actual_delay)
+
                 try:
+
                     html = await response.text()
                     response.raise_for_status()
+
                 except (HTTPError, ClientError, HttpProcessingError, UnicodeError) as error:
-                    basic_logger.info(f"Skipped URL '{url}' because of '{error}'")
+                    basic_logger.info(f"Skipped requested URL '{url}' because of '{error}'")
                     continue
+
                 except Exception as error:
-                    basic_logger.warn(f"Warning! Skipped URL '{url}' because of an unexpected error {error}")
-                if history := response.history:
-                    basic_logger.debug(f"Got redirected {len(history)} time(s) from {url} -> {response.url}")
+                    basic_logger.warn(f"Warning! Skipped  requested URL '{url}' because of an unexpected error {error}")
+                    continue
+
+                if self._filter(url):
+                    basic_logger.debug(f"Skipped responded URL '{url}' because of URL filter")
+                    continue
+
+                if response.history:
+                    basic_logger.debug(f"Got redirected {len(response.history)} time(s) from {url} -> {response.url}")
+
                 yield HTML(
-                    url=str(response.url),
+                    requested_url=url,
+                    responded_url=str(response.url),
                     content=html,
                     crawl_date=datetime.now(),
                     source=self,

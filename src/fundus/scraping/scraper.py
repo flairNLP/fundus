@@ -1,4 +1,4 @@
-from typing import AsyncIterator, Callable, Literal, Optional
+from typing import AsyncIterator, Callable, Literal, Optional, Set
 
 import more_itertools
 
@@ -42,28 +42,30 @@ class Scraper:
 
                 return
 
-        for crawler in self.sources:
-            async for article_source in crawler.async_fetch(delay=delay):
+        for html_source in self.sources:
+            async for html in html_source.async_fetch(delay=delay):
+
                 try:
-                    extraction = self.parser(article_source.crawl_date).parse(article_source.content, error_handling)
+
+                    extraction = self.parser(html.crawl_date).parse(html.content, error_handling)
 
                 except Exception as err:
                     if error_handling == "raise":
-                        error_message = f"Run into an error processing '{article_source.url}'"
+                        error_message = f"Run into an error processing '{html.requested_url}'"
                         basic_logger.error(error_message)
                         err.args = (str(err) + "\n\n" + error_message,)
                         raise err
                     elif error_handling == "catch":
-                        yield Article(html=article_source, exception=err)
+                        yield Article(html=html, exception=err)
                         continue
                     elif error_handling == "suppress":
-                        basic_logger.info(f"Skipped article '{article_source.url}' because of: {err!r}")
+                        basic_logger.info(f"Skipped article at '{html.requested_url}' because of: {err!r}")
                         continue
                     else:
                         raise ValueError(f"Unknown value '{error_handling}' for parameter <error_handling>'")
                 if extraction_filter and extraction_filter(extraction):
-                    basic_logger.debug(f"Skipped article {article_source.url} because of extraction filter")
+                    basic_logger.debug(f"Skipped article at '{html.requested_url}' because of extraction filter")
                     yield None
                 else:
-                    article = Article.from_extracted(html=article_source, extracted=extraction)
+                    article = Article.from_extracted(html=html, extracted=extraction)
                     yield article

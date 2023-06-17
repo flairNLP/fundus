@@ -10,7 +10,7 @@ from typing import (
     Set,
     Tuple,
     Type,
-    Union,
+    Union, cast,
 )
 
 import more_itertools
@@ -18,8 +18,8 @@ import more_itertools
 from fundus.publishers.base_objects import PublisherEnum
 from fundus.scraping.article import Article
 from fundus.scraping.filter import ExtractionFilter, URLFilter
+from fundus.scraping.html import URLSource, session_handler
 from fundus.scraping.scraper import Scraper
-from fundus.scraping.source import URLSource, session_handler
 from fundus.utils.more_async import async_interleave, async_next
 from fundus.utils.validation import listify
 
@@ -64,6 +64,7 @@ class Pipeline:
         extraction_filter: Optional[ExtractionFilter] = None,
         delay: Optional[Delay] = lambda: 0.1,
         url_filter: Optional[URLFilter] = None,
+        only_unique: bool = True,
     ) -> Iterator[Article]:
         """Yields articles from initialized scrapers.
 
@@ -81,6 +82,7 @@ class Pipeline:
             extraction_filter (Optional[ExtractionFilter]): Set extraction filter. Defaults to None.
             delay (Optional[Delay]): Set waiting time between article batches. Defaults to None.
             url_filter (Optional[URLFilter]): Set URLFilter. Defaults to None
+            only_unique: (bool): If true return only unique responses. Defaults to True.
 
         Returns:
             Iterator[Article]: An iterator yielding objects of type Article.
@@ -102,23 +104,27 @@ class Pipeline:
 
         loop = asyncio.get_event_loop()
 
+        response_cache: Set[str] = set()
+
         def article_gen() -> Iterator[Article]:
             interleave: AsyncIterator[Iterable[Optional[Article]]] = async_interleave(*list(scrape_map))
             while True:
-                batch = loop.run_until_complete(async_next(interleave, None))
-                if batch:
-                    yield from filter(bool, batch)
+                batch: Optional[Iterable[Optional[Article]]] = loop.run_until_complete(async_next(interleave, None))
+                if batch is not None:
+                    for next_article in cast(Iterable[Article], filter(bool, batch)):
+                        if not only_unique or next_article.html.responded_url not in response_cache:
+                            response_cache.add(next_article.html.responded_url)
+                            yield next_article
                 else:
                     break
 
         gen = article_gen()
 
         if max_articles:
-            while max_articles:
-                if article := next(gen, None):
-                    yield article
-                else:
+            for article in gen:
+                if not max_articles:
                     break
+                yield article
                 max_articles -= 1
         else:
             yield from gen
@@ -154,6 +160,7 @@ class Crawler:
         only_complete: Union[bool, ExtractionFilter] = True,
         delay: Optional[Union[float, Delay]] = None,
         url_filter: Optional[URLFilter] = None,
+        only_unique: bool = True,
     ) -> Iterator[Article]:
         """Yields articles from initialized publishers
 
@@ -178,7 +185,10 @@ class Crawler:
                 protocol. If set to None, no delay will be used between batches. See Delay for more
                 information. Defaults to None.
             url_filter (Optional[URLFilter]): A callable object satisfying the URLFilter protocol to skip
-                urls during download. Defaults to None.
+                urls during download. This filter applies on both requested and responded URL. Defaults to None.
+            only_unique (bool): If set to True only the articles yielded will be unique on the responded URL.
+                In this case the responded URL is the one linking directly to the article without redirects.
+                Defaults to True.
 
         Returns:
             Iterator[Article]: An iterator yielding objects of type Article.
@@ -229,6 +239,7 @@ class Crawler:
                 extraction_filter=extraction_filter,
                 delay=delay,
                 url_filter=url_filter,
+                only_unique=only_unique
             )
         else:
             return iter(())

@@ -62,7 +62,7 @@ class Article:
             f"Fundus-Article:"
             f'\n- Title: "{wrapped_title}"'
             f'\n- Text:  "{wrapped_plaintext}"'
-            f"\n- URL:    {self.html.url}"
+            f"\n- URL:    {self.html.requested_url}"
             f"\n- From:   {self.html.source.publisher} "
             f'({self.publishing_date.strftime("%Y-%m-%d %H:%M") if self.publishing_date else ""})'
         )
