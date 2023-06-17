@@ -184,15 +184,14 @@ class NewsMap(Sitemap):
 
 
 @dataclass(frozen=True)
-class ArticleSource:
+class HTML:
     url: str
-    html: str
+    content: str
     crawl_date: datetime
-    publisher: Optional[str] = None
-    source: Optional["Source"] = None
+    source: "HTMLSource"
 
 
-class Source:
+class HTMLSource:
     def __init__(
         self,
         url_source: AsyncIterable[str],
@@ -216,7 +215,7 @@ class Source:
                 return True
         return False
 
-    async def async_fetch(self, delay: Optional[Callable[[], float]] = None) -> AsyncIterator[ArticleSource]:
+    async def async_fetch(self, delay: Optional[Callable[[], float]] = None) -> AsyncIterator[HTML]:
         async for url in self.url_source:
 
             if not validate_url(url):
@@ -239,10 +238,9 @@ class Source:
                     basic_logger.warn(f"Warning! Skipped URL '{url}' because of an unexpected error {error}")
                 if history := response.history:
                     basic_logger.debug(f"Got redirected {len(history)} time(s) from {url} -> {response.url}")
-                yield ArticleSource(
+                yield HTML(
                     url=str(response.url),
-                    html=html,
+                    content=html,
                     crawl_date=datetime.now(),
-                    publisher=self.publisher,
                     source=self,
                 )

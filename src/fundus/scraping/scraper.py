@@ -6,11 +6,11 @@ from fundus.logging.logger import basic_logger
 from fundus.parser import ParserProxy
 from fundus.scraping.article import Article
 from fundus.scraping.filter import ExtractionFilter, Requires
-from fundus.scraping.source import Source
+from fundus.scraping.html import HTMLSource
 
 
 class Scraper:
-    def __init__(self, *sources: Source, parser: ParserProxy):
+    def __init__(self, *sources: HTMLSource, parser: ParserProxy):
         self.sources = list(sources)
 
         if not parser:
@@ -45,7 +45,7 @@ class Scraper:
         for crawler in self.sources:
             async for article_source in crawler.async_fetch(delay=delay):
                 try:
-                    extraction = self.parser(article_source.crawl_date).parse(article_source.html, error_handling)
+                    extraction = self.parser(article_source.crawl_date).parse(article_source.content, error_handling)
 
                 except Exception as err:
                     if error_handling == "raise":
@@ -54,7 +54,7 @@ class Scraper:
                         err.args = (str(err) + "\n\n" + error_message,)
                         raise err
                     elif error_handling == "catch":
-                        yield Article(article_source=article_source, exception=err)
+                        yield Article(html=article_source, exception=err)
                         continue
                     elif error_handling == "suppress":
                         basic_logger.info(f"Skipped article '{article_source.url}' because of: {err!r}")
@@ -65,5 +65,5 @@ class Scraper:
                     basic_logger.debug(f"Skipped article {article_source.url} because of extraction filter")
                     yield None
                 else:
-                    article = Article.from_extracted(article_source=article_source, extracted=extraction)
+                    article = Article.from_extracted(html=article_source, extracted=extraction)
                     yield article
