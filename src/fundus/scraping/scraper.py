@@ -57,12 +57,12 @@ class Scraper:
                         yield Article(article_source=article_source, exception=err)
                         continue
                     elif error_handling == "suppress":
-                        basic_logger.info(f"Skipped {article_source.url} because of: {err!r}")
+                        basic_logger.info(f"Skipped article '{article_source.url}' because of: {err!r}")
                         continue
                     else:
                         raise ValueError(f"Unknown value '{error_handling}' for parameter <error_handling>'")
                 if extraction_filter and extraction_filter(extraction):
-                    basic_logger.debug(f"Skipped {article_source.url} because of extraction filter")
+                    basic_logger.debug(f"Skipped article {article_source.url} because of extraction filter")
                     yield None
                 else:
                     article = Article.from_extracted(article_source=article_source, extracted=extraction)

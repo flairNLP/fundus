@@ -53,7 +53,7 @@ class US(PublisherEnum):
         name="Fox News",
         domain="https://www.foxnews.com/",
         sources=[
-            Sitemap(" https://www.foxnews.com/sitemap.xml"),
+            Sitemap("https://www.foxnews.com/sitemap.xml"),
             NewsMap("https://www.foxnews.com/sitemap.xml?type=news"),
         ],
         parser=FoxNewsParser,

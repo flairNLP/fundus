@@ -1,5 +1,6 @@
 import asyncio
 import gzip
+import re
 import time
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
@@ -14,6 +15,7 @@ from typing import (
     Iterable,
     List,
     Optional,
+    Pattern,
 )
 
 import aiohttp
@@ -26,7 +28,7 @@ from lxml.cssselect import CSSSelector
 from lxml.etree import XPath
 
 from fundus.logging.logger import basic_logger
-from fundus.scraping.filter import UrlFilter, inverse
+from fundus.scraping.filter import URLFilter, inverse
 from fundus.utils.more_async import async_next, make_async
 
 _default_header = {"user-agent": "Fundus"}
@@ -74,6 +76,13 @@ class _ArchiveDecompressor:
         return list(self.archive_mapping.keys())
 
 
+_http_regex: Pattern[str] = re.compile(r"https?://(?:[a-zA-Z]|\d|[$-_@.&+]|[!*(),]|%[\da-fA-F][\da-fA-F])+")
+
+
+def validate_url(url: str) -> bool:
+    return bool(re.match(_http_regex, url))
+
+
 @dataclass
 class StaticSource(AsyncIterable[str]):
     links: Iterable[str]
@@ -86,13 +95,15 @@ class StaticSource(AsyncIterable[str]):
 @dataclass
 class URLSource(AsyncIterable[str], ABC):
     url: str
-    url_filter: UrlFilter = lambda url: not bool(url)
+    url_filter: URLFilter = lambda url: not bool(url)
 
     _request_header: Dict[str, str] = field(default_factory=dict)
 
     def __post_init__(self):
         if not self._request_header:
             self._request_header = _default_header
+        if not validate_url(self.url):
+            raise ValueError(f"Invalid url '{self.url}'")
 
     def set_header(self, request_header: Dict[str, str]) -> None:
         self._request_header = request_header
@@ -118,7 +129,7 @@ class RSSFeed(URLSource):
             html = await response.text()
             rss_feed = feedparser.parse(html)
             if exception := rss_feed.get("bozo_exception"):
-                basic_logger.warning(f"Warning! Couldn't parse rss feed at {self.url}. Exception: {exception}")
+                basic_logger.warn(f"Warning! Couldn't parse rss feed at {self.url}. Exception: {exception}")
                 return
             else:
                 for url in (entry["link"] for entry in rss_feed["entries"]):
@@ -129,7 +140,7 @@ class RSSFeed(URLSource):
 class Sitemap(URLSource):
     recursive: bool = True
     reverse: bool = False
-    sitemap_filter: UrlFilter = lambda url: not bool(url)
+    sitemap_filter: URLFilter = lambda url: not bool(url)
 
     _decompressor: ClassVar[_ArchiveDecompressor] = _ArchiveDecompressor()
     _sitemap_selector: ClassVar[XPath] = CSSSelector("sitemap > loc")
@@ -138,15 +149,20 @@ class Sitemap(URLSource):
     async def _get_pre_filtered_urls(self) -> AsyncIterator[str]:
         async def yield_recursive(link: str) -> AsyncIterator[str]:
             session = await session_handler.get_session()
+            if not validate_url(link):
+                basic_logger.info(f"Skipped sitemap '{link}' because of invalid URL")
             async with session.get(url=link, headers=self._request_header) as response:
                 try:
                     response.raise_for_status()
                 except (HTTPError, ClientError, HttpProcessingError) as error:
-                    basic_logger.warning(f"Warning! Couldn't reach sitemap {link} because of '{error}'")
+                    basic_logger.warn(f"Warning! Couldn't reach sitemap {link} because of '{error}'")
                     return
                 content = await response.content.read()
-                if (content_type := response.headers.get("Content-Type")) in self._decompressor.supported_file_formats:
-                    content = self._decompressor.decompress(content, content_type)
+                if response.content_type in self._decompressor.supported_file_formats:
+                    content = self._decompressor.decompress(content, response.content_type)
+                if not content:
+                    basic_logger.warn(f"Warning! Empty sitemap at '{link}'")
+                    return
                 tree = lxml.html.fromstring(content)
                 urls = [node.text_content() for node in self._url_selector(tree)]
                 for new_link in reversed(urls) if self.reverse else urls:
@@ -181,20 +197,32 @@ class Source:
         self,
         url_source: AsyncIterable[str],
         publisher: Optional[str],
-        url_filter: Optional[UrlFilter] = None,
-        max_threads: int = 10,
+        url_filter: Optional[URLFilter] = None,
         request_header: Optional[Dict[str, str]] = None,
     ):
         self.url_source = url_source
         self.publisher = publisher
-        self.url_filter = url_filter or (lambda url: not bool(url))
-        self.max_threads = max_threads
+        self.url_filter = [] if not url_filter else [url_filter]
         self.request_header = request_header or _default_header
         if isinstance(url_source, URLSource):
             url_source.set_header(self.request_header)
 
+    def add_url_filter(self, url_filter: URLFilter):
+        self.url_filter.append(url_filter)
+
+    def _filter(self, url: str) -> bool:
+        for f in self.url_filter:
+            if f(url):
+                return True
+        return False
+
     async def async_fetch(self, delay: Optional[Callable[[], float]] = None) -> AsyncIterator[ArticleSource]:
         async for url in self.url_source:
+
+            if not validate_url(url):
+                basic_logger.debug(f"Skipped URL '{url}' because of invalid URL")
+                continue
+
             last_request_time = time.time()
             session = await session_handler.get_session()
             async with session.get(url, headers=self.request_header) as response:
@@ -204,11 +232,13 @@ class Source:
                 try:
                     html = await response.text()
                     response.raise_for_status()
-                except (HTTPError, ClientError, HttpProcessingError) as error:
-                    basic_logger.info(f"Skipped {url} because of '{error}'")
+                except (HTTPError, ClientError, HttpProcessingError, UnicodeError) as error:
+                    basic_logger.info(f"Skipped URL '{url}' because of '{error}'")
                     continue
+                except Exception as error:
+                    basic_logger.warn(f"Warning! Skipped URL '{url}' because of an unexpected error {error}")
                 if history := response.history:
-                    basic_logger.info(f"Got redirected {len(history)} time(s) from {url} -> {response.url}")
+                    basic_logger.debug(f"Got redirected {len(history)} time(s) from {url} -> {response.url}")
                 yield ArticleSource(
                     url=str(response.url),
                     html=html,

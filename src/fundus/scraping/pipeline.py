@@ -6,18 +6,18 @@ from typing import (
     List,
     Literal,
     Optional,
+    Protocol,
     Set,
     Tuple,
     Type,
     Union,
-    Protocol,
 )
 
 import more_itertools
 
 from fundus.publishers.base_objects import PublisherEnum
 from fundus.scraping.article import Article
-from fundus.scraping.filter import ExtractionFilter
+from fundus.scraping.filter import ExtractionFilter, URLFilter
 from fundus.scraping.scraper import Scraper
 from fundus.scraping.source import URLSource, session_handler
 from fundus.utils.more_async import async_interleave, async_next
@@ -58,11 +58,12 @@ class Pipeline:
         self.scrapers: Tuple[Scraper, ...] = scrapers
 
     def run(
-            self,
-            error_handling: Literal["suppress", "catch", "raise"],
-            max_articles: Optional[int] = None,
-            extraction_filter: Optional[ExtractionFilter] = None,
-            delay: Optional[Delay] = lambda: 0.1,
+        self,
+        error_handling: Literal["suppress", "catch", "raise"],
+        max_articles: Optional[int] = None,
+        extraction_filter: Optional[ExtractionFilter] = None,
+        delay: Optional[Delay] = lambda: 0.1,
+        url_filter: Optional[URLFilter] = None,
     ) -> Iterator[Article]:
         """Yields articles from initialized scrapers.
 
@@ -79,10 +80,16 @@ class Pipeline:
                 for extraction. Defaults to "suppress".
             extraction_filter (Optional[ExtractionFilter]): Set extraction filter. Defaults to None.
             delay (Optional[Delay]): Set waiting time between article batches. Defaults to None.
+            url_filter (Optional[URLFilter]): Set URLFilter. Defaults to None
 
         Returns:
             Iterator[Article]: An iterator yielding objects of type Article.
         """
+
+        if url_filter:
+            for scraper in self.scrapers:
+                for source in scraper.sources:
+                    source.add_url_filter(url_filter=url_filter)
 
         scrape_map = [
             scraper.scrape(
@@ -140,12 +147,13 @@ class Crawler:
         self.publishers: Set[PublisherEnum] = set(more_itertools.flatten(nested_publisher))
 
     def crawl(
-            self,
-            max_articles: Optional[int] = None,
-            restrict_sources_to: Optional[List[Type[URLSource]]] = None,
-            error_handling: Literal["suppress", "catch", "raise"] = "suppress",
-            only_complete: Union[bool, ExtractionFilter] = True,
-            delay: Optional[Union[float, Delay]] = None,
+        self,
+        max_articles: Optional[int] = None,
+        restrict_sources_to: Optional[List[Type[URLSource]]] = None,
+        error_handling: Literal["suppress", "catch", "raise"] = "suppress",
+        only_complete: Union[bool, ExtractionFilter] = True,
+        delay: Optional[Union[float, Delay]] = None,
+        url_filter: Optional[URLFilter] = None,
     ) -> Iterator[Article]:
         """Yields articles from initialized publishers
 
@@ -169,6 +177,8 @@ class Crawler:
                 batches. You can set a delay directly using float or any callable satisfying the Delay
                 protocol. If set to None, no delay will be used between batches. See Delay for more
                 information. Defaults to None.
+            url_filter (Optional[URLFilter]): A callable object satisfying the URLFilter protocol to skip
+                urls during download. Defaults to None.
 
         Returns:
             Iterator[Article]: An iterator yielding objects of type Article.
@@ -188,6 +198,7 @@ class Crawler:
             extraction_filter = only_complete
 
         if isinstance(delay, float):
+
             def _id(n: float) -> Delay:
                 return lambda: n
 
@@ -217,6 +228,7 @@ class Crawler:
                 max_articles=max_articles,
                 extraction_filter=extraction_filter,
                 delay=delay,
+                url_filter=url_filter,
             )
         else:
             return iter(())
