@@ -1,6 +1,7 @@
 import gzip
 import re
 from abc import ABC, abstractmethod
+from collections import defaultdict
 from dataclasses import dataclass, field
 from datetime import datetime
 from functools import cached_property
@@ -26,6 +27,7 @@ from lxml.cssselect import CSSSelector
 from lxml.etree import XPath
 
 from fundus.logging import basic_logger
+from fundus.logging.context import get_current_context
 from fundus.scraping.filter import URLFilter, inverse
 from fundus.utils.more_async import async_next, make_iterable_async, timed
 
@@ -218,8 +220,15 @@ class HTMLSource:
                 return True
         return False
 
-    async def async_fetch(self, delay: Optional[Callable[[], float]] = None) -> AsyncIterator[HTML]:
-        async for url in self.url_source:
+    async def async_fetch(self) -> AsyncIterator[HTML]:
+        async for iteration_time, url in timed(self.url_source.__aiter__()):
+
+            # log time to get url
+            current_context = get_current_context()[self.publisher or url]
+            if not current_context.get("timings"):
+                current_context["timings"] = defaultdict(float)
+            current_context["timings"]["url_source"] += iteration_time
+
             if not validate_url(url):
                 basic_logger.debug(f"Skipped requested URL '{url}' because of invalid URL")
                 continue
@@ -228,14 +237,9 @@ class HTMLSource:
                 basic_logger.debug(f"Skipped requested URL '{url}' because of URL filter")
                 continue
 
-            last_request_time = time.time()
             session = await session_handler.get_session()
 
             async with session.get(url, headers=self.request_header) as response:
-                if delay and (actual_delay := delay() - time.time() + last_request_time) > 0:
-                    basic_logger.debug(f"Sleep for {actual_delay} seconds.")
-                    await asyncio.sleep(actual_delay)
-
                 try:
                     html = await response.text()
                     response.raise_for_status()

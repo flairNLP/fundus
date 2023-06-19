@@ -17,7 +17,7 @@ from typing import (
 
 import more_itertools
 
-from fundus.logging import basic_logger
+from fundus.logging import basic_logger, create_context
 from fundus.publishers.base_objects import PublisherEnum
 from fundus.scraping.article import Article
 from fundus.scraping.filter import ExtractionFilter, URLFilter
@@ -111,6 +111,7 @@ class Pipeline:
         def article_gen() -> Iterator[Article]:
             interleave: AsyncIterator[Iterable[Optional[Article]]] = batched_async_interleave(*list(scrape_map))
             while True:
+                context.clear()
                 start_time = time.time()
                 batch: Optional[Iterable[Optional[Article]]] = loop.run_until_complete(async_next(interleave, None))
                 batch_time = time.time() - start_time
@@ -128,15 +129,16 @@ class Pipeline:
 
         gen = article_gen()
 
-        if max_articles is not None:
-            if max_articles > 0:
-                for article in gen:
-                    if not max_articles:
-                        break
-                    yield article
-                    max_articles -= 1
-        else:
-            yield from gen
+        with create_context(type(self).__name__) as context:
+            if max_articles is not None:
+                if max_articles > 0:
+                    for article in gen:
+                        if not max_articles:
+                            break
+                        yield article
+                        max_articles -= 1
+            else:
+                yield from gen
 
         # close current aiohttp session
         loop.run_until_complete(session_handler.close_current_session())

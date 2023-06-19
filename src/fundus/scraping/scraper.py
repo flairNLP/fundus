@@ -1,12 +1,16 @@
+import time
+from collections import defaultdict
 from typing import AsyncIterator, Literal, Optional
 
 import more_itertools
 
 from fundus.logging import basic_logger
+from fundus.logging.context import get_current_context
 from fundus.parser import ParserProxy
 from fundus.scraping.article import Article
 from fundus.scraping.filter import ExtractionFilter, Requires
 from fundus.scraping.html import HTMLSource
+from fundus.utils.more_async import timed
 
 
 class Scraper:
@@ -42,11 +46,16 @@ class Scraper:
                 return
 
         for html_source in self.sources:
-            async for html in html_source.async_fetch():
+            async for iteration_time, html in timed(html_source.async_fetch()):
+                current_context = get_current_context()[html.source.publisher or html.requested_url]
+                if not current_context.get("timings"):
+                    current_context["timings"] = defaultdict(float)
+                current_context["timings"]["fetch_async"] += iteration_time
 
                 try:
+                    pre_extraction_time = time.time()
                     extraction = self.parser(html.crawl_date).parse(html.content, error_handling)
-
+                    current_context["timings"]["extraction"] += time.time() - pre_extraction_time
                 except Exception as err:
                     if error_handling == "raise":
                         error_message = f"Run into an error processing article '{html.requested_url}'"

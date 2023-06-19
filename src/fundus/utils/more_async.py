@@ -1,5 +1,6 @@
 import asyncio
-from typing import AsyncIterator, Iterable, TypeVar, Union, overload
+import time
+from typing import AsyncIterator, Iterable, Tuple, TypeVar, Union, overload
 
 _T = TypeVar("_T")
 _VT = TypeVar("_VT")
@@ -57,3 +58,16 @@ async def batched_async_interleave(*generators: AsyncIterator[_T]) -> AsyncItera
 async def make_iterable_async(iterable: Iterable[_T]) -> AsyncIterator[_T]:
     for nxt in iterable:
         yield nxt
+
+
+async def timed(iterator: AsyncIterator[_T]) -> AsyncIterator[Tuple[float, _T]]:
+    class _Empty:
+        pass
+
+    while True:
+        start_time = time.time()
+        nxt = await async_next(iterator, _Empty())
+        iteration_time = time.time() - start_time
+        if isinstance(nxt, _Empty):
+            break
+        yield iteration_time, nxt
