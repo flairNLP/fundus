@@ -1,4 +1,5 @@
 import asyncio
+import time
 from typing import (
     AsyncIterator,
     Iterable,
@@ -16,12 +17,13 @@ from typing import (
 
 import more_itertools
 
+from fundus.logging import basic_logger
 from fundus.publishers.base_objects import PublisherEnum
 from fundus.scraping.article import Article
 from fundus.scraping.filter import ExtractionFilter, URLFilter
 from fundus.scraping.html import URLSource, session_handler
 from fundus.scraping.scraper import Scraper
-from fundus.utils.more_async import async_interleave, async_next
+from fundus.utils.more_async import batched_async_interleave, async_next
 from fundus.utils.validation import listify
 
 
@@ -98,7 +100,6 @@ class Pipeline:
             scraper.scrape(
                 error_handling=error_handling,
                 extraction_filter=extraction_filter,
-                delay=delay,
             )
             for scraper in self.scrapers
         ]
@@ -108,9 +109,15 @@ class Pipeline:
         response_cache: Set[str] = set()
 
         def article_gen() -> Iterator[Article]:
-            interleave: AsyncIterator[Iterable[Optional[Article]]] = async_interleave(*list(scrape_map))
+            interleave: AsyncIterator[Iterable[Optional[Article]]] = batched_async_interleave(*list(scrape_map))
             while True:
+                start_time = time.time()
                 batch: Optional[Iterable[Optional[Article]]] = loop.run_until_complete(async_next(interleave, None))
+                batch_time = time.time() - start_time
+                if delay:
+                    actual_delay = max(delay() - batch_time, 0.0)
+                    loop.run_until_complete(asyncio.sleep(actual_delay))
+                basic_logger.debug(f"Batch took {batch_time} seconds")
                 if batch is not None:
                     for next_article in cast(Iterable[Article], filter(bool, batch)):
                         if not only_unique or next_article.html.responded_url not in response_cache:
@@ -121,16 +128,17 @@ class Pipeline:
 
         gen = article_gen()
 
-        if max_articles:
-            for article in gen:
-                if not max_articles:
-                    break
-                yield article
-                max_articles -= 1
+        if max_articles is not None:
+            if max_articles > 0:
+                for article in gen:
+                    if not max_articles:
+                        break
+                    yield article
+                    max_articles -= 1
         else:
             yield from gen
 
-        # close current session
+        # close current aiohttp session
         loop.run_until_complete(session_handler.close_current_session())
 
 

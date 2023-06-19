@@ -2,7 +2,7 @@ import asyncio
 from typing import AsyncIterator, Iterable, TypeVar, Union, overload
 
 _T = TypeVar("_T")
-_VT = TypeVar("_VT", bound=object)
+_VT = TypeVar("_VT")
 
 
 class _Sentinel:
@@ -18,12 +18,12 @@ async def async_next(iterator: AsyncIterator[_T]) -> _T:
 
 
 @overload
-async def async_next(iterator: AsyncIterator[_T], default: _VT) -> Union[_T, _VT]:
+async def async_next(iterator: AsyncIterator[_T], default: Union[_VT, _Sentinel]) -> Union[_T, _VT]:
     ...
 
 
 async def async_next(iterator: AsyncIterator[_T], default: Union[_VT, _Sentinel] = __sentinel) -> Union[_T, _VT]:
-    task = asyncio.ensure_future(iterator.__anext__())
+    task = iterator.__anext__()
     try:
         return await task
     except StopAsyncIteration:
@@ -33,7 +33,7 @@ async def async_next(iterator: AsyncIterator[_T], default: Union[_VT, _Sentinel]
             raise StopAsyncIteration
 
 
-async def async_interleave(*generators: AsyncIterator[_T]) -> AsyncIterator[Iterable[_T]]:
+async def batched_async_interleave(*generators: AsyncIterator[_T]) -> AsyncIterator[Iterable[_T]]:
     current_generators = list(generators)
 
     class _Empty:
@@ -54,6 +54,6 @@ async def async_interleave(*generators: AsyncIterator[_T]) -> AsyncIterator[Iter
         yield iter(results)
 
 
-async def make_async(iterable: Iterable[_T]) -> AsyncIterator[_T]:
+async def make_iterable_async(iterable: Iterable[_T]) -> AsyncIterator[_T]:
     for nxt in iterable:
         yield nxt

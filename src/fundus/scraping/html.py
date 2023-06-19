@@ -1,7 +1,5 @@
-import asyncio
 import gzip
 import re
-import time
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from datetime import datetime
@@ -29,7 +27,7 @@ from lxml.etree import XPath
 
 from fundus.logging import basic_logger
 from fundus.scraping.filter import URLFilter, inverse
-from fundus.utils.more_async import async_next, make_async
+from fundus.utils.more_async import async_next, make_iterable_async, timed
 
 _default_header = {"user-agent": "Fundus"}
 
@@ -88,14 +86,13 @@ class StaticSource(AsyncIterable[str]):
     links: Iterable[str]
 
     async def __aiter__(self) -> AsyncIterator[str]:
-        async for url in make_async(self.links):
+        async for url in make_iterable_async(self.links):
             yield url
 
 
 @dataclass
 class URLSource(AsyncIterable[str], ABC):
     url: str
-    url_filter: URLFilter = lambda url: not bool(url)
 
     _request_header: Dict[str, str] = field(default_factory=dict)
 
@@ -114,11 +111,7 @@ class URLSource(AsyncIterable[str], ABC):
 
     async def __aiter__(self) -> AsyncIterator[str]:
         async for url in self._get_pre_filtered_urls():
-            # noinspection PyArgumentList
-            if url and self.url_filter(url):
-                continue
-            else:
-                yield url
+            yield url
 
 
 @dataclass
