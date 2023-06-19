@@ -176,15 +176,6 @@ class NewsMap(Sitemap):
     pass
 
 
-@dataclass
-class URL:
-    requested: str
-    responded: str
-
-    def __str__(self):
-        return self.requested
-
-
 @dataclass(frozen=True)
 class HTML:
     requested_url: str
