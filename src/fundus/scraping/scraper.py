@@ -1,4 +1,4 @@
-from typing import AsyncIterator, Callable, Literal, Optional
+from typing import AsyncIterator, Literal, Optional
 
 import more_itertools
 
@@ -22,7 +22,6 @@ class Scraper:
         self,
         error_handling: Literal["suppress", "catch", "raise"],
         extraction_filter: Optional[ExtractionFilter] = None,
-        delay: Optional[Callable[[], float]] = None,
     ) -> AsyncIterator[Optional[Article]]:
         if isinstance(extraction_filter, Requires):
             supported_attributes = set(
@@ -43,13 +42,13 @@ class Scraper:
                 return
 
         for html_source in self.sources:
-            async for html in html_source.async_fetch(delay=delay):
+            async for html in html_source.async_fetch():
                 try:
                     extraction = self.parser(html.crawl_date).parse(html.content, error_handling)
 
                 except Exception as err:
                     if error_handling == "raise":
-                        error_message = f"Run into an error processing '{html.requested_url}'"
+                        error_message = f"Run into an error processing article '{html.requested_url}'"
                         basic_logger.error(error_message)
                         err.args = (str(err) + "\n\n" + error_message,)
                         raise err
@@ -61,6 +60,7 @@ class Scraper:
                         continue
                     else:
                         raise ValueError(f"Unknown value '{error_handling}' for parameter <error_handling>'")
+
                 if extraction_filter and extraction_filter(extraction):
                     basic_logger.debug(f"Skipped article at '{html.requested_url}' because of extraction filter")
                     yield None
