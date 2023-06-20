@@ -1,66 +1,70 @@
 {
-    "DieWelt_2023_04_28.html.gz": {
-        "url": "https://www.welt.de/wirtschaft/article245055596/BIP-Diese-Grafiken-zeigen-wie-schlecht-es-um-Deutschlands-Wirtschaft-steht.html",
-        "crawl_date": "2023-04-28 20:22:32.033988"
-    },
-    "MDR_2023_04_28.html.gz": {
-        "url": "https://www.mdr.de/nachrichten/thueringen/sued-thueringen/schmalkalden-meiningen/schlachtung-fleisch-schwein-wirtschaft-landstolz-100.html",
-        "crawl_date": "2023-04-28 20:22:36.765570"
-    },
-    "FAZ_2023_04_28.html.gz": {
-        "url": "https://www.faz.net/aktuell/rhein-main/frankfurt/49-euro-ticket-pendler-zahlen-60-prozent-weniger-18857107.html",
-        "crawl_date": "2023-04-28 20:22:44.281765"
-    },
-    "Focus_2023_04_28.html.gz": {
-        "url": "https://www.focus.de/kaufberatung/deals_angebote/may-the-4th-be-with-you-lego-feiert-den-star-wars-tag-mit-neuen-sets-und-exklusiven-geschenken_id_92942238.html",
-        "crawl_date": "2023-04-28 20:21:13.976503"
-    },
-    "Merkur_2023_04_28.html.gz": {
-        "url": "https://www.merkur.de/welt/england-koenig-king-charles-iii-kroenung-zeremonie-nostradamus-vorhersage-prophezeiung-thronfolger-92243692.html",
-        "crawl_date": "2023-04-28 20:21:14.813377"
-    },
-    "SZ_2023_04_28.html.gz": {
-        "url": "https://www.sueddeutsche.de/muenchen/landkreismuenchen/ranking-fahrradfreundlichkeit-fleissige-bundestagsabgeordnete-kolumne-1.5827206",
-        "crawl_date": "2023-04-28 20:21:15.488026"
-    },
-    "SpiegelOnline_2023_04_28.html.gz": {
-        "url": "https://www.spiegel.de/wirtschaft/unternehmen/silicon-valley-bank-federal-reserve-raeumt-versaeumnisse-bei-aufsicht-ein-a-60a0111a-c2d2-46c8-9e93-b16a374e6ba8#ref=rss",
-        "crawl_date": "2023-04-28 20:21:16.250027"
-    },
-    "DieZeit_2023_04_28.html.gz": {
-        "url": "https://www.zeit.de/news/2023-04/28/nach-massenschlaegerei-real-star-llull-entschuldigt-sich",
-        "crawl_date": "2023-04-28 20:25:15.245087"
-    },
-    "BerlinerZeitung_2023_04_28.html.gz": {
-        "url": "https://www.berliner-zeitung.de/news/550-kinder-gezeugt-gericht-stoppt-uebereifrigen-samenspender-in-den-niederlanden-li.343191",
-        "crawl_date": "2023-04-28 20:25:16.328923"
-    },
-    "Tagesschau_2023_04_28.html.gz": {
-        "url": "https://www.tagesschau.de/inland/innenpolitik/ahrtal-flut-bilanz-100.html",
-        "crawl_date": "2023-04-28 20:25:17.117496"
-    },
-    "DW_2023_04_28.html.gz": {
-        "url": "https://www.dw.com/de/ukrainische-gegenoffensive-ziele-chancen-risiken/a-65464327?maca=de-rss-de-all-1119-xml-mrss",
-        "crawl_date": "2023-04-28 20:25:18.143350"
-    },
-    "Stern_2023_04_28.html.gz": {
-        "url": "https://www.stern.de/wirtschaft/geld/epi-zahlungssystem--so-kann-europa-paypal--apple-pay-und-visa-schlagen-33420056.html?utm_campaign=alle-nachrichten&utm_medium=rss-feed&utm_source=standard",
-        "crawl_date": "2023-04-28 20:32:03.502152"
-    },
-    "NTV_2023_04_28.html.gz": {
-        "url": "https://www.n-tv.de/leben/Judy-Lybke-ganz-und-gar-nicht-eigenartig-article24075843.html",
-        "crawl_date": "2023-04-28 20:32:13.689394"
-    },
-    "NDR_2023_04_28.html.gz": {
-        "url": "https://www.ndr.de/nachrichten/schleswig-holstein/Einschlag-in-Elmshorn-Es-war-ein-Meteorit,meteorit146.html",
-        "crawl_date": "2023-04-28 20:32:14.447579"
-    },
-    "Taz_2023_04_28.html.gz": {
-        "url": "https://taz.de/Entwurf-des-Selbstbestimmungsgesetzes/!5928990/",
-        "crawl_date": "2023-04-28 20:32:15.077826"
-    },
-    "Bild_2023_05_15.html.gz": {
-        "url": "https://www.bild.de/sport/fussball/fortuna-duesseldorf/bubi-bomber-wieder-da-thioune-fordert-geduld-mit-niemiec-83936220.bild.html",
-        "crawl_date": "2023-05-15 13:55:04.823203"
-    }
+  "DieWelt_2023_04_28.html.gz": {
+    "url": "https://www.welt.de/wirtschaft/article245055596/BIP-Diese-Grafiken-zeigen-wie-schlecht-es-um-Deutschlands-Wirtschaft-steht.html",
+    "crawl_date": "2023-04-28 20:22:32.033988"
+  },
+  "MDR_2023_04_28.html.gz": {
+    "url": "https://www.mdr.de/nachrichten/thueringen/sued-thueringen/schmalkalden-meiningen/schlachtung-fleisch-schwein-wirtschaft-landstolz-100.html",
+    "crawl_date": "2023-04-28 20:22:36.765570"
+  },
+  "FAZ_2023_04_28.html.gz": {
+    "url": "https://www.faz.net/aktuell/rhein-main/frankfurt/49-euro-ticket-pendler-zahlen-60-prozent-weniger-18857107.html",
+    "crawl_date": "2023-04-28 20:22:44.281765"
+  },
+  "Focus_2023_04_28.html.gz": {
+    "url": "https://www.focus.de/kaufberatung/deals_angebote/may-the-4th-be-with-you-lego-feiert-den-star-wars-tag-mit-neuen-sets-und-exklusiven-geschenken_id_92942238.html",
+    "crawl_date": "2023-04-28 20:21:13.976503"
+  },
+  "Merkur_2023_04_28.html.gz": {
+    "url": "https://www.merkur.de/welt/england-koenig-king-charles-iii-kroenung-zeremonie-nostradamus-vorhersage-prophezeiung-thronfolger-92243692.html",
+    "crawl_date": "2023-04-28 20:21:14.813377"
+  },
+  "SZ_2023_04_28.html.gz": {
+    "url": "https://www.sueddeutsche.de/muenchen/landkreismuenchen/ranking-fahrradfreundlichkeit-fleissige-bundestagsabgeordnete-kolumne-1.5827206",
+    "crawl_date": "2023-04-28 20:21:15.488026"
+  },
+  "SpiegelOnline_2023_04_28.html.gz": {
+    "url": "https://www.spiegel.de/wirtschaft/unternehmen/silicon-valley-bank-federal-reserve-raeumt-versaeumnisse-bei-aufsicht-ein-a-60a0111a-c2d2-46c8-9e93-b16a374e6ba8#ref=rss",
+    "crawl_date": "2023-04-28 20:21:16.250027"
+  },
+  "DieZeit_2023_04_28.html.gz": {
+    "url": "https://www.zeit.de/news/2023-04/28/nach-massenschlaegerei-real-star-llull-entschuldigt-sich",
+    "crawl_date": "2023-04-28 20:25:15.245087"
+  },
+  "BerlinerZeitung_2023_04_28.html.gz": {
+    "url": "https://www.berliner-zeitung.de/news/550-kinder-gezeugt-gericht-stoppt-uebereifrigen-samenspender-in-den-niederlanden-li.343191",
+    "crawl_date": "2023-04-28 20:25:16.328923"
+  },
+  "Tagesschau_2023_04_28.html.gz": {
+    "url": "https://www.tagesschau.de/inland/innenpolitik/ahrtal-flut-bilanz-100.html",
+    "crawl_date": "2023-04-28 20:25:17.117496"
+  },
+  "DW_2023_04_28.html.gz": {
+    "url": "https://www.dw.com/de/ukrainische-gegenoffensive-ziele-chancen-risiken/a-65464327?maca=de-rss-de-all-1119-xml-mrss",
+    "crawl_date": "2023-04-28 20:25:18.143350"
+  },
+  "Stern_2023_04_28.html.gz": {
+    "url": "https://www.stern.de/wirtschaft/geld/epi-zahlungssystem--so-kann-europa-paypal--apple-pay-und-visa-schlagen-33420056.html?utm_campaign=alle-nachrichten&utm_medium=rss-feed&utm_source=standard",
+    "crawl_date": "2023-04-28 20:32:03.502152"
+  },
+  "NTV_2023_04_28.html.gz": {
+    "url": "https://www.n-tv.de/leben/Judy-Lybke-ganz-und-gar-nicht-eigenartig-article24075843.html",
+    "crawl_date": "2023-04-28 20:32:13.689394"
+  },
+  "NDR_2023_04_28.html.gz": {
+    "url": "https://www.ndr.de/nachrichten/schleswig-holstein/Einschlag-in-Elmshorn-Es-war-ein-Meteorit,meteorit146.html",
+    "crawl_date": "2023-04-28 20:32:14.447579"
+  },
+  "Taz_2023_04_28.html.gz": {
+    "url": "https://taz.de/Entwurf-des-Selbstbestimmungsgesetzes/!5928990/",
+    "crawl_date": "2023-04-28 20:32:15.077826"
+  },
+  "Bild_2023_05_15.html.gz": {
+    "url": "https://www.bild.de/sport/fussball/fortuna-duesseldorf/bubi-bomber-wieder-da-thioune-fordert-geduld-mit-niemiec-83936220.bild.html",
+    "crawl_date": "2023-05-15 13:55:04.823203"
+  },
+  "DW_2023_06_13.html.gz": {
+    "url": "https://www.dw.com/de/post-vac-syndrom-nach-covid-19-impfung-was-wissen-wir/a-65897191?maca=de-rss-de-all-1119-xml-mrss",
+    "crawl_date": "2023-06-13 16:57:08.558047"
+  }
 }
