@@ -23,7 +23,7 @@ from fundus.scraping.article import Article
 from fundus.scraping.filter import ExtractionFilter, URLFilter
 from fundus.scraping.html import URLSource, session_handler
 from fundus.scraping.scraper import Scraper
-from fundus.utils.more_async import batched_async_interleave, async_next
+from fundus.utils.more_async import async_next, batched_async_interleave
 from fundus.utils.validation import listify
 
 

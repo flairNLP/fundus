@@ -178,15 +178,6 @@ class NewsMap(Sitemap):
     pass
 
 
-@dataclass
-class URL:
-    requested: str
-    responded: str
-
-    def __str__(self):
-        return self.requested
-
-
 @dataclass(frozen=True)
 class HTML:
     requested_url: str
@@ -228,7 +219,6 @@ class HTMLSource:
             if not current_context.get("timings"):
                 current_context["timings"] = defaultdict(float)
             current_context["timings"]["url_source"] += iteration_time
-
             if not validate_url(url):
                 basic_logger.debug(f"Skipped requested URL '{url}' because of invalid URL")
                 continue
