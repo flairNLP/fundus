@@ -182,6 +182,6 @@ class DE(PublisherEnum):
     WAZ = PublisherSpec(
         name="Westdeutsche Allgemeine Zeitung (WAZ)",
         domain="https://www.waz.de/",
-        news_map="https://www.waz.de/sitemaps/news.xml",
+        sources=[NewsMap("https://www.waz.de/sitemaps/news.xml")],
         parser=WAZParser,
     )
