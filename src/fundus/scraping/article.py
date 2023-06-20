@@ -9,6 +9,7 @@ import lxml.html
 import more_itertools
 from colorama import Fore, Style
 
+from fundus.logging.logger import basic_logger
 from fundus.parser import ArticleBody
 from fundus.scraping.html import HTML
 
@@ -51,10 +52,16 @@ class Article:
         start_time = time.time()
         print(time.time() - start_time)
 
-        language: Optional[str]
+        language: Optional[str] = None
+
         if self.plaintext:
-            language = langdetect.detect(self.plaintext)
-        else:
+            try:
+                language = langdetect.detect(self.plaintext)
+            except langdetect.LangDetectException:
+                basic_logger.debug(f"Unable to detect language for article '{self.html.url}'")
+
+        # use @lang attribute of <html> tag as fallback
+        if not language or language == langdetect.detector_factory.Detector.UNKNOWN_LANG:
             language = lxml.html.fromstring(self.html.content).get("lang")
             if language and "-" in language:
                 language = language.split("-")[0]
