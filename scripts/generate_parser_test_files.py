@@ -1,4 +1,3 @@
-import json
 import subprocess
 from argparse import ArgumentParser
 from logging import WARN
@@ -10,12 +9,7 @@ from fundus import Crawler, PublisherCollection
 from fundus.logging.logger import basic_logger
 from fundus.publishers.base_objects import PublisherEnum
 from fundus.scraping.article import Article
-from tests.utility import (
-    HTMLTestFile,
-    generate_parser_test_case_json_path,
-    load_html_test_file_mapping,
-    load_test_case_data,
-)
+from tests.utility import HTMLTestFile, get_test_case_json, load_html_test_file_mapping
 
 
 def get_test_article(enum: PublisherEnum) -> Optional[Article]:
@@ -47,9 +41,6 @@ if __name__ == "__main__":
         help="overwrite existing html and json files for the latest parser version",
     )
     group.add_argument(
-        "-u", "--update", action="store_true", help="parse from existing html and only update json content"
-    )
-    group.add_argument(
         "-oj",
         "--overwrite_json",
         action="store_true",
@@ -72,49 +63,41 @@ if __name__ == "__main__":
     with tqdm(total=len(publishers)) as bar:
         for publisher in publishers:
             bar.set_description(desc=publisher.name, refresh=True)
-            bar.update()
 
             # load json
-            json_path = generate_parser_test_case_json_path(publisher)
-            # ensure directories are there
-            json_path.parent.mkdir(parents=True, exist_ok=True)
-            json_data = load_test_case_data(publisher) if json_path.exists() else {}
+            test_data_file = get_test_case_json(publisher)
+            test_data = content if (content := test_data_file.load()) and not args.overwrite_json else {}
 
             # load html
             html_mapping = load_html_test_file_mapping(publisher) if not args.overwrite else {}
 
-            if args.update or args.overwrite_json:
-                for html in html_mapping.values():
-                    versioned_parser = html.publisher.parser(html.crawl_date)
-                    extraction = versioned_parser.parse(html.content)
-                    entry = json_data[type(versioned_parser).__name__]
-                    new = {attr: value for attr, value in extraction.items() if attr in args.attributes}
-                    if args.update:
-                        entry["content"].update(new)
-                    elif args.overwrite_json:
-                        entry["content"] = new
-
-            elif args.overwrite or not html_mapping.get(publisher.parser.latest_version):
+            if args.overwrite or not html_mapping.get(publisher.parser.latest_version):
                 if not (article := get_test_article(publisher)):
                     basic_logger.warn(f"Couldn't get article for {publisher.name}. Skipping")
                     continue
                 html = HTMLTestFile(
-                    content=article.article_source.html,
-                    crawl_date=article.article_source.crawl_date,
+                    url=article.html.url,
+                    content=article.html.content,
+                    crawl_date=article.html.crawl_date,
                     publisher=publisher,
                 )
                 html.write()
-
-                metadata = {"url": article.article_source.url, "crawl_date": str(article.article_source.crawl_date)}
-                requested_attrs = set(args.attributes)
-                content = {attr: value for attr in args.attributes if (value := getattr(article, attr, None))}
-                entry = {"meta": metadata, "content": content}
-                json_data.update({publisher.parser.latest_version.__name__: entry})
-
                 subprocess.call(["git", "add", html.path], stdout=subprocess.PIPE)
 
-            with open(json_path, "w", encoding="utf-8") as json_file:
-                json.dump(json_data, json_file, indent=4, ensure_ascii=False)
-                json_file.write("\n")
+                html_mapping[publisher.parser.latest_version] = html
+                test_data[publisher.parser.latest_version.__name__] = {}
 
-            subprocess.call(["git", "add", json_path], stdout=subprocess.PIPE)
+            for html in html_mapping.values():
+                versioned_parser = html.publisher.parser(html.crawl_date)
+                extraction = versioned_parser.parse(html.content)
+                new = {attr: value for attr, value in extraction.items() if attr in args.attributes}
+                if not (entry := test_data.get(type(versioned_parser).__name__)):
+                    test_data[type(versioned_parser).__name__] = new
+                else:
+                    entry.update(new)
+
+            test_data_file.write(test_data)
+            bar.update()
+            subprocess.call(["git", "add", test_data_file.path], stdout=subprocess.PIPE)
+
+        bar.update()

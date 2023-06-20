@@ -74,6 +74,7 @@ def align_tables(tables: Sequence[lxml.html.HtmlElement]) -> None:
         max_column_length: int = max(len(text) for text in column_texts)
 
         for head in colum_heads:
+            assert head.text is not None
             text: str = head.text.replace(" ", "\u00A0")
             padding: str = "\u00A0" * (2 * (max_column_length - len(head.text)))
             head.text = f"{text}{padding}"

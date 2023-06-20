@@ -5,8 +5,8 @@ import more_itertools
 from fundus.publishers.base_objects import PublisherEnum
 from fundus.scraping.article import Article
 from fundus.scraping.filter import ExtractionFilter
+from fundus.scraping.html import URLSource
 from fundus.scraping.scraper import Scraper
-from fundus.scraping.source import URLSource
 from fundus.utils.validation import listify
 
 
@@ -71,7 +71,7 @@ class Crawler:
         for spec in self.publishers:
             if restrict_sources_to:
                 sources = more_itertools.flatten(
-                    spec.source_mapping[source_type.__name__] for source_type in restrict_sources_to
+                    spec.source_mapping[source_type] for source_type in restrict_sources_to
                 )
             else:
                 sources = more_itertools.flatten(spec.source_mapping.values())

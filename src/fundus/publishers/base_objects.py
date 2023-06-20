@@ -5,7 +5,7 @@ from typing import Any, Dict, Iterator, List, Optional, Type
 
 from fundus.parser.base_parser import ParserProxy
 from fundus.scraping.filter import UrlFilter
-from fundus.scraping.source import NewsMap, RSSFeed, Sitemap, Source, URLSource
+from fundus.scraping.html import HTMLSource, NewsMap, RSSFeed, Sitemap, URLSource
 from fundus.utils.iteration import iterate_all_subclasses
 
 
@@ -40,10 +40,10 @@ class PublisherEnum(Enum):
 
         # we define the dict here manually instead of using default dict so that we can control
         # the order in which sources are proceeded.
-        source_mapping: Dict[str, List[Source]] = {
-            RSSFeed.__name__: [],
-            NewsMap.__name__: [],
-            Sitemap.__name__: [],
+        source_mapping: Dict[Type[URLSource], List[HTMLSource]] = {
+            RSSFeed: [],
+            NewsMap: [],
+            Sitemap: [],
         }
 
         for url_source in spec.sources:
@@ -52,26 +52,26 @@ class PublisherEnum(Enum):
                     f"Unexpected type '{type(url_source).__name__}' as source for {self.name}. "
                     f"Allowed are '{', '.join(cls.__name__ for cls in iterate_all_subclasses(URLSource))}'"
                 )
-            source: Source = Source(
+            source: HTMLSource = HTMLSource(
                 url_source=url_source,
                 publisher=self.publisher_name,
                 url_filter=spec.url_filter,
                 request_header=spec.request_header,
             )
-            source_mapping[type(url_source).__name__].append(source)
+            source_mapping[type(url_source)].append(source)
 
         self.source_mapping = source_mapping
 
     def supports(self, source_types: List[Type[URLSource]]) -> bool:
-        if not isinstance(source_types, list):
-            raise TypeError(f"Got unexpected type '{type(source_types)}'. Expected <class list>")
+        if not source_types:
+            raise ValueError(f"Got empty value '{source_types}' for parameter <source_types>.")
         for source_type in source_types:
             if not inspect.isclass(source_type) or not issubclass(source_type, URLSource):
                 raise TypeError(
                     f"Got unexpected type '{source_type}'. "
                     f"Allowed are '{', '.join(cls.__name__ for cls in iterate_all_subclasses(URLSource))}'"
                 )
-        return all(bool(self.source_mapping.get(source_type.__name__)) for source_type in source_types)
+        return all(bool(self.source_mapping.get(source_type)) for source_type in source_types)
 
     @classmethod
     def search(

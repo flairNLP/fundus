@@ -1,22 +1,17 @@
 {
-    "V1": {
-        "meta": {
-            "url": "https://www.foxnews.com/politics/house-china-committee-demands-answers-fbi-chinese-police-stations-us",
-            "crawl_date": "2023-04-28 20:33:03.410503"
-        },
-        "content": {
-            "authors": [
-                "Aaron Kliegman"
-            ],
-            "title": "House China Committee demands answers from FBI on Chinese police stations in US",
-            "topics": [
-                "china",
-                "houseofreps",
-                "congress",
-                "fbi",
-                "justice-department",
-                "newyorkcity"
-            ]
-        }
-    }
+  "V1": {
+    "authors": [
+      "Aaron Kliegman"
+    ],
+    "publishing_date": "2023-04-26 14:20:55-04:00",
+    "title": "House China Committee demands answers from FBI on Chinese police stations in US",
+    "topics": [
+      "china",
+      "houseofreps",
+      "congress",
+      "fbi",
+      "justice-department",
+      "newyorkcity"
+    ]
+  }
 }

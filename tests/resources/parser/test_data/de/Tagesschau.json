@@ -1,19 +1,14 @@
 {
-    "V1": {
-        "meta": {
-            "url": "https://www.tagesschau.de/inland/innenpolitik/ahrtal-flut-bilanz-100.html",
-            "crawl_date": "2023-04-28 20:25:17.117496"
-        },
-        "content": {
-            "authors": [
-                "Christin Jordan"
-            ],
-            "title": "Ausschuss zur Ahrtal-Flut: Zwei Rücktritte - und viele offene Fragen",
-            "topics": [
-                "Ahrtal",
-                "Flut",
-                "Untersuchungsausschuss"
-            ]
-        }
-    }
+  "V1": {
+    "authors": [
+      "Christin Jordan"
+    ],
+    "publishing_date": "2023-04-28 17:23:42.981000+02:00",
+    "title": "Ausschuss zur Ahrtal-Flut: Zwei Rücktritte - und viele offene Fragen",
+    "topics": [
+      "Ahrtal",
+      "Flut",
+      "Untersuchungsausschuss"
+    ]
+  }
 }

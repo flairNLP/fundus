@@ -3,7 +3,7 @@ import gzip
 import json
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Dict, Tuple, Type, Union
+from typing import Any, Callable, Dict, Generic, Optional, Type, TypeVar
 
 from typing_extensions import Self
 
@@ -13,41 +13,151 @@ from fundus.publishers.base_objects import PublisherEnum
 from scripts.generate_tables import supported_publishers_markdown_path
 from tests.resources.parser.test_data import __module_path__ as test_resource_path
 
+_T = TypeVar("_T")
+
+
+@dataclass
+class JSONFile(Generic[_T]):
+    """Generic file class representing a JSON file.
+
+    You can specify custom json.JSONEncoder/json.JSONDecoder and type hint
+    expected JSON structure.
+
+    Example:
+        >>> class CustomEncoder(json.JSONEncoder): ...
+        >>> class CustomDecoder(json.JSONDecoder): ...
+        >>> path_to_json = Path("path/to.json")
+        >>> json_file: JSONFile[Dict[str, list]] = JSONFile(path_to_json, encoder=CustomEncoder, decoder=CustomDecoder)
+        >>> content = json_file.load() # will type hint content as Dict[str, list]
+        >>> content["entry"].append("new")
+        >>> json_file.write(content)
+    """
+
+    path: Path
+    encoder: Optional[Type[json.JSONEncoder]] = None
+    decoder: Optional[Type[json.JSONDecoder]] = None
+    encoding: str = "utf-8"
+
+    def load(self, **kwargs) -> Optional[_T]:
+        """Load file content using json.load().
+
+        See the documentation of json.load() for further documentation
+        about the keyword arguments (**kwargs).
+        https://docs.python.org/3/library/json.html#json.load
+
+
+        Args:
+            **kwargs: Key word arguments for json.load()
+
+        Returns:
+            File content as if loaded with json.load(). If JSONFile is type hinted
+                properly, the expected return type is _T.
+        """
+        if not self.path.exists():
+            return None
+        if not kwargs.get("cls"):
+            kwargs["cls"] = self.decoder
+        with open(self.path, "r", encoding=self.encoding) as json_file:
+            content: _T = json.load(json_file, **kwargs)
+        return content
+
+    def write(self, content: _T, **kwargs) -> None:
+        """Writes the given content to the file with json.dump()
+
+        See the documentation of json.dump() for further documentation
+        about the keyword arguments (**kwargs).
+        https://docs.python.org/3/library/json.html#json.dump
+
+        Args:
+            content: The content to write to the file.
+            **kwargs: Keyword arguments for json.dump(), Defaults to {"ensure_ascii": False, "indent": 2}
+
+        Returns:
+
+        """
+        if not kwargs:
+            kwargs = {"ensure_ascii": False, "indent": 2}
+        if not kwargs.get("cls"):
+            kwargs["cls"] = self.encoder
+        with open(self.path, "w", encoding=self.encoding) as json_file:
+            json.dump(content, json_file, **kwargs)
+            json_file.write("\n")
+
+
+class ExtractionEncoder(json.JSONEncoder):
+    def default(self, obj: object):
+        if isinstance(obj, datetime.datetime):
+            return str(obj)
+        return json.JSONEncoder.default(self, obj)
+
+
+class ExtractionDecoder(json.JSONDecoder):
+    transformations: Dict[str, Callable[[Any], Any]] = {
+        "crawl_date": lambda timestamp: datetime.datetime.fromisoformat(timestamp),
+        "publishing_date": lambda timestamp: datetime.datetime.fromisoformat(timestamp),
+    }
+
+    def __init__(self, *args, **kwargs):
+        json.JSONDecoder.__init__(self, object_hook=self.object_hook, *args, **kwargs)
+
+    def object_hook(self, obj_dict):
+        for key, transformation in self.transformations.items():
+            if serialized_value := obj_dict.get(key):
+                obj_dict[key] = transformation(serialized_value)
+        return obj_dict
+
+
+@dataclass
+class JSONFileWithExtractionDecoderEncoder(JSONFile[_T]):
+    """Custom JSONFile using default ExtractionEncoder/ExtractionDecoder"""
+
+    encoder: Type[json.JSONEncoder] = ExtractionEncoder
+    decoder: Type[json.JSONDecoder] = ExtractionDecoder
+
 
 @dataclass
 class HTMLTestFile:
+    """Utility class representing an HTML test case file with meta infos attached.
+
+    When used with default constructor, writing the file will automatically generate
+    a file name and path where to write the content and register meta information about
+    the file to the corresponding meta.info file.
+
+    When used with alternative constructor HTMLTestFile.load(), the meta information will
+    be read the info file automatically.
+    """
+
+    url: str
     content: str
-    crawl_date: Union[datetime.date, datetime.datetime]
+    crawl_date: datetime.datetime
     publisher: PublisherEnum
     encoding: str = "utf-8"
 
     @property
     def path(self) -> Path:
         return (
-            test_resource_path
-            / f"{type(self.publisher).__name__.lower()}"
+            generate_absolute_section_path(self.publisher)
             / f"{self.publisher.name}_{self.crawl_date.strftime('%Y_%m_%d')}.html.gz"
         )
 
+    @property
+    def meta_info(self) -> Optional[Dict[str, Any]]:
+        if meta_info := get_meta_info_file(self.publisher).load():
+            return meta_info[self.path.name]
+        return None
+
     @staticmethod
-    def _parse_path(path: Path) -> Tuple[PublisherEnum, datetime.date]:
+    def _parse_path(path: Path) -> PublisherEnum:
         assert path.name.endswith(".html.gz")
         file_name: str = path.name.rsplit(".html.gz")[0]
         publisher_name, date = file_name.split("_", maxsplit=1)
-        return PublisherCollection[publisher_name], datetime.datetime.strptime(date, "%Y_%m_%d").date()
+        return PublisherCollection[publisher_name]
 
     @classmethod
     def load(cls, path: Path, encoding: str = "utf-8") -> Self:
         """Loads an HTMLTestFile from the given path.
 
-        The file at the location is expected to be a gzipped HTML file. The
-        path syntax is defined as following:
-            test_resource_path / <country_code> / <publisher_name>_<year>_<month>_<day>.html.gz
-            with:
-                <country_code>:         2-letter code, i.e. us for United States
-                <publisher_name>:       the enum name, i.e. DW, FAZ, APNews
-                <year>_<month>_<day>:   parsed date object, as when using date.strftime('%Y_%m_%d')
-
+        See write() for more information about the path syntax.
 
         Args:
             path:       The HTMLTestFile location
@@ -61,12 +171,48 @@ class HTMLTestFile:
             compressed_file = html_file.read()
         decompressed_content = gzip.decompress(compressed_file)
         content = decompressed_content.decode(encoding=encoding)
-        publisher, date = cls._parse_path(path)
-        return cls(content=content, crawl_date=date, publisher=publisher, encoding=encoding)
+        publisher = cls._parse_path(path)
+        if not (meta_info := get_meta_info_file(publisher).load()):
+            raise ValueError(f"Missing meta info for file '{path.name}'")
+        return cls(content=content, publisher=publisher, encoding=encoding, **meta_info[path.name])
+
+    def _register_at_meta_info(self) -> None:
+        """Writes meta information about the file to the corresponding meta.info file.
+
+        Returns:
+            None
+        """
+        meta_info_file = get_meta_info_file(self.publisher)
+        meta_info = meta_info_file.load() or {}
+        meta_info[self.path.name] = {"url": self.url, "crawl_date": self.crawl_date}
+        meta_info_file.write(meta_info)
 
     def write(self) -> None:
+        """Writes the test file to an autogenerated path.
+
+        This function writes self.content to an autogenerated path and registers additional
+        meta information about the test file to the corresponding meta.info file.
+
+        You can find the corresponding meta.info file under::
+
+            test_resource_path / <country_code> / meta.info
+
+        The file path syntax is defined as following::
+
+            test_resource_path / <country_code> / <publisher_name>_<year>_<month>_<day>.html.gz
+
+        with:
+            | <country_code>: 2-letter code, e.g. us for United States were the publisher originates
+            | <publisher_name>: the enum name, e.g. DW, FAZ, APNews
+            | <year>_<month>_<day>: parsed date object, as when using date.strftime('%Y_%m_%d')
+
+        Returns:
+            None
+
+        """
         with open(self.path, "wb") as file:
             file.write(gzip.compress(bytes(self.content, self.encoding)))
+        self._register_at_meta_info()
 
 
 def load_html_test_file_mapping(publisher: PublisherEnum) -> Dict[Type[BaseParser], HTMLTestFile]:
@@ -81,19 +227,37 @@ def load_html_test_file_mapping(publisher: PublisherEnum) -> Dict[Type[BaseParse
     return html_mapping
 
 
+def generate_absolute_section_path(publisher: PublisherEnum) -> Path:
+    return test_resource_path / type(publisher).__name__.lower()
+
+
+def generate_meta_info_path(publisher: PublisherEnum) -> Path:
+    return generate_absolute_section_path(publisher) / "meta.info"
+
+
+def get_meta_info_file(publisher: PublisherEnum) -> JSONFile[Dict[str, Dict[str, Any]]]:
+    return JSONFileWithExtractionDecoderEncoder(generate_meta_info_path(publisher))
+
+
 def generate_parser_test_case_json_path(publisher: PublisherEnum) -> Path:
-    relative_file_path = Path(f"{type(publisher).__name__.lower()}/{publisher.name}.json")
-    return test_resource_path / relative_file_path
+    return generate_absolute_section_path(publisher) / f"{publisher.name}.json"
 
 
-def load_test_case_data(publisher: PublisherEnum) -> Dict[str, Dict[str, Dict[str, Any]]]:
-    absolute_path = generate_parser_test_case_json_path(publisher)
+def get_test_case_json(publisher: PublisherEnum) -> JSONFile[Dict[str, Dict[str, Any]]]:
+    return JSONFileWithExtractionDecoderEncoder(generate_parser_test_case_json_path(publisher))
 
-    with open(absolute_path, "r", encoding="utf-8") as file:
-        data = json.load(file)
 
-    if isinstance(data, dict):
-        return data
+def load_test_case_data(publisher: PublisherEnum) -> Dict[str, Dict[str, Any]]:
+    test_case_file = get_test_case_json(publisher)
+
+    if not (test_data := test_case_file.load()):
+        raise ValueError(
+            f"Test case (JSON) for parser '{type(publisher.parser).__name__}' is missing. "
+            f"Use 'python -m scripts.generate_parser_test_files --help' for more information"
+        )
+
+    if isinstance(test_data, dict):
+        return test_data
     else:
         raise ValueError(
             f"Received invalid JSON format for publisher {repr(publisher.name)}. "

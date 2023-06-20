@@ -1,18 +1,13 @@
 {
-    "V1": {
-        "meta": {
-            "url": "https://theintercept.com/2023/04/28/montana-trans-zooey-zephyr/",
-            "crawl_date": "2023-04-28 20:32:56.516898"
-        },
-        "content": {
-            "authors": [
-                "Ryan Devereaux"
-            ],
-            "title": "An Insider’s View of the Montana Legislature’s Attacks on Trans Rep. Zooey Zephyr",
-            "topics": [
-                "Justice",
-                "Politics"
-            ]
-        }
-    }
+  "V1": {
+    "authors": [
+      "Ryan Devereaux"
+    ],
+    "publishing_date": "2023-04-28 15:54:24+00:00",
+    "title": "An Insider’s View of the Montana Legislature’s Attacks on Trans Rep. Zooey Zephyr",
+    "topics": [
+      "Justice",
+      "Politics"
+    ]
+  }
 }
