@@ -403,6 +403,23 @@
     </tr>
     <tr>
       <td>
+        <code>OccupyDemocrats</code>
+      </td>
+      <td>
+        <div>Occupy Democrats</div>
+      </td>
+      <td>
+        <a href="https://occupydemocrats.com/">
+          <span>occupydemocrats.com</span>
+        </a>
+      </td>
+      <td>&#160;</td>
+      <td>
+        <code>description</code>
+      </td>
+    </tr>
+    <tr>
+      <td>
         <code>Reuters</code>
       </td>
       <td>
