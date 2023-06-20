@@ -3,7 +3,6 @@ from datetime import datetime
 from fundus.publishers.base_objects import PublisherEnum, PublisherSpec
 from fundus.scraping.filter import regex_filter
 from fundus.scraping.html import NewsMap, RSSFeed, Sitemap
-
 from .berliner_zeitung import BerlinerZeitungParser
 from .bild import BildParser
 from .die_welt import DieWeltParser
@@ -31,7 +30,8 @@ class DE(PublisherEnum):
             RSSFeed("https://www.welt.de/feeds/latest.rss"),
             Sitemap("https://www.welt.de/sitemaps/sitemap/sitemap.xml"),
             NewsMap("https://www.welt.de/sitemaps/newssitemap/newssitemap.xml"),
-        ],        url_filter=regex_filter("https://(?!www.welt.de)|/Anlegertipps-|/videos[0-9]{2}"),
+        ],
+        url_filter=regex_filter("/Anlegertipps-|/videos[0-9]{2}"),
         parser=DieWeltParser,
     )
 
@@ -99,7 +99,7 @@ class DE(PublisherEnum):
 
     DieZeit = PublisherSpec(
         name="Die Zeit",
-        domain="https://www.sueddeutsche.de/",
+        domain="https://www.zeit.de/",
         sources=[
             RSSFeed("https://newsfeed.zeit.de/news/index"),
             Sitemap("https://www.zeit.de/gsitemaps/index.xml"),
@@ -109,7 +109,7 @@ class DE(PublisherEnum):
         ],
         request_header={"user-agent": "Googlebot"},
         url_filter=regex_filter(
-            "/news/|/zett/|/angebote/|/kaenguru-comics/|/administratives/|/index(?!.)|/elbvertiefung-[0-9]{2}-[0-9]{2}"
+            "|/zett/|/angebote/|/kaenguru-comics/|/administratives/|/index(?!.)|/elbvertiefung-[0-9]{2}-[0-9]{2}"
         ),
         parser=DieZeitParser,
     )
@@ -121,8 +121,8 @@ class DE(PublisherEnum):
             RSSFeed("https://www.berliner-zeitung.de/feed.xml"),
             Sitemap("https://www.berliner-zeitung.de/sitemap.xml"),
             NewsMap("https://www.berliner-zeitung.de/news-sitemap.xml"),
-            url_filter = regex_filter("https://www.berliner-zeitung.de/en|/news/"),
         ],
+        url_filter=regex_filter("/news/"),
         parser=BerlinerZeitungParser,
     )
 
@@ -140,7 +140,6 @@ class DE(PublisherEnum):
             RSSFeed("https://rss.dw.com/xml/rss-de-all"),
             Sitemap("https://www.dw.com/de/article-sitemap.xml"),
             NewsMap("https://www.dw.com/de/news-sitemap.xml"),
-        url_filter = regex_filter("^(?:(?!/de/).)*$"),
         ],
         parser=DWParser,
     )
