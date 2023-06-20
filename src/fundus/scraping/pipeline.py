@@ -91,10 +91,14 @@ class Pipeline:
             Iterator[Article]: An iterator yielding objects of type Article.
         """
 
-        if url_filter:
-            for scraper in self.scrapers:
-                for source in scraper.sources:
+        response_cache: Set[str] = set()
+
+        for scraper in self.scrapers:
+            for source in scraper.sources:
+                if url_filter:
                     source.add_url_filter(url_filter=url_filter)
+                if only_unique:
+                    source.add_url_filter(url_filter=lambda url: url in response_cache)
 
         scrape_map = [
             scraper.scrape(
@@ -105,8 +109,6 @@ class Pipeline:
         ]
 
         loop = asyncio.get_event_loop()
-
-        response_cache: Set[str] = set()
 
         def article_gen() -> Iterator[Article]:
             interleave: AsyncIterator[Iterable[Optional[Article]]] = batched_async_interleave(*list(scrape_map))
@@ -120,9 +122,9 @@ class Pipeline:
                 basic_logger.debug(f"Batch took {batch_time} seconds")
                 if batch is not None:
                     for next_article in cast(Iterable[Article], filter(bool, batch)):
-                        if not only_unique or next_article.html.responded_url not in response_cache:
+                        if only_unique:
                             response_cache.add(next_article.html.responded_url)
-                            yield next_article
+                        yield next_article
                 else:
                     break
 
