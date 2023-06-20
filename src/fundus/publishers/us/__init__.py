@@ -1,12 +1,12 @@
 from fundus.publishers.base_objects import PublisherEnum, PublisherSpec
 from fundus.scraping.filter import inverse, regex_filter
 from fundus.scraping.html import NewsMap, RSSFeed, Sitemap
-from fundus.scraping.filter import regex_filter
 
 from .ap_news import APNewsParser
 from .cnbc import CNBCParser
 from .fox_news import FoxNewsParser
 from .free_beacon import FreeBeaconParser
+from .occupy_democrats import OccupyDemocratsParser
 from .reuters import ReutersParser
 from .the_gateway_pundit import TheGatewayPunditParser
 from .the_intercept import TheInterceptParser
@@ -14,7 +14,6 @@ from .the_nation_parser import TheNationParser
 from .the_new_yorker import TheNewYorkerParser
 from .washington_times_parser import WashingtonTimesParser
 from .world_truth import WorldTruthParser
-from .occupy_democrats import OccupyDemocratsParser
 
 
 class US(PublisherEnum):
