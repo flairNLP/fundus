@@ -40,8 +40,7 @@ class Article:
 
     @property
     def plaintext(self) -> Optional[str]:
-        body = self.body
-        return str(body) if body else None
+        return str(self.body) if self.body else None
 
     def __getattr__(self, item: object) -> Any:
         raise AttributeError(f"'{type(self).__name__}' object has no attribute '{item}'")
