@@ -1,31 +1,26 @@
 {
-    "V1": {
-        "meta": {
-            "url": "https://www.stern.de/wirtschaft/geld/epi-zahlungssystem--so-kann-europa-paypal--apple-pay-und-visa-schlagen-33420056.html?utm_campaign=alle-nachrichten&utm_medium=rss-feed&utm_source=standard",
-            "crawl_date": "2023-04-28 20:32:03.502152"
-        },
-        "content": {
-            "authors": [
-                "Laura Eßlinger"
-            ],
-            "title": "Statt Paypal & Co.: So könnte Europas neues Bezahlsystem die US-Konkurrenz schlagen",
-            "topics": [
-                "Europa",
-                "Apple",
-                "Zahlungssystem",
-                "PayPal",
-                "Bezahlsystem",
-                "Deutschland",
-                "EU",
-                "SEPA",
-                "Frankreich",
-                "Brühl",
-                "MasterCard Incorporated",
-                "Belgien",
-                "Handelsblatt",
-                "Unternehmensberatung",
-                "Universität Frankfurt"
-            ]
-        }
-    }
+  "V1": {
+    "authors": [
+      "Laura Eßlinger"
+    ],
+    "publishing_date": "2023-04-28 19:09:00+02:00",
+    "title": "Statt Paypal & Co.: So könnte Europas neues Bezahlsystem die US-Konkurrenz schlagen",
+    "topics": [
+      "Europa",
+      "Apple",
+      "Zahlungssystem",
+      "PayPal",
+      "Bezahlsystem",
+      "Deutschland",
+      "EU",
+      "SEPA",
+      "Frankreich",
+      "Brühl",
+      "MasterCard Incorporated",
+      "Belgien",
+      "Handelsblatt",
+      "Unternehmensberatung",
+      "Universität Frankfurt"
+    ]
+  }
 }

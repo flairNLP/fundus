@@ -1,19 +1,14 @@
 {
-    "V1": {
-        "meta": {
-            "url": "https://apnews.com/article/mexico-economy-growth-3cc842471fb9df42315d658d88c8403a",
-            "crawl_date": "2023-04-28 20:32:23.148171"
-        },
-        "content": {
-            "authors": [
-                "ociated Press"
-            ],
-            "title": "Mexico's economy grew 1.1% in 1st quarter, 3.8% year on year",
-            "topics": [
-                "Mexico",
-                "Mexico City",
-                "Latin America"
-            ]
-        }
-    }
+  "V1": {
+    "authors": [
+      "ociated Press"
+    ],
+    "publishing_date": "2023-04-28 17:40:08+00:00",
+    "title": "Mexico's economy grew 1.1% in 1st quarter, 3.8% year on year",
+    "topics": [
+      "Mexico",
+      "Mexico City",
+      "Latin America"
+    ]
+  }
 }
