@@ -49,9 +49,6 @@ class Article:
 
     @property
     def lang(self) -> Optional[str]:
-        start_time = time.time()
-        print(time.time() - start_time)
-
         language: Optional[str] = None
 
         if self.plaintext:
