@@ -2,7 +2,7 @@ from datetime import datetime
 
 from fundus.publishers.base_objects import PublisherEnum, PublisherSpec
 from fundus.scraping.filter import regex_filter
-from fundus.scraping.source import NewsMap, RSSFeed, Sitemap
+from fundus.scraping.html import NewsMap, RSSFeed, Sitemap
 
 from .berliner_zeitung import BerlinerZeitungParser
 from .bild import BildParser
@@ -20,6 +20,7 @@ from .stern import SternParser
 from .sz import SZParser
 from .tagesschau import TagesschauParser
 from .taz import TazParser
+from .waz import WAZParser
 
 
 # noinspection PyPep8Naming
@@ -32,6 +33,7 @@ class DE(PublisherEnum):
             Sitemap("https://www.welt.de/sitemaps/sitemap/sitemap.xml"),
             NewsMap("https://www.welt.de/sitemaps/newssitemap/newssitemap.xml"),
         ],
+        url_filter=regex_filter("/Anlegertipps-|/videos[0-9]{2}"),
         parser=DieWeltParser,
     )
 
@@ -99,7 +101,7 @@ class DE(PublisherEnum):
 
     DieZeit = PublisherSpec(
         name="Die Zeit",
-        domain="https://www.sueddeutsche.de/",
+        domain="https://www.zeit.de/",
         sources=[
             RSSFeed("https://newsfeed.zeit.de/news/index"),
             Sitemap("https://www.zeit.de/gsitemaps/index.xml"),
@@ -107,6 +109,10 @@ class DE(PublisherEnum):
                 f"https://www.zeit.de/gsitemaps/index.xml?date={datetime.now().strftime('%Y-%m-%d')}&unit=days&period=1"
             ),
         ],
+        request_header={"user-agent": "Googlebot"},
+        url_filter=regex_filter(
+            "|/zett/|/angebote/|/kaenguru-comics/|/administratives/|/index(?!.)|/elbvertiefung-[0-9]{2}-[0-9]{2}"
+        ),
         parser=DieZeitParser,
     )
 
@@ -118,6 +124,7 @@ class DE(PublisherEnum):
             Sitemap("https://www.berliner-zeitung.de/sitemap.xml"),
             NewsMap("https://www.berliner-zeitung.de/news-sitemap.xml"),
         ],
+        url_filter=regex_filter("/news/"),
         parser=BerlinerZeitungParser,
     )
 
@@ -175,4 +182,11 @@ class DE(PublisherEnum):
         domain="https://www.bild.de/",
         sources=[RSSFeed("https://www.bild.de/rssfeeds/vw-neu/vw-neu-32001674,view=rss2.bild.xml")],
         parser=BildParser,
+    )
+
+    WAZ = PublisherSpec(
+        name="Westdeutsche Allgemeine Zeitung (WAZ)",
+        domain="https://www.waz.de/",
+        sources=[NewsMap("https://www.waz.de/sitemaps/news.xml")],
+        parser=WAZParser,
     )
