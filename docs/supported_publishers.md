@@ -131,8 +131,8 @@
         <div>Die Zeit</div>
       </td>
       <td>
-        <a href="https://www.sueddeutsche.de/">
-          <span>www.sueddeutsche.de</span>
+        <a href="https://www.zeit.de/">
+          <span>www.zeit.de</span>
         </a>
       </td>
       <td>&#160;</td>
