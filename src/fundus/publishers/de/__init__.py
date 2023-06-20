@@ -20,6 +20,7 @@ from .stern import SternParser
 from .sz import SZParser
 from .tagesschau import TagesschauParser
 from .taz import TazParser
+from .waz import WAZParser
 
 
 # noinspection PyPep8Naming
@@ -181,4 +182,11 @@ class DE(PublisherEnum):
         domain="https://www.bild.de/",
         sources=[RSSFeed("https://www.bild.de/rssfeeds/vw-neu/vw-neu-32001674,view=rss2.bild.xml")],
         parser=BildParser,
+    )
+
+    WAZ = PublisherSpec(
+        name="Westdeutsche Allgemeine Zeitung (WAZ)",
+        domain="https://www.waz.de/",
+        sources=[NewsMap("https://www.waz.de/sitemaps/news.xml")],
+        parser=WAZParser,
     )
