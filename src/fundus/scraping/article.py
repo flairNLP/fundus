@@ -1,8 +1,11 @@
+import time
 from dataclasses import dataclass, field, fields
 from datetime import datetime
 from textwrap import TextWrapper, dedent
 from typing import Any, Dict, Iterator, List, Optional, Set, Tuple
 
+import langdetect
+import lxml.html
 import more_itertools
 from colorama import Fore, Style
 
@@ -42,6 +45,21 @@ class Article:
     def plaintext(self) -> Optional[str]:
         body = self.body
         return str(body) if body else None
+
+    @property
+    def lang(self) -> Optional[str]:
+        start_time = time.time()
+        print(time.time() - start_time)
+
+        language: Optional[str]
+        if self.plaintext:
+            language = langdetect.detect(self.plaintext)
+        else:
+            language = lxml.html.fromstring(self.html.content).get("lang")
+            if language and "-" in language:
+                language = language.split("-")[0]
+
+        return language
 
     def __getattr__(self, item: object) -> Any:
         raise AttributeError(f"'{type(self).__name__}' object has no attribute '{item}'")
