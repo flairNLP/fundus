@@ -1,5 +1,6 @@
 import pytest
 
+from fundus import NewsMap, RSSFeed, Sitemap
 from fundus.publishers.base_objects import (
     PublisherCollectionMeta,
     PublisherEnum,
@@ -35,11 +36,14 @@ class TestCollection:
                 b = publisher_enum_with_news_map
 
     def test_supports(self, publisher_enum_with_news_map):
-        assert publisher_enum_with_news_map.value.supports("news")
-        assert not publisher_enum_with_news_map.value.supports("sitemap")
-        assert not publisher_enum_with_news_map.value.supports("rss")
+        assert publisher_enum_with_news_map.value.supports([NewsMap])
+        assert not publisher_enum_with_news_map.value.supports([Sitemap])
+        assert not publisher_enum_with_news_map.value.supports([RSSFeed])
         with pytest.raises(ValueError):
             publisher_enum_with_news_map.value.supports("")
+
+        with pytest.raises(TypeError):
+            publisher_enum_with_news_map.value.supports([""])
 
     def test_search(self, publisher_enum_with_news_map, proxy_with_two_versions_and_different_attrs):
         parser_proxy = proxy_with_two_versions_and_different_attrs()
@@ -50,6 +54,6 @@ class TestCollection:
         assert len(publisher_enum_with_news_map.search(latest.names)) == 1
         assert len(publisher_enum_with_news_map.search(earlier.names)) == 0
 
-        with pytest.raises(AssertionError):
+        with pytest.raises(ValueError):
             publisher_enum_with_news_map.search([])
             publisher_enum_with_news_map.search()

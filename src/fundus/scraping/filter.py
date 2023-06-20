@@ -6,7 +6,7 @@ from typing_extensions import ParamSpec
 P = ParamSpec("P")
 
 
-def _not(filter_func: Callable[P, bool]) -> Callable[P, bool]:
+def inverse(filter_func: Callable[P, bool]) -> Callable[P, bool]:
     def __call__(*args: P.args, **kwargs: P.kwargs) -> bool:
         return not filter_func(*args, **kwargs)
 
