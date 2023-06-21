@@ -95,9 +95,7 @@
         </a>
       </td>
       <td>&#160;</td>
-      <td>
-        <code>id</code>
-      </td>
+      <td>&#160;</td>
     </tr>
     <tr>
       <td>
