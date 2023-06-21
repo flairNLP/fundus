@@ -6,6 +6,7 @@ from .ap_news import APNewsParser
 from .cnbc import CNBCParser
 from .fox_news import FoxNewsParser
 from .free_beacon import FreeBeaconParser
+from .occupy_democrats import OccupyDemocratsParser
 from .reuters import ReutersParser
 from .the_gateway_pundit import TheGatewayPunditParser
 from .the_intercept import TheInterceptParser
@@ -123,4 +124,11 @@ class US(PublisherEnum):
             NewsMap("https://www.reuters.com/arc/outboundfeeds/news-sitemap-index/?outputType=xml"),
         ],
         parser=ReutersParser,
+    )
+
+    OccupyDemocrats = PublisherSpec(
+        name="Occupy Democrats",
+        domain="https://occupydemocrats.com/",
+        sources=[Sitemap(url="https://occupydemocrats.com/sitemap.xml", sitemap_filter=regex_filter(r"-tax-|-misc"))],
+        parser=OccupyDemocratsParser,
     )
