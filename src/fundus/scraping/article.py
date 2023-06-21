@@ -1,11 +1,15 @@
+import time
 from dataclasses import dataclass, field, fields
 from datetime import datetime
 from textwrap import TextWrapper, dedent
 from typing import Any, Dict, Iterator, List, Optional, Set, Tuple
 
+import langdetect
+import lxml.html
 import more_itertools
 from colorama import Fore, Style
 
+from fundus.logging.logger import basic_logger
 from fundus.parser import ArticleBody
 from fundus.scraping.html import HTML
 
@@ -41,6 +45,24 @@ class Article:
     @property
     def plaintext(self) -> Optional[str]:
         return str(self.body) if self.body else None
+
+    @property
+    def lang(self) -> Optional[str]:
+        language: Optional[str] = None
+
+        if self.plaintext:
+            try:
+                language = langdetect.detect(self.plaintext)
+            except langdetect.LangDetectException:
+                basic_logger.debug(f"Unable to detect language for article '{self.html.url}'")
+
+        # use @lang attribute of <html> tag as fallback
+        if not language or language == langdetect.detector_factory.Detector.UNKNOWN_LANG:
+            language = lxml.html.fromstring(self.html.content).get("lang")
+            if language and "-" in language:
+                language = language.split("-")[0]
+
+        return language
 
     def __getattr__(self, item: object) -> Any:
         raise AttributeError(f"'{type(self).__name__}' object has no attribute '{item}'")
