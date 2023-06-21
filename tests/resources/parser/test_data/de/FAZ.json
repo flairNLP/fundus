@@ -1,23 +1,18 @@
 {
-    "V1": {
-        "meta": {
-            "url": "https://www.faz.net/aktuell/rhein-main/frankfurt/49-euro-ticket-pendler-zahlen-60-prozent-weniger-18857107.html",
-            "crawl_date": "2023-04-28 20:22:44.281765"
-        },
-        "content": {
-            "authors": [
-                "Ralf Euler"
-            ],
-            "title": "49-Euro-Ticket: Pendler zahlen 60 Prozent weniger",
-            "topics": [
-                "RMV",
-                "Rhein-Main-Verkehrsverbund",
-                "AfD",
-                "Deutsche Bahn",
-                "Deutschlandticket",
-                "Preissturz",
-                "Pendler"
-            ]
-        }
-    }
+  "V1": {
+    "authors": [
+      "Ralf Euler"
+    ],
+    "publishing_date": "2023-04-28 19:20:36",
+    "title": "49-Euro-Ticket: Pendler zahlen 60 Prozent weniger",
+    "topics": [
+      "RMV",
+      "Rhein-Main-Verkehrsverbund",
+      "AfD",
+      "Deutsche Bahn",
+      "Deutschlandticket",
+      "Preissturz",
+      "Pendler"
+    ]
+  }
 }

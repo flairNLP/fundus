@@ -5,8 +5,8 @@ import more_itertools
 from fundus.publishers.base_objects import PublisherEnum
 from fundus.scraping.article import Article
 from fundus.scraping.filter import ExtractionFilter
+from fundus.scraping.html import URLSource
 from fundus.scraping.scraper import Scraper
-from fundus.scraping.source import RSSSource, SitemapSource, Source
 from fundus.utils.validation import listify
 
 
@@ -50,7 +50,7 @@ class Crawler:
     def crawl(
         self,
         max_articles: Optional[int] = None,
-        restrict_sources_to: Optional[List[Literal["rss", "sitemap", "news"]]] = None,
+        restrict_sources_to: Optional[List[Type[URLSource]]] = None,
         error_handling: Literal["suppress", "catch", "raise"] = "suppress",
         only_complete: Union[bool, ExtractionFilter] = True,
         batch_size: int = 10,
@@ -69,23 +69,18 @@ class Crawler:
 
         scrapers: List[Scraper] = []
         for spec in self.publishers:
-            sources: List[Source] = []
-
-            if restrict_sources_to is None or "rss" in restrict_sources_to:
-                sources.extend([RSSSource(url, publisher=spec.publisher_name) for url in spec.rss_feeds])
-
-            if (restrict_sources_to is None or "news" in restrict_sources_to) and spec.news_map:
-                sources.append(SitemapSource(spec.news_map, publisher=spec.publisher_name))
-
-            if restrict_sources_to is None or "sitemap" in restrict_sources_to:
-                sources.extend([SitemapSource(sitemap, publisher=spec.publisher_name) for sitemap in spec.sitemaps])
+            if restrict_sources_to:
+                sources = more_itertools.flatten(
+                    spec.source_mapping[source_type] for source_type in restrict_sources_to
+                )
+            else:
+                sources = more_itertools.flatten(spec.source_mapping.values())
 
             if sources:
                 scrapers.append(
                     Scraper(
                         *sources,
                         parser=spec.parser,
-                        url_filter=spec.url_filter,
                     )
                 )
 
