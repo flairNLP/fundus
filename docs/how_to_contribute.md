@@ -16,18 +16,18 @@ And there are a lot of domains.
 
 # How to contribute
 
-Before contributing to Fundus you should check if you have fundus installed in `editable` mode and using
+Before contributing to Fundus you should check if you have Fundus installed in `editable` mode and using
 dev-requirements.
 If you haven't done this so far or aren't sure about you should
 
 1. Clone the repository
-2. Optional but recommended: Create a virtualenv or conda environment
+2. Optional but recommended: Create a virtual environment (.venv) or conda environment
 3. Navigate to the root of the repository
 4. Run pip install -e .[dev]
 
 ## How to add a Publisher
 
-Before contributing a parser, check the [**supported puvlishers**](supported_publishers.md) table if there is already
+Before contributing a parser, check the [**supported publishers**](supported_publishers.md) table if there is already
 support for your desired publisher.
 In the following, we will walk you through an example implementation of the [*Los Angeles
 Times*](https://www.latimes.com/) covering the best practices for adding a news source.
@@ -36,15 +36,15 @@ Times*](https://www.latimes.com/) covering the best practices for adding a news 
 
 Take a look at the file structure in `fundus/publishers`.
 Publishers covered are divided into country-specific sections representing the country a news source originates from.
-As abbreviations for countries we use the [**ALPHA-2**](https://www.iban.com/country-codes) codes described in ISO 3166.
+As abbreviations for countries, we use the [**ALPHA-2**](https://www.iban.com/country-codes) codes described in ISO 3166.
 For example:
 
 - `fundus/publishers/de/` for German publishers
 - `fundus/publishers/us/` for US publishers
 - ...
 
-Now create an empty file in the corresponding country section using the publishers name - or some kind of abbreviation -
-as file name.
+Now create an empty file in the corresponding country section using the publishers' name - or some kind of abbreviation -
+as the file name.
 For the Los Angeles Times, the correct country section is `fundus/publishers/us/`, since they are a newspaper based in
 the United States, with a filename like `la_times.py` or `los_angeles_times.py`.
 We will continue here with `la_times.py`.
@@ -61,7 +61,7 @@ class LATimesParser(ParserProxy):
 ```
 
 Internally, the `ParserProxy` maps crawl dates to specific versions (`V1`, `V2`, etc.) subclassing `BaseParser`.
-Since Fundus' parser are written by hand and in most cases bound to the layout they were written for, Fundus takes the
+Since Fundus' parsers are written by hand and in most cases bound to the layout they were written for, Fundus takes the
 extra proxying step to address changes to the layout.
 Don't worry about it now.
 To add a new parser you don't even have to know why we do this ;).
@@ -70,12 +70,12 @@ Just stick to the architecture shown above, and you're good to go.
 ### 2. Creating a Publisher Specification
 
 Add a new publisher specification for the publisher you want to cover.
-The publisher specification links information about the publisher, sources where to get the HTML to parse from and the
+The publisher specification links information about the publisher, sources where to get the HTML to parse from, and the
 corresponding parser to an object used by Fundus' `Crawler`.
 
 You can add a new entry to the country-specific `PublisherEnum` in the `__init__.py` of the country section you want to
 contribute to, i.e. `fundus/publishers/<country_code>/__init__.py`.
-For now, we only specify the publisher's name, domain and parser.
+For now, we only specify the publisher's name, domain, and parser.
 We will cover sources in the next step.
 
 For the Long Angeles Times, we add the following entry to `fundus/publishers/us/__init__.py`.
@@ -95,7 +95,7 @@ to `src/library/collection/__init__.py'`.
 ### 3. Adding Sources
 
 For your newly added publisher to work we first need to specify where to find articles - in the form of HTML - to parse.
-Fundus currently supports two methods to do so. Either by specifying an RSS Feed or a sitemap as source.
+Fundus currently supports two methods to do so. Either by specifying RSS Feeds or sitemaps as `URLSource`.
 You do so by adding the corresponding `URLSource` objects with the `sources` parameter to the `PublisherSpec`.
 
 There are three of them you can import from the `fundus.scraping.html` module.
@@ -110,13 +110,13 @@ preferred).
 For all these objects you have to set an entry point URL using the `url` parameter.
 `RSSFeed`'s will parse the entire feed given with `url`; `Sitemap` and `NewsMap` will step through the given sitemap
 recursively by default.
-You can alter this behaviour or reverse the order in which sitemaps are processed with the `recursive`
+You can alter this behavior or reverse the order in which sitemaps are processed with the `recursive`
 respectively `reverse` parameter.
 
-**_NOTE:_** If you wonder why you should reverse your sources from time to time, `URLSource`s should, if possible, yield
+**_NOTE:_** If you wonder why you should reverse your sources from time to time, `URLSource`'s should, if possible, yield
 URLs in descending order by publishing date.
 
-Fundus differentiates between two types of sitemaps: Those who almost or actually span the entire site (`Sitemap`) and
+Fundus differentiates between two types of sitemaps: Those that almost or actually span the entire site (`Sitemap`) and
 those that only reference recent articles (`NewsMap`), often called [**Google News
 Maps**](https://support.google.com/news/publisher-center/answer/9607107?hl=en&ref_topic=9606468).
 Usually, the publisher's sitemaps are located at the end of `<publisher_domain>/robots.txt` or can be found through a
@@ -135,7 +135,7 @@ NewsMap("https://www.latimes.com/news-sitemap.xml", reverse=True)
 will define a `NewsMap` yielding URLs in reversed order from https://www.latimes.com/news-sitemap.xml.
 
 For the Los Angeles Times, jumping to the end of their [robots.txt](https://www.latimes.com/robots.txt) gives us the
-following information.
+the following information.
 
 ```
 Sitemap: https://www.latimes.com/sitemap.xml
@@ -181,7 +181,7 @@ like the following.
 Judging by the `<sitemap>` tag used we deal with an index map here.
 Accessing one of the sitemaps,
 e.g. [https://www.latimes.com/news-sitemap-latest.xml](https://www.latimes.com/news-sitemap-latest.xml), should yield
-and XML file like the following.
+an XML file like the following.
 
 ``` xml
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
@@ -214,8 +214,8 @@ Thus `https://www.latimes.com/news-sitemap.xml` is a Google News Index Map.
 
 #### Finishing the Publisher Specification
 
-1. Sometimes spanning the entire site means spanning the entire sites, so sitemaps can include a lot of noice like
-   sitemaps pointing to a collection of tags or authores etc.
+1. Sometimes spanning the entire site means spanning the entire site, so sitemaps can include a lot of noise like
+   sitemaps pointing to a collection of tags or authors, etc.
    You can use the `sitemap_filter` parameter of `Sitemap` or `NewsMap` to prefilter these based on a regular
    expression.
 2. If your publisher requires to use custom request headers to work properly you can alter it by using
@@ -274,12 +274,12 @@ Since we didn't add any specific implementation to the parser yet, most entries 
 
 Bring your parser to life and fill it with attributes to parse.
 
-One important caveat to consider is the type of content a particular page is.
+One important caveat to consider is the type of content on a particular page.
 For example, various news outlets use live tickers, sites that display a podcast, or hub sites which are not articles
 but link to other pages.
 At the current state of this library, you do not need to worry about sites that are not articles.
 Your code should be able to extract the desired attributes from most pages of the publisher you are adding.
-Sites that do not contain the desired attributes will be filtered by the library on its own in a later stage of the
+Sites that do not contain the desired attributes will be filtered by the library on their own in a later stage of the
 pipeline.
 
 You can add attributes by decorating the methods of your parser with the `@attribute` decorator.
@@ -287,7 +287,7 @@ Attributes are expected to have a return value precisely specified in
 the [attribute guidelines](attribute_guidelines.md).
 
 For example, if we want our parser to extract article titles, we take
-the [attribute guidelines](attribute_guidelines.md) and look for a defined attribute which matches our expectations.
+the [attribute guidelines](attribute_guidelines.md) and look for a defined attribute that matches our expectations.
 In the guidelines, we find an attribute called `title`, which exactly describes what we want to extract and the expected
 return type.
 You must stick to the specified return types since they are enforced in our unit tests.
@@ -337,7 +337,7 @@ This is a title
 Fundus will automatically add your decorated attributes as instance attributes to the `article` object during parsing.
 Attributes defined in the [attribute guidelines](attribute_guidelines.md) are additionally defined
 as `dataclasses.fields`.
-If you want to add attributes which are not listed
+If you want to add attributes that are not listed
 
 #### Extracting Attributes from Precomputed
 
@@ -346,9 +346,9 @@ of the `Article`.
 These attributes are automatically extracted when present in the HTML and are accessible during parsing time within your
 parser's attributes.
 Often useful information about an article like the `title`, `author` or `topics` can be found in these two objects.
-You can access them inside your parser class via the `precomputed` attribute of `BaseParser`, which holds a dataclass of
+You can access them inside your parser class via the `precomputed` attribute of `BaseParser`, which holds a `dataclass` of
 type `Precomputed`.
-This object contains meta-information about the article you're currently parsing.
+This object contains meta information about the article you're currently parsing.
 
 ``` python
 @dataclass
@@ -384,8 +384,8 @@ def title(self) -> Optional[str]:
 
 Sometimes you have to get information directly from the DOM (in most cases the article text).
 To do so we suggest using selector languages like `XPath` or `CSSSelect`.
-Fundus uses the pythong pkg [**lxml**](https://lxml.de/) for those cases.
-If you usa a selector in any of your attributes (which will be most likely the case when extracting the actual article
+Fundus uses the python pkg [**lxml**](https://lxml.de/) for those cases.
+If you use a selector in any of your attributes (which will be most likely the case when extracting the actual article
 text) you should precompute the selector as a class variable using the `XPath` respectively `CSSSelector` classes of
 lxml.
 
@@ -396,7 +396,7 @@ highly recommend using them, especially when parsing the `ArticleBody`.
 
 #### Finishing the Parser
 
-Bringing all above together the Los Angeles Times now looks like this.
+Bringing all the above together the Los Angeles Times now looks like this.
 
 ``` python
 import datetime
@@ -457,7 +457,7 @@ Fundus-Article:
 ### 6. Generate unit tests
 
 To finish your newly added publisher you should add unit tests for the parser.
-We recommend you doing this with the provided [**script**](../scripts/generate_parser_test_files.py).
+We recommend you do this with the provided [**script**](../scripts/generate_parser_test_files.py).
 
 Simply run
 
@@ -467,7 +467,7 @@ python -m scripts.generate_parser_test_files -p <your-publisher>
 
 in your desired console.
 
-In our case we would run
+In our case, we would run
 
 ````shell
 python -m scripts.generate_parser_test_files -p LATimes
@@ -482,6 +482,6 @@ pytest
 ### 7. Opening a Pull Request
 
 1. Make sure you tested your parser using `pytest`.
-2. Run `black src`, `isort src` and `mypy src` with no errors.
+2. Run `black src`, `isort src`, and `mypy src` with no errors.
 3. Push and open a new PR
 4. Congratulation and thank you very much.
