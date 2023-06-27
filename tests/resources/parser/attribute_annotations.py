@@ -25,13 +25,12 @@ def _parse_attribute_annotations() -> Dict[str, object]:
     root = lxml.html.fromstring(attribute_guidelines)
     row_nodes: List[lxml.html.HtmlElement] = root.xpath("//table[@class='annotations']/tr[position() > 1]")
     rows: List[Tuple[str, ...]] = [tuple(child.text_content() for child in node.iterchildren()) for node in row_nodes]
-    assert rows and all(len(row) == 4 for row in rows), (
-        "The annotation guideline table is expected to have exactly four columns: "
-        "'Name', 'Description', 'Type' and 'Utility function'."
+    assert rows and all(len(row) == 3 for row in rows), (
+        "The annotation guideline table is expected to have exactly three columns: " "'Name', 'Description' and 'Type'."
     )
 
     local_ns: Dict[str, Any] = locals()
-    return {name: eval(annotation, globals(), local_ns) for name, _, annotation, _ in rows}
+    return {name: eval(annotation, globals(), local_ns) for name, _, annotation in rows}
 
 
 attribute_annotations_mapping: Dict[str, object] = _parse_attribute_annotations()

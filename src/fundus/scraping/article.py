@@ -1,3 +1,4 @@
+import time
 from dataclasses import dataclass, field, fields
 from datetime import datetime
 from textwrap import TextWrapper, dedent
@@ -83,8 +84,8 @@ class Article:
             f'\n- Title: "{wrapped_title}"'
             f'\n- Text:  "{wrapped_plaintext}"'
             f"\n- URL:    {self.html.url}"
-            f"\n- From:   {self.html.source.publisher}"
-            f'{" (" + self.publishing_date.strftime("%Y-%m-%d %H:%M") + ")" if self.publishing_date else ""}'
+            f"\n- From:   {self.html.source.publisher} "
+            f'({self.publishing_date.strftime("%Y-%m-%d %H:%M") if self.publishing_date else ""})'
         )
 
         return dedent(text)

@@ -1,7 +1,11 @@
 import pytest
 
 from fundus import NewsMap, RSSFeed, Sitemap
-from fundus.publishers.base_objects import PublisherCollectionMeta, PublisherEnum
+from fundus.publishers.base_objects import (
+    PublisherCollectionMeta,
+    PublisherEnum,
+    PublisherSpec,
+)
 
 
 class TestCollection:
@@ -19,6 +23,10 @@ class TestCollection:
 
             class PublisherEnumWithWrongValue(PublisherEnum):
                 value = "Enum"
+
+    def test_publisher_spec_without_source(self, empty_parser_proxy):
+        with pytest.raises(ValueError):
+            PublisherSpec(name="Test", domain="https//:test.com/", parser=empty_parser_proxy)
 
     def test_duplicate_publisher_names_in_same_collection(self, publisher_enum_with_news_map):
         with pytest.raises(AttributeError):
