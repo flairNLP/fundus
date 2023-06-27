@@ -14,9 +14,13 @@ class PublisherSpec:
     name: str
     domain: str
     parser: Type[ParserProxy]
-    sources: List[URLSource]
     url_filter: Optional[UrlFilter] = field(default=None)
+    sources: List[URLSource] = field(default_factory=list)
     request_header: Dict[str, str] = field(default_factory=dict)
+
+    def __post_init__(self):
+        if not self.sources:
+            raise ValueError("Publishers must at least define either an rss-feed, sitemap or news_map to crawl")
 
 
 @unique
