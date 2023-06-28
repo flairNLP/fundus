@@ -127,7 +127,7 @@ class TestParserProxy:
 
 # enforce test coverage for test parsing
 # because this is also used for the generate_parser_test_files script we export it here
-attrs_required_to_cover = {"title", "authors", "topics", "publishing_date"}
+attributes_required_to_cover = {"title", "authors", "topics", "publishing_date"}
 
 
 @pytest.mark.parametrize(
@@ -165,7 +165,7 @@ class TestParser:
 
             # test coverage
             supported_attrs = set(versioned_parser.attributes().names)
-            missing_attrs = attrs_required_to_cover & supported_attrs - set(version_data.keys())
+            missing_attrs = attributes_required_to_cover & supported_attrs - set(version_data.keys())
             assert not missing_attrs, f"Test JSON does not cover the following attribute(s): {missing_attrs}"
 
             assert (html := html_mapping.get(versioned_parser)), f"Missing test HTML for parser version {version_name}"

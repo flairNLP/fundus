@@ -9,7 +9,7 @@ from fundus import Crawler, PublisherCollection
 from fundus.logging.logger import basic_logger
 from fundus.publishers.base_objects import PublisherEnum
 from fundus.scraping.article import Article
-from tests.test_parser import attrs_required_to_cover
+from tests.test_parser import attributes_required_to_cover
 from tests.utility import HTMLTestFile, get_test_case_json, load_html_test_file_mapping
 
 
@@ -31,7 +31,7 @@ if __name__ == "__main__":
         "attributes",
         metavar="A",
         nargs="*",
-        help=f"the attributes which should be used to create test cases. default: {', '.join(attrs_required_to_cover)}",
+        help=f"the attributes which should be used to create test cases. default: {', '.join(attributes_required_to_cover)}",
     )
     parser.add_argument("-p", dest="publishers", metavar="P", nargs="+", help="only consider given publishers")
     group = parser.add_mutually_exclusive_group()
@@ -51,7 +51,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     # sort args.attributes for consistency
-    args.attributes = list(sorted(args.attributes)) or attrs_required_to_cover
+    args.attributes = list(sorted(args.attributes)) or attributes_required_to_cover
 
     basic_logger.setLevel(WARN)
 
