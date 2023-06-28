@@ -415,6 +415,7 @@ Fundus-Article:
 
 To finish your newly added publisher you should add unit tests for the parser.
 We recommend you do this with the provided [**script**](../scripts/generate_parser_test_files.py).
+
 First you should get known to the script.
 Just read through the manual provided with:
 
@@ -422,10 +423,18 @@ Just read through the manual provided with:
 python -m scripts.generate_parser_test_files -h
 ````
 
-In our case, we would run something like this
+Then in most cases it should be enough to simply run
 
 ````shell
-python -m scripts.generate_parser_test_files authors title topics publishing_date -p LATimes
+python -m scripts.generate_parser_test_files -p <your_publisher_class>
+````
+
+with <your_publisher_class> being the class name of the `PublisherEnum` your working on.
+
+In our case, we would run:
+
+````shell
+python -m scripts.generate_parser_test_files -p LATimes
 ````
 
 to generate a unit test for our parser.

@@ -125,6 +125,11 @@ class TestParserProxy:
         assert attrs1.names != attrs2.names
 
 
+# enforce test coverage for test parsing
+# because this is also used for the generate_parser_test_files script we export it here
+attrs_required_to_cover = {"title", "authors", "topics", "publishing_date"}
+
+
 @pytest.mark.parametrize(
     "publisher", list(PublisherCollection), ids=[publisher.name for publisher in PublisherCollection]
 )
@@ -141,9 +146,6 @@ class TestParser:
                     raise KeyError(f"Unsupported attribute '{attr.__name__}'")
 
     def test_parsing(self, publisher: PublisherEnum) -> None:
-        # enforce test coverage
-        attrs_required_to_cover = {"title", "authors", "topics", "publishing_date"}
-
         comparative_data = load_test_case_data(publisher)
         html_mapping = load_html_test_file_mapping(publisher)
 
