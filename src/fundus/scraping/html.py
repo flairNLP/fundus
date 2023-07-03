@@ -204,10 +204,7 @@ class HTMLSource:
         self.url_filter.append(url_filter)
 
     def _filter(self, url: str) -> bool:
-        for f in self.url_filter:
-            if f(url):
-                return True
-        return False
+        return any(url_filter(url) for url_filter in self.url_filter)
 
     async def async_fetch(self) -> AsyncIterator[HTML]:
         async for url in self.url_source:
