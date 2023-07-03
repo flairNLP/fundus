@@ -51,9 +51,8 @@ class Pipeline:
     def __init__(self, *scrapers: Scraper):
         """Basic pipeline to utilize scrapers.
 
-        Because scrapers are implemented asynchronous this pipeline handles
-        the necessary event loops and program logic to download articles
-        in batches asynchronously.
+        Because scrapers are implemented asynchronously, this pipeline handles the necessary event loops 
+        and program logic to download articles in batches asynchronously.
 
         Args:
             *scrapers (Scraper): The scrapers which should be used.
