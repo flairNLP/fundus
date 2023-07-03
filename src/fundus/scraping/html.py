@@ -200,7 +200,7 @@ class HTMLSource:
         if isinstance(url_source, URLSource):
             url_source.set_header(self.request_header)
 
-    def add_url_filter(self, url_filter: URLFilter):
+    def add_url_filter(self, url_filter: URLFilter) -> None:
         self.url_filter.append(url_filter)
 
     def _filter(self, url: str) -> bool:
