@@ -31,10 +31,10 @@ class Delay(Protocol):
     """Protocol to define crawl delays between batches."""
 
     def __call__(self) -> float:
-        """Yields back a float to specify crawler delay for current batch in seconds
+        """Yields a float specifying the minimum crawler delay for the current article batch in seconds.
 
-        This inludes the execuion time between batches.
-        The crawler will wait max(execution_time, delay)
+        The effective delay does include crawling execution time between batches,
+        i.e. the effective delay is max(execution_time, delay).
 
         Examples:
             >>> import random
