@@ -111,7 +111,9 @@ class Pipeline:
         event_loop = asyncio.get_event_loop()
 
         def article_gen() -> Iterator[Article]:
-            interleave: AsyncIterator[Iterable[Optional[Article]]] = batched_interleave_longest(*async_article_iterators)
+            interleave: AsyncIterator[Iterable[Optional[Article]]] = batched_interleave_longest(
+                *async_article_iterators
+            )
             while True:
                 start_time = time.time()
                 batch: Optional[Iterable[Optional[Article]]] = event_loop.run_until_complete(

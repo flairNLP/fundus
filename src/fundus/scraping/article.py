@@ -54,7 +54,7 @@ class Article:
             try:
                 language = langdetect.detect(self.plaintext)
             except langdetect.LangDetectException:
-                basic_logger.debug(f"Unable to detect language for article '{self.html.url}'")
+                basic_logger.debug(f"Unable to detect language for article '{self.html.responded_url}'")
 
         # use @lang attribute of <html> tag as fallback
         if not language or language == langdetect.detector_factory.Detector.UNKNOWN_LANG:

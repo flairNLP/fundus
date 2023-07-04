@@ -19,6 +19,7 @@ from typing import (
 import aiohttp
 import feedparser
 import lxml.html
+import validators
 from aiohttp.client_exceptions import ClientError
 from aiohttp.http_exceptions import HttpProcessingError
 from aiohttp.web_exceptions import HTTPError
@@ -74,10 +75,6 @@ class _ArchiveDecompressor:
         return list(self.archive_mapping.keys())
 
 
-def validate_url(url: str) -> bool:
-    return bool(re.match(r"https?://(?:[a-zA-Z]|\d|[$-_@.&+]|[!*(),]|%[\da-fA-F][\da-fA-F])+", url))
-
-
 @dataclass
 class URLSource(AsyncIterable[str], ABC):
     url: str
@@ -87,7 +84,7 @@ class URLSource(AsyncIterable[str], ABC):
     def __post_init__(self):
         if not self._request_header:
             self._request_header = _default_header
-        if not validate_url(self.url):
+        if not validators.url(self.url):
             raise ValueError(f"Invalid url '{self.url}'")
 
     def set_header(self, request_header: Dict[str, str]) -> None:
@@ -130,7 +127,7 @@ class Sitemap(URLSource):
     async def _get_pre_filtered_urls(self) -> AsyncIterator[str]:
         async def yield_recursive(sitemap_url: str) -> AsyncIterator[str]:
             session = await session_handler.get_session()
-            if not validate_url(sitemap_url):
+            if not validators.url(sitemap_url):
                 basic_logger.info(f"Skipped sitemap '{sitemap_url}' because the URL is malformed")
             async with session.get(url=sitemap_url, headers=self._request_header) as response:
                 try:
@@ -200,7 +197,7 @@ class HTMLSource:
 
     async def fetch(self) -> AsyncIterator[HTML]:
         async for url in self.url_source:
-            if not validate_url(url):
+            if not validators.url(url):
                 basic_logger.debug(f"Skipped requested URL '{url}' because the URL is malformed")
                 continue
 
@@ -211,7 +208,6 @@ class HTMLSource:
             session = await session_handler.get_session()
 
             async with session.get(url, headers=self.request_header) as response:
-
                 if self._filter(str(response.url)):
                     basic_logger.debug(f"Skipped responded URL '{url}' because of URL filter")
                     continue
