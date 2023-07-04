@@ -13,7 +13,7 @@ from typing import (
     Iterable,
     List,
     Optional,
-    Pattern,
+    Union,
 )
 
 import aiohttp
@@ -34,10 +34,10 @@ _default_header = {"user-agent": "Fundus"}
 
 class SessionHandler:
     def __init__(self):
-        self._factory = self._build_session_factory()
+        self._factory: AsyncIterator[aiohttp.ClientSession] = self._build_session_factory()
 
     @staticmethod
-    async def _build_session_factory():
+    async def _build_session_factory() -> AsyncIterator[aiohttp.ClientSession]:
         _connector = aiohttp.TCPConnector(limit=50)
         async_session = aiohttp.ClientSession(connector=_connector)
         while True:
@@ -46,7 +46,7 @@ class SessionHandler:
     async def get_session(self) -> aiohttp.ClientSession:
         return await async_next(self._factory)
 
-    async def close_current_session(self):
+    async def close_current_session(self) -> None:
         session = await self.get_session()
         basic_logger.debug(f"Close session {session}")
         await session.close()
@@ -74,20 +74,8 @@ class _ArchiveDecompressor:
         return list(self.archive_mapping.keys())
 
 
-_http_regex: Pattern[str] = re.compile(r"https?://(?:[a-zA-Z]|\d|[$-_@.&+]|[!*(),]|%[\da-fA-F][\da-fA-F])+")
-
-
 def validate_url(url: str) -> bool:
-    return bool(re.match(_http_regex, url))
-
-
-@dataclass
-class StaticSource(AsyncIterable[str]):
-    links: Iterable[str]
-
-    async def __aiter__(self) -> AsyncIterator[str]:
-        async for url in make_iterable_async(self.links):
-            yield url
+    return bool(re.match(r"https?://(?:[a-zA-Z]|\d|[$-_@.&+]|[!*(),]|%[\da-fA-F][\da-fA-F])+", url))
 
 
 @dataclass
@@ -140,32 +128,33 @@ class Sitemap(URLSource):
     _url_selector: ClassVar[XPath] = CSSSelector("url > loc")
 
     async def _get_pre_filtered_urls(self) -> AsyncIterator[str]:
-        async def yield_recursive(link: str) -> AsyncIterator[str]:
+        async def yield_recursive(sitemap_url: str) -> AsyncIterator[str]:
             session = await session_handler.get_session()
-            if not validate_url(link):
-                basic_logger.info(f"Skipped sitemap '{link}' because of invalid URL")
-            async with session.get(url=link, headers=self._request_header) as response:
+            if not validate_url(sitemap_url):
+                basic_logger.info(f"Skipped sitemap '{sitemap_url}' because of invalid URL")
+            async with session.get(url=sitemap_url, headers=self._request_header) as response:
                 try:
                     response.raise_for_status()
                 except (HTTPError, ClientError, HttpProcessingError) as error:
-                    basic_logger.warn(f"Warning! Couldn't reach sitemap '{link}' because of {error}")
+                    basic_logger.warning(f"Warning! Couldn't reach sitemap '{sitemap_url}' because of {error}")
                     return
                 content = await response.content.read()
                 if response.content_type in self._decompressor.supported_file_formats:
                     content = self._decompressor.decompress(content, response.content_type)
                 if not content:
-                    basic_logger.warn(f"Warning! Empty sitemap at '{link}'")
+                    basic_logger.warning(f"Warning! Empty sitemap at '{sitemap_url}'")
                     return
                 tree = lxml.html.fromstring(content)
                 urls = [node.text_content() for node in self._url_selector(tree)]
-                for new_link in reversed(urls) if self.reverse else urls:
-                    yield new_link
-                if self.recursive:
+                if urls:
+                    for new_url in reversed(urls) if self.reverse else urls:
+                        yield new_url
+                elif self.recursive:
                     sitemap_locs = [node.text_content() for node in self._sitemap_selector(tree)]
                     filtered_locs = list(filter(inverse(self.sitemap_filter), sitemap_locs))
                     for loc in reversed(filtered_locs) if self.reverse else filtered_locs:
-                        async for new_link in yield_recursive(loc):
-                            yield new_link
+                        async for new_url in yield_recursive(loc):
+                            yield new_url
 
         async for url in yield_recursive(self.url):
             yield url
@@ -188,12 +177,15 @@ class HTML:
 class HTMLSource:
     def __init__(
         self,
-        url_source: AsyncIterable[str],
+        url_source: Union[AsyncIterable[str], Iterable[str]],
         publisher: Optional[str],
         url_filter: Optional[URLFilter] = None,
         request_header: Optional[Dict[str, str]] = None,
     ):
-        self.url_source = url_source
+        if isinstance(url_source, AsyncIterable):
+            self.url_source = url_source
+        else:
+            self.url_source = make_iterable_async(url_source)
         self.publisher = publisher
         self.url_filter = [] if not url_filter else [url_filter]
         self.request_header = request_header or _default_header
@@ -206,10 +198,10 @@ class HTMLSource:
     def _filter(self, url: str) -> bool:
         return any(url_filter(url) for url_filter in self.url_filter)
 
-    async def async_fetch(self) -> AsyncIterator[HTML]:
+    async def fetch(self) -> AsyncIterator[HTML]:
         async for url in self.url_source:
             if not validate_url(url):
-                basic_logger.debug(f"Skipped requested URL '{url}' because of invalid URL")
+                basic_logger.debug(f"Skipped requested URL '{url}' because the URL is malformed")
                 continue
 
             if self._filter(url):

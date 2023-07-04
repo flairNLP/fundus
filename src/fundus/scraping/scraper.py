@@ -42,7 +42,7 @@ class Scraper:
                 return
 
         for html_source in self.sources:
-            async for html in html_source.async_fetch():
+            async for html in html_source.fetch():
                 try:
                     extraction = self.parser(html.crawl_date).parse(html.content, error_handling)
 

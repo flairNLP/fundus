@@ -39,9 +39,10 @@ class Delay(Protocol):
         Examples:
             >>> import random
             >>> delay: Delay = lambda: random.randint(1, 1000)/1000.
-            This will wait a random amount of milliseconds between batches.
+            Will use a random delay in [0, 1) seconds.
 
         Returns:
+            float: The delay time in seconds.
 
         """
         ...
@@ -51,7 +52,7 @@ class Pipeline:
     def __init__(self, *scrapers: Scraper):
         """Basic pipeline to utilize scrapers.
 
-        Because scrapers are implemented asynchronously, this pipeline handles the necessary event loops 
+        Because scrapers are implemented asynchronously, this pipeline handles the necessary event loops
         and program logic to download articles in batches asynchronously.
 
         Args:
@@ -99,7 +100,7 @@ class Pipeline:
                 if only_unique:
                     source.add_url_filter(url_filter=lambda url: url in response_cache)
 
-        scrape_map = [
+        async_article_iterators: List[AsyncIterator[Optional[Article]]] = [
             scraper.scrape(
                 error_handling=error_handling,
                 extraction_filter=extraction_filter,
@@ -107,17 +108,19 @@ class Pipeline:
             for scraper in self.scrapers
         ]
 
-        loop = asyncio.get_event_loop()
+        event_loop = asyncio.get_event_loop()
 
         def article_gen() -> Iterator[Article]:
-            interleave: AsyncIterator[Iterable[Optional[Article]]] = batched_async_interleave(*list(scrape_map))
+            interleave: AsyncIterator[Iterable[Optional[Article]]] = batched_async_interleave(*async_article_iterators)
             while True:
                 start_time = time.time()
-                batch: Optional[Iterable[Optional[Article]]] = loop.run_until_complete(async_next(interleave, None))
+                batch: Optional[Iterable[Optional[Article]]] = event_loop.run_until_complete(
+                    async_next(interleave, None)
+                )
                 batch_time = time.time() - start_time
                 if delay:
                     actual_delay = max(delay() - batch_time, 0.0)
-                    loop.run_until_complete(asyncio.sleep(actual_delay))
+                    event_loop.run_until_complete(asyncio.sleep(actual_delay))
                 basic_logger.debug(f"Batch took {batch_time} seconds")
                 if batch is not None:
                     for next_article in cast(Iterable[Article], filter(bool, batch)):
@@ -140,7 +143,7 @@ class Pipeline:
             yield from gen
 
         # close current aiohttp session
-        loop.run_until_complete(session_handler.close_current_session())
+        event_loop.run_until_complete(session_handler.close_current_session())
 
 
 class Crawler:
@@ -195,10 +198,9 @@ class Crawler:
                 protocol. If set to None, no delay will be used between batches. See Delay for more
                 information. Defaults to None.
             url_filter (Optional[URLFilter]): A callable object satisfying the URLFilter protocol to skip
-                urls during download. This filter applies on both requested and responded URL. Defaults to None.
-            only_unique (bool): If set to True only the articles yielded will be unique on the responded URL.
-                In this case the responded URL is the one linking directly to the article without redirects.
-                Defaults to True.
+                URLs during download. This filter applies on both requested and responded URL. Defaults to None.
+            only_unique (bool): If set to True, articles yielded will be unique on the responded URL.
+                Always returns the first encountered article. the Defaults to True.
 
         Returns:
             Iterator[Article]: An iterator yielding objects of type Article.
