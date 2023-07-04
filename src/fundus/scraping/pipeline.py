@@ -221,10 +221,10 @@ class Crawler:
 
         if isinstance(delay, float):
 
-            def _id(n: float) -> Delay:
-                return lambda: n
+            def constant_delay() -> float:
+                return delay  # type: ignore[return-value]
 
-            delay = _id(delay)
+            delay = constant_delay
 
         scrapers: List[Scraper] = []
         for spec in self.publishers:
