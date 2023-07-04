@@ -1,10 +1,12 @@
 from fundus.publishers.base_objects import PublisherEnum, PublisherSpec
+from fundus.scraping.filter import inverse, regex_filter
 from fundus.scraping.html import NewsMap, RSSFeed, Sitemap
 
 from .ap_news import APNewsParser
 from .cnbc import CNBCParser
 from .fox_news import FoxNewsParser
 from .free_beacon import FreeBeaconParser
+from .occupy_democrats import OccupyDemocratsParser
 from .reuters import ReutersParser
 from .the_gateway_pundit import TheGatewayPunditParser
 from .the_intercept import TheInterceptParser
@@ -19,7 +21,11 @@ class US(PublisherEnum):
         name="Associated Press News",
         domain="https://www.apnews.com/",
         sources=[
-            Sitemap("https://apnews.com/sitemap/sitemaps/sitemap_index.xml"),
+            Sitemap(
+                "https://apnews.com/sitemap/sitemaps/sitemap_index.xml",
+                sitemap_filter=inverse(regex_filter("article-sitemap")),
+                reverse=True,
+            ),
             NewsMap("https://apnews.com/sitemap/google-news-sitemap/sitemap_index.xml"),
         ],
         parser=APNewsParser,
@@ -35,7 +41,7 @@ class US(PublisherEnum):
     TheIntercept = PublisherSpec(
         name="The Intercept",
         domain="https://www.theintercept.com/",
-        sources=[Sitemap("https://theintercept.com/theintercept/sitemap/master/index/")],
+        sources=[RSSFeed("https://theintercept.com/feed/?rss")],
         parser=TheInterceptParser,
     )
 
@@ -43,7 +49,11 @@ class US(PublisherEnum):
         name="The Gateway Pundit",
         domain="https://www.thegatewaypundit.com/",
         sources=[
-            Sitemap("https://www.thegatewaypundit.com/sitemap_index.xml"),
+            Sitemap(
+                "https://www.thegatewaypundit.com/sitemap_index.xml",
+                sitemap_filter=inverse(regex_filter("post-sitemap")),
+                reverse=True,
+            ),
             NewsMap("https://www.thegatewaypundit.com/news-sitemap.xml"),
         ],
         parser=TheGatewayPunditParser,
@@ -53,7 +63,7 @@ class US(PublisherEnum):
         name="Fox News",
         domain="https://www.foxnews.com/",
         sources=[
-            Sitemap("https://www.foxnews.com/sitemap.xml"),
+            Sitemap("https://www.foxnews.com/sitemap.xml", sitemap_filter=inverse(regex_filter("type=articles"))),
             NewsMap("https://www.foxnews.com/sitemap.xml?type=news"),
         ],
         parser=FoxNewsParser,
@@ -63,7 +73,9 @@ class US(PublisherEnum):
         name="The Nation",
         domain="https://www.thenation.com/",
         sources=[
-            Sitemap("https://www.thenation.com/sitemap_index.xml"),
+            Sitemap(
+                "https://www.thenation.com/sitemap_index.xml",
+            ),
             NewsMap("https://www.thenation.com/news-sitemap.xml"),
         ],
         parser=TheNationParser,
@@ -112,4 +124,11 @@ class US(PublisherEnum):
             NewsMap("https://www.reuters.com/arc/outboundfeeds/news-sitemap-index/?outputType=xml"),
         ],
         parser=ReutersParser,
+    )
+
+    OccupyDemocrats = PublisherSpec(
+        name="Occupy Democrats",
+        domain="https://occupydemocrats.com/",
+        sources=[Sitemap(url="https://occupydemocrats.com/sitemap.xml", sitemap_filter=regex_filter(r"-tax-|-misc"))],
+        parser=OccupyDemocratsParser,
     )
