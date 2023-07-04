@@ -178,7 +178,7 @@ class Crawler:
         """Yields articles from initialized publishers
 
         Args:
-            max_articles (Optional[int]): Number of articles to retrieve. If there are fewer articles
+            max_articles (Optional[int]): Number of articles to crawl. If there are fewer articles
                 than max_articles the Iterator will stop before max_articles. If None, all retrievable
                 articles are returned. Defaults to None.
             restrict_sources_to (Optional[List[Literal["rss", "sitemap", "news"]]]): Let's you restrict
