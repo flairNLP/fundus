@@ -111,7 +111,7 @@ class DE(PublisherEnum):
         ],
         request_header={"user-agent": "Googlebot"},
         url_filter=regex_filter(
-            "|/zett/|/angebote/|/kaenguru-comics/|/administratives/|/index(?!.)|/elbvertiefung-[0-9]{2}-[0-9]{2}"
+            "/zett/|/angebote/|/kaenguru-comics/|/administratives/|/index(?!.)|/elbvertiefung-[0-9]{2}-[0-9]{2}"
         ),
         parser=DieZeitParser,
     )
