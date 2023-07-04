@@ -38,7 +38,7 @@ class Delay(Protocol):
 
         Examples:
             >>> import random
-            >>> delay: Delay = lambda: random.randint(1, 1000)/1000.
+            >>> delay: Delay = lambda: random.random()
             Will use a random delay in [0, 1) seconds.
 
         Returns:
@@ -198,7 +198,7 @@ class Crawler:
                 protocol. If set to None, no delay will be used between batches. See Delay for more
                 information. Defaults to None.
             url_filter (Optional[URLFilter]): A callable object satisfying the URLFilter protocol to skip
-                URLs during download. This filter applies on both requested and responded URL. Defaults to None.
+                URLs before download. This filter applies on both requested and responded URL. Defaults to None.
             only_unique (bool): If set to True, articles yielded will be unique on the responded URL.
                 Always returns the first encountered article. the Defaults to True.
 

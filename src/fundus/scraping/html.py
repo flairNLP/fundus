@@ -211,6 +211,11 @@ class HTMLSource:
             session = await session_handler.get_session()
 
             async with session.get(url, headers=self.request_header) as response:
+
+                if self._filter(str(response.url)):
+                    basic_logger.debug(f"Skipped responded URL '{url}' because of URL filter")
+                    continue
+
                 try:
                     html = await response.text()
                     response.raise_for_status()
@@ -221,10 +226,6 @@ class HTMLSource:
 
                 except Exception as error:
                     basic_logger.warn(f"Warning! Skipped  requested URL '{url}' because of an unexpected error {error}")
-                    continue
-
-                if self._filter(url):
-                    basic_logger.debug(f"Skipped responded URL '{url}' because of URL filter")
                     continue
 
                 if response.history:
