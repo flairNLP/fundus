@@ -33,7 +33,7 @@ async def async_next(iterator: AsyncIterator[_T], default: Union[_VT, _Sentinel]
             raise StopAsyncIteration
 
 
-async def batched_async_interleave(*iterators: AsyncIterator[_T]) -> AsyncIterator[Iterable[_T]]:
+async def batched_interleave_longest(*iterators: AsyncIterator[_T]) -> AsyncIterator[Iterable[_T]]:
     current_generators = list(iterators)
 
     class _Empty:

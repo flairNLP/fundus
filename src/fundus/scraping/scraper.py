@@ -23,6 +23,7 @@ class Scraper:
         error_handling: Literal["suppress", "catch", "raise"],
         extraction_filter: Optional[ExtractionFilter] = None,
     ) -> AsyncIterator[Optional[Article]]:
+        # TODO: add docstring; especially explain why returned Article is Optional
         if isinstance(extraction_filter, Requires):
             supported_attributes = set(
                 more_itertools.flatten(collection.names for collection in self.parser.attribute_mapping.values())

@@ -131,7 +131,7 @@ class Sitemap(URLSource):
         async def yield_recursive(sitemap_url: str) -> AsyncIterator[str]:
             session = await session_handler.get_session()
             if not validate_url(sitemap_url):
-                basic_logger.info(f"Skipped sitemap '{sitemap_url}' because of invalid URL")
+                basic_logger.info(f"Skipped sitemap '{sitemap_url}' because the URL is malformed")
             async with session.get(url=sitemap_url, headers=self._request_header) as response:
                 try:
                     response.raise_for_status()

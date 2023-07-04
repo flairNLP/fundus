@@ -23,7 +23,7 @@ from fundus.scraping.article import Article
 from fundus.scraping.filter import ExtractionFilter, URLFilter
 from fundus.scraping.html import URLSource, session_handler
 from fundus.scraping.scraper import Scraper
-from fundus.utils.more_async import async_next, batched_async_interleave
+from fundus.utils.more_async import async_next, batched_interleave_longest
 from fundus.utils.validation import listify
 
 
@@ -111,7 +111,7 @@ class Pipeline:
         event_loop = asyncio.get_event_loop()
 
         def article_gen() -> Iterator[Article]:
-            interleave: AsyncIterator[Iterable[Optional[Article]]] = batched_async_interleave(*async_article_iterators)
+            interleave: AsyncIterator[Iterable[Optional[Article]]] = batched_interleave_longest(*async_article_iterators)
             while True:
                 start_time = time.time()
                 batch: Optional[Iterable[Optional[Article]]] = event_loop.run_until_complete(
