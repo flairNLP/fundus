@@ -3,7 +3,6 @@ from datetime import datetime
 from fundus.publishers.base_objects import PublisherEnum, PublisherSpec
 from fundus.scraping.filter import regex_filter
 from fundus.scraping.html import NewsMap, RSSFeed, Sitemap
-
 from .berliner_zeitung import BerlinerZeitungParser
 from .bild import BildParser
 from .die_welt import DieWeltParser
@@ -111,7 +110,7 @@ class DE(PublisherEnum):
         ],
         request_header={"user-agent": "Googlebot"},
         url_filter=regex_filter(
-            "|/zett/|/angebote/|/kaenguru-comics/|/administratives/|/index(?!.)|/elbvertiefung-[0-9]{2}-[0-9]{2}"
+            "/zett/|/angebote/|/kaenguru-comics/|/administratives/|/index(?!.)|/elbvertiefung-[0-9]{2}-[0-9]{2}"
         ),
         parser=DieZeitParser,
     )
