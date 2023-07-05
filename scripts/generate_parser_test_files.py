@@ -6,7 +6,7 @@ from typing import List, Optional
 from tqdm import tqdm
 
 from fundus import Crawler, PublisherCollection
-from fundus.logging.logger import basic_logger
+from fundus.logging import basic_logger
 from fundus.publishers.base_objects import PublisherEnum
 from fundus.scraping.article import Article
 from tests.utility import HTMLTestFile, get_test_case_json, load_html_test_file_mapping
@@ -76,7 +76,7 @@ if __name__ == "__main__":
                     basic_logger.warn(f"Couldn't get article for {publisher.name}. Skipping")
                     continue
                 html = HTMLTestFile(
-                    url=article.html.url,
+                    url=article.html.responded_url,
                     content=article.html.content,
                     crawl_date=article.html.crawl_date,
                     publisher=publisher,
