@@ -1,0 +1,52 @@
+---
+name: Proposal
+description: Propose a concrete idea you want to contribute
+title: "[Proposal]: "
+labels: ["proposal"]
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to provide an idea to improve Fundus!
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem statement
+      description: What's the problem your proposed implementation is trying to solve?
+      placeholder: A clear and concise description of what the problem is. Ex. While working on [...] I stumbled upon this idea [...]
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Solution
+      description: Describe your solution.
+      placeholder: How does your proposed solution contribute to solving the described problem?
+    validations:
+      required: true
+
+  - type: textarea
+    id: draft
+    attributes:
+      label: Draft
+      description: A minimal draft of your idea.
+      placeholder: |
+        class AwesomeNewClass:
+          def method_that_saves_the_day(self): ...
+
+        def function_that_solves_everything(): ...
+      render : python
+    validations:
+      required: true
+
+  - type: textarea
+    id: questions
+    attributes:
+      label: Open Questions
+      description: Any open questions regarding your implementation you want to share?
+      placeholder: E.g. I'm still unsure about [...]
+    validations:
+      required: false
