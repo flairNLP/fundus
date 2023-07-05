@@ -13,7 +13,7 @@ def inverse(filter_func: Callable[P, bool]) -> Callable[P, bool]:
     return __call__
 
 
-class UrlFilter(Protocol):
+class URLFilter(Protocol):
     """Protocol to define filter used before article download.
 
     Filters satisfying this protocol should work inverse to build in filter(),
@@ -34,7 +34,7 @@ class UrlFilter(Protocol):
         ...
 
 
-def regex_filter(regex: str) -> UrlFilter:
+def regex_filter(regex: str) -> URLFilter:
     def url_filter(url: str) -> bool:
         return bool(re.search(regex, url))
 
