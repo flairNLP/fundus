@@ -31,8 +31,7 @@ In the following, we will walk you through an example implementation of the [*Lo
 ### 1. Creating a Parser Stub
 
 Take a look at the file structure in `fundus/publishers`.
-Publishers covered are divided into country-specific sections representing the country a news source originates from.
-As abbreviations for countries, we use the [**ALPHA-2**](https://www.iban.com/country-codes) codes described in ISO 3166.
+Fundus uses the [**ALPHA-2**](https://www.iban.com/country-codes) codes specified in ISO3166 to sort publishers into directories by country of origin.
 For example:
 
 - `fundus/publishers/de/` for German publishers
@@ -55,9 +54,6 @@ class LATimesParser(ParserProxy):
 
 Internally, the `ParserProxy` maps crawl dates to specific versions (`V1`, `V2`, etc.) subclassing `BaseParser`.
 Since Fundus' parsers are written by hand and in most cases bound to the layout they were written for, Fundus takes the extra proxying step to address changes to the layout.
-Don't worry about it now.
-To add a new parser you don't even have to know why Fundus does things this way.
-Just stick to the architecture shown above, and you're good to go.
 
 ### 2. Creating a Publisher Specification
 
@@ -84,10 +80,10 @@ If the country section for your publisher did not exist before step 1, please ad
 ### 3. Adding Sources
 
 For your newly added publisher to work we first need to specify where to find articles - in the form of HTML - to parse.
-Fundus currently supports two methods to do so. Either by specifying RSS Feeds or sitemaps as `URLSource`.
+Fundus currently supports this by specifying RSS Feeds or sitemaps as `URLSource`s.
 You do so by adding the corresponding `URLSource` objects with the `sources` parameter to the `PublisherSpec`.
 
-There are three of them you can import from the `fundus.scraping.html` module.
+Fundus provides the following types of `URLSource`s you can import from `fundus.scraping.html`.
 
 1. `RSSFeed` - specifying RSS feeds
 2. `Sitemap` - specifying sitemaps
@@ -192,7 +188,7 @@ Thus `https://www.latimes.com/news-sitemap.xml` is a Google News Index Map.
 
 #### Finishing the Publisher Specification
 
-1. Sometimes spanning the entire site means spanning the entire site, so sitemaps can include a lot of noise like sitemaps pointing to a collection of tags or authors, etc.
+1. Sometimes spanning the entire site means the corresponding sitemaps can include a lot of noise like maps pointing to a collection of tags or authors, etc.
    You can use the `sitemap_filter` parameter of `Sitemap` or `NewsMap` to prefilter these based on a regular expression.
 2. If your publisher requires to use custom request headers to work properly you can alter it by using the `request_header` parameter.
    The default is: `{"user_agent": "fundus"}`.
@@ -415,8 +411,7 @@ Fundus-Article:
 
 To finish your newly added publisher you should add unit tests for the parser.
 We recommend you do this with the provided [**script**](../scripts/generate_parser_test_files.py).
-First you should get known to the script.
-Just read through the manual provided with:
+To get started with this script, you may read the provided manual:
 
 ````shell
 python -m scripts.generate_parser_test_files -h

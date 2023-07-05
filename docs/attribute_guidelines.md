@@ -4,10 +4,14 @@ Consistency between publishers and parsers is a main goal, please report any cas
 document.
 If you want to contribute a parser to this library, please ensure that these attributes are named consistently.
 
-**_NOTE:_** There are certain utility functions to aid you with parsing which can be found
-under `fundus/parser/utility.py`.
+**_NOTE:_** There are certain utility functions to aid you with parsing.
+These can be found under `fundus/parser/utility.py`.
 We *highly* recommend using them.
-You can find the corresponding utility function in the following table.
+
+The following table lists Fundus' core attributes and includes the name of the corresponding utility function.
+Those attributes will be validated with unit tests when used.
+
+**_NOTE:_** If you want to bypass validation you can set the `validate` parameter of the `attribute` decorator to false.
 
 ## Attributes table
 
