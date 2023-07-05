@@ -1,0 +1,87 @@
+name: Bug Report
+description: Create a report to help us improve Fundus.
+title: "[Bug]: "
+labels: ["bug"]
+assignees: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this bug report!
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Describe the bug
+      description: Please describe the bug as concretely as possible.
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: How to reproduce
+      description: Steps to reproduce the behavior (e.g. Which publishers did you crawl? Which parameters did you use?).
+      placeholder: |
+        from fundus import Crawler, PublisherCollection
+        crawler = Crawler(...)
+        ...
+      render: python
+    validations:
+      required: true
+
+  - type: textarea
+    id: expectation
+    attributes:
+      label: Expected behavior.
+      description: A clear and concise description of what you expected to happen.
+    validations:
+      required: true
+
+  - type: textarea
+    id: error
+    attributes:
+      label: Logs and Stack traces
+      description: If applicable, paste any relevant logs or error messages, please don't cut off the stack trace.
+      placeholder: |
+        Traceback (most recent call last):
+        File "C:/Users/maxda/PycharmProjects/fundus/scratch.py", line 321, in <module>
+        source = HTMLSource()
+        TypeError: __init__() missing 2 required positional arguments: ...
+      render: stacktrace
+    validations:
+      required: false
+
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: Screenshots
+      description: If applicable, add screenshots to help explain your problem.
+      placeholder: If applicable, copy-paste an image here.
+    validations:
+      required: false
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional Context
+      description: Add anything worthy to add that wasn't mentioned yet.
+    validations:
+      required: false
+
+  - type: textarea
+      id: environment
+      attributes:
+        label: Environment
+        description: Please provide detailed information about the environment you're working on.
+        placeholder: |
+          OS: e.g. Microsoft Windows 10 Home 10.0.19045 Build 19045
+          Fundus branch/version: e.g. master
+          Python version: e.g. 3.8.x
+          
+          In addition, you could run `pip freeze` and copy-paste your installed package versions here.
+          aiohttp==3.8.4
+          aioitertools==0.11.0
+          aiosignal==1.3.1    
+          ...
+        render: markdown
