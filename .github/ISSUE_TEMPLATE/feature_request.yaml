@@ -1,4 +1,4 @@
-name: Feature request
+name: Feature Request
 description: Suggest an idea for this project
 title: "[Feature Request]: "
 labels: ["feature"]
@@ -7,7 +7,8 @@ body:
   - type: markdown
     attributes:
       value: |
-        Thanks for taking the time to to provide an idea to improve Fundus!
+        Thanks for taking the time to provide an idea to improve Fundus!
+
   - type: textarea
     id: problem
     attributes:
@@ -16,14 +17,16 @@ body:
       placeholder: A clear and concise description of what the problem is. Ex. I'm always frustrated when [...]
     validations:
       required: false
+
   - type: textarea
     id: solution
     attributes:
       label: Solution
-      description: Describe the solution you'd like
+      description: Describe the solution you'd like to see implemented.
       placeholder: How should your problem ideally be solved?
     validations:
       required: true
+
   - type: textarea
     id: context
     attributes:
