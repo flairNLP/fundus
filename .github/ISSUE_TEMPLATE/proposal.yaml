@@ -1,3 +1,4 @@
+---
 name: Proposal
 description: Propose a concrete idea you want to contribute
 title: "[Proposal]: "
@@ -35,17 +36,17 @@ body:
       placeholder: |
         class AwesomeNewClass:
           def method_that_saves_the_day(self): ...
-        
+
         def function_that_solves_everything(): ...
-      render: python
+      render : python
     validations:
       required: true
 
   - type: textarea
-      id: questions
-      attributes:
-        label: Open Questions
-        description: Any open questions regarding your implementation you want to share?
-        placeholder: E.g. I'm still unsure about [...]
-      validations:
-        required: false
+    id: questions
+    attributes:
+      label: Open Questions
+      description: Any open questions regarding your implementation you want to share?
+      placeholder: E.g. I'm still unsure about [...]
+    validations:
+      required: false
