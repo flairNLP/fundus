@@ -188,7 +188,7 @@ Thus `https://www.latimes.com/news-sitemap.xml` is a Google News Index Map.
 
 #### Finishing the Publisher Specification
 
-1. Sometimes spanning the entire site means the corresponding sitemaps can include a lot of noise like maps pointing to a collection of tags or authors, etc.
+1. Sometimes sitemaps can include a lot of noise like maps pointing to a collection of tags or authors, etc.
    You can use the `sitemap_filter` parameter of `Sitemap` or `NewsMap` to prefilter these based on a regular expression.
 2. If your publisher requires to use custom request headers to work properly you can alter it by using the `request_header` parameter.
    The default is: `{"user_agent": "fundus"}`.
@@ -198,11 +198,12 @@ Bringing all of this section together our specification for the LA Times looks l
 
 ``` python
 class US(PublisherEnum):
-    LosAngelesTimes = PublisherSpec(
+    LATimes = PublisherSpec(
+        name="Los Angeles Times",
         domain="https://www.latimes.com/",
-        sitemaps=["https://www.latimes.com/sitemap.xml"],
-        news_map="https://www.latimes.com/news-sitemap.xml",
-        parser=LosAngelesTimesParser,
+        sources=[Sitemap("https://www.latimes.com/sitemap.xml"), 
+                 NewsMap("https://www.latimes.com/news-sitemap.xml")],
+        parser=LATimesParser,
     )
 ```
 
