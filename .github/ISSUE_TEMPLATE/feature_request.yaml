@@ -16,7 +16,7 @@ body:
       description: Is your feature/enhancement request related to a problem? Please describe.
       placeholder: A clear and concise description of what the problem is. Ex. I'm always frustrated when [...]
     validations:
-      required: false
+      required: true
 
   - type: textarea
     id: solution
