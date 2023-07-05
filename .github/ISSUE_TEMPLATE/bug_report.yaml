@@ -70,15 +70,15 @@ body:
       required: false
 
   - type: textarea
-      id: environment
-      attributes:
+    id: environment
+    attributes:
         label: Environment
         description: Please provide detailed information about the environment you're working on.
         placeholder: |
           OS: e.g. Microsoft Windows 10 Home 10.0.19045 Build 19045
           Fundus branch/version: e.g. master
           Python version: e.g. 3.8.x
-          
+
           In addition, you could run `pip freeze` and copy-paste your installed package versions here.
           aiohttp==3.8.4
           aioitertools==0.11.0
