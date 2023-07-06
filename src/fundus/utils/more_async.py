@@ -1,5 +1,5 @@
 import asyncio
-from typing import AsyncIterator, Iterable, TypeVar, Union, overload, Tuple
+from typing import AsyncIterator, Iterable, Tuple, TypeVar, Union, overload
 
 _T = TypeVar("_T")
 _VT = TypeVar("_VT")
