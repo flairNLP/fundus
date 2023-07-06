@@ -1,5 +1,5 @@
 import asyncio
-from typing import AsyncIterator, Iterable, TypeVar, Union, overload
+from typing import AsyncIterator, Iterable, TypeVar, Union, overload, Tuple
 
 _T = TypeVar("_T")
 _VT = TypeVar("_VT")
@@ -33,7 +33,7 @@ async def async_next(iterator: AsyncIterator[_T], default: Union[_VT, _Sentinel]
             raise StopAsyncIteration
 
 
-async def batched_interleave_longest(*iterators: AsyncIterator[_T]) -> AsyncIterator[Iterable[_T]]:
+async def zip_longest(*iterators: AsyncIterator[_T]) -> AsyncIterator[Tuple[_T, ...]]:
     current_generators = list(iterators)
 
     class _Empty:
@@ -44,14 +44,16 @@ async def batched_interleave_longest(*iterators: AsyncIterator[_T]) -> AsyncIter
         batch = [async_next(generator, _Empty(generator)) for generator in current_generators]
         results = []
         for coro in asyncio.as_completed(batch):
-            result = await coro
+            result: Union[_T, _Empty, BaseException] = await coro
             if isinstance(result, _Empty):
                 current_generators.remove(result.reference)
+            elif isinstance(result, BaseException):
+                raise result
             else:
                 results.append(result)
         if not results:
             break
-        yield iter(results)
+        yield tuple(results)
 
 
 async def make_iterable_async(iterable: Iterable[_T]) -> AsyncIterator[_T]:
