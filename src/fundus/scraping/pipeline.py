@@ -201,17 +201,17 @@ class Crawler(BaseCrawler):
         if not publishers:
             raise ValueError("param <publishers> of <Crawler.__init__> has to be non empty")
         nested_publisher = [listify(publisher) for publisher in publishers]
-        self.publishers: Set[PublisherEnum] = set(more_itertools.flatten(nested_publisher))
+        flat_publishers: Set[PublisherEnum] = set(more_itertools.flatten(nested_publisher))
 
         # build scraper
         scrapers: List[Scraper] = []
-        for spec in self.publishers:
+        for spec in flat_publishers:
             if restrict_sources_to:
-                sources = more_itertools.flatten(
-                    spec.source_mapping[source_type] for source_type in restrict_sources_to
+                sources = tuple(
+                    more_itertools.flatten(spec.source_mapping[source_type] for source_type in restrict_sources_to)
                 )
             else:
-                sources = more_itertools.flatten(spec.source_mapping.values())
+                sources = tuple(more_itertools.flatten(spec.source_mapping.values()))
 
             if sources:
                 scrapers.append(
