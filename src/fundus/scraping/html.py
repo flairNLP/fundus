@@ -1,5 +1,6 @@
 import gzip
-import re
+import time
+import types
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from datetime import datetime
@@ -39,8 +40,29 @@ class SessionHandler:
 
     @staticmethod
     async def _build_session_factory() -> AsyncIterator[aiohttp.ClientSession]:
+        timings: Dict[Optional[str], float] = dict()
+
+        async def on_request_start(
+            session: aiohttp.ClientSession, context: types.SimpleNamespace, params: aiohttp.TraceRequestStartParams
+        ):
+            timings[params.url.host] = time.time()
+
+        async def on_request_end(
+            session: aiohttp.ClientSession, context: types.SimpleNamespace, params: aiohttp.TraceRequestEndParams
+        ):
+            assert params.url.host
+            history = params.response.history
+            basic_logger.debug(
+                f"({params.response.status}) <{params.method} {params.url!r}> "
+                f"in {time.time() - timings[params.url.host if not history else history[0].url.host]}"
+            )
+
+        trace_config = aiohttp.TraceConfig()
+        trace_config.on_request_start.append(on_request_start)
+        trace_config.on_request_end.append(on_request_end)
+
         _connector = aiohttp.TCPConnector(limit=50)
-        async_session = aiohttp.ClientSession(connector=_connector)
+        async_session = aiohttp.ClientSession(connector=_connector, trace_configs=[trace_config])
         while True:
             yield async_session
 
@@ -207,30 +229,29 @@ class HTMLSource:
 
             session = await session_handler.get_session()
 
-            async with session.get(url, headers=self.request_header) as response:
-                if self._filter(str(response.url)):
-                    basic_logger.debug(f"Skipped responded URL '{url}' because of URL filter")
-                    continue
-
-                try:
+            try:
+                async with session.get(url, headers=self.request_header) as response:
+                    if self._filter(str(response.url)):
+                        basic_logger.debug(f"Skipped responded URL '{url}' because of URL filter")
+                        continue
                     html = await response.text()
                     response.raise_for_status()
 
-                except (HTTPError, ClientError, HttpProcessingError, UnicodeError) as error:
-                    basic_logger.info(f"Skipped requested URL '{url}' because of '{error}'")
-                    continue
+            except (HTTPError, ClientError, HttpProcessingError, UnicodeError) as error:
+                basic_logger.info(f"Skipped requested URL '{url}' because of '{error}'")
+                continue
 
-                except Exception as error:
-                    basic_logger.warn(f"Warning! Skipped  requested URL '{url}' because of an unexpected error {error}")
-                    continue
+            except Exception as error:
+                basic_logger.warn(f"Warning! Skipped  requested URL '{url}' because of an unexpected error {error}")
+                continue
 
-                if response.history:
-                    basic_logger.debug(f"Got redirected {len(response.history)} time(s) from {url} -> {response.url}")
+            if response.history:
+                basic_logger.debug(f"Got redirected {len(response.history)} time(s) from {url} -> {response.url}")
 
-                yield HTML(
-                    requested_url=url,
-                    responded_url=str(response.url),
-                    content=html,
-                    crawl_date=datetime.now(),
-                    source=self,
-                )
+            yield HTML(
+                requested_url=url,
+                responded_url=str(response.url),
+                content=html,
+                crawl_date=datetime.now(),
+                source=self,
+            )
