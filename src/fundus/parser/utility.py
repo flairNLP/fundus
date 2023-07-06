@@ -92,6 +92,10 @@ def extract_article_body_with_selector(
 
     striped_nodes = [node for node in nodes if node.striped()]
 
+    if not striped_nodes:
+        # return empty body if no text is present
+        return ArticleBody(TextSequence([]), [])
+
     instructions = more_itertools.split_when(striped_nodes, pred=lambda x, y: type(x) != type(y))
 
     if not summary_nodes:

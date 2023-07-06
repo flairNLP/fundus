@@ -64,7 +64,7 @@ class US(PublisherEnum):
         name="Fox News",
         domain="https://www.foxnews.com/",
         sources=[
-            Sitemap(" https://www.foxnews.com/sitemap.xml", sitemap_filter=inverse(regex_filter("type=articles"))),
+            Sitemap("https://www.foxnews.com/sitemap.xml", sitemap_filter=inverse(regex_filter("type=articles"))),
             NewsMap("https://www.foxnews.com/sitemap.xml?type=news"),
         ],
         parser=FoxNewsParser,

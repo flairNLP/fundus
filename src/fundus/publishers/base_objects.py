@@ -4,7 +4,7 @@ from enum import Enum, EnumMeta, unique
 from typing import Any, Dict, Iterator, List, Optional, Type
 
 from fundus.parser.base_parser import ParserProxy
-from fundus.scraping.filter import UrlFilter
+from fundus.scraping.filter import URLFilter
 from fundus.scraping.html import HTMLSource, NewsMap, RSSFeed, Sitemap, URLSource
 from fundus.utils.iteration import iterate_all_subclasses
 
@@ -15,7 +15,7 @@ class PublisherSpec:
     domain: str
     parser: Type[ParserProxy]
     sources: List[URLSource]
-    url_filter: Optional[UrlFilter] = field(default=None)
+    url_filter: Optional[URLFilter] = field(default=None)
     request_header: Dict[str, str] = field(default_factory=dict)
 
 
