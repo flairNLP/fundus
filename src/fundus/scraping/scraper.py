@@ -49,7 +49,7 @@ class Scraper:
 
                 except Exception as err:
                     if error_handling == "raise":
-                        error_message = f"Run into an error processing article '{html.requested_url}'"
+                        error_message = f"Run into an error processing article {repr(html.requested_url)}"
                         basic_logger.error(error_message)
                         err.args = (str(err) + "\n\n" + error_message,)
                         raise err
@@ -60,10 +60,10 @@ class Scraper:
                         basic_logger.info(f"Skipped article at '{html.requested_url}' because of: {err!r}")
                         continue
                     else:
-                        raise ValueError(f"Unknown value '{error_handling}' for parameter <error_handling>'")
+                        raise ValueError(f"Unknown value {repr(error_handling)} for parameter <error_handling>")
 
                 if extraction_filter and extraction_filter(extraction):
-                    basic_logger.debug(f"Skipped article at '{html.requested_url}' because of extraction filter")
+                    basic_logger.debug(f"Skipped article at {repr(html.requested_url)} because of extraction filter")
                     yield None
                 else:
                     article = Article.from_extracted(html=html, extracted=extraction)
