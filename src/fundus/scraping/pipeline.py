@@ -21,7 +21,7 @@ from fundus.logging import basic_logger
 from fundus.publishers.base_objects import PublisherEnum
 from fundus.scraping.article import Article
 from fundus.scraping.filter import ExtractionFilter, URLFilter
-from fundus.scraping.html import URLSource
+from fundus.scraping.html import URLSource, session_handler
 from fundus.scraping.scraper import Scraper
 from fundus.utils.more_async import async_next
 from fundus.utils.more_async import zip_longest as async_zip_longest
@@ -152,8 +152,12 @@ class BaseCrawler:
                 start_time = time.time()
 
         i: int = 0
+
         if max_articles is None:
             max_articles = -1
+        elif max_articles == 0:
+            return
+
         async for article in _async_article_interleave_longest():
             if i == max_articles:
                 break
@@ -208,11 +212,18 @@ class BaseCrawler:
 
         event_loop = asyncio.new_event_loop()
 
-        while True:
-            if nxt := event_loop.run_until_complete(async_next(async_article_iter, None)):
-                yield nxt
-            else:
-                break
+        try:
+            while True:
+                if nxt := event_loop.run_until_complete(async_next(async_article_iter, None)):
+                    yield nxt
+                else:
+                    break
+        except Exception as error:
+            raise error
+        finally:
+            event_loop.run_until_complete(session_handler.close_current_session())
+            event_loop.run_until_complete(event_loop.shutdown_asyncgens())
+            event_loop.close()
 
 
 class Crawler(BaseCrawler):

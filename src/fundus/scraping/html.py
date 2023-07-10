@@ -35,11 +35,30 @@ _default_header = {"user-agent": "Fundus"}
 
 
 class SessionHandler:
+    """Object for handling  project global aiohttp.ClientSessions
+
+    The session life cycle consists of three steps which can be repeated indefinitely:
+    Build, Supply, Teardown.
+    Initially there is no session build within the session handler. When a session is requested
+    with get_Session() either a new one is created with _session_factory() or an existing
+    one returned. Every subsequent call to get_session() will return the same aiohttp.ClientSession
+    object. If close_current_session() is called, the current session will be tear-downed and
+    the next call to get_session() will build a new session.
+    """
+
     def __init__(self):
-        self._factory: AsyncIterator[aiohttp.ClientSession] = self._build_session_factory()
+        self._session: Optional[aiohttp.ClientSession] = None
 
     @staticmethod
-    async def _build_session_factory() -> AsyncIterator[aiohttp.ClientSession]:
+    async def _session_factory() -> aiohttp.ClientSession:
+        """Builds a new ClientSession
+
+        This returns a new client session build from pre-defined configurations
+        and trace configs set. These trace configs are: on_request_start, on_request_end
+
+        Returns:
+            An new ClientSession
+        """
         timings: Dict[Optional[str], float] = dict()
 
         async def on_request_start(
@@ -63,17 +82,32 @@ class SessionHandler:
 
         _connector = aiohttp.TCPConnector(limit=50)
         async_session = aiohttp.ClientSession(connector=_connector, trace_configs=[trace_config])
-        while True:
-            yield async_session
+        return async_session
 
     async def get_session(self) -> aiohttp.ClientSession:
-        return await async_next(self._factory)
+        """Requests the current build session
+
+        If called for the first time or after close_current_session was called,
+        this function will build a new session. Every subsequent call will return
+        the same session object until the session is closed with close_current_session().
+
+        Returns:
+            aiohttp.ClientSession: The current build session
+        """
+        if not self._session:
+            self._session = await self._session_factory()
+        return self._session
 
     async def close_current_session(self) -> None:
+        """Tears down the current build session
+
+        Returns:
+            None
+        """
         session = await self.get_session()
         basic_logger.debug(f"Close session {session}")
         await session.close()
-        self._factory = self._build_session_factory()
+        self._session = None
 
 
 session_handler = SessionHandler()
