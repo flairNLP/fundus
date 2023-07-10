@@ -29,7 +29,7 @@ from lxml.etree import XPath
 
 from fundus.logging import basic_logger
 from fundus.scraping.filter import URLFilter, inverse
-from fundus.utils.more_async import async_next, make_iterable_async
+from fundus.utils.more_async import make_iterable_async
 
 _default_header = {"user-agent": "Fundus"}
 
@@ -240,24 +240,23 @@ class HTMLSource:
         else:
             self.url_source = make_iterable_async(url_source)
         self.publisher = publisher
-        self.url_filter = [] if not url_filter else [url_filter]
+        self.url_filter = url_filter
         self.request_header = request_header or _default_header
         if isinstance(url_source, URLSource):
             url_source.set_header(self.request_header)
 
-    def add_url_filter(self, url_filter: URLFilter) -> None:
-        self.url_filter.append(url_filter)
+    async def fetch(self, url_filter: Optional[URLFilter] = None) -> AsyncIterator[HTML]:
+        combined_filters = ([self.url_filter] if self.url_filter else []) + ([url_filter] if url_filter else [])
 
-    def _filter(self, url: str) -> bool:
-        return any(url_filter(url) for url_filter in self.url_filter)
+        def filter_url(u: str) -> bool:
+            return any(f(u) for f in combined_filters)
 
-    async def fetch(self) -> AsyncIterator[HTML]:
         async for url in self.url_source:
             if not validators.url(url):
                 basic_logger.debug(f"Skipped requested URL '{url}' because the URL is malformed")
                 continue
 
-            if self._filter(url):
+            if filter_url(url):
                 basic_logger.debug(f"Skipped requested URL '{url}' because of URL filter")
                 continue
 
@@ -265,8 +264,8 @@ class HTMLSource:
 
             try:
                 async with session.get(url, headers=self.request_header) as response:
-                    if self._filter(str(response.url)):
-                        basic_logger.debug(f"Skipped responded URL '{url}' because of URL filter")
+                    if filter_url(str(response.url)):
+                        basic_logger.debug(f"Skipped responded URL '{str(response.url)}' because of URL filter")
                         continue
                     html = await response.text()
                     response.raise_for_status()
