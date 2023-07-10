@@ -1,5 +1,5 @@
-import os
 import pathlib
+import sys
 
 from fundus.logging import basic_logger
 from fundus.publishers import PublisherCollection
@@ -14,7 +14,7 @@ __all__ = ["Crawler", "BaseCrawler", "PublisherCollection", "Requires", "RSSFeed
 
 # event loop policy bug on windows, see
 # https://stackoverflow.com/questions/45600579/asyncio-event-loop-is-closed-when-getting-loop
-if os.name == "nt":
+if sys.platform == "win32":
     import asyncio
 
     asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
