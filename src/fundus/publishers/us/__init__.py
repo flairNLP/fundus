@@ -22,11 +22,11 @@ class US(PublisherEnum):
         domain="https://www.apnews.com/",
         sources=[
             Sitemap(
-                "https://apnews.com/sitemap/sitemaps/sitemap_index.xml",
-                sitemap_filter=inverse(regex_filter("article-sitemap")),
+                "https://apnews.com/sitemap.xml",
+                sitemap_filter=regex_filter("apnews.com/hub/|apnews.com/video/"),
                 reverse=True,
             ),
-            NewsMap("https://apnews.com/sitemap/google-news-sitemap/sitemap_index.xml"),
+            NewsMap("https://apnews.com/news-sitemap-content.xml"),
         ],
         parser=APNewsParser,
     )
