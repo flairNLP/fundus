@@ -18,7 +18,7 @@ class APNewsParser(ParserProxy):
     class V1(BaseParser):
         VALID_UNTIL = datetime.date(2023, 7, 10)
         _author_selector: XPath = XPath(f"{CSSSelector('div.CardHeadline').path}/span/span[1]")
-        _paragraph_selector = XPath("//div[@data-key = 'article']/p[position() > 1]")
+        _paragraph_selector = XPath("//div[@data-key = 'article']/p")
 
         @attribute
         def body(self) -> ArticleBody:
