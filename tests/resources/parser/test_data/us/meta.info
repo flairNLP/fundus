@@ -46,5 +46,9 @@
   "OccupyDemocrats_2023_06_20.html.gz": {
     "url": "https://occupydemocrats.com/2023/06/19/gop-house-speaker-in-north-carolina-accused-of-blackmail-and-group-sex/",
     "crawl_date": "2023-06-20 23:47:49.443476"
+  },
+  "APNews_2023_07_11.html.gz": {
+    "url": "https://apnews.com/article/microsoft-activision-xbox-playstation-call-of-duty-2322c62e67e6c1316b3ce043e66cff62",
+    "crawl_date": "2023-07-11 18:16:56.660511"
   }
 }
