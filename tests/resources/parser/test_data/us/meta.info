@@ -50,5 +50,9 @@
   "APNews_2023_07_11.html.gz": {
     "url": "https://apnews.com/article/microsoft-activision-xbox-playstation-call-of-duty-2322c62e67e6c1316b3ce043e66cff62",
     "crawl_date": "2023-07-11 18:16:56.660511"
+  },
+  "LATimes_2023_06_26.html.gz": {
+    "url": "https://www.latimes.com/sports/story/2023-06-26/100-years-los-angeles-coliseum-historical-events",
+    "crawl_date": "2023-06-26 22:35:21.753444"
   }
 }
