@@ -6,6 +6,7 @@ from .ap_news import APNewsParser
 from .cnbc import CNBCParser
 from .fox_news import FoxNewsParser
 from .free_beacon import FreeBeaconParser
+from .la_times import LATimesParser
 from .occupy_democrats import OccupyDemocratsParser
 from .reuters import ReutersParser
 from .the_gateway_pundit import TheGatewayPunditParser
@@ -131,4 +132,11 @@ class US(PublisherEnum):
         domain="https://occupydemocrats.com/",
         sources=[Sitemap(url="https://occupydemocrats.com/sitemap.xml", sitemap_filter=regex_filter(r"-tax-|-misc"))],
         parser=OccupyDemocratsParser,
+    )
+
+    LATimes = PublisherSpec(
+        name="Los Angeles Times",
+        domain="https://www.latimes.com/",
+        sources=[Sitemap("https://www.latimes.com/sitemap.xml"), NewsMap("https://www.latimes.com/news-sitemap.xml")],
+        parser=LATimesParser,
     )

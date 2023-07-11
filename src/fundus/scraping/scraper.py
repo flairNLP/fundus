@@ -30,12 +30,12 @@ class Scraper:
             )
             if missing_attributes := extraction_filter.required_attributes - supported_attributes:
                 if len(missing_attributes) == 1:
-                    basic_logger.warn(
+                    basic_logger.warning(
                         f"The required attribute `{missing_attributes}` "
                         f"is not supported by {type(self.parser).__name__}. Skipping Scraper"
                     )
                 else:
-                    basic_logger.warn(
+                    basic_logger.warning(
                         f"The required attributes `{', '.join(missing_attributes)}` "
                         f"are not supported by {type(self.parser).__name__}. Skipping Scraper"
                     )

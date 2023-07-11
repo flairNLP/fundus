@@ -73,7 +73,7 @@ if __name__ == "__main__":
 
             if args.overwrite or not html_mapping.get(publisher.parser.latest_version):
                 if not (article := get_test_article(publisher)):
-                    basic_logger.warn(f"Couldn't get article for {publisher.name}. Skipping")
+                    basic_logger.warning(f"Couldn't get article for {publisher.name}. Skipping")
                     continue
                 html = HTMLTestFile(
                     url=article.html.responded_url,

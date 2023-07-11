@@ -10,24 +10,20 @@ from typing import (
     Set,
     Tuple,
     Type,
-    TypeVar,
     Union,
     runtime_checkable,
 )
 
 import more_itertools
 
+from fundus import PublisherCollection
 from fundus.logging import basic_logger
 from fundus.publishers.base_objects import PublisherEnum
 from fundus.scraping.article import Article
 from fundus.scraping.filter import ExtractionFilter, URLFilter
 from fundus.scraping.html import URLSource
 from fundus.scraping.scraper import Scraper
-from fundus.utils.more_async import async_next
-from fundus.utils.more_async import zip_longest as async_zip_longest
-from fundus.utils.validation import listify
-
-_T = TypeVar("_T")
+from fundus.utils.more_async import async_next, zip_longest as async_zip_longest
 
 
 @runtime_checkable
@@ -54,9 +50,9 @@ class Delay(Protocol):
 
 class BaseCrawler:
     def __init__(self, *scrapers: Scraper):
-        """Basic pipeline to utilize scrapers.
+        """Basic crawler to utilize scrapers.
 
-        Because scrapers are implemented asynchronously, this pipeline handles the necessary event loops
+        Because scrapers are implemented asynchronously, this class handles the necessary event loops
         and program logic to download articles in batches asynchronously.
 
         Args:
@@ -169,7 +165,7 @@ class BaseCrawler:
         url_filter: Optional[URLFilter] = None,
         only_unique: bool = True,
     ) -> Iterator[Article]:
-        """Yields articles from initialized publishers.
+        """Yields articles from initialized scrapers
 
         Args:
             max_articles (Optional[int]): Number of articles to crawl. If there are fewer articles
@@ -181,9 +177,9 @@ class BaseCrawler:
                 If set to "catch", errors will be caught as attribute values or, if an entire article fails,
                 through Article.exception. If set to "raise" all errors encountered during extraction will
                 be raised. Defaults to "suppress".
-            only_complete (Union[bool, ExtractionFilter]): Set extraction filters. If False, all articles
-                will be yielded, if True, only complete ones. Defaults to True. See the docs for more
-                information about ExtractionFilter.
+            only_complete (Union[bool, ExtractionFilter]): Set a callable satisfying the ExtractionFilter
+                protocol as extraction filters or use a boolean. If False, all articles will be yielded,
+                if True, only those with all attributes extracted. Defaults to True.
             delay (Optional[Union[float, Delay]]): Set a delay time in seconds to be used between article
                 batches. You can set a delay directly using float or any callable satisfying the Delay
                 protocol. If set to None, no delay will be used between batches. See Delay for more
@@ -191,7 +187,7 @@ class BaseCrawler:
             url_filter (Optional[URLFilter]): A callable object satisfying the URLFilter protocol to skip
                 URLs before download. This filter applies on both requested and responded URL. Defaults to None.
             only_unique (bool): If set to True, articles yielded will be unique on the responded URL.
-                Always returns the first encountered article. the Defaults to True.
+                Always returns the first encountered article. Defaults to True.
 
         Returns:
             Iterator[Article]: An iterator yielding objects of type Article.
@@ -218,15 +214,15 @@ class BaseCrawler:
 class Crawler(BaseCrawler):
     def __init__(
         self,
-        *publishers: Union[PublisherEnum, Type[PublisherEnum]],
+        *publishers: Union[PublisherEnum, Type[PublisherEnum], Type[PublisherCollection]],
         restrict_sources_to: Optional[List[Type[URLSource]]] = None,
     ):
         """Fundus base class for crawling articles from the web.
 
         Examples:
             >>> from fundus import PublisherCollection, Crawler
-            >>> crawler = Crawler(*PublisherCollection)
-            >>> # Crawler(*PublisherCollection.us) to crawl only english news
+            >>> crawler = Crawler(PublisherCollection)
+            >>> # Crawler(PublisherCollection.us) to crawl only english news
             >>> for article in crawler.crawl():
             >>>     print(article)
 
@@ -239,18 +235,17 @@ class Crawler(BaseCrawler):
 
         if not publishers:
             raise ValueError("param <publishers> of <Crawler.__init__> has to be non empty")
-        nested_publisher = [listify(publisher) for publisher in publishers]
-        self.publishers: Set[PublisherEnum] = set(more_itertools.flatten(nested_publisher))
+        collapsed_publishers = more_itertools.collapse(publishers)
 
         # build scraper
         scrapers: List[Scraper] = []
-        for spec in self.publishers:
+        for spec in collapsed_publishers:
             if restrict_sources_to:
-                sources = more_itertools.flatten(
-                    spec.source_mapping[source_type] for source_type in restrict_sources_to
+                sources = tuple(
+                    more_itertools.flatten(spec.source_mapping[source_type] for source_type in restrict_sources_to)
                 )
             else:
-                sources = more_itertools.flatten(spec.source_mapping.values())
+                sources = tuple(more_itertools.flatten(spec.source_mapping.values()))
 
             if sources:
                 scrapers.append(
