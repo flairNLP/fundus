@@ -242,9 +242,7 @@ class HTMLSource:
                 continue
 
             except Exception as error:
-                basic_logger.warning(
-                        f"Warning! Skipped  requested URL '{url}' because of an unexpected error {error}"
-                    )
+                basic_logger.warning(f"Warning! Skipped  requested URL '{url}' because of an unexpected error {error}")
                 continue
 
             if response.history:

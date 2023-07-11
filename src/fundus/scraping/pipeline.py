@@ -23,7 +23,8 @@ from fundus.scraping.article import Article
 from fundus.scraping.filter import ExtractionFilter, URLFilter
 from fundus.scraping.html import URLSource
 from fundus.scraping.scraper import Scraper
-from fundus.utils.more_async import async_next, zip_longest as async_zip_longest
+from fundus.utils.more_async import async_next
+from fundus.utils.more_async import zip_longest as async_zip_longest
 
 
 @runtime_checkable
