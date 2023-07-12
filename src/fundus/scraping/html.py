@@ -106,7 +106,7 @@ class RSSFeed(URLSource):
             html = await response.text()
             rss_feed = feedparser.parse(html)
             if exception := rss_feed.get("bozo_exception"):
-                basic_logger.warn(f"Warning! Couldn't parse rss feed '{self.url}' because of {exception}")
+                basic_logger.warning(f"Warning! Couldn't parse rss feed '{self.url}' because of {exception}")
                 return
             else:
                 for url in (entry["link"] for entry in rss_feed["entries"]):
@@ -220,7 +220,9 @@ class HTMLSource:
                     continue
 
                 except Exception as error:
-                    basic_logger.warn(f"Warning! Skipped  requested URL '{url}' because of an unexpected error {error}")
+                    basic_logger.warning(
+                        f"Warning! Skipped  requested URL '{url}' because of an unexpected error {error}"
+                    )
                     continue
 
                 if response.history:
