@@ -25,9 +25,18 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
-          cache: 'pip'
+
+      - name: Cache environment
+        uses: actions/cache@master
+        id: cache
+        with:
+          path: ${{ env.pythonLocation }}
+          key: ${{ matrix.os }}-${{ steps.cache.output.python-version }}-${{ hashFiles('setup.cfg') }}
+
+      - name: Install dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
         run: |
-          pip install -e .[dev]  
+          pip install -e .[dev]
 
       - name: Run pytest
         run: python -m pytest -vv
@@ -47,7 +56,16 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
-          cache: 'pip'
+
+      - name: Cache environment
+        uses: actions/cache@master
+        id: cache
+        with:
+          path: ${{ env.pythonLocation }}
+          key: ${{ matrix.os }}-${{ steps.cache.output.python-version }}-${{ hashFiles('setup.cfg') }}
+
+      - name: Install dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
         run: |
           pip install -e .[dev]
 
