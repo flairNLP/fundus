@@ -158,7 +158,7 @@ class LinkedDataMapping:
         return search_recursive([self.__dict__], 0) or default
 
     def __repr__(self):
-        return f"LD containing {repr(', '.join(content))}" if (content := self.__dict__.keys()) else "Empty LD"
+        return f"LD containing !r{', '.join(content)}" if (content := self.__dict__.keys()) else "Empty LD"
 
 
 class TextSequence(Sequence[str]):

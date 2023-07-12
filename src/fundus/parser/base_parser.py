@@ -70,9 +70,9 @@ class RegisteredFunction(ABC):
 
     def __repr__(self):
         if instance := self.__self__:
-            return f"bound {type(self).__name__} of {instance}: {self.__wrapped__} --> {repr(self.__name__)}"
+            return f"bound {type(self).__name__} of {instance}: {self.__wrapped__} --> !r{self.__name__}"
         else:
-            return f"registered {type(self).__name__}: {self.__wrapped__} --> {repr(self.__name__)}"
+            return f"registered {type(self).__name__}: {self.__wrapped__} --> !r{self.__name__}"
 
 
 class Attribute(RegisteredFunction):
@@ -298,7 +298,7 @@ class ParserProxy(ABC):
 
     def __repr__(self) -> str:
         return (
-            f"{type(self).__name__} including versions {repr(', '.join([cache.factory.__name__ for cache in self._parser_mapping.values()]))}"
+            f"{type(self).__name__} including versions r!{', '.join([cache.factory.__name__ for cache in self._parser_mapping.values()])}"
             if self._parser_mapping
             else f"Empty {type(self).__name__}"
         )

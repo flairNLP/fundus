@@ -177,8 +177,8 @@ def generic_author_parsing(
         return []
 
     parameter_type_error: TypeError = TypeError(
-        f"<value> {repr(value)} has an unsupported type {type(value)}."
-        f"Supported types are 'Optional[str], Dict[str, str], List[str], List[Dict[str, str]]'"
+        f"<value> '{value}' has an unsupported type {type(value)}. "
+        f"Supported types are 'Optional[str], Dict[str, str], List[str], List[Dict[str, str]],'"
     )
 
     if isinstance(value, str):

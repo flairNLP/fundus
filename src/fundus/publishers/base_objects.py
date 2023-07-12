@@ -46,7 +46,7 @@ class PublisherEnum(Enum):
             if not isinstance(url_source, URLSource):
                 raise TypeError(
                     f"Unexpected type '{type(url_source).__name__}' as source for {self.name}. "
-                    f"Allowed are {repr(', '.join(cls.__name__ for cls in iterate_all_subclasses(URLSource)))}"
+                    f"Allowed are !r{', '.join(cls.__name__ for cls in iterate_all_subclasses(URLSource))}"
                 )
             source: HTMLSource = HTMLSource(
                 url_source=url_source,
@@ -65,7 +65,7 @@ class PublisherEnum(Enum):
             if not inspect.isclass(source_type) or not issubclass(source_type, URLSource):
                 raise TypeError(
                     f"Got unexpected type '{source_type}'. "
-                    f"Allowed are {repr(', '.join(cls.__name__ for cls in iterate_all_subclasses(URLSource)))}"
+                    f"Allowed are !r{', '.join(cls.__name__ for cls in iterate_all_subclasses(URLSource))}"
                 )
         return all(bool(self.source_mapping.get(source_type)) for source_type in source_types)
 

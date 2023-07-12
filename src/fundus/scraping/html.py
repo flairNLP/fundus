@@ -84,7 +84,7 @@ class URLSource(AsyncIterable[str], ABC):
         if not self._request_header:
             self._request_header = _default_header
         if not validators.url(self.url):
-            raise ValueError(f"Invalid url {repr(self.url)}")
+            raise ValueError(f"Invalid url r!{self.url}")
 
     def set_header(self, request_header: Dict[str, str]) -> None:
         self._request_header = request_header
@@ -138,7 +138,7 @@ class Sitemap(URLSource):
                 if response.content_type in self._decompressor.supported_file_formats:
                     content = self._decompressor.decompress(content, response.content_type)
                 if not content:
-                    basic_logger.warning(f"Warning! Empty sitemap at {repr(sitemap_url)}")
+                    basic_logger.warning(f"Warning! Empty sitemap at r!{sitemap_url}")
                     return
                 tree = lxml.html.fromstring(content)
                 urls = [node.text_content() for node in self._url_selector(tree)]
@@ -216,7 +216,7 @@ class HTMLSource:
                     response.raise_for_status()
 
                 except (HTTPError, ClientError, HttpProcessingError, UnicodeError) as error:
-                    basic_logger.info(f"Skipped requested URL {repr(url)} because of {repr(error)}")
+                    basic_logger.info(f"Skipped requested URL r!{url} because of {error}")
                     continue
 
                 except Exception as error:
