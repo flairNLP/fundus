@@ -31,7 +31,7 @@ jobs:
         id: cache
         with:
           path: ${{ env.pythonLocation }}
-          key: ${{ matrix.os }}-${{ steps.cache.output.python-version }}-${{ hashFiles('setup.cfg') }}
+          key: ${{ matrix.os }}-${{ steps.cache.outputs.python-version }}-${{ hashFiles('setup.cfg') }}
 
       - name: Install dependencies
         if: steps.cache.outputs.cache-hit != 'true'
@@ -62,7 +62,7 @@ jobs:
         id: cache
         with:
           path: ${{ env.pythonLocation }}
-          key: ${{ matrix.os }}-${{ steps.cache.output.python-version }}-${{ hashFiles('setup.cfg') }}
+          key: ${{ matrix.os }}-${{ steps.cache.outputs.python-version }}-${{ hashFiles('setup.cfg') }}
 
       - name: Install dependencies
         if: steps.cache.outputs.cache-hit != 'true'
