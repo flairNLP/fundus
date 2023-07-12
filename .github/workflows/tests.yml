@@ -11,17 +11,17 @@ on:
 
 jobs:
   pytest:
-    # Containers must run in Linux based operating systems
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         os: [ ubuntu-latest, macos-latest, windows-latest ]
-        python-version: [ "3.8", "3.9" ]
+        python-version: [ "3.8", "3.9", "3.10" ]
     continue-on-error: true
     steps:
       - uses: actions/checkout@v3
 
       - name: Set up Python ${{ matrix.python-version }}
+        id: setup_python
         uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
@@ -31,7 +31,7 @@ jobs:
         id: cache
         with:
           path: ${{ env.pythonLocation }}
-          key: ${{ matrix.os }}-${{ steps.cache.outputs.python-version }}-${{ hashFiles('setup.cfg') }}
+          key: ${{ matrix.os }}-${{ steps.setup_python.outputs.python-version }}-${{ hashFiles('setup.cfg') }}
 
       - name: Install dependencies
         if: steps.cache.outputs.cache-hit != 'true'
@@ -42,17 +42,17 @@ jobs:
         run: python -m pytest -vv
 
   mypy:
-    # Containers must run in Linux based operating systems
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         os: [ ubuntu-latest, macos-latest, windows-latest ]
-        python-version: [ "3.8", "3.9" ]
+        python-version: [ "3.8", "3.9", "3.10" ]
     continue-on-error: true
     steps:
       - uses: actions/checkout@v3
 
       - name: Set up Python ${{ matrix.python-version }}
+        id: setup_python
         uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
@@ -62,7 +62,7 @@ jobs:
         id: cache
         with:
           path: ${{ env.pythonLocation }}
-          key: ${{ matrix.os }}-${{ steps.cache.outputs.python-version }}-${{ hashFiles('setup.cfg') }}
+          key: ${{ matrix.os }}-${{ steps.setup_python.outputs.python-version }}-${{ hashFiles('setup.cfg') }}
 
       - name: Install dependencies
         if: steps.cache.outputs.cache-hit != 'true'
