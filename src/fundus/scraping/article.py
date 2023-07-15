@@ -53,7 +53,7 @@ class Article:
             try:
                 language = langdetect.detect(self.plaintext)
             except langdetect.LangDetectException:
-                basic_logger.debug(f"Unable to detect language for article '{self.html.url}'")
+                basic_logger.debug(f"Unable to detect language for article '{self.html.responded_url}'")
 
         # use @lang attribute of <html> tag as fallback
         if not language or language == langdetect.detector_factory.Detector.UNKNOWN_LANG:
@@ -82,7 +82,7 @@ class Article:
             f"Fundus-Article:"
             f'\n- Title: "{wrapped_title}"'
             f'\n- Text:  "{wrapped_plaintext}"'
-            f"\n- URL:    {self.html.url}"
+            f"\n- URL:    {self.html.requested_url}"
             f"\n- From:   {self.html.source.publisher}"
             f'{" (" + self.publishing_date.strftime("%Y-%m-%d %H:%M") + ")" if self.publishing_date else ""}'
         )

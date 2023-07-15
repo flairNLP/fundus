@@ -6,7 +6,7 @@ from typing import List, Optional
 from tqdm import tqdm
 
 from fundus import Crawler, PublisherCollection
-from fundus.logging.logger import basic_logger
+from fundus.logging import basic_logger
 from fundus.publishers.base_objects import PublisherEnum
 from fundus.scraping.article import Article
 from tests.test_parser import attributes_required_to_cover
@@ -74,10 +74,10 @@ if __name__ == "__main__":
 
             if args.overwrite or not html_mapping.get(publisher.parser.latest_version):
                 if not (article := get_test_article(publisher)):
-                    basic_logger.warn(f"Couldn't get article for {publisher.name}. Skipping")
+                    basic_logger.warning(f"Couldn't get article for {publisher.name}. Skipping")
                     continue
                 html = HTMLTestFile(
-                    url=article.html.url,
+                    url=article.html.responded_url,
                     content=article.html.content,
                     crawl_date=article.html.crawl_date,
                     publisher=publisher,
