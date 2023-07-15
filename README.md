@@ -107,4 +107,4 @@ check these [open issues](https://github.com/flairNLP/fundus/issues) for specifi
 
 ## [License](/LICENSE)
 
-?
+[MIT](LICENSE)
