@@ -19,6 +19,10 @@
     "url": "https://freebeacon.com/democrats/soros-family-gives-early-financial-support-to-montana-moderate-jon-tester/",
     "crawl_date": "2023-04-28 20:33:07.568137"
   },
+  "LATimes_2023_06_26.html.gz": {
+    "url": "https://www.latimes.com/sports/story/2023-06-26/100-years-los-angeles-coliseum-historical-events",
+    "crawl_date": "2023-06-26 22:35:21.753444"
+  },
   "OccupyDemocrats_2023_06_20.html.gz": {
     "url": "https://occupydemocrats.com/2023/06/19/gop-house-speaker-in-north-carolina-accused-of-blackmail-and-group-sex/",
     "crawl_date": "2023-06-20 23:47:49.443476"
@@ -50,9 +54,5 @@
   "WorldTruth_2023_04_28.html.gz": {
     "url": "https://worldtruth.tv/the-mother-of-all-antioxidants/?utm_source=rss&utm_medium=rss&utm_campaign=the-mother-of-all-antioxidants",
     "crawl_date": "2023-04-28 20:33:05.767026"
-  },
-  "LATimes_2023_06_26.html.gz": {
-    "url": "https://www.latimes.com/sports/story/2023-06-26/100-years-los-angeles-coliseum-historical-events",
-    "crawl_date": "2023-06-26 22:35:21.753444"
   }
 }
