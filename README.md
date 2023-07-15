@@ -87,7 +87,7 @@ for article in crawler.crawl(max_articles=2):
 We provide **quick tutorials** to get you started with the library:
 
 1. [**Tutorial 1: How to crawl news with Fundus**](docs/1_getting_started.md)
-2. [**Tutorial 2: The Article Class**](docs/...)
+2. [**Tutorial 2: The Article Class**](docs/2_the_article_class.md)
 
 If you wish to contribute check out these tutorials
 1. [**How to add a new news-source**](docs/how_to_contribute.md)
