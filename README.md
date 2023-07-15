@@ -88,7 +88,8 @@ We provide **quick tutorials** to get you started with the library:
 
 1. [**Tutorial 1: How to crawl news with Fundus**](docs/1_getting_started.md)
 2. [**Tutorial 2: The Article Class**](docs/2_the_article_class.md)
-3. [**Tutorial 2: How to filter articles**](docs/3_how_to_filter_articles.md)
+3. [**Tutorial 3: How to filter articles**](docs/3_how_to_filter_articles.md)
+4. [**Tutorial 4: How to search for publishers**](docs/4_how_to_search_for_publishers.md)
 
 If you wish to contribute check out these tutorials
 1. [**How to add a new news-source**](docs/how_to_contribute.md)
