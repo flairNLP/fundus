@@ -45,9 +45,9 @@ class TestCollection:
 
         later, earlier = parser_proxy.attribute_mapping.values()
 
-        assert len(publisher_enum_with_news_map.search(later.names, NewsMap)) == 1
-        assert len(publisher_enum_with_news_map.search(later.names, RSSFeed, Sitemap)) == 0
-        assert len(publisher_enum_with_news_map.search(later.names, NewsMap, RSSFeed)) == 1
+        assert len(publisher_enum_with_news_map.search(later.names, [NewsMap])) == 1
+        assert len(publisher_enum_with_news_map.search(later.names, [RSSFeed, Sitemap])) == 0
+        assert len(publisher_enum_with_news_map.search(later.names, [NewsMap, RSSFeed])) == 1
 
         # check that only latest version is supported with search
         assert len(publisher_enum_with_news_map.search(later.names)) == 1
