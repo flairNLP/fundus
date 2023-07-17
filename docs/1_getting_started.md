@@ -7,7 +7,7 @@ This tutorial explains the basic concepts of Fundus:
 
 ## `PublisherCollection`
 
-Fundus comes with a collection of publisher-specific parsers grouped by country of origin.
+Fundus includes a collection of publisher-specific parsers grouped by country of origin.
 You can access these publishers through a single class called `PublisherCollection` using the [Alpha-2](https://www.iban.com/country-codes) codes described in ISO 3166 as identifiers.
 The `PublisherCollection` works as an information hub describing publishers [currently supported](supported_publishers.md) by Fundus.
 
