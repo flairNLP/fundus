@@ -16,6 +16,7 @@ from fundus.publishers import PublisherCollection
 from fundus.publishers.base_objects import PublisherEnum
 from tests.resources import attribute_annotations_mapping
 from tests.utility import (
+    get_meta_info_file,
     load_html_test_file_mapping,
     load_supported_publishers_markdown,
     load_test_case_data,
@@ -215,3 +216,14 @@ class TestUtility:
             [{"name": "Peter Funny"}, {"name": "Funny Peter"}, {"this": "is not a pipe"}, {}]  # type: ignore
         ) == ["Peter Funny", "Funny Peter"]
         assert generic_author_parsing([{}]) == generic_author_parsing([{}, {"wrong": "key"}]) == []  # type: ignore
+
+
+class TestMetaInfo:
+    def test_order(self):
+        for cc in PublisherCollection.get_publisher_enum_mapping().values():
+            meta_file = get_meta_info_file(next(iter(cc)))
+            meta_info = meta_file.load()
+            assert meta_info, f"Meta info file {meta_file.path} is missing"
+            assert sorted(meta_info.keys()) == list(meta_info.keys()), (
+                f"Meta info file {meta_file.path} " f"isn't ordered properly."
+            )

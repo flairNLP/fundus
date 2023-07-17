@@ -185,6 +185,7 @@ class HTMLTestFile:
         meta_info_file = get_meta_info_file(self.publisher)
         meta_info = meta_info_file.load() or {}
         meta_info[self.path.name] = {"url": self.url, "crawl_date": self.crawl_date}
+        meta_info = dict(sorted(meta_info.items()))
         meta_info_file.write(meta_info)
 
     def write(self) -> None:

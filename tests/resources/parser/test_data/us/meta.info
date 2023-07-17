@@ -3,56 +3,56 @@
     "url": "https://apnews.com/article/mexico-economy-growth-3cc842471fb9df42315d658d88c8403a",
     "crawl_date": "2023-04-28 20:32:23.148171"
   },
+  "APNews_2023_07_11.html.gz": {
+    "url": "https://apnews.com/article/microsoft-activision-xbox-playstation-call-of-duty-2322c62e67e6c1316b3ce043e66cff62",
+    "crawl_date": "2023-07-11 18:16:56.660511"
+  },
   "CNBC_2023_04_28.html.gz": {
     "url": "https://www.cnbc.com/2023/04/28/many-new-bitcoin-crypto-buyers-influenced-by-friends-why-to-be-cautious.html",
     "crawl_date": "2023-04-28 20:32:32.962501"
-  },
-  "TheIntercept_2023_04_28.html.gz": {
-    "url": "https://theintercept.com/2023/04/28/montana-trans-zooey-zephyr/",
-    "crawl_date": "2023-04-28 20:32:56.516898"
-  },
-  "TheGatewayPundit_2023_04_28.html.gz": {
-    "url": "https://www.thegatewaypundit.com/2023/04/new-plot-twist-in-idaho-quadruple-murders-case-surviving-roommate-agrees-to-interview-with-kohbergers-defense-lawyers/",
-    "crawl_date": "2023-04-28 20:33:02.500510"
   },
   "FoxNews_2023_04_28.html.gz": {
     "url": "https://www.foxnews.com/politics/house-china-committee-demands-answers-fbi-chinese-police-stations-us",
     "crawl_date": "2023-04-28 20:33:03.410503"
   },
-  "TheNation_2023_05_15.html.gz": {
-    "url": "https://www.thenation.com/article/activism/teamsters-tdu-ups-iowa/",
-    "crawl_date": "2023-05-15 13:55:06.350230"
-  },
-  "WorldTruth_2023_04_28.html.gz": {
-    "url": "https://worldtruth.tv/the-mother-of-all-antioxidants/?utm_source=rss&utm_medium=rss&utm_campaign=the-mother-of-all-antioxidants",
-    "crawl_date": "2023-04-28 20:33:05.767026"
-  },
   "FreeBeacon_2023_04_28.html.gz": {
     "url": "https://freebeacon.com/democrats/soros-family-gives-early-financial-support-to-montana-moderate-jon-tester/",
     "crawl_date": "2023-04-28 20:33:07.568137"
   },
-  "WashingtonTimes_2023_04_28.html.gz": {
-    "url": "https://www.washingtontimes.com/news/2023/apr/28/indiana-governor-endorses-revised-gop-state-budget/?utm_source=RSS_Feed&utm_medium=RSS",
-    "crawl_date": "2023-04-28 20:33:11.404979"
-  },
-  "TheNewYorker_2023_05_16.html.gz": {
-    "url": "https://www.newyorker.com/news/the-control-of-nature/a-heat-shield-for-the-most-important-ice-on-earth",
-    "crawl_date": "2023-05-16 14:55:06.350230"
-  },
-  "Reuters_2023_05_16.html.gz": {
-    "url": "https://www.reuters.com/business/aerospace-defense/nepal-says-no-proof-flydubai-plane-suffered-bird-strike-2023-04-25/",
-    "crawl_date": "2023-05-16 14:22:02.363166"
+  "LATimes_2023_06_26.html.gz": {
+    "url": "https://www.latimes.com/sports/story/2023-06-26/100-years-los-angeles-coliseum-historical-events",
+    "crawl_date": "2023-06-26 22:35:21.753444"
   },
   "OccupyDemocrats_2023_06_20.html.gz": {
     "url": "https://occupydemocrats.com/2023/06/19/gop-house-speaker-in-north-carolina-accused-of-blackmail-and-group-sex/",
     "crawl_date": "2023-06-20 23:47:49.443476"
   },
-  "APNews_2023_07_11.html.gz": {
-    "url": "https://apnews.com/article/microsoft-activision-xbox-playstation-call-of-duty-2322c62e67e6c1316b3ce043e66cff62",
-    "crawl_date": "2023-07-11 18:16:56.660511"
+  "Reuters_2023_05_16.html.gz": {
+    "url": "https://www.reuters.com/business/aerospace-defense/nepal-says-no-proof-flydubai-plane-suffered-bird-strike-2023-04-25/",
+    "crawl_date": "2023-05-16 14:22:02.363166"
   },
-  "LATimes_2023_06_26.html.gz": {
-    "url": "https://www.latimes.com/sports/story/2023-06-26/100-years-los-angeles-coliseum-historical-events",
-    "crawl_date": "2023-06-26 22:35:21.753444"
+  "TheGatewayPundit_2023_04_28.html.gz": {
+    "url": "https://www.thegatewaypundit.com/2023/04/new-plot-twist-in-idaho-quadruple-murders-case-surviving-roommate-agrees-to-interview-with-kohbergers-defense-lawyers/",
+    "crawl_date": "2023-04-28 20:33:02.500510"
+  },
+  "TheIntercept_2023_04_28.html.gz": {
+    "url": "https://theintercept.com/2023/04/28/montana-trans-zooey-zephyr/",
+    "crawl_date": "2023-04-28 20:32:56.516898"
+  },
+  "TheNation_2023_05_15.html.gz": {
+    "url": "https://www.thenation.com/article/activism/teamsters-tdu-ups-iowa/",
+    "crawl_date": "2023-05-15 13:55:06.350230"
+  },
+  "TheNewYorker_2023_05_16.html.gz": {
+    "url": "https://www.newyorker.com/news/the-control-of-nature/a-heat-shield-for-the-most-important-ice-on-earth",
+    "crawl_date": "2023-05-16 14:55:06.350230"
+  },
+  "WashingtonTimes_2023_04_28.html.gz": {
+    "url": "https://www.washingtontimes.com/news/2023/apr/28/indiana-governor-endorses-revised-gop-state-budget/?utm_source=RSS_Feed&utm_medium=RSS",
+    "crawl_date": "2023-04-28 20:33:11.404979"
+  },
+  "WorldTruth_2023_04_28.html.gz": {
+    "url": "https://worldtruth.tv/the-mother-of-all-antioxidants/?utm_source=rss&utm_medium=rss&utm_campaign=the-mother-of-all-antioxidants",
+    "crawl_date": "2023-04-28 20:33:05.767026"
   }
 }
