@@ -1,16 +1,17 @@
 # How to filter articles
 
-This tutorial shows you how to filter articles based on their attribute values, URLs, and news sources.
+This tutorial contains documentation on how to filter articles based on their attribute values, URLs, and news sources.
 
 ## Extraction filter
 
-Often the attributes a parser is capable of parsing are not fully supported by a specific article.
-By default, Fundus drops all articles which aren't fully extracted to ensure data quality. 
-This also means that you miss a lot of data potentially useful for your project.
+A specific article may not contain all attributes the parser is capable of extracting.
+By default, Fundus drops all articles that aren't fully extracted to ensure data quality.
+You may miss a lot of data potentially useful for your project.
 You can alter this behavior by utilizing the `extration_filter` parameter.
 You do so by either using the built-in `ExtractionFilter` `Requires` or writing a custom one.
 
-Let's print some articles with at least a `body` and `title` set.
+The following code prints some articles with at least a `body` and `title` set.
+
 ````python
 from fundus import Crawler, PublisherCollection, Requires
 
@@ -20,14 +21,17 @@ for article in crawler.crawl(max_articles=2, only_complete=Requires("title", "bo
     print(article)
 ````
 
-**_NOTE:_** We recommend thinking about what kind of data is needed first and then running Fundus with a configured extraction filter afterward.
+**_NOTE:_** We recommend thinking about what kind of data is needed first and then running Fundus with a configured
+extraction filter afterward.
 
 ### Custom extraction filter
 
-You can write custom extraction filters as well.
-All it takes is a `Callable` satisfying the `ExtractionFilter` protocol which you can find [here](../src/fundus/scraping/filter.py).
+Writing custom extraction filters is supported and encouraged.
+Fundus provides the `ExtractionFilter` protocol which you can find [here](../src/fundus/scraping/filter.py).
+Providing a `Callable` satisfying this protocol will suffice.
 
 Let's build a custom extraction filter that filters out all articles not written by an author called `Donald Duck`
+
 ````python
 from typing import Dict, Any
 
@@ -37,7 +41,9 @@ def author_filter(extracted: Dict[str, Any]) -> bool:
         return 'Donal Duck' not in authors
     return True
 ````
+
 and put it to work.
+
 ```` python
 from fundus import Crawler, PublisherCollection
 
@@ -53,9 +59,11 @@ If a filter returns True on a specific element the element will be dropped.
 ## URL filter
 
 Fundus provides a mechanic to filter articles by URL both before and after the HTML is downloaded.
-There is a built-in filter that filters out URLs based on regular expressions.
+A built-in filter that filters out URLs based on regular expressions is provided.
 
-Let's crawl a bunch of articles with URLs not including the word `advertisement` or `podcast` and print their `resuestd_url`'s.
+Let's crawl a bunch of articles with URLs not including the word `advertisement` or `podcast` and print
+their `resuestd_url`'s.
+
 ````python
 from fundus import Crawler, PublisherCollection
 from fundus.scraping.filter import regex_filter
@@ -70,6 +78,7 @@ Often it's useful to select certain criteria rather than filtering them.
 To do so use the `inverse` operator from `fundus.scraping.filter.py`.
 
 Let's crawl a bunch of articles with URLs including the string `politic`.
+
 ````python
 from fundus import Crawler, PublisherCollection
 from fundus.scraping.filter import inverse, regex_filter
@@ -79,7 +88,9 @@ crawler = Crawler(PublisherCollection.us)
 for article in crawler.crawl(max_articles=5, url_filter=inverse(regex_filter("politic"))):
     print(article.html.requested_url)
 ````
+
 Which should print something like this:
+
 ````console
 https://www.foxnews.com/politics/matt-gaetz-fisa-surveillance-citizens
 https://www.thenation.com/article/politics/jim-jordan-chris-wray/
@@ -96,21 +107,25 @@ Sometimes it is useful to combine filters of the same kind.
 You can do so by using the `lor` (logic `or`) and `land` (logic `and`) operators from `fundus.scraping.filter.py`.
 
 Let's combine both URL filters from the examples above and add a new condition.
-Our goal is to get articles that include both strings 'politic' and 'trump' in their URL and don't include the strings 'podcast' or 'advertisement'.
+Our goal is to get articles that include both strings 'politic' and 'trump' in their URL and don't include the strings '
+podcast' or 'advertisement'.
+
 ````python
 from fundus import Crawler, PublisherCollection
 from fundus.scraping.filter import inverse, regex_filter, lor, land
 
 crawler = Crawler(PublisherCollection.us)
 
-filter1 = regex_filter("advertisement|podcast") # drop all URLs including the strings "advertisement" or "podcast"
-filter2 = inverse(land(regex_filter("politic"), regex_filter("trump"))) # drop all URLs not including the strings "politic" and "trump"
+filter1 = regex_filter("advertisement|podcast")  # drop all URLs including the strings "advertisement" or "podcast"
+filter2 = inverse(land(regex_filter("politic"),
+                       regex_filter("trump")))  # drop all URLs not including the strings "politic" and "trump"
 
 for article in crawler.crawl(max_articles=10, url_filter=lor(filter1, filter2)):
     print(article.html.requested_url)
 ````
 
 Which should print something like this:
+
 ````console
 https://www.foxnews.com/politics/desantis-meet-donors-new-yorks-southampton-next-week-pitch-campaigns-long-game-trump
 https://occupydemocrats.com/2023/06/25/the-grift-trump-shifting-political-contributions-from-his-campaign-to-defense-fund/
@@ -130,22 +145,26 @@ Make sure to only use them on filters of the same kind.
 ## Filter sources
 
 Fundus supports different sources for articles which are split into two categories:
+
 1. Only recent articles: `RSSFeed`, `NewsMap` (recommended for continuous crawling jobs)
-2. Pretty much the whole site: `Sitemap` (recommended for one-time crawling)
+2. The whole site: `Sitemap` (recommended for one-time crawling)
 
 You can preselect the source for your articles when initializing a new `Crawler`.
 Let's initiate a crawler who only crawls from `NewsMaps`'s.
+
 ````python
 from fundus import Crawler, PublisherCollection, NewsMap
 
 crawler = Crawler(PublisherCollection.us, restrict_sources_to=[NewsMap])
 ````
 
-**_NOTE:_** The `restrict_sources_to` parameter expects a list as value to specify multiple sources at once, e.g. `[RSSFeed, NewsMap]`
+**_NOTE:_** The `restrict_sources_to` parameter expects a list as value to specify multiple sources at once,
+e.g. `[RSSFeed, NewsMap]`
 
 ## Filter unique articles
 
 The `crawl()` method supports functionality to filter out articles with URLs previously encountered in this run.
 You can alter this behavior by setting the `only_unique` parameter.
 
-In the [next section](4_how_to_search_for_publishers.md) we will show you how to search through publishers in the `PublisherCollection`.
+In the [next section](4_how_to_search_for_publishers.md) we will show you how to search through publishers in
+the `PublisherCollection`.

@@ -1,17 +1,19 @@
 # Basics
 
 This tutorial explains the basic concepts of Fundus:
-- What is the `PublisherCollection`
-- What is a `Crawler`
+
+- ` PublisherCollection`
+- `Crawler`
 - How to retrieve articles
 
 ## `PublisherCollection`
 
-Fundus comes with a collection of publisher-specific parsers grouped by country of origin.
-You can access these publishers through a single class called `PublisherCollection` using the [Alpha-2](https://www.iban.com/country-codes) codes described in ISO 3166 as identifiers.
-The `PublisherCollection` works as an information hub describing publishers [currently supported](supported_publishers.md) by Fundus.
+Fundus includes a collection of publisher-specific parsers grouped by country of origin.
+You can access these publishers through a single class called `PublisherCollection` using
+the [Alpha-2](https://www.iban.com/country-codes) codes described in ISO 3166 as identifiers.
 
-For example, to access all publishers based in the US simply write:
+To access all publishers based in the US:
+
 ````python
 from fundus import PublisherCollection
 
@@ -20,10 +22,11 @@ PublisherCollection.us
 
 ## The crawler
 
-If you want to crawl articles, you need to initialize a crawler first.
+If you want to crawl articles, the first step is to initialize a crawler.
 You can do so by using the publisher collection (recommended) or low-level objects.
 
-As an example, let's initiate a crawler capable of crawling publishers based in the US by utilizing the `PublisherCollection`
+Let's initiate a crawler capable of crawling publishers based in the US by utilizing
+the `PublisherCollection`
 
 ````python
 from fundus import PublisherCollection, Crawler
@@ -42,7 +45,7 @@ crawler = Crawler(PublisherCollection)
 Now to crawl articles make use of the `crawl()` method of the initialized crawler class.
 Calling this will return an `Iterator` over articles.
 
-As an example let us crawl one news article from all publishers based in the US.
+Crawling one news article from all publishers based in the US works like this:
 
 ````python
 from fundus import PublisherCollection, Crawler
@@ -55,7 +58,7 @@ for article in crawler.crawl(max_articles=1):
     print(article)
 ````
 
-This should print something like this:
+Executing the code will print something like this:
 
 ```console
 Fundus-Article:
@@ -66,15 +69,16 @@ Fundus-Article:
 - From:   FreeBeacon (2023-05-11 18:41)
 ```
 
-You can also crawl all available articles by simply removing the `max_articles` parameter.
+You can also crawl all available articles by removing the `max_articles` parameter.
+
 ```` python
 # crawl 2 articles and print
 for article in crawler.crawl():
     print(article)
 ````
 
-**_NOTE:_** There is also an `async` access point for crawling called `crawl_async`. 
-If you want to crawl articles within any async workflow we highly recommend using this instead.
+**_NOTE:_** There is also an `async` access point for crawling called `crawl_async`.
+If you want to crawl articles within any async workflow, we recommend using this instead.
 This async access point will return an `AsyncIterator[Article]`.
 
-In the [next section](2_the_article_class.md) we will introduce you to the `Article` class.
+In the [next section](2_the_article_class.md) we will introduce the `Article` class.

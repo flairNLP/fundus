@@ -3,10 +3,12 @@
 This tutorial will show you how to search for specific publishers in the `PublisherCollection`.
 
 ## Using `search()`
-There a quite a few differences between the publishers, especially in the attributes the underlying parser supports.
+
+There are quite a few differences between the publishers, especially in the attributes the underlying parser supports.
 You can search through the collection to get only publishers fitting your use case by utilizing the `search()` method.
 
-Let's get some publishers based in the US, supporting an attribute called `topics` and `NewsMap` as a source, and use them to initialize a crawler afterward.
+Let's get some publishers based in the US, supporting an attribute called `topics` and `NewsMap` as a source, and use
+them to initialize a crawler afterward.
 
 ````python
 from fundus import Crawler, PublisherCollection, NewsMap
