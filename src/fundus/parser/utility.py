@@ -217,8 +217,7 @@ def generic_topic_parsing(keyword_str: Optional[str], delimiter: str = ",") -> L
     return [keyword.strip() for keyword in keyword_str.split(delimiter)] if keyword_str else []
 
 
-_tzs = ["CET", "CEST"]
-_tz_infos = {tz: dateutil.tz.gettz(tz) for tz in _tzs}
+_tz_infos = {"CET": 3600, "CEST": 7200}
 
 
 def generic_date_parsing(date_str: Optional[str]) -> Optional[datetime]:
