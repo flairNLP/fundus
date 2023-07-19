@@ -76,6 +76,8 @@ class US(PublisherEnum):
         sources=[
             Sitemap(
                 "https://www.thenation.com/sitemap_index.xml",
+                sitemap_filter=inverse(regex_filter("article-sitemap")),
+                reverse=True,
             ),
             NewsMap("https://www.thenation.com/news-sitemap.xml"),
         ],
