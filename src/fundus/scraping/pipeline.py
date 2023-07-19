@@ -113,7 +113,6 @@ class BaseCrawler:
             extraction_filter = only_complete
 
         if isinstance(delay, float):
-
             tmp = delay
 
             def constant_delay() -> float:
