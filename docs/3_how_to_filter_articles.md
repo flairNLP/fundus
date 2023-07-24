@@ -60,7 +60,7 @@ Fundus allows you to filter articles by URL both before and after the HTML is do
 You do so by making use of the `url_filter` parameter of the `crawl()` method.
 There is a built-in filter called `regex_filter` that filters out URLs based on regular expressions.
 
-Let's crawl a bunch of articles with URLs not including the word `advertisement` or `podcast` and print their `resuestd_url`'s.
+Let's crawl a bunch of articles with URLs not including the word `advertisement` or `podcast` and print their `requested_url`'s.
 
 ````python
 from fundus import Crawler, PublisherCollection
@@ -75,7 +75,7 @@ for article in crawler.crawl(max_articles=5, url_filter=regex_filter("advertisem
 Often it's useful to select certain criteria rather than filtering them.
 To do so use the `inverse` operator from `fundus.scraping.filter.py`.
 
-Let's crawl a bunch of articles with URLs including the string `politic`.
+Let's crawl a bunch of articles with URLs including the string `politics`.
 
 ````python
 from fundus import Crawler, PublisherCollection
@@ -83,7 +83,7 @@ from fundus.scraping.filter import inverse, regex_filter
 
 crawler = Crawler(PublisherCollection.us)
 
-for article in crawler.crawl(max_articles=5, url_filter=inverse(regex_filter("politic"))):
+for article in crawler.crawl(max_articles=5, url_filter=inverse(regex_filter("politics"))):
     print(article.html.requested_url)
 ````
 

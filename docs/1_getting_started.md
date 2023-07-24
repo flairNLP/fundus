@@ -54,7 +54,7 @@ from fundus import PublisherCollection, Crawler
 # initialize the crawler for news publishers based in the US
 crawler = Crawler(PublisherCollection.us)
 
-# crawl 2 articles and print
+# crawl one article from each publisher based in the us and print it
 for article in crawler.crawl(max_articles=1):
     print(article)
 ````
@@ -73,7 +73,7 @@ Fundus-Article:
 You can also crawl all available articles by simply removing the `max_articles` parameter.
 
 ```` python
-# crawl 2 articles and print
+# crawl all available articles
 for article in crawler.crawl():
     print(article)
 ````
