@@ -75,7 +75,7 @@ for article in crawler.crawl(max_articles=5, url_filter=regex_filter("advertisem
 Often it's useful to select certain criteria rather than filtering them.
 To do so use the `inverse` operator from `fundus.scraping.filter.py`.
 
-Let's crawl a bunch of articles with URLs including the string `politics`.
+Let's crawl a bunch of articles with URLs including the string `politic`.
 
 ````python
 from fundus import Crawler, PublisherCollection
@@ -83,7 +83,7 @@ from fundus.scraping.filter import inverse, regex_filter
 
 crawler = Crawler(PublisherCollection.us)
 
-for article in crawler.crawl(max_articles=5, url_filter=inverse(regex_filter("politics"))):
+for article in crawler.crawl(max_articles=5, url_filter=inverse(regex_filter("politic"))):
     print(article.html.requested_url)
 ````
 
