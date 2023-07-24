@@ -28,26 +28,28 @@ for article in crawler.crawl(max_articles=2, only_complete=Requires("title", "bo
 Writing custom extraction filters is supported and encouraged.
 To do so you need to define a `Callable` satisfying the `ExtractionFilter` protocol which you can find [here](../src/fundus/scraping/filter.py).
 
-Let's build a custom extraction filter that filters out all articles not written by an author called `Donald Duck`
+Let's build a custom extraction filter that filters articles that contain some variation of the topic 'US'.
+
+````python
 
 ````python
 from typing import Dict, Any
 
-
-def author_filter(extracted: Dict[str, Any]) -> bool:
-    if authors := extracted.get('authors'):
-        return 'Donal Duck' not in authors
-    return True
+def us_based_filter(extracted: Dict[str, Any]) -> bool:
+    # This code is a little bit more complex to ensure that the code runs as smoothly as expected from an example
+    desired_topics = [el.lower() for el in ["US", "USA", "United States", "United States of America"]]
+    article_topics = [el.lower() for el in extracted.get("topics", [])]
+    return any(topic.lower() in desired_topics for topic in article_topics)
 ````
 
 and put it to work.
 
 ```` python
-from fundus import Crawler, PublisherCollection
+rom fundus import Crawler, PublisherCollection
 
 crawler = Crawler(PublisherCollection.us)
-for article_from_donald_duck in crawler.crawl(only_complete=author_filter):
-    print(article_from_donald_duck)
+for us_themed_article in crawler.crawl(only_complete=us_based_filter):
+    print(us_themed_article)
 ````
 
 **_NOTE:_** Fundus' filters work inversely to Python's built-in filter.
