@@ -194,44 +194,47 @@ class HTMLSource:
     def _filter(self, url: str) -> bool:
         return any(url_filter(url) for url_filter in self.url_filter)
 
-    async def fetch(self) -> AsyncIterator[HTML]:
+    async def fetch(self) -> AsyncIterator[Optional[HTML]]:
         async for url in self.url_source:
             if not validators.url(url):
                 basic_logger.debug(f"Skipped requested URL '{url}' because the URL is malformed")
+                yield None
                 continue
 
             if self._filter(url):
                 basic_logger.debug(f"Skipped requested URL '{url}' because of URL filter")
+                yield None
                 continue
 
             session = await session_handler.get_session()
 
-            async with session.get(url, headers=self.request_header) as response:
-                if self._filter(str(response.url)):
-                    basic_logger.debug(f"Skipped responded URL '{url}' because of URL filter")
-                    continue
+            try:
+                async with session.get(url, headers=self.request_header) as response:
+                    if self._filter(str(response.url)):
+                        basic_logger.debug(f"Skipped responded URL '{url}' because of URL filter")
+                        yield None
+                        continue
 
-                try:
                     html = await response.text()
                     response.raise_for_status()
 
-                except (HTTPError, ClientError, HttpProcessingError, UnicodeError) as error:
-                    basic_logger.info(f"Skipped requested URL '{url}' because of '{error}'")
-                    continue
+            except (HTTPError, ClientError, HttpProcessingError, UnicodeError) as error:
+                basic_logger.info(f"Skipped requested URL '{url}' because of '{error}'")
+                yield None
+                continue
 
-                except Exception as error:
-                    basic_logger.warning(
-                        f"Warning! Skipped  requested URL '{url}' because of an unexpected error {error}"
-                    )
-                    continue
+            except Exception as error:
+                basic_logger.warning(f"Warning! Skipped  requested URL '{url}' because of an unexpected error {error}")
+                yield None
+                continue
 
-                if response.history:
-                    basic_logger.debug(f"Got redirected {len(response.history)} time(s) from {url} -> {response.url}")
+            if response.history:
+                basic_logger.debug(f"Got redirected {len(response.history)} time(s) from {url} -> {response.url}")
 
-                yield HTML(
-                    requested_url=url,
-                    responded_url=str(response.url),
-                    content=html,
-                    crawl_date=datetime.now(),
-                    source=self,
-                )
+            yield HTML(
+                requested_url=url,
+                responded_url=str(response.url),
+                content=html,
+                crawl_date=datetime.now(),
+                source=self,
+            )
