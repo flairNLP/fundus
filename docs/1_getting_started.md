@@ -46,7 +46,7 @@ crawler = Crawler(PublisherCollection)
 Now to crawl articles make use of the `crawl()` method of the initialized crawler class.
 Calling this will return an `Iterator` over articles.
 
-Let's crawl one news article from all publishers based in the US.
+Let's crawl one news article from a publisher based in the US and print it.
 
 ````python
 from fundus import PublisherCollection, Crawler
@@ -54,7 +54,7 @@ from fundus import PublisherCollection, Crawler
 # initialize the crawler for news publishers based in the US
 crawler = Crawler(PublisherCollection.us)
 
-# crawl 2 articles and print
+# crawl one article from a publisher based in the US and print it
 for article in crawler.crawl(max_articles=1):
     print(article)
 ````
@@ -73,7 +73,7 @@ Fundus-Article:
 You can also crawl all available articles by simply removing the `max_articles` parameter.
 
 ```` python
-# crawl 2 articles and print
+# crawl all available articles
 for article in crawler.crawl():
     print(article)
 ````
