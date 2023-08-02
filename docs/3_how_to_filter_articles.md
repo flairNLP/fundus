@@ -28,31 +28,51 @@ for article in crawler.crawl(max_articles=2, only_complete=Requires("title", "bo
 Writing custom extraction filters is supported and encouraged.
 To do so you need to define a `Callable` satisfying the `ExtractionFilter` protocol which you can find [here](../src/fundus/scraping/filter.py).
 
-Let's build a custom extraction filter that filters out all articles not written by an author called `Donald Duck`
+Let's build a custom extraction filter that rejects all articles which do not contain the word string `usa`.
 
 ````python
 from typing import Dict, Any
 
-
-def author_filter(extracted: Dict[str, Any]) -> bool:
-    if authors := extracted.get('authors'):
-        return 'Donal Duck' not in authors
+def topic_filter(extracted: Dict[str, Any]) -> bool:
+    if topics := extracted.get("topics"):
+        if "usa" in [topic.casefold() for topic in topics]:
+            return False
     return True
 ````
 
 and put it to work.
 
-```` python
+````python
 from fundus import Crawler, PublisherCollection
 
 crawler = Crawler(PublisherCollection.us)
-for article_from_donald_duck in crawler.crawl(only_complete=author_filter):
-    print(article_from_donald_duck)
+for us_themed_article in crawler.crawl(only_complete=topic_filter):
+    print(us_themed_article)
 ````
 
 **_NOTE:_** Fundus' filters work inversely to Python's built-in filter.
 A filter in Fundus describes what is filtered out and not what's kept.
 If a filter returns True on a specific element the element will be dropped.
+
+#### Some more extraction filter examples:
+
+````python
+# only select articles from the past seven days
+def date_filter(extracted: Dict[str, Any]) -> bool:
+    end_date = datetime.date.today() - datetime.timedelta(weeks=1)
+    start_date = end_date - datetime.timedelta(weeks=1)
+    if publishing_date := extracted.get("publishing_date"):
+        return not (start_date <= publishing_date.date() <= end_date)
+    return True
+
+# only select articles which include at least one string from ["pollution", "climate crisis"] in the article body
+def body_filter(extracted: Dict[str, Any]) -> bool:
+    if body := extracted.get("body"):
+        for word in ["pollution", "climate crisis"]:
+            if word in str(body).casefold():
+                return False
+    return True
+````
 
 ## URL filter
 
