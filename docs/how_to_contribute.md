@@ -77,109 +77,132 @@ class US(PublisherEnum):
 
 If the country section for your publisher did not exist before step 1, please add the `PublisherEnum` to `src/library/collection/__init__.py'`.
 
-### 3. Adding Sources
+### 2. Creating a Publisher Specification
+
+Add a new publisher specification for the publisher you want to cover.
+The publisher specification links information about the publisher, sources where to get the HTML to parse from, and the corresponding parser to an object used by Fundus' `Crawler`.
+
+You can add a new entry to the country-specific `PublisherEnum` in the `__init__.py` of the country section you want to contribute to, i.e. `fundus/publishers/<country_code>/__init__.py`.
+For now, we only specify the publisher's name, domain, and parser.
+We will cover sources in the next step.
+
+For the Long Angeles Times, we add the following entry to `fundus/publishers/us/__init__.py`.
+
+``` python
+class US(PublisherEnum):
+    LATimes = PublisherSpec(
+        name="Los Angeles Times",
+        domain="https://www.latimes.com/",
+        parser=LATimesParser,
+    )
+```
+
+If the country section for your publisher did not exist before step 1, please add the `PublisherEnum` to `src/library/collection/__init__.py'`.
+
+#### Adding Sources
 
 For your newly added publisher to work we first need to specify where to find articles - in the form of HTML - to parse.
-Fundus currently supports this by specifying RSS Feeds or sitemaps as `URLSource`s.
-You do so by adding the corresponding `URLSource` objects with the `sources` parameter to the `PublisherSpec`.
+To do so Fundus utilizes access points provided by the publishers rather than using a generic approach like web spiders.
+There are many different forms in which publishers allow you to reach their articles with the most popular being RSS feeds, APIs, or sitemaps.
+Currently, Fundus supports RSS feeds and sitemaps by adding them as corresponding `URLSourece` to the `PublisherSpec` using the `source` parameter.
 
-Fundus provides the following types of `URLSource`s you can import from `fundus.scraping.html`.
+##### Different `URLSource` types
+
+Fundus provides the following types of `URLSource` you can import from `fundus.scraping.html`.
 
 1. `RSSFeed` - specifying RSS feeds
 2. `Sitemap` - specifying sitemaps
-3. `NewsMap` - specifying a special kind of sitemap
+3. `NewsMap` - specifying a special kind of sitemap displaying only recent articles
+
+Fundus differentiates between different source types in order to provide the functionality to crawl only recent articles (`RSSFeed`, `NewsMap`) or an entire website (`Sitemap`).
+We do so mainly for efficiency reasons.
+Refer to [this](3_how_to_filter_articles.md) documentation on how to filter for different source types.
 
 **_NOTE:_** Every added publisher should try to specify at least one `Sitemap` and one `RSSFeed` or `NewsMap` (preferred).
+If your publisher provides a `NewsFeed`, there is no need to specify an `RSSFeed`.
 
-For all these objects you have to set an entry point URL using the `url` parameter.
-`RSSFeed`'s will parse the entire feed given with `url`; `Sitemap` and `NewsMap` will step through the given sitemap recursively by default.
-You can alter this behavior or reverse the order in which sitemaps are processed with the `recursive` respectively `reverse` parameter.
+##### How to specify a `URLSource`
 
-**_NOTE:_** If you wonder why you should reverse your sources from time to time, `URLSource`'s should, if possible, yield URLs in descending order by publishing date.
+To build a `URLSource` you have to set an entry point URL using the `url` parameter.
 
-Fundus differentiates between two types of sitemaps: 
-Those that almost or actually span the entire site (`Sitemap`) and those that only reference recent articles (`NewsMap`), often called [**Google News Maps**](https://support.google.com/news/publisher-center/answer/9607107?hl=en&ref_topic=9606468).
-Usually, the publisher's sitemaps are located at the end of `<publisher_domain>/robots.txt` or can be found through a quick Google search.
-Most `Sitemaps`, and sometimes `NewsMaps` as well, will be index maps pointing to other sitemaps with a `<sitemap>` HTML tag instead of actual articles using an `<url>` tag.
-Since Fundus processes both recursively you don't have to worry about this part.
+###### RSS feeds
 
-E.g:
+Getting links for RSS feeds differs from publisher to publisher.
+Most of the time you can find them through a quick browser search.
+Building an `RSSFeed` looks like this:
+````python
+from fundus.scraping.html import RSSFeed
+RSSFeed("https://theintercept.com/feed/?rss")
+````
 
-```python
-from fundus.scraping.html import NewsMap
-NewsMap("https://www.latimes.com/news-sitemap.xml", reverse=True)
+###### Sitemaps
+ 
+Sitemaps are a collection of `<url>` tags, indicating links to articles with properties attached and following a normed schema.
+A typical sitemap looks like this:
 ```
-
-will define a `NewsMap` yielding URLs in reversed order from https://www.latimes.com/news-sitemap.xml.
-
-For the Los Angeles Times, jumping to the end of their [robots.txt](https://www.latimes.com/robots.txt) gives us the following information.
-
+<urlset ... >
+   <url>
+      <loc>https://www.latimes.com/recipe/peach-frozen-yogurt</loc>
+      <lastmod>2020-01-29</lastmod>
+   </url>
+   ...
 ```
+Links to sitemaps can typically be found within - often at the end of - the `robots.txt` file provided by the publisher.
+You can access this file by attaching `robots.txt` at the end of the publisher domain.
+E.g. for the LA Times reach `https://www.latimes.com/robots.txt` through your preferred browser.
+This will give you the following two sitemap links.
+
+````
 Sitemap: https://www.latimes.com/sitemap.xml
+````
+
+referring to a sitemap, and
+
+````
 Sitemap: https://www.latimes.com/news-sitemap.xml
-```
+````
 
-They specify two sitemaps.
-
-One `NewsMap`
-
-```
-https://www.latimes.com/news-sitemap.xml
-``` 
-
-And a sitemap for the entire Los Angeles Times website.
-
-```
-https://www.latimes.com/sitemap.xml
-```
+pointing to a `NewsMap`, which is a special kind of sitemap.
+To have a look at how to differentiate between those two, refer to [this](#how-to-differentiate-between-sitemap-and-newsmap) section.
 
 **_NOTE:_** There is a known issue with Firefox not displaying XML properly.
 You can find a plugin to resolve this issue [here](https://addons.mozilla.org/de/firefox/addon/pretty-xml/)
 
-#### Finding a Google News Sitemap
-
-Accessing [https://www.latimes.com/news-sitemap.xml](https://www.latimes.com/news-sitemap.xml) should yield an XML file like the following.
-
-``` xml
-<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-              xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemapindex.xsd">
-    <sitemap>
-        <loc>https://www.latimes.com/news-sitemap-content.xml</loc>
-        <lastmod>2023-03-30T04:35-04:00</lastmod>
-    </sitemap>
-    <sitemap>
-        <loc>https://www.latimes.com/news-sitemap-latest.xml</loc>
-    </sitemap>
+Most `Sitemaps`, and sometimes `NewsMaps` as well, will be index maps.
+E.g. accessing `https://www.latimes.com/news-sitemap.xml` will give you something like this:
+```
+<sitemapindex ... >
+   <sitemap>
+      <loc>https://www.latimes.com/news-sitemap-content.xml</loc>
+      <lastmod>2023-08-02T07:10-04:00</lastmod>
+   </sitemap>
+   ...
 </sitemapindex>
 ```
+The `<sitemap>`, and especially the `<sitemapindex>` tag, indicates that this is, in fact, an index map pointing to other sitemaps rather than articles.
+To address this, `Sitemap` and `NewsMap` will step through the given sitemap recursively by default.
+You can alter this behavior or reverse the order in which sitemaps are processed with the `recursive` respectively `reverse` parameters.
 
-Judging by the `<sitemap>` tag used we deal with an index map here.
-Accessing one of the sitemaps, e.g. [https://www.latimes.com/news-sitemap-latest.xml](https://www.latimes.com/news-sitemap-latest.xml), should yield an XML file like the following.
+**_NOTE:_** If you wonder why you should reverse your sources from time to time, `URLSource`'s should, if possible, yield URLs in descending order by publishing date.
 
-``` xml
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
-        xmlns:video="http://www.google.com/schemas/sitemap-video/1.1"
-        xmlns:news="http://www.google.com/schemas/sitemap-news/0.9"
-        xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
-    <url>
-        <loc>
-            https://www.latimes.com/sports/dodgers/story/2023-03-30/dodgers-2023-season-opener-diamondbacks-tv-times-odds
-        </loc>
-        <lastmod>2023-03-30</lastmod>
-        <news:news>
-            <news:publication>
-                <news:name>Los Angeles Times</news:name>
-                <news:language>eng</news:language>
-            </news:publication>
-            <news:publication_date>2023-03-30T06:00:25-04:00</news:publication_date>
-            <news:title>Dodgers 2023 season opener vs. Diamondbacks: TV times, odds</news:title>
-        </news:news>
-    </url>
-</urlset>
-```
+Now building a new `URLSource` for a `NewsMap` covering the LA Times looks like this:
+````python
+from fundus.scraping.html import NewsMap
+NewsMap("https://www.latimes.com/news-sitemap.xml", reverse=True)
+````
+
+##### How to differentiate between `Sitemap` and `NewsMap`
+
+Fundus differentiates between two types of sitemaps: 
+Those that almost or actually span the entire site (`Sitemap`) and those that only reference recent articles (`NewsMap`), often called [**Google News Maps**](https://support.google.com/news/publisher-center/answer/9607107?hl=en&ref_topic=9606468).
+You can check if a sitemap is a news map by:
+1. Checking the file name: 
+   Often there is a string like `news` included.
+   While this is a very simple method this can be unreliable.
+2. Checking the namespace:
+   Typically there is a namespace `news` defined within a news map using the `xmlns:news` attribute of the `<urlset>` tag.
+   E.g. `<urlset ... xmlns:news="http://www.google.com/schemas/sitemap-news/0.9" ... >`
+   **_NOTE:_** This can only be found within the actual sitemap and not an index map.
 
 The line we are looking for is `xmlns:news="http://www.google.com/schemas/sitemap-news/0.9"`.
 Here, the prefix `news` is bound to the namespace `http://www.google.com/schemas/sitemap-news/0.9`.
