@@ -1,27 +1,25 @@
 # We Want You!
 
-First of all: Thank you for thinking about making Fundus better.
-We try to tackle news scraping with domain-specific parsers to focus on precise extraction.
-To handle this massive workload, we depend on people like you to contribute.
+First and foremost, thank you for considering contributing to the improvement of Fundus.
+We aim to tackle news scraping by using domain-specific parsers to achieve precise extraction.
+To handle this substantial workload, we rely on contributions from people like you.
 
 # What is Fundus
 
-Fundus aims to be a very lightweight but precise news-scraping library.
-Easy to use while being able to precisely extract information from provided HTML.
-At its core Fundus is a massive parser library.
-Rather than automate the extraction layer, Fundus builds on handcrafted parsers.
-In consequence, for Fundus to be able to parse a specific news domain, someone has to write a parser specific to this domain.
-And there are a lot of domains.
+Fundus strives to be a lightweight, easy to use yet precise news-scraping library.
+At its core, Fundus is a parser library that focuses on handcrafted parsers instead of fully automated extraction.
+Consequently, to enable Fundus to parse news from specific domains, someone needs to create a parser tailored to that domain.
+Given the multitude of news domains, there are countless opportunities for contributions.
 
 # How to contribute
 
-Before contributing to Fundus you should check if you have Fundus installed in `editable` mode and using dev-requirements.
-If you haven't done this so far or aren't sure about you should
+Before contributing to Fundus, ensure that you have installed Fundus in `editable` mode and are using the development requirements.
+If you haven't done this yet or are uncertain, follow these steps:
 
-1. Clone the repository
-2. Optional but recommended: Create a virtual environment (.venv) or conda environment
-3. Navigate to the root of the repository
-4. Run pip install -e .[dev]
+1. Clone the repository.
+2. Optional but recommended: Create a virtual environment (.venv) or conda environment.
+3. Navigate to the root of the repository.
+4. Run `pip install -e .[dev]` 
 
 ## How to add a Publisher
 
@@ -38,7 +36,7 @@ For example:
 - `fundus/publishers/us/` for US publishers
 - ...
 
-Now create an empty file in the corresponding country section using the publishers' name - or some kind of abbreviation - as the file name.
+Now create an empty file in the corresponding country section using the publishers' name or some abbreviation as the file name.
 For the Los Angeles Times, the correct country section is `fundus/publishers/us/`, since they are a newspaper based in the United States, with a filename like `la_times.py` or `los_angeles_times.py`.
 We will continue here with `la_times.py`.
 In the newly created file, add an empty parser class inheriting from `ParserProxy` and a parser version `V1` subclassing `BaseParser`.
@@ -53,7 +51,29 @@ class LATimesParser(ParserProxy):
 ```
 
 Internally, the `ParserProxy` maps crawl dates to specific versions (`V1`, `V2`, etc.) subclassing `BaseParser`.
-Since Fundus' parsers are written by hand and in most cases bound to the layout they were written for, Fundus takes the extra proxying step to address changes to the layout.
+Since Fundus' parsers are handcrafted and usually tied to specific layouts, this proxying step helps address changes to the layout.
+
+### 2. Creating a Publisher Specification
+
+Next, add a new publisher specification for the publisher you want to cover.
+The publisher specification links information about the publisher, sources from where to get the HTML to parse, and the corresponding parser used by Fundus' `Crawler`.
+
+You can add a new entry to the country-specific `PublisherEnum` in the `__init__.py` of the country section you want to contribute to, i.e. `fundus/publishers/<country_code>/__init__.py`.
+For now, we only specify the publisher's name, domain, and parser.
+We will cover sources in the next step.
+
+For the Los Angeles Times (LA Times), we add the following entry to `fundus/publishers/us/__init__.py`.
+
+``` python
+class US(PublisherEnum):
+    LATimes = PublisherSpec(
+        name="Los Angeles Times",
+        domain="https://www.latimes.com/",
+        parser=LATimesParser,
+    )
+```
+
+If the country section for your publisher did not exist before step 1, please add the `PublisherEnum` to `src/library/collection/__init__.py'`.
 
 ### 2. Creating a Publisher Specification
 
@@ -77,124 +97,122 @@ class US(PublisherEnum):
 
 If the country section for your publisher did not exist before step 1, please add the `PublisherEnum` to `src/library/collection/__init__.py'`.
 
-### 3. Adding Sources
+#### Adding Sources
 
-For your newly added publisher to work we first need to specify where to find articles - in the form of HTML - to parse.
-Fundus currently supports this by specifying RSS Feeds or sitemaps as `URLSource`s.
-You do so by adding the corresponding `URLSource` objects with the `sources` parameter to the `PublisherSpec`.
+For your newly added publisher to work you first need to specify where to find articles - in the form of HTML - to parse.
+Fundus adopts a unique approach by utilizing access points provided by the publishers, rather than resorting to generic web spiders.
+Publishers offer various methods to access their articles, with the most common being RSS feeds, APIs, or sitemaps. 
+Presently, Fundus supports RSS feeds and sitemaps by adding them as corresponding `URLSource` using the `source` parameter of `PublisherSpec`.
 
-Fundus provides the following types of `URLSource`s you can import from `fundus.scraping.html`.
+##### Different `URLSource` types
+
+Fundus provides the following types of `URLSource`, which you can import from `fundus.scraping.html`.
 
 1. `RSSFeed` - specifying RSS feeds
 2. `Sitemap` - specifying sitemaps
-3. `NewsMap` - specifying a special kind of sitemap
+3. `NewsMap` - specifying a special kind of sitemap displaying only recent articles
 
-**_NOTE:_** Every added publisher should try to specify at least one `Sitemap` and one `RSSFeed` or `NewsMap` (preferred).
+Fundus distinguishes between these source types to facilitate crawling only recent articles (`RSSFeed`, `NewsMap`) or an entire website (`Sitemap`).
+This differentiation is mainly for efficiency reasons.
+Refer to [this](3_how_to_filter_articles.md#filter-sources) documentation on how to filter for different source types.
 
-For all these objects you have to set an entry point URL using the `url` parameter.
-`RSSFeed`'s will parse the entire feed given with `url`; `Sitemap` and `NewsMap` will step through the given sitemap recursively by default.
-You can alter this behavior or reverse the order in which sitemaps are processed with the `recursive` respectively `reverse` parameter.
+**_NOTE:_** When adding a new publisher, it is recommended to specify at least one `Sitemap` and one `RSSFeed` or `NewsMap` (preferred).
+If your publisher provides a `NewsFeed`, there is no need to specify an `RSSFeed`.
 
-**_NOTE:_** If you wonder why you should reverse your sources from time to time, `URLSource`'s should, if possible, yield URLs in descending order by publishing date.
+##### How to specify a `URLSource`
 
-Fundus differentiates between two types of sitemaps: 
-Those that almost or actually span the entire site (`Sitemap`) and those that only reference recent articles (`NewsMap`), often called [**Google News Maps**](https://support.google.com/news/publisher-center/answer/9607107?hl=en&ref_topic=9606468).
-Usually, the publisher's sitemaps are located at the end of `<publisher_domain>/robots.txt` or can be found through a quick Google search.
-Most `Sitemaps`, and sometimes `NewsMaps` as well, will be index maps pointing to other sitemaps with a `<sitemap>` HTML tag instead of actual articles using an `<url>` tag.
-Since Fundus processes both recursively you don't have to worry about this part.
+To instantiate an object inheriting from URLSource like `RSSFeed` or `Sitemap`, you first need to find a link to the corresponding feed or sitemap and then set it as the entry point using the `url` parameter of `URLSource`.
 
-E.g:
+###### RSS feeds
 
-```python
-from fundus.scraping.html import NewsMap
-NewsMap("https://www.latimes.com/news-sitemap.xml", reverse=True)
-```
+Getting links for RSS feeds can vary from publisher to publisher.
+Most of the time, you can find them through a quick browser search.
+Building an `RSSFeed` looks like this:
+````python
+from fundus.scraping.html import RSSFeed
+RSSFeed("https://theintercept.com/feed/?rss")
+````
 
-will define a `NewsMap` yielding URLs in reversed order from https://www.latimes.com/news-sitemap.xml.
+###### Sitemaps
+ 
+Sitemaps consist of a collection of `<url>` tags, indicating links to articles with properties attached, following a standardized schema.
+A typical sitemap looks like this:
 
-For the Los Angeles Times, jumping to the end of their [robots.txt](https://www.latimes.com/robots.txt) gives us the following information.
-
-```
-Sitemap: https://www.latimes.com/sitemap.xml
-Sitemap: https://www.latimes.com/news-sitemap.xml
-```
-
-They specify two sitemaps.
-
-One `NewsMap`
-
-```
-https://www.latimes.com/news-sitemap.xml
-``` 
-
-And a sitemap for the entire Los Angeles Times website.
-
-```
-https://www.latimes.com/sitemap.xml
+```console
+<urlset ... >
+   <url>
+      <loc>https://www.latimes.com/recipe/peach-frozen-yogurt</loc>
+      <lastmod>2020-01-29</lastmod>
+   </url>
+   ...
 ```
 
 **_NOTE:_** There is a known issue with Firefox not displaying XML properly.
 You can find a plugin to resolve this issue [here](https://addons.mozilla.org/de/firefox/addon/pretty-xml/)
 
-#### Finding a Google News Sitemap
+Links to sitemaps are typically found within the `robots.txt` file provided by the publisher, often located at the end of it.
+To access this file, append `robots.txt` at the end of the publisher's domain.
+For example, to access the LA Times' `robots.txt`, use https://www.latimes.com/robots.txt in your preferred browser.
+ This will give you the following two sitemap links:
 
-Accessing [https://www.latimes.com/news-sitemap.xml](https://www.latimes.com/news-sitemap.xml) should yield an XML file like the following.
+```console
+Sitemap: https://www.latimes.com/sitemap.xml
+Sitemap: https://www.latimes.com/news-sitemap.xml
+````
 
-``` xml
-<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-              xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemapindex.xsd">
-    <sitemap>
-        <loc>https://www.latimes.com/news-sitemap-content.xml</loc>
-        <lastmod>2023-03-30T04:35-04:00</lastmod>
-    </sitemap>
-    <sitemap>
-        <loc>https://www.latimes.com/news-sitemap-latest.xml</loc>
-    </sitemap>
+The former refers to a regular sitemap, and the latter points to a NewsMap, which is a special kind of sitemap.
+To have a look at how to differentiate between those two, refer to [this](#how-to-differentiate-between-sitemap-and-newsmap) section.
+
+Most `Sitemaps`, and sometimes `NewsMaps` as well, will be index maps.
+E.g. accessing `https://www.latimes.com/news-sitemap.xml` will give you something like this:
+```
+<sitemapindex ... >
+   <sitemap>
+      <loc>https://www.latimes.com/news-sitemap-content.xml</loc>
+      <lastmod>2023-08-02T07:10-04:00</lastmod>
+   </sitemap>
+   ...
 </sitemapindex>
 ```
+The `<sitemap>`, and especially the `<sitemapindex>` tag, indicates that this is, in fact, an index map pointing to other sitemaps rather than articles.
+To address this, `Sitemap` and `NewsMap` will step through the given sitemap recursively by default.
+You can alter this behavior or reverse the order in which sitemaps are processed with the `recursive` respectively `reverse` parameters.
 
-Judging by the `<sitemap>` tag used we deal with an index map here.
-Accessing one of the sitemaps, e.g. [https://www.latimes.com/news-sitemap-latest.xml](https://www.latimes.com/news-sitemap-latest.xml), should yield an XML file like the following.
+**_NOTE:_** If you wonder why you should reverse your sources from time to time, `URLSource`'s should, if possible, yield URLs in descending order by publishing date.
 
-``` xml
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
-        xmlns:video="http://www.google.com/schemas/sitemap-video/1.1"
-        xmlns:news="http://www.google.com/schemas/sitemap-news/0.9"
-        xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
-    <url>
-        <loc>
-            https://www.latimes.com/sports/dodgers/story/2023-03-30/dodgers-2023-season-opener-diamondbacks-tv-times-odds
-        </loc>
-        <lastmod>2023-03-30</lastmod>
-        <news:news>
-            <news:publication>
-                <news:name>Los Angeles Times</news:name>
-                <news:language>eng</news:language>
-            </news:publication>
-            <news:publication_date>2023-03-30T06:00:25-04:00</news:publication_date>
-            <news:title>Dodgers 2023 season opener vs. Diamondbacks: TV times, odds</news:title>
-        </news:news>
-    </url>
-</urlset>
-```
+Now building a new `URLSource` for a `NewsMap` covering the LA Times looks like this:
+````python
+from fundus.scraping.html import NewsMap
+NewsMap("https://www.latimes.com/news-sitemap.xml", reverse=True)
+````
 
-The line we are looking for is `xmlns:news="http://www.google.com/schemas/sitemap-news/0.9"`.
-Here, the prefix `news` is bound to the namespace `http://www.google.com/schemas/sitemap-news/0.9`.
-This indicates the sitemap is a Google News Sitemap.
-Thus `https://www.latimes.com/news-sitemap.xml` is a Google News Index Map.
+##### How to differentiate between `Sitemap` and `NewsMap`
+
+Fundus differentiates between two types of sitemaps: 
+Those that almost or actually span the entire site (`Sitemap`) and those that only reference recent articles (`NewsMap`), often called [**Google News Maps**](https://support.google.com/news/publisher-center/answer/9607107?hl=en&ref_topic=9606468).
+You can check if a sitemap is a news map by:
+1. Checking the file name: 
+   Often there is a string like `news` included.
+   While this is a very simple method this can be unreliable.
+2. Checking the namespace:
+   Typically there is a namespace `news` defined within a news map using the `xmlns:news` attribute of the `<urlset>` tag.
+   E.g. `<urlset ... xmlns:news="http://www.google.com/schemas/sitemap-news/0.9" ... >`<br>
+   **_NOTE:_** This can only be found within the actual sitemap and not the index map.
 
 #### Finishing the Publisher Specification
 
 1. Sometimes sitemaps can include a lot of noise like maps pointing to a collection of tags or authors, etc.
    You can use the `sitemap_filter` parameter of `Sitemap` or `NewsMap` to prefilter these based on a regular expression.
-2. If your publisher requires to use custom request headers to work properly you can alter it by using the `request_header` parameter.
-   The default is: `{"user_agent": "fundus"}`.
-3. If you want to block URLs for the entire publisher use the `url_filter` parameter.
+   E.g. 
+   ```` python
+   Sitemap("https://apnews.com/sitemap.xml", sitemap_filter=regex_filter("apnews.com/hub/|apnews.com/video/"))
+   ````
+   Will filter out all URLs encountered within the processing of the `Sitemap` object including either the string `apnews.com/hub/` or `apnews.com/video/`.  
+2. If your publisher requires to use custom request headers to work properly you can alter it by using the `request_header` parameter of `PublisherSpec`.
+   The default is: `{"user_agent": "Fundus"}`.
+3. If you want to block URLs for the entire publisher use the `url_filter` parameter of `PublisherSpec`.
 
-Bringing all of this section together our specification for the LA Times looks like this.
+Now, let's put it all together to specify the LA Times as a new publisher in Fundus:
 
 ``` python
 class US(PublisherEnum):
@@ -244,20 +262,20 @@ Since we didn't add any specific implementation to the parser yet, most entries 
 
 ### 5. Implementing the Parser
 
-Bring your parser to life and fill it with attributes to parse.
+Now bring your parser to life and define the attributes you want to extract.
 
 One important caveat to consider is the type of content on a particular page.
-For example, various news outlets use live tickers, sites that display a podcast, or hub sites which are not articles but link to other pages.
-At the current state of this library, you do not need to worry about sites that are not articles.
-Your code should be able to extract the desired attributes from most pages of the publisher you are adding.
-Sites that do not contain the desired attributes will be filtered by the library on their own in a later stage of the pipeline.
+Some news outlets feature live tickers, displaying podcasts, or hub sites that link to other pages but are not articles themselves.
+For now, you need not worry about handling non-article sites. 
+Your parser should focus on extracting the desired attributes from most pages you would consider as articles.
+Sites that do not contain the desired attributes will be filtered by the library in a later stage of the pipeline.
 
 You can add attributes by decorating the methods of your parser with the `@attribute` decorator.
-Attributes are expected to have a return value precisely specified in the [attribute guidelines](attribute_guidelines.md).
+The expected return value for each attribute must precisely match the specifications outlined in the [attribute guidelines](attribute_guidelines.md).
 
-For example, if we want our parser to extract article titles, we take the [attribute guidelines](attribute_guidelines.md) and look for a defined attribute that matches our expectations.
-In the guidelines, we find an attribute called `title`, which exactly describes what we want to extract and the expected return type.
-You must stick to the specified return types since they are enforced in our unit tests.
+For example, if we want our parser to extract article titles, we first refer to the [attribute guidelines](attribute_guidelines.md) and look for a attribute that matches our expectations.
+Here we can find an attribute called `title`, which exactly describes what we want to extract and the expected return type.
+It is essential to adhere to the specified return types, as they are enforced in our unit tests.
 You're free to experiment locally, but you won't be able to contribute to the repository when your PR isn't compliant with the guidelines.
 
 **_NOTE:_**
@@ -270,9 +288,9 @@ def unsupported_attribute(self):
 ```
 
 Attributes with validate set to `False` will not be validated through unit tests.
-If you have problems implementing your desired publisher feel free to ask questions in the [**issue**](https://github.com/flairNLP/fundus/issues) tab.
+If you have problems implementing your desired publisher, don't hesitate to ask questions in the [**issue**](https://github.com/flairNLP/fundus/issues) tab.
 
-Now that we have our attribute name, we add it to the parser by defining a method called `title` and declaring it as an attribute with the `@attribute` decorator.
+Now, once we have identified the attribute we want to extract, we add it to the parser by defining a method using the associated name, in our case `title`, and marking it as an attribute using the `@attribute` decorator.
 
 ``` python
 class LATimesParser(ParserProxy):
@@ -283,14 +301,14 @@ class LATimesParser(ParserProxy):
             return "This is a title"
 ```
 
-Now let's print our newly added titles.
+To see the results of our newly added titles, we can use the following code:
 
 ``` python
 for article in crawler.crawl(max_articles=2):
     print(article.title)
 ```
 
-Which should print the following output
+This should print the following output:
 
 ```console
 This is a title
@@ -298,14 +316,14 @@ This is a title
 ```
 
 Fundus will automatically add your decorated attributes as instance attributes to the `article` object during parsing.
-Attributes defined in the [attribute guidelines](attribute_guidelines.md) are additionally defined as `dataclasses.fields`.
+A Additionally, attributes defined in the attribute guidelines are explicitly defined as `dataclasses.fields`.
 
 #### Extracting Attributes from Precomputed
 
-To let your parser extract useful information rather than placeholders, one way is to use the `ld` and `meta` attributes of the `Article`.
-These attributes are automatically extracted when present in the HTML and are accessible during parsing time within your parser's attributes.
-Often useful information about an article like the `title`, `author` or `topics` can be found in these two objects.
-You can access them inside your parser class via the `precomputed` attribute of `BaseParser`, which holds a `dataclass` of type `Precomputed`.
+One way to extract useful information from articles rather placeholders, is to utilize `ld` and `meta` attributes of the `Article`.
+These attributes are automatically extracted when they are present in the currently parsed HTML.
+Often, valuable information about an article, such as the `title`, `author` or `topics`, can be found in these two objects.
+To access them during parsing, you can use the `precomputed` attribute of `BaseParser`, which references a `dataclass` of type `Precomputed`.
 This object contains meta information about the article you're currently parsing.
 
 ``` python
@@ -318,17 +336,17 @@ class Precomputed:
     cache: Dict[str, Any]
 ```
 
-In the following table, you can find a short description of the fields of the `precomputed` attribute.
+Here is a brief description of the fields of `Precomputed`.
 
-| Precomputed Attribute | Description                                                                                                                                            |
-|-----------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------|
-| html                  | The original fetched HTML.                                                                                                                             |
-| doc                   | The root node of an `lxml.html.Etree` spanning the fetched html.                                                                                       |
-| meta                  | The article's meta-information extracted from `<meta>` tags.                                                                                           |
-| ld                    | The linked data extracted from the HTML's [`ld+json`](https://json-ld.org/)                                                                            |
-| cache                 | A cache specific to the currently parsed site which can be used to share objects between attributes. Share objects with the `BaseParser.share` method. |
+| Precomputed Attribute | Description                                                                                                                                             |
+|-----------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------|
+| html                  | The original fetched HTML.                                                                                                                              |
+| doc                   | The root node of an `lxml.html.Etree` spanning the fetched html.                                                                                        |
+| meta                  | The article's meta-information extracted from `<meta>` tags.                                                                                            |
+| ld                    | The linked data extracted from the HTML's [`ld+json`](https://json-ld.org/)                                                                             |
+| cache                 | A cache specific to the currently parsed site, which can be used to share objects between attributes. Share objects with the `BaseParser.share` method. |
 
-For example, to extract the title for an article in the Los Angeles Times, we can access the `og:title` through the `meta` precomputed attribute.
+For instance, to extract the title for an article in the Los Angeles Times, we can access the `og:title` through the attribute `meta` of `Precomputed`.
 
 ``` python
 @attribute
@@ -350,7 +368,7 @@ We highly recommend using the utility functions, especially when parsing the `Ar
 
 #### Finishing the Parser
 
-Bringing all the above together the Los Angeles Times now looks like this.
+Bringing all the above together, the Los Angeles Times now looks like this.
 
 ```python
 import datetime
