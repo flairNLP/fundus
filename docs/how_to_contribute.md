@@ -58,13 +58,13 @@ Since Fundus' parsers are written by hand and in most cases bound to the layout 
 ### 2. Creating a Publisher Specification
 
 Add a new publisher specification for the publisher you want to cover.
-The publisher specification links information about the publisher, sources where to get the HTML to parse from, and the corresponding parser to an object used by Fundus' `Crawler`.
+The publisher specification links information about the publisher, sources where to get the HTML to parse from, and the corresponding parser object used by Fundus' `Crawler`.
 
 You can add a new entry to the country-specific `PublisherEnum` in the `__init__.py` of the country section you want to contribute to, i.e. `fundus/publishers/<country_code>/__init__.py`.
 For now, we only specify the publisher's name, domain, and parser.
 We will cover sources in the next step.
 
-For the Long Angeles Times, we add the following entry to `fundus/publishers/us/__init__.py`.
+For the Los Angeles Times (LA Times), we add the following entry to `fundus/publishers/us/__init__.py`.
 
 ``` python
 class US(PublisherEnum):
@@ -101,10 +101,10 @@ If the country section for your publisher did not exist before step 1, please ad
 
 #### Adding Sources
 
-For your newly added publisher to work we first need to specify where to find articles - in the form of HTML - to parse.
+For your newly added publisher to work you first need to specify where to find articles - in the form of HTML - to parse.
 To do so Fundus utilizes access points provided by the publishers rather than using a generic approach like web spiders.
 There are many different forms in which publishers allow you to reach their articles with the most popular being RSS feeds, APIs, or sitemaps.
-Currently, Fundus supports RSS feeds and sitemaps by adding them as corresponding `URLSourece` to the `PublisherSpec` using the `source` parameter.
+Currently, Fundus supports RSS feeds and sitemaps by adding them as corresponding `URLSource` using the `source` parameter of `PublisherSpec`.
 
 ##### Different `URLSource` types
 
@@ -114,16 +114,16 @@ Fundus provides the following types of `URLSource` you can import from `fundus.s
 2. `Sitemap` - specifying sitemaps
 3. `NewsMap` - specifying a special kind of sitemap displaying only recent articles
 
-Fundus differentiates between different source types in order to provide the functionality to crawl only recent articles (`RSSFeed`, `NewsMap`) or an entire website (`Sitemap`).
+Fundus differentiates between source types in order to provide the functionality to crawl only recent articles (`RSSFeed`, `NewsMap`) or an entire website (`Sitemap`).
 We do so mainly for efficiency reasons.
-Refer to [this](3_how_to_filter_articles.md) documentation on how to filter for different source types.
+Refer to [this](3_how_to_filter_articles.md#filter-sources) documentation on how to filter for different source types.
 
 **_NOTE:_** Every added publisher should try to specify at least one `Sitemap` and one `RSSFeed` or `NewsMap` (preferred).
 If your publisher provides a `NewsFeed`, there is no need to specify an `RSSFeed`.
 
 ##### How to specify a `URLSource`
 
-To build a `URLSource` you have to set an entry point URL using the `url` parameter.
+To build an object inheriting from URLSource like `RSSFeed` or `Sitemap` you first have to find a link to the corresponding feed or sitemap and then set it as entry point using the `url` parameter of `URLSource`.
 
 ###### RSS feeds
 
@@ -137,7 +137,7 @@ RSSFeed("https://theintercept.com/feed/?rss")
 
 ###### Sitemaps
  
-Sitemaps are a collection of `<url>` tags, indicating links to articles with properties attached and following a normed schema.
+Sitemaps are a collection of `<url>` tags, indicating links to articles with properties attached, and following a normed schema.
 A typical sitemap looks like this:
 ```
 <urlset ... >
@@ -163,6 +163,7 @@ Sitemap: https://www.latimes.com/news-sitemap.xml
 ````
 
 pointing to a `NewsMap`, which is a special kind of sitemap.
+
 To have a look at how to differentiate between those two, refer to [this](#how-to-differentiate-between-sitemap-and-newsmap) section.
 
 **_NOTE:_** There is a known issue with Firefox not displaying XML properly.
@@ -201,21 +202,21 @@ You can check if a sitemap is a news map by:
    While this is a very simple method this can be unreliable.
 2. Checking the namespace:
    Typically there is a namespace `news` defined within a news map using the `xmlns:news` attribute of the `<urlset>` tag.
-   E.g. `<urlset ... xmlns:news="http://www.google.com/schemas/sitemap-news/0.9" ... >`
-   **_NOTE:_** This can only be found within the actual sitemap and not an index map.
-
-The line we are looking for is `xmlns:news="http://www.google.com/schemas/sitemap-news/0.9"`.
-Here, the prefix `news` is bound to the namespace `http://www.google.com/schemas/sitemap-news/0.9`.
-This indicates the sitemap is a Google News Sitemap.
-Thus `https://www.latimes.com/news-sitemap.xml` is a Google News Index Map.
+   E.g. `<urlset ... xmlns:news="http://www.google.com/schemas/sitemap-news/0.9" ... >`<br>
+   **_NOTE:_** This can only be found within the actual sitemap and not the index map.
 
 #### Finishing the Publisher Specification
 
 1. Sometimes sitemaps can include a lot of noise like maps pointing to a collection of tags or authors, etc.
    You can use the `sitemap_filter` parameter of `Sitemap` or `NewsMap` to prefilter these based on a regular expression.
-2. If your publisher requires to use custom request headers to work properly you can alter it by using the `request_header` parameter.
-   The default is: `{"user_agent": "fundus"}`.
-3. If you want to block URLs for the entire publisher use the `url_filter` parameter.
+   E.g. 
+   ```` python
+   Sitemap("https://apnews.com/sitemap.xml", sitemap_filter=regex_filter("apnews.com/hub/|apnews.com/video/"))
+   ````
+   Will filter out all URLs encountered within the processing of the `Sitemap` object including either the string `apnews.com/hub/` or `apnews.com/video/`.  
+2. If your publisher requires to use custom request headers to work properly you can alter it by using the `request_header` parameter of `PublisherSpec`.
+   The default is: `{"user_agent": "Fundus"}`.
+3. If you want to block URLs for the entire publisher use the `url_filter` parameter of `PublisherSpec`.
 
 Bringing all of this section together our specification for the LA Times looks like this.
 
