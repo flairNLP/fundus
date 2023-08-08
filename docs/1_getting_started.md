@@ -1,3 +1,10 @@
+# Table of Contents
+
+* [Basics](#basics)
+  * [What is the `PublisherCollection`](#what-is-the-publishercollection)
+  * [What is a `Crawler`](#what-is-a-crawler)
+* [How to crawl articles](#how-to-crawl-articles)
+
 # Basics
 
 This tutorial explains the basic concepts of Fundus:

@@ -1,3 +1,8 @@
+# Table of Contents
+
+* [How to search for publishers](#how-to-search-for-publishers)
+  * [Using `search()`](#using-search)
+
 # How to search for publishers
 
 This tutorial will show you how to search for specific publishers in the `PublisherCollection`.
