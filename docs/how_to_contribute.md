@@ -8,7 +8,7 @@
 
 # We Want You!
 
-First and foremost, thank you for considering contributing to the improvement of Fundus.
+First and foremost, thank you for thinking about making Fundus better.
 We aim to tackle news scraping by using domain-specific parsers to achieve precise extraction.
 To handle this substantial workload, we rely on contributions from people like you.
 

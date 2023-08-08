@@ -56,6 +56,22 @@ Fundus supports two methods to access the body of the article
 2. Accessing the `body` attribute of `Article`. 
    This returns an `ArticleBody` instance, granting more fine-grained access to the DOM structure of the article body.
 
+The `ArticleBody` consists of
+- a `summary` giving a brief introduction of the article
+- a attribute `sections` containing multiple `ArticleSection`
+
+With `ArticleSection` including
+- a `headline`; separating the section from other sections
+- multiple `paragraphs` following the headline
+
+````console
+ArticleSection
+    |-- headline: TextSequence
+    |-- sections: List[ArticleSection]
+                            |-- headline: TextSequence
+                            |-- paragraphs: TextSequence
+````
+
 Let's print the headline and paragraphs for the last section of the article body.
 ````python
 from fundus import Crawler, PublisherCollection
