@@ -338,7 +338,7 @@ def title(self) -> Optional[str]:
 When parsing the `ArticleBody`, or in certain scenarios, you need to directly obtain information from the [Document Object Model](https://en.wikipedia.org/wiki/Document_Object_Model) (DOM) of the HTML/XML.
 The DOM serves as an interface representing the underlying HTML or XML file as a tree structure, where each element (tag) of the file functions as a node in the tree.
 To select or search respectively for the information you need you can access these nodes using selectors like CSS-Select or XPath.
-Fundus relies on the Python package lxml and its selector implementation.
+Fundus relies on the Python package `lxml` and its selector implementation.
 
 #### Working with `lxml`
 
@@ -378,7 +378,7 @@ Next we will show you how to specify search conditions in the form of selectors 
 
 #### CSS-Select
 
-CSS-Select is generally a simpler, but less comprehensive, selector compared to XPath
+CSS-Select is generally a simpler, but less comprehensive, selector compared to XPath.
 In most instances, it's advisable to use CSS-Select and resort to XPath only when necessary.
 To define your selector we recommend using [this](https://www.w3schools.com/cssref/css_selectors.php) reference.
 
