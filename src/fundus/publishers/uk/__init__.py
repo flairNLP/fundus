@@ -16,8 +16,9 @@ class UK(PublisherEnum):
     TheIndependent = PublisherSpec(
         name="The Independent",
         domain="https://www.independent.co.uk/",
-        sources=[Sitemap("https://www.independent.co.uk/sitemap.xml"),
-                 NewsMap("https://www.independent.co.uk/sitemaps/googlenews")],
+        sources=[
+            Sitemap("https://www.independent.co.uk/sitemap.xml"),
+            NewsMap("https://www.independent.co.uk/sitemaps/googlenews"),
+        ],
         parser=TheIndependentParser,
     )
-
