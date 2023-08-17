@@ -2,6 +2,7 @@ import asyncio
 import time
 from typing import (
     AsyncIterator,
+    Iterable,
     Iterator,
     List,
     Literal,
@@ -11,9 +12,11 @@ from typing import (
     Tuple,
     Type,
     Union,
+    cast,
     runtime_checkable,
 )
 
+import aioitertools
 import more_itertools
 
 from fundus import PublisherCollection
@@ -24,7 +27,6 @@ from fundus.scraping.filter import ExtractionFilter, URLFilter
 from fundus.scraping.html import URLSource
 from fundus.scraping.scraper import Scraper
 from fundus.utils.more_async import async_next
-from fundus.utils.more_async import zip_longest as async_zip_longest
 
 
 @runtime_checkable
@@ -92,7 +94,7 @@ class BaseCrawler:
                     None
                     if only_complete is False
                     else lambda extracted: not all(
-                        bool(v) if not isinstance(v, Exception) else False for k, v in extracted.items()
+                        bool(v) if not isinstance(v, Exception) else False for _, v in extracted.items()
                     )
                 )
             else:
@@ -136,26 +138,28 @@ class BaseCrawler:
         # we use this custom variant of interleave_longest in order to be able
         # to delay the program flow between batches
         async def _async_article_interleave_longest() -> AsyncIterator[Article]:
-            batches: AsyncIterator[Tuple[Optional[Article], ...]] = async_zip_longest(*async_article_iterators)
+            # type: ignore[attr-defined]
+            batches: AsyncIterator[Tuple[Optional[Article], ...]] = aioitertools.itertools.zip_longest(
+                *async_article_iterators
+            )
             start_time = time.time()
             async for batch in batches:
                 basic_logger.debug(f"Batch took {time.time() - start_time} seconds")
-                for value in batch:
-                    if value is not None:
-                        response_cache.add(value.html.responded_url)
-                        yield value
+                for next_article in cast(Iterable[Article], filter(bool, batch)):
+                    response_cache.add(next_article.html.responded_url)
+                    yield next_article
                 if final_delay:
-                    await asyncio.sleep(final_delay() - time.time() + start_time)
+                    await asyncio.sleep(max(0.0, final_delay() - time.time() + start_time))
                 start_time = time.time()
 
-        i: int = 0
         if max_articles is None:
             max_articles = -1
-        async for article in _async_article_interleave_longest():
-            if i == max_articles:
-                break
+        async for article_index, article in aioitertools.builtins.enumerate(
+            _async_article_interleave_longest(), start=1
+        ):  # type:ignore[attr-defined]
             yield article
-            i += 1
+            if article_index == max_articles:
+                break
 
     def crawl(
         self,
@@ -206,9 +210,9 @@ class BaseCrawler:
         event_loop = asyncio.new_event_loop()
 
         while True:
-            if nxt := event_loop.run_until_complete(async_next(async_article_iter, None)):
-                yield nxt
-            else:
+            try:
+                yield event_loop.run_until_complete(async_next(async_article_iter))
+            except StopAsyncIteration:
                 break
 
 
