@@ -32,3 +32,5 @@ If you haven't done this yet or are uncertain, follow these steps:
 # Contribution tutorials
 
 1. [How to add a publisher](how_to_add_a_publisher.md)
+
+**_NOTE:_** If you run into any problems while contributing don't hesitate to ask questions in the [**issue**](https://github.com/flairNLP/fundus/issues) tab.
