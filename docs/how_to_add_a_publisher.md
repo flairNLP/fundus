@@ -245,9 +245,9 @@ Now bring your parser to life and define the attributes you want to extract.
 
 One important caveat to consider is the type of content on a particular page.
 Some news outlets feature live tickers, displaying podcasts, or hub sites that link to other pages but are not articles themselves.
-At this stage, there's no need to concern yourself with handling non-article websites. 
+At this stage, there's no need to concern yourself with handling non-article pages. 
 our parser should concentrate on extracting desired attributes from most pages that can be classified as articles.
-Websites lacking the desired attributes will be filtered out by the library during a later phase of the processing pipeline.
+Pages lacking the desired attributes will be filtered out by the library during a later phase of the processing pipeline.
 
 You can add attributes by decorating the methods of your parser with the `@attribute` decorator.
 The expected return value for each attribute must precisely match the specifications outlined in the [attribute guidelines](attribute_guidelines.md).
@@ -335,7 +335,7 @@ def title(self) -> Optional[str]:
 
 ### Extracting Attributes with XPath and CSS-Select
 
-When parsing the `ArticleBody`, or in certain scenarios, you need to directly obtain information from the [Document Object Model](https://en.wikipedia.org/wiki/Document_Object_Model) (DOM) of the HTML/XML.
+When parsing the `ArticleBody`, or the desired information cannot be extracted from the `ld` or `meta` attributes, you need to directly obtain information from the [Document Object Model](https://en.wikipedia.org/wiki/Document_Object_Model) (DOM) of the HTML/XML.
 The DOM serves as an interface representing the underlying HTML or XML file as a tree structure, where each element (tag) of the file functions as a node in the tree.
 To select or search respectively for the information you need you can access these nodes using selectors like CSS-Select or XPath.
 Fundus relies on the Python package `lxml` and its selector implementation.
