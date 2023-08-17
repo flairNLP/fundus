@@ -1,3 +1,14 @@
+# Table of Contents
+
+* [How to filter articles](#how-to-filter-articles)
+  * [Extraction filter](#extraction-filter)
+    * [Custom extraction filter](#custom-extraction-filter)
+      * [Some more extraction filter examples:](#some-more-extraction-filter-examples)
+  * [URL filter](#url-filter)
+    * [Combine filters](#combine-filters)
+  * [Filter sources](#filter-sources)
+  * [Filter unique articles](#filter-unique-articles)
+
 # How to filter articles
 
 This tutorial shows you how to filter articles based on their attribute values, URLs, and news sources.

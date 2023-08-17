@@ -1,3 +1,11 @@
+# Table of Contents
+
+* [The Article class](#the-article-class)
+  * [What is an `Article`](#what-is-an-article)
+  * [The articles' body](#the-articles-body)
+  * [HTML](#html)
+  * [Language detection](#language-detection)
+
 # The Article class
 
 This tutorial introduces you to the article class and how to access the parsed data.

@@ -92,15 +92,14 @@ We provide **quick tutorials** to get you started with the library:
 4. [**Tutorial 4: How to search for publishers**](docs/4_how_to_search_for_publishers.md)
 
 If you wish to contribute check out these tutorials
-1. [**How to add a new news-source**](docs/how_to_contribute.md)
-
-The tutorials explain how ...
+1. [**How to contribute**](docs/how_to_contribute.md)
+2. [**How to add a publisher**](docs/how_to_add_a_publisher.md)
 
 ## Currently Supported News Sources
 
 You can find the publishers currently supported [**here**](/docs/supported_publishers.md).
 
-Also: **Adding a new source is easy - consider contributing to the project!**
+Also: **Adding a new publisher is easy - consider contributing to the project!**
 
 ## Contact
 
@@ -112,6 +111,6 @@ Thanks for your interest in contributing! There are many ways to get involved;
 start with our [contributor guidelines](docs/how_to_contribute.md) and then
 check these [open issues](https://github.com/flairNLP/fundus/issues) for specific tasks.
 
-## [License](/LICENSE)
+## License
 
 [MIT](LICENSE)
