@@ -12,9 +12,13 @@ Developed at [Humboldt University of Berlin](https://www.informatik.hu-berlin.de
 
 Fundus is:
 
-* A crawler for news ...
+* **A static news crawler.** 
+  Fundus lets you gather a ton of news articles already in shape from a huge variety of news sources in only a couple of lines of code.
+  Be it for your thesis about political bias or training your home-brewed stock prediction model, Fundus gets you covered with the data.
 
-* A Python ...
+* **An open-source Python package.**
+  Fundus is built around and based on the idea of building something together.
+  The more people want to be a part of this the better. So feel free to check out if you can help Fundus [growing](docs/how_to_contribute.md)
 
 ## Quick Start
 
@@ -28,15 +32,14 @@ pip install fundus
 
 Fundus requires Python 3.8+.
 
-### Example 1: Crawl a bunch of German-language news articles
+### Example 1: Crawl a bunch of English-language news articles
 
-Let's use Fundus to crawl 2 articles of English-language news publishers based in the US.
+Let's use Fundus to crawl 2 articles from publishers based in the US.
 
 ```python
-
 from fundus import PublisherCollection, Crawler
 
-# initialize the crawler for news publisher based in the us
+# initialize the crawler for news publishers based in the US
 crawler = Crawler(PublisherCollection.us)
 
 # crawl 2 articles and print
@@ -44,7 +47,7 @@ for article in crawler.crawl(max_articles=2):
     print(article)
 ```
 
-This should print something like:
+This should print something like this:
 
 ```console
 Fundus-Article:
@@ -63,9 +66,9 @@ Fundus-Article:
 
 This means that you crawled 2 articles from different US publishers.
 
-### Example 2: Crawl specific news source
+### Example 2: Crawl a specific news source
 
-Maybe you want to crawl a specific news source instead. Let's crawl news articles form Washington Times only:
+Maybe you want to crawl a specific news source instead. Let's crawl news articles from Washington Times only:
 
 ```python
 
@@ -75,7 +78,7 @@ from fundus import PublisherCollection, Crawler
 crawler = Crawler(PublisherCollection.us.WashingtonTimes)
 
 # crawl 5 articles and print
-for article in crawler.crawl(max_articles=5):
+for article in crawler.crawl(max_articles=2):
     print(article)
 ```
 
@@ -83,9 +86,13 @@ for article in crawler.crawl(max_articles=5):
 
 We provide **quick tutorials** to get you started with the library:
 
-1. [**Tutorial 1: How to crawl news with Fundus**](docs/...)
-2. [**Tutorial 2: The Article Class**](docs/...)
-3. [**Tutorial 3: How to add a new news-source**](docs/how_to_contribute.md)
+1. [**Tutorial 1: How to crawl news with Fundus**](docs/1_getting_started.md)
+2. [**Tutorial 2: The Article Class**](docs/2_the_article_class.md)
+3. [**Tutorial 3: How to filter articles**](docs/3_how_to_filter_articles.md)
+4. [**Tutorial 4: How to search for publishers**](docs/4_how_to_search_for_publishers.md)
+
+If you wish to contribute check out these tutorials
+1. [**How to add a new news-source**](docs/how_to_contribute.md)
 
 The tutorials explain how ...
 
@@ -97,7 +104,7 @@ Also: **Adding a new source is easy - consider contributing to the project!**
 
 ## Contact
 
-Please email your questions or comments to ...
+Please email your questions or comments to [**Max Dallabetta**](mailto:max.dallebtta@googlemail.com?subject=[GitHub]%20Fundus)
 
 ## Contributing
 
@@ -107,4 +114,4 @@ check these [open issues](https://github.com/flairNLP/fundus/issues) for specifi
 
 ## [License](/LICENSE)
 
-?
+[MIT](LICENSE)

@@ -166,7 +166,7 @@ class BaseCrawler:
         max_articles: Optional[int] = None,
         error_handling: Literal["suppress", "catch", "raise"] = "suppress",
         only_complete: Union[bool, ExtractionFilter] = True,
-        delay: Optional[Union[float, Delay]] = None,
+        delay: Optional[Union[float, Delay]] = 0.1,
         url_filter: Optional[URLFilter] = None,
         only_unique: bool = True,
     ) -> Iterator[Article]:

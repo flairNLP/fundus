@@ -13,6 +13,20 @@ def inverse(filter_func: Callable[P, bool]) -> Callable[P, bool]:
     return __call__
 
 
+def lor(*filters: Callable[P, bool]) -> Callable[P, bool]:
+    def __call__(*args: P.args, **kwargs: P.kwargs) -> bool:
+        return any(f(*args, **kwargs) for f in filters)
+
+    return __call__
+
+
+def land(*filters: Callable[P, bool]) -> Callable[P, bool]:
+    def __call__(*args: P.args, **kwargs: P.kwargs) -> bool:
+        return all(f(*args, **kwargs) for f in filters)
+
+    return __call__
+
+
 class URLFilter(Protocol):
     """Protocol to define filter used before article download.
 

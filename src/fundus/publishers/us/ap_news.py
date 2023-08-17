@@ -1,5 +1,5 @@
+import datetime
 import re
-from datetime import datetime
 from typing import List, Optional
 
 from lxml.cssselect import CSSSelector
@@ -16,17 +16,14 @@ from fundus.parser.utility import (
 
 class APNewsParser(ParserProxy):
     class V1(BaseParser):
+        VALID_UNTIL = datetime.date(2023, 7, 10)
         _author_selector: XPath = XPath(f"{CSSSelector('div.CardHeadline').path}/span/span[1]")
-        _paragraph_selector = XPath("//div[@data-key = 'article']/p[position() > 1]")
-        _summary_selector = XPath("//div[@data-key = 'article']/p[1]")
-        _subheadline_selector = XPath("//div[@data-key = 'article']/h2")
+        _paragraph_selector = XPath("//div[@data-key = 'article']/p")
 
         @attribute
         def body(self) -> ArticleBody:
             return extract_article_body_with_selector(
                 self.precomputed.doc,
-                summary_selector=self._summary_selector,
-                subheadline_selector=self._subheadline_selector,
                 paragraph_selector=self._paragraph_selector,
             )
 
@@ -45,7 +42,7 @@ class APNewsParser(ParserProxy):
             return re.split(r"\sand\s|,\s", author_string)
 
         @attribute
-        def publishing_date(self) -> Optional[datetime]:
+        def publishing_date(self) -> Optional[datetime.datetime]:
             return generic_date_parsing(self.precomputed.ld.get_value_by_key_path(["NewsArticle", "datePublished"]))
 
         @attribute
@@ -55,3 +52,8 @@ class APNewsParser(ParserProxy):
         @attribute
         def topics(self) -> List[str]:
             return generic_topic_parsing(self.precomputed.meta.get("keywords"))
+
+    class V1S1(V1):
+        VALID_UNTIL = datetime.date.today()
+        _author_selector = CSSSelector("div.Page-authors")
+        _paragraph_selector = CSSSelector("div.RichTextStoryBody > p")
