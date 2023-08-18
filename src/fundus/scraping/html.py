@@ -52,17 +52,29 @@ class SessionHandler:
         ):
             assert params.url.host
             history = params.response.history
+            previous_status_codes = [f"({response.status})" for response in history] if history else []
+            status_code_chain = " -> ".join(previous_status_codes + [f"({params.response.status})"])
             basic_logger.debug(
-                f"({params.response.status}) <{params.method} {params.url!r}> "
-                f"in {time.time() - timings[params.url.host if not history else history[0].url.host]}"
+                f"{status_code_chain} <{params.method} {params.url!r}> "
+                f"took {time.time() - timings[params.url.host if not history else history[0].url.host]} second(s)"
             )
+
+        async def on_request_exception(
+            session: aiohttp.ClientSession, context: types.SimpleNamespace, params: aiohttp.TraceRequestExceptionParams
+        ):
+            basic_logger.debug(f"FAILED: <{params.method} {params.url}> with {str(params.exception) or type(params.exception)}")
 
         trace_config = aiohttp.TraceConfig()
         trace_config.on_request_start.append(on_request_start)
         trace_config.on_request_end.append(on_request_end)
+        trace_config.on_request_exception.append(on_request_exception)
 
         _connector = aiohttp.TCPConnector(limit=50)
-        async_session = aiohttp.ClientSession(connector=_connector, trace_configs=[trace_config])
+        async_session = aiohttp.ClientSession(
+            connector=_connector,
+            trace_configs=[trace_config],
+            timeout=aiohttp.ClientTimeout(total=30)
+        )
         while True:
             yield async_session
 
@@ -251,7 +263,7 @@ class HTMLSource:
                 continue
 
             if response.history:
-                basic_logger.debug(f"Got redirected {len(response.history)} time(s) from {url} -> {response.url}")
+                basic_logger.info(f"Got redirected {len(response.history)} time(s) from {url} -> {response.url}")
 
             yield HTML(
                 requested_url=url,
