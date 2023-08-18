@@ -66,11 +66,6 @@ class SessionHandler:
                 f"FAILED: <{params.method} {params.url}> with {str(params.exception) or type(params.exception)}"
             )
 
-        async def on_request_exception(
-            session: aiohttp.ClientSession, context: types.SimpleNamespace, params: aiohttp.TraceRequestExceptionParams
-        ):
-            basic_logger.debug(f"FAILED: <{params.method} {params.url}> with {str(params.exception) or type(params.exception)}")
-
         trace_config = aiohttp.TraceConfig()
         trace_config.on_request_start.append(on_request_start)
         trace_config.on_request_end.append(on_request_end)
