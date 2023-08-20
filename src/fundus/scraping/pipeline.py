@@ -138,7 +138,6 @@ class BaseCrawler:
         # we use this custom variant of interleave_longest in order to be able
         # to delay the program flow between batches
         async def _async_article_interleave_longest() -> AsyncIterator[Article]:
-            # type: ignore[attr-defined]
             batches: AsyncIterator[Tuple[Optional[Article], ...]] = aioitertools.itertools.zip_longest(
                 *async_article_iterators
             )
