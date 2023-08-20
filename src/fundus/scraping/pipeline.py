@@ -145,9 +145,10 @@ class BaseCrawler:
             start_time = time.time()
             async for batch in batches:
                 basic_logger.debug(f"Batch took {time.time() - start_time} seconds")
-                for next_article in cast(Iterable[Article], filter(bool, batch)):
-                    response_cache.add(next_article.html.responded_url)
-                    yield next_article
+                for next_article in batch:
+                    if next_article is not None:
+                        response_cache.add(next_article.html.responded_url)
+                        yield next_article
                 if final_delay:
                     await asyncio.sleep(max(0.0, final_delay() - time.time() + start_time))
                 start_time = time.time()
