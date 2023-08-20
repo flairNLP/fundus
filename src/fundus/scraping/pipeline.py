@@ -156,7 +156,7 @@ class BaseCrawler:
             max_articles = -1
         async for article_index, article in aioitertools.builtins.enumerate(
             _async_article_interleave_longest(), start=1
-        ):  # type:ignore[attr-defined]
+        ):
             yield article
             if article_index == max_articles:
                 break
