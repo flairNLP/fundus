@@ -40,7 +40,7 @@ class SessionHandler:
     The session life cycle consists of three steps which can be repeated indefinitely:
     Build, Supply, Teardown.
     Initially there is no session build within the session handler. When a session is requested
-    with get_Session() either a new one is created with _session_factory() or an existing
+    with get_session() either a new one is created with _session_factory() or an existing
     one returned. Every subsequent call to get_session() will return the same aiohttp.ClientSession
     object. If close_current_session() is called, the current session will be tear-downed and
     the next call to get_session() will build a new session.
