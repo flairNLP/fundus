@@ -25,8 +25,8 @@ jobs:
         uses: actions/cache@master
         id: cache
         with:
-          path: ${{ env.pythonLocation }}
-          key: ${{ runner.os }}-${{ steps.setup_python.outputs.python-version }}-${{ hashFiles('setup.cfg') }}
+          path: ${{ env.pythonLocation }}/lib/python3.8/site-packages/*
+          key: ${{ runner.os }}-packages_only-${{ hashFiles('setup.cfg') }}
       - name: Install dependencies
         if: steps.cache.outputs.cache-hit != 'true'
         run: |
@@ -50,8 +50,8 @@ jobs:
         uses: actions/cache@master
         id: cache
         with:
-          path: ${{ env.pythonLocation }}
-          key: ${{ runner.os }}-${{ steps.setup_python.outputs.python-version }}-${{ hashFiles('setup.cfg') }}
+          path: ${{ env.pythonLocation }}/lib/python3.8/site-packages/*
+          key: ${{ runner.os }}-packages_only-${{ hashFiles('setup.cfg') }}
       - name: Install dependencies
         if: steps.cache.outputs.cache-hit != 'true'
         run: |
