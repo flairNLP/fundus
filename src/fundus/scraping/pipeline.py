@@ -88,6 +88,8 @@ class BaseCrawler:
             AsyncIterator[Article]: An iterator yielding objects of type Article.
         """
 
+        response_cache: Set[str] = set()
+
         def build_extraction_filter() -> Optional[ExtractionFilter]:
             if isinstance(only_complete, bool):
                 return (
@@ -117,8 +119,6 @@ class BaseCrawler:
         extraction_filter = build_extraction_filter()
         unique_url_filter = build_unique_url_filter() if only_unique else None
         final_delay = build_delay()
-
-        response_cache: Set[str] = set()
 
         for scraper in self.scrapers:
             for source in scraper.sources:
