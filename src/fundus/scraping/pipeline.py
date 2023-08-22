@@ -218,8 +218,6 @@ class BaseCrawler:
                     yield nxt
                 else:
                     break
-        except Exception as error:
-            raise error
         finally:
             event_loop.run_until_complete(session_handler.close_current_session())
             event_loop.run_until_complete(event_loop.shutdown_asyncgens())
