@@ -337,6 +337,21 @@
       <td>&#160;</td>
       <td>&#160;</td>
     </tr>
+    <tr>
+      <td>
+        <code>TheIndependent</code>
+      </td>
+      <td>
+        <div>The Independent</div>
+      </td>
+      <td>
+        <a href="https://www.independent.co.uk/">
+          <span>www.independent.co.uk</span>
+        </a>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
   </tbody>
 </table>
 
@@ -399,6 +414,23 @@
         </a>
       </td>
       <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
+        <code>LATimes</code>
+      </td>
+      <td>
+        <div>Los Angeles Times</div>
+      </td>
+      <td>
+        <a href="https://www.latimes.com/">
+          <span>www.latimes.com</span>
+        </a>
+      </td>
+      <td>
+        <code>topics</code>
+      </td>
       <td>&#160;</td>
     </tr>
     <tr>

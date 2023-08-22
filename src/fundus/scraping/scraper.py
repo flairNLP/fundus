@@ -30,12 +30,12 @@ class Scraper:
             )
             if missing_attributes := extraction_filter.required_attributes - supported_attributes:
                 if len(missing_attributes) == 1:
-                    basic_logger.warn(
+                    basic_logger.warning(
                         f"The required attribute `{missing_attributes}` "
                         f"is not supported by {type(self.parser).__name__}. Skipping Scraper"
                     )
                 else:
-                    basic_logger.warn(
+                    basic_logger.warning(
                         f"The required attributes `{', '.join(missing_attributes)}` "
                         f"are not supported by {type(self.parser).__name__}. Skipping Scraper"
                     )
@@ -44,6 +44,9 @@ class Scraper:
 
         for html_source in self.sources:
             async for html in html_source.fetch():
+                if html is None:
+                    yield None
+                    continue
                 try:
                     extraction = self.parser(html.crawl_date).parse(html.content, error_handling)
 

@@ -1,11 +1,7 @@
 import pytest
 
 from fundus import NewsMap, RSSFeed, Sitemap
-from fundus.publishers.base_objects import (
-    PublisherCollectionMeta,
-    PublisherEnum,
-    PublisherSpec,
-)
+from fundus.publishers.base_objects import PublisherCollectionMeta, PublisherEnum
 
 
 class TestCollection:
@@ -23,10 +19,6 @@ class TestCollection:
 
             class PublisherEnumWithWrongValue(PublisherEnum):
                 value = "Enum"
-
-    def test_publisher_spec_without_source(self, empty_parser_proxy):
-        with pytest.raises(ValueError):
-            PublisherSpec(name="Test", domain="https//:test.com/", parser=empty_parser_proxy)
 
     def test_duplicate_publisher_names_in_same_collection(self, publisher_enum_with_news_map):
         with pytest.raises(AttributeError):
@@ -47,13 +39,25 @@ class TestCollection:
 
     def test_search(self, publisher_enum_with_news_map, proxy_with_two_versions_and_different_attrs):
         parser_proxy = proxy_with_two_versions_and_different_attrs()
+
+        # monkey pathing publisher enums parser
         publisher_enum_with_news_map.value.parser = parser_proxy
 
-        latest, earlier = parser_proxy.attribute_mapping.values()
+        later, earlier = parser_proxy.attribute_mapping.values()
 
-        assert len(publisher_enum_with_news_map.search(latest.names)) == 1
+        assert len(publisher_enum_with_news_map.search(later.names, [NewsMap])) == 1
+        assert len(publisher_enum_with_news_map.search(later.names, [RSSFeed, Sitemap])) == 0
+        assert len(publisher_enum_with_news_map.search(later.names, [NewsMap, RSSFeed])) == 0
+
+        # check that only latest version is supported with search
+        assert len(publisher_enum_with_news_map.search(later.names)) == 1
         assert len(publisher_enum_with_news_map.search(earlier.names)) == 0
 
         with pytest.raises(ValueError):
-            publisher_enum_with_news_map.search([])
             publisher_enum_with_news_map.search()
+
+        with pytest.raises(ValueError):
+            publisher_enum_with_news_map.search([])
+
+        with pytest.raises(ValueError):
+            publisher_enum_with_news_map.search([], [])
