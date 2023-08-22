@@ -1,4 +1,6 @@
 import gzip
+import time
+import types
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from datetime import datetime
@@ -38,8 +40,29 @@ class SessionHandler:
 
     @staticmethod
     async def _build_session_factory() -> AsyncIterator[aiohttp.ClientSession]:
+        timings: Dict[Optional[str], float] = dict()
+
+        async def on_request_start(
+            session: aiohttp.ClientSession, context: types.SimpleNamespace, params: aiohttp.TraceRequestStartParams
+        ):
+            timings[params.url.host] = time.time()
+
+        async def on_request_end(
+            session: aiohttp.ClientSession, context: types.SimpleNamespace, params: aiohttp.TraceRequestEndParams
+        ):
+            assert params.url.host
+            history = params.response.history
+            basic_logger.debug(
+                f"({params.response.status}) <{params.method} {params.url!r}> "
+                f"in {time.time() - timings[params.url.host if not history else history[0].url.host]}"
+            )
+
+        trace_config = aiohttp.TraceConfig()
+        trace_config.on_request_start.append(on_request_start)
+        trace_config.on_request_end.append(on_request_end)
+
         _connector = aiohttp.TCPConnector(limit=50)
-        async_session = aiohttp.ClientSession(connector=_connector)
+        async_session = aiohttp.ClientSession(connector=_connector, trace_configs=[trace_config])
         while True:
             yield async_session
 
@@ -214,7 +237,6 @@ class HTMLSource:
                         basic_logger.debug(f"Skipped responded URL '{url}' because of URL filter")
                         yield None
                         continue
-
                     html = await response.text()
                     response.raise_for_status()
 

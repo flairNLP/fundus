@@ -65,6 +65,9 @@ class ExtractionFilter(Protocol):
     def __call__(self, extracted: Dict[str, Any]) -> bool:
         """This should implement a selection based on <extracted>.
 
+        Extracted will be a dictionary returned by a parser mapping the attribute
+        names of the parser to the extracted values.
+
         Args:
             extracted (dict[str, Any]): The extracted values the evaluation
                 should be based on.
