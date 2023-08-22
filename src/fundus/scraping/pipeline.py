@@ -158,11 +158,14 @@ class BaseCrawler:
         elif max_articles == 0:
             return
 
-        async for article in _async_article_interleave_longest():
-            if i == max_articles:
-                break
-            yield article
-            i += 1
+        try:
+            async for article in _async_article_interleave_longest():
+                if i == max_articles:
+                    break
+                yield article
+                i += 1
+        finally:
+            await session_handler.close_current_session()
 
     def crawl(
         self,
@@ -210,7 +213,15 @@ class BaseCrawler:
             only_unique=only_unique,
         )
 
-        event_loop = asyncio.new_event_loop()
+        try:
+            event_loop = asyncio.get_running_loop()
+            if event_loop:
+                raise AssertionError(
+                    "There is already an eventloop running. If you want to crawl articles inside an "
+                    "async environment use crawl_async() instead."
+                )
+        except RuntimeError:
+            event_loop = asyncio.new_event_loop()
 
         try:
             while True:
@@ -219,7 +230,6 @@ class BaseCrawler:
                 else:
                     break
         finally:
-            event_loop.run_until_complete(session_handler.close_current_session())
             event_loop.run_until_complete(event_loop.shutdown_asyncgens())
             event_loop.close()
 
