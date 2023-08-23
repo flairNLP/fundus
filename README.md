@@ -18,7 +18,7 @@ Fundus is:
 
 * **An open-source Python package.**
   Fundus is built around and based on the idea of building something together.
-  The more people want to be a part of this the better. So feel free to check out if you can help Fundus [growing](docs/how_to_contribute.md)
+  The more people want to be a part of this the better. So feel free to check out if you can help Fundus [growing](docs/how_to_contribute.md).
 
 ## Quick Start
 
@@ -91,7 +91,7 @@ We provide **quick tutorials** to get you started with the library:
 3. [**Tutorial 3: How to filter articles**](docs/3_how_to_filter_articles.md)
 4. [**Tutorial 4: How to search for publishers**](docs/4_how_to_search_for_publishers.md)
 
-If you wish to contribute check out these tutorials
+If you wish to contribute check out these tutorials:
 1. [**How to contribute**](docs/how_to_contribute.md)
 2. [**How to add a publisher**](docs/how_to_add_a_publisher.md)
 
@@ -103,7 +103,7 @@ Also: **Adding a new publisher is easy - consider contributing to the project!**
 
 ## Contact
 
-Please email your questions or comments to [**Max Dallabetta**](mailto:max.dallebtta@googlemail.com?subject=[GitHub]%20Fundus)
+Please email your questions or comments to [**Max Dallabetta**](mailto:max.dallabetta@googlemail.com?subject=[GitHub]%20Fundus)
 
 ## Contributing
 
