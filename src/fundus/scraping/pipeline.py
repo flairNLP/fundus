@@ -214,14 +214,15 @@ class BaseCrawler:
         )
 
         try:
-            event_loop = asyncio.get_running_loop()
-            if event_loop:
-                raise AssertionError(
-                    "There is already an eventloop running. If you want to crawl articles inside an "
-                    "async environment use crawl_async() instead."
-                )
+            asyncio.get_running_loop()
+            raise AssertionError()
         except RuntimeError:
             event_loop = asyncio.new_event_loop()
+        except AssertionError:
+            raise RuntimeError(
+                "There is already an event loop running. If you want to crawl articles inside an "
+                "async environment use crawl_async() instead."
+            )
 
         try:
             while True:
