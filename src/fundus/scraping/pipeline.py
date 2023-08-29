@@ -113,7 +113,7 @@ class BaseCrawler:
 
         def build_url_filter() -> URLFilter:
             def _filter(url: str) -> bool:
-                return (url_filter and url_filter(url)) or (only_unique and url in response_cache)
+                return (url_filter is not None and url_filter(url)) or (only_unique and url in response_cache)
 
             return _filter
 
