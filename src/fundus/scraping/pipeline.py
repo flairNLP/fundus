@@ -24,7 +24,7 @@ from fundus.logging import basic_logger
 from fundus.publishers.base_objects import PublisherEnum
 from fundus.scraping.article import Article
 from fundus.scraping.filter import ExtractionFilter, URLFilter
-from fundus.scraping.html import URLSource
+from fundus.scraping.html import URLSource, session_handler
 from fundus.scraping.scraper import Scraper
 from fundus.utils.more_async import async_next
 
@@ -154,12 +154,18 @@ class BaseCrawler:
 
         if max_articles is None:
             max_articles = -1
-        async for article_index, article in aioitertools.builtins.enumerate(
-            _async_article_interleave_longest(), start=1
-        ):
-            yield article
-            if article_index == max_articles:
-                break
+        elif max_articles == 0:
+            return
+
+        try:
+            async for article_index, article in aioitertools.builtins.enumerate(
+                _async_article_interleave_longest(), start=1
+            ):
+                yield article
+                if article_index == max_articles:
+                    break
+        finally:
+            await session_handler.close_current_session()
 
     def crawl(
         self,
@@ -207,13 +213,26 @@ class BaseCrawler:
             only_unique=only_unique,
         )
 
-        event_loop = asyncio.new_event_loop()
+        try:
+            asyncio.get_running_loop()
+            raise AssertionError()
+        except RuntimeError:
+            event_loop = asyncio.new_event_loop()
+        except AssertionError:
+            raise RuntimeError(
+                "There is already an event loop running. If you want to crawl articles inside an "
+                "async environment use crawl_async() instead."
+            )
 
-        while True:
-            try:
-                yield event_loop.run_until_complete(async_next(async_article_iter))
-            except StopAsyncIteration:
-                break
+        try:
+            while True:
+                try:
+                    yield event_loop.run_until_complete(async_next(async_article_iter))
+                except StopAsyncIteration:
+                    break
+        finally:
+            event_loop.run_until_complete(event_loop.shutdown_asyncgens())
+            event_loop.close()
 
 
 class Crawler(BaseCrawler):

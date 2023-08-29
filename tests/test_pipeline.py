@@ -32,3 +32,8 @@ class TestPipeline:
         crawler = Crawler(publisher_enum_with_rss_feeds, publisher_enum_with_news_map, restrict_sources_to=[NewsMap])
         assert len(crawler.scrapers) == 1
         assert crawler.scrapers[0].sources == publisher_enum_with_news_map.value.source_mapping[NewsMap]
+
+    def test_consecutive_calls_to_crawl(self, collection_with_validate_publisher_enum):
+        crawler = Crawler(collection_with_validate_publisher_enum)
+        next(crawler.crawl(max_articles=0), None)
+        next(crawler.crawl(max_articles=0), None)
