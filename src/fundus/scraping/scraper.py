@@ -44,6 +44,9 @@ class Scraper:
 
         for html_source in self.sources:
             async for html in html_source.fetch():
+                if html is None:
+                    yield None
+                    continue
                 try:
                     extraction = self.parser(html.crawl_date).parse(html.content, error_handling)
 

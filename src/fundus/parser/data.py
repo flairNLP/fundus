@@ -165,9 +165,6 @@ class TextSequence(Sequence[str]):
     def __init__(self, texts: Iterable[str]):
         self._data: Tuple[str, ...] = tuple(texts)
 
-    def text(self, join_on: str = "\n") -> str:
-        return join_on.join(self)
-
     @overload
     def __getitem__(self, i: int) -> str:
         ...
@@ -187,6 +184,9 @@ class TextSequence(Sequence[str]):
 
     def __repr__(self) -> str:
         return repr(self._data)
+
+    def __str__(self) -> str:
+        return "\n".join(self)
 
 
 @dataclass

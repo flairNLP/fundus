@@ -73,7 +73,7 @@ class PublisherEnum(Enum):
     def search(
         cls, attributes: Optional[List[str]] = None, source_types: Optional[List[Type[URLSource]]] = None
     ) -> List["PublisherEnum"]:
-        if not attributes or source_types:
+        if not (attributes or source_types):
             raise ValueError("You have to define at least one search condition")
         if not attributes:
             attributes = []
