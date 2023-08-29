@@ -246,7 +246,7 @@ class HTMLSource:
             url_source.set_header(self.request_header)
 
     async def fetch(self, url_filter: Optional[URLFilter] = None) -> AsyncIterator[HTML]:
-        combined_filters = ([self.url_filter] if self.url_filter else []) + ([url_filter] if url_filter else [])
+        combined_filters: List[URLFilter] = ([self.url_filter] if self.url_filter else []) + ([url_filter] if url_filter else [])
 
         def filter_url(u: str) -> bool:
             return any(f(u) for f in combined_filters)
