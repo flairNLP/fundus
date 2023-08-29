@@ -13,6 +13,20 @@ def inverse(filter_func: Callable[P, bool]) -> Callable[P, bool]:
     return __call__
 
 
+def lor(*filters: Callable[P, bool]) -> Callable[P, bool]:
+    def __call__(*args: P.args, **kwargs: P.kwargs) -> bool:
+        return any(f(*args, **kwargs) for f in filters)
+
+    return __call__
+
+
+def land(*filters: Callable[P, bool]) -> Callable[P, bool]:
+    def __call__(*args: P.args, **kwargs: P.kwargs) -> bool:
+        return all(f(*args, **kwargs) for f in filters)
+
+    return __call__
+
+
 class URLFilter(Protocol):
     """Protocol to define filter used before article download.
 
@@ -50,6 +64,9 @@ class ExtractionFilter(Protocol):
 
     def __call__(self, extracted: Dict[str, Any]) -> bool:
         """This should implement a selection based on <extracted>.
+
+        Extracted will be a dictionary returned by a parser mapping the attribute
+        names of the parser to the extracted values.
 
         Args:
             extracted (dict[str, Any]): The extracted values the evaluation

@@ -2,6 +2,7 @@ import asyncio
 import time
 from typing import (
     AsyncIterator,
+    Iterable,
     Iterator,
     List,
     Literal,
@@ -10,13 +11,15 @@ from typing import (
     Set,
     Tuple,
     Type,
-    TypeVar,
     Union,
+    cast,
     runtime_checkable,
 )
 
+import aioitertools
 import more_itertools
 
+from fundus import PublisherCollection
 from fundus.logging import basic_logger
 from fundus.publishers.base_objects import PublisherEnum
 from fundus.scraping.article import Article
@@ -24,10 +27,6 @@ from fundus.scraping.filter import ExtractionFilter, URLFilter
 from fundus.scraping.html import URLSource, session_handler
 from fundus.scraping.scraper import Scraper
 from fundus.utils.more_async import async_next
-from fundus.utils.more_async import zip_longest as async_zip_longest
-from fundus.utils.validation import listify
-
-_T = TypeVar("_T")
 
 
 @runtime_checkable
@@ -54,9 +53,9 @@ class Delay(Protocol):
 
 class BaseCrawler:
     def __init__(self, *scrapers: Scraper):
-        """Basic pipeline to utilize scrapers.
+        """Basic crawler to utilize scrapers.
 
-        Because scrapers are implemented asynchronously, this pipeline handles the necessary event loops
+        Because scrapers are implemented asynchronously, this class handles the necessary event loops
         and program logic to download articles in batches asynchronously.
 
         Args:
@@ -89,13 +88,15 @@ class BaseCrawler:
             AsyncIterator[Article]: An iterator yielding objects of type Article.
         """
 
+        response_cache: Set[str] = set()
+
         def build_extraction_filter() -> Optional[ExtractionFilter]:
             if isinstance(only_complete, bool):
                 return (
                     None
                     if only_complete is False
                     else lambda extracted: not all(
-                        bool(v) if not isinstance(v, Exception) else False for k, v in extracted.items()
+                        bool(v) if not isinstance(v, Exception) else False for _, v in extracted.items()
                     )
                 )
             else:
@@ -118,7 +119,6 @@ class BaseCrawler:
             return _filter
 
         final_delay = build_delay()
-        response_cache: Set[str] = set()
 
         async_article_iterators: List[AsyncIterator[Optional[Article]]] = [
             scraper.scrape(
@@ -132,41 +132,45 @@ class BaseCrawler:
         # we use this custom variant of interleave_longest in order to be able
         # to delay the program flow between batches
         async def _async_article_interleave_longest() -> AsyncIterator[Article]:
-            batches: AsyncIterator[Tuple[Optional[Article], ...]] = async_zip_longest(*async_article_iterators)
+            batches: AsyncIterator[Tuple[Optional[Article], ...]] = aioitertools.itertools.zip_longest(
+                *async_article_iterators
+            )
             start_time = time.time()
             async for batch in batches:
                 basic_logger.debug(f"Batch took {time.time() - start_time} seconds")
-                for value in batch:
-                    if value is not None:
-                        response_cache.add(value.html.responded_url)
-                        yield value
+                for next_article in batch:
+                    if next_article is not None:
+                        response_cache.add(next_article.html.responded_url)
+                        yield next_article
                 if final_delay:
-                    await asyncio.sleep(final_delay() - time.time() + start_time)
+                    await asyncio.sleep(max(0.0, final_delay() - time.time() + start_time))
                 start_time = time.time()
-
-        i: int = 0
 
         if max_articles is None:
             max_articles = -1
         elif max_articles == 0:
             return
 
-        async for article in _async_article_interleave_longest():
-            if i == max_articles:
-                break
-            yield article
-            i += 1
+        try:
+            async for article_index, article in aioitertools.builtins.enumerate(
+                _async_article_interleave_longest(), start=1
+            ):
+                yield article
+                if article_index == max_articles:
+                    break
+        finally:
+            await session_handler.close_current_session()
 
     def crawl(
         self,
         max_articles: Optional[int] = None,
         error_handling: Literal["suppress", "catch", "raise"] = "suppress",
         only_complete: Union[bool, ExtractionFilter] = True,
-        delay: Optional[Union[float, Delay]] = None,
+        delay: Optional[Union[float, Delay]] = 0.1,
         url_filter: Optional[URLFilter] = None,
         only_unique: bool = True,
     ) -> Iterator[Article]:
-        """Yields articles from initialized publishers.
+        """Yields articles from initialized scrapers
 
         Args:
             max_articles (Optional[int]): Number of articles to crawl. If there are fewer articles
@@ -178,9 +182,9 @@ class BaseCrawler:
                 If set to "catch", errors will be caught as attribute values or, if an entire article fails,
                 through Article.exception. If set to "raise" all errors encountered during extraction will
                 be raised. Defaults to "suppress".
-            only_complete (Union[bool, ExtractionFilter]): Set extraction filters. If False, all articles
-                will be yielded, if True, only complete ones. Defaults to True. See the docs for more
-                information about ExtractionFilter.
+            only_complete (Union[bool, ExtractionFilter]): Set a callable satisfying the ExtractionFilter
+                protocol as extraction filters or use a boolean. If False, all articles will be yielded,
+                if True, only those with all attributes extracted. Defaults to True.
             delay (Optional[Union[float, Delay]]): Set a delay time in seconds to be used between article
                 batches. You can set a delay directly using float or any callable satisfying the Delay
                 protocol. If set to None, no delay will be used between batches. See Delay for more
@@ -188,7 +192,7 @@ class BaseCrawler:
             url_filter (Optional[URLFilter]): A callable object satisfying the URLFilter protocol to skip
                 URLs before download. This filter applies on both requested and responded URL. Defaults to None.
             only_unique (bool): If set to True, articles yielded will be unique on the responded URL.
-                Always returns the first encountered article. the Defaults to True.
+                Always returns the first encountered article. Defaults to True.
 
         Returns:
             Iterator[Article]: An iterator yielding objects of type Article.
@@ -203,18 +207,24 @@ class BaseCrawler:
             only_unique=only_unique,
         )
 
-        event_loop = asyncio.new_event_loop()
+        try:
+            asyncio.get_running_loop()
+            raise AssertionError()
+        except RuntimeError:
+            event_loop = asyncio.new_event_loop()
+        except AssertionError:
+            raise RuntimeError(
+                "There is already an event loop running. If you want to crawl articles inside an "
+                "async environment use crawl_async() instead."
+            )
 
         try:
             while True:
-                if nxt := event_loop.run_until_complete(async_next(async_article_iter, None)):
-                    yield nxt
-                else:
+                try:
+                    yield event_loop.run_until_complete(async_next(async_article_iter))
+                except StopAsyncIteration:
                     break
-        except Exception as error:
-            raise error
         finally:
-            event_loop.run_until_complete(session_handler.close_current_session())
             event_loop.run_until_complete(event_loop.shutdown_asyncgens())
             event_loop.close()
 
@@ -222,15 +232,15 @@ class BaseCrawler:
 class Crawler(BaseCrawler):
     def __init__(
         self,
-        *publishers: Union[PublisherEnum, Type[PublisherEnum]],
+        *publishers: Union[PublisherEnum, Type[PublisherEnum], Type[PublisherCollection]],
         restrict_sources_to: Optional[List[Type[URLSource]]] = None,
     ):
         """Fundus base class for crawling articles from the web.
 
         Examples:
             >>> from fundus import PublisherCollection, Crawler
-            >>> crawler = Crawler(*PublisherCollection)
-            >>> # Crawler(*PublisherCollection.us) to crawl only english news
+            >>> crawler = Crawler(PublisherCollection)
+            >>> # Crawler(PublisherCollection.us) to crawl only english news
             >>> for article in crawler.crawl():
             >>>     print(article)
 
@@ -243,18 +253,17 @@ class Crawler(BaseCrawler):
 
         if not publishers:
             raise ValueError("param <publishers> of <Crawler.__init__> has to be non empty")
-        nested_publisher = [listify(publisher) for publisher in publishers]
-        self.publishers: Set[PublisherEnum] = set(more_itertools.flatten(nested_publisher))
+        collapsed_publishers = more_itertools.collapse(publishers)
 
         # build scraper
         scrapers: List[Scraper] = []
-        for spec in self.publishers:
+        for spec in collapsed_publishers:
             if restrict_sources_to:
-                sources = more_itertools.flatten(
-                    spec.source_mapping[source_type] for source_type in restrict_sources_to
+                sources = tuple(
+                    more_itertools.flatten(spec.source_mapping[source_type] for source_type in restrict_sources_to)
                 )
             else:
-                sources = more_itertools.flatten(spec.source_mapping.values())
+                sources = tuple(more_itertools.flatten(spec.source_mapping.values()))
 
             if sources:
                 scrapers.append(

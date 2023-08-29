@@ -40,10 +40,10 @@ class SessionHandler:
     The session life cycle consists of three steps which can be repeated indefinitely:
     Build, Supply, Teardown.
     Initially there is no session build within the session handler. When a session is requested
-    with get_Session() either a new one is created with _session_factory() or an existing
-    one returned. Every subsequent call to get_session() will return the same aiohttp.ClientSession
-    object. If close_current_session() is called, the current session will be tear-downed and
-    the next call to get_session() will build a new session.
+    with get_session() either a new one is created with _session_factory() or the session handler's
+    existing one returned. Every subsequent call to get_session() will return the same
+    aiohttp.ClientSession object. If close_current_session() is called, the current session will be
+    tear-downed and the next call to get_session() will build a new session.
     """
 
     def __init__(self):
@@ -71,17 +71,29 @@ class SessionHandler:
         ):
             assert params.url.host
             history = params.response.history
+            previous_status_codes = [f"({response.status})" for response in history] if history else []
+            status_code_chain = " -> ".join(previous_status_codes + [f"({params.response.status})"])
             basic_logger.debug(
-                f"({params.response.status}) <{params.method} {params.url!r}> "
-                f"in {time.time() - timings[params.url.host if not history else history[0].url.host]}"
+                f"{status_code_chain} <{params.method} {params.url!r}> "
+                f"took {time.time() - timings[params.url.host if not history else history[0].url.host]} second(s)"
+            )
+
+        async def on_request_exception(
+            session: aiohttp.ClientSession, context: types.SimpleNamespace, params: aiohttp.TraceRequestExceptionParams
+        ):
+            basic_logger.debug(
+                f"FAILED: <{params.method} {params.url}> with {str(params.exception) or type(params.exception)}"
             )
 
         trace_config = aiohttp.TraceConfig()
         trace_config.on_request_start.append(on_request_start)
         trace_config.on_request_end.append(on_request_end)
+        trace_config.on_request_exception.append(on_request_exception)
 
         _connector = aiohttp.TCPConnector(limit=50)
-        async_session = aiohttp.ClientSession(connector=_connector, trace_configs=[trace_config])
+        async_session = aiohttp.ClientSession(
+            connector=_connector, trace_configs=[trace_config], timeout=aiohttp.ClientTimeout(total=30)
+        )
         return async_session
 
     async def get_session(self) -> aiohttp.ClientSession:
@@ -163,7 +175,7 @@ class RSSFeed(URLSource):
             html = await response.text()
             rss_feed = feedparser.parse(html)
             if exception := rss_feed.get("bozo_exception"):
-                basic_logger.warn(f"Warning! Couldn't parse rss feed '{self.url}' because of {exception}")
+                basic_logger.warning(f"Warning! Couldn't parse rss feed '{self.url}' because of {exception}")
                 return
             else:
                 for url in (entry["link"] for entry in rss_feed["entries"]):
@@ -245,8 +257,10 @@ class HTMLSource:
         if isinstance(url_source, URLSource):
             url_source.set_header(self.request_header)
 
-    async def fetch(self, url_filter: Optional[URLFilter] = None) -> AsyncIterator[HTML]:
-        combined_filters: List[URLFilter] = ([self.url_filter] if self.url_filter else []) + ([url_filter] if url_filter else [])
+    async def fetch(self, url_filter: Optional[URLFilter] = None) -> AsyncIterator[Optional[HTML]]:
+        combined_filters: List[URLFilter] = ([self.url_filter] if self.url_filter else []) + (
+            [url_filter] if url_filter else []
+        )
 
         def filter_url(u: str) -> bool:
             return any(f(u) for f in combined_filters)
@@ -254,10 +268,12 @@ class HTMLSource:
         async for url in self.url_source:
             if not validators.url(url):
                 basic_logger.debug(f"Skipped requested URL '{url}' because the URL is malformed")
+                yield None
                 continue
 
             if filter_url(url):
                 basic_logger.debug(f"Skipped requested URL '{url}' because of URL filter")
+                yield None
                 continue
 
             session = await session_handler.get_session()
@@ -266,20 +282,23 @@ class HTMLSource:
                 async with session.get(url, headers=self.request_header) as response:
                     if filter_url(str(response.url)):
                         basic_logger.debug(f"Skipped responded URL '{str(response.url)}' because of URL filter")
+                        yield None
                         continue
                     html = await response.text()
                     response.raise_for_status()
 
             except (HTTPError, ClientError, HttpProcessingError, UnicodeError) as error:
                 basic_logger.info(f"Skipped requested URL '{url}' because of '{error}'")
+                yield None
                 continue
 
             except Exception as error:
-                basic_logger.warn(f"Warning! Skipped  requested URL '{url}' because of an unexpected error {error}")
+                basic_logger.warning(f"Warning! Skipped  requested URL '{url}' because of an unexpected error {error}")
+                yield None
                 continue
 
             if response.history:
-                basic_logger.debug(f"Got redirected {len(response.history)} time(s) from {url} -> {response.url}")
+                basic_logger.info(f"Got redirected {len(response.history)} time(s) from {url} -> {response.url}")
 
             yield HTML(
                 requested_url=url,
