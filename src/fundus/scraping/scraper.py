@@ -5,7 +5,7 @@ import more_itertools
 from fundus.logging import basic_logger
 from fundus.parser import ParserProxy
 from fundus.scraping.article import Article
-from fundus.scraping.filter import ExtractionFilter, Requires
+from fundus.scraping.filter import ExtractionFilter, Requires, URLFilter
 from fundus.scraping.html import HTMLSource
 
 
@@ -22,6 +22,7 @@ class Scraper:
         self,
         error_handling: Literal["suppress", "catch", "raise"],
         extraction_filter: Optional[ExtractionFilter] = None,
+        url_filter: Optional[URLFilter] = None,
     ) -> AsyncIterator[Optional[Article]]:
         # TODO: add docstring; especially explain why returned Article is Optional
         if isinstance(extraction_filter, Requires):
@@ -43,7 +44,7 @@ class Scraper:
                 return
 
         for html_source in self.sources:
-            async for html in html_source.fetch():
+            async for html in html_source.fetch(url_filter=url_filter):
                 if html is None:
                     yield None
                     continue

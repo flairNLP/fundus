@@ -112,25 +112,19 @@ class BaseCrawler:
             else:
                 return delay
 
-        def build_unique_url_filter() -> URLFilter:
-            return lambda url: url in response_cache
+        def build_url_filter() -> URLFilter:
+            def _filter(url: str) -> bool:
+                return (url_filter is not None and url_filter(url)) or (only_unique and url in response_cache)
 
-        # build filters and delay. this is for readability and typeguard reasons
-        extraction_filter = build_extraction_filter()
-        unique_url_filter = build_unique_url_filter() if only_unique else None
+            return _filter
+
         final_delay = build_delay()
-
-        for scraper in self.scrapers:
-            for source in scraper.sources:
-                if url_filter:
-                    source.add_url_filter(url_filter=url_filter)
-                if unique_url_filter:
-                    source.add_url_filter(url_filter=unique_url_filter)
 
         async_article_iterators: List[AsyncIterator[Optional[Article]]] = [
             scraper.scrape(
                 error_handling=error_handling,
-                extraction_filter=extraction_filter,
+                extraction_filter=build_extraction_filter(),
+                url_filter=build_url_filter(),
             )
             for scraper in self.scrapers
         ]
