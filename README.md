@@ -24,7 +24,7 @@ Fundus is:
   Fundus lets you crawl online news articles with only a few lines of Python code!
 
 * **An open-source Python package.**
-  Fundus is built around and based on the idea of building something together. We welcome your
+  Fundus is built on the idea of building something together. We welcome your
   contribution to  help Fundus [grow](docs/how_to_contribute.md)!
 
 <hr>
