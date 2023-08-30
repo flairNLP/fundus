@@ -3,6 +3,7 @@ from fundus.scraping.html import NewsMap, Sitemap
 
 from .the_guardian import TheGuardianParser
 from .the_independent import TheIndependentParser
+from .the_telegraph import TheTelegraphParser
 
 
 class UK(PublisherEnum):
@@ -21,4 +22,14 @@ class UK(PublisherEnum):
             NewsMap("https://www.independent.co.uk/sitemaps/googlenews"),
         ],
         parser=TheIndependentParser,
+    )
+
+    TheTelegraph = PublisherSpec(
+        name="The Telegraph",
+        domain="https://www.telegraph.co.uk/",
+        sources=[
+            Sitemap("https://www.telegraph.co.uk/sitemap.xml"),
+            NewsMap("https://www.telegraph.co.uk/custom/daily-news/sitemap.xml"),
+        ],
+        parser=TheTelegraphParser,
     )

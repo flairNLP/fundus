@@ -352,6 +352,21 @@
       <td>&#160;</td>
       <td>&#160;</td>
     </tr>
+    <tr>
+      <td>
+        <code>TheTelegraph</code>
+      </td>
+      <td>
+        <div>The Telegraph</div>
+      </td>
+      <td>
+        <a href="https://www.telegraph.co.uk/">
+          <span>www.telegraph.co.uk</span>
+        </a>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
   </tbody>
 </table>
 
