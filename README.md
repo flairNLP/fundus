@@ -75,7 +75,7 @@ Fundus-Article:
 - From:   FoxNews (2023-05-09 14:37)
 ```
 
-This printout that you succesfully crawled to articles!
+This printout tells you that you succesfully crawled to articles!
 
 For each article, the printout details:
 - the "Title" of the article, i.e. its headline 
