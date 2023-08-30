@@ -64,6 +64,7 @@ Fundus-Article:
           through committee votes on Thursday thanks to a last-minute [...]"
 - URL:    https://freebeacon.com/politics/feinsteins-return-not-enough-for-confirmation-of-controversial-new-hampshire-judicial-nominee/
 - From:   FreeBeacon (2023-05-11 18:41)
+
 Fundus-Article:
 - Title: "Northwestern student government freezes College Republicans funding over [...]"
 - Text:  "Student government at Northwestern University in Illinois "indefinitely" froze
