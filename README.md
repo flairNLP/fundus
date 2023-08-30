@@ -74,10 +74,10 @@ Fundus-Article:
 ```
 
 This printout shows two crawled articles. For each article, the printout shows:
-- the "title" of the article, i.e. its headline
-- the "text", i.e. the main article body text
-- the URL from which it was crawled
-- the news source it is from 
+- the "Title" of the article, i.e. its headline
+- the "Text", i.e. the main article body text
+- the "URL" from which it was crawled
+- the news source it is "From"
 
 ## Example 2: Crawl a specific news source
 
