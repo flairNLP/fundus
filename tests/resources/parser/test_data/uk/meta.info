@@ -10,5 +10,9 @@
   "TheTelegraph_2023_08_30.html.gz": {
     "url": "https://www.telegraph.co.uk/recommended/home/best-heated-clothes-airer/",
     "crawl_date": "2023-08-30 17:51:33.803288"
+  },
+  "iNews_2023_08_30.html.gz": {
+    "url": "https://inews.co.uk/sport/tennis/us-open-2023-british-players-results-andy-murray-katie-boulter-cam-norrie-evans-burrage-draper-2580837",
+    "crawl_date": "2023-08-30 18:39:34.320432"
   }
 }

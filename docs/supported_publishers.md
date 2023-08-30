@@ -367,6 +367,21 @@
       <td>&#160;</td>
       <td>&#160;</td>
     </tr>
+    <tr>
+      <td>
+        <code>iNews</code>
+      </td>
+      <td>
+        <div>i</div>
+      </td>
+      <td>
+        <a href="https://inews.co.uk/">
+          <span>inews.co.uk</span>
+        </a>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
   </tbody>
 </table>
 
