@@ -29,9 +29,9 @@ Fundus is:
 
 <hr>
 
-## Quick Start
+# Quick Start
 
-### Requirements and Installation
+## Requirements and Installation
 
 In your favorite virtual environment, simply do:
 
@@ -41,8 +41,8 @@ pip install fundus
 
 Fundus requires Python 3.8+.
 
----
-### Example 1: Crawl a bunch of English-language news articles
+
+## Example 1: Crawl a bunch of English-language news articles
 
 Let's use Fundus to crawl 2 articles from publishers based in the US.
 
@@ -76,8 +76,8 @@ Fundus-Article:
 
 This means that you crawled 2 articles from different US publishers.
 
----
-### Example 2: Crawl a specific news source
+
+## Example 2: Crawl a specific news source
 
 Maybe you want to crawl a specific news source instead. Let's crawl news articles from Washington Times only:
 
