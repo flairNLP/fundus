@@ -55,7 +55,9 @@ for article in crawler.crawl(max_articles=2):
     print(article)
 ```
 
-This should print something like this:
+That's already it!
+
+If you run this code, it should print out something like this:
 
 ```console
 Fundus-Article:
