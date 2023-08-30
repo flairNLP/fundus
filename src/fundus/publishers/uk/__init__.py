@@ -1,4 +1,5 @@
 from fundus.publishers.base_objects import PublisherEnum, PublisherSpec
+from fundus.scraping.filter import inverse, regex_filter
 from fundus.scraping.html import NewsMap, Sitemap
 
 from .the_guardian import TheGuardianParser
@@ -17,7 +18,9 @@ class UK(PublisherEnum):
         name="The Independent",
         domain="https://www.independent.co.uk/",
         sources=[
-            Sitemap("https://www.independent.co.uk/sitemap.xml"),
+            Sitemap(
+                "https://www.independent.co.uk/sitemap.xml", sitemap_filter=inverse(regex_filter(f"sitemap-articles"))
+            ),
             NewsMap("https://www.independent.co.uk/sitemaps/googlenews"),
         ],
         parser=TheIndependentParser,
