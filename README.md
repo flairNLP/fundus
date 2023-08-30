@@ -1,24 +1,33 @@
 <img alt="alt text" src="resources/fundus_logo.png" width="180"/>
 
-[![PyPI version](https://badge.fury.io/py/fundus.svg)](https://badge.fury.io/py/fundus)
-[![GitHub Issues](https://img.shields.io/github/issues/flairNLP/fundus.svg)](https://github.com/flairNLP/fundus/issues)
-[![Contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg)](docs/how_to_contribute.md)
-[![License: MIT](https://img.shields.io/badge/License-MIT-brightgreen.svg)](https://opensource.org/licenses/MIT)
+<p align="center">A very simple <b>news crawler</b> in Python.
+Developed at <a href="https://www.informatik.hu-berlin.de/en/forschung-en/gebiete/ml-en/">Humboldt University of Berlin</a>.
+</p>
+<p align="center">
+<img alt="version" src="https://img.shields.io/badge/version-0.1-green">
+<img alt="python" src="https://img.shields.io/badge/python-3.8-blue">
+<img alt="Static Badge" src="https://img.shields.io/badge/license-MIT-green">
+</p>
+<div align="center">
+<hr>
 
-A very simple **news crawler**.
-Developed at [Humboldt University of Berlin](https://www.informatik.hu-berlin.de/en/forschung-en/gebiete/ml-en/).
+[Quick Start](#installation) |  [Tutorials](tutorials/TUTORIAL-1_OVERVIEW.md)  | [Citation](#citation)
+
+</div>
+
 
 ---
 
 Fundus is:
 
 * **A static news crawler.** 
-  Fundus lets you gather a ton of news articles already in shape from a huge variety of news sources in only a couple of lines of code.
-  Be it for your thesis about political bias or training your home-brewed stock prediction model, Fundus gets you covered with the data.
+  Fundus lets you crawl online news articles with only a few lines of Python code!
 
 * **An open-source Python package.**
-  Fundus is built around and based on the idea of building something together.
-  The more people want to be a part of this the better. So feel free to check out if you can help Fundus [growing](docs/how_to_contribute.md).
+  Fundus is built around and based on the idea of building something together. We welcome your
+  contribution to  help Fundus [grow](docs/how_to_contribute.md)!
+
+<hr>
 
 ## Quick Start
 
