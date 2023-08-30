@@ -29,11 +29,9 @@ Fundus is:
 
 <hr>
 
-# Quick Start
+## Quick Start
 
-## Requirements and Installation
-
-In your favorite virtual environment, simply do:
+To install from pip, simply do:
 
 ```
 pip install fundus
