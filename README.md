@@ -73,7 +73,7 @@ Fundus-Article:
 - From:   FoxNews (2023-05-09 14:37)
 ```
 
-This means that you crawled 2 articles from different US publishers.
+This printout shows two crawled articles. For each article, the printout shows the "title" (headline) of the article and its "text" (main article text). It also shows which URL it was crawled from and which news source. 
 
 
 ## Example 2: Crawl a specific news source
