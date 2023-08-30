@@ -73,11 +73,14 @@ Fundus-Article:
 - From:   FoxNews (2023-05-09 14:37)
 ```
 
-This printout shows two crawled articles. For each article, the printout shows:
-- the "Title" of the article, i.e. its headline
-- the "Text", i.e. the main article body text
+This printout that you succesfully crawled to articles!
+
+For each article, the printout details:
+- the "Title" of the article, i.e. its headline _(truncated in the printout)_
+- the "Text", i.e. the main article body text _(truncated in the printout)_
 - the "URL" from which it was crawled
 - the news source it is "From"
+
 
 ## Example 2: Crawl a specific news source
 
