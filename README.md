@@ -11,7 +11,7 @@ Developed at <a href="https://www.informatik.hu-berlin.de/en/forschung-en/gebiet
 <div align="center">
 <hr>
 
-[Quick Start](#quick-start) |  [Tutorials](#tutorials)  | [Supprted News Sources](/docs/supported_publishers.md)
+[Quick Start](#quick-start) |  [Tutorials](#tutorials)  | [News Sources](/docs/supported_publishers.md)
 
 </div>
 
