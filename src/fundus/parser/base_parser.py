@@ -70,9 +70,9 @@ class RegisteredFunction(ABC):
 
     def __repr__(self):
         if instance := self.__self__:
-            return f"bound {type(self).__name__} of {instance}: {self.__wrapped__} --> !r{self.__name__}"
+            return f"bound {type(self).__name__} of {instance}: {self.__wrapped__} --> {self.__name__!r}"
         else:
-            return f"registered {type(self).__name__}: {self.__wrapped__} --> !r{self.__name__}"
+            return f"registered {type(self).__name__}: {self.__wrapped__} --> {self.__name__!r}"
 
 
 class Attribute(RegisteredFunction):
