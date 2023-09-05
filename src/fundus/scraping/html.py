@@ -12,6 +12,7 @@ from typing import (
     ClassVar,
     Dict,
     Iterable,
+    Iterator,
     List,
     Optional,
     Union,
@@ -29,7 +30,7 @@ from lxml.etree import XPath
 
 from fundus.logging import basic_logger
 from fundus.scraping.filter import URLFilter, inverse
-from fundus.utils.more_async import make_iterable_async
+from fundus.utils.more_async import AsyncRunner, async_next, make_iterable_async
 
 _default_header = {"user-agent": "Fundus"}
 
@@ -165,6 +166,19 @@ class URLSource(AsyncIterable[str], ABC):
     async def __aiter__(self) -> AsyncIterator[str]:
         async for url in self._get_pre_filtered_urls():
             yield url
+
+    def get_urls(self, max_urls: int = -1) -> Iterator[str]:
+        async_url_gen = self.__aiter__()
+        counter = 0
+        with AsyncRunner() as runner:
+            while True:
+                if counter == max_urls:
+                    break
+                try:
+                    yield runner.run_until_complete(async_next(async_url_gen))
+                except StopAsyncIteration:
+                    break
+                counter += 1
 
 
 @dataclass
