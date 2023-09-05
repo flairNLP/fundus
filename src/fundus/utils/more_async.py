@@ -1,3 +1,5 @@
+import asyncio
+from asyncio import AbstractEventLoop
 from typing import AsyncIterator, Iterable, TypeVar, Union, overload
 
 _T = TypeVar("_T")
@@ -35,3 +37,25 @@ async def async_next(iterator: AsyncIterator[_T], default: Union[_VT, _Sentinel]
 async def make_iterable_async(iterable: Iterable[_T]) -> AsyncIterator[_T]:
     for nxt in iterable:
         yield nxt
+
+
+class AsyncRunner:
+    def __init__(self):
+        self.event_loop: AbstractEventLoop
+
+    def __enter__(self):
+        try:
+            asyncio.get_running_loop()
+            raise AssertionError()
+        except RuntimeError:
+            self.event_loop = asyncio.new_event_loop()
+        except AssertionError:
+            raise RuntimeError(
+                "There is already an event loop running. If you want to crawl articles inside an "
+                "async environment use crawl_async() instead."
+            )
+        return self.event_loop
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.event_loop.run_until_complete(self.event_loop.shutdown_asyncgens())
+        self.event_loop.close()
