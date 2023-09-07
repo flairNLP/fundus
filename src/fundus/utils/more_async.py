@@ -40,10 +40,10 @@ async def make_iterable_async(iterable: Iterable[_T]) -> AsyncIterator[_T]:
 
 
 class AsyncRunner:
-    def __init__(self):
+    def __init__(self) -> None:
         self.event_loop: AbstractEventLoop
 
-    def __enter__(self):
+    def __enter__(self) -> AbstractEventLoop:
         try:
             asyncio.get_running_loop()
             raise AssertionError()
@@ -56,6 +56,6 @@ class AsyncRunner:
             )
         return self.event_loop
 
-    def __exit__(self, exc_type, exc_val, exc_tb):
+    def __exit__(self, exc_type, exc_val, exc_tb) -> None:
         self.event_loop.run_until_complete(self.event_loop.shutdown_asyncgens())
         self.event_loop.close()
