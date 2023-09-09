@@ -168,6 +168,8 @@ class URLSource(AsyncIterable[str], ABC):
             yield url
 
     def get_urls(self, max_urls: int = -1) -> Iterator[str]:
+        # The default value on counter is done on purpose:
+        # It causes the code to run until all the urls are exhausted.
         async_url_gen = self.__aiter__()
         counter = 0
         with AsyncRunner() as runner:
