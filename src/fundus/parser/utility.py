@@ -214,8 +214,15 @@ def generic_text_extraction_with_css(doc, selector: XPath) -> Optional[str]:
     return strip_nodes_to_text(nodes)
 
 
-def generic_topic_parsing(keyword_str: Optional[str], delimiter: str = ",") -> List[str]:
-    return [keyword.strip() for keyword in keyword_str.split(delimiter)] if keyword_str else []
+def generic_topic_parsing(keywords: Optional[Union[str, List[str]]], delimiter: str = ",") -> List[str]:
+    if isinstance(keywords, str):
+        return [keyword.strip() for keyword in keywords.split(delimiter)]
+    elif isinstance(keywords, list) and all(isinstance(s, str) for s in keywords):
+        return keywords
+    elif keywords is None:
+        return []
+    else:
+        raise TypeError(f"Encountered unexpected type {type(keywords)} as keyword parameter")
 
 
 _tz_infos = {"CET": 3600, "CEST": 7200}
