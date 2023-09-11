@@ -30,7 +30,7 @@ from lxml.etree import XPath
 
 from fundus.logging import basic_logger
 from fundus.scraping.filter import URLFilter, inverse
-from fundus.utils.more_async import AsyncRunner, async_next, make_iterable_async
+from fundus.utils.more_async import ManagedEventLoop, async_next, make_iterable_async
 
 _default_header = {"user-agent": "Fundus"}
 
@@ -168,11 +168,21 @@ class URLSource(AsyncIterable[str], ABC):
             yield url
 
     def get_urls(self, max_urls: int = -1) -> Iterator[str]:
-        # The default value on counter is done on purpose:
-        # It causes the code to run until all the urls are exhausted.
+        """Returns a generator yielding up to <max_urls> URLs from <self>.
+
+
+        Args:
+            max_urls (int): Number of max URLs to return. Set value is
+                an upper bound and not necessarily the actual number of
+                URLs. If set < 0, the source will be exhausted until
+                StopAsyncIteration is hit. Defaults to -1.
+
+        Yields:
+            str: The next URL.
+        """
         async_url_gen = self.__aiter__()
         counter = 0
-        with AsyncRunner() as runner:
+        with ManagedEventLoop() as runner:
             while True:
                 if counter == max_urls:
                     break
