@@ -1,7 +1,6 @@
 import pathlib
 import sys
 
-from fundus.logging import basic_logger
 from fundus.publishers import PublisherCollection
 from fundus.scraping.filter import Requires
 from fundus.scraping.html import NewsMap, RSSFeed, Sitemap
