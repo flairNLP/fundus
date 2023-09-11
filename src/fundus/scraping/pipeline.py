@@ -24,7 +24,7 @@ from fundus.scraping.article import Article
 from fundus.scraping.filter import ExtractionFilter, URLFilter
 from fundus.scraping.html import URLSource, session_handler
 from fundus.scraping.scraper import Scraper
-from fundus.utils.more_async import AsyncRunner, async_next
+from fundus.utils.more_async import ManagedEventLoop, async_next
 
 
 @runtime_checkable
@@ -205,7 +205,7 @@ class BaseCrawler:
             only_unique=only_unique,
         )
 
-        with AsyncRunner() as runner:
+        with ManagedEventLoop() as runner:
             while True:
                 try:
                     yield runner.run_until_complete(async_next(async_article_iter))

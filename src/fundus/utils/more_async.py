@@ -39,7 +39,7 @@ async def make_iterable_async(iterable: Iterable[_T]) -> AsyncIterator[_T]:
         yield nxt
 
 
-class AsyncRunner:
+class ManagedEventLoop:
     def __init__(self) -> None:
         self.event_loop: AbstractEventLoop
 
