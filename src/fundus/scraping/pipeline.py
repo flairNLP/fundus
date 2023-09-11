@@ -2,7 +2,6 @@ import asyncio
 import time
 from typing import (
     AsyncIterator,
-    Iterable,
     Iterator,
     List,
     Literal,
@@ -12,7 +11,6 @@ from typing import (
     Tuple,
     Type,
     Union,
-    cast,
     runtime_checkable,
 )
 
@@ -26,7 +24,7 @@ from fundus.scraping.article import Article
 from fundus.scraping.filter import ExtractionFilter, URLFilter
 from fundus.scraping.html import URLSource, session_handler
 from fundus.scraping.scraper import Scraper
-from fundus.utils.more_async import async_next
+from fundus.utils.more_async import ManagedEventLoop, async_next
 
 
 @runtime_checkable
@@ -207,26 +205,12 @@ class BaseCrawler:
             only_unique=only_unique,
         )
 
-        try:
-            asyncio.get_running_loop()
-            raise AssertionError()
-        except RuntimeError:
-            event_loop = asyncio.new_event_loop()
-        except AssertionError:
-            raise RuntimeError(
-                "There is already an event loop running. If you want to crawl articles inside an "
-                "async environment use crawl_async() instead."
-            )
-
-        try:
+        with ManagedEventLoop() as runner:
             while True:
                 try:
-                    yield event_loop.run_until_complete(async_next(async_article_iter))
+                    yield runner.run_until_complete(async_next(async_article_iter))
                 except StopAsyncIteration:
                     break
-        finally:
-            event_loop.run_until_complete(event_loop.shutdown_asyncgens())
-            event_loop.close()
 
 
 class Crawler(BaseCrawler):
