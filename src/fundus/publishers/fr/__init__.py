@@ -8,6 +8,6 @@ class FR(PublisherEnum):
     LeMonde = PublisherSpec(
         name="Le Monde",
         domain="https://www.lemonde.fr/",
-        sources=[NewsMap("https://www.lemonde.fr/sitemap_news.xml", reverse=True)],
+        sources=[NewsMap("https://www.lemonde.fr/sitemap_news.xml")],
         parser=LeMondeParser,
     )
