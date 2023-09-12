@@ -30,7 +30,7 @@ class LeMondeParser(ParserProxy):
 
         @attribute
         def topics(self) -> List[str]:
-            return self.precomputed.ld.get("NewsArticle").get("keywords")  # type: ignore
+            return self.precomputed.ld.bf_search("keywords")  # type: ignore
 
         @attribute
         def publishing_date(self) -> Optional[datetime.datetime]:
