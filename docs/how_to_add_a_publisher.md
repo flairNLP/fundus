@@ -499,7 +499,7 @@ class LATimesParser(ParserProxy):
             )
 
         @attribute
-        def publishing_date(self) -> datetime.datetime:
+        def publishing_date(self) -> Optional[datetime.datetime]:
             return generic_date_parsing(self.precomputed.ld.bf_search("datePublished"))
 
         @attribute
