@@ -16,19 +16,21 @@ This tutorial shows you how to filter articles based on their attribute values, 
 ## Extraction filter
 
 A specific article may not contain all attributes the parser is capable of extracting.
-By default, Fundus drops all articles that aren't fully extracted to ensure data quality.
-You may miss a lot of data potentially useful for your project.
-To alter this behavior make use of the `extration_filter` parameter of the `crawl()` method.
-You do so by either using the built-in `ExtractionFilter` `Requires` or writing a custom one.
+By default, Fundus drops all articles without at least a title, body, and publishing date extracted to ensure data quality.
+To alter this behavior make use of the `only_complete` parameter of the `crawl()` method.
+You have three options to do so:
+- Use the build in `ExtractionFilter` `Requires`, or write a custome one.
+- Set it to `false` to disable extraction filtering entirely.
+- Set it to `true` to yield only fully extracted articles.
 
-Let's print some articles with at least a `body` and `title` set.
+Let's print some articles with at least a `body`, `title`, and `topics` set.
 
 ````python
 from fundus import Crawler, PublisherCollection, Requires
 
-crawler = Crawler(PublisherCollection.de)
+crawler = Crawler(PublisherCollection.us)
 
-for article in crawler.crawl(max_articles=2, only_complete=Requires("title", "body")):
+for article in crawler.crawl(max_articles=2, only_complete=Requires("title", "body", "topics")):
     print(article)
 ````
 

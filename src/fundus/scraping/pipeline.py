@@ -21,7 +21,7 @@ from fundus import PublisherCollection
 from fundus.logging import basic_logger
 from fundus.publishers.base_objects import PublisherEnum
 from fundus.scraping.article import Article
-from fundus.scraping.filter import ExtractionFilter, URLFilter
+from fundus.scraping.filter import ExtractionFilter, URLFilter, Requires
 from fundus.scraping.html import URLSource, session_handler
 from fundus.scraping.scraper import Scraper
 from fundus.utils.more_async import ManagedEventLoop, async_next
@@ -65,7 +65,7 @@ class BaseCrawler:
         self,
         max_articles: Optional[int] = None,
         error_handling: Literal["suppress", "catch", "raise"] = "suppress",
-        only_complete: Union[bool, ExtractionFilter] = True,
+        only_complete: Union[bool, ExtractionFilter] = Requires("title, body", "publishing_date"),
         delay: Optional[Union[float, Delay]] = None,
         url_filter: Optional[URLFilter] = None,
         only_unique: bool = True,
@@ -77,7 +77,8 @@ class BaseCrawler:
         Args:
             max_articles (Optional[int]): Number of articles to crawl. Defaults to None.
             error_handling (Literal["suppress", "catch", "raise"]): Set error handling. Defaults to "suppress".
-            only_complete (Union[bool, ExtractionFilter]): Set extraction filters. Defaults to True
+            only_complete (Union[bool, ExtractionFilter]): Set extraction filters. Defaults to
+                Requires("title", "body", "publishing_date").
             delay (Optional[Union[float, Delay]]): Set delay time between article batches. Defaults to None.
             url_filter (Optional[URLFilter]): Set URLFilter. Defaults to None.
             only_unique (bool): If true return only unique responses. Defaults to True.
@@ -163,7 +164,7 @@ class BaseCrawler:
         self,
         max_articles: Optional[int] = None,
         error_handling: Literal["suppress", "catch", "raise"] = "suppress",
-        only_complete: Union[bool, ExtractionFilter] = True,
+        only_complete: Union[bool, ExtractionFilter] = Requires("title", "body", "publishing_date"),
         delay: Optional[Union[float, Delay]] = 0.1,
         url_filter: Optional[URLFilter] = None,
         only_unique: bool = True,
@@ -181,8 +182,9 @@ class BaseCrawler:
                 through Article.exception. If set to "raise" all errors encountered during extraction will
                 be raised. Defaults to "suppress".
             only_complete (Union[bool, ExtractionFilter]): Set a callable satisfying the ExtractionFilter
-                protocol as extraction filters or use a boolean. If False, all articles will be yielded,
-                if True, only those with all attributes extracted. Defaults to True.
+                protocol as an extraction filter or use a boolean. If False, all articles will be yielded,
+                if True, only those with all attributes extracted. Defaults to ExtractionFilter letting
+                through all articles with at least title, body, and publishing_date set.
             delay (Optional[Union[float, Delay]]): Set a delay time in seconds to be used between article
                 batches. You can set a delay directly using float or any callable satisfying the Delay
                 protocol. If set to None, no delay will be used between batches. See Delay for more
