@@ -21,7 +21,7 @@ from fundus import PublisherCollection
 from fundus.logging import basic_logger
 from fundus.publishers.base_objects import PublisherEnum
 from fundus.scraping.article import Article
-from fundus.scraping.filter import ExtractionFilter, URLFilter, Requires
+from fundus.scraping.filter import ExtractionFilter, Requires, URLFilter
 from fundus.scraping.html import URLSource, session_handler
 from fundus.scraping.scraper import Scraper
 from fundus.utils.more_async import ManagedEventLoop, async_next
