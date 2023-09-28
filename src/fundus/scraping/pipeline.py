@@ -230,7 +230,7 @@ class Crawler(BaseCrawler):
 
         Args:
             *publishers (Union[PublisherEnum, Type[PublisherEnum]]): The publishers to crawl.
-            restrict_sources_to (Optional[List[Literal["rss", "sitemap", "news"]]]): Let's you restrict
+            restrict_sources_to (Optional[List[Type[URLSource]]]): Let's you restrict
                 sources defined in the publisher specs. If set, only articles from given source types
                 will be yielded.
         """
