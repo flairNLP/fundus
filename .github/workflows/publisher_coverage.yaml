@@ -4,6 +4,8 @@ on:
   schedule:
     - cron: '0 1 * * *'  # Runs at 01:00
 
+  push:
+
   workflow_dispatch:
 
 jobs:
