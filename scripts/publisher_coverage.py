@@ -7,7 +7,7 @@ Note that this script does not check the attributes' correctness, only their pre
 import sys
 import traceback
 from enum import EnumMeta
-from typing import Optional, cast
+from typing import List, Optional, cast
 
 from fundus import Crawler, NewsMap, PublisherCollection, RSSFeed
 from fundus.publishers.base_objects import PublisherEnum
@@ -17,7 +17,7 @@ from fundus.scraping.article import Article
 def main() -> None:
     failed: int = 0
 
-    publisher_regions: list[EnumMeta] = sorted(
+    publisher_regions: List[EnumMeta] = sorted(
         PublisherCollection.get_publisher_enum_mapping().values(), key=lambda region: region.__name__
     )
 
