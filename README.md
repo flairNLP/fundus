@@ -7,7 +7,7 @@ Developed at <a href="https://www.informatik.hu-berlin.de/en/forschung-en/gebiet
 <img alt="version" src="https://img.shields.io/badge/version-0.1-green">
 <img alt="python" src="https://img.shields.io/badge/python-3.8-blue">
 <img alt="Static Badge" src="https://img.shields.io/badge/license-MIT-green">
-<img alt="Publisher Coverage" scr="https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/dobbersc/ca0ae056b05cbfeaf30fa42f84ddf458/raw/fundus_publisher_coverage.json">
+<img alt="Publisher Coverage" src="https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/dobbersc/ca0ae056b05cbfeaf30fa42f84ddf458/raw/fundus_publisher_coverage.json">
 </p>
 <div align="center">
 <hr>
