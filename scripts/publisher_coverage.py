@@ -1,6 +1,6 @@
 """
-This script performs a baseline crawler validation for every publisher and reports the test coverage.
-The tests include a real-time crawl for each publisher's news map and RSS-Feed
+This script performs a baseline real-time crawler validation for every publisher and reports the test coverage.
+The tests include a real-time crawl for each publisher's news map and RSS Feed
 checking the received articles for attribute completeness.
 Note that this script does not check the attributes' correctness, only their presence.
 """
