@@ -1,0 +1,78 @@
+name: Publisher Coverage
+
+on:
+  schedule:
+    - cron: '0 1 * * *'  # Runs at 01:00
+
+  workflow_dispatch:
+
+jobs:
+  validate_crawlers:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Set up Git repository
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.head_ref }}
+
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.9
+
+      - name: Install Fundus
+        run: pip install -e .
+
+      - name: Validate Crawlers
+        run: |
+          set -o pipefail
+          exec python scripts/publisher_coverage.py | tee publisher_coverage.txt
+
+      - name: Upload Coverage Report
+        if: success() || failure()
+        uses: actions/upload-artifact@v3
+        with:
+          name: Publisher Coverage
+          path: publisher_coverage.txt
+
+
+  create_badge:
+    runs-on: ubuntu-latest
+    needs: validate_crawlers
+    if: success() || failure()
+
+    steps:
+      - name: Set up Git repository
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.head_ref }}
+
+      - name: Download Coverage Report
+        uses: actions/download-artifact@v3
+        with:
+          name: Publisher Coverage
+
+      - name: Get Success Rate
+        run: echo "SUCCESS_RATE=$(tail -n 1 publisher_coverage.txt | grep -P -o '\d+\/\d+')" >> $GITHUB_ENV
+
+      - name: Get Coverage Bounds
+        run: |
+          echo "TOTAL_PUBLISHERS=$(echo ${{ env.SUCCESS_RATE }} | grep -P -o '\d+' | tail -1)" >> $GITHUB_ENV
+          echo "PASSED_PUBLISHERS=$(echo ${{ env.SUCCESS_RATE }} | grep -P -o '\d+' | head -1)" >> $GITHUB_ENV
+
+      - name: Get Red Threshold
+        # We set the badge colour to red when at least one publisher failed the tests.
+        run: echo "RED_THRESHOLD=$(( ${{ env.TOTAL_PUBLISHERS }} - 1 ))" >> $GITHUB_ENV
+
+      - name: Create Badge
+        uses: schneegans/dynamic-badges-action@v1.6.0
+        with:
+          auth: ${{ secrets.DOBBERSC_GIST_SECRET }}
+          gistID: ca0ae056b05cbfeaf30fa42f84ddf458
+          filename: fundus_publisher_coverage.json
+          label: Publisher Coverage
+          message: ${{ env.SUCCESS_RATE }}
+          valColorRange: ${{ env.PASSED_PUBLISHERS }}
+          maxColorRange: ${{ env.TOTAL_PUBLISHERS }}
+          minColorRange: ${{ env.RED_THRESHOLD }}
