@@ -28,6 +28,8 @@ def main() -> None:
         for publisher in sorted(
             publisher_region, key=lambda p: cast(PublisherEnum, p).name  # type: ignore[no-any-return]
         ):
+            publisher_name: str = publisher.name  # type: ignore[attr-defined]
+
             crawler: Crawler = Crawler(publisher, restrict_sources_to=[NewsMap, RSSFeed])
             complete_article: Optional[Article] = next(
                 crawler.crawl(max_articles=1, only_complete=True, error_handling="catch"), None
@@ -39,10 +41,10 @@ def main() -> None:
                 )
 
                 if incomplete_article is None:
-                    print(f"❌ FAILED: {publisher.name!r} - No articles received")
+                    print(f"❌ FAILED: {publisher_name!r} - No articles received")
                 else:
                     print(
-                        f"❌ FAILED: {publisher.name!r} - No complete articles received "
+                        f"❌ FAILED: {publisher_name!r} - No complete articles received "
                         f"(URL of an incomplete article: {incomplete_article.html.requested_url})"
                     )
                 failed += 1
@@ -50,7 +52,7 @@ def main() -> None:
 
             if complete_article.exception is not None:
                 print(
-                    f"❌ FAILED: {publisher.name!r} - Encountered exception during crawling "
+                    f"❌ FAILED: {publisher_name!r} - Encountered exception during crawling "
                     f"(URL: {complete_article.html.requested_url})"
                 )
                 traceback.print_exception(
@@ -63,7 +65,7 @@ def main() -> None:
                 failed += 1
                 continue
 
-            print(f"✔️ PASSED: {publisher.name!r}")
+            print(f"✔️ PASSED: {publisher_name!r}")
         print()
 
     total_publishers: int = len(PublisherCollection)
