@@ -25,7 +25,6 @@ class TheNamibianParser(ParserProxy):
 
         @attribute
         def publishing_date(self) -> Optional[datetime]:
-            # publishing date wird is given in YYYY-mm-ddTHH:MM:SS+HH:MM since %:z in datetime was only intruduced in python 3.12, it needs to be handled by splitting the string
             return generic_date_parsing(self.precomputed.meta.get("article:published_time"))
 
         @attribute
