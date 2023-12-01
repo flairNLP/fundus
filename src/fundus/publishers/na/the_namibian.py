@@ -31,7 +31,7 @@ class TheNamibianParser(ParserProxy):
         @attribute
         def title(self) -> Optional[str]:
             title = self.precomputed.meta.get("og:title")
-            # Verfication Necessary if title is non None, to prevent error on function call
+            # Verfication necessary if title is None, to prevent error on function call
             if not not title:
                 if " - The Namibian" in title:
                     title = title.split(" - The Nam")[0]
