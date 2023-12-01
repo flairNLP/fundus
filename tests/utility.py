@@ -211,6 +211,10 @@ class HTMLTestFile:
             None
 
         """
+
+        # ensure that path exists
+        self.path.parent.mkdir(parents=True, exist_ok=True)
+
         with open(self.path, "wb") as file:
             file.write(gzip.compress(bytes(self.content, self.encoding)))
         self._register_at_meta_info()

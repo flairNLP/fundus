@@ -73,7 +73,7 @@ class US(PublisherEnum):
     )
 ```
 
-If the country section for your publisher did not exist before step 1, please add the `PublisherEnum` to `src/library/collection/__init__.py'`.
+If the country section for your publisher did not exist before step 1, please add the `PublisherEnum` to the `PublisherCollection` in `fundus/publishers/__init__.py'`.
 
 ### Adding Sources
 
@@ -217,7 +217,7 @@ publisher = PublisherCollection.us.LosAngelesTimes
 
 crawler = Crawler(publisher)
 
-for article in crawler.crawl(max_articles=2):
+for article in crawler.crawl(max_articles=2, only_complete=False):
     print(article)
 ```
 
