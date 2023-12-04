@@ -38,8 +38,3 @@ class TheNamibianParser(ParserProxy):
         @attribute
         def authors(self) -> List[str]:
             return generic_author_parsing(self.precomputed.ld.get_value_by_key_path(["Person", "name"]))
-
-        @attribute(validate=False)
-        def language(self) -> Optional[str]:
-            # Since The Namibian publishes articles in English and Oshiwambo, I added the attribute as well.
-            return self.precomputed.meta.get("og:locale")
