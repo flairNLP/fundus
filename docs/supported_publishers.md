@@ -369,9 +369,7 @@
       <td>
         <code>topics</code>
       </td>
-      <td>
-        <code>language</code>
-      </td>
+      <td>&#160;</td>
     </tr>
   </tbody>
 </table>
