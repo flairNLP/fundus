@@ -1,4 +1,5 @@
-<img alt="alt text" src="resources/fundus_logo.png" width="180"/>
+![LOGO](resources/logo_darkmode.svg#gh-dark-mode-only)
+![LOGO](resources/logo_lightmode.svg#gh-light-mode-only)
 
 <p align="center">A very simple <b>news crawler</b> in Python.
 Developed at <a href="https://www.informatik.hu-berlin.de/en/forschung-en/gebiete/ml-en/">Humboldt University of Berlin</a>.
