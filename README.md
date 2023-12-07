@@ -1,7 +1,7 @@
-<picture>
+<picture style="">
   <source media="(prefers-color-scheme: dark)" srcset="resources/logo_darkmode.svg">
   <source media="(prefers-color-scheme: light)" srcset="resources/logo_lightmode.svg">
-  <img src="resources/logo_lightmode.svg" alt="Logo">
+  <img src="resources/logo_lightmode.svg" alt="Logo" style="display: block; margin-left: auto; margin-right: auto; transform: scale(0.8);">
 </picture>
 
 <p align="center">A very simple <b>news crawler</b> in Python.
