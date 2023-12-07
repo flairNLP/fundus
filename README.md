@@ -1,22 +1,9 @@
 <p align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="resources/logo_darkmode.svg">
-    <source media="(prefers-color-scheme: light)" srcset="resources/logo_lightmode.svg">
-    <img src="resources/logo_lightmode.svg" alt="Logo" width="80%" height="80%">
-  </picture>
-</p>
-
-<p align="center">
-  <picture>
     <source media="(prefers-color-scheme: dark)" srcset="resources/logo_lightmode.svg">
     <source media="(prefers-color-scheme: light)" srcset="resources/logo_darkmode.svg">
     <img src="resources/logo_lightmode.svg" alt="Logo" width="50%" height="50%">
   </picture>
-</p>
-
-<p align="center">
-  <img alt="logo_dark" src="resources/logo_darkmode.svg#gh-dark-mode-only" width="80%" height="80%">
-  <img alt="logo_light" src="resources/logo_lightmode.svg#gh-light-mode-only" width="80%" height="80%">
 </p>
 
 <p align="center">A very simple <b>news crawler</b> in Python.
