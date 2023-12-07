@@ -10,7 +10,7 @@
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="resources/logo_lightmode.svg">
     <source media="(prefers-color-scheme: light)" srcset="resources/logo_darkmode.svg">
-    <img src="resources/logo_lightmode.svg" alt="Logo" width="80%" height="80%">
+    <img src="resources/logo_lightmode.svg" alt="Logo" width="50%" height="50%">
   </picture>
 </p>
 
