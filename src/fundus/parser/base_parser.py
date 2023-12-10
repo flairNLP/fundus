@@ -76,8 +76,9 @@ class RegisteredFunction(ABC):
 
 
 class Attribute(RegisteredFunction):
-    def __init__(self, func: Callable[[object], Any], priority: Optional[int], validate: bool):
-        self.validate = validate
+    def __init__(self, func: Callable[[object], Any], priority: Optional[int], validate: bool, overwrite: bool = False):
+        self.validate = validate if not overwrite else False
+        self.overwrite = overwrite
         super(Attribute, self).__init__(func=func, priority=priority)
 
 
@@ -88,7 +89,10 @@ class Function(RegisteredFunction):
 
 def _register(cls, factory: Type[RegisteredFunction], **kwargs):
     def wrapper(func):
-        return functools.update_wrapper(factory(func, **kwargs), func)
+        try:
+            return functools.update_wrapper(factory(func, **kwargs), func)
+        except TypeError as err:
+            raise err
 
     # _register was called with parenthesis
     if cls is None:
@@ -100,6 +104,10 @@ def _register(cls, factory: Type[RegisteredFunction], **kwargs):
 
 def attribute(cls=None, /, *, priority: Optional[int] = None, validate: bool = True):
     return _register(cls, factory=Attribute, priority=priority, validate=validate)
+
+
+def overwrite_attribute(cls):
+    return _register(cls, factory=Attribute, priority=None, validate=False, overwrite=True)
 
 
 def function(cls=None, /, *, priority: Optional[int] = None):
@@ -137,7 +145,7 @@ class AttributeCollection(RegisteredFunctionCollection[Attribute]):
 
     @property
     def unvalidated(self) -> "AttributeCollection":
-        return AttributeCollection(*[attr for attr in self.functions if not attr.validate])
+        return AttributeCollection(*[attr for attr in self.functions if not attr.validate and not attr.overwrite])
 
 
 class FunctionCollection(RegisteredFunctionCollection[Function]):
