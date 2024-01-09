@@ -19,25 +19,12 @@ from fundus.scraping.common_crawl.scraper import CCNewsScraper
 from fundus.scraping.filter import ExtractionFilter, Requires, URLFilter
 
 
-def supply_articles(
-        warc_path: str,
-        publishers: Tuple[PublisherEnum],
-        error_handling: Literal["suppress", "catch", "raise"],
-        extraction_filter: Optional[ExtractionFilter] = None,
-        url_filter: Optional[URLFilter] = None,
-):
-    source = CCNewsSource(*publishers, warc_path=warc_path)
-    scraper = CCNewsScraper(source)
-    for article in scraper.scrape(error_handling, extraction_filter, url_filter):
-        yield article
-
-
 class CCNewsCrawler:
     def __init__(
-            self,
-            *publishers: PublisherEnum,
-            processes: Optional[int] = None,
-            server_address: str = "https://data.commoncrawl.org/",
+        self,
+        *publishers: PublisherEnum,
+        processes: Optional[int] = None,
+        server_address: str = "https://data.commoncrawl.org/",
     ):
         self.publishers = publishers
         self.processes = processes or os.cpu_count()
@@ -81,11 +68,11 @@ class CCNewsCrawler:
 
     @staticmethod
     def _fetch_articles(
-            warc_path: str,
-            publishers: Tuple[PublisherEnum],
-            error_handling: Literal["suppress", "catch", "raise"],
-            extraction_filter: Optional[ExtractionFilter] = None,
-            url_filter: Optional[URLFilter] = None,
+        warc_path: str,
+        publishers: Tuple[PublisherEnum],
+        error_handling: Literal["suppress", "catch", "raise"],
+        extraction_filter: Optional[ExtractionFilter] = None,
+        url_filter: Optional[URLFilter] = None,
     ) -> Iterator[Article]:
         source = CCNewsSource(*publishers, warc_path=warc_path)
         scraper = CCNewsScraper(source)
@@ -93,14 +80,14 @@ class CCNewsCrawler:
             yield article
 
     def crawl(
-            self,
-            start: datetime = datetime(2016, 8, 1),
-            end: datetime = datetime.now(),
-            max_articles: Optional[int] = None,
-            error_handling: Literal["suppress", "catch", "raise"] = "suppress",
-            only_complete: Union[bool, ExtractionFilter] = Requires("title", "body", "publishing_date"),
-            url_filter: Optional[URLFilter] = None,
-            only_unique: bool = True,
+        self,
+        start: datetime = datetime(2016, 8, 1),
+        end: datetime = datetime.now(),
+        max_articles: Optional[int] = None,
+        error_handling: Literal["suppress", "catch", "raise"] = "suppress",
+        only_complete: Union[bool, ExtractionFilter] = Requires("title", "body", "publishing_date"),
+        url_filter: Optional[URLFilter] = None,
+        only_unique: bool = True,
     ) -> Iterator[Article]:
         """Yields articles from the CC-NEWS server.
 
