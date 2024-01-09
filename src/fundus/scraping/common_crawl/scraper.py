@@ -23,7 +23,6 @@ class CCNewsScraper:
         # TODO: Once we decided on weather to continue fundus with async functionality or not, refactor this to
         #   be suitable for a BaseScraper class
         for html in self.source.fetch(url_filter):
-            assert html.source
             parser = self._parser_mapping[html.source.publisher]
             try:
                 extraction = parser(html.crawl_date).parse(html.content, error_handling)
