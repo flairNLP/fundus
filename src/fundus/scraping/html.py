@@ -32,6 +32,8 @@ from fundus.logging import basic_logger
 from fundus.scraping.filter import URLFilter, inverse
 from fundus.utils.more_async import ManagedEventLoop, async_next, make_iterable_async
 
+__all__ = ["HTMLSource", "FundusSource", "RSSFeed", "Sitemap", "NewsMap"]
+
 _default_header = {"user-agent": "Fundus"}
 
 
@@ -265,15 +267,34 @@ class HTML:
     source: "HTMLSource"
 
 
+@dataclass(frozen=True)
 class HTMLSource:
+    publisher: str
+
+
+@dataclass(frozen=True)
+class WarcSource(HTMLSource):
+    warc_path: str
+    warc_headers: Dict[str, str]
+    http_headers: Dict[str, str]
+
+
+@dataclass(frozen=True)
+class WebSource(HTMLSource):
+    type: str
+    url: str
+
+
+class FundusSource:
     def __init__(
         self,
-        url_source: Union[AsyncIterable[str], Iterable[str]],
-        publisher: Optional[str],
+        url_source: Union[URLSource, Iterable[str]],
+        publisher: str,
         url_filter: Optional[URLFilter] = None,
         request_header: Optional[Dict[str, str]] = None,
     ):
-        if isinstance(url_source, AsyncIterable):
+        self.url_source: Union[URLSource, AsyncIterator[str]]
+        if isinstance(url_source, URLSource):
             self.url_source = url_source
         else:
             self.url_source = make_iterable_async(url_source)
@@ -326,10 +347,16 @@ class HTMLSource:
             if response.history:
                 basic_logger.info(f"Got redirected {len(response.history)} time(s) from {url} -> {response.url}")
 
+            source = (
+                WebSource(self.publisher, type(self.url_source).__name__, self.url_source.url)
+                if isinstance(self.url_source, URLSource)
+                else HTMLSource(self.publisher)
+            )
+
             yield HTML(
                 requested_url=url,
                 responded_url=str(response.url),
                 content=html,
                 crawl_date=datetime.now(),
-                source=self,
+                source=source,
             )
