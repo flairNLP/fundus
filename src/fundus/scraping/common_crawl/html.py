@@ -32,7 +32,7 @@ class CCNewsSource:
             try:
                 return str(raw_body, encoding=record.http_charset)
             except (UnicodeDecodeError, TypeError):
-                return cast(str, guess_bytes(raw_body)[0])
+                return guess_bytes(raw_body)[0]
 
         with requests.Session() as session:
             stream = session.get(self.warc_path, stream=True, headers=self.headers).raw
