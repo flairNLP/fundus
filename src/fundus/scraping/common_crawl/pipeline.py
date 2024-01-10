@@ -3,16 +3,15 @@ from __future__ import annotations
 import gzip
 import os
 import re
-import time
-from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime
 from functools import partial
 from multiprocessing import Manager
 from multiprocessing.context import TimeoutError
 from multiprocessing.pool import MapResult, Pool, ThreadPool
 from queue import Empty, Queue
-from threading import Lock
 from typing import (
+    Any,
+    Callable,
     Iterable,
     Iterator,
     List,
@@ -29,6 +28,7 @@ import more_itertools
 import requests
 from dateutil.rrule import MONTHLY, rrule
 from tqdm import tqdm
+from typing_extensions import ParamSpec
 
 from fundus.publishers.base_objects import PublisherEnum
 from fundus.scraping.article import Article
@@ -37,6 +37,7 @@ from fundus.scraping.common_crawl.scraper import CCNewsScraper
 from fundus.scraping.filter import ExtractionFilter, Requires, URLFilter
 
 _T = TypeVar("_T")
+P = ParamSpec("P")
 
 
 class CCNewsCrawler:
@@ -46,8 +47,16 @@ class CCNewsCrawler:
         processes: Optional[int] = None,
         server_address: str = "https://data.commoncrawl.org/",
     ):
+        """Initializes a crawler for crawling the CC-NEWS dataset.
+
+        Args:
+            *publishers (PublisherEnum): The publishers to crawl.
+            processes: Number of process to use for crawling. If None, use os.cpu_count(); if -1 omit multiprocessing
+                entirely. Defaults to None
+            server_address: The CC-NEWS dataset server address. Defaults to 'https://data.commoncrawl.org/'
+        """
         self.publishers = publishers
-        self.processes = processes or os.cpu_count() or 1
+        self.processes = processes or os.cpu_count() or -1
         self.server_address = server_address
 
     def _get_list_of_warc_path(self, start: datetime, end: datetime) -> List[str]:
@@ -89,16 +98,38 @@ class CCNewsCrawler:
     @staticmethod
     def _fetch_articles(
         warc_path: str,
-        queue: Queue[Article],
         publishers: Tuple[PublisherEnum],
         error_handling: Literal["suppress", "catch", "raise"],
         extraction_filter: Optional[ExtractionFilter] = None,
         url_filter: Optional[URLFilter] = None,
-    ) -> None:
+    ) -> Iterator[Article]:
         source = CCNewsSource(*publishers, warc_path=warc_path)
         scraper = CCNewsScraper(source)
         for article in scraper.scrape(error_handling, extraction_filter, url_filter):
-            queue.put(article)
+            yield article
+
+    @staticmethod
+    def _wrapper(*args, queue: Queue[_T], target: Callable[P, Iterator[_T]], **kwargs) -> None:
+        for obj in target(*args, **kwargs):
+            queue.put(obj)
+
+    @staticmethod
+    def _queue_wrapper(
+        queue: Queue[_T],
+        target: Callable[P, Iterator[_T]],
+    ) -> Callable[P, None]:
+        return partial(CCNewsCrawler._wrapper, queue=queue, target=target)
+
+    @staticmethod
+    def _single_crawl(warc_paths: List[str], target: Callable[[str], Iterator[Article]]) -> Iterator[Article]:
+        for warc_path in warc_paths:
+            yield from target(warc_path)
+
+    def _parallel_crawl(self, warc_paths: List[str], target: Callable[[str], Iterator[Article]]) -> Iterator[Article]:
+        with Manager() as manager, Pool(processes=min(self.processes, len(warc_paths))) as pool:
+            article_queue: Queue[Article] = manager.Queue()
+            wrapped_target: Callable[[str], None] = self._queue_wrapper(article_queue, target)
+            yield from _PoolResult(pool.map_async(wrapped_target, warc_paths), article_queue)
 
     def crawl(
         self,
@@ -110,7 +141,7 @@ class CCNewsCrawler:
         url_filter: Optional[URLFilter] = None,
         only_unique: bool = True,
     ) -> Iterator[Article]:
-        """Yields articles from the CC-NEWS server.
+        """Yields articles crawled from the CC-NEWS server.
 
         Same functionality as fundus standard crawler except this one fetches articles from the
         CC-News corpus.
@@ -160,39 +191,52 @@ class CCNewsCrawler:
         warc_paths = self._get_list_of_warc_path(start, end)
         response_cache: Set[str] = set()
 
-        with Manager() as manager, Pool(processes=min(self.processes, len(warc_paths))) as pool:
-            article_queue: Queue[Article] = manager.Queue()
+        article_task: Callable[[str], Iterator[Article]] = partial(
+            self._fetch_articles,
+            publishers=self.publishers,
+            error_handling=error_handling,
+            extraction_filter=build_extraction_filter(),
+            url_filter=url_filter,
+        )
 
-            target = partial(
-                self._fetch_articles,
-                queue=article_queue,
-                publishers=self.publishers,
-                error_handling=error_handling,
-                extraction_filter=build_extraction_filter(),
-                url_filter=url_filter,
-            )
+        if max_articles is None:
+            max_articles = -1
 
-            for article in PoolResult(pool.map_async(target, warc_paths), article_queue, max_articles):
-                if not only_unique or article.html.responded_url not in response_cache:
-                    response_cache.add(article.html.responded_url)
-                    yield article
+        if self.processes == -1:
+            article_iter = self._single_crawl(warc_paths, article_task)
+        else:
+            article_iter = self._parallel_crawl(warc_paths, article_task)
+
+        for article_idx, article in enumerate(article_iter, start=1):
+            if article_idx - 1 == max_articles:
+                break
+            if not only_unique or article.html.responded_url not in response_cache:
+                response_cache.add(article.html.responded_url)
+                yield article
 
 
-class PoolResult(Iterable[_T]):
-    def __init__(self, result: MapResult[None], queue: Queue[_T], max_results: Optional[int] = None):
-        self._result = result
+class _PoolResult(Iterable[_T]):
+    def __init__(self, result: MapResult[Any], queue: Queue[_T]):
+        """Utility class to iterate a pool queue.
+
+        Exhaust the queue given with <queue>. If <queue> raises an Empty exception and the pool finished,
+        raise StopIteration, otherwise continue to wait for the next result from <queue>.
+
+        Args:
+            result (MapResult[Any]): A MapResult returned by a Pool.map/.map_async call to use as a handle.
+            queue (Queue[_T): The queue to exhaust.
+        """
+        self._handle = result
         self._queue = queue
-        self._max_results = max_results or -1
 
     def __next__(self) -> _T:
-        while True and self._max_results != 0:
+        while True:
             try:
                 result = self._queue.get(timeout=0.1)
-                self._max_results -= 1
                 return result
             except Empty:
                 try:
-                    self._result.get(timeout=0.1)
+                    self._handle.get(timeout=0.1)
                 except TimeoutError:
                     continue
                 else:
