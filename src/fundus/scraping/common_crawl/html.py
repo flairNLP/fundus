@@ -25,11 +25,7 @@ class CCNewsSource:
         ]
 
     def fetch(self, url_filter: Optional[URLFilter] = None) -> Iterator[HTML]:
-        combined_filters = [url_filter] if url_filter else [] + self._url_filters
         domains = list(self._publisher_mapping)
-
-        def filter_url(u: str) -> bool:
-            return any(f(u) for f in combined_filters)
 
         def extract_body(record: WarcRecord) -> str:
             raw_body = record.reader.read()
@@ -45,12 +41,20 @@ class CCNewsSource:
                 target_uri = str(warc_record.headers["WARC-Target-URI"])
 
                 # TODO: Don't apply all filter at once, but per publisher
-                if filter_url(target_uri):
+                if url_filter and url_filter(target_uri):
                     basic_logger.debug(f"Skipped WARC record with target URI {target_uri!r} because of URL filter")
                     continue
                 elif (netloc := urlparse(target_uri).netloc) in domains:
-                    # parse record
                     publisher = self._publisher_mapping[netloc]
+
+                    if publisher.url_filter is not None and publisher.url_filter(target_uri):
+                        basic_logger.debug(
+                            f"Skipped WARC record with target URI {target_uri!r} because of "
+                            f"publisher specific URL filter"
+                        )
+                        continue
+
+                    # parse record
                     body = extract_body(warc_record)
                     html = HTML(
                         requested_url=target_uri,
