@@ -42,10 +42,10 @@ P = ParamSpec("P")
 
 class CCNewsCrawler:
     def __init__(
-            self,
-            *publishers: PublisherEnum,
-            processes: Optional[int] = None,
-            server_address: str = "https://data.commoncrawl.org/",
+        self,
+        *publishers: PublisherEnum,
+        processes: Optional[int] = None,
+        server_address: str = "https://data.commoncrawl.org/",
     ):
         """Initializes a crawler for crawling the CC-NEWS dataset.
 
@@ -63,19 +63,13 @@ class CCNewsCrawler:
         date_pattern: Pattern[str] = re.compile(r"CC-NEWS-(?P<date>\d{14})-\d{5}")
 
         if start >= end:
-            raise ValueError(
-                "Start date has to be < end date. " "The default, and earliest possible, start date is 2016/08/01"
-            )
+            raise ValueError("Start date has to be < end date.")
 
         if start < datetime(2016, 8, 1):
-            raise ValueError(
-                "The default, and earliest possible, start date is 2016/08/01"
-            )
+            raise ValueError("The default, and earliest possible, start date is 2016/08/01.")
 
         if end > datetime.now():
-            raise ValueError(
-                "The specified end date lays in the future. We don't want to spoiler, do we?"
-            )
+            raise ValueError("The specified end date lays in the future. We don't want to spoiler, do we?")
 
         date_sequence: List[datetime] = [dt for dt in rrule(MONTHLY, dtstart=start, until=end)]
         urls = [
@@ -107,11 +101,11 @@ class CCNewsCrawler:
 
     @staticmethod
     def _fetch_articles(
-            warc_path: str,
-            publishers: Tuple[PublisherEnum],
-            error_handling: Literal["suppress", "catch", "raise"],
-            extraction_filter: Optional[ExtractionFilter] = None,
-            url_filter: Optional[URLFilter] = None,
+        warc_path: str,
+        publishers: Tuple[PublisherEnum],
+        error_handling: Literal["suppress", "catch", "raise"],
+        extraction_filter: Optional[ExtractionFilter] = None,
+        url_filter: Optional[URLFilter] = None,
     ) -> Iterator[Article]:
         source = CCNewsSource(*publishers, warc_path=warc_path)
         scraper = CCNewsScraper(source)
@@ -125,8 +119,8 @@ class CCNewsCrawler:
 
     @staticmethod
     def _queue_wrapper(
-            queue: Queue[_T],
-            target: Callable[P, Iterator[_T]],
+        queue: Queue[_T],
+        target: Callable[P, Iterator[_T]],
     ) -> Callable[P, None]:
         return partial(CCNewsCrawler._wrapper, queue=queue, target=target)
 
@@ -142,14 +136,14 @@ class CCNewsCrawler:
             yield from _PoolResult(pool.map_async(wrapped_target, warc_paths), article_queue)
 
     def crawl(
-            self,
-            start: datetime = datetime(2016, 8, 1),
-            end: datetime = datetime.now(),
-            max_articles: Optional[int] = None,
-            error_handling: Literal["suppress", "catch", "raise"] = "suppress",
-            only_complete: Union[bool, ExtractionFilter] = Requires("title", "body", "publishing_date"),
-            url_filter: Optional[URLFilter] = None,
-            only_unique: bool = True,
+        self,
+        start: datetime = datetime(2016, 8, 1),
+        end: datetime = datetime.now(),
+        max_articles: Optional[int] = None,
+        error_handling: Literal["suppress", "catch", "raise"] = "suppress",
+        only_complete: Union[bool, ExtractionFilter] = Requires("title", "body", "publishing_date"),
+        url_filter: Optional[URLFilter] = None,
+        only_unique: bool = True,
     ) -> Iterator[Article]:
         """Yields articles crawled from the CC-NEWS server.
 
