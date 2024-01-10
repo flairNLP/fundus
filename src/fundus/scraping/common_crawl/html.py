@@ -20,9 +20,6 @@ class CCNewsSource:
         self._publisher_mapping: Dict[str, PublisherEnum] = {
             urlparse(publisher.domain).netloc: publisher for publisher in publishers
         }
-        self._url_filters: List[URLFilter] = [
-            url_filter for publisher in publishers if (url_filter := publisher.url_filter) is not None
-        ]
 
     def fetch(self, url_filter: Optional[URLFilter] = None) -> Iterator[HTML]:
         domains = list(self._publisher_mapping)
