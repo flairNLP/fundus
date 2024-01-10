@@ -44,6 +44,7 @@ class CCNewsSource:
             for warc_record in ArchiveIterator(stream, record_types=WarcRecordType.response, verify_digests=True):
                 target_uri = str(warc_record.headers["WARC-Target-URI"])
 
+                # TODO: Don't apply all filter at once, but per publisher
                 if filter_url(target_uri):
                     basic_logger.debug(f"Skipped WARC record with target URI {target_uri!r} because of URL filter")
                     continue

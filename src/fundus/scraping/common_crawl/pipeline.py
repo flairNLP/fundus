@@ -1,14 +1,32 @@
+from __future__ import annotations
+
 import gzip
 import os
 import re
+import time
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime
 from functools import partial
-from multiprocessing.pool import ThreadPool
-from typing import Iterator, List, Literal, Optional, Pattern, Set, Tuple, Union
+from multiprocessing import Manager
+from multiprocessing.context import TimeoutError
+from multiprocessing.pool import MapResult, Pool, ThreadPool
+from queue import Empty, Queue
+from threading import Lock
+from typing import (
+    Iterable,
+    Iterator,
+    List,
+    Literal,
+    Optional,
+    Pattern,
+    Set,
+    Tuple,
+    TypeVar,
+    Union,
+)
 
 import more_itertools
 import requests
-from cavant import StreamLine, SupplyLayer
 from dateutil.rrule import MONTHLY, rrule
 from tqdm import tqdm
 
@@ -17,6 +35,8 @@ from fundus.scraping.article import Article
 from fundus.scraping.common_crawl.html import CCNewsSource
 from fundus.scraping.common_crawl.scraper import CCNewsScraper
 from fundus.scraping.filter import ExtractionFilter, Requires, URLFilter
+
+_T = TypeVar("_T")
 
 
 class CCNewsCrawler:
@@ -27,7 +47,7 @@ class CCNewsCrawler:
         server_address: str = "https://data.commoncrawl.org/",
     ):
         self.publishers = publishers
-        self.processes = processes or os.cpu_count()
+        self.processes = processes or os.cpu_count() or 1
         self.server_address = server_address
 
     def _get_list_of_warc_path(self, start: datetime, end: datetime) -> List[str]:
@@ -49,7 +69,7 @@ class CCNewsCrawler:
                 bar.update()
                 return paths
 
-        with ThreadPool(processes=len(urls)) as pool, tqdm(total=len(urls), desc="Load WARC paths") as bar:
+        with ThreadPool(processes=len(urls)) as pool, tqdm(total=len(urls), desc="Load WARC paths", leave=False) as bar:
             warc_paths = more_itertools.flatten(pool.map(load_paths, urls))
 
         start_strf = start.strftime("%Y%m%d%H%M%S")
@@ -69,15 +89,16 @@ class CCNewsCrawler:
     @staticmethod
     def _fetch_articles(
         warc_path: str,
+        queue: Queue[Article],
         publishers: Tuple[PublisherEnum],
         error_handling: Literal["suppress", "catch", "raise"],
         extraction_filter: Optional[ExtractionFilter] = None,
         url_filter: Optional[URLFilter] = None,
-    ) -> Iterator[Article]:
+    ) -> None:
         source = CCNewsSource(*publishers, warc_path=warc_path)
         scraper = CCNewsScraper(source)
         for article in scraper.scrape(error_handling, extraction_filter, url_filter):
-            yield article
+            queue.put(article)
 
     def crawl(
         self,
@@ -124,11 +145,6 @@ class CCNewsCrawler:
             Iterator[Article]: An iterator yielding objects of type Article.
         """
 
-        if max_articles is None:
-            max_articles = -1
-        elif max_articles == 0:
-            return
-
         def build_extraction_filter() -> Optional[ExtractionFilter]:
             if isinstance(only_complete, bool):
                 return (
@@ -144,20 +160,44 @@ class CCNewsCrawler:
         warc_paths = self._get_list_of_warc_path(start, end)
         response_cache: Set[str] = set()
 
-        target = partial(
-            self._fetch_articles,
-            publishers=self.publishers,
-            error_handling=error_handling,
-            extraction_filter=build_extraction_filter(),
-            url_filter=url_filter,
-        )
+        with Manager() as manager, Pool(processes=min(self.processes, len(warc_paths))) as pool:
+            article_queue: Queue[Article] = manager.Queue()
 
-        parser_layer = SupplyLayer(target, size=self.processes)
+            target = partial(
+                self._fetch_articles,
+                queue=article_queue,
+                publishers=self.publishers,
+                error_handling=error_handling,
+                extraction_filter=build_extraction_filter(),
+                url_filter=url_filter,
+            )
 
-        with StreamLine([parser_layer], use_tqdm=False) as stream:
-            for article_idx, article in enumerate(stream.imap(warc_paths)):
+            for article in PoolResult(pool.map_async(target, warc_paths), article_queue, max_articles):
                 if not only_unique or article.html.responded_url not in response_cache:
                     response_cache.add(article.html.responded_url)
                     yield article
-                    if article_idx == max_articles:
-                        break
+
+
+class PoolResult(Iterable[_T]):
+    def __init__(self, result: MapResult[None], queue: Queue[_T], max_results: Optional[int] = None):
+        self._result = result
+        self._queue = queue
+        self._max_results = max_results or -1
+
+    def __next__(self) -> _T:
+        while True and self._max_results != 0:
+            try:
+                result = self._queue.get(timeout=0.1)
+                self._max_results -= 1
+                return result
+            except Empty:
+                try:
+                    self._result.get(timeout=0.1)
+                except TimeoutError:
+                    continue
+                else:
+                    break
+        raise StopIteration
+
+    def __iter__(self) -> Iterator[_T]:
+        return self
