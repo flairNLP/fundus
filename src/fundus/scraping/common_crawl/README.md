@@ -49,7 +49,7 @@ from fundus import CCNewsCrawler, PublisherCollection
 crawler = CCNewsCrawler(*PublisherCollection, processes=4)
 ````
 
-Currently, the `CCNEwsCrawler` is only implemented in a multiprocessing manner, but there will be a single process variant later on.
+To omit multiprocessing, pass `-1` to the `processes` parameter.
 
 This crawler also supports all other parameters (extraction filtering, URL filtering, etc.) introduced with the basic fundus crawler.
 Refer to the [tutorial](../../../../docs/1_getting_started.md) for an overview of how to use these parameters.
