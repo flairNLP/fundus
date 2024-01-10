@@ -62,9 +62,9 @@ class CCNewsCrawler:
     def _get_list_of_warc_path(self, start: datetime, end: datetime) -> List[str]:
         date_pattern: Pattern[str] = re.compile(r"CC-NEWS-(?P<date>\d{14})-\d{5}")
 
-        if start > end:
+        if start >= end:
             raise ValueError(
-                "Start date has to be <= end date. " "The default, and earliest possible, start date is 2016/08"
+                "Start date has to be < end date. " "The default, and earliest possible, start date is 2016/08/01"
             )
 
         date_sequence: List[datetime] = [dt for dt in rrule(MONTHLY, dtstart=start, until=end)]
@@ -176,6 +176,11 @@ class CCNewsCrawler:
             Iterator[Article]: An iterator yielding objects of type Article.
         """
 
+        if max_articles == 0:
+            return
+        elif max_articles is None:
+            max_articles = -1
+
         def build_extraction_filter() -> Optional[ExtractionFilter]:
             if isinstance(only_complete, bool):
                 return (
@@ -199,27 +204,24 @@ class CCNewsCrawler:
             url_filter=url_filter,
         )
 
-        if max_articles is None:
-            max_articles = -1
-
         if self.processes == -1:
             article_iter = self._single_crawl(warc_paths, article_task)
         else:
             article_iter = self._parallel_crawl(warc_paths, article_task)
 
         for article_idx, article in enumerate(article_iter, start=1):
-            if article_idx - 1 == max_articles:
-                break
             if not only_unique or article.html.responded_url not in response_cache:
                 response_cache.add(article.html.responded_url)
                 yield article
+            if article_idx == max_articles:
+                break
 
 
 class _PoolResult(Iterable[_T]):
     def __init__(self, result: MapResult[Any], queue: Queue[_T]):
         """Utility class to iterate a pool queue.
 
-        Exhaust the queue given with <queue>. If <queue> raises an Empty exception and the pool finished,
+        Exhaust the queue given with <queue>. If <queue> raises Empty and the pool finished,
         raise StopIteration, otherwise continue to wait for the next result from <queue>.
 
         Args:
@@ -232,8 +234,7 @@ class _PoolResult(Iterable[_T]):
     def __next__(self) -> _T:
         while True:
             try:
-                result = self._queue.get(timeout=0.1)
-                return result
+                return self._queue.get(timeout=0.1)
             except Empty:
                 try:
                     self._handle.get(timeout=0.1)
