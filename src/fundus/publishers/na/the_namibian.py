@@ -1,7 +1,9 @@
+import re
 from datetime import datetime
-from typing import List, Optional
+from typing import List, Optional, Pattern
 
 from lxml.cssselect import CSSSelector
+from lxml.etree import XPath
 
 from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute
 from fundus.parser.utility import (
@@ -13,13 +15,15 @@ from fundus.parser.utility import (
 
 class TheNamibianParser(ParserProxy):
     class V1(BaseParser):
-        selector = CSSSelector("p")
+        _summary_selector = XPath("//div[contains(@class, 'tdb-block-inner')]/p[position()=1]")
+        _paragraph_selector = XPath("//div[contains(@class, 'tdb-block-inner')]/p[position()>1]")
+        _title_substitution_pattern: Pattern[str] = re.compile(r" - The Namibian$")
 
         @attribute
         def body(self) -> ArticleBody:
             return extract_article_body_with_selector(
                 self.precomputed.doc,
-                paragraph_selector=self.selector,
+                paragraph_selector=self._paragraph_selector,
             )
 
         @attribute
@@ -29,10 +33,8 @@ class TheNamibianParser(ParserProxy):
         @attribute
         def title(self) -> Optional[str]:
             title = self.precomputed.meta.get("og:title")
-            # Verfication necessary if title is None, to prevent error on function call
-            if not not title:
-                if " - The Namibian" in title:
-                    title = title.split(" - The Nam")[0]
+            if title is not None:
+                return re.sub(self._title_substitution_pattern, "", title)
             return title
 
         @attribute
