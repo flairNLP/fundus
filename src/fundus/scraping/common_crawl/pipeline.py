@@ -91,7 +91,7 @@ class CCNewsCrawler:
             raise ValueError("The default, and earliest possible, start date is 2016/08/01.")
 
         if end > datetime.now():
-            raise ValueError("The specified end date lays in the future. We don't want to spoiler, do we?")
+            raise ValueError("The specified end date is in the future. We don't want to give spoilers, do we?")
 
         date_sequence: List[datetime] = [dt for dt in rrule(MONTHLY, dtstart=start, until=end)]
         urls = [
