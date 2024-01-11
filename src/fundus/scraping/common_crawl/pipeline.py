@@ -4,7 +4,7 @@ import gzip
 import os
 import re
 from datetime import datetime
-from functools import partial
+from functools import lru_cache, partial
 from multiprocessing import Manager
 from multiprocessing.context import TimeoutError
 from multiprocessing.pool import MapResult, Pool, ThreadPool
@@ -22,8 +22,10 @@ from typing import (
     Tuple,
     TypeVar,
     Union,
+    cast,
 )
 
+import dill
 import more_itertools
 import requests
 from dateutil.rrule import MONTHLY, rrule
@@ -38,6 +40,26 @@ from fundus.scraping.filter import ExtractionFilter, Requires, URLFilter
 
 _T = TypeVar("_T")
 P = ParamSpec("P")
+
+
+# noinspection PyPep8Naming
+class dill_wrapper(Callable[P, _T]):  # type: ignore[misc]
+    def __init__(self, target: Callable[P, _T]):
+        """Wraps function in dill serialization.
+
+        This is in order to use unpickable functions within multiprocessing.
+
+        Args:
+            target (Callable[P, _T): The function to wrap.
+        """
+        self._serialized_target: bytes = dill.dumps(target)
+
+    @lru_cache
+    def _deserialize(self) -> Callable[P, _T]:
+        return cast(Callable[P, _T], dill.loads(self._serialized_target))
+
+    def __call__(self, *args: P.args, **kwargs: P.kwargs) -> _T:
+        return self._deserialize()(*args, **kwargs)
 
 
 class CCNewsCrawler:
@@ -133,7 +155,8 @@ class CCNewsCrawler:
         with Manager() as manager, Pool(processes=min(self.processes, len(warc_paths))) as pool:
             article_queue: Queue[Article] = manager.Queue()
             wrapped_target: Callable[[str], None] = self._queue_wrapper(article_queue, target)
-            yield from _PoolResult(pool.map_async(wrapped_target, warc_paths), article_queue)
+            serialized_target = dill_wrapper(wrapped_target)
+            yield from _PoolResult(pool.map_async(serialized_target, warc_paths), article_queue)
 
     def crawl(
         self,
