@@ -1,7 +1,8 @@
-from datetime import datetime
+from datetime import datetime, date
 from typing import List, Optional
 
 from lxml.cssselect import CSSSelector
+from lxml.etree import XPath
 
 from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute, function
 from fundus.parser.utility import (
@@ -14,6 +15,8 @@ from fundus.parser.utility import (
 
 class TheNationParser(ParserProxy):
     class V1(BaseParser):
+        VALID_UNTIL = date(2023, 11, 7)
+
         # There is a known issue preventing lxml from extracting text content within
         # the specified summary node.
         # This is due to invalid XML provided by The Nation.
@@ -56,3 +59,14 @@ class TheNationParser(ParserProxy):
         @attribute
         def topics(self) -> List[str]:
             return generic_topic_parsing(self.precomputed.meta.get("keywords"))
+
+    class V2(V1):
+        VALID_UNTIL = date.today()
+
+        _summary_selector = XPath("//article//div[contains(@class, 'article-title')]//p")
+        _paragraph_selector = CSSSelector("article > p")
+
+        # remove aside function from V1
+        def _remove_aside(self):
+            pass
+
