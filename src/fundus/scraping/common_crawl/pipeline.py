@@ -135,16 +135,15 @@ class CCNewsCrawler:
             yield article
 
     @staticmethod
-    def _wrapper(*args, queue: Queue[_T], target: Callable[P, Iterator[_T]], **kwargs) -> None:
-        for obj in target(*args, **kwargs):
-            queue.put(obj)
-
-    @staticmethod
     def _queue_wrapper(
         queue: Queue[_T],
         target: Callable[P, Iterator[_T]],
     ) -> Callable[P, None]:
-        return partial(CCNewsCrawler._wrapper, queue=queue, target=target)
+        def wrapper(*args, **kwargs) -> None:
+            for obj in target(*args, **kwargs):
+                queue.put(obj)
+
+        return wrapper
 
     @staticmethod
     def _single_crawl(warc_paths: List[str], target: Callable[[str], Iterator[Article]]) -> Iterator[Article]:
