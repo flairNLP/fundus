@@ -1,10 +1,17 @@
-from datetime import datetime, date
-from typing import List, Optional
+from datetime import date, datetime
+from typing import List, Optional, Union
 
 from lxml.cssselect import CSSSelector
 from lxml.etree import XPath
 
-from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute, function
+from fundus.parser import (
+    ArticleBody,
+    BaseParser,
+    ParserProxy,
+    Selector,
+    attribute,
+    function,
+)
 from fundus.parser.utility import (
     extract_article_body_with_selector,
     generic_author_parsing,
@@ -22,7 +29,7 @@ class TheNationParser(ParserProxy):
         # This is due to invalid XML provided by The Nation.
         # Currently(lxml 4.9.3), lxml does not accept p tags within any heading (h*) tag.
         # The "correct" selector would be ".article-header-content > h2 > p"
-        _summary_selector = CSSSelector(".article-header-content > h2")
+        _summary_selector: Selector = CSSSelector(".article-header-content > h2")
         _paragraph_selector = CSSSelector(".article-body-inner > p")
         _aside_selector = CSSSelector("aside")
 
@@ -69,4 +76,3 @@ class TheNationParser(ParserProxy):
         # remove aside function from V1
         def _remove_aside(self):
             pass
-
