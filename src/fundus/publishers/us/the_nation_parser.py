@@ -15,7 +15,7 @@ from fundus.parser.utility import (
 
 class TheNationParser(ParserProxy):
     class V1(BaseParser):
-        VALID_UNTIL = date(2023, 11, 7)
+        VALID_UNTIL = date(2023, 7, 22)
 
         # There is a known issue preventing lxml from extracting text content within
         # the specified summary node.
