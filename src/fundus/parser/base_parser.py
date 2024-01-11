@@ -89,10 +89,7 @@ class Function(RegisteredFunction):
 
 def _register(cls, factory: Type[RegisteredFunction], **kwargs):
     def wrapper(func):
-        try:
-            return functools.update_wrapper(factory(func, **kwargs), func)
-        except TypeError as err:
-            raise err
+        return functools.update_wrapper(factory(func, **kwargs), func)
 
     # _register was called with parenthesis
     if cls is None:
