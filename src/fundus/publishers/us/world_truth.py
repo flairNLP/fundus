@@ -34,13 +34,12 @@ class WorldTruthParser(ParserProxy):
 
     class V2(BaseParser):
         _meta_node_selector = CSSSelector("meta[itemprop]")
+        _paragraph_selector = CSSSelector(".td-post-content > p")
 
         @function(priority=1)
         def overwrite_meta(self):
             meta = get_meta_content(self.precomputed.doc, {"itemprop": self._meta_node_selector})
             self.precomputed.meta = meta
-
-        _paragraph_selector = CSSSelector(".td-post-content > p")
 
         @attribute
         def body(self) -> ArticleBody:
