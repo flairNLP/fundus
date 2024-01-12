@@ -56,12 +56,3 @@ class WorldTruthParser(ParserProxy):
         @attribute
         def title(self) -> Optional[str]:
             return self.precomputed.meta.get("headline ")
-
-    # class V2(V1):
-    #     VALID_UNTIL = datetime.date.today()
-    #     _title_selector = CSSSelector("h1")
-    #
-    #     @attribute
-    #     def title(self) -> Optional[str]:
-    #         title_node = self._title_selector(self.precomputed.doc)
-    #         return strip_nodes_to_text(title_node)
