@@ -16,6 +16,17 @@
       "World news",
       "Volodymyr Zelenskiy",
       "Vladimir Putin"
-    ]
+    ],
+    "body": {
+      "summary": [
+        "Ukraine president meets British prime minister in UK to discuss supply of fighter jets and other military aid"
+      ],
+      "sections": [
+        {
+          "headline": [],
+          "paragraphs": []
+        }
+      ]
+    }
   }
 }

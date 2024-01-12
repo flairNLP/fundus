@@ -17,6 +17,45 @@
       "Lee Baker",
       "CFP",
       "business news"
-    ]
+    ],
+    "body": {
+      "summary": [],
+      "sections": [
+        {
+          "headline": [],
+          "paragraphs": [
+            "When it comes to cryptocurrency like bitcoin, new investors are often motivated by friends to take the plunge, according to a new study.",
+            "But that might hold traps for the unwary, experts warn.",
+            "\"I don't imagine friends are talking about when they lost money,\" said Lee Baker, a certified financial planner and founder of Apex Financial Services in Atlanta.  ",
+            "\"The sexy sells,\" added Baker, a member of CNBC's Advisor Council. \"The upside sells.",
+            "\"But folks don't talk about the downside,\" he added.",
+            "Here are more FA Council perspectives on how to navigate this economy while building wealth.",
+            "Nearly a third — 31% — of new cryptocurrency investors in 2022 used a friend's suggestion as their primary reason for buying in, according to a recent joint study published by the Financial Industry Regulatory Authority Investor Education Foundation and NORC at the University of Chicago. Friends' recommendations were the No. 1 motivating factor for new crypto buyers.",
+            "That share compares with 8% of new investors in more traditional assets like stocks and bonds.",
+            "The disparity indicates there is \"a social element to cryptocurrency investing not evident in equities or bond investing,\" according to the study.",
+            "This isn't to say a friend's recommendation is necessarily a poor reason to buy into the digital assets.",
+            "But it can be a \"double-edged sword,\" said Gary Mottola, research director at the FINRA Investor Education Foundation and a co-author of the report.",
+            "On one hand, crypto can be an on-ramp to more traditional investing — which is generally a good outcome, Mottola said. There's some evidence of this happening: 36% of new crypto investors said their purchase made them more interested in investing in the stock market, the study found.",
+            "However, \"the friends recommending [crypto], the sources of information on social media, may not be reliable,\" Mottola said."
+          ]
+        },
+        {
+          "headline": [
+            "Trust but verify"
+          ],
+          "paragraphs": [
+            "The fear of missing out can be a powerful driver of investment decisions.",
+            "Bitcoin and other crypto assets rallied through 2021, a record year for the digital assets. Bitcoin jumped from roughly $10,000 in the summer of 2020 to a peak above $68,000 by November 2021.",
+            "But the tide turned quickly during a so-called \"crypto winter,\" when investors lost more than $2 trillion in the year following the market peak.",
+            "Celebrities, like actress Lindsay Lohan and the rapper Soulja Boy, were recently fined by the Securities and Exchange Commission for undisclosed endorsements of various cryptocurrencies.",
+            "\"Unless they're some legitimately knowledgeable financial person, trust but verify,\" Baker said of information you may hear from friends or from \"pseudo experts\" on social media.",
+            "One of the dangers of following a friend's advice: Investors may not understand the risks and volatility associated with crypto (or other investments), or how it fits within a broader, well-diversified investment portfolio, he said.",
+            "Another potential trap: You may be getting a friend's recommendation when the market is nearing its top, when much of the growth potential has already been realized.",
+            "Bitcoin's current value around $30,000 is nearly double what it was at the beginning of 2023. Baker expects he may soon be fielding more phone calls about crypto if the trend continues.",
+            "\"If you're doing some investigation [about crypto], I think it's great,\" Baker said. \"If you're just taking information blindly without doing any investigation, that's a horrible idea.\""
+          ]
+        }
+      ]
+    }
   }
 }

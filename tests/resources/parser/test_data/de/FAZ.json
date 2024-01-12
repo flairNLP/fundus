@@ -13,6 +13,43 @@
       "Deutschlandticket",
       "Preissturz",
       "Pendler"
-    ]
+    ],
+    "body": {
+      "summary": [
+        "\t\t\tAlles wird teurer, nur nicht der ÖPNV. Allein der Rhein-Main-Verkehrsverbund hat mehr als 120.000 Deutschlandtickets verkauft - mehr als ein Drittel davon an Kunden, die bislang selten oder nie Bus oder Bahn fahren.\n\t\t"
+      ],
+      "sections": [
+        {
+          "headline": [],
+          "paragraphs": [
+            "Das von Montag an gültige Deutschlandticket für 49 Euro wird zwar nicht annähernd so erfolgreich wie das 9-Euro-Ticket im vergangenen Sommer, die sich abzeichnenden Verkaufszahlen sind allerdings dennoch beeindruckend. Mehr als jeder zehnte Erwachsene in Deutschland hat einer Umfrage zufolge bereits das Deutschlandticket erworben.",
+            "Die Deutsche Bahn rechnet damit, dass mit dem Ticket sechs Millionen neue Abo-Kunden gewonnen werden. Hinzu kämen rund elf Millionen Menschen, die bereits ein Abonnement hätten und nun voraussichtlich auf das 49-Euro-Ticket umsteigen würden. Schlussendlich würde dann jeder fünfte Bundesbürger das neue Ticket nutzen.",
+            "Allein der Rhein-Main-Verkehrsverbund (RMV) und seine Vertriebspartner haben seit Verkaufsbeginn am 3. April mehr als 120.000 Deutschlandtickets veräußert. Gut die Hälfte davon wurde nach RMV-Angaben von Menschen erworben, die bisher noch keine Stammkunden waren. Mehr als 21.000 Tickets gingen an Arbeitnehmer, die das 49-Euro-Ticket als Jobticket bekommen."
+          ]
+        },
+        {
+          "headline": [
+            "855 Euro pro Jahr günstiger"
+          ],
+          "paragraphs": [
+            "Bei einer Marktbefragung des RMV hat sich gezeigt, dass 24 Prozent der bisherigen Seltenfahrer das Deutschlandticket erwerben wollen, darüber hinaus noch 15 Prozent derer, die bisher überhaupt nicht Bus oder Bahn gefahren sind. Der Kostendeckungsgrad des RMV – bisher mehr als 50 Prozent – könnte als Folge sinkender Einnahmen dennoch zurückgehen.",
+            "Für einen langfristigen Erfolg des neuen Angebots sind nach Ansicht von Geschäftsführer Ringat jedenfalls eine nachhaltige Finanzierung des ÖPNV und ein verbessertes Angebot unabdingbar. Zum einen müsse der Schienenverkehr modernisiert und ausgebaut werden, zum anderen könnten insbesondere im ländlichen Raum beispielsweise mit der Reaktivierung stillgelegter Strecken und On-Demand-Busangeboten noch mehr Kunden gewonnen werden.",
+            "Mit dem Deutschlandticket werde die Vision seiner Partei von einem günstigen Bürgerticket für Busse und Bahnen Wirklichkeit, äußerte der Fraktionsvorsitzende der Grünen im Landtag, Mathias Wagner. Pendler sparten durch das Ticket in Zeiten hoher Inflation enorm viel Geld, und für Autofahrer werde es deutlich attraktiver, auf den öffentlichen Nahverkehr umzusteigen. Wer mit dem Regionalverkehr regelmäßig zwischen Wiesbaden und Frankfurt unterwegs sei, zahle aktuell 1446 Euro für seine monatlich bezahlte Jahreskarte. Mit der Umstellung auf das Deutschlandticket ließen sich 855 Euro sparen, das seien etwa 60 Prozent der Fahrtkosten. Zudem sei das neue Ticket noch in ganz Deutschland gültig."
+          ]
+        },
+        {
+          "headline": [
+            "49-Euro-Ticket gilt nicht im Fernverkehr"
+          ],
+          "paragraphs": [
+            "Das Urteil der AfD im Landtag fällt eher kritisch aus. Zwar vereinfache das 49-Euro-Ticket die Tarifstruktur und bedeute für hessische ÖPNV-Pendler eine Ersparnis. Was den Bürgern auf der einen Seite durch staatliche Subventionen gegeben werde, werde ihnen als Steuerzahler aber auf der anderen Seite wieder genommen, sagte der AfD-Abgeordnete Klaus Gagel. Die ausbleibenden Fahrgeldeinnahmen durch diese Art der Vergünstigung fehlten für Investitionen.",
+            "Das Deutschlandticket gilt vom 1. Mai an bundesweit im Nah- und Regionalverkehr. Für die Fernzüge wie den ICE, EC oder IC hingegen ist weiterhin ein eigenes Ticket erforderlich. Die neue Monatskarte gibt es an Schaltern der Deutschen Bahn und in den RMV-Vertriebsstellen auch in physischer Form als Chipkarte. Das Handy-Ticket (etwa über die App RMVgo) kann nach dem Erwerb direkt für Fahrten genutzt werden.",
+            "Der am 1. April begonnene Vorverkauf war daher vor allem für Kunden relevant, die das Deutschlandticket auf einer Chipkarte bevorzugen, denn bei der Bestellung in einer Vertriebsstelle gilt eine Bestellfrist bis zum 10. und beim E-Ticket-Kauf online (auf rmv.de) bis zum 20. des Monats vor Gültigkeitsbeginn. Das mit dem Kauf abgeschlossene Abonnement ist bis zum 10. eines Monats zum Ende des jeweiligen Monats schriftlich oder in der App kündbar und kann dann jederzeit wieder aufgenommen werden.",
+            "In Hessen soll es von August an einen zusätzlichen Rabatt für Geringverdiener geben. Personen, die Wohngeld, Bürgergeld oder Sozialgeld empfangen, können das Deutschlandticket dann für nur 31 Euro erwerben. Studenten in Hessen werden ein Deutschlandticket voraussichtlich vom Wintersemester an mit dem Preis ihres bisherigen Semestertickets verrechnen können. Eine landesweite Regelung wird dadurch erschwert, dass bisher jede Hochschule und Universität eigenständig die Tarife ihrer Semestertickets ausgehandelt hat. Diese können, je nach den Anforderungen und Bedingungen an den jeweiligen Standorten, recht unterschiedlich sein.",
+            "Die Verkehrsminister der Länder haben sich grundsätzlich darauf geeinigt, dass Studenten lediglich die Differenz zwischen dem Preis ihres Semestertickets und jenem des Deutschlandtickets zahlen müssen. Das wären im bundesweiten Durchschnitt etwa 25 Euro monatlich."
+          ]
+        }
+      ]
+    }
   }
 }

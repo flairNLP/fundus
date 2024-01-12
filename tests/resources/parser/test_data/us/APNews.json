@@ -9,7 +9,21 @@
       "Mexico",
       "Mexico City",
       "Latin America"
-    ]
+    ],
+    "body": {
+      "summary": [],
+      "sections": [
+        {
+          "headline": [],
+          "paragraphs": [
+            "MEXICO CITY (AP) — Mexico’s economy grew by 1.1% in the first quarter of 2023, bringing growth to an annualized rate of 3.8% compared to the same period of 2022, Mexico’s National Statistics Institute said Friday.",
+            "The institute said growth was spurred by an expansion in industry and services, which offset a 3.2% drop in agriculture and mining.",
+            "It marked the sixth consecutive quarter of growth since the coronavirus pandemic, during which Mexico suffered a severe drop in output.",
+            "Mexico’s economy has recovered from the pandemic, but the effects of high domestic interest rates and stubborn inflation have acted as a drag on growth. Mexico’s central bank has raised interest rates to 11.25% and inflation remains high, at 6.85%."
+          ]
+        }
+      ]
+    }
   },
   "V1S1": {
     "authors": [
@@ -37,6 +51,38 @@
       "Sony Corp",
       "Amazon.com Inc",
       "U.S. News"
-    ]
+    ],
+    "body": {
+      "summary": [],
+      "sections": [
+        {
+          "headline": [],
+          "paragraphs": [
+            "A federal judge has handed Microsoft a major victory by declining to block its looming $69 billion takeover of video game company Activision Blizzard. Regulators sought to ax the deal saying it will hurt competition.",
+            "U.S. District Judge Jacqueline Scott Corley said in a ruling that the Federal Trade Commission, which enforces antitrust laws, has not shown a likelihood it would prevail if it took the case to trial.",
+            "“The FTC has not raised serious questions regarding whether the proposed merger is likely to substantially lessen competition in the console, library subscription services, or cloud gaming markets,” Corley wrote.",
+            "Microsoft appeared to have the upper hand in a 5-day San Francisco court hearing that ended late last month. The proceeding showcased testimony by Microsoft Chief Executive Officer Satya Nadella and longtime Activision Blizzard CEO Bobby Kotick, who both pledged to keep Activision’s blockbuster game Call of Duty available to people who play it on consoles — particularly Sony’s PlayStation — that compete with Microsoft’s Xbox.",
+            "“Our merger will benefit consumers and workers. It will enable competition rather than allow entrenched market leaders to continue to dominate our rapidly growing industry,” Kotick said in a written statement after Tuesday’s ruling. ",
+            "The FTC had asked Corley to issue an injunction temporarily blocking Microsoft and Activision from closing the deal before the FTC’s in-house judge can review it in an August trial.",
+            "Both companies suggested that such a delay would effectively force them to abandon the takeover agreement they signed nearly 18 months ago. Microsoft has promised to pay Activision a $3 billion breakup fee if the deal doesn’t close by July 18.",
+            "The case was an important test for the FTC’s heightened scrutiny of the technology industry under Chairperson Lina Khan, who was installed by President Joe Biden in 2021 because of her tough stance on what she sees as monopolistic behavior by tech giants such as Amazon, Google and Facebook parent Meta.",
+            "Another judge rebuffed the FTC’s attempt earlier this year to stop Meta from taking over the virtual reality fitness company Within Unlimited.",
+            "Corley, herself a Biden nominee, expressed skepticism about the FTC’s case during the proceedings, particularly about the hypothetical harms caused if Microsoft were to remove Call of Duty from rival platforms or offer a subpar experience on competing consoles.",
+            "“It all comes down again to Call of Duty,” she said. “We’re here because of Call of Duty.” ",
+            "Near the close of the hearing, Corley said the FTC had already achieved a victory for consumers because of promises Microsoft made to some rivals as it sought to clear a path for the Activision Blizzard deal to go through.",
+            "As antitrust investigations and legal challenges mounted in the U.S. and around the world, Microsoft pledged that Call of Duty would appear on Nintendo’s Switch console, Nvidia’s cloud gaming service and other platforms for at least a decade.",
+            "“In many ways you won,” Corley told the FTC’s lead trial attorney on the case, James Weingarten.",
+            "“I don’t think we won,” Weingarten responded, saying there was no evidence that the “hastily agreed to” contracts would sufficiently protect the market.",
+            "Shares of Activision Blizzard Inc. jumped more than 11% Tuesday on the ruling, a high for the year. ",
+            "A number of other countries and the European Union have approved the Activision Blizzard takeover, but it still faces opposition from the U.K.’s Competition and Markets Authority. The company was set to challenge that decision at tribunal hearing scheduled for later this month but the FTC’s ruling appeared to have forced a rethink.",
+            "The Competition and Markets Authority and Microsoft said they jointly applied to put the hearing on hold, saying a “stay of litigation” would be in the public interest while they work out a way to resolve their differences so that the deal can go ahead.",
+            "“We stand ready to consider any proposals from Microsoft to restructure the transaction in a way that would address the concerns set out in our Final Report,” the CMA said in a statement.",
+            "Microsoft said that its focus now turns back to the U.K. “While we ultimately disagree with the CMA’s concerns, we are considering how the transaction might be modified in order to address those concerns in a way that is acceptable to the CMA,” President Brad Smith said in a statement. ",
+            "Canadian regulators are also investigating the transaction and have concluded it is “likely to result” in preventing or lessening competition on gaming consoles, subscription services and cloud-based gaming, according to a letter to Microsoft filed in the U.S. case late last month.",
+            "AP Business Writer Kelvin Chan contributed to this report from London. "
+          ]
+        }
+      ]
+    }
   }
 }
