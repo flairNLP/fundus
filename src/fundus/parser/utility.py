@@ -121,7 +121,9 @@ def extract_article_body_with_selector(
 _meta_node_selector = CSSSelector("meta[name], meta[property]")
 
 
-def get_meta_content(tree: lxml.html.HtmlElement) -> Dict[str, str]:
+def get_meta_content(
+    tree: lxml.html.HtmlElement, additional_selectors: Optional[Dict[str, Union[XPath, CSSSelector]]] = None
+) -> Dict[str, str]:
     meta_nodes = _meta_node_selector(tree)
     meta: Dict[str, str] = {}
     for node in meta_nodes:
@@ -129,6 +131,13 @@ def get_meta_content(tree: lxml.html.HtmlElement) -> Dict[str, str]:
         value = node.attrib.get("content")
         if key and value:
             meta[key] = value
+
+    if additional_selectors:
+        for key, selector in additional_selectors.items():
+            for node in selector(tree):
+                if content := node.attrib.get("content"):
+                    meta[node.attrib[key]] = content
+
     return meta
 
 
