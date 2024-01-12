@@ -2,6 +2,8 @@ from abc import ABC
 from dataclasses import dataclass, fields
 from typing import (
     Any,
+    Callable,
+    ClassVar,
     Collection,
     Dict,
     Iterable,
@@ -188,9 +190,33 @@ class TextSequence(Sequence[str]):
     def __str__(self) -> str:
         return "\n".join(self)
 
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, TextSequence):
+            return NotImplemented
+        return self._data == other._data
+
 
 @dataclass
 class TextSequenceTree(ABC):
+    """Base class to traverse and build trees of TextSequence.
+
+    The ClassVar __transformation__ is needed to serialize the tree. There must be an entry with type
+    Tuple[Callable, Callable] for each field with the first callable beeing the serialization and
+    the second the deserialization of that specific field.
+
+    Examples:
+        >>> import datetime
+        >>> class Tree(TextSequenceTree):
+        >>>     head: TextSequence
+        >>>     tail: TextSequence
+        >>>
+        >>>     __transformation__ = {"head": (list, TextSequence), "tail": (list, TextSequence)}
+
+
+    """
+
+    __transformation__: ClassVar[Dict[str, Tuple[Callable[[Any], Any], Callable[[Any], Any]]]]
+
     def as_text_sequence(self) -> TextSequence:
         texts = [text for tl in self.df_traversal() for text in tl]
         return TextSequence(texts)
@@ -215,7 +241,22 @@ class TextSequenceTree(ABC):
         for value in self:
             yield from recursion(value)
 
-    def __iter__(self):
+    def serialize(self) -> Dict[str, Any]:
+        serialized = {}
+        for field in fields(self):
+            name = field.name
+            serialized[name] = self.__transformation__[name][0](getattr(self, name))
+        return serialized
+
+    @classmethod
+    def deserialize(cls, obj: Dict[str, Any]) -> "TextSequenceTree":
+        kwargs = {}
+        for name, value in obj.items():
+            kwargs[name] = cls.__transformation__[name][1](value)
+        # noinspection PyArgumentList
+        return cls(**kwargs)
+
+    def __iter__(self) -> Iterator[Any]:
         field_values = [getattr(self, f.name) for f in fields(self)]
         yield from field_values
 
@@ -231,8 +272,18 @@ class ArticleSection(TextSequenceTree):
     headline: TextSequence
     paragraphs: TextSequence
 
+    __transformation__ = {"headline": (list, TextSequence), "paragraphs": (list, TextSequence)}
+
 
 @dataclass
 class ArticleBody(TextSequenceTree):
     summary: TextSequence
     sections: List[ArticleSection]
+
+    __transformation__ = {
+        "summary": (list, TextSequence),
+        "sections": (
+            lambda sections: [section.serialize() for section in sections],
+            lambda sections: [ArticleSection.deserialize(section) for section in sections],
+        ),
+    }

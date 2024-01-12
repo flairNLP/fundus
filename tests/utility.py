@@ -1,6 +1,7 @@
 import datetime
 import gzip
 import json
+from abc import ABC
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Callable, Dict, Generic, Optional, Type, TypeVar
@@ -8,7 +9,8 @@ from typing import Any, Callable, Dict, Generic, Optional, Type, TypeVar
 from typing_extensions import Self
 
 from fundus import PublisherCollection
-from fundus.parser import BaseParser
+from fundus.parser import ArticleBody, BaseParser
+from fundus.parser.data import TextSequenceTree
 from fundus.publishers.base_objects import PublisherEnum
 from scripts.generate_tables import supported_publishers_markdown_path
 from tests.resources.parser.test_data import __module_path__ as test_resource_path
@@ -88,23 +90,30 @@ class ExtractionEncoder(json.JSONEncoder):
     def default(self, obj: object):
         if isinstance(obj, datetime.datetime):
             return str(obj)
+        if isinstance(obj, TextSequenceTree):
+            return obj.serialize()
         return json.JSONEncoder.default(self, obj)
 
 
-class ExtractionDecoder(json.JSONDecoder):
-    transformations: Dict[str, Callable[[Any], Any]] = {
-        "crawl_date": lambda timestamp: datetime.datetime.fromisoformat(timestamp),
-        "publishing_date": lambda timestamp: datetime.datetime.fromisoformat(timestamp),
-    }
+class CustomDecoder(json.JSONDecoder, ABC):
+    transformations: Dict[str, Callable[[Any], Any]]
 
     def __init__(self, *args, **kwargs):
         json.JSONDecoder.__init__(self, object_hook=self.object_hook, *args, **kwargs)
 
     def object_hook(self, obj_dict):
         for key, transformation in self.transformations.items():
-            if serialized_value := obj_dict.get(key):
+            if (serialized_value := obj_dict.get(key)) is not None:
                 obj_dict[key] = transformation(serialized_value)
         return obj_dict
+
+
+class ExtractionDecoder(CustomDecoder):
+    transformations: Dict[str, Callable[[Any], Any]] = {
+        "crawl_date": lambda timestamp: datetime.datetime.fromisoformat(timestamp),
+        "publishing_date": lambda timestamp: datetime.datetime.fromisoformat(timestamp),
+        "body": lambda body: ArticleBody.deserialize(body),
+    }
 
 
 @dataclass

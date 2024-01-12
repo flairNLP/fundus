@@ -128,7 +128,7 @@ class TestParserProxy:
 
 # enforce test coverage for test parsing
 # because this is also used for the generate_parser_test_files script we export it here
-attributes_required_to_cover = {"title", "authors", "topics", "publishing_date"}
+attributes_required_to_cover = {"title", "authors", "topics", "publishing_date", "body"}
 
 
 @pytest.mark.parametrize(
