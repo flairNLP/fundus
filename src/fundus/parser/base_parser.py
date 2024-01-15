@@ -24,15 +24,12 @@ from typing import (
 
 import lxml.html
 import more_itertools
-from lxml.cssselect import CSSSelector
 from lxml.etree import XPath
-from typing_extensions import TypeAlias
 
 from fundus.parser.data import LinkedDataMapping
 from fundus.parser.utility import get_meta_content
 
 RegisteredFunctionT_co = TypeVar("RegisteredFunctionT_co", covariant=True, bound="RegisteredFunction")
-Selector: TypeAlias = Union[XPath, CSSSelector]
 
 
 class RegisteredFunction(ABC):
