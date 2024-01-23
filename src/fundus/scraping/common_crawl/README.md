@@ -1,9 +1,9 @@
-# CCNewsCrawler quick guide
+# CCNewsCrawler Quick Guide
 
 This package provides functionality to crawl the [CC-NEWS](https://paperswithcode.com/dataset/cc-news) dataset for publishers supported by Fundus.
-To use this crawler simply stick to the same schema as with the main Fundus crawler.
+To use this crawler, simply stick to the same schema as with the main Fundus crawler.
 
-Let's crawl a bunch of news articles using the whole `PublisherCollection`
+Let's crawl a bunch of news articles from all available publishers supported in the Fundus `PublisherCollection`.
 
 ````python
 from fundus import CCNewsCrawler, PublisherCollection
@@ -13,7 +13,7 @@ for article in crawler.crawl(max_articles=100):
     print(article)
 ````
 
-Depending on the process [start methode](https://docs.python.org/3/library/multiprocessing.html#contexts-and-start-methods) used by your os you may have to wrap this crawl into `__name__ == "__main__"`.
+Depending on the process [start method](https://docs.python.org/3/library/multiprocessing.html#contexts-and-start-methods) used by your OS, you may have to wrap this crawl with a `__name__ == "__main__"` block.
 
 ````python
 from fundus import CCNewsCrawler, PublisherCollection
@@ -40,7 +40,7 @@ for article in crawler.crawl(start=datetime(2020, 1, 1), end=datetime(2020, 3, 1
 ````
 
 Due to the sheer amount of data, the crawler utilizes multiple processes.
-Per default, the number of processes is equal to `os.cpu_count()`.
+Per default, it uses all CPUs available in your system.
 You can alter the number of processes used with the `processes` parameter.
 
 ````python

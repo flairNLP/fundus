@@ -69,13 +69,13 @@ class CCNewsCrawler:
         processes: Optional[int] = None,
         server_address: str = "https://data.commoncrawl.org/",
     ):
-        """Initializes a crawler for crawling the CC-NEWS dataset.
+        """Initializes a crawler for the CC-NEWS dataset.
 
         Args:
             *publishers (PublisherEnum): The publishers to crawl.
             processes: Number of process to use for crawling. If None, use os.cpu_count(); if -1 omit multiprocessing
                 entirely. Defaults to None
-            server_address: The CC-NEWS dataset server address. Defaults to 'https://data.commoncrawl.org/'
+            server_address: The CC-NEWS dataset server address. Defaults to 'https://data.commoncrawl.org/'.
         """
         self.publishers = publishers
         self.processes = processes or os.cpu_count() or -1
@@ -93,7 +93,7 @@ class CCNewsCrawler:
         if end > datetime.now():
             raise ValueError("The specified end date is in the future. We don't want to give spoilers, do we?")
 
-        date_sequence: List[datetime] = [dt for dt in rrule(MONTHLY, dtstart=start, until=end)]
+        date_sequence: List[datetime] = list(rrule(MONTHLY, dtstart=start, until=end))
         urls = [
             self.server_address + f"crawl-data/CC-NEWS/{date.strftime('%Y/%m')}/warc.paths.gz" for date in date_sequence
         ]
@@ -111,10 +111,11 @@ class CCNewsCrawler:
         end_strf = end.strftime("%Y%m%d%H%M%S")
 
         def filter_warc_path_by_date(path: str) -> bool:
-            if match := date_pattern.search(path):
-                return start_strf <= match["date"] <= end_strf
-            else:
-                return False
+            match: Optional[Match[str]] = date_pattern.search(path)
+            if match is None:
+                raise AssertionError(f"Invalid WARC path {path!r}")
+            return start_strf <= match["date"] <= end_strf
+
 
         return sorted(
             [self.server_address + warc_path for warc_path in filter(filter_warc_path_by_date, warc_paths)],
@@ -131,15 +132,22 @@ class CCNewsCrawler:
     ) -> Iterator[Article]:
         source = CCNewsSource(*publishers, warc_path=warc_path)
         scraper = CCNewsScraper(source)
-        for article in scraper.scrape(error_handling, extraction_filter, url_filter):
-            yield article
+        yield from scraper.scrape(error_handling, extraction_filter, url_filter)
 
     @staticmethod
-    def _queue_wrapper(
-        queue: Queue[_T],
-        target: Callable[P, Iterator[_T]],
-    ) -> Callable[P, None]:
-        def wrapper(*args, **kwargs) -> None:
+    def _queue_wrapper(queue: Queue[_T], target: Callable[P, Iterator[_T]]) -> Callable[P, None]:
+        """Wraps the target callable to add its results to the queue instead of returning them directly.
+
+        Args:
+            queue: (Queue[_T]) The buffer queue.
+            target: (Callable[P, Iterator[_T]]) A target callable.
+
+        Returns:
+            (Callable[P, None]) The wrapped target.
+        """
+
+        @functools.wraps(target)
+        def wrapper(*args: P.args, **kwargs: P.kwargs) -> None:
             for obj in target(*args, **kwargs):
                 queue.put(obj)
 
@@ -169,17 +177,16 @@ class CCNewsCrawler:
     ) -> Iterator[Article]:
         """Yields articles crawled from the CC-NEWS server.
 
-        Same functionality as fundus standard crawler except this one fetches articles from the
-        CC-News corpus.
-        One can specify a date range from <start> to <end> to fetch only articles crawled in this range.
-        The default range is 2016/8 -> datetime.now()
-        This corresponds to the crawl date of the CC-News crawler, not the publishing date.
-        To filter on publishing dates use the <only_complete> parameter and refer to the docs about
-        filtering articles.
+        This method provides the same functionality as the fundus standard crawler,
+        except this one fetches articles from the CC-News corpus.
+        Specify a date range from <start> to <end> to fetch only articles crawled in this range.
+        The default range is 2016/8/1 -> datetime.now().
+        These dates correspond to the crawl date of the CC-News crawler, not the publishing date.
+        To filter on publishing dates, use the <only_complete> parameter and refer to the docs about filtering articles.
 
         Args:
-            start: (datetime): Earliest possible crawl date for retrieved articles. Defaults to 2016/8/1
-            end: (datetime): Latest possible crawl date for retrieved articles. Defaults to datetime.now()
+            start: (datetime): Earliest possible crawl date for retrieved articles. Defaults to 2016/8/1.
+            end: (datetime): Latest possible crawl date for retrieved articles. Defaults to datetime.now().
             max_articles (Optional[int]): Number of articles to crawl. If there are fewer articles
                 than max_articles the Iterator will stop before max_articles. If None, all retrievable
                 articles are returned. Defaults to None.
@@ -187,7 +194,7 @@ class CCNewsCrawler:
                 encountered during extraction. If set to "suppress", all errors will be skipped, either
                 with None values for respective attributes in the extraction or by skipping entire articles.
                 If set to "catch", errors will be caught as attribute values or, if an entire article fails,
-                through Article.exception. If set to "raise" all errors encountered during extraction will
+                through Article.exception. If set to "raise", all errors encountered during extraction will
                 be raised. Defaults to "suppress".
             only_complete (Union[bool, ExtractionFilter]): Set a callable satisfying the ExtractionFilter
                 protocol as an extraction filter or use a boolean. If False, all articles will be yielded,
@@ -204,7 +211,8 @@ class CCNewsCrawler:
 
         if max_articles == 0:
             return
-        elif max_articles is None:
+        
+        if max_articles is None:
             max_articles = -1
 
         def build_extraction_filter() -> Optional[ExtractionFilter]:

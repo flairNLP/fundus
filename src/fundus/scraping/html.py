@@ -32,7 +32,17 @@ from fundus.logging import basic_logger
 from fundus.scraping.filter import URLFilter, inverse
 from fundus.utils.more_async import ManagedEventLoop, async_next, make_iterable_async
 
-__all__ = ["HTMLSource", "FundusSource", "RSSFeed", "Sitemap", "NewsMap"]
+__all__ = [
+    "URLSource",
+    "RSSFeed",
+    "Sitemap",
+    "NewsMap",
+    "HTML",
+    "HTMLSource",
+    "WarcSource",
+    "WebSource",
+    "FundusSource",
+]
 
 _default_header = {"user-agent": "Fundus"}
 

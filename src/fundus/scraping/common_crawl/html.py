@@ -1,4 +1,4 @@
-from typing import Dict, Iterator, List, Optional, cast
+from typing import Dict, Iterator, Optional
 from urllib.parse import urlparse
 
 import requests
@@ -37,7 +37,7 @@ class CCNewsSource:
             for warc_record in ArchiveIterator(stream, record_types=WarcRecordType.response, verify_digests=True):
                 target_uri = str(warc_record.headers["WARC-Target-URI"])
 
-                if url_filter and url_filter(target_uri):
+                if url_filter is not None and url_filter(target_uri):
                     basic_logger.debug(f"Skipped WARC record with target URI {target_uri!r} because of URL filter")
                     continue
                 elif (netloc := urlparse(target_uri).netloc) in domains:
