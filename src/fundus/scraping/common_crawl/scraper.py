@@ -31,7 +31,7 @@ class CCNewsScraper:
                 if error_handling == "raise":
                     error_message = f"Run into an error processing article '{html.requested_url}'"
                     basic_logger.error(error_message)
-                    err.args = (f"{err}\n\n{error_message},)
+                    err.args = (f"{err}\n\n{error_message}",)
                     raise err
                 elif error_handling == "catch":
                     yield Article(html=html, exception=err)
