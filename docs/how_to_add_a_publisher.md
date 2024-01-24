@@ -92,7 +92,7 @@ Fundus provides the following types of `URLSource`, which you can import from `f
 
 Fundus distinguishes between these source types to facilitate crawling only recent articles (`RSSFeed`, `NewsMap`) or an entire website (`Sitemap`).
 This differentiation is mainly for efficiency reasons.
-Refer to [this](3_how_to_filter_articles.md#filter-sources) documentation on how to filter for different source types.
+Refer to [this](4_how_to_filter_articles#filter-sources) documentation on how to filter for different source types.
 
 **_NOTE:_** When adding a new publisher, it is recommended to specify at least one `Sitemap` and one `RSSFeed` or `NewsMap` (preferred).
 If your publisher provides a `NewsFeed`, there is no need to specify an `RSSFeed`.
