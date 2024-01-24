@@ -168,10 +168,22 @@ class CCNewsCrawler:
     def _parallel_crawl(
         self, warc_paths: List[str], article_task: Callable[[str], Iterator[Article]]
     ) -> Iterator[Article]:
+        # As one could think, because we're downloading a bunch of files, this task is IO bound, but it is actually
+        # process bound. The reason for this is that we stream the data and process it on the fly rather than
+        # downloading all files and processing them afterward. Therefore, we utilize multiprocessing here instead
+        # of multithreading.
         with Manager() as manager, Pool(processes=min(self.processes, len(warc_paths))) as pool:
             article_queue: Queue[Article] = manager.Queue()
+
+            # Because multiprocessing.Pool does not support iterators as targets we wrap the article_task to pass
+            # the articles to a queue instead of returning them directly.
             wrapped_article_task: Callable[[str], None] = queue_wrapper(article_queue, article_task)
+
+            # To avoid restricting article_task to use only pickable objects we serialize it using dill.
             serialized_article_task = dill_wrapper(wrapped_article_task)
+
+            # Finally, we build an iterator around the queue, exhausting the queue and handling if the pool
+            # is finished.
             yield from pool_queue_iter(pool.map_async(serialized_article_task, warc_paths), article_queue)
 
     def crawl(
