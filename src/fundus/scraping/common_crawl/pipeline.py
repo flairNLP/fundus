@@ -116,8 +116,8 @@ class CCNewsCrawler:
             raise ValueError("The specified end date is in the future. We don't want to give spoilers, do we?")
 
         date_sequence: List[datetime] = list(rrule(MONTHLY, dtstart=start, until=end))
-        urls = [
-            self.server_address + f"crawl-data/CC-NEWS/{date.strftime('%Y/%m')}/warc.paths.gz" for date in date_sequence
+        urls: List[str] = [
+            f"{self.server_address}crawl-data/CC-NEWS/{date.strftime('%Y/%m')}/warc.paths.gz" for date in date_sequence
         ]
 
         def load_paths(url: str) -> List[str]:
@@ -144,7 +144,7 @@ class CCNewsCrawler:
             return start_strf <= match["date"] <= end_strf
 
         return sorted(
-            [self.server_address + warc_path for warc_path in filter(filter_warc_path_by_date, warc_paths)],
+            (f"{self.server_address}{warc_path}" for warc_path in filter(filter_warc_path_by_date, warc_paths)),
             reverse=True,
         )
 
