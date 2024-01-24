@@ -39,7 +39,7 @@ from fundus.scraping.common_crawl.scraper import CCNewsScraper
 from fundus.scraping.filter import ExtractionFilter, Requires, URLFilter
 
 _T = TypeVar("_T")
-_P = ParamSpec("P")
+_P = ParamSpec("_P")
 
 
 # noinspection PyPep8Naming
