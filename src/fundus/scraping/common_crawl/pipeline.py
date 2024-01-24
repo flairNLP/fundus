@@ -39,12 +39,12 @@ from fundus.scraping.common_crawl.scraper import CCNewsScraper
 from fundus.scraping.filter import ExtractionFilter, Requires, URLFilter
 
 _T = TypeVar("_T")
-P = ParamSpec("P")
+_P = ParamSpec("P")
 
 
 # noinspection PyPep8Naming
-class dill_wrapper(Generic[P, _T]):
-    def __init__(self, target: Callable[P, _T]):
+class dill_wrapper(Generic[_P, _T]):
+    def __init__(self, target: Callable[_P, _T]):
         """Wraps function in dill serialization.
 
         This is in order to use unpickable functions within multiprocessing.
@@ -55,14 +55,14 @@ class dill_wrapper(Generic[P, _T]):
         self._serialized_target: bytes = dill.dumps(target)
 
     @lru_cache
-    def _deserialize(self) -> Callable[P, _T]:
-        return cast(Callable[P, _T], dill.loads(self._serialized_target))
+    def _deserialize(self) -> Callable[_P, _T]:
+        return cast(Callable[_P, _T], dill.loads(self._serialized_target))
 
-    def __call__(self, *args: P.args, **kwargs: P.kwargs) -> _T:
+    def __call__(self, *args: _P.args, **kwargs: _P.kwargs) -> _T:
         return self._deserialize()(*args, **kwargs)
 
 
-def queue_wrapper(queue: Queue[_T], target: Callable[P, Iterator[_T]]) -> Callable[P, None]:
+def queue_wrapper(queue: Queue[_T], target: Callable[_P, Iterator[_T]]) -> Callable[_P, None]:
     """Wraps the target callable to add its results to the queue instead of returning them directly.
 
     Args:
@@ -74,7 +74,7 @@ def queue_wrapper(queue: Queue[_T], target: Callable[P, Iterator[_T]]) -> Callab
     """
 
     @wraps(target)
-    def wrapper(*args: P.args, **kwargs: P.kwargs) -> None:
+    def wrapper(*args: _P.args, **kwargs: _P.kwargs) -> None:
         for obj in target(*args, **kwargs):
             queue.put(obj)
 
