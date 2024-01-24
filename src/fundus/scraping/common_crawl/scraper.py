@@ -25,7 +25,7 @@ class CCNewsScraper:
         for html in self.source.fetch(url_filter):
             parser = self._parser_mapping[html.source.publisher]
             try:
-                extraction = parser(html.crawl_date).parse(html.content, error_handling)
+                extracted = parser(html.crawl_date).parse(html.content, error_handling)
 
             except Exception as err:
                 if error_handling == "raise":
@@ -41,8 +41,8 @@ class CCNewsScraper:
                     raise ValueError(f"Unknown value '{error_handling}' for parameter <error_handling>'")
 
             else:
-                if extraction_filter is not None and extraction_filter(extraction):
+                if extraction_filter is not None and extraction_filter(extracted):
                     basic_logger.debug(f"Skipped article at '{html.requested_url}' because of extraction filter")
                 else:
-                    article = Article.from_extracted(html=html, extracted=extraction)
+                    article = Article.from_extracted(html=html, extracted=extracted)
                     yield article
