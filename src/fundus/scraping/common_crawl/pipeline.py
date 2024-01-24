@@ -50,7 +50,7 @@ class dill_wrapper(Generic[_P, _T]):
         This is in order to use unpickable functions within multiprocessing.
 
         Args:
-            target (Callable[P, _T): The function to wrap.
+            target: The function to wrap.
         """
         self._serialized_target: bytes = dill.dumps(target)
 
@@ -66,11 +66,11 @@ def queue_wrapper(queue: Queue[_T], target: Callable[_P, Iterator[_T]]) -> Calla
     """Wraps the target callable to add its results to the queue instead of returning them directly.
 
     Args:
-        queue: (Queue[_T]) The buffer queue.
-        target: (Callable[P, Iterator[_T]]) A target callable.
+        queue: The buffer queue.
+        target: A target callable.
 
     Returns:
-        (Callable[P, None]) The wrapped target.
+        (Callable[_P, None]) The wrapped target.
     """
 
     @wraps(target)
@@ -91,7 +91,7 @@ class CCNewsCrawler:
         """Initializes a crawler for the CC-NEWS dataset.
 
         Args:
-            *publishers (PublisherEnum): The publishers to crawl.
+            *publishers: The publishers to crawl.
             processes: Number of additional process to use for crawling.
                 If -1, the number of processes is set to `os.cpu_count()`.
                 If `os.cpu_count()` is not available, the number of processes is set to 0.
