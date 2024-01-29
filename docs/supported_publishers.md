@@ -80,6 +80,21 @@
     </tr>
     <tr>
       <td>
+        <code>BusinessInsider</code>
+      </td>
+      <td>
+        <div>Business Insider</div>
+      </td>
+      <td>
+        <a href="https://www.businessinsider.de/">
+          <span>www.businessinsider.de</span>
+        </a>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
         <code>DW</code>
       </td>
       <td>
