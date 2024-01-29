@@ -1,8 +1,7 @@
 import datetime
 import re
-from typing import List, Optional
+from typing import List, Optional, Pattern
 
-from lxml.cssselect import CSSSelector
 from lxml.etree import XPath
 
 from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute
@@ -17,7 +16,7 @@ from fundus.parser.utility import (
 
 class BSZeitungParser(ParserProxy):
     class V1(BaseParser):
-        _author_substitution_pattern: re.Pattern[str] = re.compile(r"FUNKE Mediengruppe")
+        _author_substitution_pattern: Pattern[str] = re.compile(r"FUNKE Mediengruppe")
         _paragraph_selector = XPath(
             "//div[@class='article-body']//p[not(contains(strong, 'Meistgeklickte Nachrichten "
             "aus der Region') or contains(strong, 'Keine wichtigen News mehr verpassen') or "
