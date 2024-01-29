@@ -103,7 +103,7 @@ class CCNewsCrawler:
         self.server_address = server_address
 
     def _get_warc_paths(self, start: datetime, end: datetime) -> List[str]:
-        # https://regex101.com/r/yDX3G6/1
+        # Date regex examples: https://regex101.com/r/yDX3G6/1
         date_pattern: Pattern[str] = re.compile(r"CC-NEWS-(?P<date>\d{14})-")
 
         if start >= end:
@@ -168,22 +168,20 @@ class CCNewsCrawler:
     def _parallel_crawl(
         self, warc_paths: List[str], article_task: Callable[[str], Iterator[Article]]
     ) -> Iterator[Article]:
-        # As one could think, because we're downloading a bunch of files, this task is IO bound, but it is actually
-        # process bound. The reason for this is that we stream the data and process it on the fly rather than
-        # downloading all files and processing them afterward. Therefore, we utilize multiprocessing here instead
-        # of multithreading.
+        # As one could think, because we're downloading a bunch of files, this task is IO-bound, but it is actually
+        # process-bound. The reason is that we stream the data and process it on the fly rather than downloading all
+        # files and processing them afterwards. Therefore, we utilize multiprocessing here instead of multithreading.
         with Manager() as manager, Pool(processes=min(self.processes, len(warc_paths))) as pool:
             article_queue: Queue[Article] = manager.Queue()
 
-            # Because multiprocessing.Pool does not support iterators as targets we wrap the article_task to pass
-            # the articles to a queue instead of returning them directly.
+            # Because multiprocessing.Pool does not support iterators as targets,
+            # we wrap the article_task to write the articles to a queue instead of returning them directly.
             wrapped_article_task: Callable[[str], None] = queue_wrapper(article_queue, article_task)
 
-            # To avoid restricting article_task to use only pickable objects we serialize it using dill.
+            # To avoid restricting the article_task to use only pickleable objects, we serialize it using dill.
             serialized_article_task = dill_wrapper(wrapped_article_task)
 
-            # Finally, we build an iterator around the queue, exhausting the queue and handling if the pool
-            # is finished.
+            # Finally, we build an iterator around the queue, exhausting the queue until the pool is finished.
             yield from pool_queue_iter(pool.map_async(serialized_article_task, warc_paths), article_queue)
 
     def crawl(
@@ -273,6 +271,19 @@ class CCNewsCrawler:
 
 
 def pool_queue_iter(handle: MapResult[Any], queue: Queue[_T]) -> Iterator[_T]:
+    """Utility function to iterate exhaustively over a pool queue.
+
+    The underlying iterator of this function repeatedly exhausts the given queue.
+    Then, if the queue is empty only if all the pool's jobs have finished, the iterator reruns.
+    Otherwise, it waits for the queue to be populated with the next result from the pool.
+
+    Args:
+        handle (MapResult[Any]):  A handle o the MappedResult of the underling multiprocessing pool.
+        queue (Queue[_T]): The pool queue.
+
+    Returns:
+        Iterator[_T]: The iterator over the queue as it is populated.
+    """
     while True:
         try:
             yield queue.get(timeout=0.1)
