@@ -6,6 +6,7 @@ from fundus.scraping.html import NewsMap, RSSFeed, Sitemap
 
 from .berliner_zeitung import BerlinerZeitungParser
 from .bild import BildParser
+from .braunschweiger_zeitung import BSZeitungParser
 from .die_welt import DieWeltParser
 from .die_zeit import DieZeitParser
 from .dw import DWParser
@@ -173,7 +174,10 @@ class DE(PublisherEnum):
     Taz = PublisherSpec(
         name="Die Tageszeitung (taz)",
         domain="https://www.taz.de/",
-        sources=[NewsMap("https://taz.de/sitemap-google-news.xml"), Sitemap("https://taz.de/sitemap-index.xml")],
+        sources=[
+            NewsMap("https://taz.de/sitemap-google-news.xml"),
+            Sitemap("https://taz.de/sitemap-index.xml", reverse=True),
+        ],
         parser=TazParser,
     )
 
@@ -189,4 +193,14 @@ class DE(PublisherEnum):
         domain="https://www.waz.de/",
         sources=[NewsMap("https://www.waz.de/sitemaps/news.xml")],
         parser=WAZParser,
+    )
+
+    BSZ = PublisherSpec(
+        name="Braunschweiger Zeitung",
+        domain="https://www.braunschweiger-zeitung.de/",
+        sources=[
+            RSSFeed("https://www.braunschweiger-zeitung.de/rss"),
+            Sitemap("https://www.braunschweiger-zeitung.de/sitemaps/news.xml"),
+        ],
+        parser=BSZeitungParser,
     )
