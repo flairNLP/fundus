@@ -1,9 +1,9 @@
 from typing import Dict, Iterator, Optional
 from urllib.parse import urlparse
 
+import chardet
 import requests
 from fastwarc import ArchiveIterator, WarcRecord, WarcRecordType
-from ftfy import guess_bytes
 
 from fundus.logging import basic_logger
 from fundus.publishers.base_objects import PublisherEnum
@@ -22,18 +22,31 @@ class CCNewsSource:
         }
 
     def fetch(self, url_filter: Optional[URLFilter] = None) -> Iterator[HTML]:
-        domains = list(self._publisher_mapping)
-
-        def extract_content(record: WarcRecord) -> str:
+        def extract_content(record: WarcRecord) -> Optional[str]:
             warc_body: bytes = record.reader.read()
+
             try:
                 return str(warc_body, encoding=record.http_charset)
             except (UnicodeDecodeError, TypeError):
-                basic_logger.warning(
-                    f"Couldn't decode record {record.record_id!r} from {target_url!r} "
-                    f"using charset {record.http_charset!r}."
-                )
-                return guess_bytes(warc_body)[0]
+                encoding: Optional[str] = chardet.detect(warc_body)["encoding"]
+
+                if encoding is not None:
+                    basic_logger.debug(
+                        f"Try decoding record {record.record_id!r} from {target_url!r} using "
+                        f"detected encoding {encoding}."
+                    )
+
+                    try:
+                        return str(warc_body, encoding=encoding)
+                    except UnicodeDecodeError:
+                        basic_logger.warning(
+                            f"Couldn't decode record {record.record_id!r} from {target_url!r} with "
+                            f"original charset {record.http_charset} using detected charset {encoding}."
+                        )
+                else:
+                    basic_logger.warning(f"Couldn't detect charset for record {record.record_id!r} from {target_url!r}")
+
+            return None
 
         with requests.Session() as session:
             stream = session.get(self.warc_path, stream=True, headers=self.headers).raw
@@ -44,27 +57,33 @@ class CCNewsSource:
                 if url_filter is not None and url_filter(target_url):
                     basic_logger.debug(f"Skipped WARC record with target URI {target_url!r} because of URL filter")
                     continue
-                elif (netloc := urlparse(target_url).netloc) in domains:
-                    publisher = self._publisher_mapping[netloc]
 
-                    if publisher.url_filter is not None and publisher.url_filter(target_url):
-                        basic_logger.debug(
-                            f"Skipped WARC record with target URI {target_url!r} because of "
-                            f"publisher specific URL filter"
-                        )
-                        continue
+                publisher_domain: str = urlparse(target_url).netloc
 
-                    content = extract_content(warc_record)
-                    html = HTML(
-                        requested_url=target_url,
-                        responded_url=target_url,
-                        content=content,
-                        crawl_date=warc_record.record_date,
-                        source=WarcSource(
-                            publisher=publisher.publisher_name,
-                            warc_path=self.warc_path,
-                            warc_headers=dict(warc_record.headers),
-                            http_headers=dict(warc_record.http_headers),
-                        ),
+                if publisher_domain not in self._publisher_mapping:
+                    continue
+
+                publisher = self._publisher_mapping[publisher_domain]
+
+                if publisher.url_filter is not None and publisher.url_filter(target_url):
+                    basic_logger.debug(
+                        f"Skipped WARC record with target URI {target_url!r} because of "
+                        f"publisher specific URL filter"
                     )
-                    yield html
+                    continue
+
+                if (content := extract_content(warc_record)) is None:
+                    continue
+
+                yield HTML(
+                    requested_url=target_url,
+                    responded_url=target_url,
+                    content=content,
+                    crawl_date=warc_record.record_date,
+                    source=WarcSource(
+                        publisher=publisher.publisher_name,
+                        warc_path=self.warc_path,
+                        warc_headers=dict(warc_record.headers),
+                        http_headers=dict(warc_record.http_headers),
+                    ),
+                )

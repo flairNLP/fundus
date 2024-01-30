@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import asyncio
 import gzip
 import os
 import re
@@ -7,11 +8,12 @@ from datetime import datetime
 from functools import lru_cache, partial, wraps
 from multiprocessing import Manager
 from multiprocessing.context import TimeoutError
-from multiprocessing.pool import MapResult, Pool, ThreadPool
+from multiprocessing.pool import MapResult, Pool
 from queue import Empty, Queue
 from typing import (
     Any,
     Callable,
+    Coroutine,
     Generic,
     Iterator,
     List,
@@ -25,11 +27,11 @@ from typing import (
     cast,
 )
 
+import aiohttp
 import dill
 import more_itertools
-import requests
 from dateutil.rrule import MONTHLY, rrule
-from tqdm import tqdm
+from tqdm.asyncio import tqdm
 from typing_extensions import ParamSpec
 
 from fundus.publishers.base_objects import PublisherEnum
@@ -81,6 +83,31 @@ def queue_wrapper(queue: Queue[_T], target: Callable[_P, Iterator[_T]]) -> Calla
     return wrapper
 
 
+def pool_queue_iter(handle: MapResult[Any], queue: Queue[_T]) -> Iterator[_T]:
+    """Utility function to iterate exhaustively over a pool queue.
+
+    The underlying iterator of this function repeatedly exhausts the given queue.
+    Then, if the queue is empty only if all the pool's jobs have finished, the iterator reruns.
+    Otherwise, it waits for the queue to be populated with the next result from the pool.
+
+    Args:
+        handle (MapResult[Any]):  A handle o the MappedResult of the underling multiprocessing pool.
+        queue (Queue[_T]): The pool queue.
+
+    Returns:
+        Iterator[_T]: The iterator over the queue as it is populated.
+    """
+    while True:
+        try:
+            yield queue.get(timeout=0.1)
+        except Empty:
+            try:
+                handle.get(timeout=0.1)
+            except TimeoutError:
+                continue
+            return
+
+
 class CCNewsCrawler:
     def __init__(
         self,
@@ -98,7 +125,7 @@ class CCNewsCrawler:
                 If 0, only the main process is used. Defaults to -1.
             server_address: The CC-NEWS dataset server address. Defaults to 'https://data.commoncrawl.org/'.
         """
-        self.publishers = publishers
+        self.publishers = tuple(more_itertools.collapse(publishers))
         self.processes = os.cpu_count() or 0 if processes == -1 else processes
         self.server_address = server_address
 
@@ -120,19 +147,26 @@ class CCNewsCrawler:
             f"{self.server_address}crawl-data/CC-NEWS/{date.strftime('%Y/%m')}/warc.paths.gz" for date in date_sequence
         ]
 
-        def load_paths(url: str) -> List[str]:
-            with requests.Session() as session:
-                return gzip.decompress(session.get(url).content).decode("utf-8").split()
+        async def load_warc_paths_from(url: str) -> List[str]:
+            async with aiohttp.ClientSession(raise_for_status=True) as session:
+                async with session.get(url) as response:
+                    return gzip.decompress(await response.read()).decode("utf-8").split()
 
-        # running two threads per core
-        max_number_of_threads = 2 * (os.cpu_count() or 1)
+        load_warc_paths: Coroutine[Any, Any, List[List[str]]] = tqdm.gather(
+            *[load_warc_paths_from(url) for url in urls],
+            total=len(urls),
+            desc="Loading WARC paths",
+            leave=False,
+        )
 
-        with ThreadPool(processes=min(len(urls), max_number_of_threads)) as pool:
-            warc_paths = more_itertools.flatten(
-                list(
-                    tqdm(pool.imap_unordered(load_paths, urls), total=len(urls), desc="Loading WARC paths", leave=False)
-                )
-            )
+        try:
+            event_loop = asyncio.get_running_loop()
+        except RuntimeError:
+            nested_warc_paths = asyncio.run(load_warc_paths)
+        else:
+            nested_warc_paths = event_loop.run_until_complete(load_warc_paths)
+
+        warc_paths: Iterator[str] = more_itertools.flatten(nested_warc_paths)
 
         start_strf = start.strftime("%Y%m%d%H%M%S")
         end_strf = end.strftime("%Y%m%d%H%M%S")
@@ -151,7 +185,7 @@ class CCNewsCrawler:
     @staticmethod
     def _fetch_articles(
         warc_path: str,
-        publishers: Tuple[PublisherEnum],
+        publishers: Tuple[PublisherEnum, ...],
         error_handling: Literal["suppress", "catch", "raise"],
         extraction_filter: Optional[ExtractionFilter] = None,
         url_filter: Optional[URLFilter] = None,
@@ -170,7 +204,7 @@ class CCNewsCrawler:
     ) -> Iterator[Article]:
         # As one could think, because we're downloading a bunch of files, this task is IO-bound, but it is actually
         # process-bound. The reason is that we stream the data and process it on the fly rather than downloading all
-        # files and processing them afterwards. Therefore, we utilize multiprocessing here instead of multithreading.
+        # files and processing them afterward. Therefore, we utilize multiprocessing here instead of multithreading.
         with Manager() as manager, Pool(processes=min(self.processes, len(warc_paths))) as pool:
             article_queue: Queue[Article] = manager.Queue()
 
@@ -268,28 +302,3 @@ class CCNewsCrawler:
                 yield article
             if article_idx == max_articles:
                 break
-
-
-def pool_queue_iter(handle: MapResult[Any], queue: Queue[_T]) -> Iterator[_T]:
-    """Utility function to iterate exhaustively over a pool queue.
-
-    The underlying iterator of this function repeatedly exhausts the given queue.
-    Then, if the queue is empty only if all the pool's jobs have finished, the iterator reruns.
-    Otherwise, it waits for the queue to be populated with the next result from the pool.
-
-    Args:
-        handle (MapResult[Any]):  A handle o the MappedResult of the underling multiprocessing pool.
-        queue (Queue[_T]): The pool queue.
-
-    Returns:
-        Iterator[_T]: The iterator over the queue as it is populated.
-    """
-    while True:
-        try:
-            yield queue.get(timeout=0.1)
-        except Empty:
-            try:
-                handle.get(timeout=0.1)
-            except TimeoutError:
-                continue
-            return
