@@ -6,11 +6,11 @@ from fundus.logging import basic_logger
 from fundus.parser import ParserProxy
 from fundus.scraping.article import Article
 from fundus.scraping.filter import ExtractionFilter, Requires, URLFilter
-from fundus.scraping.html import HTMLSource
+from fundus.scraping.html import FundusSource
 
 
 class Scraper:
-    def __init__(self, *sources: HTMLSource, parser: ParserProxy):
+    def __init__(self, *sources: FundusSource, parser: ParserProxy):
         self.sources = list(sources)
 
         if not parser:

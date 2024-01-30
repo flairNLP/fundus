@@ -29,10 +29,11 @@ Fundus is:
 
 * **A static news crawler.** 
   Fundus lets you crawl online news articles with only a few lines of Python code!
+  Be it from live websites or the CC-NEWS dataset.
 
 * **An open-source Python package.**
-  Fundus is built on the idea of building something together. We welcome your
-  contribution to  help Fundus [grow](docs/how_to_contribute.md)!
+  Fundus is built on the idea of building something together. 
+  We welcome your contribution to  help Fundus [grow](docs/how_to_contribute.md)!
 
 <hr>
 
@@ -82,7 +83,7 @@ Fundus-Article:
 - From:   FoxNews (2023-05-09 14:37)
 ```
 
-This printout tells you that you succesfully crawled two articles!
+This printout tells you that you successfully crawled two articles!
 
 For each article, the printout details:
 - the "Title" of the article, i.e. its headline 
@@ -96,25 +97,41 @@ For each article, the printout details:
 Maybe you want to crawl a specific news source instead. Let's crawl news articles from Washington Times only:
 
 ```python
-
 from fundus import PublisherCollection, Crawler
 
 # initialize the crawler for Washington Times
 crawler = Crawler(PublisherCollection.us.WashingtonTimes)
 
-# crawl 5 articles and print
+# crawl 2 articles and print
 for article in crawler.crawl(max_articles=2):
     print(article)
 ```
+
+## Example 3: Crawl articles from CC-NEWS
+
+If you're not familiar with CC-NEWS, check out their [paper](https://paperswithcode.com/dataset/cc-news).
+
+````python
+from fundus import PublisherCollection, CCNewsCrawler
+
+# initialize the crawler for news publishers based in the US
+crawler = CCNewsCrawler(*PublisherCollection.us)
+
+# crawl 2 articles and print
+for article in crawler.crawl(max_articles=2):
+  print(article)
+````
+
 
 ## Tutorials
 
 We provide **quick tutorials** to get you started with the library:
 
 1. [**Tutorial 1: How to crawl news with Fundus**](docs/1_getting_started.md)
-2. [**Tutorial 2: The Article Class**](docs/2_the_article_class.md)
-3. [**Tutorial 3: How to filter articles**](docs/3_how_to_filter_articles.md)
-4. [**Tutorial 4: How to search for publishers**](docs/4_how_to_search_for_publishers.md)
+2. [**Tutorial 2: How to crawl articles from CC-NEWS**](docs/2_crawl_from_cc_news.md)
+3. [**Tutorial 3: The Article Class**](docs/3_the_article_class)
+4. [**Tutorial 4: How to filter articles**](docs/4_how_to_filter_articles)
+5. [**Tutorial 5: How to search for publishers**](docs/5_how_to_search_for_publishers)
 
 If you wish to contribute check out these tutorials:
 1. [**How to contribute**](docs/how_to_contribute.md)
