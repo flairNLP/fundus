@@ -32,8 +32,8 @@ class CCNewsSource:
 
                 if encoding is not None:
                     basic_logger.debug(
-                        f"Try decoding record {record.record_id!r} from {target_url!r} using "
-                        f"detected encoding {encoding}."
+                        f"Trying to decode record {record.record_id!r} from {target_url!r} "
+                        f"using detected encoding {encoding}."
                     )
 
                     try:
@@ -41,10 +41,13 @@ class CCNewsSource:
                     except UnicodeDecodeError:
                         basic_logger.warning(
                             f"Couldn't decode record {record.record_id!r} from {target_url!r} with "
-                            f"original charset {record.http_charset} using detected charset {encoding}."
+                            f"original charset {record.http_charset!r} using detected charset {encoding!r}."
                         )
                 else:
-                    basic_logger.warning(f"Couldn't detect charset for record {record.record_id!r} from {target_url!r}")
+                    basic_logger.warning(
+                        f"Couldn't detect charset for record {record.record_id!r} from {target_url!r} "
+                        f"with invalid original charset {record.http_charset!r}."
+                    )
 
             return None
 
