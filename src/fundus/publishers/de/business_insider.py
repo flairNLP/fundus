@@ -18,10 +18,18 @@ class BusinessInsiderParser(ParserProxy):
         _summary_selector = CSSSelector("article div.bi-bulletpoints > p")
         _subheadline_selector = CSSSelector("article h2")
 
-        # The mark is to remove prepended text about machine translation
         _paragraph_selector = XPath(
-            "//article //div[contains(@class, 'article-body')] "
-            "/p[not(mark[@class='has-inline-color has-cyan-bluish-gray-color'])]"
+            """
+            //article 
+            //div[contains(@class, 'article-body')] 
+            //p[
+                not(
+                    ancestor::*[@class='bi-bulletpoints'] or
+                    mark[@class='has-inline-color has-cyan-bluish-gray-color'] or 
+                    @class='has-text-align-right'
+                )
+            ]
+            """
         )
 
         @attribute
@@ -47,4 +55,6 @@ class BusinessInsiderParser(ParserProxy):
 
         @attribute
         def topics(self) -> List[str]:
-            return generic_topic_parsing(self.precomputed.meta.get("keywords"))
+            return generic_topic_parsing(self.precomputed.meta.get("keywords")) or generic_topic_parsing(
+                self.precomputed.ld.bf_search("keywords")
+            )
