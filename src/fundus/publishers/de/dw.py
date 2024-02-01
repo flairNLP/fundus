@@ -21,7 +21,7 @@ class DWParser(ParserProxy):
     class V2(BaseParser):
         VALID_UNTIL = datetime.date(2024, 1, 18)
 
-        _paragraph_selector = CSSSelector("div.rich-text > p")
+        _paragraph_selector = XPath("//div[contains(@class, 'rich-text')] /p[not(em) or text()]")
         _summary_selector = CSSSelector("header > p")
         _subheadline_selector = CSSSelector("div.rich-text > h2")
 
