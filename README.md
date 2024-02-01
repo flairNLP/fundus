@@ -129,9 +129,9 @@ We provide **quick tutorials** to get you started with the library:
 
 1. [**Tutorial 1: How to crawl news with Fundus**](docs/1_getting_started.md)
 2. [**Tutorial 2: How to crawl articles from CC-NEWS**](docs/2_crawl_from_cc_news.md)
-3. [**Tutorial 3: The Article Class**](docs/3_the_article_class)
-4. [**Tutorial 4: How to filter articles**](docs/4_how_to_filter_articles)
-5. [**Tutorial 5: How to search for publishers**](docs/5_how_to_search_for_publishers)
+3. [**Tutorial 3: The Article Class**](docs/3_the_article_class.md)
+4. [**Tutorial 4: How to filter articles**](docs/4_how_to_filter_articles.md)
+5. [**Tutorial 5: How to search for publishers**](docs/5_how_to_search_for_publishers.md)
 
 If you wish to contribute check out these tutorials:
 1. [**How to contribute**](docs/how_to_contribute.md)

@@ -68,5 +68,5 @@ crawler = CCNewsCrawler(*PublisherCollection, processes=4)
 
 To omit multiprocessing, pass `0` to the `processes` parameter.
 
-In the [next section](3_the_article_class) we will introduce you to the `Article` class.
+In the [next section](3_the_article_class.md) we will introduce you to the `Article` class.
 
