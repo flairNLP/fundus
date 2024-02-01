@@ -62,7 +62,7 @@ class Scraper:
                         continue
                     elif error_handling == "suppress":
                         basic_logger.info(f"Skipped article at '{html.requested_url}' because of: {err!r}")
-                        continue
+                        yield None
                     else:
                         raise ValueError(f"Unknown value '{error_handling}' for parameter <error_handling>'")
 
