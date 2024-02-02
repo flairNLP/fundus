@@ -100,5 +100,3 @@ if __name__ == "__main__":
             test_data_file.write(test_data)
             bar.update()
             subprocess.call(["git", "add", test_data_file.path], stdout=subprocess.PIPE)
-
-        bar.update()
