@@ -137,4 +137,4 @@ Should print this:
 en
 ``
 
-In the [**next section**](4_how_to_filter_articles) we will show you how to filter articles.
+In the [**next section**](4_how_to_filter_articles.md) we will show you how to filter articles.
