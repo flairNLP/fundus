@@ -107,33 +107,39 @@ class WebSource:
 
             except (HTTPError, ConnectionError) as error:
                 basic_logger.info(f"Skipped requested URL '{url}' because of '{error}'")
+                if isinstance(error, HTTPError) and error.response.status_code >= 500:
+                    return
                 continue
+
+            except ConnectionError as error:
+                basic_logger.info(f"Skipped requested URL '{url}' because of '{error}'")
 
             except Exception as error:
                 basic_logger.warning(f"Warning! Skipped  requested URL '{url}' because of an unexpected error {error}")
                 continue
 
-            if filter_url(str(response.url)):
-                basic_logger.debug(f"Skipped responded URL '{str(response.url)}' because of URL filter")
-                continue
-            html = response.text
+            else:
+                if filter_url(str(response.url)):
+                    basic_logger.debug(f"Skipped responded URL '{str(response.url)}' because of URL filter")
+                    continue
+                html = response.text
 
-            if response.history:
-                basic_logger.info(f"Got redirected {len(response.history)} time(s) from {url} -> {response.url}")
+                if response.history:
+                    basic_logger.info(f"Got redirected {len(response.history)} time(s) from {url} -> {response.url}")
 
-            source = (
-                WebSourceInfo(self.publisher, type(self.url_source).__name__, self.url_source.url)
-                if isinstance(self.url_source, URLSource)
-                else SourceInfo(self.publisher)
-            )
+                source = (
+                    WebSourceInfo(self.publisher, type(self.url_source).__name__, self.url_source.url)
+                    if isinstance(self.url_source, URLSource)
+                    else SourceInfo(self.publisher)
+                )
 
-            yield HTML(
-                requested_url=url,
-                responded_url=str(response.url),
-                content=html,
-                crawl_date=datetime.now(),
-                source=source,
-            )
+                yield HTML(
+                    requested_url=url,
+                    responded_url=str(response.url),
+                    content=html,
+                    crawl_date=datetime.now(),
+                    source=source,
+                )
 
             if self.delay:
                 time.sleep(max(0.0, self.delay() - time.time() + timestamp))

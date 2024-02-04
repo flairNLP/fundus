@@ -223,9 +223,11 @@ class BaseCrawler:
         else:
             article_iter = self._parallel_crawl(self._args, article_task)
 
-        for article_idx, article in enumerate(article_iter, start=1):
+        article_idx = 0
+        for article in article_iter:
             if not only_unique or article.html.responded_url not in response_cache:
                 response_cache.add(article.html.responded_url)
+                article_idx += 1
                 yield article
             if article_idx == max_articles:
                 break
@@ -236,7 +238,8 @@ class Crawler(BaseCrawler):
         self,
         *publishers: Union[PublisherEnum, Type[PublisherEnum], Type[PublisherCollection]],
         restrict_sources_to: Optional[List[Type[URLSource]]] = None,
-        delay: Optional[Union[float, Delay]] = 0.1,
+        delay: Optional[Union[float, Delay]] = 1.,
+        threading: bool = True,
     ):
         """Fundus base class for crawling articles from the web.
 
@@ -269,12 +272,16 @@ class Crawler(BaseCrawler):
                     return delay  # type: ignore[return-value]
 
                 return constant_delay
-            else:
+
+            elif isinstance(delay, Delay):
                 return delay
+
+            else:
+                raise TypeError("param <delay> of <Crawler.__init__>")
 
         super().__init__(
             pool_factory=ThreadPool,
-            processes=len(collapsed_publishers),
+            processes=len(collapsed_publishers) if threading else 0,
             args=collapsed_publishers,
             kwargs={"delay": build_delay(), "restrict_sources_to": restrict_sources_to},
         )
@@ -334,8 +341,9 @@ class CCNewsCrawler(BaseCrawler):
         scraper = CCNewsScraper(source)
         yield from scraper.scrape(error_handling, extraction_filter, url_filter)
 
+    @staticmethod
     def _get_warc_paths(
-        self, start: datetime, end: datetime, processes: int, server_address: str = "https://data.commoncrawl.org/"
+        start: datetime, end: datetime, processes: int, server_address: str = "https://data.commoncrawl.org/"
     ) -> List[str]:
         # Date regex examples: https://regex101.com/r/yDX3G6/1
         date_pattern: Pattern[str] = re.compile(r"CC-NEWS-(?P<date>\d{14})-")
