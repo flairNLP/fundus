@@ -1,6 +1,6 @@
 from typing import Optional
 
-import requests
+import requests.adapters
 
 from fundus.logging import basic_logger
 
@@ -35,41 +35,19 @@ class SessionHandler:
             An new ClientSession
         """
 
-        # timings: Dict[Optional[str], float] = dict()
-        #
-        # async def on_request_start(
-        #     session: aiohttp.ClientSession, context: types.SimpleNamespace, params: aiohttp.TraceRequestStartParams
-        # ):
-        #     timings[params.url.host] = time.time()
-        #
-        # async def on_request_end(
-        #     session: aiohttp.ClientSession, context: types.SimpleNamespace, params: aiohttp.TraceRequestEndParams
-        # ):
-        #     assert params.url.host
-        #     history = params.response.history
-        #     previous_status_codes = [f"({response.status})" for response in history] if history else []
-        #     status_code_chain = " -> ".join(previous_status_codes + [f"({params.response.status})"])
-        #     basic_logger.debug(
-        #         f"{status_code_chain} <{params.method} {params.url!r}> "
-        #         f"took {time.time() - timings[params.url.host if not history else history[0].url.host]} second(s)"
-        #     )
-        #
-        # async def on_request_exception(
-        #     session: aiohttp.ClientSession, context: types.SimpleNamespace, params: aiohttp.TraceRequestExceptionParams
-        # ):
-        #     basic_logger.debug(
-        #         f"FAILED: <{params.method} {params.url}> with {str(params.exception) or type(params.exception)}"
-        #     )
-        #
-        # trace_config = aiohttp.TraceConfig()
-        # trace_config.on_request_start.append(on_request_start)
-        # trace_config.on_request_end.append(on_request_end)
-        # trace_config.on_request_exception.append(on_request_exception)
-
         session = requests.Session()
 
+        def _response_log(response: requests.Response, *args, **kwargs) -> None:
+            history = response.history
+            previous_status_codes = [f"({response.status_code})" for response in history] if history else []
+            status_code_chain = " -> ".join(previous_status_codes + [f"({response.status_code})"])
+            basic_logger.debug(
+                f"{status_code_chain} <{response.request.method} {response.url!r}> "
+                f"took {response.elapsed.total_seconds()} second(s)"
+            )
+
         # hooks
-        hooks = {"response": lambda response, *args, **kwargs: response.raise_for_status()}
+        hooks = {"response": [lambda response, *args, **kwargs: response.raise_for_status(), _response_log]}
         session.hooks = hooks
 
         # adapters
