@@ -273,7 +273,9 @@
         </a>
       </td>
       <td>&#160;</td>
-      <td>&#160;</td>
+      <td>
+        <code>free_access</code>
+      </td>
     </tr>
     <tr>
       <td>
