@@ -2,6 +2,7 @@ import datetime
 from typing import List, Optional
 
 from lxml.cssselect import CSSSelector
+from lxml.etree import XPath
 
 from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute
 from fundus.parser.utility import (
@@ -14,9 +15,14 @@ from fundus.parser.utility import (
 
 class SZParser(ParserProxy):
     class V1(BaseParser):
-        _paragraph_selector = CSSSelector('main [itemprop="articleBody"] > p, ' "main .css-korpch > div > ul > li")
+        _paragraph_selector = XPath(
+            "//div[@itemprop='articleBody']//p[@data-manual='paragraph'" " and not(contains(text(), '© dpa-infocom'))]"
+        )
         _summary_selector = CSSSelector("main [data-manual='teaserText']")
-        _subheadline_selector = CSSSelector("main [itemprop='articleBody'] > h3")
+        _subheadline_selector = XPath(
+            "//div[@itemprop='articleBody']//h3[@data-manual='subheadline']|"
+            "//div[@itemprop='articleBody']//h2[@data-manual='subheadline']"
+        )
 
         @attribute
         def body(self) -> ArticleBody:
@@ -42,3 +48,9 @@ class SZParser(ParserProxy):
         @attribute
         def topics(self) -> List[str]:
             return generic_topic_parsing(self.precomputed.ld.bf_search("keywords"))
+
+        @attribute(validate=False)
+        def free_access(self) -> bool:
+            if self.precomputed.ld.bf_search("isAccessibleForFree") is None:
+                return True
+            return not self.precomputed.ld.bf_search("isAccessibleForFree") == "False"
