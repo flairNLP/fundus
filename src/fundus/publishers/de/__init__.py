@@ -6,7 +6,7 @@ from fundus.scraping.html import NewsMap, RSSFeed, Sitemap
 
 from .berliner_zeitung import BerlinerZeitungParser
 from .bild import BildParser
-from .braunschweiger_zeitung import BSZeitungParser
+from .braunschweiger_zeitung import BSZParser
 from .die_welt import DieWeltParser
 from .die_zeit import DieZeitParser
 from .dw import DWParser
@@ -176,7 +176,7 @@ class DE(PublisherEnum):
         domain="https://www.taz.de/",
         sources=[
             NewsMap("https://taz.de/sitemap-google-news.xml"),
-            Sitemap("https://taz.de/sitemap-index.xml", reverse=True),
+            Sitemap("https://taz.de/sitemap-index.xml"),
         ],
         parser=TazParser,
     )
@@ -200,7 +200,7 @@ class DE(PublisherEnum):
         domain="https://www.braunschweiger-zeitung.de/",
         sources=[
             RSSFeed("https://www.braunschweiger-zeitung.de/rss"),
-            Sitemap("https://www.braunschweiger-zeitung.de/sitemaps/news.xml"),
+            NewsMap("https://www.braunschweiger-zeitung.de/sitemaps/news.xml"),
         ],
-        parser=BSZeitungParser,
+        parser=BSZParser,
     )

@@ -14,26 +14,35 @@ from fundus.parser.utility import (
 )
 
 
-class BSZeitungParser(ParserProxy):
+class BSZParser(ParserProxy):
     class V1(BaseParser):
         _author_substitution_pattern: Pattern[str] = re.compile(r"FUNKE Mediengruppe")
         _paragraph_selector = XPath(
-            "//div[@class='article-body']//p[not(contains(strong, 'Meistgeklickte Nachrichten "
-            "aus der Region') or contains(strong, 'Keine wichtigen News mehr verpassen') or "
-            "@rel='author' or em[@class='print'] or contains(a, 'Jetzt Angebot und Vorteile "
-            "checken') or contains(text(), 'Lesen Sie mehr Geschichten aus')  or contains("
-            "strong, 'Mehr wichtige Nachrichten aus') or contains(strong, 'Täglich wissen, "
-            "was in') or contains(strong, 'Auch interessant') or contains(strong, 'Das könnte "
-            "Sie auch interessieren') or contains(strong, 'Lesen Sie auch') or contains("
-            "strong, 'Mehr zu dem Thema') or contains(strong, 'Mehr zum Thema') or contains("
-            "strong, 'Lesen Sie dazu') or contains(strong, 'Lesen Sie hier'))]"
+            "//div[@class='article-body']//p[not("
+            "contains(strong, 'Meistgeklickte Nachrichten aus der Region')"
+            " or contains(strong, 'Keine wichtigen News mehr verpassen')"
+            " or @rel='author' or em[@class='print']"
+            " or contains(a, 'Jetzt Angebot und Vorteile checken')"
+            " or contains(text(), 'Lesen Sie mehr Geschichten aus')"
+            " or contains(strong, 'Mehr wichtige Nachrichten aus')"
+            " or contains(strong, 'Täglich wissen, was in')"
+            " or contains(strong, 'Auch interessant')"
+            " or contains(strong, 'Auch interessant')"
+            " or contains(strong, 'Das könnte Sie auch interessieren')"
+            " or contains(strong, 'Lesen Sie auch')"
+            " or contains(strong, 'Mehr zu dem Thema')"
+            " or contains(strong, 'Mehr zum Thema')"
+            " or contains(strong, 'Lesen Sie dazu')"
+            " or contains(strong, 'Lesen Sie hier'))]"
         )
         _summary_selector = XPath("//div[@class='article-body']//p[1]")
         _subheadline_selector = XPath(
-            "//div[@class='article-body']//h3[not(contains(text(), 'Alle Artikel der "
-            "Serie') or contains(text(), 'Mehr zum Thema') or contains(text(), "
-            "'weitere Videos') or contains(text(), 'Auch interessant') or contains(text(), "
-            "'Weitere News'))]"
+            "//div[@class='article-body']//h3[not("
+            "contains(text(), 'Alle Artikel der Serie')"
+            " or contains(text(), 'Mehr zum Thema')"
+            " or contains(text(), 'weitere Videos')"
+            " or contains(text(), 'Auch interessant')"
+            " or contains(text(), 'Weitere News'))]"
         )
 
         @attribute
@@ -51,7 +60,7 @@ class BSZeitungParser(ParserProxy):
 
         @attribute
         def topics(self) -> List[str]:
-            return generic_topic_parsing(self.precomputed.ld.bf_search("keywords"))
+            return generic_topic_parsing(self.precomputed.meta.get("news_keywords"))
 
         @attribute
         def authors(self) -> List[str]:
