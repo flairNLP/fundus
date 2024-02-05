@@ -18,22 +18,7 @@ class BSZParser(ParserProxy):
     class V1(BaseParser):
         _author_substitution_pattern: Pattern[str] = re.compile(r"FUNKE Mediengruppe")
         _paragraph_selector = XPath(
-            "//div[@class='article-body']//p[not("
-            "contains(strong, 'Meistgeklickte Nachrichten aus der Region')"
-            " or contains(strong, 'Keine wichtigen News mehr verpassen')"
-            " or @rel='author' or em[@class='print']"
-            " or contains(a, 'Jetzt Angebot und Vorteile checken')"
-            " or contains(text(), 'Lesen Sie mehr Geschichten aus')"
-            " or contains(strong, 'Mehr wichtige Nachrichten aus')"
-            " or contains(strong, 'Täglich wissen, was in')"
-            " or contains(strong, 'Auch interessant')"
-            " or contains(strong, 'Auch interessant')"
-            " or contains(strong, 'Das könnte Sie auch interessieren')"
-            " or contains(strong, 'Lesen Sie auch')"
-            " or contains(strong, 'Mehr zu dem Thema')"
-            " or contains(strong, 'Mehr zum Thema')"
-            " or contains(strong, 'Lesen Sie dazu')"
-            " or contains(strong, 'Lesen Sie hier'))]"
+            "//div[@class='article-body']//p[not(not(text()) or @rel='author' or em[@class='print'] or position()=1)]"
         )
         _summary_selector = XPath("//div[@class='article-body']//p[1]")
         _subheadline_selector = XPath(
