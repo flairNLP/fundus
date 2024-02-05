@@ -1,0 +1,18 @@
+{
+  "V1": {
+    "authors": [
+      "Madeleine Domogalla"
+    ],
+    "publishing_date": "2024-02-05 14:16:00+01:00",
+    "title": "CheerpJ 3.0: WebAssembly-JVM für nahtlose Java-Ausführung im Browser",
+    "topics": [
+      "CheerpJ",
+      "Java",
+      "Minecraft",
+      "WebAssembly",
+      "Webanwendungen",
+      "Webapp",
+      "Webentwicklung"
+    ]
+  }
+}

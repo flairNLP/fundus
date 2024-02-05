@@ -170,6 +170,23 @@
     </tr>
     <tr>
       <td>
+        <code>Heise</code>
+      </td>
+      <td>
+        <div>Heise</div>
+      </td>
+      <td>
+        <a href="https://www.heise.de">
+          <span>www.heise.de</span>
+        </a>
+      </td>
+      <td>&#160;</td>
+      <td>
+        <code>free_access</code>
+      </td>
+    </tr>
+    <tr>
+      <td>
         <code>MDR</code>
       </td>
       <td>
