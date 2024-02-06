@@ -18,9 +18,9 @@ class BSZParser(ParserProxy):
     class V1(BaseParser):
         _author_substitution_pattern: Pattern[str] = re.compile(r"FUNKE Mediengruppe")
         _paragraph_selector = XPath(
-            "//div[@class='article-body']//p[not(not(text()) or @rel='author' or em[@class='print'] or position()=1)]"
+            "//div[@class='article-body']//p[not(not(text()) or @rel='author' or em[@class='print'] or contains(@class, 'font-sans'))]"
         )
-        _summary_selector = XPath("//div[@class='article-body']//p[1]")
+        _summary_selector = XPath("//div[@class='article-body']//p[contains(@class, 'font-sans')]")
         _subheadline_selector = XPath(
             "//div[@class='article-body']//h3[not("
             "contains(text(), 'Alle Artikel der Serie')"
