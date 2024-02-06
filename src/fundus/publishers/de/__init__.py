@@ -1,5 +1,7 @@
 from datetime import datetime
 
+from dateutil.rrule import MONTHLY, rrule
+
 from fundus.publishers.base_objects import PublisherEnum, PublisherSpec
 from fundus.scraping.filter import regex_filter
 from fundus.scraping.html import NewsMap, RSSFeed, Sitemap
@@ -201,6 +203,12 @@ class DE(PublisherEnum):
         sources=[
             RSSFeed("https://www.braunschweiger-zeitung.de/rss"),
             NewsMap("https://www.braunschweiger-zeitung.de/sitemaps/news.xml"),
+        ]
+        + [
+            Sitemap(
+                f"https://www.braunschweiger-zeitung.de/sitemaps/archive/sitemap-{d.year}-{str(d.month).zfill(2)}-p00.xml.gz"
+            )
+            for d in reversed(list(rrule(MONTHLY, dtstart=datetime(2016, 9, 1), until=datetime.now())))
         ],
         parser=BSZParser,
     )
