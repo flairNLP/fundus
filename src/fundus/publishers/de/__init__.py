@@ -181,7 +181,11 @@ class DE(PublisherEnum):
     Bild = PublisherSpec(
         name="Bild",
         domain="https://www.bild.de/",
-        sources=[RSSFeed("https://www.bild.de/rssfeeds/vw-neu/vw-neu-32001674,view=rss2.bild.xml")],
+        sources=[
+            RSSFeed("https://www.bild.de/rssfeeds/vw-neu/vw-neu-32001674,view=rss2.bild.xml"),
+            NewsMap("https://www.bild.de/sitemap-news.xml"),
+            Sitemap("https://www.bild.de/sitemap-index.xml"),
+        ],
         parser=BildParser,
     )
 
