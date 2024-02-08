@@ -1,5 +1,5 @@
 import datetime
-from typing import List, Optional, Union
+from typing import List, Optional
 
 from lxml.cssselect import CSSSelector
 from lxml.etree import XPath
@@ -13,14 +13,24 @@ from fundus.parser.utility import (
 )
 
 
-class SZParser(ParserProxy):
+class BusinessInsiderParser(ParserProxy):
     class V1(BaseParser):
-        VALID_UNTIL = datetime.datetime(2024, 2, 1).date()
-        _paragraph_selector: Union[CSSSelector, XPath] = CSSSelector(
-            'main [itemprop="articleBody"] > p, ' "main .css-korpch > div > ul > li"
+        _summary_selector = CSSSelector("article div.bi-bulletpoints > p")
+        _subheadline_selector = CSSSelector("article h2")
+
+        _paragraph_selector = XPath(
+            """
+            //article 
+            //div[contains(@class, 'article-body')] 
+            //p[
+                not(
+                    ancestor::*[@class='bi-bulletpoints'] or
+                    mark[@class='has-inline-color has-cyan-bluish-gray-color'] or 
+                    @class='has-text-align-right'
+                )
+            ]
+            """
         )
-        _summary_selector: Union[CSSSelector, XPath] = CSSSelector("main [data-manual='teaserText']")
-        _subheadline_selector: Union[CSSSelector, XPath] = CSSSelector("main [itemprop='articleBody'] > h3")
 
         @attribute
         def body(self) -> ArticleBody:
@@ -45,15 +55,6 @@ class SZParser(ParserProxy):
 
         @attribute
         def topics(self) -> List[str]:
-            return generic_topic_parsing(self.precomputed.ld.bf_search("keywords"))
-
-    class V1_1(V1):
-        VALID_UNTIL = datetime.date.today()
-        _paragraph_selector = XPath(
-            "//div[@itemprop='articleBody']//p[@data-manual='paragraph'" " and not(contains(text(), '© dpa-infocom'))]"
-        )
-        _summary_selector = CSSSelector("main [data-manual='teaserText']")
-        _subheadline_selector = XPath(
-            "//div[@itemprop='articleBody']//h3[@data-manual='subheadline']|"
-            "//div[@itemprop='articleBody']//h2[@data-manual='subheadline']"
-        )
+            return generic_topic_parsing(self.precomputed.meta.get("keywords")) or generic_topic_parsing(
+                self.precomputed.ld.bf_search("keywords")
+            )
