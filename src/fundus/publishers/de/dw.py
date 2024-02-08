@@ -20,12 +20,12 @@ from fundus.parser.utility import (
 class DWParser(ParserProxy):
     class V2(BaseParser):
         VALID_UNTIL = datetime.date(2024, 1, 18)
-
-        # There is a little author line at the end of the nodes gathered by the paragraph selector,
-        # which seems to be rather hard to omit. Some examples:
-        # AR/jj (dpa, rtr, ap), kle/jj (kna, dpa, rtr, afp), pg/AR/kle (dpa, afp),
-        # pg/AR/haz (afp, dpa), kle/haz (dpa, rtr, afp)
-        _paragraph_selector = XPath("//div[contains(@class, 'rich-text')] /p[not(em) or text()]")
+        # https://regex101.com/r/uZLwyb/1
+        _author_regex = r"^([a-z]{2,3}\/|[A-Z]{2,3}\/)*([a-z]{2,3}|[A-Z]{2,3})\s\(([a-z]{2,3}, )*([a-z]{2,3})\)$"
+        _paragraph_selector = XPath(
+            f"//div[contains(@class, 'rich-text')] /p[not(em) or text() and not(re:test(text(), '{_author_regex}'))]",
+            namespaces={"re": "http://exslt.org/regular-expressions"},
+        )
         _summary_selector = CSSSelector("header > p")
         _subheadline_selector = CSSSelector("div.rich-text > h2")
 
