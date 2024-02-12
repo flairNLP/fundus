@@ -1,11 +1,14 @@
 from datetime import datetime
 
+from dateutil.rrule import MONTHLY, rrule
+
 from fundus.publishers.base_objects import PublisherEnum, PublisherSpec
 from fundus.scraping.filter import regex_filter
 from fundus.scraping.html import NewsMap, RSSFeed, Sitemap
 
 from .berliner_zeitung import BerlinerZeitungParser
 from .bild import BildParser
+from .braunschweiger_zeitung import BSZParser
 from .business_insider import BusinessInsiderParser
 from .die_welt import DieWeltParser
 from .die_zeit import DieZeitParser
@@ -174,7 +177,10 @@ class DE(PublisherEnum):
     Taz = PublisherSpec(
         name="Die Tageszeitung (taz)",
         domain="https://www.taz.de/",
-        sources=[NewsMap("https://taz.de/sitemap-google-news.xml"), Sitemap("https://taz.de/sitemap-index.xml")],
+        sources=[
+            NewsMap("https://taz.de/sitemap-google-news.xml"),
+            Sitemap("https://taz.de/sitemap-index.xml"),
+        ],
         parser=TazParser,
     )
 
@@ -194,6 +200,22 @@ class DE(PublisherEnum):
         domain="https://www.waz.de/",
         sources=[NewsMap("https://www.waz.de/sitemaps/news.xml")],
         parser=WAZParser,
+    )
+
+    BSZ = PublisherSpec(
+        name="Braunschweiger Zeitung",
+        domain="https://www.braunschweiger-zeitung.de/",
+        sources=[
+            RSSFeed("https://www.braunschweiger-zeitung.de/rss"),
+            NewsMap("https://www.braunschweiger-zeitung.de/sitemaps/news.xml"),
+        ]
+        + [
+            Sitemap(
+                f"https://www.braunschweiger-zeitung.de/sitemaps/archive/sitemap-{d.year}-{str(d.month).zfill(2)}-p00.xml.gz"
+            )
+            for d in reversed(list(rrule(MONTHLY, dtstart=datetime(2016, 9, 1), until=datetime.now())))
+        ],
+        parser=BSZParser,
     )
 
     BusinessInsider = PublisherSpec(
