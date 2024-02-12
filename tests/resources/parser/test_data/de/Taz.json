@@ -3,17 +3,6 @@
     "authors": [
       "Nicole Opitz"
     ],
-    "publishing_date": "2023-04-28 18:41:00+02:00",
-    "title": "Entwurf des Selbstbestimmungsgesetzes: Ein bisschen Fortschritt",
-    "topics": [
-      "Transgender",
-      "LGBTQIA-Community",
-      "Deutschland",
-      "Politik",
-      "Schwerpunkt",
-      "taz",
-      "tageszeitung"
-    ],
     "body": {
       "summary": [
         "Das alte, diskriminierende Transsexuellengesetz ist endlich bald Geschichte. Das neue Gesetz sollte nicht weiter verwässert werden."
@@ -39,6 +28,17 @@
           ]
         }
       ]
-    }
+    },
+    "publishing_date": "2023-04-28 18:41:00+02:00",
+    "title": "Entwurf des Selbstbestimmungsgesetzes: Ein bisschen Fortschritt",
+    "topics": [
+      "Transgender",
+      "LGBTQIA-Community",
+      "Deutschland",
+      "Politik",
+      "Schwerpunkt",
+      "taz",
+      "tageszeitung"
+    ]
   }
 }

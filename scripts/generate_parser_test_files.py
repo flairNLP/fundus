@@ -51,7 +51,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     # sort args.attributes for consistency
-    args.attributes = list(sorted(args.attributes)) or attributes_required_to_cover
+    args.attributes = sorted(set(args.attributes) or attributes_required_to_cover)
 
     basic_logger.setLevel(WARN)
 

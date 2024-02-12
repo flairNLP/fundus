@@ -3,20 +3,6 @@
     "authors": [
       "Oliver Kring"
     ],
-    "publishing_date": "2023-04-28 16:15:45.403000+02:00",
-    "title": "Einschlag in Elmshorn: Es war ein Meteorit ",
-    "topics": [
-      "Meteorit",
-      "Elmshorn",
-      "Einschlag",
-      "Meteoritenregen",
-      "Wissenschaft",
-      "NDR",
-      "Norddeutscher Rundfunk",
-      "Norddeutschland",
-      "Radio",
-      "Fernsehen"
-    ],
     "body": {
       "summary": [
         "Vor wenigen Tagen berichteten Anwohner in Elmshorn von einem Knall - das Dach eines Hauses wurde durchschlagen. Jetzt ist klar: Es waren Meteoriten, die über Elmshorn heruntergegangen sind."
@@ -55,6 +41,20 @@
           ]
         }
       ]
-    }
+    },
+    "publishing_date": "2023-04-28 16:15:45.403000+02:00",
+    "title": "Einschlag in Elmshorn: Es war ein Meteorit ",
+    "topics": [
+      "Meteorit",
+      "Elmshorn",
+      "Einschlag",
+      "Meteoritenregen",
+      "Wissenschaft",
+      "NDR",
+      "Norddeutscher Rundfunk",
+      "Norddeutschland",
+      "Radio",
+      "Fernsehen"
+    ]
   }
 }

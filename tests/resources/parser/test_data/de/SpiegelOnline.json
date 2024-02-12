@@ -3,14 +3,6 @@
     "authors": [
       "DER SPIEGEL"
     ],
-    "publishing_date": "2023-04-28 20:15:23+02:00",
-    "title": "Silicon Valley Bank: Federal Reserve räumt Versäumnisse bei Aufsicht ein",
-    "topics": [
-      "Wirtschaft",
-      "Unternehmen",
-      "USA",
-      "Banken"
-    ],
     "body": {
       "summary": [
         "Auf über 100 Seiten hat die Federal Reserve den Zusammenbruch der Silicon Valley Bank analysiert – und Mängel bei Überwachung und Regulierung festgestellt. Künftig müsse man schneller Risiken und Schwächen ausmachen können."
@@ -34,6 +26,14 @@
           ]
         }
       ]
-    }
+    },
+    "publishing_date": "2023-04-28 20:15:23+02:00",
+    "title": "Silicon Valley Bank: Federal Reserve räumt Versäumnisse bei Aufsicht ein",
+    "topics": [
+      "Wirtschaft",
+      "Unternehmen",
+      "USA",
+      "Banken"
+    ]
   }
 }

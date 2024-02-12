@@ -3,20 +3,6 @@
     "authors": [
       "David Straub"
     ],
-    "publishing_date": "2023-04-28 05:00:00+02:00",
-    "title": "Ist die Thüringer Bratwurst eine Illusion? Das harte Geschäft mit dem Tod",
-    "topics": [
-      "Nachrichten",
-      "Fleisch",
-      "Schwein",
-      "Schlachtung",
-      "Landstolz",
-      "Schmalkalden",
-      "Holland-Moritz",
-      "Rinder",
-      "Grafik",
-      "Zahlen"
-    ],
     "body": {
       "summary": [
         "Beim Fleischkonsum gehört Thüringen zu den Spitzenreitern - doch tatsächlich geschlachtet werden im Freistaat immer weniger Tiere. Naht das Ende der echten Thüringer Bratwurst? Zu Besuch beim mittelständischen Schlachtbetrieb \"Thüringer Landstolz\"."
@@ -106,6 +92,20 @@
           ]
         }
       ]
-    }
+    },
+    "publishing_date": "2023-04-28 05:00:00+02:00",
+    "title": "Ist die Thüringer Bratwurst eine Illusion? Das harte Geschäft mit dem Tod",
+    "topics": [
+      "Nachrichten",
+      "Fleisch",
+      "Schwein",
+      "Schlachtung",
+      "Landstolz",
+      "Schmalkalden",
+      "Holland-Moritz",
+      "Rinder",
+      "Grafik",
+      "Zahlen"
+    ]
   }
 }

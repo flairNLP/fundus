@@ -3,14 +3,6 @@
     "authors": [
       "Gopal Sharma"
     ],
-    "publishing_date": "2023-04-25 12:26:15+00:00",
-    "title": "Nepal says 'no proof' flydubai plane suffered bird strike",
-    "topics": [
-      "Aerospace & Defense",
-      "Business",
-      "Asia Pacific",
-      "World"
-    ],
     "body": {
       "summary": [
         "KATHMANDU,\r\n April 25 (Reuters) - Nepal's civil aviation authority disputed on \r\nTuesday whether a flydubai plane had been hit by a bird strike in Nepali\r\n airspace, calling the United Arab Emirates carrier's account of the \r\nincident \"misleading\"."
@@ -29,6 +21,14 @@
           ]
         }
       ]
-    }
+    },
+    "publishing_date": "2023-04-25 12:26:15+00:00",
+    "title": "Nepal says 'no proof' flydubai plane suffered bird strike",
+    "topics": [
+      "Aerospace & Defense",
+      "Business",
+      "Asia Pacific",
+      "World"
+    ]
   }
 }

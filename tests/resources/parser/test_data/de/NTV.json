@@ -3,14 +3,6 @@
     "authors": [
       "Juliane Rohr"
     ],
-    "publishing_date": "2023-04-28 18:11:01+02:00",
-    "title": "Judy Lybke, ganz und gar nicht eigenartig",
-    "topics": [
-      "Leben",
-      "Kunst",
-      "Berlin",
-      "KunstKultur"
-    ],
     "body": {
       "summary": [],
       "sections": [
@@ -46,6 +38,14 @@
           ]
         }
       ]
-    }
+    },
+    "publishing_date": "2023-04-28 18:11:01+02:00",
+    "title": "Judy Lybke, ganz und gar nicht eigenartig",
+    "topics": [
+      "Leben",
+      "Kunst",
+      "Berlin",
+      "KunstKultur"
+    ]
   }
 }

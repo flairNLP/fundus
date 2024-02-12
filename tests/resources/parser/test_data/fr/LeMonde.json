@@ -3,17 +3,6 @@
     "authors": [
       "Le Monde"
     ],
-    "publishing_date": "2023-08-30 12:52:08+00:00",
-    "title": "Sophie Binet met en garde Emmanuel Macron sur la « gravité de la situation dans le pays »",
-    "topics": [
-      "Économie",
-      "Politique",
-      "Emmanuel Macron",
-      "Syndicats",
-      "Social",
-      "Économie française",
-      "CGT"
-    ],
     "body": {
       "summary": [],
       "sections": [
@@ -28,6 +17,17 @@
           ]
         }
       ]
-    }
+    },
+    "publishing_date": "2023-08-30 12:52:08+00:00",
+    "title": "Sophie Binet met en garde Emmanuel Macron sur la « gravité de la situation dans le pays »",
+    "topics": [
+      "Économie",
+      "Politique",
+      "Emmanuel Macron",
+      "Syndicats",
+      "Social",
+      "Économie française",
+      "CGT"
+    ]
   }
 }

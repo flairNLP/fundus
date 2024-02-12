@@ -3,12 +3,6 @@
     "authors": [
       "Ryan Devereaux"
     ],
-    "publishing_date": "2023-04-28 15:54:24+00:00",
-    "title": "An Insider’s View of the Montana Legislature’s Attacks on Trans Rep. Zooey Zephyr",
-    "topics": [
-      "Justice",
-      "Politics"
-    ],
     "body": {
       "summary": [
         "The ACLU’s Keegan Medrano, a queer, Native advocate in Helena, said Zephyr’s expulsion was the culmination of months of attacks from Montana’s far right."
@@ -43,6 +37,12 @@
           ]
         }
       ]
-    }
+    },
+    "publishing_date": "2023-04-28 15:54:24+00:00",
+    "title": "An Insider’s View of the Montana Legislature’s Attacks on Trans Rep. Zooey Zephyr",
+    "topics": [
+      "Justice",
+      "Politics"
+    ]
   }
 }

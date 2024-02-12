@@ -3,13 +3,6 @@
     "authors": [
       "Christin Jordan"
     ],
-    "publishing_date": "2023-04-28 17:23:42.981000+02:00",
-    "title": "Ausschuss zur Ahrtal-Flut: Zwei Rücktritte - und viele offene Fragen",
-    "topics": [
-      "Ahrtal",
-      "Flut",
-      "Untersuchungsausschuss"
-    ],
     "body": {
       "summary": [
         "        Nach 42 Sitzungen hat der Untersuchungsausschuss zur Flutkatastrophe im Ahrtal die Beweisaufnahme beendet. Was bleibt - außer zwei Rücktritten und schweren Vorwürfen gegen Verantwortliche? \n    "
@@ -60,6 +53,13 @@
           ]
         }
       ]
-    }
+    },
+    "publishing_date": "2023-04-28 17:23:42.981000+02:00",
+    "title": "Ausschuss zur Ahrtal-Flut: Zwei Rücktritte - und viele offene Fragen",
+    "topics": [
+      "Ahrtal",
+      "Flut",
+      "Untersuchungsausschuss"
+    ]
   }
 }

@@ -3,20 +3,6 @@
     "authors": [
       "FOCUS online"
     ],
-    "publishing_date": "2023-04-28 17:25:31+00:00",
-    "title": "Lego feiert Star-Wars-Tag: Alle Angebote im Überblick",
-    "topics": [
-      "Lego",
-      "Helm",
-      "Diorama",
-      "Prominenz",
-      "Star Wars Day",
-      "Rabatt",
-      "Provision",
-      "Kalender",
-      "Death Metal",
-      "Jedi"
-    ],
     "body": {
       "summary": [
         "Bald heißt es wieder „May the 4th be with you“! Lego wartet zum Star-Wars-Tag am 4. Mai schon im Vorfeld mit zahlreichen Angeboten auf, die sich vor allem an erwachsene Fans der Science-Fiction-Saga richten. Neben neuen Modellen gibt es im Online-Shop von Lego mehrere Gratiszugaben und sogar ein Gewinnspiel zu entdecken."
@@ -62,6 +48,20 @@
           ]
         }
       ]
-    }
+    },
+    "publishing_date": "2023-04-28 17:25:31+00:00",
+    "title": "Lego feiert Star-Wars-Tag: Alle Angebote im Überblick",
+    "topics": [
+      "Lego",
+      "Helm",
+      "Diorama",
+      "Prominenz",
+      "Star Wars Day",
+      "Rabatt",
+      "Provision",
+      "Kalender",
+      "Death Metal",
+      "Jedi"
+    ]
   }
 }

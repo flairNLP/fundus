@@ -3,6 +3,17 @@
     "authors": [
       "Florian Peters"
     ],
+    "body": {
+      "summary": [
+        "\t\t\t\tWitten. \n\t\t\t\tZum zweiten Mal sind die Food-Trucks nach Witten gekommen. Die Besucher konnten sich über alle Kontinente schlemmen. Was gab es auf die Gabel?\n\t\t\t"
+      ],
+      "sections": [
+        {
+          "headline": [],
+          "paragraphs": []
+        }
+      ]
+    },
     "publishing_date": "2023-06-19 12:52:00+02:00",
     "title": "Hitze dämpft den Appetit beim Street Food Festival in Witten",
     "topics": [
@@ -16,17 +27,6 @@
       "Kultur",
       "Reise",
       "Fotostrecke"
-    ],
-    "body": {
-      "summary": [
-        "\t\t\t\tWitten. \n\t\t\t\tZum zweiten Mal sind die Food-Trucks nach Witten gekommen. Die Besucher konnten sich über alle Kontinente schlemmen. Was gab es auf die Gabel?\n\t\t\t"
-      ],
-      "sections": [
-        {
-          "headline": [],
-          "paragraphs": []
-        }
-      ]
-    }
+    ]
   }
 }

@@ -1,18 +1,7 @@
 {
   "V1": {
-    "alternative_description": "Rachel Riederer writes about geoengineering and the idea of using glass bubbles to deflect light away from Arctic ice to slow climate change.",
-    "alternative_title": "Rachel Riederer writes about geoengineering and the idea of using glass bubbles to deflect light away from Arctic ice to slow climate change.",
     "authors": [
       "Rachel Riederer"
-    ],
-    "description": "Engineers might be able to protect Arctic ice by coating it with tiny glass bubbles. Should they?",
-    "publishing_date": "2023-04-25 06:00:00-04:00",
-    "section": "the control of nature",
-    "title": "A Heat Shield for the Most Important Ice on Earth",
-    "topics": [
-      "the arctic",
-      "ice",
-      "climate change"
     ],
     "body": {
       "summary": [],
@@ -57,6 +46,13 @@
           ]
         }
       ]
-    }
+    },
+    "publishing_date": "2023-04-25 06:00:00-04:00",
+    "title": "A Heat Shield for the Most Important Ice on Earth",
+    "topics": [
+      "the arctic",
+      "ice",
+      "climate change"
+    ]
   }
 }
