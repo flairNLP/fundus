@@ -1,9 +1,7 @@
-from abc import ABC
+from abc import ABC, abstractmethod
 from dataclasses import dataclass, fields
 from typing import (
     Any,
-    Callable,
-    ClassVar,
     Collection,
     Dict,
     Iterable,
@@ -16,7 +14,7 @@ from typing import (
     overload,
 )
 
-from typing_extensions import TypeAlias
+from typing_extensions import Self, TypeAlias
 
 from fundus.logging import basic_logger
 
@@ -202,24 +200,7 @@ class TextSequence(Sequence[str]):
 
 @dataclass
 class TextSequenceTree(ABC):
-    """Base class to traverse and build trees of TextSequence.
-
-    The ClassVar __transformation__ is needed to serialize the tree. There must be an entry with type
-    Tuple[Callable, Callable] for each field with the first callable beeing the serialization and
-    the second the deserialization of that specific field.
-
-    Examples:
-        >>> import datetime
-        >>> class Tree(TextSequenceTree):
-        >>>     head: TextSequence
-        >>>     tail: TextSequence
-        >>>
-        >>>     __transformation__ = {"head": (list, TextSequence), "tail": (list, TextSequence)}
-
-
-    """
-
-    __transformation__: ClassVar[Dict[str, Tuple[Callable[[Any], Any], Callable[[Any], Any]]]]
+    """Base class to traverse and build trees of TextSequence."""
 
     def as_text_sequence(self) -> TextSequence:
         texts = [text for tl in self.df_traversal() for text in tl]
@@ -245,20 +226,14 @@ class TextSequenceTree(ABC):
         for value in self:
             yield from recursion(value)
 
+    @abstractmethod
     def serialize(self) -> Dict[str, Any]:
-        serialized = {}
-        for field in fields(self):
-            name = field.name
-            serialized[name] = self.__transformation__[name][0](getattr(self, name))
-        return serialized
+        pass
 
     @classmethod
-    def deserialize(cls, obj: Dict[str, Any]) -> "TextSequenceTree":
-        kwargs = {}
-        for name, value in obj.items():
-            kwargs[name] = cls.__transformation__[name][1](value)
-        # noinspection PyArgumentList
-        return cls(**kwargs)
+    @abstractmethod
+    def deserialize(cls, serialized: Dict[str, Any]) -> Self:
+        pass
 
     def __iter__(self) -> Iterator[Any]:
         field_values = [getattr(self, f.name) for f in fields(self)]
@@ -276,7 +251,15 @@ class ArticleSection(TextSequenceTree):
     headline: TextSequence
     paragraphs: TextSequence
 
-    __transformation__ = {"headline": (list, TextSequence), "paragraphs": (list, TextSequence)}
+    def serialize(self) -> Dict[str, Any]:
+        return {
+            "headline": list(self.headline),
+            "paragraphs": list(self.paragraphs),
+        }
+
+    @classmethod
+    def deserialize(cls, serialized: Dict[str, Any]) -> Self:
+        return cls(headline=TextSequence(serialized["headline"]), paragraphs=TextSequence(serialized["paragraphs"]))
 
 
 @dataclass
@@ -284,10 +267,15 @@ class ArticleBody(TextSequenceTree):
     summary: TextSequence
     sections: List[ArticleSection]
 
-    __transformation__ = {
-        "summary": (list, TextSequence),
-        "sections": (
-            lambda sections: [section.serialize() for section in sections],
-            lambda sections: [ArticleSection.deserialize(section) for section in sections],
-        ),
-    }
+    def serialize(self) -> Dict[str, Any]:
+        return {
+            "summary": list(self.summary),
+            "sections": [section.serialize() for section in self.sections],
+        }
+
+    @classmethod
+    def deserialize(cls, serialized: Dict[str, Any]) -> Self:
+        return cls(
+            summary=TextSequence(serialized["summary"]),
+            sections=[ArticleSection.deserialize(section) for section in serialized["sections"]],
+        )
