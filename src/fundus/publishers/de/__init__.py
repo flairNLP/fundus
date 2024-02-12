@@ -6,6 +6,7 @@ from fundus.scraping.html import NewsMap, RSSFeed, Sitemap
 
 from .berliner_zeitung import BerlinerZeitungParser
 from .bild import BildParser
+from .business_insider import BusinessInsiderParser
 from .die_welt import DieWeltParser
 from .die_zeit import DieZeitParser
 from .dw import DWParser
@@ -180,7 +181,11 @@ class DE(PublisherEnum):
     Bild = PublisherSpec(
         name="Bild",
         domain="https://www.bild.de/",
-        sources=[RSSFeed("https://www.bild.de/rssfeeds/vw-neu/vw-neu-32001674,view=rss2.bild.xml")],
+        sources=[
+            RSSFeed("https://www.bild.de/rssfeeds/vw-neu/vw-neu-32001674,view=rss2.bild.xml"),
+            NewsMap("https://www.bild.de/sitemap-news.xml"),
+            Sitemap("https://www.bild.de/sitemap-index.xml"),
+        ],
         parser=BildParser,
     )
 
@@ -189,4 +194,14 @@ class DE(PublisherEnum):
         domain="https://www.waz.de/",
         sources=[NewsMap("https://www.waz.de/sitemaps/news.xml")],
         parser=WAZParser,
+    )
+
+    BusinessInsider = PublisherSpec(
+        name="Business Insider",
+        domain="https://www.businessinsider.de/",
+        sources=[
+            NewsMap("https://www.businessinsider.de/news-sitemap.xml"),
+            Sitemap("https://www.businessinsider.de/sitemap_index.xml"),
+        ],
+        parser=BusinessInsiderParser,
     )

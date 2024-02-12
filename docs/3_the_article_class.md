@@ -45,7 +45,7 @@ You can find those attributes under the [**supported publisher**](supported_publ
 
 Sometimes an attribute listed in the attribute guidelines isn't supported at all by a specific parser.
 You can find this information under the `Missing Attributes` tab within the supported publisher tables.
-There is also a built-in search mechanic you can learn about [here](4_how_to_search_for_publishers.md)
+There is also a built-in search mechanic you can learn about [here](5_how_to_search_for_publishers)
 
 ## The articles' body
 
@@ -137,4 +137,4 @@ Should print this:
 en
 ``
 
-In the [**next section**](3_how_to_filter_articles.md) we will show you how to filter articles.
+In the [**next section**](4_how_to_filter_articles.md) we will show you how to filter articles.

@@ -65,7 +65,7 @@ class BaseCrawler:
         self,
         max_articles: Optional[int] = None,
         error_handling: Literal["suppress", "catch", "raise"] = "suppress",
-        only_complete: Union[bool, ExtractionFilter] = Requires("title, body", "publishing_date"),
+        only_complete: Union[bool, ExtractionFilter] = Requires("title", "body", "publishing_date"),
         delay: Optional[Union[float, Delay]] = None,
         url_filter: Optional[URLFilter] = None,
         only_unique: bool = True,
@@ -232,7 +232,7 @@ class Crawler(BaseCrawler):
 
         Args:
             *publishers (Union[PublisherEnum, Type[PublisherEnum]]): The publishers to crawl.
-            restrict_sources_to (Optional[List[Type[URLSource]]]): Let's you restrict
+            restrict_sources_to (Optional[List[Type[URLSource]]]): Lets you restrict
                 sources defined in the publisher specs. If set, only articles from given source types
                 will be yielded.
         """

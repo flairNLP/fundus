@@ -85,4 +85,5 @@ for article in crawler.crawl():
     print(article)
 ````
 
-In the [next section](2_the_article_class.md) we will introduce you to the `Article` class.
+
+In the [next](2_crawl_from_cc_news.md) section we will show you how to crawl articles from the CC-NEWS dataset.

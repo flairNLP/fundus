@@ -276,7 +276,13 @@ class ParserProxy(ABC):
 
         parsed_date = crawl_date.date() if isinstance(crawl_date, datetime) else crawl_date
         parser_cache: _ParserCache
-        _, parser_cache = next(itertools.dropwhile(lambda x: x[0] < parsed_date, self._parser_mapping.items()))
+        try:
+            _, parser_cache = next(itertools.dropwhile(lambda x: x[0] < parsed_date, self._parser_mapping.items()))
+        except StopIteration:
+            raise ValueError(
+                f"Couldn't find a fitting parser valid at date {parsed_date}. "
+                f"Last valid date is {self._get_latest_cache()().VALID_UNTIL}"
+            )
         return parser_cache()
 
     def __iter__(self) -> Iterator[Type[BaseParser]]:

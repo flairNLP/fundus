@@ -40,6 +40,8 @@ class LinkedDataMapping:
     In this context an LD is represented as a python dict.
     """
 
+    __UNKNOWN_TYPE__ = "UNKNOWN_TYPE"
+
     def __init__(self, lds: Iterable[Dict[str, Any]] = ()):
         for ld in lds:
             if graph := ld.get("@graph"):
@@ -62,7 +64,9 @@ class LinkedDataMapping:
             else:
                 self.__dict__[ld_type] = ld
         else:
-            raise ValueError(f"Found no type for LD")
+            if not self.__dict__.get(self.__UNKNOWN_TYPE__):
+                self.__dict__[self.__UNKNOWN_TYPE__] = []
+            self.__dict__[self.__UNKNOWN_TYPE__].append(ld)
 
     def get(self, ld_type: str, default: Any = None) -> Optional[LDMappingValue]:
         """
