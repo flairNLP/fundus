@@ -1,7 +1,6 @@
 import datetime
 import gzip
 import json
-from abc import ABC
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Callable, Dict, Generic, Optional, Type, TypeVar
@@ -95,25 +94,21 @@ class ExtractionEncoder(json.JSONEncoder):
         return json.JSONEncoder.default(self, obj)
 
 
-class CustomDecoder(json.JSONDecoder, ABC):
-    transformations: Dict[str, Callable[[Any], Any]]
+class ExtractionDecoder(json.JSONDecoder):
+    deserialization_functions: Dict[str, Callable[[Any], Any]] = {
+        "crawl_date": datetime.datetime.fromisoformat,
+        "publishing_date": datetime.datetime.fromisoformat,
+        "body": ArticleBody.deserialize,
+    }
 
     def __init__(self, *args, **kwargs):
         json.JSONDecoder.__init__(self, object_hook=self.object_hook, *args, **kwargs)
 
     def object_hook(self, obj_dict):
-        for key, transformation in self.transformations.items():
+        for key, deserialization_function in self.deserialization_functions.items():
             if (serialized_value := obj_dict.get(key)) is not None:
-                obj_dict[key] = transformation(serialized_value)
+                obj_dict[key] = deserialization_function(serialized_value)
         return obj_dict
-
-
-class ExtractionDecoder(CustomDecoder):
-    transformations: Dict[str, Callable[[Any], Any]] = {
-        "crawl_date": lambda timestamp: datetime.datetime.fromisoformat(timestamp),
-        "publishing_date": lambda timestamp: datetime.datetime.fromisoformat(timestamp),
-        "body": lambda body: ArticleBody.deserialize(body),
-    }
 
 
 @dataclass
