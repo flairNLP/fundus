@@ -132,10 +132,10 @@ def get_meta_content(tree: lxml.html.HtmlElement) -> Dict[str, str]:
     return meta
 
 
-def strip_nodes_to_text(text_nodes: List[lxml.html.HtmlElement]) -> Optional[str]:
+def strip_nodes_to_text(text_nodes: List[lxml.html.HtmlElement], join_on: str = "\n\n") -> Optional[str]:
     if not text_nodes:
         return None
-    return "\n\n".join(([re.sub(r"\n+", " ", node.text_content()) for node in text_nodes])).strip()
+    return join_on.join(([re.sub(r"\n+", " ", node.text_content()) for node in text_nodes])).strip()
 
 
 def apply_substitution_pattern_over_list(
