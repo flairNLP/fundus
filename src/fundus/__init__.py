@@ -2,6 +2,7 @@ import pathlib
 import sys
 
 from fundus.publishers import PublisherCollection
+from fundus.scraping.common_crawl import CCNewsCrawler
 from fundus.scraping.filter import Requires
 from fundus.scraping.html import NewsMap, RSSFeed, Sitemap
 from fundus.scraping.pipeline import BaseCrawler, Crawler
@@ -9,7 +10,16 @@ from fundus.scraping.pipeline import BaseCrawler, Crawler
 __module_path__ = pathlib.Path(__file__).parent
 __development_base_path__ = __module_path__.parents[1]
 
-__all__ = ["Crawler", "BaseCrawler", "PublisherCollection", "Requires", "RSSFeed", "Sitemap", "NewsMap"]
+__all__ = [
+    "Crawler",
+    "BaseCrawler",
+    "CCNewsCrawler",
+    "PublisherCollection",
+    "Requires",
+    "RSSFeed",
+    "Sitemap",
+    "NewsMap",
+]
 
 # On a Windows machines, when executing `BaseCrawler.crawl` from our sync API two times,
 # Python throws an `RuntimeError: Event loop is closed exception` during Python's clean-up phase.

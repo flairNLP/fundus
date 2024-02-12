@@ -196,4 +196,4 @@ crawler = Crawler(PublisherCollection.us, restrict_sources_to=[NewsMap])
 The `crawl()` method supports functionality to filter out articles with URLs previously encountered in this run.
 You can alter this behavior by setting the `only_unique` parameter.
 
-In the [next section](4_how_to_search_for_publishers.md) we will show you how to search through publishers in the `PublisherCollection`.
+In the [next section](5_how_to_search_for_publishers.md) we will show you how to search through publishers in the `PublisherCollection`.
