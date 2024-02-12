@@ -167,7 +167,13 @@ class TestParser:
             # test coverage
             supported_attrs = set(versioned_parser.attributes().names)
             missing_attrs = attributes_required_to_cover & supported_attrs - set(version_data.keys())
-            assert not missing_attrs, f"Test JSON does not cover the following attribute(s): {missing_attrs}"
+            assert (
+                not missing_attrs
+            ), f"Test JSON for {version_name} does not cover the following attribute(s): {missing_attrs}"
+
+            assert list(version_data.keys()) == sorted(
+                attributes_required_to_cover & supported_attrs
+            ), f"Test JSON for {version_name} is not in alphabetical order"
 
             assert (html := html_mapping.get(versioned_parser)), f"Missing test HTML for parser version {version_name}"
             # compare data
