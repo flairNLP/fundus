@@ -23,7 +23,7 @@ class DWParser(ParserProxy):
         # https://regex101.com/r/uZLwyb/1
         _author_regex = r"^([a-z]{2,3}\/|[A-Z]{2,3}\/)*([a-z]{2,3}|[A-Z]{2,3})\s\(([a-z]{2,3}, )*([a-z]{2,3})\)$"
         _paragraph_selector = XPath(
-            f"//div[contains(@class, 'rich-text')] /p[not(em) or text() and not(re:test(text(), '{_author_regex}'))]",
+            f"//div[contains(@class, 'rich-text')] /p[text() and not(re:test(text(), '{_author_regex}'))]",
             namespaces={"re": "http://exslt.org/regular-expressions"},
         )
         _summary_selector = CSSSelector("header > p")
