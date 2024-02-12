@@ -20,8 +20,8 @@ from fundus.parser.utility import (
 class DWParser(ParserProxy):
     class V2(BaseParser):
         VALID_UNTIL = datetime.date(2024, 1, 18)
-        # https://regex101.com/r/uZLwyb/1
-        _author_regex = r"^([a-z]{2,3}\/|[A-Z]{2,3}\/)*([a-z]{2,3}|[A-Z]{2,3})\s\(([a-z]{2,3}, )*([a-z]{2,3})\)$"
+        # https://regex101.com/r/Xsadk5/1
+        _author_regex = r"^([A-z]{2,3}\/)*([A-z]{2,3})\s\([A-z\s,\d]*\)$"
         _paragraph_selector = XPath(
             f"//div[contains(@class, 'rich-text')] /p[text() and not(re:test(text(), '{_author_regex}'))]",
             namespaces={"re": "http://exslt.org/regular-expressions"},
