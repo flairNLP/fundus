@@ -20,7 +20,15 @@ class HeiseParser(ParserProxy):
         _subheadline_selector = XPath("//article[not(@data-component='TeaserContainer')]//h3[@class='subheading']")
         _paragraph_selector = XPath(
             "//div[@class='article-layout__content article-content']//p[not(@class"
-            " or (contains(span, '(') and contains(a, mailto)))]"
+            " or ((string-length(text()) < 3) and (contains(text(), '(') or contains(span, '(')))"
+            " or contains(text(), '=== Anzeige / Sponsorenhinweis')"
+            " or contains(text(), 'Tipp: Wir sind bei WhatsApp!')"
+            " or contains(a, 'heise+ abonnieren')"
+            " or contains(text(), '► '))"
+            " or @class='antwort rte__abs--antwort'"
+            " or @class='frage rte__abs--frage'] "
+            " | //div[@class='article-layout__content article-content']//ul["
+            "@class='rte__list rte__list--unordered' or @class='boxtext']"
         )
 
         @attribute
@@ -47,7 +55,3 @@ class HeiseParser(ParserProxy):
         @attribute
         def topics(self) -> List[str]:
             return generic_topic_parsing(self.precomputed.meta.get("keywords"))
-
-        @attribute(validate=False)
-        def free_access(self) -> bool:
-            return self.precomputed.ld.bf_search("isAccessibleForFree") == 1
