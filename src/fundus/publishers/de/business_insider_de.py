@@ -13,7 +13,7 @@ from fundus.parser.utility import (
 )
 
 
-class BusinessInsiderParser(ParserProxy):
+class BusinessInsiderDEParser(ParserProxy):
     class V1(BaseParser):
         _summary_selector = CSSSelector("article div.bi-bulletpoints > p")
         _subheadline_selector = CSSSelector("article h2")

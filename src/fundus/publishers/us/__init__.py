@@ -3,6 +3,7 @@ from fundus.scraping.filter import inverse, regex_filter
 from fundus.scraping.html import NewsMap, RSSFeed, Sitemap
 
 from .ap_news import APNewsParser
+from .business_insider import BusinessInsiderParser
 from .cnbc import CNBCParser
 from .fox_news import FoxNewsParser
 from .free_beacon import FreeBeaconParser
@@ -141,4 +142,14 @@ class US(PublisherEnum):
         domain="https://www.latimes.com/",
         sources=[Sitemap("https://www.latimes.com/sitemap.xml"), NewsMap("https://www.latimes.com/news-sitemap.xml")],
         parser=LATimesParser,
+    )
+
+    BusinessInsider = PublisherSpec(
+        name="Business Insider",
+        domain="https://www.businessinsider.com/",
+        sources=[
+            NewsMap("https://www.businessinsider.com/sitemap/google-news.xml"),
+            Sitemap("https://www.businessinsider.com/sitemap/2024-01.xml"),
+        ],
+        parser=BusinessInsiderParser,
     )
