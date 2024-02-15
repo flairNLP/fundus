@@ -56,7 +56,7 @@ jobs:
 
     environment:
       name: testpypi
-      url: https://test.pypi.org/p/<package-name>fundus
+      url: https://test.pypi.org/p/fundus
     permissions:
       id-token: write
 
