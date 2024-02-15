@@ -1,9 +1,8 @@
 import pathlib
-import sys
 
 from fundus.publishers import PublisherCollection
+from fundus.scraping.crawler import CCNewsCrawler, Crawler, CrawlerBase
 from fundus.scraping.filter import Requires
-from fundus.scraping.crawler import CrawlerBase, Crawler, CCNewsCrawler
 from fundus.scraping.url import NewsMap, RSSFeed, Sitemap
 
 __module_path__ = pathlib.Path(__file__).parent

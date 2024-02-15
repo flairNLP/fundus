@@ -3,7 +3,7 @@ from __future__ import annotations
 import gzip
 import os
 import re
-from abc import abstractmethod, ABC
+from abc import ABC, abstractmethod
 from datetime import datetime
 from functools import lru_cache, partial, wraps
 from multiprocessing import Manager

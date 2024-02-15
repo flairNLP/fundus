@@ -3,15 +3,7 @@ import itertools
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from functools import cached_property
-from typing import (
-    Callable,
-    ClassVar,
-    Dict,
-    Iterable,
-    Iterator,
-    List,
-    Optional,
-)
+from typing import Callable, ClassVar, Dict, Iterable, Iterator, List, Optional
 
 import feedparser
 import lxml.html
