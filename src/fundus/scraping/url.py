@@ -4,7 +4,6 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from functools import cached_property
 from typing import (
-    AsyncIterator,
     Callable,
     ClassVar,
     Dict,
