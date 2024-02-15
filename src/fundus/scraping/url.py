@@ -104,8 +104,8 @@ class Sitemap(URLSource):
     _sitemap_selector: ClassVar[XPath] = CSSSelector("sitemap > loc")
     _url_selector: ClassVar[XPath] = CSSSelector("url > loc")
 
-    def __iter__(self) -> AsyncIterator[str]:
-        def yield_recursive(sitemap_url: str) -> AsyncIterator[str]:
+    def __iter__(self) -> Iterator[str]:
+        def yield_recursive(sitemap_url: str) -> Iterator[str]:
             session = session_handler.get_session()
             if not validators.url(sitemap_url):
                 basic_logger.info(f"Skipped sitemap '{sitemap_url}' because the URL is malformed")

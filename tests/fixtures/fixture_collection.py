@@ -72,7 +72,7 @@ def publisher_enum_with_sitemaps(parser_proxy_with_version):
 
 
 @pytest.fixture
-def collection_with_validate_publisher_enum(publisher_enum_with_news_map):
+def collection_with_valid_publisher_enum(publisher_enum_with_news_map):
     class CollectionWithValidatePublisherEnum(metaclass=PublisherCollectionMeta):
         pub = publisher_enum_with_news_map
 

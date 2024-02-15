@@ -3,7 +3,7 @@ from __future__ import annotations
 import gzip
 import os
 import re
-from abc import abstractmethod
+from abc import abstractmethod, ABC
 from datetime import datetime
 from functools import lru_cache, partial, wraps
 from multiprocessing import Manager
@@ -13,7 +13,6 @@ from queue import Empty, Queue
 from typing import (
     Any,
     Callable,
-    Dict,
     Generic,
     Iterator,
     List,
@@ -41,7 +40,7 @@ from fundus.scraping.article import Article
 from fundus.scraping.delay import Delay
 from fundus.scraping.filter import ExtractionFilter, Requires, URLFilter
 from fundus.scraping.html import CCNewsSource
-from fundus.scraping.scraper import CCNewsScraper, Scraper
+from fundus.scraping.scraper import CCNewsScraper, WebScraper
 from fundus.scraping.url import URLSource
 
 _T = TypeVar("_T")
@@ -112,46 +111,15 @@ def pool_queue_iter(handle: MapResult[Any], queue: Queue[_T]) -> Iterator[_T]:
             return
 
 
-class BaseCrawler:
-    def __init__(
-        self,
-        pool_factory: Type[Pool],
-        processes: int,
-        args: Tuple[_T, ...],
-        kwargs: Dict[str, Any],
-    ):
-        self._pool_factory = pool_factory
-        self._args = args
-        self._kwargs = kwargs
-        self.processes = os.cpu_count() or 0 if processes == -1 else processes
-
+class CrawlerBase(ABC):
     @abstractmethod
-    def _fetch_articles(self, *args, **kwargs) -> Iterator[Article]:
-        raise NotImplementedError
-
-    @staticmethod
-    def _single_crawl(args: Tuple[_T, ...], article_task: Callable[[_T], Iterator[Article]]) -> Iterator[Article]:
-        for arg in args:
-            yield from article_task(arg)
-
-    def _parallel_crawl(
-        self, args: Tuple[_T, ...], article_task: Callable[[_T], Iterator[Article]]
+    def _build_article_iterator(
+        self,
+        error_handling: Literal["suppress", "catch", "raise"],
+        extraction_filter: Optional[ExtractionFilter],
+        url_filter: Optional[URLFilter],
     ) -> Iterator[Article]:
-        # As one could think, because we're downloading a bunch of files, this task is IO-bound, but it is actually
-        # process-bound. The reason is that we stream the data and process it on the fly rather than downloading all
-        # files and processing them afterward. Therefore, we utilize multiprocessing here instead of multithreading.
-        with Manager() as manager, self._pool_factory(processes=min(self.processes, len(args))) as pool:
-            article_queue: Queue[Article] = manager.Queue()
-
-            # Because multiprocessing.Pool does not support iterators as targets,
-            # we wrap the article_task to write the articles to a queue instead of returning them directly.
-            wrapped_article_task: Callable[[str], None] = queue_wrapper(article_queue, article_task)
-
-            # To avoid restricting the article_task to use only pickleable objects, we serialize it using dill.
-            serialized_article_task = dill_wrapper(wrapped_article_task)
-
-            # Finally, we build an iterator around the queue, exhausting the queue until the pool is finished.
-            yield from pool_queue_iter(pool.map_async(serialized_article_task, args), article_queue)
+        raise NotImplementedError
 
     def crawl(
         self,
@@ -177,10 +145,6 @@ class BaseCrawler:
                 protocol as an extraction filter or use a boolean. If False, all articles will be yielded,
                 if True, only those with all attributes extracted. Defaults to ExtractionFilter letting
                 through all articles with at least title, body, and publishing_date set.
-            delay (Optional[Union[float, fundus.scraping.delay.Delay]]): Set a delay time in seconds to be used between article
-                batches. You can set a delay directly using float or any callable satisfying the Delay
-                protocol. If set to None, no delay will be used between batches. See Delay for more
-                information. Defaults to None.
             url_filter (Optional[URLFilter]): A callable object satisfying the URLFilter protocol to skip
                 URLs before download. This filter applies on both requested and responded URL. Defaults to None.
             only_unique (bool): If set to True, articles yielded will be unique on the responded URL.
@@ -210,21 +174,8 @@ class BaseCrawler:
 
         response_cache: Set[str] = set()
 
-        article_task: Callable[[str], Iterator[Article]] = partial(
-            self._fetch_articles,
-            error_handling=error_handling,
-            extraction_filter=build_extraction_filter(),
-            url_filter=url_filter,
-            **self._kwargs,
-        )
-
-        if self.processes == 0:
-            article_iter = self._single_crawl(self._args, article_task)
-        else:
-            article_iter = self._parallel_crawl(self._args, article_task)
-
         article_idx = 0
-        for article in article_iter:
+        for article in self._build_article_iterator(error_handling, build_extraction_filter(), url_filter):
             if not only_unique or article.html.responded_url not in response_cache:
                 response_cache.add(article.html.responded_url)
                 article_idx += 1
@@ -233,12 +184,12 @@ class BaseCrawler:
                 break
 
 
-class Crawler(BaseCrawler):
+class Crawler(CrawlerBase):
     def __init__(
         self,
         *publishers: Union[PublisherEnum, Type[PublisherEnum], Type[PublisherCollection]],
         restrict_sources_to: Optional[List[Type[URLSource]]] = None,
-        delay: Optional[Union[float, Delay]] = 1.,
+        delay: Optional[Union[float, Delay]] = 1.0,
         threading: bool = True,
     ):
         """Fundus base class for crawling articles from the web.
@@ -263,43 +214,78 @@ class Crawler(BaseCrawler):
 
         if not publishers:
             raise ValueError("param <publishers> of <Crawler.__init__> has to be non empty")
-        collapsed_publishers = tuple(more_itertools.collapse(publishers))
 
+        self.publishers = tuple(more_itertools.collapse(publishers))
+        self.restrict_sources_to = restrict_sources_to
+        self.delay = delay
+        self.threading = threading
+
+    def _fetch_articles(
+        self,
+        publisher: PublisherEnum,
+        error_handling: Literal["suppress", "catch", "raise"],
+        extraction_filter: Optional[ExtractionFilter] = None,
+        url_filter: Optional[URLFilter] = None,
+    ) -> Iterator[Article]:
         def build_delay() -> Optional[Delay]:
-            if isinstance(delay, float):
+            if isinstance(self.delay, float):
 
                 def constant_delay() -> float:
-                    return delay  # type: ignore[return-value]
+                    return self.delay  # type: ignore[return-value]
 
                 return constant_delay
 
-            elif isinstance(delay, Delay):
-                return delay
+            elif isinstance(self.delay, Delay):
+                return self.delay
 
             else:
                 raise TypeError("param <delay> of <Crawler.__init__>")
 
-        super().__init__(
-            pool_factory=ThreadPool,
-            processes=len(collapsed_publishers) if threading else 0,
-            args=collapsed_publishers,
-            kwargs={"delay": build_delay(), "restrict_sources_to": restrict_sources_to},
-        )
-
-    @staticmethod
-    def _fetch_articles(
-        publisher: PublisherEnum,
-        error_handling: Literal["suppress", "catch", "raise"],
-        delay: Optional[Delay] = None,
-        restrict_sources_to: Optional[List[Type[URLSource]]] = None,
-        extraction_filter: Optional[ExtractionFilter] = None,
-        url_filter: Optional[URLFilter] = None,
-    ) -> Iterator[Article]:
-        scraper = Scraper(publisher, restrict_sources_to, delay)
+        scraper = WebScraper(publisher, self.restrict_sources_to, build_delay())
         yield from scraper.scrape(error_handling, extraction_filter, url_filter)
 
+    @staticmethod
+    def _single_crawl(
+        publishers: Tuple[PublisherEnum, ...], article_task: Callable[[PublisherEnum], Iterator[Article]]
+    ) -> Iterator[Article]:
+        article_iterators = [article_task(publisher) for publisher in publishers]
+        while article_iterators:
+            for iterator in article_iterators:
+                try:
+                    yield next(iterator)
+                except StopIteration:
+                    article_iterators.remove(iterator)
 
-class CCNewsCrawler(BaseCrawler):
+    @staticmethod
+    def _threaded_crawl(
+        publishers: Tuple[PublisherEnum, ...], article_task: Callable[[PublisherEnum], Iterator[Article]]
+    ) -> Iterator[Article]:
+        article_queue: Queue[Article] = Queue()
+        wrapped_article_task = queue_wrapper(article_queue, article_task)
+
+        with ThreadPool(processes=len(publishers) or None) as pool:
+            yield from pool_queue_iter(pool.map_async(wrapped_article_task, publishers), article_queue)
+
+    def _build_article_iterator(
+        self,
+        error_handling: Literal["suppress", "catch", "raise"],
+        extraction_filter: Optional[ExtractionFilter],
+        url_filter: Optional[URLFilter],
+    ) -> Iterator[Article]:
+        article_task = partial(
+            self._fetch_articles,
+            error_handling=error_handling,
+            extraction_filter=extraction_filter,
+            url_filter=url_filter,
+        )
+
+        if self.threading:
+            yield from self._threaded_crawl(self.publishers, article_task)
+        else:
+            yield from self._single_crawl(self.publishers, article_task)
+
+
+class CCNewsCrawler(CrawlerBase):
     def __init__(
         self,
         *publishers: PublisherEnum,
@@ -319,15 +305,11 @@ class CCNewsCrawler(BaseCrawler):
             server_address: The CC-NEWS dataset server address. Defaults to 'https://data.commoncrawl.org/'.
         """
 
-        collapsed_publishers = tuple(more_itertools.collapse(publishers))
-        processes = os.cpu_count() or 0 if processes == -1 else processes
-        warc_paths = tuple(
-            self._get_warc_paths(start=start, end=end, processes=processes, server_address=server_address)
-        )
-
-        super().__init__(
-            pool_factory=Pool, processes=processes, args=warc_paths, kwargs={"publishers": collapsed_publishers}
-        )
+        self.publishers = tuple(more_itertools.collapse(publishers))
+        self.start = start
+        self.end = end
+        self.processes = os.cpu_count() or 0 if processes == -1 else processes
+        self.server_address = server_address
 
     @staticmethod
     def _fetch_articles(
@@ -342,24 +324,47 @@ class CCNewsCrawler(BaseCrawler):
         yield from scraper.scrape(error_handling, extraction_filter, url_filter)
 
     @staticmethod
-    def _get_warc_paths(
-        start: datetime, end: datetime, processes: int, server_address: str = "https://data.commoncrawl.org/"
-    ) -> List[str]:
+    def _single_crawl(
+        warc_paths: Tuple[str, ...], article_task: Callable[[str], Iterator[Article]]
+    ) -> Iterator[Article]:
+        for warc_path in warc_paths:
+            yield from article_task(warc_path)
+
+    def _parallel_crawl(
+        self, warc_paths: Tuple[str, ...], article_task: Callable[[str], Iterator[Article]]
+    ) -> Iterator[Article]:
+        # As one could think, because we're downloading a bunch of files, this task is IO-bound, but it is actually
+        # process-bound. The reason is that we stream the data and process it on the fly rather than downloading all
+        # files and processing them afterward. Therefore, we utilize multiprocessing here instead of multithreading.
+        with Manager() as manager, Pool(processes=min(self.processes, len(warc_paths))) as pool:
+            article_queue: Queue[Article] = manager.Queue()
+
+            # Because multiprocessing.Pool does not support iterators as targets,
+            # we wrap the article_task to write the articles to a queue instead of returning them directly.
+            wrapped_article_task: Callable[[str], None] = queue_wrapper(article_queue, article_task)
+
+            # To avoid restricting the article_task to use only pickleable objects, we serialize it using dill.
+            serialized_article_task = dill_wrapper(wrapped_article_task)
+
+            # Finally, we build an iterator around the queue, exhausting the queue until the pool is finished.
+            yield from pool_queue_iter(pool.map_async(serialized_article_task, warc_paths), article_queue)
+
+    def _get_warc_paths(self) -> List[str]:
         # Date regex examples: https://regex101.com/r/yDX3G6/1
         date_pattern: Pattern[str] = re.compile(r"CC-NEWS-(?P<date>\d{14})-")
 
-        if start >= end:
+        if self.start >= self.end:
             raise ValueError("Start date has to be < end date.")
 
-        if start < datetime(2016, 8, 1):
+        if self.start < datetime(2016, 8, 1):
             raise ValueError("The default, and earliest possible, start date is 2016/08/01.")
 
-        if end > datetime.now():
+        if self.end > datetime.now():
             raise ValueError("The specified end date is in the future. We don't want to give spoilers, do we?")
 
-        date_sequence: List[datetime] = list(rrule(MONTHLY, dtstart=start, until=end))
+        date_sequence: List[datetime] = list(rrule(MONTHLY, dtstart=self.start, until=self.end))
         urls: List[str] = [
-            f"{server_address}crawl-data/CC-NEWS/{date.strftime('%Y/%m')}/warc.paths.gz" for date in date_sequence
+            f"{self.server_address}crawl-data/CC-NEWS/{date.strftime('%Y/%m')}/warc.paths.gz" for date in date_sequence
         ]
 
         with tqdm(total=len(urls), desc="Loading WARC Paths", leave=False) as bar:
@@ -370,19 +375,19 @@ class CCNewsCrawler(BaseCrawler):
                     bar.update()
                     return paths
 
-            if processes == 0:
+            if self.processes == 0:
                 nested_warc_paths = [load_paths(url) for url in urls]
             else:
                 # use two threads per process, default two threads per core
-                max_number_of_threads = processes * 2
+                max_number_of_threads = self.processes * 2
 
                 with ThreadPool(processes=min(len(urls), max_number_of_threads)) as pool:
                     nested_warc_paths = pool.map(load_paths, urls)
 
         warc_paths: Iterator[str] = more_itertools.flatten(nested_warc_paths)
 
-        start_strf = start.strftime("%Y%m%d%H%M%S")
-        end_strf = end.strftime("%Y%m%d%H%M%S")
+        start_strf = self.start.strftime("%Y%m%d%H%M%S")
+        end_strf = self.end.strftime("%Y%m%d%H%M%S")
 
         def filter_warc_path_by_date(path: str) -> bool:
             match: Optional[re.Match[str]] = date_pattern.search(path)
@@ -391,6 +396,27 @@ class CCNewsCrawler(BaseCrawler):
             return start_strf <= match["date"] <= end_strf
 
         return sorted(
-            (f"{server_address}{warc_path}" for warc_path in filter(filter_warc_path_by_date, warc_paths)),
+            (f"{self.server_address}{warc_path}" for warc_path in filter(filter_warc_path_by_date, warc_paths)),
             reverse=True,
         )
+
+    def _build_article_iterator(
+        self,
+        error_handling: Literal["suppress", "catch", "raise"],
+        extraction_filter: Optional[ExtractionFilter],
+        url_filter: Optional[URLFilter],
+    ) -> Iterator[Article]:
+        warc_paths = tuple(self._get_warc_paths())
+
+        article_task = partial(
+            self._fetch_articles,
+            publishers=self.publishers,
+            error_handling=error_handling,
+            extraction_filter=extraction_filter,
+            url_filter=url_filter,
+        )
+
+        if self.processes == 0:
+            yield from self._single_crawl(warc_paths, article_task)
+        else:
+            yield from self._parallel_crawl(warc_paths, article_task)

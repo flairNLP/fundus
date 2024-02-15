@@ -51,7 +51,7 @@ class BaseScraper:
                         yield article
 
 
-class Scraper(BaseScraper):
+class WebScraper(BaseScraper):
     def __init__(
         self,
         publisher: PublisherEnum,

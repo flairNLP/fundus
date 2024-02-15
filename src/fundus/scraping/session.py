@@ -19,11 +19,12 @@ class SessionHandler:
     tear-downed and the next call to get_session() will build a new session.
     """
 
-    def __init__(self):
-        self._session: Optional[requests.Session] = None
+    def __init__(self, pool_connections: int = 50, pool_maxsize: int = 50):
+        self.session: Optional[requests.Session] = None
+        self.pool_connections = pool_connections
+        self.pool_maxsize = pool_maxsize
 
-    @staticmethod
-    def _session_factory() -> requests.Session:
+    def _session_factory(self) -> requests.Session:
         """Builds a new Session
 
         This returns a new client session build from pre-defined configurations:
@@ -47,13 +48,18 @@ class SessionHandler:
             )
 
         # hooks
-        hooks = {"response": [lambda response, *args, **kwargs: response.raise_for_status(), _response_log]}
-        session.hooks = hooks
+        response_hooks = [lambda response, *args, **kwargs: response.raise_for_status(), _response_log]
+        session.hooks["response"].extend(response_hooks)
 
         # adapters
-        adapter_kwargs = {"pool_connections": 50, "pool_maxsize": 50}
-        session.mount("http://", requests.adapters.HTTPAdapter(**adapter_kwargs))
-        session.mount("https://", requests.adapters.HTTPAdapter(**adapter_kwargs))
+        session.mount(
+            "http://",
+            requests.adapters.HTTPAdapter(pool_connections=self.pool_connections, pool_maxsize=self.pool_maxsize),
+        )
+        session.mount(
+            "https://",
+            requests.adapters.HTTPAdapter(pool_connections=self.pool_connections, pool_maxsize=self.pool_maxsize),
+        )
 
         return session
 
@@ -67,9 +73,9 @@ class SessionHandler:
         Returns:
             requests.Session: The current build session
         """
-        if not self._session:
-            self._session = self._session_factory()
-        return self._session
+        if not self.session:
+            self.session = self._session_factory()
+        return self.session
 
     def close_current_session(self) -> None:
         """Tears down the current build session
@@ -80,7 +86,7 @@ class SessionHandler:
         session = self.get_session()
         basic_logger.debug(f"Close session {session}")
         session.close()
-        self._session = None
+        self.session = None
 
 
 session_handler = SessionHandler()
