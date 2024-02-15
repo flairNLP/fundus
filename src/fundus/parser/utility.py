@@ -57,6 +57,9 @@ class Node:
     def __str__(self) -> str:
         return self._get_break_preserved_node().text_content()
 
+    def __bool__(self):
+        return bool(self.striped())
+
 
 class SummaryNode(Node):
     pass
@@ -83,20 +86,18 @@ def extract_article_body_with_selector(
         if not selector and node_type:
             raise ValueError("Both a selector and node type are required")
 
-        return [node_type(df_idx_by_ref[element], element) for element in selector(doc)]
+        return [node for element in selector(doc) if (node := node_type(df_idx_by_ref[element], element))]
 
     summary_nodes = extract_nodes(summary_selector, SummaryNode) if summary_selector else []
     subhead_nodes = extract_nodes(subheadline_selector, SubheadNode) if subheadline_selector else []
     paragraph_nodes = extract_nodes(paragraph_selector, ParagraphNode)
     nodes = sorted(summary_nodes + subhead_nodes + paragraph_nodes)
 
-    striped_nodes = [node for node in nodes if node.striped()]
-
-    if not striped_nodes:
+    if not nodes:
         # return empty body if no text is present
         return ArticleBody(TextSequence([]), [])
 
-    instructions = more_itertools.split_when(striped_nodes, pred=lambda x, y: type(x) != type(y))
+    instructions = more_itertools.split_when(nodes, pred=lambda x, y: type(x) != type(y))
 
     if not summary_nodes:
         instructions = more_itertools.prepend([], instructions)
@@ -213,12 +214,18 @@ def generic_text_extraction_with_css(doc, selector: XPath) -> Optional[str]:
     return strip_nodes_to_text(nodes)
 
 
-def generic_topic_parsing(keyword_str: Optional[str], delimiter: str = ",") -> List[str]:
-    return [keyword.strip() for keyword in keyword_str.split(delimiter)] if keyword_str else []
+def generic_topic_parsing(keywords: Optional[Union[str, List[str]]], delimiter: str = ",") -> List[str]:
+    if isinstance(keywords, str):
+        return [keyword.strip() for keyword in keywords.split(delimiter)]
+    elif isinstance(keywords, list) and all(isinstance(s, str) for s in keywords):
+        return keywords
+    elif keywords is None:
+        return []
+    else:
+        raise TypeError(f"Encountered unexpected type {type(keywords)} as keyword parameter")
 
 
-_tzs = ["CET", "CEST"]
-_tz_infos = {tz: dateutil.tz.gettz(tz) for tz in _tzs}
+_tz_infos = {"CET": 3600, "CEST": 7200}
 
 
 def generic_date_parsing(date_str: Optional[str]) -> Optional[datetime]:

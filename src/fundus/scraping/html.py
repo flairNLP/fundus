@@ -1,164 +1,34 @@
-import gzip
-from abc import ABC, abstractmethod
-from dataclasses import dataclass, field
+import time
+from abc import abstractmethod
+from dataclasses import dataclass
 from datetime import datetime
-from functools import cached_property
-from typing import (
-    AsyncIterable,
-    AsyncIterator,
-    Callable,
-    ClassVar,
-    Dict,
-    Iterable,
-    List,
-    Optional,
-    Union,
-)
+from typing import Dict, Iterable, Iterator, List, Optional, Protocol
+from urllib.parse import urlparse
 
-import aiohttp
-import feedparser
-import lxml.html
+import chardet
+import requests
 import validators
-from aiohttp.client_exceptions import ClientError
-from aiohttp.http_exceptions import HttpProcessingError
-from aiohttp.web_exceptions import HTTPError
-from lxml.cssselect import CSSSelector
-from lxml.etree import XPath
+from fastwarc import ArchiveIterator, WarcRecord, WarcRecordType
+from requests import ConnectionError, HTTPError
 
 from fundus.logging import basic_logger
-from fundus.scraping.filter import URLFilter, inverse
-from fundus.utils.more_async import async_next, make_iterable_async
+from fundus.publishers.base_objects import PublisherEnum
+from fundus.scraping.delay import Delay
+from fundus.scraping.filter import URLFilter
+from fundus.scraping.session import _default_header
 
-_default_header = {"user-agent": "Fundus"}
+__all__ = [
+    "HTML",
+    "SourceInfo",
+    "WarcSourceInfo",
+    "WebSourceInfo",
+    "HTMLSource",
+    "WebSource",
+    "CCNewsSource",
+]
 
-
-class SessionHandler:
-    def __init__(self):
-        self._factory: AsyncIterator[aiohttp.ClientSession] = self._build_session_factory()
-
-    @staticmethod
-    async def _build_session_factory() -> AsyncIterator[aiohttp.ClientSession]:
-        _connector = aiohttp.TCPConnector(limit=50)
-        async_session = aiohttp.ClientSession(connector=_connector)
-        while True:
-            yield async_session
-
-    async def get_session(self) -> aiohttp.ClientSession:
-        return await async_next(self._factory)
-
-    async def close_current_session(self) -> None:
-        session = await self.get_session()
-        basic_logger.debug(f"Close session {session}")
-        await session.close()
-        self._factory = self._build_session_factory()
-
-
-session_handler = SessionHandler()
-
-
-class _ArchiveDecompressor:
-    def __init__(self):
-        self.archive_mapping: Dict[str, Callable[[bytes], bytes]] = {"application/x-gzip": self._decompress_gzip}
-
-    @staticmethod
-    def _decompress_gzip(compressed_content: bytes) -> bytes:
-        decompressed_content = gzip.decompress(compressed_content)
-        return decompressed_content
-
-    def decompress(self, content: bytes, file_format: "str") -> bytes:
-        decompress_function = self.archive_mapping[file_format]
-        return decompress_function(content)
-
-    @cached_property
-    def supported_file_formats(self) -> List[str]:
-        return list(self.archive_mapping.keys())
-
-
-@dataclass
-class URLSource(AsyncIterable[str], ABC):
-    url: str
-
-    _request_header: Dict[str, str] = field(default_factory=dict)
-
-    def __post_init__(self):
-        if not self._request_header:
-            self._request_header = _default_header
-        if not validators.url(self.url):
-            raise ValueError(f"Invalid url '{self.url}'")
-
-    def set_header(self, request_header: Dict[str, str]) -> None:
-        self._request_header = request_header
-
-    @abstractmethod
-    def _get_pre_filtered_urls(self) -> AsyncIterator[str]:
-        pass
-
-    async def __aiter__(self) -> AsyncIterator[str]:
-        async for url in self._get_pre_filtered_urls():
-            yield url
-
-
-@dataclass
-class RSSFeed(URLSource):
-    async def _get_pre_filtered_urls(self) -> AsyncIterator[str]:
-        session = await session_handler.get_session()
-        async with session.get(self.url, headers=self._request_header) as response:
-            html = await response.text()
-            rss_feed = feedparser.parse(html)
-            if exception := rss_feed.get("bozo_exception"):
-                basic_logger.warning(f"Warning! Couldn't parse rss feed '{self.url}' because of {exception}")
-                return
-            else:
-                for url in (entry["link"] for entry in rss_feed["entries"]):
-                    yield url
-
-
-@dataclass
-class Sitemap(URLSource):
-    recursive: bool = True
-    reverse: bool = False
-    sitemap_filter: URLFilter = lambda url: not bool(url)
-
-    _decompressor: ClassVar[_ArchiveDecompressor] = _ArchiveDecompressor()
-    _sitemap_selector: ClassVar[XPath] = CSSSelector("sitemap > loc")
-    _url_selector: ClassVar[XPath] = CSSSelector("url > loc")
-
-    async def _get_pre_filtered_urls(self) -> AsyncIterator[str]:
-        async def yield_recursive(sitemap_url: str) -> AsyncIterator[str]:
-            session = await session_handler.get_session()
-            if not validators.url(sitemap_url):
-                basic_logger.info(f"Skipped sitemap '{sitemap_url}' because the URL is malformed")
-            async with session.get(url=sitemap_url, headers=self._request_header) as response:
-                try:
-                    response.raise_for_status()
-                except (HTTPError, ClientError, HttpProcessingError) as error:
-                    basic_logger.warning(f"Warning! Couldn't reach sitemap '{sitemap_url}' because of {error}")
-                    return
-                content = await response.content.read()
-                if response.content_type in self._decompressor.supported_file_formats:
-                    content = self._decompressor.decompress(content, response.content_type)
-                if not content:
-                    basic_logger.warning(f"Warning! Empty sitemap at '{sitemap_url}'")
-                    return
-                tree = lxml.html.fromstring(content)
-                urls = [node.text_content() for node in self._url_selector(tree)]
-                if urls:
-                    for new_url in reversed(urls) if self.reverse else urls:
-                        yield new_url
-                elif self.recursive:
-                    sitemap_locs = [node.text_content() for node in self._sitemap_selector(tree)]
-                    filtered_locs = list(filter(inverse(self.sitemap_filter), sitemap_locs))
-                    for loc in reversed(filtered_locs) if self.reverse else filtered_locs:
-                        async for new_url in yield_recursive(loc):
-                            yield new_url
-
-        async for url in yield_recursive(self.url):
-            yield url
-
-
-@dataclass
-class NewsMap(Sitemap):
-    pass
+from fundus.scraping.session import session_handler
+from fundus.scraping.url import URLSource
 
 
 @dataclass(frozen=True)
@@ -167,71 +37,191 @@ class HTML:
     responded_url: str
     content: str
     crawl_date: datetime
-    source: "HTMLSource"
+    source: "SourceInfo"
 
 
-class HTMLSource:
+@dataclass(frozen=True)
+class SourceInfo:
+    publisher: str
+
+
+@dataclass(frozen=True)
+class WarcSourceInfo(SourceInfo):
+    warc_path: str
+    warc_headers: Dict[str, str]
+    http_headers: Dict[str, str]
+
+
+@dataclass(frozen=True)
+class WebSourceInfo(SourceInfo):
+    type: str
+    url: str
+
+
+class HTMLSource(Protocol):
+    @abstractmethod
+    def fetch(self, url_filter: Optional[URLFilter] = None) -> Iterator[HTML]:
+        ...
+
+
+class WebSource:
     def __init__(
         self,
-        url_source: Union[AsyncIterable[str], Iterable[str]],
-        publisher: Optional[str],
+        url_source: Iterable[str],
+        publisher: str,
         url_filter: Optional[URLFilter] = None,
         request_header: Optional[Dict[str, str]] = None,
+        delay: Optional[Delay] = None,
     ):
-        if isinstance(url_source, AsyncIterable):
-            self.url_source = url_source
-        else:
-            self.url_source = make_iterable_async(url_source)
+        self.url_source = url_source
         self.publisher = publisher
-        self.url_filter = [] if not url_filter else [url_filter]
+        self.url_filter = url_filter
         self.request_header = request_header or _default_header
         if isinstance(url_source, URLSource):
             url_source.set_header(self.request_header)
+        self.delay = delay
 
-    def add_url_filter(self, url_filter: URLFilter) -> None:
-        self.url_filter.append(url_filter)
+    def fetch(self, url_filter: Optional[URLFilter] = None) -> Iterator[HTML]:
+        combined_filters: List[URLFilter] = ([self.url_filter] if self.url_filter else []) + (
+            [url_filter] if url_filter else []
+        )
 
-    def _filter(self, url: str) -> bool:
-        return any(url_filter(url) for url_filter in self.url_filter)
+        timestamp = time.time()
 
-    async def fetch(self) -> AsyncIterator[HTML]:
-        async for url in self.url_source:
+        def filter_url(u: str) -> bool:
+            return any(f(u) for f in combined_filters)
+
+        for url in self.url_source:
             if not validators.url(url):
                 basic_logger.debug(f"Skipped requested URL '{url}' because the URL is malformed")
                 continue
 
-            if self._filter(url):
+            if filter_url(url):
                 basic_logger.debug(f"Skipped requested URL '{url}' because of URL filter")
                 continue
 
-            session = await session_handler.get_session()
+            session = session_handler.get_session()
 
-            async with session.get(url, headers=self.request_header) as response:
-                if self._filter(str(response.url)):
-                    basic_logger.debug(f"Skipped responded URL '{url}' because of URL filter")
+            try:
+                response = session.get(url, headers=self.request_header)
+
+            except (HTTPError, ConnectionError) as error:
+                basic_logger.info(f"Skipped requested URL '{url}' because of '{error}'")
+                if isinstance(error, HTTPError) and error.response.status_code >= 500:
+                    return
+                continue
+
+            except ConnectionError as error:
+                basic_logger.info(f"Skipped requested URL '{url}' because of '{error}'")
+
+            except Exception as error:
+                basic_logger.warning(f"Warning! Skipped  requested URL '{url}' because of an unexpected error {error}")
+                continue
+
+            else:
+                if filter_url(str(response.url)):
+                    basic_logger.debug(f"Skipped responded URL '{str(response.url)}' because of URL filter")
                     continue
-
-                try:
-                    html = await response.text()
-                    response.raise_for_status()
-
-                except (HTTPError, ClientError, HttpProcessingError, UnicodeError) as error:
-                    basic_logger.info(f"Skipped requested URL '{url}' because of '{error}'")
-                    continue
-
-                except Exception as error:
-                    basic_logger.warning(
-                        f"Warning! Skipped  requested URL '{url}' because of an unexpected error {error}"
-                    )
-                    continue
+                html = response.text
 
                 if response.history:
-                    basic_logger.debug(f"Got redirected {len(response.history)} time(s) from {url} -> {response.url}")
+                    basic_logger.info(f"Got redirected {len(response.history)} time(s) from {url} -> {response.url}")
+
+                source = (
+                    WebSourceInfo(self.publisher, type(self.url_source).__name__, self.url_source.url)
+                    if isinstance(self.url_source, URLSource)
+                    else SourceInfo(self.publisher)
+                )
 
                 yield HTML(
                     requested_url=url,
                     responded_url=str(response.url),
                     content=html,
                     crawl_date=datetime.now(),
-                    source=self,
+                    source=source,
+                )
+
+            if self.delay:
+                time.sleep(max(0.0, self.delay() - time.time() + timestamp))
+                timestamp = time.time()
+
+
+class CCNewsSource:
+    def __init__(self, *publishers: PublisherEnum, warc_path: str, headers: Optional[Dict[str, str]] = None):
+        self.publishers = publishers
+        self.warc_path = warc_path
+        self.headers = headers or _default_header
+
+        self._publisher_mapping: Dict[str, PublisherEnum] = {
+            urlparse(publisher.domain).netloc: publisher for publisher in publishers
+        }
+
+    def fetch(self, url_filter: Optional[URLFilter] = None) -> Iterator[HTML]:
+        def extract_content(record: WarcRecord) -> Optional[str]:
+            warc_body: bytes = record.reader.read()
+
+            try:
+                return str(warc_body, encoding=record.http_charset)
+            except (UnicodeDecodeError, TypeError):
+                encoding: Optional[str] = chardet.detect(warc_body)["encoding"]
+
+                if encoding is not None:
+                    basic_logger.debug(
+                        f"Trying to decode record {record.record_id!r} from {target_url!r} "
+                        f"using detected encoding {encoding}."
+                    )
+
+                    try:
+                        return str(warc_body, encoding=encoding)
+                    except UnicodeDecodeError:
+                        basic_logger.warning(
+                            f"Couldn't decode record {record.record_id!r} from {target_url!r} with "
+                            f"original charset {record.http_charset!r} using detected charset {encoding!r}."
+                        )
+                else:
+                    basic_logger.warning(
+                        f"Couldn't detect charset for record {record.record_id!r} from {target_url!r} "
+                        f"with invalid original charset {record.http_charset!r}."
+                    )
+
+            return None
+
+        with requests.Session() as session:
+            stream = session.get(self.warc_path, stream=True, headers=self.headers).raw
+
+            for warc_record in ArchiveIterator(stream, record_types=WarcRecordType.response, verify_digests=True):
+                target_url = str(warc_record.headers["WARC-Target-URI"])
+
+                if url_filter is not None and url_filter(target_url):
+                    basic_logger.debug(f"Skipped WARC record with target URI {target_url!r} because of URL filter")
+                    continue
+
+                publisher_domain: str = urlparse(target_url).netloc
+
+                if publisher_domain not in self._publisher_mapping:
+                    continue
+
+                publisher = self._publisher_mapping[publisher_domain]
+
+                if publisher.url_filter is not None and publisher.url_filter(target_url):
+                    basic_logger.debug(
+                        f"Skipped WARC record with target URI {target_url!r} because of "
+                        f"publisher specific URL filter"
+                    )
+                    continue
+
+                if (content := extract_content(warc_record)) is None:
+                    continue
+
+                yield HTML(
+                    requested_url=target_url,
+                    responded_url=target_url,
+                    content=content,
+                    crawl_date=warc_record.record_date,
+                    source=WarcSourceInfo(
+                        publisher=publisher.publisher_name,
+                        warc_path=self.warc_path,
+                        warc_headers=dict(warc_record.headers),
+                        http_headers=dict(warc_record.http_headers),
+                    ),
                 )

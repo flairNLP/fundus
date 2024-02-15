@@ -1,0 +1,26 @@
+Please use SVG variants if possible. Both folders contain the same images, but SVG files are smaller and infinitely scalable. The PNG files are intended for use in case SVG cannot be used for technical reasons.
+
+Explanation of file names:
+
+with/without_clear_space
+The clear space is an area around the logo that should be kept clear for aesthetic reasons. If you do not have precise control over the layout, use the version with the clear space to ensure the distance from other elements.
+
+darkmode/lightmode:
+Self-explanatory. I made the color a little brighter with darkmode and also removed some blue to compensate for the slight blue tint [rgb(34, 39, 46)] of the Darkmode on Github.
+
+with/without_font:
+once the logo with the word Fundus next to it and once without.
+
+logo_round:
+This version is exclusively for uploading the logo somewhere where it will be placed in a round frame, e.g. as a profile picture.
+
+Colors:
+
+Lightmode (standard): #0a9d85
+Darkmode: #0bad88
+
+If you need other variants such as neutral black or white, let me know :)
+
+Font:
+
+The font is called "Quicksand" (weight: medium) and is available on Google fonts under the Open Fonts License. Quicksand is a display font in the sans-serif style with rounded terminals.

@@ -31,8 +31,7 @@ jobs:
         id: cache
         with:
           path: ${{ env.pythonLocation }}
-          key: ${{ matrix.os }}-${{ steps.setup_python.outputs.python-version }}-${{ hashFiles('setup.cfg') }}
-
+          key: ${{ matrix.os }}-{{ matrix.python-version }}-${{ hashFiles('pyproject.toml') }}
       - name: Install dependencies
         if: steps.cache.outputs.cache-hit != 'true'
         run: |
@@ -62,8 +61,7 @@ jobs:
         id: cache
         with:
           path: ${{ env.pythonLocation }}
-          key: ${{ matrix.os }}-${{ steps.setup_python.outputs.python-version }}-${{ hashFiles('setup.cfg') }}
-
+          key: ${{ matrix.os }}-{{ matrix.python-version }}-${{ hashFiles('pyproject.toml') }}
       - name: Install dependencies
         if: steps.cache.outputs.cache-hit != 'true'
         run: |

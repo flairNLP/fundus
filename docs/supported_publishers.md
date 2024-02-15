@@ -309,6 +309,72 @@
 </table>
 
 
+## FR-Publishers
+
+<table class="publishers fr">
+  <thead>
+    <tr>
+      <th>Class&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</th>
+      <th>Source&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</th>
+      <th>URL&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</th>
+      <th>Missing&#160;Attributes</th>
+      <th>Additional&#160;Attributes&#160;&#160;&#160;&#160;</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <code>LeMonde</code>
+      </td>
+      <td>
+        <div>Le Monde</div>
+      </td>
+      <td>
+        <a href="https://www.lemonde.fr/">
+          <span>www.lemonde.fr</span>
+        </a>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+  </tbody>
+</table>
+
+
+## NA-Publishers
+
+<table class="publishers na">
+  <thead>
+    <tr>
+      <th>Class&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</th>
+      <th>Source&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</th>
+      <th>URL&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</th>
+      <th>Missing&#160;Attributes</th>
+      <th>Additional&#160;Attributes&#160;&#160;&#160;&#160;</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <code>TheNamibian</code>
+      </td>
+      <td>
+        <div>The Namibian</div>
+      </td>
+      <td>
+        <a href="https://www.namibian.com.na/">
+          <span>www.namibian.com.na</span>
+        </a>
+      </td>
+      <td>
+        <code>topics</code>
+      </td>
+      <td>&#160;</td>
+    </tr>
+  </tbody>
+</table>
+
+
 ## UK-Publishers
 
 <table class="publishers uk">
@@ -332,6 +398,51 @@
       <td>
         <a href="https://www.theguardian.com/">
           <span>www.theguardian.com</span>
+        </a>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
+        <code>TheIndependent</code>
+      </td>
+      <td>
+        <div>The Independent</div>
+      </td>
+      <td>
+        <a href="https://www.independent.co.uk/">
+          <span>www.independent.co.uk</span>
+        </a>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
+        <code>TheTelegraph</code>
+      </td>
+      <td>
+        <div>The Telegraph</div>
+      </td>
+      <td>
+        <a href="https://www.telegraph.co.uk/">
+          <span>www.telegraph.co.uk</span>
+        </a>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
+        <code>iNews</code>
+      </td>
+      <td>
+        <div>i</div>
+      </td>
+      <td>
+        <a href="https://inews.co.uk/">
+          <span>inews.co.uk</span>
         </a>
       </td>
       <td>&#160;</td>
@@ -399,6 +510,23 @@
         </a>
       </td>
       <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
+        <code>LATimes</code>
+      </td>
+      <td>
+        <div>Los Angeles Times</div>
+      </td>
+      <td>
+        <a href="https://www.latimes.com/">
+          <span>www.latimes.com</span>
+        </a>
+      </td>
+      <td>
+        <code>topics</code>
+      </td>
       <td>&#160;</td>
     </tr>
     <tr>

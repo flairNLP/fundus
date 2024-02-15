@@ -5,7 +5,7 @@ from typing import Any, Dict, Iterator, List, Optional, Type
 
 from fundus.parser.base_parser import ParserProxy
 from fundus.scraping.filter import URLFilter
-from fundus.scraping.html import HTMLSource, NewsMap, RSSFeed, Sitemap, URLSource
+from fundus.scraping.url import NewsMap, RSSFeed, Sitemap, URLSource
 from fundus.utils.iteration import iterate_all_subclasses
 
 
@@ -33,10 +33,12 @@ class PublisherEnum(Enum):
         self.domain = spec.domain
         self.parser = spec.parser()
         self.publisher_name = spec.name
+        self.url_filter = spec.url_filter
+        self.request_header = spec.request_header
 
         # we define the dict here manually instead of using default dict so that we can control
         # the order in which sources are proceeded.
-        source_mapping: Dict[Type[URLSource], List[HTMLSource]] = {
+        source_mapping: Dict[Type[URLSource], List[URLSource]] = {
             RSSFeed: [],
             NewsMap: [],
             Sitemap: [],
@@ -48,13 +50,7 @@ class PublisherEnum(Enum):
                     f"Unexpected type '{type(url_source).__name__}' as source for {self.name}. "
                     f"Allowed are '{', '.join(cls.__name__ for cls in iterate_all_subclasses(URLSource))}'"
                 )
-            source: HTMLSource = HTMLSource(
-                url_source=url_source,
-                publisher=self.publisher_name,
-                url_filter=spec.url_filter,
-                request_header=spec.request_header,
-            )
-            source_mapping[type(url_source)].append(source)
+            source_mapping[type(url_source)].append(url_source)
 
         self.source_mapping = source_mapping
 
@@ -73,7 +69,7 @@ class PublisherEnum(Enum):
     def search(
         cls, attributes: Optional[List[str]] = None, source_types: Optional[List[Type[URLSource]]] = None
     ) -> List["PublisherEnum"]:
-        if not attributes or source_types:
+        if not (attributes or source_types):
             raise ValueError("You have to define at least one search condition")
         if not attributes:
             attributes = []

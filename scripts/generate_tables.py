@@ -30,10 +30,10 @@ column_mapping: Dict[str, ColumnFactory] = {
         attributes := set(attribute_annotations_mapping.keys())
         - set(spec.parser.latest_version.attributes().validated.names)
     )
-    else cast(lxml.html.HtmlElement, lxml.html.fromstring("<td>&nbsp;</td>")),
+    else lxml.html.fromstring("<td>&nbsp;</td>"),
     "Additional Attributes": lambda spec: TD(*[CODE(a) for a in sorted(attributes)])
     if (attributes := spec.parser.latest_version.attributes().unvalidated.names)
-    else cast(lxml.html.HtmlElement, lxml.html.fromstring("<td>&nbsp;</td>")),
+    else lxml.html.fromstring("<td>&nbsp;</td>"),
 }
 
 

@@ -1,11 +1,12 @@
 from fundus.publishers.base_objects import PublisherEnum, PublisherSpec
 from fundus.scraping.filter import inverse, regex_filter
-from fundus.scraping.html import NewsMap, RSSFeed, Sitemap
+from fundus.scraping.url import NewsMap, RSSFeed, Sitemap
 
 from .ap_news import APNewsParser
 from .cnbc import CNBCParser
 from .fox_news import FoxNewsParser
 from .free_beacon import FreeBeaconParser
+from .la_times import LATimesParser
 from .occupy_democrats import OccupyDemocratsParser
 from .reuters import ReutersParser
 from .the_gateway_pundit import TheGatewayPunditParser
@@ -22,11 +23,11 @@ class US(PublisherEnum):
         domain="https://www.apnews.com/",
         sources=[
             Sitemap(
-                "https://apnews.com/sitemap/sitemaps/sitemap_index.xml",
-                sitemap_filter=inverse(regex_filter("article-sitemap")),
+                "https://apnews.com/sitemap.xml",
+                sitemap_filter=regex_filter("apnews.com/hub/|apnews.com/video/"),
                 reverse=True,
             ),
-            NewsMap("https://apnews.com/sitemap/google-news-sitemap/sitemap_index.xml"),
+            NewsMap("https://apnews.com/news-sitemap-content.xml"),
         ],
         parser=APNewsParser,
     )
@@ -75,6 +76,8 @@ class US(PublisherEnum):
         sources=[
             Sitemap(
                 "https://www.thenation.com/sitemap_index.xml",
+                sitemap_filter=inverse(regex_filter("article-sitemap")),
+                reverse=True,
             ),
             NewsMap("https://www.thenation.com/news-sitemap.xml"),
         ],
@@ -131,4 +134,11 @@ class US(PublisherEnum):
         domain="https://occupydemocrats.com/",
         sources=[Sitemap(url="https://occupydemocrats.com/sitemap.xml", sitemap_filter=regex_filter(r"-tax-|-misc"))],
         parser=OccupyDemocratsParser,
+    )
+
+    LATimes = PublisherSpec(
+        name="Los Angeles Times",
+        domain="https://www.latimes.com/",
+        sources=[Sitemap("https://www.latimes.com/sitemap.xml"), NewsMap("https://www.latimes.com/news-sitemap.xml")],
+        parser=LATimesParser,
     )
