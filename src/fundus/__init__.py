@@ -3,7 +3,7 @@ import sys
 
 from fundus.publishers import PublisherCollection
 from fundus.scraping.filter import Requires
-from fundus.scraping.pipeline import CrawlerBase, Crawler, CCNewsCrawler
+from fundus.scraping.crawler import CrawlerBase, Crawler, CCNewsCrawler
 from fundus.scraping.url import NewsMap, RSSFeed, Sitemap
 
 __module_path__ = pathlib.Path(__file__).parent
