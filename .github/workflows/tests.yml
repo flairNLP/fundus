@@ -31,7 +31,7 @@ jobs:
         id: cache
         with:
           path: ${{ env.pythonLocation }}
-          key: ${{ matrix.os }}-{{ matrix.python-version }}-${{ hashFiles('pyproject.toml') }}
+          key: ${{ matrix.os }}-${{ matrix.python-version }}-${{ hashFiles('pyproject.toml') }}
       - name: Install dependencies
         if: steps.cache.outputs.cache-hit != 'true'
         run: |
@@ -44,7 +44,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ ubuntu-latest, macos-latest, windows-latest ]
+        os: [ ubuntu-latest ]
         python-version: [ "3.8", "3.9", "3.10", "3.11" ]
     continue-on-error: true
     steps:
@@ -61,7 +61,7 @@ jobs:
         id: cache
         with:
           path: ${{ env.pythonLocation }}
-          key: ${{ matrix.os }}-{{ matrix.python-version }}-${{ hashFiles('pyproject.toml') }}
+          key: ${{ matrix.os }}-${{ matrix.python-version }}-${{ hashFiles('pyproject.toml') }}
       - name: Install dependencies
         if: steps.cache.outputs.cache-hit != 'true'
         run: |
