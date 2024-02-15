@@ -32,10 +32,10 @@ import more_itertools
 import requests
 from dateutil.rrule import MONTHLY, rrule
 from tqdm import tqdm
-from typing_extensions import ParamSpec
+from typing_extensions import ParamSpec, TypeAlias
 
-from fundus import PublisherCollection
-from fundus.publishers.base_objects import PublisherEnum
+from fundus.logging import basic_logger
+from fundus.publishers.base_objects import PublisherCollectionMeta, PublisherEnum
 from fundus.scraping.article import Article
 from fundus.scraping.delay import Delay
 from fundus.scraping.filter import ExtractionFilter, Requires, URLFilter
@@ -45,6 +45,8 @@ from fundus.scraping.url import URLSource
 
 _T = TypeVar("_T")
 _P = ParamSpec("_P")
+
+Publisher: TypeAlias = Union[PublisherEnum, Type[PublisherEnum], PublisherCollectionMeta]
 
 
 # noinspection PyPep8Naming
@@ -112,9 +114,13 @@ def pool_queue_iter(handle: MapResult[Any], queue: Queue[_T]) -> Iterator[_T]:
 
 
 class CrawlerBase(ABC):
+    def __init__(self, *publishers: Publisher):
+        self.publishers = tuple(set(more_itertools.collapse(publishers)))
+
     @abstractmethod
     def _build_article_iterator(
         self,
+        publishers: Tuple[PublisherEnum, ...],
         error_handling: Literal["suppress", "catch", "raise"],
         extraction_filter: Optional[ExtractionFilter],
         url_filter: Optional[URLFilter],
@@ -174,8 +180,35 @@ class CrawlerBase(ABC):
 
         response_cache: Set[str] = set()
 
+        extraction_filter = build_extraction_filter()
+        fitting_publisher: List[PublisherEnum] = []
+
+        if isinstance(extraction_filter, Requires):
+            for publisher in self.publishers:
+                supported_attributes = set(
+                    more_itertools.flatten(
+                        collection.names for collection in publisher.parser.attribute_mapping.values()
+                    )
+                )
+                if missing_attributes := extraction_filter.required_attributes - supported_attributes:
+                    basic_logger.warning(
+                        f"The required attribute(s) `{', '.join(missing_attributes)}` "
+                        f"is(are) not supported by {publisher.publisher_name}. Skipping publisher"
+                    )
+                else:
+                    fitting_publisher.append(publisher)
+
+            if not fitting_publisher:
+                basic_logger.error(
+                    f"Could not find any fitting publisher for required attributes  "
+                    f"`{', '.join(extraction_filter.required_attributes)}`"
+                )
+                return
+
         article_idx = 0
-        for article in self._build_article_iterator(error_handling, build_extraction_filter(), url_filter):
+        for article in self._build_article_iterator(
+            tuple(fitting_publisher or self.publishers), error_handling, build_extraction_filter(), url_filter
+        ):
             if not only_unique or article.html.responded_url not in response_cache:
                 response_cache.add(article.html.responded_url)
                 article_idx += 1
@@ -187,7 +220,7 @@ class CrawlerBase(ABC):
 class Crawler(CrawlerBase):
     def __init__(
         self,
-        *publishers: Union[PublisherEnum, Type[PublisherEnum], Type[PublisherCollection]],
+        *publishers: Publisher,
         restrict_sources_to: Optional[List[Type[URLSource]]] = None,
         delay: Optional[Union[float, Delay]] = 1.0,
         threading: bool = True,
@@ -196,7 +229,7 @@ class Crawler(CrawlerBase):
 
         Examples:
             >>> from fundus import PublisherCollection, Crawler
-            >>> crawler = Crawler(PublisherCollection)
+            >>> crawler = Crawler(*PublisherCollection)
             >>> # Crawler(PublisherCollection.us) to crawl only english news
             >>> for article in crawler.crawl():
             >>>     print(article)
@@ -215,7 +248,8 @@ class Crawler(CrawlerBase):
         if not publishers:
             raise ValueError("param <publishers> of <Crawler.__init__> has to be non empty")
 
-        self.publishers = tuple(more_itertools.collapse(publishers))
+        super().__init__(*publishers)
+
         self.restrict_sources_to = restrict_sources_to
         self.delay = delay
         self.threading = threading
@@ -268,6 +302,7 @@ class Crawler(CrawlerBase):
 
     def _build_article_iterator(
         self,
+        publishers: Tuple[PublisherEnum, ...],
         error_handling: Literal["suppress", "catch", "raise"],
         extraction_filter: Optional[ExtractionFilter],
         url_filter: Optional[URLFilter],
@@ -280,15 +315,15 @@ class Crawler(CrawlerBase):
         )
 
         if self.threading:
-            yield from self._threaded_crawl(self.publishers, article_task)
+            yield from self._threaded_crawl(publishers, article_task)
         else:
-            yield from self._single_crawl(self.publishers, article_task)
+            yield from self._single_crawl(publishers, article_task)
 
 
 class CCNewsCrawler(CrawlerBase):
     def __init__(
         self,
-        *publishers: PublisherEnum,
+        *publishers: Publisher,
         start: datetime = datetime(2016, 8, 1),
         end: datetime = datetime.now(),
         processes: int = -1,
@@ -305,7 +340,8 @@ class CCNewsCrawler(CrawlerBase):
             server_address: The CC-NEWS dataset server address. Defaults to 'https://data.commoncrawl.org/'.
         """
 
-        self.publishers = tuple(more_itertools.collapse(publishers))
+        super().__init__(*publishers)
+
         self.start = start
         self.end = end
         self.processes = os.cpu_count() or 0 if processes == -1 else processes
@@ -402,6 +438,7 @@ class CCNewsCrawler(CrawlerBase):
 
     def _build_article_iterator(
         self,
+        publishers: Tuple[PublisherEnum, ...],
         error_handling: Literal["suppress", "catch", "raise"],
         extraction_filter: Optional[ExtractionFilter],
         url_filter: Optional[URLFilter],
@@ -410,7 +447,7 @@ class CCNewsCrawler(CrawlerBase):
 
         article_task = partial(
             self._fetch_articles,
-            publishers=self.publishers,
+            publishers=publishers,
             error_handling=error_handling,
             extraction_filter=extraction_filter,
             url_filter=url_filter,

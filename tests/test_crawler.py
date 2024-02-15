@@ -17,6 +17,24 @@ class TestPipeline:
         publisher = collection_with_valid_publisher_enum.pub.value
         assert len(crawler.publishers) == 1
 
+    def test_crawler_with_two_collections(
+        self,
+        collection_with_valid_publisher_enum,
+        collection_with_empty_publisher_enum,
+        collection_with_two_valid_publisher_enum,
+    ):
+        crawler = Crawler(collection_with_empty_publisher_enum, collection_with_valid_publisher_enum)
+        assert len(crawler.publishers) == 1
+
+        crawler = Crawler(collection_with_valid_publisher_enum, collection_with_valid_publisher_enum)
+        assert len(crawler.publishers) == 1
+
+        crawler = Crawler(collection_with_two_valid_publisher_enum)
+        assert len(crawler.publishers) == 2
+
+        crawler = Crawler(collection_with_valid_publisher_enum, collection_with_two_valid_publisher_enum)
+        assert len(crawler.publishers) == 3
+
     def test_crawler_with_publisher_enum(self, publisher_enum_with_rss_feeds, publisher_enum_with_news_map):
         crawler = Crawler(publisher_enum_with_rss_feeds, publisher_enum_with_news_map)
         assert len(crawler.publishers) == 2

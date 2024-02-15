@@ -77,3 +77,28 @@ def collection_with_valid_publisher_enum(publisher_enum_with_news_map):
         pub = publisher_enum_with_news_map
 
     return CollectionWithValidatePublisherEnum
+
+
+@pytest.fixture
+def collection_with_two_valid_publisher_enum(parser_proxy_with_version):
+    class PubEnumNews(PublisherEnum):
+        news = PublisherSpec(
+            name="test_pub",
+            domain="https://test.com/",
+            sources=[NewsMap("https://test.com/test_newsmap")],
+            parser=parser_proxy_with_version,
+        )
+
+    class PubEnumSitemap(PublisherEnum):
+        sitemap = PublisherSpec(
+            name="test_pub",
+            domain="https://test.com/",
+            sources=[Sitemap("https://test.com/test_sitemap")],
+            parser=parser_proxy_with_version,
+        )
+
+    class CollectionWithTwoValidatePublisherEnum(metaclass=PublisherCollectionMeta):
+        enum_news = PubEnumNews
+        enum_sitemap = PubEnumSitemap
+
+    return CollectionWithTwoValidatePublisherEnum
