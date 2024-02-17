@@ -21,7 +21,7 @@ from fundus import PublisherCollection
 from fundus.logging import basic_logger
 from fundus.publishers.base_objects import PublisherEnum
 from fundus.scraping.article import Article
-from fundus.scraping.filter import ExtractionFilter, Requires, URLFilter
+from fundus.scraping.filter import ExtractionFilter, Requires, RequiresAll, URLFilter
 from fundus.scraping.html import URLSource, session_handler
 from fundus.scraping.scraper import Scraper
 from fundus.utils.more_async import ManagedEventLoop, async_next
@@ -91,13 +91,7 @@ class BaseCrawler:
 
         def build_extraction_filter() -> Optional[ExtractionFilter]:
             if isinstance(only_complete, bool):
-                return (
-                    None
-                    if only_complete is False
-                    else lambda extracted: not all(
-                        bool(v) if not isinstance(v, Exception) else False for _, v in extracted.items()
-                    )
-                )
+                return None if only_complete is False else RequiresAll()
             else:
                 return only_complete
 
