@@ -111,9 +111,6 @@ class WebSource:
                     return
                 continue
 
-            except ConnectionError as error:
-                basic_logger.info(f"Skipped requested URL '{url}' because of '{error}'")
-
             except Exception as error:
                 basic_logger.warning(f"Warning! Skipped  requested URL '{url}' because of an unexpected error {error}")
                 continue
