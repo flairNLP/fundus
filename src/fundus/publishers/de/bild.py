@@ -47,6 +47,6 @@ class BildParser(ParserProxy):
         @attribute
         def free_access(self) -> bool:
             if (url := self.precomputed.meta.get("og:url")) is not None:
-                return re.search(r"/bild-plus/", url) is not None
+                return re.search(r"/bild-plus/", url) is None
             else:
                 return True
