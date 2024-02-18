@@ -172,7 +172,7 @@ class BaseParser(ABC):
     @classmethod
     def attributes(cls) -> AttributeCollection:
         attrs: List[Attribute] = [
-            func for _, func in cls._search_members(Attribute) if func.__name__ not in ["__ld", "__meta"]
+            func for _, func in cls._search_members(Attribute) if func.__name__ not in ["__ld", "__meta", "free_access"]
         ]
         return AttributeCollection(*attrs)
 
@@ -232,6 +232,15 @@ class BaseParser(ABC):
     @attribute
     def __ld(self) -> Optional[LinkedDataMapping]:
         return self.precomputed.ld
+
+    @attribute
+    def free_access(self) -> bool:
+        if (isAccessibleForFree := self.precomputed.ld.bf_search("isAccessibleForFree")) is None:
+            return True
+        elif not isAccessibleForFree or isAccessibleForFree == "false" or isAccessibleForFree == "False":
+            return False
+        else:
+            return True
 
 
 class _ParserCache:
