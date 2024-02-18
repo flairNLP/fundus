@@ -95,7 +95,8 @@ class BaseCrawler:
                     None
                     if only_complete is False
                     else lambda extracted: not all(
-                        bool(v) if not isinstance(v, Exception) else False for _, v in extracted.items()
+                        bool(v) if not isinstance(v, Exception) else False
+                        for v in [value for key, value in extracted.items() if not (isinstance(value, bool))]
                     )
                 )
             else:
