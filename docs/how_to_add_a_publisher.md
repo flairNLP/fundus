@@ -469,6 +469,24 @@ Instead, we recommend referring to [this](https://devhints.io/xpath) documentati
 Make sure to examine other parsers and consult the [attribute guidelines](attribute_guidelines.md) for specifics on attribute implementation. 
 We strongly encourage utilizing these utility functions, especially when parsing the `ArticleBody`.
 
+### Checking the free_access attribute
+
+In case your new publisher does not have a subscription model, you can go ahead and skip this step. If it does,
+please verify that there is a tag `isAccessibleForFree` within the `<script type="application/ld+json">` blocks in the
+source code of premium articles that is set to either `false` or `False`. It doesn't matter if the tag is missing in the
+freely accessible articles. If this is the case, you can continue with the next step. If not, please overwrite the
+existing function by adding the following snippet to your parser:
+
+```python
+@attribute
+def free_access(self) -> bool:
+    # Your personalized logic goes here
+    pass
+```
+
+Usually you can identify a premium article by an indicator within the URL or by using XPath or CSSSelector and selecting
+the element asking to to purchase a subscription to view the article.
+
 ### Finishing the Parser
 
 Bringing all the above together, the Los Angeles Times now looks like this.
