@@ -15,6 +15,7 @@ from fundus.parser.utility import (
 
 class TheNamibianParser(ParserProxy):
     class V1(BaseParser):
+        VALID_UNTIL = datetime(year=2024, month=2, day=1).date()
         _summary_selector = XPath("//div[contains(@class, 'tdb-block-inner')]/p[position()=1]")
         _paragraph_selector = XPath("//div[contains(@class, 'tdb-block-inner')]/p[position()>1]")
         _title_substitution_pattern: Pattern[str] = re.compile(r" - The Namibian$")
@@ -24,6 +25,7 @@ class TheNamibianParser(ParserProxy):
             return extract_article_body_with_selector(
                 self.precomputed.doc,
                 paragraph_selector=self._paragraph_selector,
+                summary_selector=self._summary_selector,
             )
 
         @attribute
@@ -40,3 +42,8 @@ class TheNamibianParser(ParserProxy):
         @attribute
         def authors(self) -> List[str]:
             return generic_author_parsing(self.precomputed.ld.get_value_by_key_path(["Person", "name"]))
+
+    class V1_1(V1):
+        VALID_UNTIL = datetime.today().date()
+        _paragraph_selector = XPath("//div[contains(@class, 'entry-content')]/p[position()>1]")
+        _summary_selector = XPath("//div[contains(@class, 'entry-content')]/p[position()=1]")
