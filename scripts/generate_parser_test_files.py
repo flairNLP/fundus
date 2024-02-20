@@ -5,16 +5,24 @@ from typing import List, Optional
 
 from tqdm import tqdm
 
-from fundus import Crawler, PublisherCollection
+from fundus import BaseCrawler, Crawler, PublisherCollection
 from fundus.logging import basic_logger
 from fundus.publishers.base_objects import PublisherEnum
 from fundus.scraping.article import Article
+from fundus.scraping.html import FundusSource
+from fundus.scraping.scraper import Scraper
 from tests.test_parser import attributes_required_to_cover
 from tests.utility import HTMLTestFile, get_test_case_json, load_html_test_file_mapping
 
 
-def get_test_article(enum: PublisherEnum) -> Optional[Article]:
-    crawler = Crawler(enum)
+def get_test_article(enum: PublisherEnum, url: Optional[str] = None) -> Optional[Article]:
+    crawler: BaseCrawler
+    if url is None:
+        crawler = Crawler(enum)
+    else:
+        source = FundusSource([url], publisher=enum.publisher_name)
+        scraper = Scraper(source, parser=enum.parser)
+        crawler = BaseCrawler(scraper)
     return next(crawler.crawl(max_articles=1, error_handling="suppress", only_complete=True), None)
 
 
@@ -31,9 +39,17 @@ if __name__ == "__main__":
         "attributes",
         metavar="A",
         nargs="*",
-        help=f"the attributes which should be used to create test cases. default: {', '.join(attributes_required_to_cover)}",
+        help=f"the attributes which should be used to create test cases. "
+        f"default: {', '.join(attributes_required_to_cover)}",
     )
     parser.add_argument("-p", dest="publishers", metavar="P", nargs="+", help="only consider given publishers")
+    parser.add_argument(
+        "-u",
+        dest="urls",
+        metavar="U",
+        nargs="+",
+        help="use given URL instead of searching for an article. if set the urls will be mapped to the order of -p",
+    )
     group = parser.add_mutually_exclusive_group()
     group.add_argument(
         "-o",
@@ -50,19 +66,25 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
+    if args.urls is not None:
+        if args.publishers is None:
+            parser.error("-u requires -p. you can only specify URLs when also specifying publishers.")
+        if len(args.urls) != len(args.publishers):
+            parser.error("-u and -p do not have the same argument length")
+
     # sort args.attributes for consistency
     args.attributes = list(sorted(args.attributes)) or attributes_required_to_cover
 
     basic_logger.setLevel(WARN)
 
     publishers: List[PublisherEnum] = (
-        list(PublisherCollection)
-        if args.publishers is None
-        else [pub for pub in PublisherCollection if pub.name in args.publishers]
+        list(PublisherCollection) if args.publishers is None else [PublisherCollection[pub] for pub in args.publishers]
     )
 
+    urls = args.urls if args.urls is not None else [None] * len(publishers)
+
     with tqdm(total=len(publishers)) as bar:
-        for publisher in publishers:
+        for url, publisher in zip(urls, publishers):
             bar.set_description(desc=publisher.name, refresh=True)
 
             # load json
@@ -73,7 +95,7 @@ if __name__ == "__main__":
             html_mapping = load_html_test_file_mapping(publisher) if not args.overwrite else {}
 
             if args.overwrite or not html_mapping.get(publisher.parser.latest_version):
-                if not (article := get_test_article(publisher)):
+                if not (article := get_test_article(publisher, url)):
                     basic_logger.warning(f"Couldn't get article for {publisher.name}. Skipping")
                     continue
                 html = HTMLTestFile(
