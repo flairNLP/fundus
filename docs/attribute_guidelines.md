@@ -60,7 +60,7 @@ Those attributes will be validated with unit tests when used.
     </tr>
     <tr>
         <td>free_access</td>
-        <td>A boolean which is set to be True, if the article is restricted to users with a subscription. This usually indicates
+        <td>A boolean which is set to be False, if the article is restricted to users with a subscription. This usually indicates
         that the article cannot be crawled completely.
         <i>This attribute is implemented by default</i></td>
         <td><code>bool</code></td>
