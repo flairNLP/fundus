@@ -16,6 +16,7 @@
     * [Working with `lxml`](#working-with-lxml)
     * [CSS-Select](#css-select)
     * [XPath](#xpath)
+  * [Checking the free_access attribute](#checking-the-free_access-attribute)
   * [Finishing the Parser](#finishing-the-parser)
 * [6. Generate unit tests](#6-generate-unit-tests)
 * [7. Opening a Pull Request](#7-opening-a-pull-request)
@@ -472,10 +473,11 @@ We strongly encourage utilizing these utility functions, especially when parsing
 ### Checking the free_access attribute
 
 In case your new publisher does not have a subscription model, you can go ahead and skip this step. If it does,
-please verify that there is a tag `isAccessibleForFree` within the `<script type="application/ld+json">` blocks in the
-source code of premium articles that is set to either `false` or `False`. It doesn't matter if the tag is missing in the
-freely accessible articles. If this is the case, you can continue with the next step. If not, please overwrite the
-existing function by adding the following snippet to your parser:
+please verify that there is a tag `isAccessibleForFree` within the HTMLs `ld+json` elements (refer to the section
+[Extracting attributes from Precomputed](#extracting-attributes-from-precomputed) for details) in the source code of
+premium articles that is set to either `false` or `False`. It doesn't matter if the tag is missing in the freely
+accessible articles. If this is the case, you can continue with the next step. If not, please overwrite the existing
+function by adding the following snippet to your parser:
 
 ```python
 @attribute

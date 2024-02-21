@@ -34,7 +34,6 @@ class Scraper:
             supported_attributes = set(
                 more_itertools.flatten(collection.names for collection in self.parser.attribute_mapping.values())
             )
-            supported_attributes.add("free_access")
             if missing_attributes := extraction_filter.required_attributes - supported_attributes:
                 if len(missing_attributes) == 1:
                     basic_logger.warning(
