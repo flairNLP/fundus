@@ -483,7 +483,7 @@ function by adding the following snippet to your parser:
 @attribute
 def free_access(self) -> bool:
     # Your personalized logic goes here
-    pass
+    ...
 ```
 
 Usually you can identify a premium article by an indicator within the URL or by using XPath or CSSSelector and selecting
