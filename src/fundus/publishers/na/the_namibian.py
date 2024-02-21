@@ -15,7 +15,7 @@ from fundus.parser.utility import (
 
 class TheNamibianParser(ParserProxy):
     class V1(BaseParser):
-        VALID_UNTIL = datetime(year=2024, month=2, day=1).date()
+        VALID_UNTIL = datetime(year=2024, month=1, day=31).date()
         _summary_selector = XPath("//div[contains(@class, 'tdb-block-inner')]/p[position()=1]")
         _paragraph_selector = XPath("//div[contains(@class, 'tdb-block-inner')]/p[position()>1]")
         _title_substitution_pattern: Pattern[str] = re.compile(r" - The Namibian$")
