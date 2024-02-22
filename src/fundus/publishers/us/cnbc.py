@@ -2,6 +2,7 @@ import datetime
 from typing import List, Optional
 
 from lxml.cssselect import CSSSelector
+from lxml.etree import XPath
 
 from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute
 from fundus.parser.utility import (
@@ -15,7 +16,7 @@ from fundus.parser.utility import (
 class CNBCParser(ParserProxy):
     class V1(BaseParser):
         _subheadline_selector: CSSSelector = CSSSelector("div[data-module = 'ArticleBody'] > h2")
-        _paragraph_selector: CSSSelector = CSSSelector("div.group > p")
+        _paragraph_selector: CSSSelector = XPath("//div[@data-module='ArticleBody'] / div[@class='group'] / p[text()]")
         _key_points_selector: CSSSelector = CSSSelector("div.RenderKeyPoints-list li")
 
         @attribute
