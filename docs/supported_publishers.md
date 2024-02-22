@@ -27,7 +27,6 @@
         </a>
       </td>
       <td>
-        <code>free_access</code>
         <code>topics</code>
       </td>
       <td>&#160;</td>
@@ -61,9 +60,7 @@
           <span>www.berliner-zeitung.de</span>
         </a>
       </td>
-      <td>
-        <code>free_access</code>
-      </td>
+      <td>&#160;</td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -78,9 +75,7 @@
           <span>www.bild.de</span>
         </a>
       </td>
-      <td>
-        <code>free_access</code>
-      </td>
+      <td>&#160;</td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -95,9 +90,7 @@
           <span>www.braunschweiger-zeitung.de</span>
         </a>
       </td>
-      <td>
-        <code>free_access</code>
-      </td>
+      <td>&#160;</td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -112,9 +105,7 @@
           <span>www.businessinsider.de</span>
         </a>
       </td>
-      <td>
-        <code>free_access</code>
-      </td>
+      <td>&#160;</td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -129,9 +120,7 @@
           <span>www.dw.com</span>
         </a>
       </td>
-      <td>
-        <code>free_access</code>
-      </td>
+      <td>&#160;</td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -146,9 +135,7 @@
           <span>www.taz.de</span>
         </a>
       </td>
-      <td>
-        <code>free_access</code>
-      </td>
+      <td>&#160;</td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -163,9 +150,7 @@
           <span>www.welt.de</span>
         </a>
       </td>
-      <td>
-        <code>free_access</code>
-      </td>
+      <td>&#160;</td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -180,9 +165,7 @@
           <span>www.zeit.de</span>
         </a>
       </td>
-      <td>
-        <code>free_access</code>
-      </td>
+      <td>&#160;</td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -197,9 +180,7 @@
           <span>www.focus.de</span>
         </a>
       </td>
-      <td>
-        <code>free_access</code>
-      </td>
+      <td>&#160;</td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -214,9 +195,7 @@
           <span>www.faz.net</span>
         </a>
       </td>
-      <td>
-        <code>free_access</code>
-      </td>
+      <td>&#160;</td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -231,9 +210,7 @@
           <span>www.mdr.de</span>
         </a>
       </td>
-      <td>
-        <code>free_access</code>
-      </td>
+      <td>&#160;</td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -249,7 +226,6 @@
         </a>
       </td>
       <td>
-        <code>free_access</code>
         <code>topics</code>
       </td>
       <td>&#160;</td>
@@ -266,9 +242,7 @@
           <span>www.ntv.de</span>
         </a>
       </td>
-      <td>
-        <code>free_access</code>
-      </td>
+      <td>&#160;</td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -283,9 +257,7 @@
           <span>www.ndr.de</span>
         </a>
       </td>
-      <td>
-        <code>free_access</code>
-      </td>
+      <td>&#160;</td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -300,9 +272,7 @@
           <span>www.spiegel.de</span>
         </a>
       </td>
-      <td>
-        <code>free_access</code>
-      </td>
+      <td>&#160;</td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -317,9 +287,7 @@
           <span>www.stern.de</span>
         </a>
       </td>
-      <td>
-        <code>free_access</code>
-      </td>
+      <td>&#160;</td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -334,9 +302,7 @@
           <span>www.sueddeutsche.de</span>
         </a>
       </td>
-      <td>
-        <code>free_access</code>
-      </td>
+      <td>&#160;</td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -351,9 +317,7 @@
           <span>www.tagesschau.de</span>
         </a>
       </td>
-      <td>
-        <code>free_access</code>
-      </td>
+      <td>&#160;</td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -368,9 +332,7 @@
           <span>www.waz.de</span>
         </a>
       </td>
-      <td>
-        <code>free_access</code>
-      </td>
+      <td>&#160;</td>
       <td>&#160;</td>
     </tr>
   </tbody>
@@ -402,9 +364,7 @@
           <span>www.lemonde.fr</span>
         </a>
       </td>
-      <td>
-        <code>free_access</code>
-      </td>
+      <td>&#160;</td>
       <td>&#160;</td>
     </tr>
   </tbody>
@@ -437,7 +397,6 @@
         </a>
       </td>
       <td>
-        <code>free_access</code>
         <code>topics</code>
       </td>
       <td>&#160;</td>
@@ -471,9 +430,7 @@
           <span>www.theguardian.com</span>
         </a>
       </td>
-      <td>
-        <code>free_access</code>
-      </td>
+      <td>&#160;</td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -488,9 +445,7 @@
           <span>www.independent.co.uk</span>
         </a>
       </td>
-      <td>
-        <code>free_access</code>
-      </td>
+      <td>&#160;</td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -505,9 +460,7 @@
           <span>www.telegraph.co.uk</span>
         </a>
       </td>
-      <td>
-        <code>free_access</code>
-      </td>
+      <td>&#160;</td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -522,9 +475,7 @@
           <span>inews.co.uk</span>
         </a>
       </td>
-      <td>
-        <code>free_access</code>
-      </td>
+      <td>&#160;</td>
       <td>&#160;</td>
     </tr>
   </tbody>
@@ -556,9 +507,7 @@
           <span>www.apnews.com</span>
         </a>
       </td>
-      <td>
-        <code>free_access</code>
-      </td>
+      <td>&#160;</td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -573,9 +522,7 @@
           <span>www.cnbc.com</span>
         </a>
       </td>
-      <td>
-        <code>free_access</code>
-      </td>
+      <td>&#160;</td>
       <td>
         <code>key_points</code>
       </td>
@@ -592,9 +539,7 @@
           <span>www.foxnews.com</span>
         </a>
       </td>
-      <td>
-        <code>free_access</code>
-      </td>
+      <td>&#160;</td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -610,7 +555,6 @@
         </a>
       </td>
       <td>
-        <code>free_access</code>
         <code>topics</code>
       </td>
       <td>&#160;</td>
@@ -627,9 +571,7 @@
           <span>occupydemocrats.com</span>
         </a>
       </td>
-      <td>
-        <code>free_access</code>
-      </td>
+      <td>&#160;</td>
       <td>
         <code>description</code>
       </td>
@@ -646,9 +588,7 @@
           <span>www.reuters.com</span>
         </a>
       </td>
-      <td>
-        <code>free_access</code>
-      </td>
+      <td>&#160;</td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -664,7 +604,6 @@
         </a>
       </td>
       <td>
-        <code>free_access</code>
         <code>topics</code>
       </td>
       <td>&#160;</td>
@@ -681,9 +620,7 @@
           <span>www.theintercept.com</span>
         </a>
       </td>
-      <td>
-        <code>free_access</code>
-      </td>
+      <td>&#160;</td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -698,9 +635,7 @@
           <span>www.thenation.com</span>
         </a>
       </td>
-      <td>
-        <code>free_access</code>
-      </td>
+      <td>&#160;</td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -715,9 +650,7 @@
           <span>www.newyorker.com</span>
         </a>
       </td>
-      <td>
-        <code>free_access</code>
-      </td>
+      <td>&#160;</td>
       <td>
         <code>alternative_description</code>
         <code>alternative_title</code>
@@ -737,9 +670,7 @@
           <span>www.freebeacon.com</span>
         </a>
       </td>
-      <td>
-        <code>free_access</code>
-      </td>
+      <td>&#160;</td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -755,7 +686,6 @@
         </a>
       </td>
       <td>
-        <code>free_access</code>
         <code>topics</code>
       </td>
       <td>&#160;</td>
@@ -774,7 +704,6 @@
       </td>
       <td>
         <code>authors</code>
-        <code>free_access</code>
         <code>topics</code>
       </td>
       <td>&#160;</td>
