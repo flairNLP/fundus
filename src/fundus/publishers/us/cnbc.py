@@ -16,7 +16,7 @@ from fundus.parser.utility import (
 class CNBCParser(ParserProxy):
     class V1(BaseParser):
         _subheadline_selector: CSSSelector = CSSSelector("div[data-module = 'ArticleBody'] > h2")
-        _paragraph_selector: CSSSelector = XPath("//div[@data-module='ArticleBody'] / div[@class='group'] / p[text()]")
+        _paragraph_selector: XPath = XPath("//div[@data-module='ArticleBody'] / div[@class='group'] / p[text()]")
         _key_points_selector: CSSSelector = CSSSelector("div.RenderKeyPoints-list li")
 
         @attribute
