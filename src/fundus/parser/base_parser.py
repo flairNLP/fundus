@@ -172,7 +172,7 @@ class BaseParser(ABC):
     @classmethod
     def attributes(cls) -> AttributeCollection:
         attrs: List[Attribute] = [
-            func for _, func in cls._search_members(Attribute) if func.__name__ not in ["__ld", "__meta", "free_access"]
+            func for _, func in cls._search_members(Attribute) if func.__name__ not in ["__ld", "__meta"]
         ]
         return AttributeCollection(*attrs)
 

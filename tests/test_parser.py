@@ -47,10 +47,10 @@ class TestBaseParser:
         assert parser_with_function_test.functions().names == ["test"]
 
     def test_attributes_iter(self, parser_with_attr_title, parser_with_static_method):
-        assert len(BaseParser.attributes()) == 0
-        assert len(parser_with_static_method.attributes()) == 0
-        assert len(parser_with_attr_title.attributes()) == 1
-        assert parser_with_attr_title.attributes().names == ["title"]
+        assert len(BaseParser.attributes()) == 1
+        assert len(parser_with_static_method.attributes()) == 1
+        assert len(parser_with_attr_title.attributes()) == 2
+        assert parser_with_attr_title.attributes().names == ["free_access", "title"]
 
     def test_supported_unsupported(self):
         class ParserWithValidatedAndUnvalidated(BaseParser):
@@ -63,12 +63,12 @@ class TestBaseParser:
                 return "unsupported"
 
         parser = ParserWithValidatedAndUnvalidated()
-        assert len(parser.attributes()) == 2
+        assert len(parser.attributes()) == 3
 
         assert (validated := parser.attributes().validated)
         assert isinstance(validated, AttributeCollection)
         assert (funcs := list(validated)) != [parser.validated]
-        assert funcs[0].__func__ == parser.validated.__func__
+        assert funcs[1].__func__ == parser.validated.__func__
 
         assert (unvalidated := parser.attributes().unvalidated)
         assert isinstance(validated, AttributeCollection)
