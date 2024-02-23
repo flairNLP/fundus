@@ -19,7 +19,6 @@ class DieZeitParser(ParserProxy):
     class V1(BaseParser):
         _author_substitution_pattern: Pattern[str] = re.compile(r"DIE ZEIT (Archiv)")
         _paragraph_selector = XPath("//div[@class = 'article-page']/p[not(contains(text(), '© dpa-infocom'))]")
-        # _paragraph_selector = CSSSelector("div.article-page > p")
         _summary_selector = CSSSelector("div.summary")
         _subheadline_selector = CSSSelector("div.article-page > h2")
 
