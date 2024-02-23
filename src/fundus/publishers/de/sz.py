@@ -48,7 +48,7 @@ class SZParser(ParserProxy):
     class V1_1(V1):
         VALID_UNTIL = datetime.date.today()
         _paragraph_selector = XPath(
-            "//div[@itemprop='articleBody']" "//p[@data-manual='paragraph' and not(contains(text(), '© dpa-infocom'))]"
+            "//div[@itemprop='articleBody'] //p[@data-manual='paragraph' and not(contains(text(), '© dpa-infocom'))]"
         )
         _summary_selector = CSSSelector("main [data-manual='teaserText']")
         _subheadline_selector = XPath(
