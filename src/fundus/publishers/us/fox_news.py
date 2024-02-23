@@ -1,6 +1,7 @@
 import datetime
 from typing import List, Optional
 
+from lxml.cssselect import CSSSelector
 from lxml.etree import XPath
 
 from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute
@@ -14,7 +15,11 @@ from fundus.parser.utility import (
 
 class FoxNewsParser(ParserProxy):
     class V1(BaseParser):
-        _paragraph_selector = XPath("//div[@class='article-body'] / p[text()]")
+        _summary_selector = CSSSelector(".article-meta > h2")
+        _paragraph_selector = XPath(
+            "(//div[@class='article-body'] | //div[@class='article-body']/div[@class='paywall']) "
+            "/p[not(child::script) and text()]"
+        )
 
         @attribute
         def body(self) -> ArticleBody:
