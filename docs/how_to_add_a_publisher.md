@@ -472,12 +472,10 @@ We strongly encourage utilizing these utility functions, especially when parsing
 
 ### Checking the free_access attribute
 
-In case your new publisher does not have a subscription model, you can go ahead and skip this step. If it does,
-please verify that there is a tag `isAccessibleForFree` within the HTMLs `ld+json` elements (refer to the section
-[Extracting attributes from Precomputed](#extracting-attributes-from-precomputed) for details) in the source code of
-premium articles that is set to either `false` or `False`. It doesn't matter if the tag is missing in the freely
-accessible articles. If this is the case, you can continue with the next step. If not, please overwrite the existing
-function by adding the following snippet to your parser:
+In case your new publisher does not have a subscription model, you can go ahead and skip this step.
+If it does, please verify that there is a tag `isAccessibleForFree` within the HTMLs `ld+json` elements (refer to the section [Extracting attributes from Precomputed](#extracting-attributes-from-precomputed) for details) in the source code of premium articles that is set to either `false` or `False`.
+It doesn't matter if the tag is missing in the freely accessible articles.
+If this is the case, you can continue with the next step. If not, please overwrite the existing function by adding the following snippet to your parser:
 
 ```python
 @attribute
