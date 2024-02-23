@@ -3,6 +3,7 @@ import re
 from typing import List, Optional, Pattern
 
 from lxml.cssselect import CSSSelector
+from lxml.etree import XPath
 
 from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute
 from fundus.parser.utility import (
@@ -17,7 +18,15 @@ from fundus.parser.utility import (
 class MDRParser(ParserProxy):
     class V1(BaseParser):
         _author_substitution_pattern: Pattern[str] = re.compile(r"MDR \w*$|MDR \w*-\w*$|MDRfragt-Redaktionsteam|^von")
-        _paragraph_selector = CSSSelector("div.paragraph")
+        _source_detection: str = (
+            r"((MDR AKTUELL \(ans\))|(Quell(e|en): [A-z\.]{3,4})|(\([A-z]{1,4}\))|([A-z]{3}/[A-z]{3}))"
+        )
+        _paragraph_selector = XPath(
+            f"//div[@class='paragraph '"
+            f" and not(div[@class='mediaCon mediaLeft mediaSizeA cssImage hasNoRessort item-delegated-lightbox'])"
+            f" ]//p[not(re:test(em, '{_source_detection}') or re:test(text(), '{_source_detection}'))]",
+            namespaces={"re": "http://exslt.org/regular-expressions"},
+        )
         _summary_selector = CSSSelector("p.einleitung")
         _subheadline_selector = CSSSelector("div > .subtitle")
         _author_selector = CSSSelector(".articleMeta > .author")
@@ -33,7 +42,10 @@ class MDRParser(ParserProxy):
 
         @attribute
         def topics(self) -> List[str]:
-            return generic_topic_parsing(self.precomputed.meta.get("news_keywords"))
+            if self.precomputed.meta.get("news_keywords") is not None:
+                return generic_topic_parsing(self.precomputed.meta.get("news_keywords"))
+            else:
+                return generic_topic_parsing(self.precomputed.meta.get("keywords"))
 
         @attribute
         def publishing_date(self) -> Optional[datetime.datetime]:
