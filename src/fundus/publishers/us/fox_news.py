@@ -17,7 +17,7 @@ class FoxNewsParser(ParserProxy):
     class V1(BaseParser):
         _summary_selector = CSSSelector(".article-meta > h2")
         _paragraph_selector = XPath(
-            "(//div[@class='article-body'] | //div[@class='article-body']/div[@class='paywall']) "
+            "(//div[@class='article-body'] | //div[@class='article-body']/div[contains(@class, 'paywall')]) "
             "/p[not(child::script) and text()]"
         )
 
