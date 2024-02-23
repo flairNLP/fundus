@@ -16,7 +16,7 @@ from fundus.parser.utility import (
 class SZParser(ParserProxy):
     class V1(BaseParser):
         VALID_UNTIL = datetime.datetime(2024, 2, 1).date()
-        _paragraph_selector: XPath = CSSSelector("main[itemprop='articleBody'] > p, main.css-korpch > div > ul > li")
+        _paragraph_selector: XPath = CSSSelector("main [itemprop='articleBody'] > p, main .css-korpch > div > ul > li")
         _summary_selector: XPath = CSSSelector("main [data-manual='teaserText']")
         _subheadline_selector: XPath = CSSSelector("main [itemprop='articleBody'] > h3")
 
@@ -48,8 +48,7 @@ class SZParser(ParserProxy):
     class V1_1(V1):
         VALID_UNTIL = datetime.date.today()
         _paragraph_selector = XPath(
-            "//div[@itemprop='articleBody']"
-            "//p[@data-manual='paragraph' and not(contains(text(), '© dpa-infocom'))]"
+            "//div[@itemprop='articleBody']" "//p[@data-manual='paragraph' and not(contains(text(), '© dpa-infocom'))]"
         )
         _summary_selector = CSSSelector("main [data-manual='teaserText']")
         _subheadline_selector = XPath(
