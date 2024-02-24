@@ -58,4 +58,12 @@ Those attributes will be validated with unit tests when used.
         <td><code>List[str]</code></td>
         <td><code>generic_topic_parsing</code></td>
     </tr>
+    <tr>
+        <td>free_access</td>
+        <td>A boolean which is set to be False, if the article is restricted to users with a subscription. This usually indicates
+        that the article cannot be crawled completely.
+        <i><b>This attribute is implemented by default</b></i></td>
+        <td><code>bool</code></td>
+        <td><code></code></td>
+    </tr>
 </table>

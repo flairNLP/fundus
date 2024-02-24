@@ -235,6 +235,15 @@ class BaseParser(ABC):
     def __ld(self) -> Optional[LinkedDataMapping]:
         return self.precomputed.ld
 
+    @attribute
+    def free_access(self) -> bool:
+        if (isAccessibleForFree := self.precomputed.ld.bf_search("isAccessibleForFree")) is None:
+            return True
+        elif not isAccessibleForFree or isAccessibleForFree == "false" or isAccessibleForFree == "False":
+            return False
+        else:
+            return True
+
 
 class _ParserCache:
     def __init__(self, factory: Type[BaseParser]):
