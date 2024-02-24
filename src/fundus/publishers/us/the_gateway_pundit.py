@@ -38,5 +38,5 @@ class TheGatewayPunditParser(ParserProxy):
         @attribute
         def title(self) -> Optional[str]:
             if (title := self.precomputed.meta.get("og:title")) is not None:
-                title = title.split("|")[0]
+                title = title.split("|")[0].strip()
             return title
