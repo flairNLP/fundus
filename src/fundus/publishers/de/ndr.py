@@ -15,7 +15,6 @@ from fundus.parser.utility import (
 
 class NDRParser(ParserProxy):
     class V1(BaseParser):
-        _paragraph_selector = CSSSelector(".modulepadding > p:not(), .modulepadding > ol > li")
         _paragraph_selector = XPath("//div[@class='modulepadding copytext']/p[not(@class='textauthor' or @class='preface')] "
                                     "| //div[@class='modulepadding copytext']/ul/li")
         _summary_selector = CSSSelector(".preface")
