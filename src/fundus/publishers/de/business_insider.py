@@ -16,13 +16,13 @@ from fundus.parser.utility import (
 class BusinessInsiderParser(ParserProxy):
     class V1(BaseParser):
         _summary_selector = CSSSelector("article div.bi-bulletpoints > p")
-        _subheadline_selector = CSSSelector("article h2")
+        _subheadline_selector = CSSSelector("article > div > h2, article > div > h3")
 
         _paragraph_selector = XPath(
             """
             //article 
             //div[contains(@class, 'article-body')] 
-            //p[
+            /p[
                 not(
                     ancestor::*[@class='bi-bulletpoints'] or
                     mark[@class='has-inline-color has-cyan-bluish-gray-color'] or 
@@ -51,7 +51,7 @@ class BusinessInsiderParser(ParserProxy):
 
         @attribute
         def title(self) -> Optional[str]:
-            return self.precomputed.ld.bf_search("headline")
+            return self.precomputed.meta.get("og:title")
 
         @attribute
         def topics(self) -> List[str]:
