@@ -22,9 +22,8 @@ class MDRParser(ParserProxy):
             r"((MDR AKTUELL \(ans\))|(Quell(e|en): [A-z\.]{3,4})|(\([A-z]{1,4}\))|([A-z]{3}/[A-z]{3}))"
         )
         _paragraph_selector = XPath(
-            f"//div[@class='paragraph '"
-            f" and not(div[@class='mediaCon mediaLeft mediaSizeA cssImage hasNoRessort item-delegated-lightbox'])"
-            f" ]//p[not(re:test(em, '{_source_detection}') or re:test(text(), '{_source_detection}'))]",
+            f"//div[@class='paragraph '] "
+            f"/p[not(re:test(em, '{_source_detection}') or re:test(text(), '{_source_detection}'))]",
             namespaces={"re": "http://exslt.org/regular-expressions"},
         )
         _summary_selector = CSSSelector("p.einleitung")
