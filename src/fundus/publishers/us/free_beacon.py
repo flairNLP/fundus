@@ -13,12 +13,14 @@ from fundus.parser.utility import (
 
 class FreeBeaconParser(ParserProxy):
     class V1(BaseParser):
+        _summary_selector = CSSSelector("h2.article-excerpt")
         _paragraph_selector = CSSSelector(".article-content > p")
 
         @attribute
         def body(self) -> ArticleBody:
             return extract_article_body_with_selector(
                 self.precomputed.doc,
+                summary_selector=self._summary_selector,
                 paragraph_selector=self._paragraph_selector,
             )
 
