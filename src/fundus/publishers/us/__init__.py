@@ -132,7 +132,11 @@ class US(PublisherEnum):
     OccupyDemocrats = PublisherSpec(
         name="Occupy Democrats",
         domain="https://occupydemocrats.com/",
-        sources=[Sitemap(url="https://occupydemocrats.com/sitemap.xml", sitemap_filter=regex_filter(r"-tax-|-misc"))],
+        sources=[
+            Sitemap(
+                url="https://occupydemocrats.com/sitemap.xml", sitemap_filter=inverse(regex_filter(r"post-sitemap"))
+            )
+        ],
         parser=OccupyDemocratsParser,
     )
 
