@@ -41,10 +41,10 @@ class Node:
     # //*[not(self::script) and text()]/text(), but for whatever reason, that's actually 50-150% slower
     # than simply using the implemented mixture below
     def text_content(self, excluded_tags: Optional[List[str]] = None) -> str:
-        excluded_tags = excluded_tags or []
+        guarded_excluded_tags: List[str] = excluded_tags or []
 
         def _text_content(element: lxml.html.HtmlElement) -> str:
-            if element.tag in excluded_tags:
+            if element.tag in guarded_excluded_tags:
                 return ""
             text = element.text or "" if not isinstance(element, lxml.html.HtmlComment) else ""
             children = "".join([_text_content(child) for child in element.iterchildren()]) or ""
