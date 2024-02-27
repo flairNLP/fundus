@@ -17,7 +17,6 @@ from typing import (
     cast,
 )
 
-import dateutil.tz
 import lxml.html
 import more_itertools
 from dateutil import parser
@@ -27,6 +26,10 @@ from lxml.etree import XPath
 from fundus.parser.data import ArticleBody, ArticleSection, TextSequence
 
 
+def normalize_whitespace(text: str) -> str:
+    return " ".join(text.split())
+
+
 @total_ordering
 @dataclass(eq=False)
 class Node:
@@ -34,8 +37,21 @@ class Node:
     node: lxml.html.HtmlElement = field(compare=False)
     _break_selector: ClassVar[XPath] = XPath("*//br")
 
-    def striped(self, chars: Optional[str] = None) -> str:
-        return str(self).strip(chars)
+    # one could replace this recursion with XPath using an expression like this:
+    # //*[not(self::script) and text()]/text(), but for whatever reason, that's actually 50-150% slower
+    # than simply using the implemented mixture below
+    def text_content(self, excluded_tags: Optional[List[str]] = None) -> str:
+        excluded_tags = excluded_tags or []
+
+        def _text_content(element: lxml.html.HtmlElement) -> str:
+            if element.tag in excluded_tags:
+                return ""
+            text = element.text or "" if not isinstance(element, lxml.html.HtmlComment) else ""
+            children = "".join([_text_content(child) for child in element.iterchildren()]) or ""
+            tail = element.tail or ""
+            return text + children + tail
+
+        return _text_content(self._get_break_preserved_node())
 
     def _get_break_preserved_node(self) -> lxml.html.HtmlElement:
         copied_node = copy(self.node)
@@ -55,10 +71,10 @@ class Node:
         return hash(self.position)
 
     def __str__(self) -> str:
-        return self._get_break_preserved_node().text_content()
+        return self.text_content()
 
     def __bool__(self):
-        return bool(self.striped())
+        return bool(normalize_whitespace(self.text_content()))
 
 
 class SummaryNode(Node):
@@ -106,13 +122,13 @@ def extract_article_body_with_selector(
         first = next(instructions)
         instructions = itertools.chain([first, []], instructions)
 
-    summary = TextSequence(map(lambda x: x.striped("\n"), next(instructions)))
+    summary = TextSequence(map(lambda x: normalize_whitespace(x.text_content(["script"])), next(instructions)))
     sections: List[ArticleSection] = []
 
     for chunk in more_itertools.chunked(instructions, 2):
         if len(chunk) == 1:
             chunk.append([])
-        texts = [list(map(lambda x: x.striped("\n"), c)) for c in chunk]
+        texts = [list(map(lambda x: normalize_whitespace(x.text_content(["script"])), c)) for c in chunk]
         sections.append(ArticleSection(*map(TextSequence, texts)))
 
     return ArticleBody(summary=summary, sections=sections)
