@@ -122,7 +122,9 @@ def extract_article_body_with_selector(
         first = next(instructions)
         instructions = itertools.chain([first, []], instructions)
 
-    summary = TextSequence(map(lambda x: normalize_whitespace(x.text_content(excluded_tags=["script"])), next(instructions)))
+    summary = TextSequence(
+        map(lambda x: normalize_whitespace(x.text_content(excluded_tags=["script"])), next(instructions))
+    )
     sections: List[ArticleSection] = []
 
     for chunk in more_itertools.chunked(instructions, 2):
