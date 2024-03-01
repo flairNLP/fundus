@@ -47,7 +47,7 @@ class Node:
             if element.tag in guarded_excluded_tags:
                 return ""
             text = element.text or "" if not isinstance(element, lxml.html.HtmlComment) else ""
-            children = "".join([_text_content(child) for child in element.iterchildren()]) or ""
+            children = "".join([_text_content(child) for child in element.iterchildren()])
             tail = element.tail or ""
             return text + children + tail
 
