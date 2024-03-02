@@ -18,9 +18,8 @@ from fundus.parser.utility import (
 class MDRParser(ParserProxy):
     class V1(BaseParser):
         _author_substitution_pattern: Pattern[str] = re.compile(r"MDR \w*$|MDR \w*-\w*$|MDRfragt-Redaktionsteam|^von")
-        _source_detection: str = (
-            r"((MDR AKTUELL \(ans\))|(Quell(e|en): [A-z\.]{3,4})|(\([A-z]{1,4}\))|([A-z]{3}/[A-z]{3}))"
-        )
+        # regex examples: https://regex101.com/r/2DSjAz/1
+        _source_detection: str = r"^((MDR (AKTUELL ){0,1}\(([A-z]{2,3}(\/[A-z]{2,3})*|[A-z, ]{2,50}))\)|(Quell(e|en): (u.a. ){0,1}[A-z,]{3,4})|[A-z]{2,4}(, [A-z]{2,4}){0,3}( \([A-z]{2,4}\)){0,1}$|[A-z]{2,4}\/[A-z(), \/]{3,10}$)"
         _paragraph_selector = XPath(
             f"//div[@class='paragraph '] "
             f"/p[not(re:test(em, '{_source_detection}') or re:test(text(), '{_source_detection}'))]",
