@@ -39,13 +39,15 @@ if __name__ == "__main__":
         "attributes",
         metavar="A",
         nargs="*",
-        help=f"the attributes which should be used to create test cases. "
-        f"default: {', '.join(attributes_required_to_cover)}",
+        help=(
+            "the attributes which should be used to create test cases. "
+            f"default: {', '.join(attributes_required_to_cover)}"
+        ),
     )
     parser.add_argument("-p", dest="publishers", metavar="P", nargs="+", help="only consider given publishers")
     parser.add_argument(
         "-u",
-        dest="urls",
+        "--urls",
         metavar="U",
         nargs="+",
         help="use given URL instead of searching for an article. if set the urls will be mapped to the order of -p",
