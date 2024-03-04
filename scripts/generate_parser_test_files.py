@@ -1,5 +1,5 @@
 import subprocess
-from argparse import ArgumentParser
+from argparse import ArgumentParser, Namespace
 from logging import WARN
 from typing import List, Optional
 
@@ -26,7 +26,7 @@ def get_test_article(enum: PublisherEnum, url: Optional[str] = None) -> Optional
     return next(crawler.crawl(max_articles=1, error_handling="suppress", only_complete=True), None)
 
 
-def main() -> None:
+def parse_arguments() -> Namespace:
     parser = ArgumentParser(
         prog="generate_parser_test_files",
         description=(
@@ -66,24 +66,32 @@ def main() -> None:
         help="parse from existing html and overwrite existing json content",
     )
 
-    args = parser.parse_args()
+    arguments = parser.parse_args()
 
-    if args.urls is not None:
-        if args.publishers is None:
+    if arguments.urls is not None:
+        if arguments.publishers is None:
             parser.error("-u requires -p. you can only specify URLs when also specifying publishers.")
-        if len(args.urls) != len(args.publishers):
+        if len(arguments.urls) != len(arguments.publishers):
             parser.error("-u and -p do not have the same argument length")
 
+    return arguments
+
+
+def main() -> None:
+    arguments = parse_arguments()
+
     # sort args.attributes for consistency
-    args.attributes = list(sorted(args.attributes)) or attributes_required_to_cover
+    arguments.attributes = list(sorted(arguments.attributes)) or attributes_required_to_cover
 
     basic_logger.setLevel(WARN)
 
     publishers: List[PublisherEnum] = (
-        list(PublisherCollection) if args.publishers is None else [PublisherCollection[pub] for pub in args.publishers]
+        list(PublisherCollection)
+        if arguments.publishers is None
+        else [PublisherCollection[pub] for pub in arguments.publishers]
     )
 
-    urls = args.urls if args.urls is not None else [None] * len(publishers)
+    urls = arguments.urls if arguments.urls is not None else [None] * len(publishers)
 
     with tqdm(total=len(publishers)) as bar:
         for url, publisher in zip(urls, publishers):
@@ -91,12 +99,12 @@ def main() -> None:
 
             # load json
             test_data_file = get_test_case_json(publisher)
-            test_data = content if (content := test_data_file.load()) and not args.overwrite_json else {}
+            test_data = content if (content := test_data_file.load()) and not arguments.overwrite_json else {}
 
             # load html
-            html_mapping = load_html_test_file_mapping(publisher) if not args.overwrite else {}
+            html_mapping = load_html_test_file_mapping(publisher) if not arguments.overwrite else {}
 
-            if args.overwrite or not html_mapping.get(publisher.parser.latest_version):
+            if arguments.overwrite or not html_mapping.get(publisher.parser.latest_version):
                 if not (article := get_test_article(publisher, url)):
                     basic_logger.warning(f"Couldn't get article for {publisher.name}. Skipping")
                     continue
@@ -115,7 +123,7 @@ def main() -> None:
             for html in html_mapping.values():
                 versioned_parser = html.publisher.parser(html.crawl_date)
                 extraction = versioned_parser.parse(html.content)
-                new = {attr: value for attr, value in extraction.items() if attr in args.attributes}
+                new = {attr: value for attr, value in extraction.items() if attr in arguments.attributes}
                 if not (entry := test_data.get(type(versioned_parser).__name__)):
                     test_data[type(versioned_parser).__name__] = new
                 else:
