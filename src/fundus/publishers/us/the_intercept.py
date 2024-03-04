@@ -64,5 +64,5 @@ class TheInterceptParser(ParserProxy):
         _summary_selector = XPath(
             "//p[@class='post__excerpt'] | //h2[preceding-sibling::h1[contains(@class, 'post__title')]]"
         )
-        _paragraph_selector = CSSSelector("div.entry-content > div.entry-content__content > p")
+        _paragraph_selector = CSSSelector("div.entry-content > div.entry-content__content > p, blockquote > p")
         _subheadline_selector = CSSSelector("div.entry-content > div.entry-content__content > h2")
