@@ -26,7 +26,7 @@ def get_test_article(enum: PublisherEnum, url: Optional[str] = None) -> Optional
     return next(crawler.crawl(max_articles=1, error_handling="suppress", only_complete=True), None)
 
 
-if __name__ == "__main__":
+def main() -> None:
     parser = ArgumentParser(
         prog="generate_parser_test_files",
         description=(
@@ -124,3 +124,7 @@ if __name__ == "__main__":
             test_data_file.write(test_data)
             bar.update()
             subprocess.call(["git", "add", test_data_file.path], stdout=subprocess.PIPE)
+
+
+if __name__ == "__main__":
+    main()
