@@ -1,9 +1,10 @@
-from datetime import datetime
+from datetime import date, datetime
 from typing import List, Optional
 
+import lxml.html
 from lxml.etree import XPath
 
-from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute
+from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute, function
 from fundus.parser.utility import (
     extract_article_body_with_selector,
     generic_author_parsing,
@@ -14,8 +15,9 @@ from fundus.parser.utility import (
 
 class ReutersParser(ParserProxy):
     class V1(BaseParser):
-        _paragraph_selector = XPath("//p[starts-with(@data-testid, 'paragraph') and position() > 1]")
-        _summary_selector = XPath("//p[starts-with(@data-testid, 'paragraph')][1]")
+        VALID_UNTIL = date(2024, 1, 1)
+        _paragraph_selector = XPath("(//p[starts-with(@data-testid, 'paragraph')])[position() > 1]")
+        _summary_selector = XPath("(//p[starts-with(@data-testid, 'paragraph')])[1]")
 
         @attribute
         def body(self) -> ArticleBody:
@@ -59,3 +61,18 @@ class ReutersParser(ParserProxy):
             # Remove empty topics and duplicates deterministically
             processed_topics = list(dict.fromkeys(topic for topic in topics if topic))
             return processed_topics
+
+    class V1_1(V1):
+        VALID_UNTIL = date.today()
+        _paragraph_selector = XPath("(//div[starts-with(@data-testid, 'paragraph')])[position() > 1]")
+        _summary_selector = XPath("(//div[starts-with(@data-testid, 'paragraph')])[1]")
+
+        _new_tab_span_selector = XPath(
+            "//div[starts-with(@data-testid, 'paragraph')] //span[contains(text(), 'opens new tab')]"
+        )
+
+        @function(priority=1)
+        def _remove_new_tab_span(self) -> None:
+            span: lxml.html.HtmlElement
+            for span in self._new_tab_span_selector(self.precomputed.doc):
+                span.drop_tree()
