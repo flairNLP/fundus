@@ -199,12 +199,8 @@ class TextSequenceTree(ABC):
         texts = [text for tl in self.df_traversal() for text in tl]
         return TextSequence(texts)
 
-    def text(self, join_on: str = "\n\n", strip_text: bool = True) -> str:
-        if strip_text:
-            striped_texts = [" ".join(text.split()) for text in self.as_text_sequence()]
-            return join_on.join(striped_texts)
-        else:
-            return join_on.join(self.as_text_sequence())
+    def text(self, join_on: str = "\n\n") -> str:
+        return join_on.join(self.as_text_sequence())
 
     def df_traversal(self) -> Iterable[TextSequence]:
         def recursion(o: object):
