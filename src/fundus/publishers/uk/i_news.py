@@ -15,7 +15,7 @@ from fundus.parser.utility import (
 class INewsParser(ParserProxy):
     class V1(BaseParser):
         _summary_selector = CSSSelector("article > h2")
-        _paragraph_selector = CSSSelector("article > div.article-content > p")
+        _paragraph_selector = CSSSelector("article div.article-content p")
 
         @attribute
         def body(self) -> ArticleBody:
