@@ -13,7 +13,9 @@ from fundus.parser.utility import (
 
 class LATimesParser(ParserProxy):
     class V1(BaseParser):
-        _subheadline_selector = CSSSelector("div[data-element*=story-body] h3[class*=story-title]")
+        _subheadline_selector = CSSSelector(
+            "div[data-element*=story-body] h3[class*=story-title], div[data-element*=story-body] h2[class=subhead]"
+        )
         _paragraph_selector = CSSSelector("div[data-element*=story-body] > p")
 
         @attribute
