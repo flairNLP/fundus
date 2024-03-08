@@ -14,6 +14,7 @@ from fundus.parser.utility import (
 
 class WAZParser(ParserProxy):
     class V1(BaseParser):
+        VALID_UNTIL = datetime.date(2024, 2, 21)
         _paragraph_selector = CSSSelector(".article__body > p")
         _summary_selector = CSSSelector(".article__header__intro__text")
         _subheadline_selector = CSSSelector(".article__body > h3")
@@ -44,3 +45,9 @@ class WAZParser(ParserProxy):
             authors = generic_author_parsing(self.precomputed.meta.get("author"))
             topics = generic_topic_parsing(self.precomputed.meta.get("keywords"))
             return [topic for topic in topics if topic not in authors]
+
+    class V1_1(V1):
+        VALID_UNTIL = datetime.date.today()
+        _paragraph_selector = CSSSelector(".article-body > p")
+        _summary_selector = CSSSelector(".article-body > p.font-sans")
+        _subheadline_selector = CSSSelector(".article-body > h3")
