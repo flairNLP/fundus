@@ -294,7 +294,7 @@ class Crawler(CrawlerBase):
     def _threaded_crawl(
         publishers: Tuple[PublisherEnum, ...], article_task: Callable[[PublisherEnum], Iterator[Article]]
     ) -> Iterator[Article]:
-        article_queue: Queue[Article] = Queue()
+        article_queue: Queue[Article] = Queue(len(publishers))
         wrapped_article_task = queue_wrapper(article_queue, article_task)
 
         with ThreadPool(processes=len(publishers) or None) as pool:
@@ -373,7 +373,7 @@ class CCNewsCrawler(CrawlerBase):
         # process-bound. The reason is that we stream the data and process it on the fly rather than downloading all
         # files and processing them afterward. Therefore, we utilize multiprocessing here instead of multithreading.
         with Manager() as manager, Pool(processes=min(self.processes, len(warc_paths))) as pool:
-            article_queue: Queue[Article] = manager.Queue()
+            article_queue: Queue[Article] = manager.Queue(maxsize=1000)
 
             # Because multiprocessing.Pool does not support iterators as targets,
             # we wrap the article_task to write the articles to a queue instead of returning them directly.
