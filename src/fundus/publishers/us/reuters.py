@@ -66,6 +66,10 @@ class ReutersParser(ParserProxy):
 
     class V1_1(V1):
         VALID_UNTIL = date.today()
+
+        # TODO: at the end of sports related articles like
+        #  https://www.reuters.com/sports/basketball/hot-shooting-suns-wear-down-raptors-2024-03-08/
+        #  there is this `--Field Level Media` bloat line
         _paragraph_selector = XPath("(//div[starts-with(@data-testid, 'paragraph')])[position() > 1]")
         _summary_selector = XPath("(//div[starts-with(@data-testid, 'paragraph')])[1]")
 
