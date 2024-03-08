@@ -18,6 +18,7 @@ class ReutersParser(ParserProxy):
         VALID_UNTIL = date(2024, 1, 1)
         _paragraph_selector = XPath("(//p[starts-with(@data-testid, 'paragraph')])[position() > 1]")
         _summary_selector = XPath("(//p[starts-with(@data-testid, 'paragraph')])[1]")
+        _subheadline_selector = XPath("//div[contains(@class, 'article-body')] /h2[@data-testid='Heading']")
 
         @attribute
         def body(self) -> ArticleBody:
@@ -25,6 +26,7 @@ class ReutersParser(ParserProxy):
                 self.precomputed.doc,
                 summary_selector=self._summary_selector,
                 paragraph_selector=self._paragraph_selector,
+                subheadline_selector=self._subheadline_selector,
             )
 
         @attribute
