@@ -94,3 +94,10 @@ class TheNationParser(ParserProxy):
         # remove aside function from V1
         def _remove_aside(self):
             pass
+
+        @attribute
+        def topics(self) -> List[str]:
+            if topics := generic_topic_parsing(self.precomputed.meta.get("keywords")):
+                return topics
+            else:
+                return generic_topic_parsing(self.precomputed.meta.get("sailthru.tags"))
