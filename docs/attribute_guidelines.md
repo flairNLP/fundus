@@ -27,7 +27,7 @@ Those attributes will be validated with unit tests when used.
         <td>A string representing the headline of a given article.
             Does not include subheaders, aims to be as short as possible.</td>
         <td><code>Optional[str]</code></td>
-        <td><code>&#160;</code></td>
+        <td></td>
     </tr>
     <tr>
         <td>body</td>
@@ -64,6 +64,6 @@ Those attributes will be validated with unit tests when used.
         that the article cannot be crawled completely.
         <i><b>This attribute is implemented by default</b></i></td>
         <td><code>bool</code></td>
-        <td><code></code></td>
+        <td></td>
     </tr>
 </table>
