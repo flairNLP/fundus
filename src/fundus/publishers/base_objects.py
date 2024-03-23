@@ -17,6 +17,7 @@ class PublisherSpec:
     sources: List[URLSource]
     url_filter: Optional[URLFilter] = field(default=None)
     request_header: Dict[str, str] = field(default_factory=dict)
+    query_parameter: str = ""
 
 
 @unique

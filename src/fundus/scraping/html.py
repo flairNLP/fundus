@@ -28,6 +28,7 @@ from aiohttp.web_exceptions import HTTPError
 from lxml.cssselect import CSSSelector
 from lxml.etree import XPath
 
+from fundus import PublisherCollection
 from fundus.logging import basic_logger
 from fundus.scraping.filter import URLFilter, inverse
 from fundus.utils.more_async import ManagedEventLoop, async_next, make_iterable_async
@@ -308,6 +309,9 @@ class FundusSource:
             self.url_source = url_source
         else:
             self.url_source = make_iterable_async(url_source)
+        publisher_enum = PublisherCollection[publisher]
+        if publisher_enum.query_parameter is not None:
+            url_source.url += publisher_enum.query_parameter
         self.publisher = publisher
         self.url_filter = url_filter
         self.request_header = request_header or _default_header
