@@ -15,6 +15,7 @@ from .die_zeit import DieZeitParser
 from .dw import DWParser
 from .faz import FAZParser
 from .focus import FocusParser
+from .heise import HeiseParser
 from .mdr import MDRParser
 from .merkur import MerkurParser
 from .ndr import NDRParser
@@ -200,6 +201,17 @@ class DE(PublisherEnum):
         domain="https://www.waz.de/",
         sources=[NewsMap("https://www.waz.de/sitemaps/news.xml")],
         parser=WAZParser,
+    )
+
+    Heise = PublisherSpec(
+        name="Heise",
+        domain="https://www.heise.de",
+        sources=[
+            RSSFeed("https://www.heise.de/rss/heise.rdf"),
+            Sitemap("https://www.heise.de/sitemapindex.xml"),
+            NewsMap("https://www.heise.de/news/sitemap.xml"),
+        ],
+        parser=HeiseParser,
     )
 
     BSZ = PublisherSpec(
