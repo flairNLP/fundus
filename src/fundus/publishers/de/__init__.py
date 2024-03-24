@@ -9,7 +9,7 @@ from fundus.scraping.html import NewsMap, RSSFeed, Sitemap
 from .berliner_zeitung import BerlinerZeitungParser
 from .bild import BildParser
 from .braunschweiger_zeitung import BSZParser
-from .business_insider import BusinessInsiderParser
+from .business_insider_de import BusinessInsiderDEParser
 from .die_welt import DieWeltParser
 from .die_zeit import DieZeitParser
 from .dw import DWParser
@@ -218,12 +218,12 @@ class DE(PublisherEnum):
         parser=BSZParser,
     )
 
-    BusinessInsider = PublisherSpec(
-        name="Business Insider",
+    BusinessInsiderDE = PublisherSpec(
+        name="Business Insider DE",
         domain="https://www.businessinsider.de/",
         sources=[
             NewsMap("https://www.businessinsider.de/news-sitemap.xml"),
             Sitemap("https://www.businessinsider.de/sitemap_index.xml"),
         ],
-        parser=BusinessInsiderParser,
+        parser=BusinessInsiderDEParser,
     )
