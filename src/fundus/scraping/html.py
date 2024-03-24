@@ -302,7 +302,7 @@ class FundusSource:
         publisher: str,
         url_filter: Optional[URLFilter] = None,
         request_header: Optional[Dict[str, str]] = None,
-        query_parameter: Optional[str] = ""
+        query_parameter: Optional[str] = "",
     ):
         self.url_source: Union[URLSource, AsyncIterator[str]]
         if isinstance(url_source, URLSource):
@@ -325,6 +325,11 @@ class FundusSource:
             return any(f(u) for f in combined_filters)
 
         async for url in self.url_source:
+            if self.query_parameter is not None:
+                if "?" in url:
+                    url += "&" + self.query_parameter
+                else:
+                    url += "?" + self.query_parameter
             if not validators.url(url):
                 basic_logger.debug(f"Skipped requested URL '{url}' because the URL is malformed")
                 yield None
@@ -338,7 +343,7 @@ class FundusSource:
             session = await session_handler.get_session()
 
             try:
-                async with session.get(url + self.query_parameter, headers=self.request_header) as response:
+                async with session.get(url, headers=self.request_header) as response:
                     if filter_url(str(response.url)):
                         basic_logger.debug(f"Skipped responded URL '{str(response.url)}' because of URL filter")
                         yield None

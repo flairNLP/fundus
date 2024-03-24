@@ -212,7 +212,7 @@ class DE(PublisherEnum):
             NewsMap("https://www.heise.de/news/sitemap.xml"),
         ],
         parser=HeiseParser,
-        query_parameter="?seite=all"
+        query_parameter="seite=all",
     )
 
     BSZ = PublisherSpec(
