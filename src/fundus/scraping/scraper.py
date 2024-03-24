@@ -2,7 +2,6 @@ from typing import AsyncIterator, Literal, Optional
 
 import more_itertools
 
-from fundus import PublisherCollection
 from fundus.logging import basic_logger
 from fundus.parser import ParserProxy
 from fundus.scraping.article import Article
