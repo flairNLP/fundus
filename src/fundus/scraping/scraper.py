@@ -50,8 +50,6 @@ class Scraper:
                 return
 
         for html_source in self.sources:
-            if param := PublisherCollection[html_source.publisher].query_parameter is not None:
-                html_source.url_source.url += param
             async for html in html_source.fetch(url_filter=url_filter):
                 if html is None:
                     yield None
