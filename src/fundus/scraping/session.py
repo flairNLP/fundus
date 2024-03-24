@@ -2,7 +2,9 @@ from typing import Optional
 
 import requests.adapters
 
-from fundus.logging import basic_logger
+from fundus.logging import create_logger
+
+__module_logger__ = create_logger(__name__)
 
 _default_header = {"user-agent": "Fundus"}
 
@@ -42,7 +44,7 @@ class SessionHandler:
             history = response.history
             previous_status_codes = [f"({response.status_code})" for response in history] if history else []
             status_code_chain = " -> ".join(previous_status_codes + [f"({response.status_code})"])
-            basic_logger.debug(
+            __module_logger__.debug(
                 f"{status_code_chain} <{response.request.method} {response.url!r}> "
                 f"took {response.elapsed.total_seconds()} second(s)"
             )
@@ -84,7 +86,7 @@ class SessionHandler:
             None
         """
         session = self.get_session()
-        basic_logger.debug(f"Close session {session}")
+        __module_logger__.debug(f"Close session {session}")
         session.close()
         self.session = None
 

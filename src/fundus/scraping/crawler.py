@@ -34,7 +34,7 @@ from dateutil.rrule import MONTHLY, rrule
 from tqdm import tqdm
 from typing_extensions import ParamSpec, TypeAlias
 
-from fundus.logging import basic_logger
+from fundus.logging import create_logger
 from fundus.publishers.base_objects import PublisherCollectionMeta, PublisherEnum
 from fundus.scraping.article import Article
 from fundus.scraping.delay import Delay
@@ -42,6 +42,8 @@ from fundus.scraping.filter import ExtractionFilter, Requires, URLFilter
 from fundus.scraping.html import CCNewsSource
 from fundus.scraping.scraper import CCNewsScraper, WebScraper
 from fundus.scraping.url import URLSource
+
+__module_logger__ = create_logger(__name__)
 
 _T = TypeVar("_T")
 _P = ParamSpec("_P")
@@ -191,7 +193,7 @@ class CrawlerBase(ABC):
                     )
                 )
                 if missing_attributes := extraction_filter.required_attributes - supported_attributes:
-                    basic_logger.warning(
+                    __module_logger__.warning(
                         f"The required attribute(s) `{', '.join(missing_attributes)}` "
                         f"is(are) not supported by {publisher.publisher_name}. Skipping publisher"
                     )
@@ -199,7 +201,7 @@ class CrawlerBase(ABC):
                     fitting_publisher.append(publisher)
 
             if not fitting_publisher:
-                basic_logger.error(
+                __module_logger__.error(
                     f"Could not find any fitting publisher for required attributes  "
                     f"`{', '.join(extraction_filter.required_attributes)}`"
                 )

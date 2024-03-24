@@ -12,9 +12,11 @@ from lxml.cssselect import CSSSelector
 from lxml.etree import XPath
 from requests import ConnectionError, HTTPError
 
-from fundus.logging import basic_logger
+from fundus.logging import create_logger
 from fundus.scraping.filter import URLFilter, inverse
 from fundus.scraping.session import _default_header, session_handler
+
+__module_logger__ = create_logger(__name__)
 
 
 class _ArchiveDecompressor:
@@ -78,7 +80,7 @@ class RSSFeed(URLSource):
         html = response.text
         rss_feed = feedparser.parse(html)
         if exception := rss_feed.get("bozo_exception"):
-            basic_logger.warning(f"Warning! Couldn't parse rss feed '{self.url}' because of {exception}")
+            __module_logger__.warning(f"Warning! Couldn't parse rss feed '{self.url}' because of {exception}")
             return
         else:
             for url in (entry["link"] for entry in rss_feed["entries"]):
@@ -99,17 +101,17 @@ class Sitemap(URLSource):
         def yield_recursive(sitemap_url: str) -> Iterator[str]:
             session = session_handler.get_session()
             if not validators.url(sitemap_url):
-                basic_logger.info(f"Skipped sitemap '{sitemap_url}' because the URL is malformed")
+                __module_logger__.info(f"Skipped sitemap '{sitemap_url}' because the URL is malformed")
             try:
                 response = session.get(url=sitemap_url, headers=self._request_header)
             except (HTTPError, ConnectionError) as error:
-                basic_logger.warning(f"Warning! Couldn't reach sitemap '{sitemap_url}' because of {error}")
+                __module_logger__.warning(f"Warning! Couldn't reach sitemap '{sitemap_url}' because of {error}")
                 return
             content = response.content
             if (content_type := response.headers["content-type"]) in self._decompressor.supported_file_formats:
                 content = self._decompressor.decompress(content, content_type)
             if not content:
-                basic_logger.warning(f"Warning! Empty sitemap at '{sitemap_url}'")
+                __module_logger__.warning(f"Warning! Empty sitemap at '{sitemap_url}'")
                 return
             tree = lxml.html.fromstring(content)
             urls = [node.text_content() for node in self._url_selector(tree)]

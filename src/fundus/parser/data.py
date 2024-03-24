@@ -16,9 +16,12 @@ from typing import (
 
 from typing_extensions import TypeAlias
 
-from fundus.logging import basic_logger
+from fundus.logging import create_logger
+
+__module_logger__ = create_logger(__name__)
 
 _displayed_deprecation_info = False
+
 
 LDMappingValue: TypeAlias = Union[List[Dict[str, Any]], Dict[str, Any]]
 
@@ -80,7 +83,7 @@ class LinkedDataMapping:
 
         if not _displayed_deprecation_info:
             _displayed_deprecation_info = True
-            basic_logger.warning(
+            __module_logger__.warning(
                 "LinkedDate.get() will be deprecated in the future. Use .get_value_by_key_path() "
                 "or .bf_search() instead"
             )
