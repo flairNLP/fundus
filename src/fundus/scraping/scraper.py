@@ -7,7 +7,11 @@ from fundus.parser import ParserProxy
 from fundus.publishers.base_objects import PublisherEnum
 from fundus.scraping.article import Article
 from fundus.scraping.delay import Delay
-from fundus.scraping.filter import ExtractionFilter, FilterResultWithMissingAttributes, URLFilter
+from fundus.scraping.filter import (
+    ExtractionFilter,
+    FilterResultWithMissingAttributes,
+    URLFilter,
+)
 from fundus.scraping.html import CCNewsSource, HTMLSource, WebSource
 from fundus.scraping.url import URLSource
 
@@ -51,7 +55,9 @@ class BaseScraper:
                                 f"{', '.join(filter_result.missing_attributes)!r} is(are) missing"
                             )
                         else:
-                            basic_logger.debug(f"Skipped article at '{html.requested_url}' because of extraction filter")
+                            basic_logger.debug(
+                                f"Skipped article at '{html.requested_url}' because of extraction filter"
+                            )
                     else:
                         article = Article.from_extracted(html=html, extracted=extraction)
                         yield article
