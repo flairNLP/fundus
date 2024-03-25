@@ -2,6 +2,7 @@ import datetime
 from typing import List, Optional
 
 from lxml.cssselect import CSSSelector
+from lxml.etree import XPath
 
 from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute
 from fundus.parser.utility import (
@@ -14,13 +15,17 @@ from fundus.parser.utility import (
 
 class LeMondeParser(ParserProxy):
     class V1(BaseParser):
-        _paragraph_selector = CSSSelector("p[class='article__paragraph ']")
+        _paragraph_selector: CSSSelector = CSSSelector("p[class='article__paragraph ']")
+        _summary_selector: XPath = XPath("//p[contains(@class, 'article__desc') or @id='js-summary-live']")
+        _subheadline_selector: XPath = XPath("//h2[@class = 'article__sub-title']")
 
         @attribute
         def body(self) -> ArticleBody:
             return extract_article_body_with_selector(
                 self.precomputed.doc,
                 paragraph_selector=self._paragraph_selector,
+                summary_selector=self._summary_selector,
+                subheadline_selector=self._subheadline_selector,
             )
 
         @attribute

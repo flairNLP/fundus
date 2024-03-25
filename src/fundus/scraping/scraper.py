@@ -5,7 +5,12 @@ import more_itertools
 from fundus.logging import basic_logger
 from fundus.parser import ParserProxy
 from fundus.scraping.article import Article
-from fundus.scraping.filter import ExtractionFilter, Requires, URLFilter
+from fundus.scraping.filter import (
+    ExtractionFilter,
+    FilterResultWithMissingAttributes,
+    Requires,
+    URLFilter,
+)
 from fundus.scraping.html import FundusSource
 
 
@@ -66,8 +71,14 @@ class Scraper:
                     else:
                         raise ValueError(f"Unknown value '{error_handling}' for parameter <error_handling>'")
 
-                if extraction_filter and extraction_filter(extraction):
-                    basic_logger.debug(f"Skipped article at '{html.requested_url}' because of extraction filter")
+                if extraction_filter and (filter_result := extraction_filter(extraction)):
+                    if isinstance(filter_result, FilterResultWithMissingAttributes):
+                        basic_logger.debug(
+                            f"Skipped article at '{html.requested_url}' because attribute(s) "
+                            f"{', '.join(filter_result.missing_attributes)!r} is(are) missing"
+                        )
+                    else:
+                        basic_logger.debug(f"Skipped article at '{html.requested_url}' because of extraction filter")
                     yield None
                 else:
                     article = Article.from_extracted(html=html, extracted=extraction)

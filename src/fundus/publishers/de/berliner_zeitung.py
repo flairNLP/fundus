@@ -15,7 +15,7 @@ from fundus.parser.utility import (
 class BerlinerZeitungParser(ParserProxy):
     class V1(BaseParser):
         _paragraph_selector = CSSSelector("div[id=articleBody] > p")
-        _summary_selector = CSSSelector("div[id=articleBody] > p")
+        _summary_selector = CSSSelector("div[data-testid=article-header] > p")
         _subheadline_selector = CSSSelector("div[id=articleBody] > h2")
 
         @attribute

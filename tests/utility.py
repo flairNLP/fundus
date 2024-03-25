@@ -3,7 +3,7 @@ import gzip
 import json
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Callable, Dict, Generic, Optional, Type, TypeVar
+from typing import Any, Callable, Dict, Generic, List, Optional, Type, TypeVar
 
 from typing_extensions import Self
 
@@ -11,10 +11,29 @@ from fundus import PublisherCollection
 from fundus.parser import ArticleBody, BaseParser
 from fundus.parser.data import TextSequenceTree
 from fundus.publishers.base_objects import PublisherEnum
+from fundus.scraping.article import Article
+from fundus.scraping.html import HTML, HTMLSource
 from scripts.generate_tables import supported_publishers_markdown_path
 from tests.resources.parser.test_data import __module_path__ as test_resource_path
 
 _T = TypeVar("_T")
+
+
+def get_test_articles(publisher: PublisherEnum) -> List[Article]:
+    articles = []
+    html_mapping = load_html_test_file_mapping(publisher)
+    for html_test_file in html_mapping.values():
+        extraction = publisher.parser(html_test_file.crawl_date).parse(html_test_file.content)
+        html = HTML(
+            content=html_test_file.content,
+            crawl_date=html_test_file.crawl_date,
+            requested_url=html_test_file.url,
+            responded_url=html_test_file.url,
+            source=HTMLSource(publisher.publisher_name),
+        )
+        article = Article.from_extracted(extracted=extraction, html=html)
+        articles.append(article)
+    return articles
 
 
 @dataclass

@@ -91,9 +91,7 @@
         </a>
       </td>
       <td>&#160;</td>
-      <td>
-        <code>free_access</code>
-      </td>
+      <td>&#160;</td>
     </tr>
     <tr>
       <td>
