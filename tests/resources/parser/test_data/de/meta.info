@@ -1,4 +1,8 @@
 {
+  "BSZ_2024_01_29.html.gz": {
+    "url": "https://www.braunschweiger-zeitung.de/niedersachsen/article241536118/Heide-Park-Eroeffnungstermin-fuer-neue-Attraktion-steht-fest.html",
+    "crawl_date": "2024-01-29 19:29:19.952428"
+  },
   "BerlinerZeitung_2023_04_28.html.gz": {
     "url": "https://www.berliner-zeitung.de/news/550-kinder-gezeugt-gericht-stoppt-uebereifrigen-samenspender-in-den-niederlanden-li.343191",
     "crawl_date": "2023-04-28 20:25:16.328923"
@@ -7,6 +11,10 @@
     "url": "https://www.bild.de/sport/fussball/fortuna-duesseldorf/bubi-bomber-wieder-da-thioune-fordert-geduld-mit-niemiec-83936220.bild.html",
     "crawl_date": "2023-05-15 13:55:04.823203"
   },
+  "BusinessInsider_2024_01_29.html.gz": {
+    "url": "https://www.businessinsider.de/wirtschaft/international-business/wie-gross-ist-evergrande-chinas-sterbender-immobilienriese/",
+    "crawl_date": "2024-01-29 22:53:02.986279"
+  },
   "DW_2023_04_28.html.gz": {
     "url": "https://www.dw.com/de/ukrainische-gegenoffensive-ziele-chancen-risiken/a-65464327?maca=de-rss-de-all-1119-xml-mrss",
     "crawl_date": "2023-04-28 20:25:18.143350"
@@ -14,6 +22,10 @@
   "DW_2023_06_13.html.gz": {
     "url": "https://www.dw.com/de/post-vac-syndrom-nach-covid-19-impfung-was-wissen-wir/a-65897191?maca=de-rss-de-all-1119-xml-mrss",
     "crawl_date": "2023-06-13 16:57:08.558047"
+  },
+  "DW_2024_01_30.html.gz": {
+    "url": "https://www.dw.com/de/russland-wahl-nadeschdin-setzt-auf-ein-ende-der-putin-%C3%A4ra/a-68117411?maca=de-rss-de-all-1119-xml-mrss",
+    "crawl_date": "2024-01-30 16:12:24.867249"
   },
   "DieWelt_2023_04_28.html.gz": {
     "url": "https://www.welt.de/wirtschaft/article245055596/BIP-Diese-Grafiken-zeigen-wie-schlecht-es-um-Deutschlands-Wirtschaft-steht.html",
@@ -50,6 +62,10 @@
   "SZ_2023_04_28.html.gz": {
     "url": "https://www.sueddeutsche.de/muenchen/landkreismuenchen/ranking-fahrradfreundlichkeit-fleissige-bundestagsabgeordnete-kolumne-1.5827206",
     "crawl_date": "2023-04-28 20:21:15.488026"
+  },
+  "SZ_2024_02_06.html.gz": {
+    "url": "https://www.sueddeutsche.de/politik/chile-ex-praesident-stirbt-bei-hubschrauberabsturz-1.6345022",
+    "crawl_date": "2024-02-06 21:46:40.133150"
   },
   "SpiegelOnline_2023_04_28.html.gz": {
     "url": "https://www.spiegel.de/wirtschaft/unternehmen/silicon-valley-bank-federal-reserve-raeumt-versaeumnisse-bei-aufsicht-ein-a-60a0111a-c2d2-46c8-9e93-b16a374e6ba8#ref=rss",

@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import List, Optional
 
-from lxml.cssselect import CSSSelector
+from lxml.etree import XPath
 
 from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute
 from fundus.parser.utility import (
@@ -13,7 +13,12 @@ from fundus.parser.utility import (
 
 class TheGatewayPunditParser(ParserProxy):
     class V1(BaseParser):
-        _paragraph_selector = CSSSelector("div.entry-content > p")
+        _related = r"^Click\s$"
+        _paragraph_selector = XPath(
+            f"(//div[@class='entry-content'] | //div[@class='entry-content']/blockquote[not(@class='twitter-tweet')]) "
+            f"/p[not(child::img or child::script or re:test(text(), '{_related}')) and text()]",
+            namespaces={"re": "http://exslt.org/regular-expressions"},
+        )
 
         @attribute
         def body(self) -> ArticleBody:
@@ -32,4 +37,6 @@ class TheGatewayPunditParser(ParserProxy):
 
         @attribute
         def title(self) -> Optional[str]:
-            return self.precomputed.meta.get("og:title")
+            if (title := self.precomputed.meta.get("og:title")) is not None:
+                title = title.split("|")[0].strip()
+            return title

@@ -2,7 +2,6 @@ import datetime
 import re
 from typing import List, Optional, Pattern
 
-from lxml.cssselect import CSSSelector
 from lxml.etree import XPath
 
 from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute
@@ -15,12 +14,21 @@ from fundus.parser.utility import (
 )
 
 
-class DieZeitParser(ParserProxy):
+class BSZParser(ParserProxy):
     class V1(BaseParser):
-        _author_substitution_pattern: Pattern[str] = re.compile(r"DIE ZEIT (Archiv)")
-        _paragraph_selector = XPath("//div[@class = 'article-page']/p[not(contains(text(), '© dpa-infocom'))]")
-        _summary_selector = CSSSelector("div.summary")
-        _subheadline_selector = CSSSelector("div.article-page > h2")
+        _author_substitution_pattern: Pattern[str] = re.compile(r"FUNKE Mediengruppe")
+        _paragraph_selector = XPath(
+            "//div[@class='article-body']//p[not(not(text()) or @rel='author' or em[@class='print'] or contains(@class, 'font-sans'))]"
+        )
+        _summary_selector = XPath("//div[@class='article-body']//p[contains(@class, 'font-sans')]")
+        _subheadline_selector = XPath(
+            "//div[@class='article-body']//h3[not("
+            "contains(text(), 'Alle Artikel der Serie')"
+            " or contains(text(), 'Mehr zum Thema')"
+            " or contains(text(), 'weitere Videos')"
+            " or contains(text(), 'Auch interessant')"
+            " or contains(text(), 'Weitere News'))]"
+        )
 
         @attribute
         def body(self) -> ArticleBody:
@@ -32,6 +40,14 @@ class DieZeitParser(ParserProxy):
             )
 
         @attribute
+        def title(self) -> Optional[str]:
+            return self.precomputed.ld.bf_search("headline")
+
+        @attribute
+        def topics(self) -> List[str]:
+            return generic_topic_parsing(self.precomputed.meta.get("news_keywords"))
+
+        @attribute
         def authors(self) -> List[str]:
             return apply_substitution_pattern_over_list(
                 generic_author_parsing(self.precomputed.ld.bf_search("author")), self._author_substitution_pattern
@@ -40,11 +56,3 @@ class DieZeitParser(ParserProxy):
         @attribute
         def publishing_date(self) -> Optional[datetime.datetime]:
             return generic_date_parsing(self.precomputed.ld.bf_search("datePublished"))
-
-        @attribute
-        def title(self) -> Optional[str]:
-            return self.precomputed.ld.bf_search("headline")
-
-        @attribute
-        def topics(self) -> List[str]:
-            return generic_topic_parsing(self.precomputed.meta.get("keywords"))

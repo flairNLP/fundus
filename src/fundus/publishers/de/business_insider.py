@@ -13,24 +13,37 @@ from fundus.parser.utility import (
 )
 
 
-class FoxNewsParser(ParserProxy):
+class BusinessInsiderParser(ParserProxy):
     class V1(BaseParser):
-        _summary_selector = CSSSelector(".article-meta > h2")
+        _summary_selector = CSSSelector("article div.bi-bulletpoints > p")
+        _subheadline_selector = CSSSelector("article h2")
+
         _paragraph_selector = XPath(
-            "(//div[@class='article-body'] | //div[@class='article-body']/div[contains(@class, 'paywall')]) "
-            "/p[not(child::script) and text()]"
+            """
+            //article 
+            //div[contains(@class, 'article-body')] 
+            //p[
+                not(
+                    ancestor::*[@class='bi-bulletpoints'] or
+                    mark[@class='has-inline-color has-cyan-bluish-gray-color'] or 
+                    @class='has-text-align-right'
+                )
+            ]
+            """
         )
 
         @attribute
         def body(self) -> ArticleBody:
             return extract_article_body_with_selector(
                 self.precomputed.doc,
+                summary_selector=self._summary_selector,
+                subheadline_selector=self._subheadline_selector,
                 paragraph_selector=self._paragraph_selector,
             )
 
         @attribute
         def authors(self) -> List[str]:
-            return generic_author_parsing(self.precomputed.meta.get("dc.creator"))
+            return generic_author_parsing(self.precomputed.ld.bf_search("author"))
 
         @attribute
         def publishing_date(self) -> Optional[datetime.datetime]:
@@ -42,4 +55,6 @@ class FoxNewsParser(ParserProxy):
 
         @attribute
         def topics(self) -> List[str]:
-            return generic_topic_parsing(self.precomputed.meta.get("classification-tags"))
+            return generic_topic_parsing(self.precomputed.meta.get("keywords")) or generic_topic_parsing(
+                self.precomputed.ld.bf_search("keywords")
+            )
