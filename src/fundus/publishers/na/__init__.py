@@ -1,6 +1,6 @@
 from fundus.publishers.base_objects import PublisherEnum, PublisherSpec
 from fundus.scraping.filter import inverse, regex_filter
-from fundus.scraping.html import RSSFeed, Sitemap
+from fundus.scraping.url import RSSFeed, Sitemap
 
 from .the_namibian import TheNamibianParser
 

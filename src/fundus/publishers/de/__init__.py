@@ -4,7 +4,7 @@ from dateutil.rrule import MONTHLY, rrule
 
 from fundus.publishers.base_objects import PublisherEnum, PublisherSpec
 from fundus.scraping.filter import regex_filter
-from fundus.scraping.html import NewsMap, RSSFeed, Sitemap
+from fundus.scraping.url import NewsMap, RSSFeed, Sitemap
 
 from .berliner_zeitung import BerlinerZeitungParser
 from .bild import BildParser

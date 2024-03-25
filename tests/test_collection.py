@@ -11,8 +11,8 @@ class TestCollection:
     def test_iter_collection_with_empty_publisher_enum(self, collection_with_empty_publisher_enum):
         assert list(collection_with_empty_publisher_enum) == []
 
-    def test_iter_collection_with_publisher_enum(self, collection_with_validate_publisher_enum):
-        assert list(collection_with_validate_publisher_enum) == [collection_with_validate_publisher_enum.pub.value]
+    def test_iter_collection_with_publisher_enum(self, collection_with_valid_publisher_enum):
+        assert list(collection_with_valid_publisher_enum) == [collection_with_valid_publisher_enum.pub.value]
 
     def test_publisher_enum_with_wrong_enum_value(self):
         with pytest.raises(ValueError):
