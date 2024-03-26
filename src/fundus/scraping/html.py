@@ -302,6 +302,7 @@ class FundusSource:
         publisher: str,
         url_filter: Optional[URLFilter] = None,
         request_header: Optional[Dict[str, str]] = None,
+        query_parameter: Optional[str] = "",
     ):
         self.url_source: Union[URLSource, AsyncIterator[str]]
         if isinstance(url_source, URLSource):
@@ -313,6 +314,7 @@ class FundusSource:
         self.request_header = request_header or _default_header
         if isinstance(url_source, URLSource):
             url_source.set_header(self.request_header)
+        self.query_parameter = query_parameter
 
     async def fetch(self, url_filter: Optional[URLFilter] = None) -> AsyncIterator[Optional[HTML]]:
         combined_filters: List[URLFilter] = ([self.url_filter] if self.url_filter else []) + (
@@ -323,6 +325,11 @@ class FundusSource:
             return any(f(u) for f in combined_filters)
 
         async for url in self.url_source:
+            if self.query_parameter is not None:
+                if "?" in url:
+                    url += "&" + self.query_parameter
+                else:
+                    url += "?" + self.query_parameter
             if not validators.url(url):
                 basic_logger.debug(f"Skipped requested URL '{url}' because the URL is malformed")
                 yield None

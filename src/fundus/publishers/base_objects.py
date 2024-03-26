@@ -17,6 +17,7 @@ class PublisherSpec:
     sources: List[URLSource]
     url_filter: Optional[URLFilter] = field(default=None)
     request_header: Dict[str, str] = field(default_factory=dict)
+    query_parameter: str = ""
 
 
 @unique
@@ -54,6 +55,7 @@ class PublisherEnum(Enum):
                 publisher=self.publisher_name,
                 url_filter=spec.url_filter,
                 request_header=spec.request_header,
+                query_parameter=spec.query_parameter,
             )
             source_mapping[type(url_source)].append(source)
 
