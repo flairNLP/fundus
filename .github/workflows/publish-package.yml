@@ -57,6 +57,7 @@ jobs:
     environment:
       name: testpypi
       url: https://test.pypi.org/p/fundus
+      
     permissions:
       id-token: write
 
@@ -66,6 +67,7 @@ jobs:
         with:
           name: python-package-distributions
           path: dist/
+          
       - name: Publish distribution 📦 to TestPyPI
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
@@ -113,6 +115,7 @@ jobs:
         with:
           name: python-package-distributions
           path: dist/
+          
       - name: Publish distribution 📦 to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
 
