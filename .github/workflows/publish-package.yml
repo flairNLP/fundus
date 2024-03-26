@@ -73,6 +73,10 @@ jobs:
         with:
           repository-url: https://test.pypi.org/legacy/
 
+      - name: Sleep for 2 minutes
+        run: sleep 2m
+        shell: bash
+
   test-distribution:
     name: Install and test TestPyPi distribution
     needs:
