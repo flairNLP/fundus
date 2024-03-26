@@ -45,7 +45,7 @@ jobs:
       - name: Store the distribution packages
         uses: actions/upload-artifact@v3
         with:
-          name: python-package-distribution
+          name: python-package-distributions
           path: dist/
 
   publish-to-testpypi:
@@ -78,6 +78,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - uses: actions/checkout@v4
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
