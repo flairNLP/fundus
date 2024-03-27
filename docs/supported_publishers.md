@@ -131,8 +131,8 @@
         <div>Die Tageszeitung (taz)</div>
       </td>
       <td>
-        <a href="https://www.taz.de/">
-          <span>www.taz.de</span>
+        <a href="https://taz.de/">
+          <span>taz.de</span>
         </a>
       </td>
       <td>&#160;</td>
