@@ -176,7 +176,7 @@ class DE(PublisherEnum):
 
     Taz = PublisherSpec(
         name="Die Tageszeitung (taz)",
-        domain="https://www.taz.de/",
+        domain="https://taz.de/",
         sources=[
             NewsMap("https://taz.de/sitemap-google-news.xml"),
             Sitemap("https://taz.de/sitemap-index.xml"),
