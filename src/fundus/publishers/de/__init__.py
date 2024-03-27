@@ -158,7 +158,7 @@ class DE(PublisherEnum):
 
     NTV = PublisherSpec(
         name="N-Tv",
-        domain="https://www.ntv.de/",
+        domain="https://www.n-tv.de/",
         sources=[NewsMap("https://www.n-tv.de/news.xml"), Sitemap("https://www.n-tv.de/sitemap.xml")],
         parser=NTVParser,
     )
