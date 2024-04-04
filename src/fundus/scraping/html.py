@@ -108,7 +108,7 @@ class WebSource:
             except (HTTPError, ConnectionError) as error:
                 basic_logger.info(f"Skipped requested URL '{url}' because of '{error}'")
                 if isinstance(error, HTTPError) and error.response.status_code >= 500:
-                    return
+                    basic_logger.info(f"Skipped {self.publisher} due to server errors: '{error}'")
                 continue
 
             except Exception as error:
