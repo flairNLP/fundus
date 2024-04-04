@@ -8,14 +8,14 @@ _default_header = {"user-agent": "Fundus"}
 
 
 class SessionHandler:
-    """Object for handling  project global aiohttp.ClientSessions
+    """Object for handling  project global request.Session
 
     The session life cycle consists of three steps which can be repeated indefinitely:
     Build, Supply, Teardown.
     Initially there is no session build within the session handler. When a session is requested
     with get_session() either a new one is created with _session_factory() or the session handler's
     existing one returned. Every subsequent call to get_session() will return the same
-    aiohttp.ClientSession object. If close_current_session() is called, the current session will be
+    response.Session object. If close_current_session() is called, the current session will be
     tear-downed and the next call to get_session() will build a new session.
     """
 
@@ -30,12 +30,13 @@ class SessionHandler:
         This returns a new client session build from pre-defined configurations:
         - pool_connections: 50
         - pool_maxsize: 50
-        - hooks = {'request': lambda request:}
+        - hooks = {'response': raise_for_status(), _response_log():}
 
         Returns:
             A new requests.Session
         """
 
+        basic_logger.debug("Creating new session")
         session = requests.Session()
 
         def _response_log(response: requests.Response, *args, **kwargs) -> None:
