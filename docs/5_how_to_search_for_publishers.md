@@ -15,8 +15,7 @@ You can search through the collection to get only publishers fitting your use ca
 Let's get some publishers based in the US, supporting an attribute called `topics` and `NewsMap` as a source, and use them to initialize a crawler afterward.
 
 ````python
-from fundus import Crawler, PublisherCollection
-from fundus.scraping.url import NewsMap
+from fundus import Crawler, PublisherCollection, NewsMap
 
 fitting_publishers = PublisherCollection.us.search(attributes=["topics"], source_types=[NewsMap])
 crawler = Crawler(fitting_publishers)
