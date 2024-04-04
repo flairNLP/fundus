@@ -257,7 +257,7 @@ class Crawler(CrawlerBase):
     ) -> Iterator[Article]:
         def build_delay() -> Optional[Delay]:
             if isinstance(self.delay, float):
-                  delay = self.delay
+                delay = self.delay
 
                 def constant_delay() -> float:
                     return delay
