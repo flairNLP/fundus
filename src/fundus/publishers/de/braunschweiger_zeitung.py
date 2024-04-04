@@ -56,7 +56,3 @@ class BSZParser(ParserProxy):
         @attribute
         def publishing_date(self) -> Optional[datetime.datetime]:
             return generic_date_parsing(self.precomputed.ld.bf_search("datePublished"))
-
-        @attribute(validate=False)
-        def free_access(self) -> bool:
-            return self.precomputed.ld.bf_search("isAccessibleForFree") == "True"

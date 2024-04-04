@@ -35,6 +35,10 @@
     "url": "https://www.reuters.com/business/aerospace-defense/nepal-says-no-proof-flydubai-plane-suffered-bird-strike-2023-04-25/",
     "crawl_date": "2023-05-16 14:22:02.363166"
   },
+  "Reuters_2024_03_07.html.gz": {
+    "url": "https://www.reuters.com/world/middle-east/israeli-tank-likely-scenario-fired-machine-gun-reporters-after-deadly-shelling-2024-03-07/",
+    "crawl_date": "2024-03-07 13:30:03.931664"
+  },
   "TheGatewayPundit_2023_04_28.html.gz": {
     "url": "https://www.thegatewaypundit.com/2023/04/new-plot-twist-in-idaho-quadruple-murders-case-surviving-roommate-agrees-to-interview-with-kohbergers-defense-lawyers/",
     "crawl_date": "2023-04-28 20:33:02.500510"
@@ -42,6 +46,10 @@
   "TheIntercept_2023_04_28.html.gz": {
     "url": "https://theintercept.com/2023/04/28/montana-trans-zooey-zephyr/",
     "crawl_date": "2023-04-28 20:32:56.516898"
+  },
+  "TheIntercept_2024_02_28.html.gz": {
+    "url": "https://theintercept.com/2024/02/28/aaron-bushnell-reddit-fire-protest-israel-palestine/",
+    "crawl_date": "2024-02-28 21:30:40.614829"
   },
   "TheNation_2023_05_15.html.gz": {
     "url": "https://www.thenation.com/article/activism/teamsters-tdu-ups-iowa/",

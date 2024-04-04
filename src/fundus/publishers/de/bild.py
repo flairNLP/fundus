@@ -1,4 +1,5 @@
 import datetime
+import re
 from typing import List, Optional
 
 from lxml.etree import XPath
@@ -42,3 +43,10 @@ class BildParser(ParserProxy):
         @attribute
         def topics(self) -> List[str]:
             return generic_topic_parsing(self.precomputed.meta.get("keywords"))
+
+        @attribute
+        def free_access(self) -> bool:
+            if (url := self.precomputed.meta.get("og:url")) is not None:
+                return re.search(r"/bild-plus/", url) is None
+            else:
+                return True

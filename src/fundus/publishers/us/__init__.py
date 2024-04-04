@@ -43,7 +43,14 @@ class US(PublisherEnum):
     TheIntercept = PublisherSpec(
         name="The Intercept",
         domain="https://www.theintercept.com/",
-        sources=[RSSFeed("https://theintercept.com/feed/?rss")],
+        sources=[
+            RSSFeed("https://theintercept.com/feed/?lang=en"),
+            Sitemap(
+                "https://theintercept.com/sitemap_index.xml",
+                reverse=True,
+                sitemap_filter=inverse(regex_filter("post-sitemap")),
+            ),
+        ],
         parser=TheInterceptParser,
     )
 
@@ -85,12 +92,12 @@ class US(PublisherEnum):
         parser=TheNationParser,
     )
 
-    WorldTruth = PublisherSpec(
-        name="World Truth",
-        domain="https://www.worldtruth.tv/",
-        sources=[RSSFeed("https://feeds.feedburner.com/ConsciousnessTv")],
-        parser=WorldTruthParser,
-    )
+    # WorldTruth = PublisherSpec(
+    #     name="World Truth",
+    #     domain="https://www.worldtruth.tv/",
+    #     sources=[RSSFeed("https://feeds.feedburner.com/ConsciousnessTv")],
+    #     parser=WorldTruthParser,
+    # )
 
     FreeBeacon = PublisherSpec(
         name="The Washington Free Beacon",
@@ -133,7 +140,11 @@ class US(PublisherEnum):
     OccupyDemocrats = PublisherSpec(
         name="Occupy Democrats",
         domain="https://occupydemocrats.com/",
-        sources=[Sitemap(url="https://occupydemocrats.com/sitemap.xml", sitemap_filter=regex_filter(r"-tax-|-misc"))],
+        sources=[
+            Sitemap(
+                url="https://occupydemocrats.com/sitemap.xml", sitemap_filter=inverse(regex_filter(r"post-sitemap"))
+            )
+        ],
         parser=OccupyDemocratsParser,
     )
 

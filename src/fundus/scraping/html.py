@@ -166,7 +166,7 @@ class URLSource(AsyncIterable[str], ABC):
         if not self._request_header:
             self._request_header = _default_header
         if not validators.url(self.url):
-            raise ValueError(f"Invalid url '{self.url}'")
+            basic_logger.error(f"{type(self).__name__} initialized with invalid URL {self.url}")
 
     def set_header(self, request_header: Dict[str, str]) -> None:
         self._request_header = request_header

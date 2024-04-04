@@ -91,9 +91,7 @@
         </a>
       </td>
       <td>&#160;</td>
-      <td>
-        <code>free_access</code>
-      </td>
+      <td>&#160;</td>
     </tr>
     <tr>
       <td>
@@ -703,24 +701,6 @@
         </a>
       </td>
       <td>
-        <code>topics</code>
-      </td>
-      <td>&#160;</td>
-    </tr>
-    <tr>
-      <td>
-        <code>WorldTruth</code>
-      </td>
-      <td>
-        <div>World Truth</div>
-      </td>
-      <td>
-        <a href="https://www.worldtruth.tv/">
-          <span>www.worldtruth.tv</span>
-        </a>
-      </td>
-      <td>
-        <code>authors</code>
         <code>topics</code>
       </td>
       <td>&#160;</td>

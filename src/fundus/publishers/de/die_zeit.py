@@ -3,6 +3,7 @@ import re
 from typing import List, Optional, Pattern
 
 from lxml.cssselect import CSSSelector
+from lxml.etree import XPath
 
 from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute
 from fundus.parser.utility import (
@@ -17,7 +18,7 @@ from fundus.parser.utility import (
 class DieZeitParser(ParserProxy):
     class V1(BaseParser):
         _author_substitution_pattern: Pattern[str] = re.compile(r"DIE ZEIT (Archiv)")
-        _paragraph_selector = CSSSelector("div.article-page > p")
+        _paragraph_selector = XPath("//div[@class = 'article-page']/p[not(contains(text(), '© dpa-infocom'))]")
         _summary_selector = CSSSelector("div.summary")
         _subheadline_selector = CSSSelector("div.article-page > h2")
 
