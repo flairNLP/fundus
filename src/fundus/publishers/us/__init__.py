@@ -91,12 +91,12 @@ class US(PublisherEnum):
         parser=TheNationParser,
     )
 
-    WorldTruth = PublisherSpec(
-        name="World Truth",
-        domain="https://www.worldtruth.tv/",
-        sources=[RSSFeed("https://feeds.feedburner.com/ConsciousnessTv")],
-        parser=WorldTruthParser,
-    )
+    # WorldTruth = PublisherSpec(
+    #     name="World Truth",
+    #     domain="https://www.worldtruth.tv/",
+    #     sources=[RSSFeed("https://feeds.feedburner.com/ConsciousnessTv")],
+    #     parser=WorldTruthParser,
+    # )
 
     FreeBeacon = PublisherSpec(
         name="The Washington Free Beacon",
