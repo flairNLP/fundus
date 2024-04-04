@@ -33,7 +33,7 @@ class SessionHandler:
         - hooks = {'request': lambda request:}
 
         Returns:
-            An new ClientSession
+            A new requests.Session
         """
 
         session = requests.Session()

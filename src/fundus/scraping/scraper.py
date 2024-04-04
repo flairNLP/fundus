@@ -86,7 +86,7 @@ class WebScraper(BaseScraper):
             )
             for url_source in url_sources
         ]
-        parser_mapping = {publisher.publisher_name: publisher.parser}
+        parser_mapping: Dict[str, ParserProxy] = {publisher.publisher_name: publisher.parser}
         super().__init__(*html_sources, parser_mapping=parser_mapping)
 
 

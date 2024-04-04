@@ -224,12 +224,12 @@ class Crawler(CrawlerBase):
         Examples:
             >>> from fundus import PublisherCollection, Crawler
             >>> crawler = Crawler(*PublisherCollection)
-            >>> # Crawler(PublisherCollection.us) to crawl only english news
+            >>> # Crawler(PublisherCollection.us) to crawl only american news
             >>> for article in crawler.crawl():
             >>>     print(article)
 
         Args:
-            *publishers (Union[PublisherEnum, Type[PublisherEnum]]): The publishers to crawl.
+            *publishers (Union[PublisherEnum, Type[PublisherEnum], PublisherCollectionMeta]): The publishers to crawl.
             restrict_sources_to (Optional[List[Type[URLSource]]]): Lets you restrict
                 sources defined in the publisher specs. If set, only articles from given source types
                 will be yielded.
@@ -257,9 +257,10 @@ class Crawler(CrawlerBase):
     ) -> Iterator[Article]:
         def build_delay() -> Optional[Delay]:
             if isinstance(self.delay, float):
+                  delay = self.delay
 
                 def constant_delay() -> float:
-                    return self.delay  # type: ignore[return-value]
+                    return delay
 
                 return constant_delay
 
