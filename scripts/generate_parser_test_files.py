@@ -23,7 +23,7 @@ def get_test_article(enum: PublisherEnum, url: Optional[str] = None) -> Optional
     else:
         source = WebSource([url], publisher=enum.publisher_name)
         scraper = BaseScraper(source, parser_mapping={enum.publisher_name: enum.parser})
-        return next(scraper.scrape(error_handling="suppress", extraction_filter=RequiresAll()))
+        return next(scraper.scrape(error_handling="suppress", extraction_filter=RequiresAll()), None)
 
 
 def parse_arguments() -> Namespace:
