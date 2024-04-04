@@ -2,6 +2,7 @@ import datetime
 from typing import List, Optional
 
 from lxml.cssselect import CSSSelector
+from lxml.etree import XPath
 
 from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute
 from fundus.parser.utility import (
@@ -15,8 +16,8 @@ from fundus.parser.utility import (
 class WAZParser(ParserProxy):
     class V1(BaseParser):
         VALID_UNTIL = datetime.date(2024, 2, 21)
-        _paragraph_selector = CSSSelector(".article__body > p")
-        _summary_selector = CSSSelector(".article__header__intro__text")
+        _paragraph_selector: XPath = CSSSelector(".article__body > p")
+        _summary_selector: XPath = CSSSelector(".article__header__intro__text")
         _subheadline_selector = CSSSelector(".article__body > h3")
 
         @attribute
@@ -48,6 +49,6 @@ class WAZParser(ParserProxy):
 
     class V1_1(V1):
         VALID_UNTIL = datetime.date.today()
-        _paragraph_selector = CSSSelector(".article-body > p")
-        _summary_selector = CSSSelector(".article-body > p.font-sans")
+        _paragraph_selector = XPath("//div[@class='article-body'] /p[position()>1 and not(@rel='author')]")
+        _summary_selector = XPath("//div[@class='article-body'] /p[position()=1]")
         _subheadline_selector = CSSSelector(".article-body > h3")
