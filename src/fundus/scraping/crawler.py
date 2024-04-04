@@ -41,6 +41,7 @@ from fundus.scraping.delay import Delay
 from fundus.scraping.filter import ExtractionFilter, Requires, RequiresAll, URLFilter
 from fundus.scraping.html import CCNewsSource
 from fundus.scraping.scraper import CCNewsScraper, WebScraper
+from fundus.scraping.session import session_handler
 from fundus.scraping.url import URLSource
 
 _T = TypeVar("_T")
@@ -209,6 +210,8 @@ class CrawlerBase(ABC):
                 yield article
             if article_count == max_articles:
                 break
+
+        session_handler.close_current_session()
 
 
 class Crawler(CrawlerBase):
