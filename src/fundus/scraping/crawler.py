@@ -199,15 +199,15 @@ class CrawlerBase(ABC):
                 )
                 return
 
-        article_idx = 0
+        article_count = 0
         for article in self._build_article_iterator(
             tuple(fitting_publisher or self.publishers), error_handling, build_extraction_filter(), url_filter
         ):
             if not only_unique or article.html.responded_url not in response_cache:
                 response_cache.add(article.html.responded_url)
-                article_idx += 1
+                article_count += 1
                 yield article
-            if article_idx == max_articles:
+            if article_count == max_articles:
                 break
 
 
@@ -237,6 +237,9 @@ class Crawler(CrawlerBase):
                 downloads. You can set a delay directly using float or any callable satisfying the Delay
                 protocol. If set to None, no delay will be used between batches. See Delay for more
                 information. Defaults to None.
+            threading (bool): If True, the crawler will use a dedicated thread per publisher, if set to False,
+                the crawler will use a single thread for a publishers and load articles succesively. This will greatly
+                influence performance, and it is highly recommended to use a threaded crawler. Deafults to True.
         """
 
         if not publishers:
@@ -279,7 +282,8 @@ class Crawler(CrawlerBase):
     ) -> Iterator[Article]:
         article_iterators = [article_task(publisher) for publisher in publishers]
         while article_iterators:
-            for iterator in article_iterators:
+            tmp = article_iterators
+            for iterator in tmp:
                 try:
                     yield next(iterator)
                 except StopIteration:
