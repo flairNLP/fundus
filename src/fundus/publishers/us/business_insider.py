@@ -21,7 +21,7 @@ class BusinessInsiderParser(ParserProxy):
             """
             //article 
             //div[contains(@class, 'content-lock-content')] 
-            /p[text() and not(contains(@class, 'disclaimer'))]
+            /p[not(contains(@class, 'disclaimer'))]
             """
         )
 
@@ -48,6 +48,8 @@ class BusinessInsiderParser(ParserProxy):
 
         @attribute
         def topics(self) -> List[str]:
-            return generic_topic_parsing(self.precomputed.meta.get("keywords")) or generic_topic_parsing(
-                self.precomputed.ld.bf_search("keywords")
+            return generic_topic_parsing(
+                self.precomputed.meta.get("keywords")
+                or self.precomputed.ld.bf_search("keywords")
+                or self.precomputed.meta.get("news_keywords")
             )
