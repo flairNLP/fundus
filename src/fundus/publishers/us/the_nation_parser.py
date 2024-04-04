@@ -42,8 +42,6 @@ class TheNationParser(ParserProxy):
                     'name="sft_double_opt_sail"value="yes"/></div></form>',
                     self.precomputed.html,
                 )
-                with open("test_nation.html", "w", encoding="utf-8") as file:
-                    file.write(self.precomputed.html)
                 self.precomputed.doc = lxml.html.document_fromstring(fixed_html)
 
         # We remove aside tags here because the provided HTML does not enclose <p> tags
