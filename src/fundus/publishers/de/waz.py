@@ -49,6 +49,10 @@ class WAZParser(ParserProxy):
 
     class V1_1(V1):
         VALID_UNTIL = datetime.date.today()
-        _paragraph_selector = XPath("//div[@class='article-body'] /p[position()>1 and not(@rel='author')]")
+
+        _paragraph_selector = XPath(
+            "//div[@class='article-body'] /p[position()>1 and not(@rel='author' or re:test(string(), '^>>.*[+]{3}'))]",
+            namespaces={"re": "http://exslt.org/regular-expressions"},
+        )
         _summary_selector = XPath("//div[@class='article-body'] /p[position()=1]")
         _subheadline_selector = CSSSelector(".article-body > h3")
