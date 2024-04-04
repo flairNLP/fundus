@@ -19,12 +19,14 @@ class BusinessInsiderParser(ParserProxy):
         _subheadline_selector = CSSSelector("article > div > h2, article > div > h3")
         _paragraph_selector = XPath(
             """
-            //article//div[
+            //article
+            //div[
                 contains(@class, 'article-body') 
                 or contains(@class, 'piano-article')]
-            /p[not(ancestor::*[@class='bi-bulletpoints']
-                or mark[@class='has-inline-color has-cyan-bluish-gray-color']
-                or @class='has-text-align-right')]
+            /p[
+                not(ancestor::*[@class='bi-bulletpoints']
+                    or mark[@class='has-inline-color has-cyan-bluish-gray-color']
+                    or @class='has-text-align-right')]
             """
         )
 
