@@ -44,7 +44,7 @@ class BusinessInsiderParser(ParserProxy):
 
         @attribute
         def title(self) -> Optional[str]:
-            return self.precomputed.ld.bf_search("headline")
+            return self.precomputed.meta.get("title")
 
         @attribute
         def topics(self) -> List[str]:
