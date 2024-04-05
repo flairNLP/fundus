@@ -106,7 +106,7 @@ def main() -> None:
 
             if arguments.overwrite or not html_mapping.get(publisher.parser.latest_version):
                 if not (article := get_test_article(publisher, url)):
-                    basic_logger.warning(f"Couldn't get article for {publisher.name}. Skipping")
+                    basic_logger.error(f"Couldn't get article for {publisher.name}. Skipping")
                     continue
                 html = HTMLTestFile(
                     url=article.html.responded_url,
