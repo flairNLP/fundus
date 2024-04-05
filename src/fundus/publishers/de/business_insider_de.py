@@ -15,20 +15,18 @@ from fundus.parser.utility import (
 
 class BusinessInsiderDEParser(ParserProxy):
     class V1(BaseParser):
-        _summary_selector = CSSSelector("article div.bi-bulletpoints > p")
-        _subheadline_selector = CSSSelector("article h2")
-
+        _summary_selector = CSSSelector("article div.bi-bulletpoints li, article div.bi-bulletpoints > p")
+        _subheadline_selector = CSSSelector("article > div > h2, article > div > h3")
         _paragraph_selector = XPath(
             """
-            //article 
-            //div[contains(@class, 'article-body')] 
-            //p[
-                not(
-                    ancestor::*[@class='bi-bulletpoints'] or
-                    mark[@class='has-inline-color has-cyan-bluish-gray-color'] or 
-                    @class='has-text-align-right'
-                )
-            ]
+            //article
+            //div[
+                contains(@class, 'article-body') 
+                or contains(@class, 'piano-article')]
+            /p[
+                not(ancestor::*[@class='bi-bulletpoints']
+                    or mark[@class='has-inline-color has-cyan-bluish-gray-color']
+                    or @class='has-text-align-right')]
             """
         )
 
@@ -51,7 +49,7 @@ class BusinessInsiderDEParser(ParserProxy):
 
         @attribute
         def title(self) -> Optional[str]:
-            return self.precomputed.ld.bf_search("headline")
+            return self.precomputed.meta.get("og:title")
 
         @attribute
         def topics(self) -> List[str]:
