@@ -22,9 +22,9 @@ class PublisherSpec:
 
 class PublisherEnumMeta(EnumMeta):
     def __str__(self) -> str:
-        representation = f"Region {self.__name__!r} containing {len(self)} publisher(s), including:"
+        representation = f"Region {self.__name__!r} containing {len(self)} publisher(s):"
         publisher: str
-        for publisher in islice(self.__members__.values(), 0, 5):
+        for publisher in self.__members__.values():
             representation += f"\n\t {publisher}"
         return representation
 
@@ -210,11 +210,15 @@ class PublisherCollectionMeta(type):
     def __str__(self) -> str:
         enum_mapping = self.get_publisher_enum_mapping()
         enum_mapping_keys = enum_mapping.keys()
-        representation = f"The entire Publisher Collection consists of {len(self)} publishers from {len(enum_mapping_keys)} countries:"
+        representation = (
+            f"The {self.__name__!r} consists of {len(self)} publishers from {len(enum_mapping_keys)} , including:"
+        )
         publisher: str
         country: str
         for country in enum_mapping_keys:
             representation += f"\n\t {country}:"
-            for publisher in enum_mapping[country]:
+            for publisher in islice(enum_mapping[country], 0, 5):
                 representation += f"\n\t\t {publisher}"
+            if len(enum_mapping[country]) > 5:
+                representation += f"\n\t\t ..."
         return representation
