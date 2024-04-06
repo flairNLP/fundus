@@ -21,7 +21,7 @@ from .world_truth import WorldTruthParser
 class US(PublisherEnum):
     APNews = PublisherSpec(
         name="Associated Press News",
-        domain="https://www.apnews.com/",
+        domain="https://apnews.com/",
         sources=[
             Sitemap(
                 "https://apnews.com/sitemap.xml",
@@ -42,7 +42,7 @@ class US(PublisherEnum):
 
     TheIntercept = PublisherSpec(
         name="The Intercept",
-        domain="https://www.theintercept.com/",
+        domain="https://theintercept.com/",
         sources=[
             RSSFeed("https://theintercept.com/feed/?lang=en"),
             Sitemap(
@@ -101,7 +101,7 @@ class US(PublisherEnum):
 
     FreeBeacon = PublisherSpec(
         name="The Washington Free Beacon",
-        domain="https://www.freebeacon.com/",
+        domain="https://freebeacon.com/",
         sources=[NewsMap("https://freebeacon.com/post_google_news.xml")],
         parser=FreeBeaconParser,
     )

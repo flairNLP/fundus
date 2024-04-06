@@ -131,8 +131,8 @@
         <div>Die Tageszeitung (taz)</div>
       </td>
       <td>
-        <a href="https://www.taz.de/">
-          <span>www.taz.de</span>
+        <a href="https://taz.de/">
+          <span>taz.de</span>
         </a>
       </td>
       <td>&#160;</td>
@@ -238,8 +238,8 @@
         <div>N-Tv</div>
       </td>
       <td>
-        <a href="https://www.ntv.de/">
-          <span>www.ntv.de</span>
+        <a href="https://www.n-tv.de/">
+          <span>www.n-tv.de</span>
         </a>
       </td>
       <td>&#160;</td>
@@ -535,8 +535,8 @@
         <div>Associated Press News</div>
       </td>
       <td>
-        <a href="https://www.apnews.com/">
-          <span>www.apnews.com</span>
+        <a href="https://apnews.com/">
+          <span>apnews.com</span>
         </a>
       </td>
       <td>&#160;</td>
@@ -663,8 +663,8 @@
         <div>The Intercept</div>
       </td>
       <td>
-        <a href="https://www.theintercept.com/">
-          <span>www.theintercept.com</span>
+        <a href="https://theintercept.com/">
+          <span>theintercept.com</span>
         </a>
       </td>
       <td>&#160;</td>
@@ -713,8 +713,8 @@
         <div>The Washington Free Beacon</div>
       </td>
       <td>
-        <a href="https://www.freebeacon.com/">
-          <span>www.freebeacon.com</span>
+        <a href="https://freebeacon.com/">
+          <span>freebeacon.com</span>
         </a>
       </td>
       <td>&#160;</td>
