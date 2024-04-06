@@ -190,9 +190,7 @@ class DE(PublisherEnum):
         domain="https://www.heise.de",
         sources=[
             RSSFeed("https://www.heise.de/rss/heise.rdf"),
-            Sitemap("https://www.heise.de/sitemapindex.xml"),
         ],
-        url_filter=inverse(regex_filter("/download/|sitemap-thema.xml|heise.de/sitemap.xml|/select/")),
         parser=HeiseParser,
         # TODO: Add query parameter seite=all as soon as functionality is available
     )
