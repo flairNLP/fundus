@@ -71,12 +71,14 @@ class WebSource:
         publisher: str,
         url_filter: Optional[URLFilter] = None,
         request_header: Optional[Dict[str, str]] = None,
+        query_parameters: Optional[Dict[str, str]] = None,
         delay: Optional[Delay] = None,
     ):
         self.url_source = url_source
         self.publisher = publisher
         self.url_filter = url_filter
         self.request_header = request_header or _default_header
+        self.query_parameters = query_parameters
         if isinstance(url_source, URLSource):
             url_source.set_header(self.request_header)
         self.delay = delay
@@ -103,6 +105,12 @@ class WebSource:
             session = session_handler.get_session()
 
             try:
+                if self.query_parameters is not None:
+                    for key, value in self.query_parameters.items():
+                        if "?" in url:
+                            url += "&" + key + "=" + value
+                        else:
+                            url += "?" + key + "=" + value
                 response = session.get(url, headers=self.request_header)
 
             except (HTTPError, ConnectionError) as error:

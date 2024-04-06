@@ -21,7 +21,7 @@ def get_test_article(enum: PublisherEnum, url: Optional[str] = None) -> Optional
         crawler = Crawler(enum)
         return next(crawler.crawl(max_articles=1, error_handling="suppress", only_complete=True), None)
     else:
-        source = WebSource([url], publisher=enum.publisher_name)
+        source = WebSource([url], publisher=enum.publisher_name, query_parameters=enum.query_parameter)
         scraper = BaseScraper(source, parser_mapping={enum.publisher_name: enum.parser})
         return next(scraper.scrape(error_handling="suppress", extraction_filter=RequiresAll()), None)
 

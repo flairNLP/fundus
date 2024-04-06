@@ -15,6 +15,7 @@ class PublisherSpec:
     domain: str
     parser: Type[ParserProxy]
     sources: List[URLSource]
+    query_parameter: Dict[str, str] = field(default_factory=dict)
     url_filter: Optional[URLFilter] = field(default=None)
     request_header: Dict[str, str] = field(default_factory=dict)
 
@@ -33,6 +34,7 @@ class PublisherEnum(Enum):
         self.domain = spec.domain
         self.parser = spec.parser()
         self.publisher_name = spec.name
+        self.query_parameter = spec.query_parameter
         self.url_filter = spec.url_filter
         self.request_header = spec.request_header
 

@@ -196,6 +196,7 @@ You can check if a sitemap is a news map by:
 2. If your publisher requires to use custom request headers to work properly you can alter it by using the `request_header` parameter of `PublisherSpec`.
    The default is: `{"user_agent": "Fundus"}`.
 3. If you want to block URLs for the entire publisher use the `url_filter` parameter of `PublisherSpec`.
+4. In some cases it can be necessary to append query parameters to the end of the URL, e.g. to load the article as one page. This can be achieved by adding the `query_parameter` attribute of `PublisherSpec` and assigning it a dictionary object containing the key - value pairs: e.g. `{"page": "all"}`. These key  - value pairs will be appended to all crawled URLs.
 
 Now, let's put it all together to specify the LA Times as a new publisher in Fundus:
 
