@@ -3,7 +3,7 @@ from datetime import datetime
 from dateutil.rrule import MONTHLY, rrule
 
 from fundus.publishers.base_objects import PublisherEnum, PublisherSpec
-from fundus.scraping.filter import regex_filter
+from fundus.scraping.filter import regex_filter, inverse
 from fundus.scraping.html import NewsMap, RSSFeed, Sitemap
 
 from .berliner_zeitung import BerlinerZeitungParser
@@ -191,8 +191,8 @@ class DE(PublisherEnum):
         sources=[
             RSSFeed("https://www.heise.de/rss/heise.rdf"),
             Sitemap("https://www.heise.de/sitemapindex.xml"),
-            NewsMap("https://www.heise.de/news/sitemap.xml"),
         ],
+        url_filter=inverse(regex_filter("/download/|sitemap-thema.xml|heise.de/sitemap.xml|/select/")),
         parser=HeiseParser,
         # TODO: Add query parameter seite=all as soon as functionality is available
     )
