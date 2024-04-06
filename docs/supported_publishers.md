@@ -19,7 +19,7 @@
         <code>ORF</code>
       </td>
       <td>
-        <div>ORF</div>
+        <div>&#214;sterreichischer Rundfunk</div>
       </td>
       <td>
         <a href="https://www.orf.at">
