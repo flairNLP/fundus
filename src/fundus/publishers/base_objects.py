@@ -22,7 +22,7 @@ class PublisherSpec:
 
 class PublisherEnumMeta(EnumMeta):
     def __str__(self) -> str:
-        representation = f"Publisher Collection {self.__name__} containing {len(self)} publisher(s), including:"
+        representation = f"Region {self.__name__!r} containing {len(self)} publisher(s), including:"
         publisher: str
         for publisher in islice(self.__members__.values(), 0, 5):
             representation += f"\n\t {publisher}"
