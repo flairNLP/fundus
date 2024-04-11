@@ -7,11 +7,18 @@ Note that this script does not check the attributes' correctness, only their pre
 import sys
 import traceback
 from enum import EnumMeta
-from typing import List, Optional, cast
+from typing import Any, Dict, List, Optional, cast
 
 from fundus import Crawler, NewsMap, PublisherCollection, RSSFeed
 from fundus.publishers.base_objects import PublisherEnum
 from fundus.scraping.article import Article
+
+
+class RequiresAllSkipBoolean:
+    """Custom filter skipping boolean values"""
+
+    def __call__(self, extraction: Dict[str, Any]) -> bool:
+        return not all([bool(value) for value in extraction.values() if not isinstance(value, bool)])
 
 
 def main() -> None:
@@ -30,9 +37,14 @@ def main() -> None:
         ):
             publisher_name: str = publisher.name  # type: ignore[attr-defined]
 
+            if not (publisher.source_mapping[RSSFeed] or publisher.source_mapping[NewsMap]):  # type: ignore[attr-defined]
+                # skip publishers providing no NewsMap or RSSFeed
+                print(f"⏩  SKIPPED: {publisher_name!r} - NO NewsMap or RSSFeed found")
+                continue
+
             crawler: Crawler = Crawler(publisher, restrict_sources_to=[NewsMap, RSSFeed])
             complete_article: Optional[Article] = next(
-                crawler.crawl(max_articles=1, only_complete=True, error_handling="catch"), None
+                crawler.crawl(max_articles=1, only_complete=RequiresAllSkipBoolean(), error_handling="catch"), None
             )
 
             if complete_article is None:
