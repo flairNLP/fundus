@@ -192,7 +192,7 @@ class DE(PublisherEnum):
             RSSFeed("https://www.heise.de/rss/heise.rdf"),
         ],
         parser=HeiseParser,
-        # TODO: Add query parameter seite=all as soon as functionality is available
+        query_parameter= {"seite": "all"}
     )
 
     Bild = PublisherSpec(
