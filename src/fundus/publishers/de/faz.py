@@ -2,6 +2,7 @@ import datetime
 from typing import List, Optional
 
 from lxml.cssselect import CSSSelector
+from lxml.html import HtmlElement
 
 from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute
 from fundus.parser.utility import (
@@ -44,6 +45,7 @@ class FAZParser(ParserProxy):
                 if len(author_nodes) > 1:
                     # With more than one entry, we abuse the fact that authors are linked with an <a> tag,
                     # but cities are not
+                    node: HtmlElement
                     author_nodes = [node for node in author_nodes if next(node.iterchildren(tag="a"), None) is not None]
                 return [text for node in author_nodes if "F.A.Z" not in (text := node.text_content())]
 
