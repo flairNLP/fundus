@@ -5,25 +5,25 @@ from typing import List, Optional
 
 from tqdm import tqdm
 
-from fundus import BaseCrawler, Crawler, PublisherCollection
+from fundus import Crawler, PublisherCollection
 from fundus.logging import basic_logger
 from fundus.publishers.base_objects import PublisherEnum
 from fundus.scraping.article import Article
-from fundus.scraping.html import FundusSource
-from fundus.scraping.scraper import Scraper
+from fundus.scraping.filter import RequiresAll
+from fundus.scraping.html import WebSource
+from fundus.scraping.scraper import BaseScraper, WebScraper
 from tests.test_parser import attributes_required_to_cover
 from tests.utility import HTMLTestFile, get_test_case_json, load_html_test_file_mapping
 
 
 def get_test_article(enum: PublisherEnum, url: Optional[str] = None) -> Optional[Article]:
-    crawler: BaseCrawler
     if url is None:
         crawler = Crawler(enum)
+        return next(crawler.crawl(max_articles=1, error_handling="suppress", only_complete=True), None)
     else:
-        source = FundusSource([url], publisher=enum.publisher_name)
-        scraper = Scraper(source, parser=enum.parser)
-        crawler = BaseCrawler(scraper)
-    return next(crawler.crawl(max_articles=1, error_handling="suppress", only_complete=True), None)
+        source = WebSource([url], publisher=enum.publisher_name, query_parameters=enum.query_parameter)
+        scraper = BaseScraper(source, parser_mapping={enum.publisher_name: enum.parser})
+        return next(scraper.scrape(error_handling="suppress", extraction_filter=RequiresAll()), None)
 
 
 def parse_arguments() -> Namespace:
@@ -106,7 +106,7 @@ def main() -> None:
 
             if arguments.overwrite or not html_mapping.get(publisher.parser.latest_version):
                 if not (article := get_test_article(publisher, url)):
-                    basic_logger.warning(f"Couldn't get article for {publisher.name}. Skipping")
+                    basic_logger.error(f"Couldn't get article for {publisher.name}. Skipping")
                     continue
                 html = HTMLTestFile(
                     url=article.html.responded_url,

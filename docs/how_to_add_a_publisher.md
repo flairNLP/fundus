@@ -107,8 +107,11 @@ To instantiate an object inheriting from URLSource like `RSSFeed` or `Sitemap`, 
 Getting links for RSS feeds can vary from publisher to publisher.
 Most of the time, you can find them through a quick browser search.
 Building an `RSSFeed` looks like this:
+
 ````python
-from fundus.scraping.html import RSSFeed
+
+from fundus import RSSFeed
+
 RSSFeed("https://theintercept.com/feed/?rss")
 ````
 
@@ -160,8 +163,11 @@ You can alter this behavior or reverse the order in which sitemaps are processed
 **_NOTE:_** If you wonder why you should reverse your sources from time to time, `URLSource`'s should, if possible, yield URLs in descending order by publishing date.
 
 Now building a new `URLSource` for a `NewsMap` covering the LA Times looks like this:
+
 ````python
-from fundus.scraping.html import NewsMap
+
+from fundus import NewsMap
+
 NewsMap("https://www.latimes.com/news-sitemap.xml", reverse=True)
 ````
 
@@ -190,6 +196,7 @@ You can check if a sitemap is a news map by:
 2. If your publisher requires to use custom request headers to work properly you can alter it by using the `request_header` parameter of `PublisherSpec`.
    The default is: `{"user_agent": "Fundus"}`.
 3. If you want to block URLs for the entire publisher use the `url_filter` parameter of `PublisherSpec`.
+4. In some cases it can be necessary to append query parameters to the end of the URL, e.g. to load the article as one page. This can be achieved by adding the `query_parameter` attribute of `PublisherSpec` and assigning it a dictionary object containing the key - value pairs: e.g. `{"page": "all"}`. These key  - value pairs will be appended to all crawled URLs.
 
 Now, let's put it all together to specify the LA Times as a new publisher in Fundus:
 
