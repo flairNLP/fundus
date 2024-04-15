@@ -3,6 +3,7 @@ from typing import List, Optional
 
 from lxml.cssselect import CSSSelector
 from lxml.etree import XPath
+from lxml.html import HtmlElement
 
 from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute
 from fundus.parser.utility import (
@@ -64,4 +65,5 @@ class SRFParser(ParserProxy):
             if not (title_node := self._title_selector(self.precomputed.doc)):
                 return None
             else:
-                return title_node[0].text_content()
+                node: HtmlElement = title_node[0]
+                return node.text_content()
