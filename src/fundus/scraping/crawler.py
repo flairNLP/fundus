@@ -31,6 +31,7 @@ import dill
 import more_itertools
 import requests
 from dateutil.rrule import MONTHLY, rrule
+from more_itertools import roundrobin
 from tqdm import tqdm
 from typing_extensions import ParamSpec, TypeAlias
 
@@ -116,7 +117,11 @@ def pool_queue_iter(handle: MapResult[Any], queue: Queue[_T]) -> Iterator[_T]:
 
 class CrawlerBase(ABC):
     def __init__(self, *publishers: Publisher):
-        self.publishers = tuple(set(more_itertools.collapse(publishers)))
+
+        if not publishers:
+            raise ValueError("param <publishers> of <Crawler.__init__> has to be non empty")
+
+        self.publishers: List[PublisherEnum] = list(set(more_itertools.collapse(publishers)))
 
     @abstractmethod
     def _build_article_iterator(
@@ -176,7 +181,7 @@ class CrawlerBase(ABC):
         response_cache: Set[str] = set()
 
         extraction_filter = build_extraction_filter()
-        fitting_publisher: List[PublisherEnum] = []
+        fitting_publishers: List[PublisherEnum] = []
 
         if isinstance(extraction_filter, Requires):
             for publisher in self.publishers:
@@ -191,18 +196,20 @@ class CrawlerBase(ABC):
                         f"is(are) not supported by {publisher.publisher_name}. Skipping publisher"
                     )
                 else:
-                    fitting_publisher.append(publisher)
+                    fitting_publishers.append(publisher)
 
-            if not fitting_publisher:
+            if not fitting_publishers:
                 basic_logger.error(
                     f"Could not find any fitting publishers for required attributes  "
                     f"`{', '.join(extraction_filter.required_attributes)}`"
                 )
                 return
+        else:
+            fitting_publishers = self.publishers
 
         article_count = 0
         for article in self._build_article_iterator(
-            tuple(fitting_publisher or self.publishers), error_handling, build_extraction_filter(), url_filter
+                tuple(fitting_publishers), error_handling, build_extraction_filter(), url_filter
         ):
             if not only_unique or article.html.responded_url not in response_cache:
                 response_cache.add(article.html.responded_url)
@@ -245,9 +252,6 @@ class Crawler(CrawlerBase):
                 influence performance, and it is highly recommended to use a threaded crawler. Deafults to True.
         """
 
-        if not publishers:
-            raise ValueError("param <publishers> of <Crawler.__init__> has to be non empty")
-
         super().__init__(*publishers)
 
         self.restrict_sources_to = restrict_sources_to
@@ -284,13 +288,7 @@ class Crawler(CrawlerBase):
         publishers: Tuple[PublisherEnum, ...], article_task: Callable[[PublisherEnum], Iterator[Article]]
     ) -> Iterator[Article]:
         article_iterators = [article_task(publisher) for publisher in publishers]
-        while article_iterators:
-            tmp = article_iterators
-            for iterator in tmp:
-                try:
-                    yield next(iterator)
-                except StopIteration:
-                    article_iterators.remove(iterator)
+        yield from roundrobin(*article_iterators)
 
     @staticmethod
     def _threaded_crawl(
@@ -299,7 +297,7 @@ class Crawler(CrawlerBase):
         article_queue: Queue[Article] = Queue(len(publishers))
         wrapped_article_task = queue_wrapper(article_queue, article_task)
 
-        with ThreadPool(processes=len(publishers) or None) as pool:
+        with ThreadPool(processes=len(publishers) or None) as pool, session_handler.context(len(publishers), 1):
             yield from pool_queue_iter(pool.map_async(wrapped_article_task, publishers), article_queue)
 
     def _build_article_iterator(

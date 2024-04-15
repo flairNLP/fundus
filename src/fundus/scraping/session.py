@@ -1,6 +1,8 @@
-from typing import Optional
+from contextlib import contextmanager
+from typing import Iterator, Optional
 
 import requests.adapters
+from typing_extensions import Self
 
 from fundus.logging import basic_logger
 
@@ -19,7 +21,7 @@ class SessionHandler:
     tear-downed and the next call to get_session() will build a new session.
     """
 
-    def __init__(self, pool_connections: int = 50, pool_maxsize: int = 50):
+    def __init__(self, pool_connections: int = 50, pool_maxsize: int = 1):
         self.session: Optional[requests.Session] = None
         self.pool_connections = pool_connections
         self.pool_maxsize = pool_maxsize
@@ -30,7 +32,7 @@ class SessionHandler:
         This returns a new client session build from pre-defined configurations:
         - pool_connections: 50
         - pool_maxsize: 50
-        - hooks = {'response': raise_for_status(), _response_log():}
+        - hooks = {'response': raise_for_status(), _response_log()}
 
         Returns:
             A new requests.Session
@@ -84,10 +86,35 @@ class SessionHandler:
         Returns:
             None
         """
-        session = self.get_session()
-        basic_logger.debug(f"Close session {session}")
-        session.close()
-        self.session = None
+        if self.session is not None:
+            session = self.get_session()
+            basic_logger.debug(f"Close session {session}")
+            session.close()
+            self.session = None
+
+    @contextmanager
+    def context(self, pool_connections: int, pool_maxsize: int) -> Self:
+        """Context manager to temporarily overwrite parameter and build new session.
+
+        Args:
+            pool_connections: see requests.Session documentation.
+            pool_maxsize: see requests.Session documentation.
+
+        Returns:
+            SessionHandler: The session handler instance.
+        """
+        previous_pool_connections = self.pool_connections
+        previous_pool_maxsize = self.pool_maxsize
+
+        self.close_current_session()
+
+        try:
+            self.pool_connections = pool_connections
+            self.pool_maxsize = pool_maxsize
+            yield self
+        finally:
+            self.pool_connections = previous_pool_connections
+            self.pool_maxsize = previous_pool_maxsize
 
 
 session_handler = SessionHandler()
