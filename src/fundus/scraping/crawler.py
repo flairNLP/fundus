@@ -195,7 +195,7 @@ class CrawlerBase(ABC):
 
             if not fitting_publisher:
                 basic_logger.error(
-                    f"Could not find any fitting publisher for required attributes  "
+                    f"Could not find any fitting publishers for required attributes  "
                     f"`{', '.join(extraction_filter.required_attributes)}`"
                 )
                 return
@@ -241,7 +241,7 @@ class Crawler(CrawlerBase):
                 protocol. If set to None, no delay will be used between batches. See Delay for more
                 information. Defaults to None.
             threading (bool): If True, the crawler will use a dedicated thread per publisher, if set to False,
-                the crawler will use a single thread for a publishers and load articles succesively. This will greatly
+                the crawler will use a single thread for all publishers and load articles successively. This will greatly
                 influence performance, and it is highly recommended to use a threaded crawler. Deafults to True.
         """
 

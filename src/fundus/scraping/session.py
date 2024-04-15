@@ -8,7 +8,7 @@ _default_header = {"user-agent": "Fundus"}
 
 
 class SessionHandler:
-    """Object for handling  project global request.Session
+    """Object for handling project global request.Session
 
     The session life cycle consists of three steps which can be repeated indefinitely:
     Build, Supply, Teardown.
