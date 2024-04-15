@@ -29,7 +29,7 @@ class BaseScraper:
     ) -> Iterator[Article]:
         for source in self.sources:
             for html in source.fetch(url_filter=url_filter):
-                parser = self.parser_mapping[html.source.publisher]
+                parser = self.parser_mapping[html.source_info.publisher]
 
                 try:
                     extraction = parser(html.crawl_date).parse(html.content, error_handling)

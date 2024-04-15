@@ -37,7 +37,7 @@ class HTML:
     responded_url: str
     content: str
     crawl_date: datetime
-    source: "SourceInfo"
+    source_info: "SourceInfo"
 
 
 @dataclass(frozen=True)
@@ -122,7 +122,7 @@ class WebSource:
                 if response.history:
                     basic_logger.info(f"Got redirected {len(response.history)} time(s) from {url} -> {response.url}")
 
-                source = (
+                source_info = (
                     WebSourceInfo(self.publisher, type(self.url_source).__name__, self.url_source.url)
                     if isinstance(self.url_source, URLSource)
                     else SourceInfo(self.publisher)
@@ -133,7 +133,7 @@ class WebSource:
                     responded_url=str(response.url),
                     content=html,
                     crawl_date=datetime.now(),
-                    source=source,
+                    source_info=source_info,
                 )
 
             if self.delay:
@@ -213,7 +213,7 @@ class CCNewsSource:
                     responded_url=target_url,
                     content=content,
                     crawl_date=warc_record.record_date,
-                    source=WarcSourceInfo(
+                    source_info=WarcSourceInfo(
                         publisher=publisher.publisher_name,
                         warc_path=self.warc_path,
                         warc_headers=dict(warc_record.headers),
