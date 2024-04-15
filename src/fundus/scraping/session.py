@@ -93,7 +93,7 @@ class SessionHandler:
             self.session = None
 
     @contextmanager
-    def context(self, pool_connections: int, pool_maxsize: int) -> Self:
+    def context(self, pool_connections: int, pool_maxsize: int) -> Iterator[Self]:
         """Context manager to temporarily overwrite parameter and build new session.
 
         Args:

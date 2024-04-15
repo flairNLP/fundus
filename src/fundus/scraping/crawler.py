@@ -117,7 +117,6 @@ def pool_queue_iter(handle: MapResult[Any], queue: Queue[_T]) -> Iterator[_T]:
 
 class CrawlerBase(ABC):
     def __init__(self, *publishers: Publisher):
-
         if not publishers:
             raise ValueError("param <publishers> of <Crawler.__init__> has to be non empty")
 
@@ -209,7 +208,7 @@ class CrawlerBase(ABC):
 
         article_count = 0
         for article in self._build_article_iterator(
-                tuple(fitting_publishers), error_handling, build_extraction_filter(), url_filter
+            tuple(fitting_publishers), error_handling, build_extraction_filter(), url_filter
         ):
             if not only_unique or article.html.responded_url not in response_cache:
                 response_cache.add(article.html.responded_url)
