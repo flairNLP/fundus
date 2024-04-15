@@ -36,7 +36,8 @@ def parse_arguments() -> Namespace:
         ),
     )
     parser.add_argument(
-        "attributes",
+        "-a",
+        "--attributes",
         metavar="A",
         nargs="*",
         help=(
