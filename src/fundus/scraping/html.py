@@ -59,9 +59,7 @@ class WebSourceInfo(SourceInfo):
 
 
 class HTMLSource(Protocol):
-    @abstractmethod
-    def fetch(self, url_filter: Optional[URLFilter] = None) -> Iterator[HTML]:
-        ...
+    def fetch(self, url_filter: Optional[URLFilter] = None) -> Iterator[HTML]: ...
 
 
 class WebSource:
