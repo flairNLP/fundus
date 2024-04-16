@@ -85,12 +85,16 @@ class WebSource:
             [url_filter] if url_filter else []
         )
 
-        timestamp = time.time()
+        timestamp = time.time() + self.delay() if self.delay is not None else time.time()
 
         def filter_url(u: str) -> bool:
             return any(f(u) for f in combined_filters)
 
         for url in self.url_source:
+            if self.delay:
+                time.sleep(max(0.0, self.delay() - time.time() + timestamp))
+                timestamp = time.time()
+
             if not validators.url(url):
                 basic_logger.debug(f"Skipped requested URL '{url}' because the URL is malformed")
                 continue
@@ -136,10 +140,6 @@ class WebSource:
                     crawl_date=datetime.now(),
                     source_info=source_info,
                 )
-
-            if self.delay:
-                time.sleep(max(0.0, self.delay() - time.time() + timestamp))
-                timestamp = time.time()
 
 
 class CCNewsSource:
