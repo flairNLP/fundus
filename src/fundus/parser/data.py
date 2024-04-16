@@ -16,8 +16,6 @@ from typing import (
 
 from typing_extensions import TypeAlias
 
-from fundus.logging import basic_logger
-
 LDMappingValue: TypeAlias = Union[List[Dict[str, Any]], Dict[str, Any]]
 
 
