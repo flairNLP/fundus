@@ -1,3 +1,4 @@
+import threading
 from contextlib import contextmanager
 from typing import Iterator, Optional
 
@@ -25,6 +26,7 @@ class SessionHandler:
         self.session: Optional[requests.Session] = None
         self.pool_connections = pool_connections
         self.pool_maxsize = pool_maxsize
+        self.lock = threading.Lock()
 
     def _session_factory(self) -> requests.Session:
         """Builds a new Session
@@ -76,9 +78,11 @@ class SessionHandler:
         Returns:
             requests.Session: The current build session
         """
-        if not self.session:
-            self.session = self._session_factory()
-        return self.session
+
+        with self.lock:
+            if not self.session:
+                self.session = self._session_factory()
+            return self.session
 
     def close_current_session(self) -> None:
         """Tears down the current build session
