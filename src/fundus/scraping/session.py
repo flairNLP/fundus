@@ -32,9 +32,9 @@ class SessionHandler:
         """Builds a new Session
 
         This returns a new client session build from pre-defined configurations:
-        - pool_connections: 50
-        - pool_maxsize: 50
-        - hooks = {'response': raise_for_status(), _response_log()}
+        - pool_connections: <self.pool_connections>
+        - pool_maxsize: <self.pool_maxsize>
+        - hooks: (1) Hook to raise an `HTTPError` if one occurred. (2) Hook to log the request responses.
 
         Returns:
             A new requests.Session
@@ -98,7 +98,7 @@ class SessionHandler:
 
     @contextmanager
     def context(self, pool_connections: int, pool_maxsize: int) -> Iterator[Self]:
-        """Context manager to temporarily overwrite parameter and build new session.
+        """Context manager to temporarily overwrite parameter and build a new session.
 
         Args:
             pool_connections: see requests.Session documentation.
