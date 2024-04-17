@@ -16,10 +16,6 @@ from typing import (
 
 from typing_extensions import TypeAlias
 
-from fundus.logging import basic_logger
-
-_displayed_deprecation_info = False
-
 LDMappingValue: TypeAlias = Union[List[Dict[str, Any]], Dict[str, Any]]
 
 
@@ -65,26 +61,6 @@ class LinkedDataMapping:
             if not self.__dict__.get(self.__UNKNOWN_TYPE__):
                 self.__dict__[self.__UNKNOWN_TYPE__] = []
             self.__dict__[self.__UNKNOWN_TYPE__].append(ld)
-
-    def get(self, ld_type: str, default: Any = None) -> Optional[LDMappingValue]:
-        """
-        This function works like get() on a mapping. It will return all LDs containing
-        the given <ld_type>. If there are multiple LDs of the same '@type' this function
-        returns a list instead of a dictionary.
-
-        :param ld_type: The key to search for
-        :param default: The returned default if <key> is not found, default: None
-        :return: The reached value or <default>
-        """
-        global _displayed_deprecation_info
-
-        if not _displayed_deprecation_info:
-            _displayed_deprecation_info = True
-            basic_logger.warning(
-                "LinkedDate.get() will be deprecated in the future. Use .get_value_by_key_path() "
-                "or .bf_search() instead"
-            )
-        return self.__dict__.get(ld_type, default)
 
     def get_value_by_key_path(self, key_path: List[str], default: Any = None) -> Optional[Any]:
         """
