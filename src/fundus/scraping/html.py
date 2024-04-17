@@ -1,5 +1,4 @@
 import time
-from abc import abstractmethod
 from dataclasses import dataclass
 from datetime import datetime
 from typing import Dict, Iterable, Iterator, List, Optional, Protocol
@@ -37,7 +36,7 @@ class HTML:
     responded_url: str
     content: str
     crawl_date: datetime
-    source: "SourceInfo"
+    source_info: "SourceInfo"
 
 
 @dataclass(frozen=True)
@@ -59,7 +58,6 @@ class WebSourceInfo(SourceInfo):
 
 
 class HTMLSource(Protocol):
-    @abstractmethod
     def fetch(self, url_filter: Optional[URLFilter] = None) -> Iterator[HTML]:
         ...
 
@@ -88,12 +86,16 @@ class WebSource:
             [url_filter] if url_filter else []
         )
 
-        timestamp = time.time()
+        timestamp = time.time() + self.delay() if self.delay is not None else time.time()
 
         def filter_url(u: str) -> bool:
             return any(f(u) for f in combined_filters)
 
         for url in self.url_source:
+            if self.delay:
+                time.sleep(max(0.0, self.delay() - time.time() + timestamp))
+                timestamp = time.time()
+
             if not validators.url(url):
                 basic_logger.debug(f"Skipped requested URL '{url}' because the URL is malformed")
                 continue
@@ -132,7 +134,7 @@ class WebSource:
                 if response.history:
                     basic_logger.info(f"Got redirected {len(response.history)} time(s) from {url} -> {response.url}")
 
-                source = (
+                source_info = (
                     WebSourceInfo(self.publisher, type(self.url_source).__name__, self.url_source.url)
                     if isinstance(self.url_source, URLSource)
                     else SourceInfo(self.publisher)
@@ -143,12 +145,8 @@ class WebSource:
                     responded_url=str(response.url),
                     content=html,
                     crawl_date=datetime.now(),
-                    source=source,
+                    source_info=source_info,
                 )
-
-            if self.delay:
-                time.sleep(max(0.0, self.delay() - time.time() + timestamp))
-                timestamp = time.time()
 
 
 class CCNewsSource:
@@ -223,7 +221,7 @@ class CCNewsSource:
                     responded_url=target_url,
                     content=content,
                     crawl_date=warc_record.record_date,
-                    source=WarcSourceInfo(
+                    source_info=WarcSourceInfo(
                         publisher=publisher.publisher_name,
                         warc_path=self.warc_path,
                         warc_headers=dict(warc_record.headers),

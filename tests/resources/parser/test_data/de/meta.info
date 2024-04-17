@@ -11,7 +11,7 @@
     "url": "https://www.bild.de/sport/fussball/fortuna-duesseldorf/bubi-bomber-wieder-da-thioune-fordert-geduld-mit-niemiec-83936220.bild.html",
     "crawl_date": "2023-05-15 13:55:04.823203"
   },
-  "BusinessInsider_2024_01_29.html.gz": {
+  "BusinessInsiderDE_2024_01_29.html.gz": {
     "url": "https://www.businessinsider.de/wirtschaft/international-business/wie-gross-ist-evergrande-chinas-sterbender-immobilienriese/",
     "crawl_date": "2024-01-29 22:53:02.986279"
   },
@@ -86,5 +86,9 @@
   "WAZ_2023_06_20.html.gz": {
     "url": "https://www.waz.de/staedte/witten/witten-street-food-festival-sorgt-fuer-internationales-flair-id238719673.html",
     "crawl_date": "2023-06-20 17:12:11.301003"
+  },
+  "WAZ_2024_03_08.html.gz": {
+    "url": "https://www.waz.de/staedte/duisburg/article241847490/Erstes-Bild-So-koennte-die-Duisburger-Seilbahn-aussehen.html",
+    "crawl_date": "2024-03-08 19:08:06.071698"
   }
 }

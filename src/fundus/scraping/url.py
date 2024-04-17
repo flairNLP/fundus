@@ -106,7 +106,7 @@ class Sitemap(URLSource):
                 basic_logger.warning(f"Warning! Couldn't reach sitemap '{sitemap_url}' because of {error}")
                 return
             content = response.content
-            if (content_type := response.headers["content-type"]) in self._decompressor.supported_file_formats:
+            if (content_type := response.headers.get("content-type")) in self._decompressor.supported_file_formats:
                 content = self._decompressor.decompress(content, content_type)
             if not content:
                 basic_logger.warning(f"Warning! Empty sitemap at '{sitemap_url}'")

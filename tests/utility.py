@@ -28,7 +28,7 @@ def get_test_articles(publisher: PublisherEnum) -> List[Article]:
             crawl_date=html_test_file.crawl_date,
             requested_url=html_test_file.url,
             responded_url=html_test_file.url,
-            source=SourceInfo(publisher.publisher_name),
+            source_info=SourceInfo(publisher.publisher_name),
         )
         article = Article.from_extracted(extracted=extraction, html=html)
         articles.append(article)
