@@ -13,23 +13,15 @@ from fundus.parser.utility import (
 )
 
 
-class BusinessInsiderParser(ParserProxy):
+class LRTParser(ParserProxy):
     class V1(BaseParser):
-        _summary_selector = CSSSelector("article div.bi-bulletpoints > p")
-        _subheadline_selector = CSSSelector("article h2")
-
         _paragraph_selector = XPath(
-            """
-            //article 
-            //div[contains(@class, 'article-body')] 
-            //p[
-                not(
-                    ancestor::*[@class='bi-bulletpoints'] or
-                    mark[@class='has-inline-color has-cyan-bluish-gray-color'] or 
-                    @class='has-text-align-right'
-                )
-            ]
-            """
+            "//div[@class='article-content js-text-selection']/"
+            "p[not((strong and not(text())) or @class='text-lead')]"
+        )
+        _summary_selector = CSSSelector("p.text-lead")
+        _subheadline_selector = XPath(
+            "//div[@class='article-content js-text-selection']/" "p[strong and not(@class='text-lead') and not(text())]"
         )
 
         @attribute
@@ -43,7 +35,7 @@ class BusinessInsiderParser(ParserProxy):
 
         @attribute
         def authors(self) -> List[str]:
-            return generic_author_parsing(self.precomputed.ld.bf_search("author"))
+            return generic_author_parsing(self.precomputed.meta.get("lrt_authors"))
 
         @attribute
         def publishing_date(self) -> Optional[datetime.datetime]:
@@ -51,10 +43,8 @@ class BusinessInsiderParser(ParserProxy):
 
         @attribute
         def title(self) -> Optional[str]:
-            return self.precomputed.ld.bf_search("headline")
+            return self.precomputed.meta.get("og:title")
 
         @attribute
         def topics(self) -> List[str]:
-            return generic_topic_parsing(self.precomputed.meta.get("keywords")) or generic_topic_parsing(
-                self.precomputed.ld.bf_search("keywords")
-            )
+            return generic_topic_parsing(self.precomputed.ld.bf_search("keywords"))

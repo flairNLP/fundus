@@ -37,6 +37,27 @@ For example:
 - `fundus/publishers/us/` for US publishers
 - ...
 
+In case you don't see a directory labelled with the corresponding country code, feel free to create one. 
+Within this directory add a file called `__init__.py` and create a class inheriting the PublisherEnum behaviour.
+As an example, if you were to add the US, it should look something like this:
+
+```python
+from fundus.publishers.base_objects import PublisherEnum
+
+class US(PublisherEnum):
+    pass
+```
+
+Next, you should open the file `fundus/publishers/__init__.py` and make sure that the class PublisherCollection has an attribute corresponding to your newly added country:
+
+```python
+from fundus.publishers.base_objects import PublisherCollectionMeta
+from fundus.publishers.us import US
+
+class PublisherCollection(metaclass=PublisherCollectionMeta):
+    us = US
+```
+
 Now create an empty file in the corresponding country section using the publishers' name or some abbreviation as the file name.
 For the Los Angeles Times, the correct country section is `fundus/publishers/us/`, since they are a newspaper based in the United States, with a filename like `la_times.py` or `los_angeles_times.py`.
 We will continue here with `la_times.py`.

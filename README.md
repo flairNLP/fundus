@@ -99,7 +99,7 @@ Maybe you want to crawl a specific news source instead. Let's crawl news article
 ```python
 from fundus import PublisherCollection, Crawler
 
-# initialize the crawler for Washington Times
+# initialize the crawler for The New Yorker
 crawler = Crawler(PublisherCollection.us.TheNewYorker)
 
 # crawl 2 articles and print
