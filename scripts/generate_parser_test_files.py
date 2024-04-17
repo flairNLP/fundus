@@ -38,8 +38,8 @@ def parse_arguments() -> Namespace:
     parser.add_argument(
         "-a",
         "--attributes",
-        metavar="A",
-        nargs="*",
+        nargs="+",
+        default=[],
         help=(
             "the attributes which should be used to create test cases. "
             f"default: {', '.join(attributes_required_to_cover)}"
