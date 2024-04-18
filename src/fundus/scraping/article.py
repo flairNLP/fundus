@@ -24,6 +24,7 @@ class Article:
     body: Optional[ArticleBody] = None
     publishing_date: Optional[datetime] = None
     topics: List[str] = field(default_factory=list)
+    free_access: bool = True
 
     @classmethod
     def from_extracted(cls, html: HTML, extracted: Dict[str, Any], exception: Optional[Exception] = None) -> "Article":
