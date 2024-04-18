@@ -1,5 +1,5 @@
 from fundus.publishers.base_objects import PublisherEnum, PublisherSpec
-from fundus.scraping.html import RSSFeed, Sitemap
+from fundus.scraping.url import RSSFeed, Sitemap
 
 from .lrt import LRTParser
 
