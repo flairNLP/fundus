@@ -18,7 +18,7 @@ class Article:
     html: HTML
     exception: Optional[Exception] = None
 
-    # supported attributes as defined in the guidelines
+    # supported (validated) attributes as defined in the guidelines
     title: Optional[str] = None
     authors: List[str] = field(default_factory=list)
     body: Optional[ArticleBody] = None
