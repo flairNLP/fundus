@@ -30,3 +30,12 @@ class TestExtractionFilter:
 
         extraction = {"a": "Some Stuff", "c": False}
         assert not RequiresAll()(extraction)
+
+        # test skip_boolean=False
+        extraction = {"a": "Some Stuff", "b": [], "c": False}
+
+        assert (result := RequiresAll(skip_boolean=False)(extraction))
+        assert sorted(result.missing_attributes) == sorted(("b", "c"))
+
+        extraction = {"a": "Some Stuff", "c": True}
+        assert not RequiresAll(skip_boolean=False)(extraction)
