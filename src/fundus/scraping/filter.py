@@ -1,5 +1,5 @@
 import re
-from typing import Any, Callable, Dict, Protocol
+from typing import Any, Callable, Dict, Protocol, cast
 
 from typing_extensions import ParamSpec
 
@@ -119,33 +119,61 @@ class FilterResultWithMissingAttributes:
         return bool(self.missing_attributes)
 
 
+def _guarded_bool(value: Any):
+    if isinstance(value, bool):
+        return True
+    else:
+        return bool(value)
+
+
 class Requires:
-    def __init__(self, *required_attributes: str) -> None:
+    def __init__(self, *required_attributes: str, skip_bool: bool = False) -> None:
         """Class to filter extractions based on attribute values
 
-        If a required_attribute is not present in the extracted data, this filter won't
-        be passed.
+        If a required_attribute is not present in the extracted data or evaluates to bool() -> False,
+        this filter won't be passed. By default, required boolean attributes are evaluated with bool().
+
+        I.e.,
+
+            Requires("free_access")({"free_access": False}) -> will be filtered out
+
+        You can alter this behaviour by setting `skip_bool=True`
+
+        I.e.,
+
+           Requires("free_access", skip_bool=True)({"free_access": False}) -> will pass
 
         Args:
             *required_attributes: Attributes required to evaluate to True in order to
-                pass the filter. If no attributes are given, all attributes will be evaluated:
+                pass the filter. If no attributes are given, all attributes will be evaluated
+            skip_boolean: If True then all attributes with boolean value will be evaluated with
+                <value> != None. If false, with bool(<value>). Defaults to False.
         """
         self.required_attributes = set(required_attributes)
+        # somehow mypy does not recognize bool as callable :(
+        self._eval: Callable[[Any], bool] = _guarded_bool if skip_bool else bool  # type: ignore[assignment]
 
     def __call__(self, extraction: Dict[str, Any]) -> FilterResultWithMissingAttributes:
         missing_attributes = [
             attribute
             for attribute in self.required_attributes or extraction.keys()
-            if not bool(value := extraction.get(attribute)) or isinstance(value, Exception)
+            if not self._eval(value := extraction.get(attribute)) or isinstance(value, Exception)
         ]
         return FilterResultWithMissingAttributes(*missing_attributes)
 
 
 class RequiresAll(Requires):
+    """Custom filter skipping boolean values"""
+
+    def __init__(self):
+        super().__init__(skip_bool=False)
+
+
+class RequiresAllSkipBoolean(Requires):
     def __init__(self):
         """Name wrap for Requires()
 
         This is for readability only. It requires all attributes of the extraction to evaluate to True.
         See class:Requires docstring for more information.
         """
-        super().__init__()
+        super().__init__(skip_bool=True)
