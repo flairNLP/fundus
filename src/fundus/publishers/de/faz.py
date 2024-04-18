@@ -2,7 +2,6 @@ import datetime
 from typing import List, Optional
 
 from lxml.cssselect import CSSSelector
-from lxml.html import HtmlElement
 
 from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute
 from fundus.parser.utility import (
@@ -39,7 +38,6 @@ class FAZParser(ParserProxy):
         @attribute
         def authors(self) -> List[str]:
             # Unfortunately, the raw data may contain cities. Most of these methods aims to remove the cities heuristically.
-            author_nodes: List[HtmlElement]
             if not (author_nodes := self._author_selector(self.precomputed.doc)):
                 return []
             else:
