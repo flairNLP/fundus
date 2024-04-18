@@ -163,7 +163,11 @@ class Requires:
 
 
 class RequiresAll(Requires):
-    """Custom filter skipping boolean values"""
+    """Name wrap for Requires(skip_bool=False)
+
+    This is for readability only. It requires all attributes of the extraction to evaluate to True.
+        See class:Requires docstring for more information.
+    """
 
     def __init__(self):
         super().__init__(skip_bool=False)
@@ -171,9 +175,9 @@ class RequiresAll(Requires):
 
 class RequiresAllSkipBoolean(Requires):
     def __init__(self):
-        """Name wrap for Requires()
+        """Name wrap for Requires(skip_bool=True)
 
-        This is for readability only. It requires all attributes of the extraction to evaluate to True.
+        This is for readability only. It requires all non-boolean attributes of the extraction to evaluate to True.
         See class:Requires docstring for more information.
         """
         super().__init__(skip_bool=True)
