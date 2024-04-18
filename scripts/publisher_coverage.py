@@ -12,7 +12,7 @@ from typing import List, Optional, cast
 from fundus import Crawler, NewsMap, PublisherCollection, RSSFeed
 from fundus.publishers.base_objects import PublisherEnum
 from fundus.scraping.article import Article
-from fundus.scraping.filter import RequiresAllSkipBoolean
+from fundus.scraping.filter import RequiresAll
 
 
 def main() -> None:
@@ -38,7 +38,7 @@ def main() -> None:
 
             crawler: Crawler = Crawler(publisher, restrict_sources_to=[NewsMap, RSSFeed])
             complete_article: Optional[Article] = next(
-                crawler.crawl(max_articles=1, only_complete=RequiresAllSkipBoolean(), error_handling="catch"), None
+                crawler.crawl(max_articles=1, only_complete=RequiresAll(), error_handling="catch"), None
             )
 
             if complete_article is None:

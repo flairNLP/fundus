@@ -1,5 +1,5 @@
 from fundus import Requires
-from fundus.scraping.filter import RequiresAll, RequiresAllSkipBoolean
+from fundus.scraping.filter import RequiresAll
 
 
 class TestExtractionFilter:
@@ -26,16 +26,7 @@ class TestExtractionFilter:
         extraction = {"a": "Some Stuff", "b": [], "c": False}
 
         assert (result := RequiresAll()(extraction))
-        assert sorted(result.missing_attributes) == sorted(("b", "c"))
-
-        extraction = {"a": "Some Stuff", "c": True}
-        assert not RequiresAll()(extraction)
-
-    def test_requires_all_skip_bool(self):
-        extraction = {"a": "Some Stuff", "b": [], "c": False}
-
-        assert (result := RequiresAllSkipBoolean()(extraction))
         assert result.missing_attributes == ("b",)
 
         extraction = {"a": "Some Stuff", "c": False}
-        assert not RequiresAllSkipBoolean()(extraction)
+        assert not RequiresAll()(extraction)

@@ -9,7 +9,7 @@ from fundus import Crawler, PublisherCollection
 from fundus.logging import basic_logger
 from fundus.publishers.base_objects import PublisherEnum
 from fundus.scraping.article import Article
-from fundus.scraping.filter import RequiresAllSkipBoolean
+from fundus.scraping.filter import RequiresAll
 from fundus.scraping.html import WebSource
 from fundus.scraping.scraper import BaseScraper, WebScraper
 from tests.test_parser import attributes_required_to_cover
@@ -20,10 +20,10 @@ def get_test_article(enum: PublisherEnum, url: Optional[str] = None) -> Optional
     if url is not None:
         source = WebSource([url], publisher=enum.publisher_name)
         scraper = BaseScraper(source, parser_mapping={enum.publisher_name: enum.parser})
-        return next(scraper.scrape(error_handling="suppress", extraction_filter=RequiresAllSkipBoolean()), None)
+        return next(scraper.scrape(error_handling="suppress", extraction_filter=RequiresAll()), None)
 
     crawler = Crawler(enum)
-    return next(crawler.crawl(max_articles=1, error_handling="suppress", only_complete=RequiresAllSkipBoolean()), None)
+    return next(crawler.crawl(max_articles=1, error_handling="suppress", only_complete=RequiresAll()), None)
 
 
 def parse_arguments() -> Namespace:
