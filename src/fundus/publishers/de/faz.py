@@ -10,6 +10,7 @@ from fundus.parser.utility import (
     generic_author_parsing,
     generic_date_parsing,
     generic_topic_parsing,
+    parse_title_from_root,
     strip_nodes_to_text,
 )
 
@@ -58,7 +59,7 @@ class FAZParser(ParserProxy):
 
     class V2(BaseParser):
         _summary_selector = CSSSelector("div.header-teaser")
-        _paragraph_selector = CSSSelector("div.body-elements > p")
+        _paragraph_selector = CSSSelector(".body-elements__paragraph")
         _subheadline_selector = CSSSelector("div.body-elements > h3")
 
         _author_meta_selector = CSSSelector("div.author-meta")
@@ -93,4 +94,4 @@ class FAZParser(ParserProxy):
 
         @attribute
         def title(self) -> Optional[str]:
-            return self.precomputed.meta.get("og:title")
+            return parse_title_from_root(self.precomputed.doc)
