@@ -44,7 +44,7 @@ class URLSource(Iterable[str], ABC):
     def __post_init__(self):
         if not self._request_header:
             self._request_header = _default_header
-        if not validators.url(self.url):
+        if not validators.url(self.url, strict_query=False):
             basic_logger.error(f"{type(self).__name__} initialized with invalid URL {self.url}")
 
     def set_header(self, request_header: Dict[str, str]) -> None:
