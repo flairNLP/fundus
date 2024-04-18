@@ -1,6 +1,9 @@
-from typing import Optional
+import threading
+from contextlib import contextmanager
+from typing import Iterator, Optional
 
 import requests.adapters
+from typing_extensions import Self
 
 from fundus.logging import basic_logger
 
@@ -8,7 +11,7 @@ _default_header = {"user-agent": "Fundus"}
 
 
 class SessionHandler:
-    """Object for handling  project global request.Session
+    """Object for handling project global request.Session
 
     The session life cycle consists of three steps which can be repeated indefinitely:
     Build, Supply, Teardown.
@@ -19,18 +22,19 @@ class SessionHandler:
     tear-downed and the next call to get_session() will build a new session.
     """
 
-    def __init__(self, pool_connections: int = 50, pool_maxsize: int = 50):
+    def __init__(self, pool_connections: int = 50, pool_maxsize: int = 1):
         self.session: Optional[requests.Session] = None
         self.pool_connections = pool_connections
         self.pool_maxsize = pool_maxsize
+        self.lock = threading.Lock()
 
     def _session_factory(self) -> requests.Session:
         """Builds a new Session
 
         This returns a new client session build from pre-defined configurations:
-        - pool_connections: 50
-        - pool_maxsize: 50
-        - hooks = {'response': raise_for_status(), _response_log():}
+        - pool_connections: <self.pool_connections>
+        - pool_maxsize: <self.pool_maxsize>
+        - hooks: (1) Hook to raise an `HTTPError` if one occurred. (2) Hook to log the request responses.
 
         Returns:
             A new requests.Session
@@ -74,9 +78,11 @@ class SessionHandler:
         Returns:
             requests.Session: The current build session
         """
-        if not self.session:
-            self.session = self._session_factory()
-        return self.session
+
+        with self.lock:
+            if not self.session:
+                self.session = self._session_factory()
+            return self.session
 
     def close_current_session(self) -> None:
         """Tears down the current build session
@@ -84,10 +90,35 @@ class SessionHandler:
         Returns:
             None
         """
-        session = self.get_session()
-        basic_logger.debug(f"Close session {session}")
-        session.close()
-        self.session = None
+        if self.session is not None:
+            session = self.get_session()
+            basic_logger.debug(f"Close session {session}")
+            session.close()
+            self.session = None
+
+    @contextmanager
+    def context(self, pool_connections: int, pool_maxsize: int) -> Iterator[Self]:
+        """Context manager to temporarily overwrite parameter and build a new session.
+
+        Args:
+            pool_connections: see requests.Session documentation.
+            pool_maxsize: see requests.Session documentation.
+
+        Returns:
+            SessionHandler: The session handler instance.
+        """
+        previous_pool_connections = self.pool_connections
+        previous_pool_maxsize = self.pool_maxsize
+
+        self.close_current_session()
+
+        try:
+            self.pool_connections = pool_connections
+            self.pool_maxsize = pool_maxsize
+            yield self
+        finally:
+            self.pool_connections = previous_pool_connections
+            self.pool_maxsize = previous_pool_maxsize
 
 
 session_handler = SessionHandler()
