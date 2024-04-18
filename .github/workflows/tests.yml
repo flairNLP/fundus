@@ -17,16 +17,11 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: 3.8
+          cache: pip
 
-      - name: Cache environment
-        uses: actions/cache@master
-        id: cache
-        with:
-          path: ${{ env.pythonLocation }}/lib/python3.8/site-packages/*
-          key: ${{ runner.os }}-packages_only-${{ hashFiles('pyproject.toml') }}
       - name: Install dependencies
-        if: steps.cache.outputs.cache-hit != 'true'
         run: |
+          python -m pip install --upgrade pip
           pip install -e .[dev]
 
       - name: Run pytest
@@ -42,16 +37,11 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: 3.8
+          cache: pip
 
-      - name: Cache environment
-        uses: actions/cache@master
-        id: cache
-        with:
-          path: ${{ env.pythonLocation }}/lib/python3.8/site-packages/*
-          key: ${{ runner.os }}-packages_only-${{ hashFiles('pyproject.toml') }}
       - name: Install dependencies
-        if: steps.cache.outputs.cache-hit != 'true'
         run: |
+          python -m pip install --upgrade pip
           pip install -e .[dev]
 
       - name: Run mypy
