@@ -18,7 +18,7 @@ from tests.utility import HTMLTestFile, get_test_case_json, load_html_test_file_
 
 def get_test_article(enum: PublisherEnum, url: Optional[str] = None) -> Optional[Article]:
     if url is not None:
-        source = WebSource([url], publisher=enum.publisher_name, query_parameters=enum.query_parameter)
+        source = WebSource([url], publisher=enum.publisher_name)
         scraper = BaseScraper(source, parser_mapping={enum.publisher_name: enum.parser})
         return next(scraper.scrape(error_handling="suppress", extraction_filter=RequiresAll()), None)
 
