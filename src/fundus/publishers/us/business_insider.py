@@ -15,12 +15,16 @@ from fundus.parser.utility import (
 
 class BusinessInsiderParser(ParserProxy):
     class V1(BaseParser):
-        _summary_selector = CSSSelector("article ul.summary-list > li")
+        _summary_selector = CSSSelector("article ul[class^='summary-list'] > li")
         _subheadline_selector = CSSSelector("article h2")
         _paragraph_selector = XPath(
             """
             //article 
             //div[contains(@class, 'content-lock-content')] 
+            /p[not(contains(@class, 'disclaimer'))] | 
+            //article 
+            //div[contains(@class, 'content-lock-content')]
+            /div[contains(@class, 'premium-content')] 
             /p[not(contains(@class, 'disclaimer'))]
             """
         )
