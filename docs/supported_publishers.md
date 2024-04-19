@@ -16,6 +16,23 @@
   <tbody>
     <tr>
       <td>
+        <code>DerStandard</code>
+      </td>
+      <td>
+        <div>Der Standard</div>
+      </td>
+      <td>
+        <a href="https://derstandard.at">
+          <span>derstandard.at</span>
+        </a>
+      </td>
+      <td>
+        <code>topics</code>
+      </td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
         <code>ORF</code>
       </td>
       <td>
