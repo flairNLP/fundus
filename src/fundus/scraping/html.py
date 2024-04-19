@@ -105,13 +105,12 @@ class WebSource:
                 continue
 
             session = session_handler.get_session()
-
+            for key, value in self.query_parameters.items():
+                if "?" in url:
+                    url += "&" + key + "=" + value
+                else:
+                    url += "?" + key + "=" + value
             try:
-                for key, value in self.query_parameters.items():
-                    if "?" in url:
-                        url += "&" + key + "=" + value
-                    else:
-                        url += "?" + key + "=" + value
                 response = session.get(url, headers=self.request_header)
 
             except (HTTPError, ConnectionError) as error:
