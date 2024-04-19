@@ -15,6 +15,7 @@ from .die_zeit import DieZeitParser
 from .dw import DWParser
 from .faz import FAZParser
 from .focus import FocusParser
+from .heise import HeiseParser
 from .mdr import MDRParser
 from .merkur import MerkurParser
 from .ndr import NDRParser
@@ -182,6 +183,16 @@ class DE(PublisherEnum):
             Sitemap("https://taz.de/sitemap-index.xml"),
         ],
         parser=TazParser,
+    )
+
+    Heise = PublisherSpec(
+        name="Heise",
+        domain="https://www.heise.de",
+        sources=[
+            RSSFeed("https://www.heise.de/rss/heise.rdf"),
+        ],
+        parser=HeiseParser,
+        query_parameter={"seite": "all"},
     )
 
     Bild = PublisherSpec(
