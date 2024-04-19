@@ -17,4 +17,4 @@ class PublisherCollection(metaclass=PublisherCollectionMeta):
     uk = UK
     fr = FR
     ch = CH
-    lt = LT
+    # lt = LT
