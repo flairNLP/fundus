@@ -1,12 +1,12 @@
 # Table of Contents
 
-* [Crawl articles from CC-NEWS](#crawl-articles-from-cc-news)
+* [How to crawl articles from CC-NEWS](#how-to-crawl-articles-from-cc-news)
   * [The crawler](#the-crawler)
     * [OS start method](#os-start-method)
   * [Date range](#date-range)
   * [Multiprocessing](#multiprocessing)
 
-# Crawl articles from CC-NEWS
+# How to crawl articles from CC-NEWS
 
 This tutorial explains how to crawl articles from the [CC-NEWS](https://paperswithcode.com/dataset/cc-news) dataset using Fundus.
 
@@ -48,8 +48,8 @@ from datetime import datetime
 
 from fundus import CCNewsCrawler, PublisherCollection
 
-crawler = CCNewsCrawler(*PublisherCollection)
-for article in crawler.crawl(start=datetime(2020, 1, 1), end=datetime(2020, 3, 1), max_articles=100):
+crawler = CCNewsCrawler(*PublisherCollection, start=datetime(2020, 1, 1), end=datetime(2020, 3, 1))
+for article in crawler.crawl(max_articles=100):
     print(article)
 ````
 
@@ -66,7 +66,7 @@ from fundus import CCNewsCrawler, PublisherCollection
 crawler = CCNewsCrawler(*PublisherCollection, processes=4)
 ````
 
-To omit multiprocessing, pass `0` to the `processes` parameter.
+To omit multiprocessing, pass `-1` to the `processes` parameter.
 
 In the [next section](3_the_article_class.md) we will introduce you to the `Article` class.
 

@@ -16,9 +16,9 @@ from typing import (
 
 from typing_extensions import TypeAlias
 
-from fundus.logging import basic_logger
-
 LDMappingValue: TypeAlias = Union[List[Dict[str, Any]], Dict[str, Any]]
+
+_sentinel = object()
 
 
 class LinkedDataMapping:
@@ -125,19 +125,28 @@ class LinkedDataMapping:
 
         def search_recursive(nodes: Iterable[LDMappingValue], current_depth: int):
             if current_depth == depth:
-                return None
+                return _sentinel
             else:
                 new: List[Dict[str, Any]] = []
                 for node in nodes:
                     if isinstance(node, list):
                         new.extend(node)
                         continue
-                    elif value := node.get(key):
+                    elif (value := node.get(key, _sentinel)) is not _sentinel:
                         return value
                     new.extend(v for v in node.values() if isinstance(v, dict))
-                return search_recursive(new, current_depth + 1) if new else None
 
-        return search_recursive([self.__dict__], 0) or default
+                if not new:
+                    return _sentinel
+
+                return search_recursive(new, current_depth + 1)
+
+        result = search_recursive([self.__dict__], 0)
+
+        if result == _sentinel:
+            return default
+
+        return result
 
     def __repr__(self):
         return f"LD containing '{', '.join(content)}'" if (content := self.__dict__.keys()) else "Empty LD"

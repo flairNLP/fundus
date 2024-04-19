@@ -11,7 +11,7 @@ from fundus import PublisherCollection
 from fundus.parser import BaseParser
 from fundus.publishers.base_objects import PublisherEnum
 from fundus.scraping.article import Article
-from fundus.scraping.html import HTML, HTMLSource
+from fundus.scraping.html import HTML, SourceInfo
 from scripts.generate_tables import supported_publishers_markdown_path
 from tests.resources.parser.test_data import __module_path__ as test_resource_path
 
@@ -28,7 +28,7 @@ def get_test_articles(publisher: PublisherEnum) -> List[Article]:
             crawl_date=html_test_file.crawl_date,
             requested_url=html_test_file.url,
             responded_url=html_test_file.url,
-            source=HTMLSource(publisher.publisher_name),
+            source_info=SourceInfo(publisher.publisher_name),
         )
         article = Article.from_extracted(extracted=extraction, html=html)
         articles.append(article)

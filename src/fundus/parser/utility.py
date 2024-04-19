@@ -248,3 +248,15 @@ _tz_infos = {"CET": 3600, "CEST": 7200}
 
 def generic_date_parsing(date_str: Optional[str]) -> Optional[datetime]:
     return parser.parse(date_str, tzinfos=_tz_infos) if date_str else None
+
+
+_title_selector = CSSSelector("title")
+
+
+def parse_title_from_root(root: lxml.html.HtmlElement) -> Optional[str]:
+    title_node = _title_selector(root)
+
+    if len(title_node) != 1:
+        return None
+
+    return strip_nodes_to_text(title_node)

@@ -18,7 +18,9 @@
     * [XPath](#xpath)
   * [Checking the free_access attribute](#checking-the-free_access-attribute)
   * [Finishing the Parser](#finishing-the-parser)
-* [6. Generate unit tests](#6-generate-unit-tests)
+* [6. Generate unit tests](#6-generate-unit-tests-and-update-tables)
+  * [Add unit test](#add-unit-tests)
+  * [Update tables](#update-tables)
 * [7. Opening a Pull Request](#7-opening-a-pull-request)
 
 # How to add a Publisher
@@ -128,8 +130,11 @@ To instantiate an object inheriting from URLSource like `RSSFeed` or `Sitemap`, 
 Getting links for RSS feeds can vary from publisher to publisher.
 Most of the time, you can find them through a quick browser search.
 Building an `RSSFeed` looks like this:
+
 ````python
-from fundus.scraping.html import RSSFeed
+
+from fundus import RSSFeed
+
 RSSFeed("https://theintercept.com/feed/?rss")
 ````
 
@@ -181,8 +186,11 @@ You can alter this behavior or reverse the order in which sitemaps are processed
 **_NOTE:_** If you wonder why you should reverse your sources from time to time, `URLSource`'s should, if possible, yield URLs in descending order by publishing date.
 
 Now building a new `URLSource` for a `NewsMap` covering the LA Times looks like this:
+
 ````python
-from fundus.scraping.html import NewsMap
+
+from fundus import NewsMap
+
 NewsMap("https://www.latimes.com/news-sitemap.xml", reverse=True)
 ````
 
@@ -211,6 +219,7 @@ You can check if a sitemap is a news map by:
 2. If your publisher requires to use custom request headers to work properly you can alter it by using the `request_header` parameter of `PublisherSpec`.
    The default is: `{"user_agent": "Fundus"}`.
 3. If you want to block URLs for the entire publisher use the `url_filter` parameter of `PublisherSpec`.
+4. In some cases it can be necessary to append query parameters to the end of the URL, e.g. to load the article as one page. This can be achieved by adding the `query_parameter` attribute of `PublisherSpec` and assigning it a dictionary object containing the key - value pairs: e.g. `{"page": "all"}`. These key  - value pairs will be appended to all crawled URLs.
 
 Now, let's put it all together to specify the LA Times as a new publisher in Fundus:
 
@@ -506,7 +515,7 @@ def free_access(self) -> bool:
 ```
 
 Usually you can identify a premium article by an indicator within the URL or by using XPath or CSSSelector and selecting
-the element asking to to purchase a subscription to view the article.
+the element asking to purchase a subscription to view the article.
 
 ### Finishing the Parser
 
@@ -568,7 +577,9 @@ Fundus-Article:
 - From:   Los Angeles Times (2023-06-25 21:30)
 ```
 
-## 6. Generate unit tests
+## 6. Generate unit tests and update tables
+
+### Add unit tests
 
 To finish your newly added publisher you should add unit tests for the parser.
 We recommend you do this with the provided [**script**](../scripts/generate_parser_test_files.py).
@@ -594,6 +605,15 @@ python -m scripts.generate_parser_test_files -p LATimes
 ````
 
 to generate a unit test for our parser.
+
+### Update tables
+
+To fully integrate your new publisher you have to add it to the [supported publishers](supported_publishers.md) table.
+You do so by simply running
+
+````shell
+python -m scripts.generate_tables
+````
 
 Now to test your newly added publisher you should run pytest with the following command:
 

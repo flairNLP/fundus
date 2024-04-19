@@ -46,8 +46,6 @@ You can also initialize a crawler for the entire publisher collection
 crawler = Crawler(PublisherCollection)
 ````
 
-**_NOTE:_** To build a pipeline from low-level `Scraper` objects make use of the `BaseCrawler` class.
-
 # How to crawl articles
 
 Now to crawl articles make use of the `crawl()` method of the initialized crawler class.
