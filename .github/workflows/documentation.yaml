@@ -11,13 +11,11 @@ on:
       - src/fundus/publishers/**
       - scripts/generate_tables.py
 
-  pull_request:
+  # https://github.com/stefanzweifel/git-auto-commit-action/issues/211#issuecomment-1100105924
+  pull_request_target:
     paths:
       - src/fundus/publishers/**
       - scripts/generate_tables.py
-
-  # https://github.com/stefanzweifel/git-auto-commit-action/issues/211#issuecomment-1100105924
-  pull_request_target:
 
   workflow_dispatch:
 
@@ -31,7 +29,17 @@ env:
     }}
 
 jobs:
+  require_permission_for_fork:
+    name: Require permission to run on fork
+    if: " github.event.pull_request.head.repo.fork "
+    runs-on: ubuntu-latest
+
+    environment:
+      name: documentation
+
   supported_publishers:
+    needs:
+      - require_permission_for_fork
     runs-on: ubuntu-latest
     
     permissions:
