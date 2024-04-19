@@ -18,7 +18,9 @@
     * [XPath](#xpath)
   * [Checking the free_access attribute](#checking-the-free_access-attribute)
   * [Finishing the Parser](#finishing-the-parser)
-* [6. Generate unit tests](#6-generate-unit-tests)
+* [6. Generate unit tests](#6-generate-unit-tests-and-update-tables)
+  * [Add unit test](#add-unit-tests)
+  * [Update tables](#update-tables)
 * [7. Opening a Pull Request](#7-opening-a-pull-request)
 
 # How to add a Publisher
@@ -512,7 +514,7 @@ def free_access(self) -> bool:
 ```
 
 Usually you can identify a premium article by an indicator within the URL or by using XPath or CSSSelector and selecting
-the element asking to to purchase a subscription to view the article.
+the element asking to purchase a subscription to view the article.
 
 ### Finishing the Parser
 
@@ -574,7 +576,9 @@ Fundus-Article:
 - From:   Los Angeles Times (2023-06-25 21:30)
 ```
 
-## 6. Generate unit tests
+## 6. Generate unit tests and update tables
+
+### Add unit tests
 
 To finish your newly added publisher you should add unit tests for the parser.
 We recommend you do this with the provided [**script**](../scripts/generate_parser_test_files.py).
@@ -600,6 +604,15 @@ python -m scripts.generate_parser_test_files -p LATimes
 ````
 
 to generate a unit test for our parser.
+
+### Update tables
+
+To fully integrate your new publisher you have to add it to the [supported publishers](supported_publishers.md) table.
+You do so by simply running
+
+````shell
+python -m scripts.generate_tables
+````
 
 Now to test your newly added publisher you should run pytest with the following command:
 
