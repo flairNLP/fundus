@@ -16,6 +16,9 @@ on:
       - src/fundus/publishers/**
       - scripts/generate_tables.py
 
+  # https://github.com/stefanzweifel/git-auto-commit-action/issues/211#issuecomment-1100105924
+  pull_request_target:
+
   workflow_dispatch:
 
 env:
