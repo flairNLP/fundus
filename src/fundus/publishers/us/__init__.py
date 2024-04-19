@@ -1,8 +1,9 @@
 from fundus.publishers.base_objects import PublisherEnum, PublisherSpec
 from fundus.scraping.filter import inverse, regex_filter
-from fundus.scraping.html import NewsMap, RSSFeed, Sitemap
+from fundus.scraping.url import NewsMap, RSSFeed, Sitemap
 
 from .ap_news import APNewsParser
+from .business_insider import BusinessInsiderParser
 from .cnbc import CNBCParser
 from .fox_news import FoxNewsParser
 from .free_beacon import FreeBeaconParser
@@ -20,7 +21,7 @@ from .world_truth import WorldTruthParser
 class US(PublisherEnum):
     APNews = PublisherSpec(
         name="Associated Press News",
-        domain="https://www.apnews.com/",
+        domain="https://apnews.com/",
         sources=[
             Sitemap(
                 "https://apnews.com/sitemap.xml",
@@ -41,7 +42,7 @@ class US(PublisherEnum):
 
     TheIntercept = PublisherSpec(
         name="The Intercept",
-        domain="https://www.theintercept.com/",
+        domain="https://theintercept.com/",
         sources=[
             RSSFeed("https://theintercept.com/feed/?lang=en"),
             Sitemap(
@@ -91,16 +92,16 @@ class US(PublisherEnum):
         parser=TheNationParser,
     )
 
-    WorldTruth = PublisherSpec(
-        name="World Truth",
-        domain="https://www.worldtruth.tv/",
-        sources=[RSSFeed("https://feeds.feedburner.com/ConsciousnessTv")],
-        parser=WorldTruthParser,
-    )
+    # WorldTruth = PublisherSpec(
+    #     name="World Truth",
+    #     domain="https://www.worldtruth.tv/",
+    #     sources=[RSSFeed("https://feeds.feedburner.com/ConsciousnessTv")],
+    #     parser=WorldTruthParser,
+    # )
 
     FreeBeacon = PublisherSpec(
         name="The Washington Free Beacon",
-        domain="https://www.freebeacon.com/",
+        domain="https://freebeacon.com/",
         sources=[NewsMap("https://freebeacon.com/post_google_news.xml")],
         parser=FreeBeaconParser,
     )
@@ -152,4 +153,14 @@ class US(PublisherEnum):
         domain="https://www.latimes.com/",
         sources=[Sitemap("https://www.latimes.com/sitemap.xml"), NewsMap("https://www.latimes.com/news-sitemap.xml")],
         parser=LATimesParser,
+    )
+
+    BusinessInsider = PublisherSpec(
+        name="Business Insider",
+        domain="https://www.businessinsider.com/",
+        sources=[
+            NewsMap("https://www.businessinsider.com/sitemap/google-news.xml"),
+            Sitemap("https://www.businessinsider.com/sitemap/2024-01.xml"),
+        ],
+        parser=BusinessInsiderParser,
     )

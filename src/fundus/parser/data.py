@@ -16,11 +16,9 @@ from typing import (
 
 from typing_extensions import Self, TypeAlias
 
-from fundus.logging import basic_logger
-
-_displayed_deprecation_info = False
-
 LDMappingValue: TypeAlias = Union[List[Dict[str, Any]], Dict[str, Any]]
+
+_sentinel = object()
 
 
 class LinkedDataMapping:
@@ -65,26 +63,6 @@ class LinkedDataMapping:
             if not self.__dict__.get(self.__UNKNOWN_TYPE__):
                 self.__dict__[self.__UNKNOWN_TYPE__] = []
             self.__dict__[self.__UNKNOWN_TYPE__].append(ld)
-
-    def get(self, ld_type: str, default: Any = None) -> Optional[LDMappingValue]:
-        """
-        This function works like get() on a mapping. It will return all LDs containing
-        the given <ld_type>. If there are multiple LDs of the same '@type' this function
-        returns a list instead of a dictionary.
-
-        :param ld_type: The key to search for
-        :param default: The returned default if <key> is not found, default: None
-        :return: The reached value or <default>
-        """
-        global _displayed_deprecation_info
-
-        if not _displayed_deprecation_info:
-            _displayed_deprecation_info = True
-            basic_logger.warning(
-                "LinkedDate.get() will be deprecated in the future. Use .get_value_by_key_path() "
-                "or .bf_search() instead"
-            )
-        return self.__dict__.get(ld_type, default)
 
     def get_value_by_key_path(self, key_path: List[str], default: Any = None) -> Optional[Any]:
         """
@@ -147,19 +125,28 @@ class LinkedDataMapping:
 
         def search_recursive(nodes: Iterable[LDMappingValue], current_depth: int):
             if current_depth == depth:
-                return None
+                return _sentinel
             else:
                 new: List[Dict[str, Any]] = []
                 for node in nodes:
                     if isinstance(node, list):
                         new.extend(node)
                         continue
-                    elif value := node.get(key):
+                    elif (value := node.get(key, _sentinel)) is not _sentinel:
                         return value
                     new.extend(v for v in node.values() if isinstance(v, dict))
-                return search_recursive(new, current_depth + 1) if new else None
 
-        return search_recursive([self.__dict__], 0) or default
+                if not new:
+                    return _sentinel
+
+                return search_recursive(new, current_depth + 1)
+
+        result = search_recursive([self.__dict__], 0)
+
+        if result == _sentinel:
+            return default
+
+        return result
 
     def __repr__(self):
         return f"LD containing '{', '.join(content)}'" if (content := self.__dict__.keys()) else "Empty LD"

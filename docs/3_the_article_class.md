@@ -114,7 +114,7 @@ Here you have access to the following information:
    Often the same as `requested_url`; can change with redirects.
 3. `content: str`: The HTML content.
 4. `crawl_date: datetime`: The exact timestamp the article was crawled.
-5. `source: HTMLSource`: The internal source object the article originates from.
+5. `source_info: SourceInfo`: Some information about the HTML's origins, mostly for debugging purpose.
 
 ## Language detection
 
@@ -133,8 +133,8 @@ for article in crawler.crawl(max_articles=1):
 ````
 
 Should print this:
-``console
+```console
 en
-``
+```
 
 In the [**next section**](4_how_to_filter_articles.md) we will show you how to filter articles.

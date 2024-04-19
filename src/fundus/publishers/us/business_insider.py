@@ -15,20 +15,17 @@ from fundus.parser.utility import (
 
 class BusinessInsiderParser(ParserProxy):
     class V1(BaseParser):
-        _summary_selector = CSSSelector("article div.bi-bulletpoints > p")
+        _summary_selector = CSSSelector("article ul[class^='summary-list'] > li")
         _subheadline_selector = CSSSelector("article h2")
-
         _paragraph_selector = XPath(
             """
             //article 
-            //div[contains(@class, 'article-body')] 
-            //p[
-                not(
-                    ancestor::*[@class='bi-bulletpoints'] or
-                    mark[@class='has-inline-color has-cyan-bluish-gray-color'] or 
-                    @class='has-text-align-right'
-                )
-            ]
+            //div[contains(@class, 'content-lock-content')] 
+            /p[not(contains(@class, 'disclaimer'))] | 
+            //article 
+            //div[contains(@class, 'content-lock-content')]
+            /div[contains(@class, 'premium-content')] 
+            /p[not(contains(@class, 'disclaimer'))]
             """
         )
 
@@ -51,10 +48,12 @@ class BusinessInsiderParser(ParserProxy):
 
         @attribute
         def title(self) -> Optional[str]:
-            return self.precomputed.ld.bf_search("headline")
+            return self.precomputed.meta.get("title")
 
         @attribute
         def topics(self) -> List[str]:
-            return generic_topic_parsing(self.precomputed.meta.get("keywords")) or generic_topic_parsing(
-                self.precomputed.ld.bf_search("keywords")
+            return generic_topic_parsing(
+                self.precomputed.meta.get("keywords")
+                or self.precomputed.ld.bf_search("keywords")
+                or self.precomputed.meta.get("news_keywords")
             )

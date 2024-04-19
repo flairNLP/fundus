@@ -1,5 +1,5 @@
 from fundus.publishers.base_objects import PublisherEnum, PublisherSpec
-from fundus.scraping.html import RSSFeed
+from fundus.scraping.url import RSSFeed
 
 from .orf import OrfParser
 
@@ -8,7 +8,7 @@ from .orf import OrfParser
 
 class AT(PublisherEnum):
     ORF = PublisherSpec(
-        name="ORF",
+        name="Österreichischer Rundfunk",
         domain="https://www.orf.at",
         sources=[RSSFeed("https://rss.orf.at/news.xml")],
         parser=OrfParser,
