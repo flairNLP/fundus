@@ -94,4 +94,4 @@ class FAZParser(ParserProxy):
 
         @attribute
         def title(self) -> Optional[str]:
-            return self.precomputed.meta.get('og:title') or parse_title_from_root(self.precomputed.doc)
+            return self.precomputed.meta.get("og:title") or parse_title_from_root(self.precomputed.doc)
