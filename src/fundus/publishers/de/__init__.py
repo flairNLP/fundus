@@ -232,6 +232,10 @@ class DE(PublisherEnum):
     RheinischePost = PublisherSpec(
         name="Rheinische Post",
         domain="https://rp-online.de/",
-        sources=[NewsMap("https://rp-online.de/sitemap-news.xml"), Sitemap("https://rp-online.de/sitemap.xml")],
+        sources=[
+            RSSFeed("https://rp-online.de/feed.rss"),
+            NewsMap("https://rp-online.de/sitemap-news.xml"),
+            Sitemap("https://rp-online.de/sitemap.xml"),
+        ],
         parser=RheinischePostParser,
     )

@@ -16,6 +16,7 @@ class RheinischePostParser(ParserProxy):
     class V1(BaseParser):
         _summary_selector = CSSSelector("strong[data-cy='intro']")
         _paragraph_selector = CSSSelector("div[data-cy='article-content'] p")
+        _subheadline_selector = CSSSelector("div[data-cy='article-content'] h2")
 
         @attribute
         def body(self) -> ArticleBody:
@@ -23,6 +24,7 @@ class RheinischePostParser(ParserProxy):
                 self.precomputed.doc,
                 summary_selector=self._summary_selector,
                 paragraph_selector=self._paragraph_selector,
+                subheadline_selector=self._subheadline_selector,
             )
 
         @attribute
