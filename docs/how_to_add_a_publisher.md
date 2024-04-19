@@ -611,7 +611,7 @@ To fully integrate your new publisher you have to add it to the [supported publi
 You do so by simply running
 
 ````shell
-python -m scritps.generate_tables
+python -m scripts.generate_tables
 ````
 
 Now to test your newly added publisher you should run pytest with the following command:
