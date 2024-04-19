@@ -37,6 +37,9 @@ jobs:
     environment:
       name: documentation
 
+    steps:
+      - run: echo permission granted
+
   supported_publishers:
     needs:
       - require_permission_for_fork
