@@ -18,7 +18,7 @@ class WAZParser(ParserProxy):
         VALID_UNTIL = datetime.date(2024, 2, 21)
         _paragraph_selector: XPath = CSSSelector(".article__body > p")
         _summary_selector: XPath = CSSSelector(".article__header__intro__text")
-        _subheadline_selector = CSSSelector(".article__body > h3")
+        _subheadline_selector: XPath = CSSSelector(".article__body > h3")
 
         @attribute
         def body(self) -> ArticleBody:
@@ -55,4 +55,4 @@ class WAZParser(ParserProxy):
             namespaces={"re": "http://exslt.org/regular-expressions"},
         )
         _summary_selector = XPath("//div[@class='article-body'] /p[position()=1]")
-        _subheadline_selector = CSSSelector(".article-body > h3")
+        _subheadline_selector = XPath("//div[@class='article-body'] / h3[not(text()='Auch interessant')]")
