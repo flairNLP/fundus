@@ -18,7 +18,7 @@ Developed at <a href="https://www.informatik.hu-berlin.de/en/forschung-en/gebiet
 <div align="center">
 <hr>
 
-[Quick Start](#quick-start) |  [Tutorials](#tutorials)  | [News Sources](/docs/supported_publishers.md)
+[Quick Start](#quick-start) | [Tutorials](#tutorials) | [News Sources](/docs/supported_publishers.md) | [Paper]()
 
 </div>
 
@@ -142,6 +142,21 @@ If you wish to contribute check out these tutorials:
 You can find the publishers currently supported [**here**](/docs/supported_publishers.md).
 
 Also: **Adding a new publisher is easy - consider contributing to the project!**
+
+## Cite
+
+Please cite the following [paper](https://arxiv.org/abs/2403.15279) when using Fundus or building upon our work:
+
+```bibtex
+@misc{dallabetta2024fundus,
+      title={Fundus: A Simple-to-Use News Scraper Optimized for High Quality Extractions}, 
+      author={Max Dallabetta and Conrad Dobberstein and Adrian Breiding and Alan Akbik},
+      year={2024},
+      eprint={2403.15279},
+      archivePrefix={arXiv},
+      primaryClass={cs.CL}
+}
+```
 
 ## Contact
 
