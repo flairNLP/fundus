@@ -235,6 +235,7 @@ class DE(PublisherEnum):
         sources=[
             Sitemap("https://www.zdf.de/sitemap.xml", reverse=True),
             NewsMap("https://www.zdf.de/news-sitemap.xml"),
+            RSSFeed("https://www.zdf.de/rss/zdf/nachrichten"),
         ],
         parser=ZDFParser,
     )
