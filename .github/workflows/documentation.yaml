@@ -30,8 +30,6 @@ env:
 
 jobs:
   supported_publishers:
-    needs:
-      - require_permission_for_fork
     runs-on: ubuntu-latest
     
     permissions:
