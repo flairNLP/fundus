@@ -20,7 +20,7 @@ class TestExtractionFilter:
 
         assert sorted(result.missing_attributes) == sorted(("b", "c"))
 
-        assert not Requires("c", skip_bool=True)(extraction)
+        assert not Requires("c", eval_bools=False)(extraction)
 
     def test_requires_all(self):
         extraction = {"a": "Some Stuff", "b": [], "c": False}
@@ -34,8 +34,8 @@ class TestExtractionFilter:
         # test skip_boolean=False
         extraction = {"a": "Some Stuff", "b": [], "c": False}
 
-        assert (result := RequiresAll(skip_boolean=False)(extraction))
+        assert (result := RequiresAll(eval_bool=True)(extraction))
         assert sorted(result.missing_attributes) == sorted(("b", "c"))
 
         extraction = {"a": "Some Stuff", "c": True}
-        assert not RequiresAll(skip_boolean=False)(extraction)
+        assert not RequiresAll(eval_bool=True)(extraction)

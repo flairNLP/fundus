@@ -127,7 +127,7 @@ def _guarded_bool(value: Any):
 
 
 class Requires:
-    def __init__(self, *required_attributes: str, skip_bool: bool = False) -> None:
+    def __init__(self, *required_attributes: str, eval_bools: bool = True) -> None:
         """Class to filter extractions based on attribute values
 
         If a required_attribute is not present in the extracted data or evaluates to bool() -> False,
@@ -146,12 +146,12 @@ class Requires:
         Args:
             *required_attributes: Attributes required to evaluate to True in order to
                 pass the filter. If no attributes are given, all attributes will be evaluated
-            skip_boolean: If True then all attributes with boolean value will be evaluated with
-                <value> != None. If false, with bool(<value>). Defaults to False.
+            eval_bools: If True the boolean values will also be evaluated with bool(<value>).
+                If False, all boolean values evaluate to True. Defaults to True.
         """
         self.required_attributes = set(required_attributes)
         # somehow mypy does not recognize bool as callable :(
-        self._eval: Callable[[Any], bool] = _guarded_bool if skip_bool else bool  # type: ignore[assignment]
+        self._eval: Callable[[Any], bool] = bool if eval_bools else _guarded_bool  # type: ignore[assignment]
 
     def __call__(self, extraction: Dict[str, Any]) -> FilterResultWithMissingAttributes:
         missing_attributes = [
@@ -163,7 +163,7 @@ class Requires:
 
 
 class RequiresAll(Requires):
-    def __init__(self, skip_boolean: bool = True) -> None:
+    def __init__(self, eval_bool: bool = False) -> None:
         """Name wrap for Requires()
 
         This is for readability only. By default, it requires all non-boolean attributes of the extraction
@@ -171,6 +171,6 @@ class RequiresAll(Requires):
         See class:Requires docstring for more information.
 
         Args:
-            skip_boolean: See Requires docstring for more information. Defaults to True.
+            eval_bool: See Requires docstring for more information. Defaults to False.
         """
-        super().__init__(skip_bool=skip_boolean)
+        super().__init__(eval_bools=eval_bool)
