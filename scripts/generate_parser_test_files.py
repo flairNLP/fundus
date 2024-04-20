@@ -82,7 +82,7 @@ def main() -> None:
     arguments = parse_arguments()
 
     # sort args.attributes for consistency
-    arguments.attributes = list(sorted(arguments.attributes)) or attributes_required_to_cover
+    arguments.attributes = sorted(set(arguments.attributes) or attributes_required_to_cover)
 
     basic_logger.setLevel(WARN)
 
@@ -124,11 +124,15 @@ def main() -> None:
             for html in html_mapping.values():
                 versioned_parser = html.publisher.parser(html.crawl_date)
                 extraction = versioned_parser.parse(html.content)
-                new = {attr: value for attr, value in extraction.items() if attr in arguments.attributes}
+                missing_attributes = set(arguments.attributes) - set(
+                    test_data.get(type(versioned_parser).__name__) or {}
+                )
+                new = {attr: value for attr, value in extraction.items() if attr in missing_attributes}
                 if not (entry := test_data.get(type(versioned_parser).__name__)):
                     test_data[type(versioned_parser).__name__] = new
                 else:
                     entry.update(new)
+                    test_data[type(versioned_parser).__name__] = dict(sorted(entry.items()))
 
             test_data_file.write(test_data)
             bar.update()
