@@ -23,7 +23,7 @@ def get_test_article(enum: PublisherEnum, url: Optional[str] = None) -> Optional
         return next(scraper.scrape(error_handling="suppress", extraction_filter=RequiresAll()), None)
 
     crawler = Crawler(enum)
-    return next(crawler.crawl(max_articles=1, error_handling="suppress", only_complete=True), None)
+    return next(crawler.crawl(max_articles=1, error_handling="suppress", only_complete=RequiresAll()), None)
 
 
 def parse_arguments() -> Namespace:
