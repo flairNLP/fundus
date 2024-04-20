@@ -14,12 +14,14 @@ from fundus.parser.utility import (
 class ZDFParser(ParserProxy):
     class V1(BaseParser):
         _div_selector = CSSSelector("div.r1nj4qn5")
+        _summary_selector = CSSSelector("p.ikh9v7p.c1bdz7f4")
 
         @attribute
         def body(self) -> ArticleBody:
             return extract_article_body_with_selector(
                 self.precomputed.doc,
                 paragraph_selector=self._div_selector,
+                summary_selector=self._summary_selector,
             )
 
         @attribute
