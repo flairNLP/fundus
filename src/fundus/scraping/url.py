@@ -46,8 +46,8 @@ class URLSource(Iterable[str], ABC):
     def __post_init__(self):
         if not self._request_header:
             self._request_header = _default_header
-        if not validators.url(self.url):
-            raise ValueError(f"Invalid url '{self.url}'")
+        if not validators.url(self.url, strict_query=False):
+            basic_logger.error(f"{type(self).__name__} initialized with invalid URL {self.url}")
 
     def set_header(self, request_header: Dict[str, str]) -> None:
         self._request_header = request_header
@@ -108,7 +108,7 @@ class Sitemap(URLSource):
                 __module_logger__.warning(f"Warning! Couldn't reach sitemap '{sitemap_url}' because of {error}")
                 return
             content = response.content
-            if (content_type := response.headers["content-type"]) in self._decompressor.supported_file_formats:
+            if (content_type := response.headers.get("content-type")) in self._decompressor.supported_file_formats:
                 content = self._decompressor.decompress(content, content_type)
             if not content:
                 __module_logger__.warning(f"Warning! Empty sitemap at '{sitemap_url}'")

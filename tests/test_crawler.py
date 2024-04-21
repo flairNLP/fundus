@@ -6,7 +6,7 @@ from fundus import Crawler, NewsMap, RSSFeed
 class TestPipeline:
     def test_crawler_with_empty_collection(self, collection_with_empty_publisher_enum):
         crawler = Crawler(collection_with_empty_publisher_enum)
-        assert crawler.publishers == tuple()
+        assert crawler.publishers == list()
         assert next(crawler.crawl(), None) is None
 
         with pytest.raises(ValueError):

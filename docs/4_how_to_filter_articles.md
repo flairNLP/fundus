@@ -184,8 +184,7 @@ You can preselect the source for your articles when initializing a new `Crawler`
 Let's initiate a crawler who only crawls from `NewsMaps`'s.
 
 ````python
-from fundus import Crawler, PublisherCollection
-from fundus.scraping.url import NewsMap
+from fundus import Crawler, PublisherCollection, NewsMap
 
 crawler = Crawler(PublisherCollection.us, restrict_sources_to=[NewsMap])
 ````

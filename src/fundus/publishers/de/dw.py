@@ -13,12 +13,19 @@ from fundus.parser.utility import (
     generic_date_parsing,
     generic_text_extraction_with_css,
     generic_topic_parsing,
+    strip_nodes_to_text,
 )
 
 
 class DWParser(ParserProxy):
     class V2(BaseParser):
-        _paragraph_selector = CSSSelector("div.rich-text > p")
+        VALID_UNTIL = datetime.date(2024, 1, 18)
+        # https://regex101.com/r/Xsadk5/1
+        _author_regex = r"^([A-z]{2,3}\/)*([A-z]{2,3})\s\([A-z\s,\d]*\)$"
+        _paragraph_selector = XPath(
+            f"//div[contains(@class, 'rich-text')] /p[text() and not(re:test(text(), '{_author_regex}'))]",
+            namespaces={"re": "http://exslt.org/regular-expressions"},
+        )
         _summary_selector = CSSSelector("header > p")
         _subheadline_selector = CSSSelector("div.rich-text > h2")
 
@@ -52,6 +59,18 @@ class DWParser(ParserProxy):
         @attribute
         def topics(self) -> List[str]:
             return [node.text_content().strip() for node in self._topic_selector(self.precomputed.doc)]
+
+    class V2_1(V2):
+        VALID_UNTIL = datetime.date.today()
+
+        _topic_selector = CSSSelector("header > div.kicker > span")
+
+        @attribute
+        def topics(self) -> List[str]:
+            topic_nodes = self._topic_selector(self.precomputed.doc)
+            if (topic_string := strip_nodes_to_text(topic_nodes, join_on=", ")) is not None:
+                return topic_string.split(", ")
+            return []
 
     class V1(BaseParser):
         VALID_UNTIL = datetime.date(2023, 6, 12)

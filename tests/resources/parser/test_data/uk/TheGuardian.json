@@ -1,21 +1,33 @@
 {
   "V1": {
     "authors": [
-      "Martin Belam",
-      "Jordyn Beazley",
-      "Mabel Banfield-Nwachi",
-      "Jennifer Rankin",
-      "Philip Oltermann"
+      "Guardian staff reporter"
     ],
-    "publishing_date": "2023-05-15 11:50:54+00:00",
-    "title": "Russia-Ukraine war live: Sunak tells Zelenskiy UK will train pilots but supplying fighter jets to Kyiv is not ‘straightforward’",
+    "body": {
+      "summary": [
+        "Police in Spanish city continue to search debris after blaze that consumed one of the buildings in less than an hour"
+      ],
+      "sections": [
+        {
+          "headline": [],
+          "paragraphs": [
+            "The death toll from a fire that left two residential buildings charred ruins in the Spanish city of Valencia rose to 10 on Saturday after authorities announced they had located the remains of what they believed to be the last missing person.",
+            "Forensic police found the 10th victim inside the building, the national government delegate in Valencia, Pilar Bernabé, told journalists. Police will proceed with DNA testing to confirm the identities of all the victims, she said.",
+            "Although there were no other missing people reported, Bernabé said police and firefighters would continue the complex work of combing the debris in search of any other possible victim.",
+            "It was not immediately known how many people were in the two buildings when the fire broke out, but the complex had about 140 apartments.",
+            "The blaze that appeared to begin in one home on Thursday afternoon engulfed the rest of the 14-story apartment block in less than an hour, raising questions about whether construction materials used on the façade may have contributed to the fire spreading so rapidly.",
+            "Neighbours described seeing the rapid evolution of the flames, with residents stuck on balconies and children screaming. Those left homeless by the fire, including many Ukrainian refugees who lived in the complex, were initially given refuge in city hotels but were expected to be moved to other accommodation over the weekend.",
+            "Experts suggested that a type of cladding might have made the blaze spread faster, but Valencia’s mayor, María José Catalá, said the cause was still unknown and that it was too early to comment on whether some materials used in the construction of the buidlings might have worsened it."
+          ]
+        }
+      ]
+    },
+    "publishing_date": "2024-02-24 11:42:23+00:00",
+    "title": "Death toll in Valencia fire rises to 10 as remains of last missing person found",
     "topics": [
-      "Ukraine",
-      "Russia",
+      "Spain",
       "Europe",
-      "World news",
-      "Volodymyr Zelenskiy",
-      "Vladimir Putin"
+      "World news"
     ]
   }
 }

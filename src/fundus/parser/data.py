@@ -1,4 +1,4 @@
-from abc import ABC
+from abc import ABC, abstractmethod
 from dataclasses import dataclass, fields
 from typing import (
     Any,
@@ -14,16 +14,11 @@ from typing import (
     overload,
 )
 
-from typing_extensions import TypeAlias
-
-from fundus.logging import create_logger
-
-__module_logger__ = create_logger(__name__)
-
-_displayed_deprecation_info = False
-
+from typing_extensions import Self, TypeAlias
 
 LDMappingValue: TypeAlias = Union[List[Dict[str, Any]], Dict[str, Any]]
+
+_sentinel = object()
 
 
 class LinkedDataMapping:
@@ -68,26 +63,6 @@ class LinkedDataMapping:
             if not self.__dict__.get(self.__UNKNOWN_TYPE__):
                 self.__dict__[self.__UNKNOWN_TYPE__] = []
             self.__dict__[self.__UNKNOWN_TYPE__].append(ld)
-
-    def get(self, ld_type: str, default: Any = None) -> Optional[LDMappingValue]:
-        """
-        This function works like get() on a mapping. It will return all LDs containing
-        the given <ld_type>. If there are multiple LDs of the same '@type' this function
-        returns a list instead of a dictionary.
-
-        :param ld_type: The key to search for
-        :param default: The returned default if <key> is not found, default: None
-        :return: The reached value or <default>
-        """
-        global _displayed_deprecation_info
-
-        if not _displayed_deprecation_info:
-            _displayed_deprecation_info = True
-            __module_logger__.warning(
-                "LinkedDate.get() will be deprecated in the future. Use .get_value_by_key_path() "
-                "or .bf_search() instead"
-            )
-        return self.__dict__.get(ld_type, default)
 
     def get_value_by_key_path(self, key_path: List[str], default: Any = None) -> Optional[Any]:
         """
@@ -150,19 +125,28 @@ class LinkedDataMapping:
 
         def search_recursive(nodes: Iterable[LDMappingValue], current_depth: int):
             if current_depth == depth:
-                return None
+                return _sentinel
             else:
                 new: List[Dict[str, Any]] = []
                 for node in nodes:
                     if isinstance(node, list):
                         new.extend(node)
                         continue
-                    elif value := node.get(key):
+                    elif (value := node.get(key, _sentinel)) is not _sentinel:
                         return value
                     new.extend(v for v in node.values() if isinstance(v, dict))
-                return search_recursive(new, current_depth + 1) if new else None
 
-        return search_recursive([self.__dict__], 0) or default
+                if not new:
+                    return _sentinel
+
+                return search_recursive(new, current_depth + 1)
+
+        result = search_recursive([self.__dict__], 0)
+
+        if result == _sentinel:
+            return default
+
+        return result
 
     def __repr__(self):
         return f"LD containing '{', '.join(content)}'" if (content := self.__dict__.keys()) else "Empty LD"
@@ -195,19 +179,22 @@ class TextSequence(Sequence[str]):
     def __str__(self) -> str:
         return "\n".join(self)
 
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, TextSequence):
+            return NotImplemented
+        return self._data == other._data
+
 
 @dataclass
 class TextSequenceTree(ABC):
+    """Base class to traverse and build trees of TextSequence."""
+
     def as_text_sequence(self) -> TextSequence:
         texts = [text for tl in self.df_traversal() for text in tl]
         return TextSequence(texts)
 
-    def text(self, join_on: str = "\n\n", strip_text: bool = True) -> str:
-        if strip_text:
-            striped_texts = [" ".join(text.split()) for text in self.as_text_sequence()]
-            return join_on.join(striped_texts)
-        else:
-            return join_on.join(self.as_text_sequence())
+    def text(self, join_on: str = "\n\n") -> str:
+        return join_on.join(self.as_text_sequence())
 
     def df_traversal(self) -> Iterable[TextSequence]:
         def recursion(o: object):
@@ -222,7 +209,16 @@ class TextSequenceTree(ABC):
         for value in self:
             yield from recursion(value)
 
-    def __iter__(self):
+    @abstractmethod
+    def serialize(self) -> Dict[str, Any]:
+        pass
+
+    @classmethod
+    @abstractmethod
+    def deserialize(cls, serialized: Dict[str, Any]) -> Self:
+        pass
+
+    def __iter__(self) -> Iterator[Any]:
         field_values = [getattr(self, f.name) for f in fields(self)]
         yield from field_values
 
@@ -238,8 +234,31 @@ class ArticleSection(TextSequenceTree):
     headline: TextSequence
     paragraphs: TextSequence
 
+    def serialize(self) -> Dict[str, Any]:
+        return {
+            "headline": list(self.headline),
+            "paragraphs": list(self.paragraphs),
+        }
+
+    @classmethod
+    def deserialize(cls, serialized: Dict[str, Any]) -> Self:
+        return cls(headline=TextSequence(serialized["headline"]), paragraphs=TextSequence(serialized["paragraphs"]))
+
 
 @dataclass
 class ArticleBody(TextSequenceTree):
     summary: TextSequence
     sections: List[ArticleSection]
+
+    def serialize(self) -> Dict[str, Any]:
+        return {
+            "summary": list(self.summary),
+            "sections": [section.serialize() for section in self.sections],
+        }
+
+    @classmethod
+    def deserialize(cls, serialized: Dict[str, Any]) -> Self:
+        return cls(
+            summary=TextSequence(serialized["summary"]),
+            sections=[ArticleSection.deserialize(section) for section in serialized["sections"]],
+        )

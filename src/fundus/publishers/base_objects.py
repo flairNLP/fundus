@@ -1,6 +1,7 @@
 import inspect
 from dataclasses import dataclass, field
 from enum import Enum, EnumMeta, unique
+from itertools import islice
 from typing import Any, Dict, Iterator, List, Optional, Type
 
 from fundus.parser.base_parser import ParserProxy
@@ -15,12 +16,22 @@ class PublisherSpec:
     domain: str
     parser: Type[ParserProxy]
     sources: List[URLSource]
+    query_parameter: Dict[str, str] = field(default_factory=dict)
     url_filter: Optional[URLFilter] = field(default=None)
     request_header: Dict[str, str] = field(default_factory=dict)
 
 
+class PublisherEnumMeta(EnumMeta):
+    def __str__(self) -> str:
+        representation = f"Region {self.__name__!r} containing {len(self)} publisher(s):"
+        publisher: str
+        for publisher in self.__members__.values():
+            representation += f"\n\t {publisher}"
+        return representation
+
+
 @unique
-class PublisherEnum(Enum):
+class PublisherEnum(Enum, metaclass=PublisherEnumMeta):
     def __new__(cls, *args, **kwargs):
         value = len(cls.__members__) + 1
         obj = object.__new__(cls)
@@ -33,6 +44,7 @@ class PublisherEnum(Enum):
         self.domain = spec.domain
         self.parser = spec.parser()
         self.publisher_name = spec.name
+        self.query_parameter = spec.query_parameter
         self.url_filter = spec.url_filter
         self.request_header = spec.request_header
 
@@ -53,6 +65,9 @@ class PublisherEnum(Enum):
             source_mapping[type(url_source)].append(url_source)
 
         self.source_mapping = source_mapping
+
+    def __str__(self) -> str:
+        return f"{self.publisher_name}"
 
     def supports(self, source_types: List[Type[URLSource]]) -> bool:
         if not source_types:
@@ -188,3 +203,19 @@ class PublisherCollectionMeta(type):
             int: The number of publishers.
         """
         return len(list(iter(cls)))
+
+    def __str__(self) -> str:
+        enum_mapping = self.get_publisher_enum_mapping()
+        enum_mapping_keys = enum_mapping.keys()
+        representation = (
+            f"The {self.__name__!r} consists of {len(self)} publishers from {len(enum_mapping_keys)} , including:"
+        )
+        publisher: str
+        country: str
+        for country in enum_mapping_keys:
+            representation += f"\n\t {country}:"
+            for publisher in islice(enum_mapping[country], 0, 5):
+                representation += f"\n\t\t {publisher}"
+            if len(enum_mapping[country]) > 5:
+                representation += f"\n\t\t ..."
+        return representation

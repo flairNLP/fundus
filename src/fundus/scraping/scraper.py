@@ -7,11 +7,15 @@ from fundus.parser import ParserProxy
 from fundus.publishers.base_objects import PublisherEnum
 from fundus.scraping.article import Article
 from fundus.scraping.delay import Delay
-from fundus.scraping.filter import ExtractionFilter, URLFilter
+from fundus.scraping.filter import (
+    ExtractionFilter,
+    FilterResultWithMissingAttributes,
+    URLFilter,
+)
 from fundus.scraping.html import CCNewsSource, HTMLSource, WebSource
 from fundus.scraping.url import URLSource
 
-__module_logger__ = create_logger(__name__)
+logger = create_logger(__name__)
 
 
 class BaseScraper:
@@ -27,7 +31,7 @@ class BaseScraper:
     ) -> Iterator[Article]:
         for source in self.sources:
             for html in source.fetch(url_filter=url_filter):
-                parser = self.parser_mapping[html.source.publisher]
+                parser = self.parser_mapping[html.source_info.publisher]
 
                 try:
                     extraction = parser(html.crawl_date).parse(html.content, error_handling)
@@ -35,21 +39,27 @@ class BaseScraper:
                 except Exception as err:
                     if error_handling == "raise":
                         error_message = f"Run into an error processing article '{html.requested_url}'"
-                        __module_logger__.error(error_message)
+                        logger.error(error_message)
                         err.args = (str(err) + "\n\n" + error_message,)
                         raise err
                     elif error_handling == "catch":
                         yield Article(html=html, exception=err)
                     elif error_handling == "suppress":
-                        __module_logger__.info(f"Skipped article at '{html.requested_url}' because of: {err!r}")
+                        logger.info(f"Skipped article at '{html.requested_url}' because of: {err!r}")
                     else:
                         raise ValueError(f"Unknown value '{error_handling}' for parameter <error_handling>'")
 
                 else:
-                    if extraction_filter and extraction_filter(extraction):
-                        __module_logger__.debug(
-                            f"Skipped article at '{html.requested_url}' because of extraction filter"
-                        )
+                    if extraction_filter and (filter_result := extraction_filter(extraction)):
+                        if isinstance(filter_result, FilterResultWithMissingAttributes):
+                            logger.debug(
+                                f"Skipped article at '{html.requested_url}' because attribute(s) "
+                                f"{', '.join(filter_result.missing_attributes)!r} is(are) missing"
+                            )
+                        else:
+                            logger.debug(
+                                f"Skipped article at '{html.requested_url}' because of extraction filter"
+                            )
                     else:
                         article = Article.from_extracted(html=html, extracted=extraction)
                         yield article
@@ -75,10 +85,11 @@ class WebScraper(BaseScraper):
                 publisher=publisher.publisher_name,
                 request_header=publisher.request_header,
                 delay=delay,
+                query_parameters=publisher.query_parameter,
             )
             for url_source in url_sources
         ]
-        parser_mapping = {publisher.publisher_name: publisher.parser}
+        parser_mapping: Dict[str, ParserProxy] = {publisher.publisher_name: publisher.parser}
         super().__init__(*html_sources, parser_mapping=parser_mapping)
 
 

@@ -16,8 +16,11 @@
     * [Working with `lxml`](#working-with-lxml)
     * [CSS-Select](#css-select)
     * [XPath](#xpath)
+  * [Checking the free_access attribute](#checking-the-free_access-attribute)
   * [Finishing the Parser](#finishing-the-parser)
-* [6. Generate unit tests](#6-generate-unit-tests)
+* [6. Generate unit tests](#6-generate-unit-tests-and-update-tables)
+  * [Add unit test](#add-unit-tests)
+  * [Update tables](#update-tables)
 * [7. Opening a Pull Request](#7-opening-a-pull-request)
 
 # How to add a Publisher
@@ -35,6 +38,27 @@ For example:
 - `fundus/publishers/de/` for German publishers
 - `fundus/publishers/us/` for US publishers
 - ...
+
+In case you don't see a directory labelled with the corresponding country code, feel free to create one. 
+Within this directory add a file called `__init__.py` and create a class inheriting the PublisherEnum behaviour.
+As an example, if you were to add the US, it should look something like this:
+
+```python
+from fundus.publishers.base_objects import PublisherEnum
+
+class US(PublisherEnum):
+    pass
+```
+
+Next, you should open the file `fundus/publishers/__init__.py` and make sure that the class PublisherCollection has an attribute corresponding to your newly added country:
+
+```python
+from fundus.publishers.base_objects import PublisherCollectionMeta
+from fundus.publishers.us import US
+
+class PublisherCollection(metaclass=PublisherCollectionMeta):
+    us = US
+```
 
 Now create an empty file in the corresponding country section using the publishers' name or some abbreviation as the file name.
 For the Los Angeles Times, the correct country section is `fundus/publishers/us/`, since they are a newspaper based in the United States, with a filename like `la_times.py` or `los_angeles_times.py`.
@@ -195,6 +219,7 @@ You can check if a sitemap is a news map by:
 2. If your publisher requires to use custom request headers to work properly you can alter it by using the `request_header` parameter of `PublisherSpec`.
    The default is: `{"user_agent": "Fundus"}`.
 3. If you want to block URLs for the entire publisher use the `url_filter` parameter of `PublisherSpec`.
+4. In some cases it can be necessary to append query parameters to the end of the URL, e.g. to load the article as one page. This can be achieved by adding the `query_parameter` attribute of `PublisherSpec` and assigning it a dictionary object containing the key - value pairs: e.g. `{"page": "all"}`. These key  - value pairs will be appended to all crawled URLs.
 
 Now, let's put it all together to specify the LA Times as a new publisher in Fundus:
 
@@ -475,6 +500,23 @@ Instead, we recommend referring to [this](https://devhints.io/xpath) documentati
 Make sure to examine other parsers and consult the [attribute guidelines](attribute_guidelines.md) for specifics on attribute implementation. 
 We strongly encourage utilizing these utility functions, especially when parsing the `ArticleBody`.
 
+### Checking the free_access attribute
+
+In case your new publisher does not have a subscription model, you can go ahead and skip this step.
+If it does, please verify that there is a tag `isAccessibleForFree` within the HTMLs `ld+json` elements (refer to the section [Extracting attributes from Precomputed](#extracting-attributes-from-precomputed) for details) in the source code of premium articles that is set to either `false` or `False`,  `true`/`True` respectively.
+It doesn't matter if the tag is missing in the freely accessible articles.
+If this is the case, you can continue with the next step. If not, please overwrite the existing function by adding the following snippet to your parser:
+
+```python
+@attribute
+def free_access(self) -> bool:
+    # Your personalized logic goes here
+    ...
+```
+
+Usually you can identify a premium article by an indicator within the URL or by using XPath or CSSSelector and selecting
+the element asking to purchase a subscription to view the article.
+
 ### Finishing the Parser
 
 Bringing all the above together, the Los Angeles Times now looks like this.
@@ -535,7 +577,9 @@ Fundus-Article:
 - From:   Los Angeles Times (2023-06-25 21:30)
 ```
 
-## 6. Generate unit tests
+## 6. Generate unit tests and update tables
+
+### Add unit tests
 
 To finish your newly added publisher you should add unit tests for the parser.
 We recommend you do this with the provided [**script**](../scripts/generate_parser_test_files.py).
@@ -561,6 +605,15 @@ python -m scripts.generate_parser_test_files -p LATimes
 ````
 
 to generate a unit test for our parser.
+
+### Update tables
+
+To fully integrate your new publisher you have to add it to the [supported publishers](supported_publishers.md) table.
+You do so by simply running
+
+````shell
+python -m scripts.generate_tables
+````
 
 Now to test your newly added publisher you should run pytest with the following command:
 

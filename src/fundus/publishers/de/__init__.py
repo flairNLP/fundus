@@ -1,11 +1,15 @@
 from datetime import datetime
 
+from dateutil.rrule import MONTHLY, rrule
+
 from fundus.publishers.base_objects import PublisherEnum, PublisherSpec
 from fundus.scraping.filter import regex_filter
 from fundus.scraping.url import NewsMap, RSSFeed, Sitemap
 
 from .berliner_zeitung import BerlinerZeitungParser
 from .bild import BildParser
+from .braunschweiger_zeitung import BSZParser
+from .business_insider_de import BusinessInsiderDEParser
 from .die_welt import DieWeltParser
 from .die_zeit import DieZeitParser
 from .dw import DWParser
@@ -154,7 +158,7 @@ class DE(PublisherEnum):
 
     NTV = PublisherSpec(
         name="N-Tv",
-        domain="https://www.ntv.de/",
+        domain="https://www.n-tv.de/",
         sources=[NewsMap("https://www.n-tv.de/news.xml"), Sitemap("https://www.n-tv.de/sitemap.xml")],
         parser=NTVParser,
     )
@@ -172,15 +176,22 @@ class DE(PublisherEnum):
 
     Taz = PublisherSpec(
         name="Die Tageszeitung (taz)",
-        domain="https://www.taz.de/",
-        sources=[NewsMap("https://taz.de/sitemap-google-news.xml"), Sitemap("https://taz.de/sitemap-index.xml")],
+        domain="https://taz.de/",
+        sources=[
+            NewsMap("https://taz.de/sitemap-google-news.xml"),
+            Sitemap("https://taz.de/sitemap-index.xml"),
+        ],
         parser=TazParser,
     )
 
     Bild = PublisherSpec(
         name="Bild",
         domain="https://www.bild.de/",
-        sources=[RSSFeed("https://www.bild.de/rssfeeds/vw-neu/vw-neu-32001674,view=rss2.bild.xml")],
+        sources=[
+            RSSFeed("https://www.bild.de/rssfeeds/vw-neu/vw-neu-32001674,view=rss2.bild.xml"),
+            NewsMap("https://www.bild.de/sitemap-news.xml"),
+            Sitemap("https://www.bild.de/sitemap-index.xml"),
+        ],
         parser=BildParser,
     )
 
@@ -189,4 +200,30 @@ class DE(PublisherEnum):
         domain="https://www.waz.de/",
         sources=[NewsMap("https://www.waz.de/sitemaps/news.xml")],
         parser=WAZParser,
+    )
+
+    BSZ = PublisherSpec(
+        name="Braunschweiger Zeitung",
+        domain="https://www.braunschweiger-zeitung.de/",
+        sources=[
+            RSSFeed("https://www.braunschweiger-zeitung.de/rss"),
+            NewsMap("https://www.braunschweiger-zeitung.de/sitemaps/news.xml"),
+        ]
+        + [
+            Sitemap(
+                f"https://www.braunschweiger-zeitung.de/sitemaps/archive/sitemap-{d.year}-{str(d.month).zfill(2)}-p00.xml.gz"
+            )
+            for d in reversed(list(rrule(MONTHLY, dtstart=datetime(2016, 9, 1), until=datetime.now())))
+        ],
+        parser=BSZParser,
+    )
+
+    BusinessInsiderDE = PublisherSpec(
+        name="Business Insider DE",
+        domain="https://www.businessinsider.de/",
+        sources=[
+            NewsMap("https://www.businessinsider.de/news-sitemap.xml"),
+            Sitemap("https://www.businessinsider.de/sitemap_index.xml"),
+        ],
+        parser=BusinessInsiderDEParser,
     )

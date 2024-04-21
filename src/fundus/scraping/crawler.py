@@ -31,6 +31,7 @@ import dill
 import more_itertools
 import requests
 from dateutil.rrule import MONTHLY, rrule
+from more_itertools import roundrobin
 from tqdm import tqdm
 from typing_extensions import ParamSpec, TypeAlias
 
@@ -38,12 +39,13 @@ from fundus.logging import create_logger
 from fundus.publishers.base_objects import PublisherCollectionMeta, PublisherEnum
 from fundus.scraping.article import Article
 from fundus.scraping.delay import Delay
-from fundus.scraping.filter import ExtractionFilter, Requires, URLFilter
+from fundus.scraping.filter import ExtractionFilter, Requires, RequiresAll, URLFilter
 from fundus.scraping.html import CCNewsSource
 from fundus.scraping.scraper import CCNewsScraper, WebScraper
+from fundus.scraping.session import session_handler
 from fundus.scraping.url import URLSource
 
-__module_logger__ = create_logger(__name__)
+logger = create_logger(__name__)
 
 _T = TypeVar("_T")
 _P = ParamSpec("_P")
@@ -117,7 +119,10 @@ def pool_queue_iter(handle: MapResult[Any], queue: Queue[_T]) -> Iterator[_T]:
 
 class CrawlerBase(ABC):
     def __init__(self, *publishers: Publisher):
-        self.publishers = tuple(set(more_itertools.collapse(publishers)))
+        if not publishers:
+            raise ValueError("param <publishers> of <Crawler.__init__> has to be non empty")
+
+        self.publishers: List[PublisherEnum] = list(set(more_itertools.collapse(publishers)))
 
     @abstractmethod
     def _build_article_iterator(
@@ -170,20 +175,14 @@ class CrawlerBase(ABC):
 
         def build_extraction_filter() -> Optional[ExtractionFilter]:
             if isinstance(only_complete, bool):
-                return (
-                    None
-                    if only_complete is False
-                    else lambda extracted: not all(
-                        bool(v) if not isinstance(v, Exception) else False for _, v in extracted.items()
-                    )
-                )
+                return None if only_complete is False else RequiresAll()
             else:
                 return only_complete
 
         response_cache: Set[str] = set()
 
         extraction_filter = build_extraction_filter()
-        fitting_publisher: List[PublisherEnum] = []
+        fitting_publishers: List[PublisherEnum] = []
 
         if isinstance(extraction_filter, Requires):
             for publisher in self.publishers:
@@ -193,30 +192,34 @@ class CrawlerBase(ABC):
                     )
                 )
                 if missing_attributes := extraction_filter.required_attributes - supported_attributes:
-                    __module_logger__.warning(
+                    logger.warning(
                         f"The required attribute(s) `{', '.join(missing_attributes)}` "
                         f"is(are) not supported by {publisher.publisher_name}. Skipping publisher"
                     )
                 else:
-                    fitting_publisher.append(publisher)
+                    fitting_publishers.append(publisher)
 
-            if not fitting_publisher:
-                __module_logger__.error(
-                    f"Could not find any fitting publisher for required attributes  "
+            if not fitting_publishers:
+                logger.error(
+                    f"Could not find any fitting publishers for required attributes  "
                     f"`{', '.join(extraction_filter.required_attributes)}`"
                 )
                 return
+        else:
+            fitting_publishers = self.publishers
 
-        article_idx = 0
+        article_count = 0
         for article in self._build_article_iterator(
-            tuple(fitting_publisher or self.publishers), error_handling, build_extraction_filter(), url_filter
+            tuple(fitting_publishers), error_handling, build_extraction_filter(), url_filter
         ):
             if not only_unique or article.html.responded_url not in response_cache:
                 response_cache.add(article.html.responded_url)
-                article_idx += 1
+                article_count += 1
                 yield article
-            if article_idx == max_articles:
+            if article_count == max_articles:
                 break
+
+        session_handler.close_current_session()
 
 
 class Crawler(CrawlerBase):
@@ -232,12 +235,12 @@ class Crawler(CrawlerBase):
         Examples:
             >>> from fundus import PublisherCollection, Crawler
             >>> crawler = Crawler(*PublisherCollection)
-            >>> # Crawler(PublisherCollection.us) to crawl only english news
+            >>> # Crawler(PublisherCollection.us) to crawl only american news
             >>> for article in crawler.crawl():
             >>>     print(article)
 
         Args:
-            *publishers (Union[PublisherEnum, Type[PublisherEnum]]): The publishers to crawl.
+            *publishers (Union[PublisherEnum, Type[PublisherEnum], PublisherCollectionMeta]): The publishers to crawl.
             restrict_sources_to (Optional[List[Type[URLSource]]]): Lets you restrict
                 sources defined in the publisher specs. If set, only articles from given source types
                 will be yielded.
@@ -245,10 +248,10 @@ class Crawler(CrawlerBase):
                 downloads. You can set a delay directly using float or any callable satisfying the Delay
                 protocol. If set to None, no delay will be used between batches. See Delay for more
                 information. Defaults to None.
+            threading (bool): If True, the crawler will use a dedicated thread per publisher, if set to False,
+                the crawler will use a single thread for all publishers and load articles successively. This will greatly
+                influence performance, and it is highly recommended to use a threaded crawler. Deafults to True.
         """
-
-        if not publishers:
-            raise ValueError("param <publishers> of <Crawler.__init__> has to be non empty")
 
         super().__init__(*publishers)
 
@@ -265,9 +268,10 @@ class Crawler(CrawlerBase):
     ) -> Iterator[Article]:
         def build_delay() -> Optional[Delay]:
             if isinstance(self.delay, float):
+                delay = self.delay
 
                 def constant_delay() -> float:
-                    return self.delay  # type: ignore[return-value]
+                    return delay
 
                 return constant_delay
 
@@ -285,21 +289,16 @@ class Crawler(CrawlerBase):
         publishers: Tuple[PublisherEnum, ...], article_task: Callable[[PublisherEnum], Iterator[Article]]
     ) -> Iterator[Article]:
         article_iterators = [article_task(publisher) for publisher in publishers]
-        while article_iterators:
-            for iterator in article_iterators:
-                try:
-                    yield next(iterator)
-                except StopIteration:
-                    article_iterators.remove(iterator)
+        yield from roundrobin(*article_iterators)
 
     @staticmethod
     def _threaded_crawl(
         publishers: Tuple[PublisherEnum, ...], article_task: Callable[[PublisherEnum], Iterator[Article]]
     ) -> Iterator[Article]:
-        article_queue: Queue[Article] = Queue()
+        article_queue: Queue[Article] = Queue(len(publishers))
         wrapped_article_task = queue_wrapper(article_queue, article_task)
 
-        with ThreadPool(processes=len(publishers) or None) as pool:
+        with ThreadPool(processes=len(publishers) or None) as pool, session_handler.context(len(publishers), 1):
             yield from pool_queue_iter(pool.map_async(wrapped_article_task, publishers), article_queue)
 
     def _build_article_iterator(
@@ -375,7 +374,7 @@ class CCNewsCrawler(CrawlerBase):
         # process-bound. The reason is that we stream the data and process it on the fly rather than downloading all
         # files and processing them afterward. Therefore, we utilize multiprocessing here instead of multithreading.
         with Manager() as manager, Pool(processes=min(self.processes, len(warc_paths))) as pool:
-            article_queue: Queue[Article] = manager.Queue()
+            article_queue: Queue[Article] = manager.Queue(maxsize=1000)
 
             # Because multiprocessing.Pool does not support iterators as targets,
             # we wrap the article_task to write the articles to a queue instead of returning them directly.

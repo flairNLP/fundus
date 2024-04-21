@@ -1,10 +1,10 @@
-from datetime import datetime
+from datetime import date, datetime
 from typing import List, Optional
 
 from lxml.cssselect import CSSSelector
+from lxml.etree import XPath
 
 from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute
-from fundus.parser.data import TextSequence
 from fundus.parser.utility import (
     extract_article_body_with_selector,
     generic_author_parsing,
@@ -14,13 +14,20 @@ from fundus.parser.utility import (
 
 class TheInterceptParser(ParserProxy):
     class V1(BaseParser):
-        _paragraph_selector = CSSSelector("div.PostContent > div > p:not(p.caption):not(p.PhotoGrid-description)")
-        _subheadline_selector = CSSSelector("div.PostContent > div > h2")
+        # this date isn't exact nor confirmed, because TheIntercept isn't included an CC-NEWS and the
+        # Publisher Coverage action didn't capture the layout change.
+        VALID_UNTIL = date(2024, 2, 1)
+        _summary_selector: XPath = CSSSelector("h2.Post-excerpt")
+        _paragraph_selector: XPath = CSSSelector(
+            "div.PostContent > div > p:not(p.caption):not(p.PhotoGrid-description)"
+        )
+        _subheadline_selector: XPath = CSSSelector("div.PostContent > div > h2")
 
         @attribute
         def body(self) -> ArticleBody:
-            body: ArticleBody = extract_article_body_with_selector(
+            return extract_article_body_with_selector(
                 self.precomputed.doc,
+                summary_selector=self._summary_selector,
                 subheadline_selector=self._subheadline_selector,
                 # The Intercept uses `p` tags for the article's paragraphs, image captions and photo grid descriptions.
                 # Since we are only interested in the article's paragraphs,
@@ -28,10 +35,6 @@ class TheInterceptParser(ParserProxy):
                 # Example article: https://theintercept.com/2023/04/01/israel-palestine-apartheid-settlements/
                 paragraph_selector=self._paragraph_selector,
             )
-            description: Optional[str] = self.precomputed.meta.get("og:description")
-            if description is not None:
-                body.summary = TextSequence(texts=(description,))
-            return body
 
         @attribute
         def authors(self) -> List[str]:
@@ -55,3 +58,11 @@ class TheInterceptParser(ParserProxy):
                 return []
 
             return [keyword[9:] for keyword in keywords if keyword.startswith("Subject: ")]
+
+    class V1_1(V1):
+        VALID_UNTIL = date.today()
+        _summary_selector = XPath(
+            "//p[@class='post__excerpt'] | //h2[preceding-sibling::h1[contains(@class, 'post__title')]]"
+        )
+        _paragraph_selector = CSSSelector("div.entry-content > div.entry-content__content > p, blockquote > p")
+        _subheadline_selector = CSSSelector("div.entry-content > div.entry-content__content > h2")

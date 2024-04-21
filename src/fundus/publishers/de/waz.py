@@ -2,6 +2,7 @@ import datetime
 from typing import List, Optional
 
 from lxml.cssselect import CSSSelector
+from lxml.etree import XPath
 
 from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute
 from fundus.parser.utility import (
@@ -14,9 +15,10 @@ from fundus.parser.utility import (
 
 class WAZParser(ParserProxy):
     class V1(BaseParser):
-        _paragraph_selector = CSSSelector(".article__body > p")
-        _summary_selector = CSSSelector(".article__header__intro__text")
-        _subheadline_selector = CSSSelector(".article__body > h3")
+        VALID_UNTIL = datetime.date(2024, 2, 21)
+        _paragraph_selector: XPath = CSSSelector(".article__body > p")
+        _summary_selector: XPath = CSSSelector(".article__header__intro__text")
+        _subheadline_selector: XPath = CSSSelector(".article__body > h3")
 
         @attribute
         def body(self) -> ArticleBody:
@@ -44,3 +46,13 @@ class WAZParser(ParserProxy):
             authors = generic_author_parsing(self.precomputed.meta.get("author"))
             topics = generic_topic_parsing(self.precomputed.meta.get("keywords"))
             return [topic for topic in topics if topic not in authors]
+
+    class V1_1(V1):
+        VALID_UNTIL = datetime.date.today()
+
+        _paragraph_selector = XPath(
+            "//div[@class='article-body'] /p[position()>1 and not(@rel='author' or re:test(string(), '^>>.*[+]{3}'))]",
+            namespaces={"re": "http://exslt.org/regular-expressions"},
+        )
+        _summary_selector = XPath("//div[@class='article-body'] /p[position()=1]")
+        _subheadline_selector = XPath("//div[@class='article-body'] / h3[not(text()='Auch interessant')]")

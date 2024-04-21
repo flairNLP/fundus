@@ -3,17 +3,37 @@ import gzip
 import json
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Callable, Dict, Generic, Optional, Type, TypeVar
+from typing import Any, Callable, Dict, Generic, List, Optional, Type, TypeVar
 
 from typing_extensions import Self
 
 from fundus import PublisherCollection
-from fundus.parser import BaseParser
+from fundus.parser import ArticleBody, BaseParser
+from fundus.parser.data import TextSequenceTree
 from fundus.publishers.base_objects import PublisherEnum
+from fundus.scraping.article import Article
+from fundus.scraping.html import HTML, SourceInfo
 from scripts.generate_tables import supported_publishers_markdown_path
 from tests.resources.parser.test_data import __module_path__ as test_resource_path
 
 _T = TypeVar("_T")
+
+
+def get_test_articles(publisher: PublisherEnum) -> List[Article]:
+    articles = []
+    html_mapping = load_html_test_file_mapping(publisher)
+    for html_test_file in html_mapping.values():
+        extraction = publisher.parser(html_test_file.crawl_date).parse(html_test_file.content)
+        html = HTML(
+            content=html_test_file.content,
+            crawl_date=html_test_file.crawl_date,
+            requested_url=html_test_file.url,
+            responded_url=html_test_file.url,
+            source_info=SourceInfo(publisher.publisher_name),
+        )
+        article = Article.from_extracted(extracted=extraction, html=html)
+        articles.append(article)
+    return articles
 
 
 @dataclass
@@ -88,22 +108,25 @@ class ExtractionEncoder(json.JSONEncoder):
     def default(self, obj: object):
         if isinstance(obj, datetime.datetime):
             return str(obj)
+        if isinstance(obj, TextSequenceTree):
+            return obj.serialize()
         return json.JSONEncoder.default(self, obj)
 
 
 class ExtractionDecoder(json.JSONDecoder):
-    transformations: Dict[str, Callable[[Any], Any]] = {
-        "crawl_date": lambda timestamp: datetime.datetime.fromisoformat(timestamp),
-        "publishing_date": lambda timestamp: datetime.datetime.fromisoformat(timestamp),
+    deserialization_functions: Dict[str, Callable[[Any], Any]] = {
+        "crawl_date": datetime.datetime.fromisoformat,
+        "publishing_date": datetime.datetime.fromisoformat,
+        "body": ArticleBody.deserialize,
     }
 
     def __init__(self, *args, **kwargs):
         json.JSONDecoder.__init__(self, object_hook=self.object_hook, *args, **kwargs)
 
     def object_hook(self, obj_dict):
-        for key, transformation in self.transformations.items():
-            if serialized_value := obj_dict.get(key):
-                obj_dict[key] = transformation(serialized_value)
+        for key, deserialization_function in self.deserialization_functions.items():
+            if (serialized_value := obj_dict.get(key)) is not None:
+                obj_dict[key] = deserialization_function(serialized_value)
         return obj_dict
 
 

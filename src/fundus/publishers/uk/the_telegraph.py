@@ -15,6 +15,7 @@ from fundus.parser.utility import (
 class TheTelegraphParser(ParserProxy):
     class V1(BaseParser):
         _paragraph_selector = CSSSelector("div.articleBodyText p")
+        _subheadline_selector = CSSSelector("div.articleBodyText h2")
         _summary_selector = CSSSelector("p[itemprop='description']")
         _datetime_selector = CSSSelector("time[itemprop='datePublished']")
 
@@ -24,6 +25,7 @@ class TheTelegraphParser(ParserProxy):
                 self.precomputed.doc,
                 summary_selector=self._summary_selector,
                 paragraph_selector=self._paragraph_selector,
+                subheadline_selector=self._subheadline_selector,
             )
             return body
 

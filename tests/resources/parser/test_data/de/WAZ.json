@@ -3,6 +3,17 @@
     "authors": [
       "Florian Peters"
     ],
+    "body": {
+      "summary": [
+        "Witten. Zum zweiten Mal sind die Food-Trucks nach Witten gekommen. Die Besucher konnten sich über alle Kontinente schlemmen. Was gab es auf die Gabel?"
+      ],
+      "sections": [
+        {
+          "headline": [],
+          "paragraphs": []
+        }
+      ]
+    },
     "publishing_date": "2023-06-19 12:52:00+02:00",
     "title": "Hitze dämpft den Appetit beim Street Food Festival in Witten",
     "topics": [
@@ -16,6 +27,46 @@
       "Kultur",
       "Reise",
       "Fotostrecke"
+    ]
+  },
+  "V1_1": {
+    "authors": [
+      "Philipp Wahl"
+    ],
+    "body": {
+      "summary": [
+        "Duisburg. Erste Visualisierungen zeigen, wie die Seilbahn in Duisburg aussehen könnten. Ebenfalls zu sehen: eine Haltestelle am Technologiequartier Wedau."
+      ],
+      "sections": [
+        {
+          "headline": [],
+          "paragraphs": [
+            "Zum Start der Immobilienmesse Mipim in Cannes startet Duisburgs städtische Entwicklungsgesellschaft Gebag am Montag eine neue Projekt-Internetseite zum Technologiequartier Wedau. Ein Hingucker der Seite, der viele Duisburgerinnen und Duisburger interessieren dürfte, ist eine erste Visualisierung der geplanten Seilbahn.",
+            "Die noch nicht finanzierte und noch nicht beschlossene „Urbane Seilbahn“ würden Stadtplaner und städtische Gesellschaften gerne umsetzen. Sie soll vom Duisburger Hauptbahnhof bis zur Fläche des Stadtentwicklungsprojekts 6-Seen-Wedau „fliegen“. Die Gebag hatte im Herbst eine Konzeptstudie zum Seilbahnbau vorgestellt, die für Aufsehen und Diskussionen über das Für und Wider sorgte."
+          ]
+        },
+        {
+          "headline": [
+            "Seilbahn Duisburg: Haltestelle an der ehemaligen Richthalle und Trassenverlauf"
+          ],
+          "paragraphs": [
+            "Die nun von der Gebag veröffentlichte Visualisierung zeigt, wie ein möglicher Haltepunkt am zukünftigen Technologie-Quartier-Wedau (TQW) aussehen könnte. Demnach sei es „denkbar, dass sich die Seilbahn-Haltestelle über dem Dach der ehemaligen Richthalle im Herzen der Projektfläche wiederfinden wird“, so die Gebag.",
+            "Neben allgemeinen Informationen zum Projekt TQW illustriert die Webseite auch den aktuell vorgesehenen Trassenverlauf vom Hauptbahnhof an den „Duisburger Dünen“ entlang über den Sportpark Duisburg bis hin zum Bahnhof Wedau, direkt an der Projektfläche 6-Seen-Wedau.",
+            "Auf www.technologie-quartier-wedau.de geht‘s aber vor allem um das geplante Technologiequartier, etwa in Visualisierungen und Erläuterungen zum Entwurf.",
+            "Auf der rund 30 Hektar großen Fläche des ehemaligen Ausbesserungswerks Wedau, die sich unmittelbar nördlich an das Stadtentwicklungsprojekt 6-Seen-Wedau anschließt, soll ein Technologie-Quartier geschaffen werden, das Impulse für die Gesamtentwicklung der Stadt und der Region setzen soll.",
+            "Dort sollen etwa Campus-Flächen für eine mögliche Ansiedlung der Ingenieurwissenschaftlichen Fakultät der Universität Duisburg-Essen (UDE) und ein „Wissens-Campus“ geschaffen werden, wo sich beispielsweise Forschungs- und Entwicklungsfirmen oder Start-ups ansiedeln können."
+          ]
+        }
+      ]
+    },
+    "publishing_date": "2024-03-08 17:59:39+00:00",
+    "title": "Erstes Bild: So könnte die Duisburger Seilbahn aussehen",
+    "topics": [
+      "Städtebau",
+      "Messen",
+      "Investition",
+      "Duisburg",
+      "Cannes"
     ]
   }
 }

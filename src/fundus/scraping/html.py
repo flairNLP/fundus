@@ -1,5 +1,4 @@
 import time
-from abc import abstractmethod
 from dataclasses import dataclass
 from datetime import datetime
 from typing import Dict, Iterable, Iterator, List, Optional, Protocol
@@ -39,7 +38,7 @@ class HTML:
     responded_url: str
     content: str
     crawl_date: datetime
-    source: "SourceInfo"
+    source_info: "SourceInfo"
 
 
 @dataclass(frozen=True)
@@ -61,7 +60,6 @@ class WebSourceInfo(SourceInfo):
 
 
 class HTMLSource(Protocol):
-    @abstractmethod
     def fetch(self, url_filter: Optional[URLFilter] = None) -> Iterator[HTML]:
         ...
 
@@ -73,12 +71,14 @@ class WebSource:
         publisher: str,
         url_filter: Optional[URLFilter] = None,
         request_header: Optional[Dict[str, str]] = None,
+        query_parameters: Optional[Dict[str, str]] = None,
         delay: Optional[Delay] = None,
     ):
         self.url_source = url_source
         self.publisher = publisher
         self.url_filter = url_filter
         self.request_header = request_header or _default_header
+        self.query_parameters = query_parameters or {}
         if isinstance(url_source, URLSource):
             url_source.set_header(self.request_header)
         self.delay = delay
@@ -88,12 +88,16 @@ class WebSource:
             [url_filter] if url_filter else []
         )
 
-        timestamp = time.time()
+        timestamp = time.time() + self.delay() if self.delay is not None else time.time()
 
         def filter_url(u: str) -> bool:
             return any(f(u) for f in combined_filters)
 
         for url in self.url_source:
+            if self.delay:
+                time.sleep(max(0.0, self.delay() - time.time() + timestamp))
+                timestamp = time.time()
+
             if not validators.url(url):
                 __module_logger__.debug(f"Skipped requested URL '{url}' because the URL is malformed")
                 continue
@@ -103,14 +107,18 @@ class WebSource:
                 continue
 
             session = session_handler.get_session()
-
+            for key, value in self.query_parameters.items():
+                if "?" in url:
+                    url += "&" + key + "=" + value
+                else:
+                    url += "?" + key + "=" + value
             try:
                 response = session.get(url, headers=self.request_header)
 
             except (HTTPError, ConnectionError) as error:
                 __module_logger__.info(f"Skipped requested URL '{url}' because of '{error}'")
                 if isinstance(error, HTTPError) and error.response.status_code >= 500:
-                    return
+                    basic_logger.info(f"Skipped {self.publisher} due to server errors: '{error}'")
                 continue
 
             except Exception as error:
@@ -130,7 +138,7 @@ class WebSource:
                         f"Got redirected {len(response.history)} time(s) from {url} -> {response.url}"
                     )
 
-                source = (
+                source_info = (
                     WebSourceInfo(self.publisher, type(self.url_source).__name__, self.url_source.url)
                     if isinstance(self.url_source, URLSource)
                     else SourceInfo(self.publisher)
@@ -141,12 +149,8 @@ class WebSource:
                     responded_url=str(response.url),
                     content=html,
                     crawl_date=datetime.now(),
-                    source=source,
+                    source_info=source_info,
                 )
-
-            if self.delay:
-                time.sleep(max(0.0, self.delay() - time.time() + timestamp))
-                timestamp = time.time()
 
 
 class CCNewsSource:
@@ -221,7 +225,7 @@ class CCNewsSource:
                     responded_url=target_url,
                     content=content,
                     crawl_date=warc_record.record_date,
-                    source=WarcSourceInfo(
+                    source_info=WarcSourceInfo(
                         publisher=publisher.publisher_name,
                         warc_path=self.warc_path,
                         warc_headers=dict(warc_record.headers),

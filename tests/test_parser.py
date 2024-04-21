@@ -47,10 +47,10 @@ class TestBaseParser:
         assert parser_with_function_test.functions().names == ["test"]
 
     def test_attributes_iter(self, parser_with_attr_title, parser_with_static_method):
-        assert len(BaseParser.attributes()) == 0
-        assert len(parser_with_static_method.attributes()) == 0
-        assert len(parser_with_attr_title.attributes()) == 1
-        assert parser_with_attr_title.attributes().names == ["title"]
+        assert len(BaseParser.attributes()) == 1
+        assert len(parser_with_static_method.attributes()) == 1
+        assert len(parser_with_attr_title.attributes()) == 2
+        assert parser_with_attr_title.attributes().names == ["free_access", "title"]
 
     def test_supported_unsupported(self):
         class ParserWithValidatedAndUnvalidated(BaseParser):
@@ -63,12 +63,12 @@ class TestBaseParser:
                 return "unsupported"
 
         parser = ParserWithValidatedAndUnvalidated()
-        assert len(parser.attributes()) == 2
+        assert len(parser.attributes()) == 3
 
         assert (validated := parser.attributes().validated)
         assert isinstance(validated, AttributeCollection)
         assert (funcs := list(validated)) != [parser.validated]
-        assert funcs[0].__func__ == parser.validated.__func__
+        assert funcs[1].__func__ == parser.validated.__func__
 
         assert (unvalidated := parser.attributes().unvalidated)
         assert isinstance(validated, AttributeCollection)
@@ -128,7 +128,7 @@ class TestParserProxy:
 
 # enforce test coverage for test parsing
 # because this is also used for the generate_parser_test_files script we export it here
-attributes_required_to_cover = {"title", "authors", "topics", "publishing_date"}
+attributes_required_to_cover = {"title", "authors", "topics", "publishing_date", "body"}
 
 
 @pytest.mark.parametrize(
@@ -167,7 +167,13 @@ class TestParser:
             # test coverage
             supported_attrs = set(versioned_parser.attributes().names)
             missing_attrs = attributes_required_to_cover & supported_attrs - set(version_data.keys())
-            assert not missing_attrs, f"Test JSON does not cover the following attribute(s): {missing_attrs}"
+            assert (
+                not missing_attrs
+            ), f"Test JSON for {version_name} does not cover the following attribute(s): {missing_attrs}"
+
+            assert list(version_data.keys()) == sorted(
+                attributes_required_to_cover & supported_attrs
+            ), f"Test JSON for {version_name} is not in alphabetical order"
 
             assert (html := html_mapping.get(versioned_parser)), f"Missing test HTML for parser version {version_name}"
             # compare data
