@@ -311,6 +311,21 @@
     </tr>
     <tr>
       <td>
+        <code>RheinischePost</code>
+      </td>
+      <td>
+        <div>Rheinische Post</div>
+      </td>
+      <td>
+        <a href="https://rp-online.de/">
+          <span>rp-online.de</span>
+        </a>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
         <code>SpiegelOnline</code>
       </td>
       <td>
