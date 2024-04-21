@@ -19,6 +19,7 @@ from .mdr import MDRParser
 from .merkur import MerkurParser
 from .ndr import NDRParser
 from .ntv import NTVParser
+from .rheinische_post import RheinischePostParser
 from .spon import SPONParser
 from .stern import SternParser
 from .sz import SZParser
@@ -226,4 +227,15 @@ class DE(PublisherEnum):
             Sitemap("https://www.businessinsider.de/sitemap_index.xml"),
         ],
         parser=BusinessInsiderDEParser,
+    )
+
+    RheinischePost = PublisherSpec(
+        name="Rheinische Post",
+        domain="https://rp-online.de/",
+        sources=[
+            RSSFeed("https://rp-online.de/feed.rss"),
+            NewsMap("https://rp-online.de/sitemap-news.xml"),
+            Sitemap("https://rp-online.de/sitemap.xml"),
+        ],
+        parser=RheinischePostParser,
     )
