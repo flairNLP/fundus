@@ -84,6 +84,21 @@
   <tbody>
     <tr>
       <td>
+        <code>BR</code>
+      </td>
+      <td>
+        <div>Bayerischer Rundfunk (BR)</div>
+      </td>
+      <td>
+        <a href="https://www.br.de/">
+          <span>www.br.de</span>
+        </a>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
         <code>BerlinerZeitung</code>
       </td>
       <td>
