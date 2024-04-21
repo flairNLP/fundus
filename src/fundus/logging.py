@@ -8,6 +8,11 @@ _stream_handler = logging.StreamHandler()
 _formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 _stream_handler.setFormatter(_formatter)
 
+logging.basicConfig(
+    level=logging.ERROR,
+    handlers=[_stream_handler],
+)
+
 
 def create_logger(name: str) -> logging.Logger:
     logger = logging.getLogger(name)

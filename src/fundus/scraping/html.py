@@ -29,7 +29,7 @@ __all__ = [
 from fundus.scraping.session import session_handler
 from fundus.scraping.url import URLSource
 
-__module_logger__ = create_logger(__name__)
+logger = create_logger(__name__)
 
 
 @dataclass(frozen=True)
@@ -99,11 +99,11 @@ class WebSource:
                 timestamp = time.time()
 
             if not validators.url(url):
-                __module_logger__.debug(f"Skipped requested URL '{url}' because the URL is malformed")
+                logger.debug(f"Skipped requested URL '{url}' because the URL is malformed")
                 continue
 
             if filter_url(url):
-                __module_logger__.debug(f"Skipped requested URL '{url}' because of URL filter")
+                logger.debug(f"Skipped requested URL '{url}' because of URL filter")
                 continue
 
             session = session_handler.get_session()
@@ -116,27 +116,23 @@ class WebSource:
                 response = session.get(url, headers=self.request_header)
 
             except (HTTPError, ConnectionError) as error:
-                __module_logger__.info(f"Skipped requested URL '{url}' because of '{error}'")
+                logger.info(f"Skipped requested URL '{url}' because of '{error}'")
                 if isinstance(error, HTTPError) and error.response.status_code >= 500:
-                    basic_logger.info(f"Skipped {self.publisher} due to server errors: '{error}'")
+                    logger.info(f"Skipped {self.publisher} due to server errors: '{error}'")
                 continue
 
             except Exception as error:
-                __module_logger__.warning(
-                    f"Warning! Skipped  requested URL '{url}' because of an unexpected error {error}"
-                )
+                logger.warning(f"Warning! Skipped  requested URL '{url}' because of an unexpected error {error}")
                 continue
 
             else:
                 if filter_url(str(response.url)):
-                    __module_logger__.debug(f"Skipped responded URL '{str(response.url)}' because of URL filter")
+                    logger.debug(f"Skipped responded URL '{str(response.url)}' because of URL filter")
                     continue
                 html = response.text
 
                 if response.history:
-                    __module_logger__.info(
-                        f"Got redirected {len(response.history)} time(s) from {url} -> {response.url}"
-                    )
+                    logger.info(f"Got redirected {len(response.history)} time(s) from {url} -> {response.url}")
 
                 source_info = (
                     WebSourceInfo(self.publisher, type(self.url_source).__name__, self.url_source.url)
@@ -173,7 +169,7 @@ class CCNewsSource:
                 encoding: Optional[str] = chardet.detect(warc_body)["encoding"]
 
                 if encoding is not None:
-                    __module_logger__.debug(
+                    logger.debug(
                         f"Trying to decode record {record.record_id!r} from {target_url!r} "
                         f"using detected encoding {encoding}."
                     )
@@ -181,12 +177,12 @@ class CCNewsSource:
                     try:
                         return str(warc_body, encoding=encoding)
                     except UnicodeDecodeError:
-                        __module_logger__.warning(
+                        logger.warning(
                             f"Couldn't decode record {record.record_id!r} from {target_url!r} with "
                             f"original charset {record.http_charset!r} using detected charset {encoding!r}."
                         )
                 else:
-                    __module_logger__.warning(
+                    logger.warning(
                         f"Couldn't detect charset for record {record.record_id!r} from {target_url!r} "
                         f"with invalid original charset {record.http_charset!r}."
                     )
@@ -200,7 +196,7 @@ class CCNewsSource:
                 target_url = str(warc_record.headers["WARC-Target-URI"])
 
                 if url_filter is not None and url_filter(target_url):
-                    __module_logger__.debug(f"Skipped WARC record with target URI {target_url!r} because of URL filter")
+                    logger.debug(f"Skipped WARC record with target URI {target_url!r} because of URL filter")
                     continue
 
                 publisher_domain: str = urlparse(target_url).netloc
@@ -211,7 +207,7 @@ class CCNewsSource:
                 publisher = self._publisher_mapping[publisher_domain]
 
                 if publisher.url_filter is not None and publisher.url_filter(target_url):
-                    __module_logger__.debug(
+                    logger.debug(
                         f"Skipped WARC record with target URI {target_url!r} because of "
                         f"publisher specific URL filter"
                     )

@@ -12,7 +12,7 @@ from fundus.logging import create_logger
 from fundus.parser import ArticleBody
 from fundus.scraping.html import HTML
 
-__module_logger__ = create_logger(__name__)
+logger = create_logger(__name__)
 
 
 @dataclass(frozen=True)
@@ -56,7 +56,7 @@ class Article:
             try:
                 language = langdetect.detect(self.plaintext)
             except langdetect.LangDetectException:
-                __module_logger__.debug(f"Unable to detect language for article '{self.html.responded_url}'")
+                logger.debug(f"Unable to detect language for article '{self.html.responded_url}'")
 
         # use @lang attribute of <html> tag as fallback
         if not language or language == langdetect.detector_factory.Detector.UNKNOWN_LANG:

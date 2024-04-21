@@ -57,9 +57,7 @@ class BaseScraper:
                                 f"{', '.join(filter_result.missing_attributes)!r} is(are) missing"
                             )
                         else:
-                            logger.debug(
-                                f"Skipped article at '{html.requested_url}' because of extraction filter"
-                            )
+                            logger.debug(f"Skipped article at '{html.requested_url}' because of extraction filter")
                     else:
                         article = Article.from_extracted(html=html, extracted=extraction)
                         yield article
