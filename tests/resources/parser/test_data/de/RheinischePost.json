@@ -1,0 +1,50 @@
+{
+  "V1": {
+    "authors": [
+      "Sina Zehrfeld"
+    ],
+    "body": {
+      "summary": [
+        "Was kann Künstliche Intelligenz im Klassenzimmer – jenseits davon, dass Chat GPT Schülern beim Schummeln hilft? Es gibt eine Menge Möglichkeiten, wenn denn die Rahmenbedingungen stimmen. Ein Beispiel aus der Praxis einer Privatschule."
+      ],
+      "sections": [
+        {
+          "headline": [],
+          "paragraphs": [
+            "Deutschunterricht in der siebten Klasse der International School on the Rhine in Neuss. Das Thema: Argumentieren. In Gruppenarbeit sollen die Kinder sich Gründe für die Einrichtung eines Bienenstocks auf dem Schulgelände ausdenken. Zu überzeugen ist die künstliche Intelligenz: eine Premiumversion von Chat GPT. Auf dem Smartboard im Klassenzimmer verlangt eine Comicbiene über einem Texteingabefeld Antworten auf ihre skeptischen Fragen: Gibt es hier überhaupt genug Blumen im Umfeld? Sind da gefährliche Pestizide?",
+            "Lehrer Andreas Heller hat vorher festgelegt, wie schwer oder leicht das Programm zu überzeugen sein soll, wie schlüssig die Argumente der Kinder sein müssen: „Die GPT ist absolut anpassbar“, erklärt er. Jetzt tippt er ein, was die Kinder ihm sagen, und an der Tafel zeigen sich automatisch Antworten – ein Dialog entsteht, den er sich nicht selbst ausdenken musste. „Die Arbeit, die man hineinstecken muss, ist um ein Vielfaches reduziert“, beschreibt er die Unterrichtsvorbereitung und deutet auf die Comicbiene: „Man kann sich darauf konzentrieren, alles hübsch zu gestalten, weil der Papierkram wegfällt.“ Und einmal getroffene Vorbereitungen sind wandelbar: Beim nächsten Mal könnte er ohne größere Umstände Argumente für eine Schafherde oder einen Taubenschlag verlangen und die Schwierigkeit hochsetzen.",
+            "Begriff Künstliche Intelligenz (KI) ist einer der wichtigsten Trends in der Digitalisierung und hält in immer mehr Branchen Einzug. Viele Firmen setzen KI bereits in der Entwicklung, Produktion oder Verwaltung ein. KI-Anwendungen sind auch kaum noch aus dem Alltag wegzudenken – von der Suche nach dem schnellsten Weg zur Arbeit, der automatischen Steuerung eines Smart-Home-Systems oder die Auswahl der nächsten Streaming­serie.",
+            "Vorbild Ein weit verbreiteter Vertreter von KI-Modellen sind neuronale Netze. Vorbild hierfür ist das menschliche Gehirn. Um eine Aufgabe zu lösen, wird das neuronale Netz mit Daten „trainiert“. Ziel ist dabei, dass das Netz anschließend auch auf unbekannten Daten zur gewollten Schlussfolgerung kommt. ⇥(Quelle: BMWK)",
+            "Mathematik in der achten Klasse, Lehrer Rejhan Nisic moderiert. „Wir haben einen Chatbot speziell für unsere Mathe-Stunden kreiert. Für unsere Themen, die wir in der Stunde bearbeiten, abgestimmt auf unsere Schule, unsere Schüler und Lehrer“, erklärt er. Die Jugendlichen können sich aussuchen, wie schwer die nächste Aufgabe für sie werden soll – das Programm erstellt sie. Natürlich hätte Lehrer Nisic selbst eine ganze Aufgabenpalette vorbereiten können. Muss er aber nicht. Der Computer erledigt das rasend schnell, immer wieder neu.",
+            "Und mehr noch: „Der Bot erklärt alles“, sagt Schülerin Diba später außerhalb der Klasse. Nicht besser als der Lehrer. Aber wenn sie es will, dann liegen Erläuterungen auf Knopfdruck schriftlich vor. „Man kann es sich mehrfach durchlesen, dann bleibt das besser im Kopf.“ Und, so ergänzt Mitschüler Nicolas: „Man kann auf andere Sprachen switchen. Ich kann nicht so perfekt Englisch, dass ich alles immer direkt verstehe.“ An der internationalen Schule ist Englisch nämlich die Unterrichtssprache.",
+            "Mathelehrer Rejhan Nisic erklärt die Aufgaben, die Tablets liegen auf dem Tisch.",
+            "Die International School on the Rhine in Neuss will technologisch vorangehen. Sie unterhält eine IT-Abteilung mit zwei Mitarbeitern, sie wird in diesem Jahr mindestens 100.000 Euro in ihre IT-Ausstattung investieren, und das ist keine Ausnahme – man investiere kontinuierlich, sagt Rektorin Eileen Lyons. Die Technik sei niemals Selbstzweck, betont sie: „Technologie muss immer einen Mehrwert bieten. Und sie muss ins Lernen integriert sein, aber sie ist nicht das dominante Werkzeug.“ Auch ganz klassisch mit Stift, Papier und Büchern werde noch gearbeitet; gerade bei jüngeren Kindern setzte man nur sehr dosiert aufs Lernen über den Bildschirm. Gleichzeitig können die Kinder sich aber auch mit VR-Brillen virtuell im Regenwald oder im Weltall umschauen, am 3D-Drucker Objekte entwerfen, und nun gehört künstliche Intelligenz zum Schulalltag dazu. Allerdings verfügt die International School on the Rhine aus einem Grund über all diese Möglichkeiten: Sie ist eine Privatschule. Etwa 1000 Schüler aus 60 Nationen von der Grundschule bis zur Oberstufe besuchen sie, die Eltern zahlen zwischen etwa 12.000 und 18.000 Euro Schulgebühren im Jahr, zum pädagogischen Team gehören rund 160 Lehrkräfte. Voraussetzungen, die an staatlichen Schulen kaum gegeben sind.",
+            "Doch Annika Poestges, die im Haus für die Öffentlichkeitsarbeit zuständig ist, ist überzeugt: Auch öffentliche Schulen könnten mehr von künstlicher Intelligenz profitieren. „Man kann mit kostenfreien Programmen starten“, regt sie an. Beispielsweise in der Deutschförderung, die vielerorts enorm wichtig ist: „Es gibt ein kostenfreies KI-Tool, das Lernlücken bei Kindern erkennt und dann in den Aufgaben langsam schwieriger wird. Es stellt sich dynamisch und individualisiert auf die Schüler ein.“ Anderes wiederum sei nicht allzu teuer: Die Chat-GPT-Version, die in der Argumentationsübung im Deutschunterricht zum Einsatz kommt, koste pro Monat 21 Dollar. „Die Motivation von Lehrkräften ist maßgeblich“, so Poestges.",
+            "Ein Bild, das in der Welt der staatlichen Schulen nicht gleichermaßen geteilt wird. „Unsere Lehrkräfte sind nicht weniger motiviert. Sie haben einfach weder die Ressourcen noch die Zeit, sich intensiv mit der Thematik zu beschäftigen“, sagt Sabine Mistler, Vorsitzende des Philologenverbands NRW. Es brauche fundiertes Wissen, um künstliche Intelligenz sinnvoll einzusetzen. „An dem Punkt sind wir noch nicht, dass die Lehrkräfte das einfach könnten. Wir brauchen gute, geeignete Fortbildungen, die Angebote müssen zur jeweiligen Schulform passen.“",
+            "Außerdem müsse man die vorhandenen Rahmenbedingungen zur Kenntnis nehmen: Viele Schulen hätten eine schlechte digitale Ausstattung, Lehrkräfte müssten immer damit rechnen, dass das W-Lan versagt oder Geräte fehlten. Wollte man mehr KI-Lösungen vorantreiben, müsse man ernsthaft über die Finanzierung reden: „Dürfen Kommunen dafür Digitalpaktgelder nutzen? Oder müssen wir das hintanstellen, weil anderes wichtiger ist, etwa die Ausstattung aller mit Endgeräten oder der IT-Support? Was ist überhaupt mit dem Geld zu schaffen, das uns zur Verfügung steht?“, fragt Mistler.",
+            "Aus dem Schulministerium heißt es, es sei klar, „dass es entsprechender Fortbildungsangebote für die Lehrerinnen und Lehrer bedarf“. Man habe zuletzt rund 18 Millionen Euro in die digitale Weiterbildung von Schulleitungen und Lehrkräften investiert. Ein Handlungsleitfaden des Landes zählt Chancen von KI-Anwendungen auf: Sie könnten Ideen zur Unterrichtsvorbereitung liefern oder bei Korrekturen helfen. Lehrer könnten sie auch in der Klasse einsetzen, sofern sie „auf freiwilliger Basis über einen Zugang zu Chat GPT oder anderen KI-Anwendungen verfügen“, heißt es darin.",
+            "Die International School on the Rhine plant derweil den nächsten Ausbau: ein Computerlabor, in dem Jugendliche mit künstlicher Intelligenz arbeiten, beispielsweise Filme erstellen oder technische Entwürfe kreieren – mit VR-Brillen und 3D-Drucker können sie ihre Ergebnisse direkt testen. Die Technologie richtig zu nutzen müsse man lernen, erklärt Mohammed Aloof, Leiter der IT-Abteilung der Schule. Er sagt: „Es ist nicht so, dass Kinder durch KI faul würden. Sie werden schneller und erfolgreicher.“"
+          ]
+        }
+      ]
+    },
+    "publishing_date": "2024-04-21 20:24:00+02:00",
+    "title": "Technologie im Klassenzimmer: Künstliche Intelligenz in der Schule – „Sie werden schneller und erfolgreicher“",
+    "topics": [
+      "Intelligenz",
+      "Künstliche",
+      "Lehrer",
+      "GPT",
+      "Klassenzimmer",
+      "Rhine",
+      "School",
+      "Lernen",
+      "Chat",
+      "ausdenken",
+      "Klasse",
+      "künstlicher",
+      "Chatbot",
+      "Lehrerinnen"
+    ]
+  }
+}
