@@ -15,11 +15,13 @@ from fundus.parser.utility import (
 class BRParser(ParserProxy):
     class V1(BaseParser):
         _summary_selector = XPath(
-            "//p[starts-with(@class, 'ArticleModuleTeaser_teaserText') or starts-with(@class, 'ArticleItemTeaserText_text')]"
+            "//div[starts-with(@class, 'ArticleHeader_section')]//p[starts-with(@class, 'ArticleModuleTeaser_teaserText') or starts-with(@class, 'ArticleItemTeaserText_text')]"
         )
         # paragraph_selector captures div contents for full article, p for teaser-only flash articles
-        _paragraph_selector = XPath(
-            "(//div[starts-with(@class, 'ArticleModuleText_content')]//p) | //p[starts-with(@class, 'ArticleItemTeaserText_text')]"
+        _paragraph_selector = XPath("(//div[starts-with(@class, 'ArticleModuleText_content')])[1]//p")
+
+        _subheadline_selector = XPath(
+            "//section[starts-with(@class, 'ArticleModuleText_wrapper')]//div[starts-with(@class, 'ArticleModuleText_content')]//h2"
         )
 
         @attribute
@@ -36,9 +38,11 @@ class BRParser(ParserProxy):
 
         @attribute
         def body(self) -> ArticleBody:
+            # TODO
             return extract_article_body_with_selector(
                 self.precomputed.doc,
                 summary_selector=self._summary_selector,
+                subheadline_selector=self._subheadline_selector,
                 paragraph_selector=self._paragraph_selector,
             )
 

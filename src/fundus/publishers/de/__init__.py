@@ -240,7 +240,7 @@ class DE(PublisherEnum):
         ],
         parser=RheinischePostParser,
     )
-    
+
     BR = PublisherSpec(
         name="Bayerischer Rundfunk (BR)",
         domain="https://www.br.de/",
