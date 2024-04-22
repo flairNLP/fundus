@@ -1,42 +1,78 @@
 {
   "V1": {
     "authors": [
-      "Julia Klaus",
-      "Hakan Tanriverdi"
+      "Katja Belousova"
     ],
     "body": {
       "summary": [
-        "Volkswagen wurden brisante Daten gestohlen. Spuren weisen zu Hackern aus China. Recherchen von ZDF frontal und \"Spiegel\" zeigen, was die Datendiebe erbeutet haben."
+        "Immer wieder heißt es, Deutschland sei der wichtigste EU-Handelspartner Teherans. Doch wie groß ist das Handelsvolumen? Und welchen Einfluss hat Deutschland auf Iran?"
       ],
       "sections": [
         {
           "headline": [],
           "paragraphs": [
-            "Wenn in Peking kommende Woche die Automobilmesse \"Auto China\" beginnt, werden deutsche Konzerne ihre neuen Modelle präsentieren - und darauf hoffen, dass die Mahnung des deutschen Kanzlers in China auch gehört wird: \"Das Einzige, was immer klar sein muss, ist, dass der Wettbewerb fair sein muss\", sagte Olaf Scholz (SPD) Anfang dieser Woche während seiner China-Reise und fügte hinzu:",
-            "In der Vergangenheit lief das mitunter ganz anders: Das zeigen mehr als 40 interne Dokumenten, die der \"Spiegel\" gemeinsam mit ZDF frontal im Rahmen einer internationalen Kooperation zu chinesischen Spionagetätigkeiten in Europa einsehen konnte. Mutmaßlich chinesische Staatshacker nahmen die Volkswagen-Gruppe ab 2010 für mehrere Jahre ins Visier. Den Hackern gelang es mehrfach, tief in die Netzwerke von Volkswagen einzudringen und geistiges Eigentum zu stehlen.",
-            "Anhand der internen Unterlagen und Gesprächen mit einem Dutzend Personen, die den Fall kennen, lässt sich rekonstruieren, wie die Hacker agierten und für welche Daten sie sich interessierten.",
-            "Der Fall spielt sich zwischen 2010 und 2015 ab - doch er hat Folgen bis in die Gegenwart. Denn die Hacker hatten es unter anderem auf E-Mobilität abgesehen. Und damit jenen Markt, in dem sich deutsche Konzerne besonders gegen chinesische Konkurrenten behaupten müssen und große Probleme haben, Autos zu verkaufen.",
-            "Der Angriff kam in mehreren Wellen. Die Hacker hatten bereits 2010 damit begonnen, die IT-Infrastruktur von VW zu analysieren, um über mögliche Lücken einzudringen. Das gelang ihnen schon ein Jahr später. Zwischen 2011 und 2014 flossen mehrfach Daten ab, wie die internen Unterlagen zeigen. Microsoft soll vom größten Cyberangriff weltweit gesprochen haben - ausgehend von den Systemen, die neu aufgesetzt werden mussten.",
-            "Zur Volkswagen-Gruppe gehören neben der Kernmarke VW unter anderem auch Audi, Lamborghini, MAN, Porsche, Skoda und Bentley. Neben Pkw zählen auch Motorräder und Nutzfahrzeuge wie Busse und Lkw zum Unternehmens-Portfolio. Produziert werden die Fahrzeuge in Werken auf der ganzen Welt.",
-            "In den Unterlagen werden \"identifizierte Ziele\" der Hacker genannt, darunter:",
-            "die Entwicklung von Ottomotorendie Getriebeentwicklung sowiespeziell Doppelkupplungsgetriebe",
-            "Abgeflossen sind demnach auch Daten zu E-Mobilität, alternativen Antrieben wie der Brennstoffzelle sowie zu Automatikgetrieben. Wie IT-Experten, die den Fall betreuten, das herausfanden? Ihnen gelang es, Dateien wiederherzustellen, die die Hacker auf eigene Server geschickt und anschließend gelöscht hatten. Insgesamt sollen die Hacker rund 19.000 Dokumente gestohlen haben.",
-            "China ist für Volkswagen noch immer der größte Absatzmarkt. Lange waren die Wolfsburger beim Autoverkauf in China führend, rutschten im vergangenen Jahr allerdings auf Platz zwei ab. Der Markt ist stark umkämpft. Welche Rolle spielen geklaute Daten und gestohlenes Wissen im Wettbewerb der Autokonzerne?",
-            "Professorin Helena Wisbert forscht und lehrt an der Hochschule Ostfalia zu Wettbewerbsstrategien in der Automobilwirtschaft. Sie weiß, wer die Pläne der Konkurrenz kennt, ist im Vorteil:",
-            "Bei allen drei Angriffen soll es sich um dieselben Hacker gehandelt haben, heißt es in den internen VW-Unterlagen. China selbst wird nicht direkt beschuldigt, doch alle Gesprächspartner von ZDF frontal und \"Spiegel\" teilen mit, dass die Spur Richtung China geführt habe. \"Wir konnten die IP-Adresse bis nach Peking zurückverfolgen, sogar bis in die Nähe der PLA\", sagt ein Cybersicherheits-Experte, der mit dem Fall vertraut ist. Als PLA wird der militärische Nachrichtendienst Chinas bezeichnet. Ein endgültiger Beweis fehle aber.",
-            "Die chinesische Botschaft in Berlin betont auf Anfrage, dass China \"jede Form von Cyber-Spionage schon immer klar verurteilt und bekämpft\" habe. Die Behauptung, dass die chinesische Regierung Hackergruppen einsetze, um Cyberangriffe durchzuführen, sei \"empörend\".",
-            "Mehr zu dem Thema sehen Sie am Dienstag bei frontal. Am 23. April um 21 Uhr im ZDF und in der ZDF-Mediathek.",
-            "Aus den Dokumenten geht auch hervor, dass Volkswagen an einem Freitag begann, die Hacker aus den Netzwerken zu entfernen - und zwar, sobald es 16 Uhr in China war, die Hacker also mutmaßlich Feierabend hatten. Die chinesische Zeitzone wird explizit in den Dokumenten erwähnt.",
-            "Auch die eingesetzte Hacking-Software lasse einen Rückschluss zu, so IT-Experte Christoph Fischer: \"’China Chopper' und 'Plug X' ist aus chinesischer Hand und wurde sehr oft von den Chinesen verwendet. Man kann nicht mit hundertprozentiger Wahrscheinlichkeit sagen, dass nur die Chinesen das verwendet haben, aber mit Sicherheit ist der größte Teil der Anwendungen aus China gekommen.\"",
-            "Fischer, der den Bundestags-Hack 2015 mit aufgearbeitet hat und auch für die deutsche Automobilindustrie arbeitet, sagt mit Blick auf diese Hinweise:",
-            "Auf Anfrage bestätigt Volkswagen den Vorfall und weist darauf hin, dass dieser zehn Jahre zurückliegt. \"Wir waren zu dieser Zeit bereits dabei, im Rahmen kontinuierlicher Sicherheitsprogramme erheblich in unsere IT-Sicherheit zu investieren und strategisch zu verstärken\", teilt ein VW-Sprecher mit. \"Der Vorfall führte uns die Richtigkeit und Dringlichkeit nochmals vor Augen.\"",
-            "Das für die Cybersicherheit zuständige Bundesamt warnt dennoch vor weiteren Attacken:",
-            "Deutschland habe - so BSI-Chefin Plattner - in diesen Bereichen \"ein starkes Know-how, einen großen Wissensschatz\", der Begehrlichkeiten wecke. \"Und insofern, ja, wir sind da ein attraktives Ziel.\""
+            "Als Reaktion auf die iranischen Angriffe gegen Israel beraten die Außenminister der Europäischen Union an diesem Montag über weitere Iran-Sanktionen. Dabei steht auch die deutsche Wirtschaft im Fokus. Denn Deutschland ist, als größte europäische Handelsnation, auch der wichtigste EU-Handelspartner Teherans.",
+            "Wie viel exportiert Deutschland aktuell in das autoritäre Land? Und können weitere wirtschaftliche Sanktionen der EU den Druck auf das iranische Mullah-Regime erhöhen?"
+          ]
+        },
+        {
+          "headline": [
+            "Wo liegt Iran im Handelspartner-Vergleich?"
+          ],
+          "paragraphs": [
+            "Daten des Statistischen Bundesamts zeigen: Mit Blick auf Deutschlands wichtigste Export-Partner lag der Iran im Jahr 2023 auf Rang 66 - hinter anderen Autokratien wie Russland, Belarus oder Saudi-Arabien. Bei den Importen belegte der Iran Platz 93.",
+            "Für die Darstellung von ZDFheute Infografiken nutzen wir die Software von Datawrapper. Erst wenn Sie hier klicken, werden die Grafiken nachgeladen. Ihre IP-Adresse wird dabei an externe Server von Datawrapper übertragen. Über den Datenschutz von Datawrapper können Sie sich auf der Seite des Anbieters informieren. Um Ihre künftigen Besuche zu erleichtern, speichern wir Ihre Zustimmung in den Datenschutzeinstellungen. Ihre Zustimmung können Sie im Bereich „Meine News“ jederzeit widerrufen.",
+            "EU-weit war Deutschland laut eines Berichts der \"Teheran Times\" wichtigster Handelspartner des Iran, dahinter folgen Italien und die Niederlande. Das Ranking verwundert nicht: Immerhin ist Deutschland nach Angaben des Statistischen Bundesamts größter EU-Exporteur - vor den Niederlanden und Italien."
+          ]
+        },
+        {
+          "headline": [
+            "Wie viel wurde exportiert und importiert?"
+          ],
+          "paragraphs": [
+            "Die Daten zeigen auch: Der Handel mit dem Iran war, bedingt durch Sanktionen, in den vergangenen Jahrzehnten immer wieder Schwankungen unterlegen. Seit 2005 nimmt der Wert der in den Iran exportierten Waren aber stetig ab. Während Deutschland in dem Jahr noch Waren im Wert von fast 4,4 Milliarden Euro in das Land exportierte, betrug dieser Wert vergangenes Jahr etwa 1,2 Milliarden.",
+            "Für die Darstellung von ZDFheute Infografiken nutzen wir die Software von Datawrapper. Erst wenn Sie hier klicken, werden die Grafiken nachgeladen. Ihre IP-Adresse wird dabei an externe Server von Datawrapper übertragen. Über den Datenschutz von Datawrapper können Sie sich auf der Seite des Anbieters informieren. Um Ihre künftigen Besuche zu erleichtern, speichern wir Ihre Zustimmung in den Datenschutzeinstellungen. Ihre Zustimmung können Sie im Bereich „Meine News“ jederzeit widerrufen.",
+            "Ähnlich verhält es sich mit den Importen. 2023 importierte Deutschland Waren im Wert von 245 Millionen Euro aus dem Iran - 2010 war der Wert mit 918 Milliarden fast viermal so hoch gewesen.",
+            "Aussagekräftige Daten für 2024 liegen bislang nicht vor. Die Auswertung des Januars und Februars zeigt laut Statistischem Bundesamt jedoch, dass deutsche Exporte in den Iran gegenüber dem Vorjahreszeitraum um 22,1 Prozent gestiegen und Importe aus dem Iran um 13,1 Prozent gesunken sind."
+          ]
+        },
+        {
+          "headline": [
+            "Welche Güter werden gehandelt?"
+          ],
+          "paragraphs": [
+            "Exportiert wurden dabei vor allem:",
+            "Maschinenpharmazeutische Erzeugnissechemische Erzeugnisse",
+            "Importiert werden hauptsächlich:",
+            "Nahrungsmittel und landwirtschaftliche ErzeugnisseTextilien"
+          ]
+        },
+        {
+          "headline": [
+            "Wie wichtig ist der Handelspartner Iran?"
+          ],
+          "paragraphs": [
+            "Die Bedeutung des Handelspartners Iran für Deutschland ist vor dem Hintergrund dieser Zahlen überschaubar. Sascha Lohmann, Sanktionsexperte der Stiftung Wissenschaft und Politik, sagt gegenüber ZDFheute:",
+            "Umgekehrt seien deutsche Ausfuhren aber teilweise von großer Bedeutung für die iranische Wirtschaft und Gesellschaft, erklärt Lohmann. \"Insbesondere bei der medizinischen Versorgung im Bereich zur Diagnostik und Behandlung bestimmter Krankheiten.\""
+          ]
+        },
+        {
+          "headline": [
+            "Welche Mittel haben Deutschland und die EU?"
+          ],
+          "paragraphs": [
+            "\"Mit der Verlängerung der EU-Wirtschaftssanktionen im Oktober vergangenen Jahres, die unter dem Atomabkommen eigentlich hätten beendet werden sollen, hat Deutschland bzw. die EU das wirtschaftliche Druckpotential bereits weitgehend ausgeschöpft\", sagt Sascha Lohmann.",
+            "Iran-Experte Cornelius Adebahr von der Deutschen Gesellschaft für Auswärtige Politik (DGAP) gibt gleichzeitig zu bedenken, dass das Handelsvolumen alleine kein Indikator für oder gegen eine Unterstützung der Islamischen Republik sei. Wer das mache, verkenne die Bedeutung von Wirtschaft über rein politische Zwecke hinaus.",
+            "Wichtiger als Handelssanktionen seien Exportkontrollen und Sanktionen im Bereich militärisch nutzbarer Technologie - also sogenannter Dual-use-Güter. Und politische Verhandlungen in der Region.",
+            "Zu diesen Grundkonflikgen gehören laut Adebahr:",
+            "das iranische Nuklearprogramm - \"für das eine wirksame diplomatische Lösung bestand, bis die USA den Deal 2018 aufkündigten\",die iranische Unterstützung für militante und terroristische Gruppen in der Region,die neuerlich aufgeflammte direkte Konfrontation mit Israel.",
+            "Hier solle sich Deutschland gemeinsam mit seinen europäischen Verbündeten und den USA für eine regionale Sicherheitslösung einsetzen.",
+            "Mehr zur Lage im Nahen Osten lesen Sie in unserem Liveblog:"
           ]
         }
       ]
     },
-    "publishing_date": "2024-04-19 18:41:37.635000+02:00",
-    "title": "Der große Hack bei Volkswagen - China im Fokus"
+    "publishing_date": "2024-04-22 15:55:00.842000+02:00",
+    "title": "Deutscher Handel mit Iran: Druck mit Wirtschaftssanktionen?"
   }
 }
