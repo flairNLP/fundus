@@ -7,6 +7,7 @@ from fundus.publishers.lt import LT
 from fundus.publishers.na import NA
 from fundus.publishers.uk import UK
 from fundus.publishers.us import US
+from fundus.publishers.cn import CN
 
 
 class PublisherCollection(metaclass=PublisherCollectionMeta):
@@ -18,3 +19,4 @@ class PublisherCollection(metaclass=PublisherCollectionMeta):
     fr = FR
     ch = CH
     lt = LT
+    cn = CN
