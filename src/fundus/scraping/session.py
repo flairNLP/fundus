@@ -7,7 +7,7 @@ from typing_extensions import Self
 
 from fundus.logging import basic_logger
 
-_default_header = {"user-agent": "Fundus"}
+_default_header = {"user-agent": "FundusBot"}
 
 
 class SessionHandler:
