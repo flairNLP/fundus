@@ -15,6 +15,7 @@ class ZDFParser(ParserProxy):
     class V1(BaseParser):
         _div_selector = CSSSelector("div.r1nj4qn5")
         _summary_selector = CSSSelector("p.ikh9v7p.c1bdz7f4")
+        _subheadlines_selector = CSSSelector("h2.t1rbo974.hhhtovw")
 
         @attribute
         def body(self) -> ArticleBody:
@@ -22,6 +23,7 @@ class ZDFParser(ParserProxy):
                 self.precomputed.doc,
                 paragraph_selector=self._div_selector,
                 summary_selector=self._summary_selector,
+                subheadline_selector=self._subheadlines_selector
             )
 
         @attribute
