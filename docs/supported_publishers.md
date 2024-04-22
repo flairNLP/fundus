@@ -531,6 +531,21 @@
     </tr>
     <tr>
       <td>
+        <code>TheSun</code>
+      </td>
+      <td>
+        <div>The Sun</div>
+      </td>
+      <td>
+        <a href="https://www.thesun.co.uk/">
+          <span>www.thesun.co.uk</span>
+        </a>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
         <code>TheTelegraph</code>
       </td>
       <td>
