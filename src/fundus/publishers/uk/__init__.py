@@ -7,6 +7,7 @@ from fundus.scraping.url import NewsMap, Sitemap
 from .i_news import INewsParser
 from .the_guardian import TheGuardianParser
 from .the_independent import TheIndependentParser
+from .the_sun import TheSunParser
 from .the_telegraph import TheTelegraphParser
 
 
@@ -51,4 +52,14 @@ class UK(PublisherEnum):
             ),
         ],
         parser=INewsParser,
+    )
+
+    TheSun = PublisherSpec(
+        name="The Sun",
+        domain="https://www.thesun.co.uk/",
+        sources=[
+            Sitemap("https://www.thesun.co.uk/sitemap.xml"),
+            NewsMap("https://www.thesun.co.uk/news-sitemap.xml"),
+        ],
+        parser=TheSunParser,
     )
