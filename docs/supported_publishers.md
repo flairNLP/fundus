@@ -501,6 +501,21 @@
   <tbody>
     <tr>
       <td>
+        <code>DailyStar</code>
+      </td>
+      <td>
+        <div>Daily Star</div>
+      </td>
+      <td>
+        <a href="https://www.dailystar.co.uk/">
+          <span>www.dailystar.co.uk</span>
+        </a>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
         <code>TheGuardian</code>
       </td>
       <td>

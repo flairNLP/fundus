@@ -8,6 +8,7 @@ from .i_news import INewsParser
 from .the_guardian import TheGuardianParser
 from .the_independent import TheIndependentParser
 from .the_telegraph import TheTelegraphParser
+from .daily_star import DailyStarParser
 
 
 class UK(PublisherEnum):
@@ -51,4 +52,15 @@ class UK(PublisherEnum):
             ),
         ],
         parser=INewsParser,
+    )
+
+    DailyStar = PublisherSpec(
+        name="Daily Star",
+        domain="https://www.dailystar.co.uk/",
+        sources=[
+            Sitemap("https://www.dailystar.co.uk/sitemaps/sitemap_index.xml",
+                    reverse=True),
+            NewsMap("https://www.dailystar.co.uk/map_news.xml")
+        ],
+        parser=DailyStarParser,
     )
