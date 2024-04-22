@@ -23,7 +23,7 @@ class ZDFParser(ParserProxy):
                 self.precomputed.doc,
                 paragraph_selector=self._div_selector,
                 summary_selector=self._summary_selector,
-                subheadline_selector=self._subheadlines_selector
+                subheadline_selector=self._subheadlines_selector,
             )
 
         @attribute
