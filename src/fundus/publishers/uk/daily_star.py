@@ -15,7 +15,7 @@ from fundus.parser.utility import (
 class DailyStarParser(ParserProxy):
     class V1(BaseParser):
         _summary_selector = CSSSelector("p.sub-title")
-        _paragraph_selector = CSSSelector("div.article-body")
+        _paragraph_selector = XPath("//div[@class='article-body'] /p[text()]")
 
         @attribute
         def body(self) -> ArticleBody:
