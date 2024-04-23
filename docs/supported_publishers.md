@@ -95,7 +95,6 @@
         </a>
       </td>
       <td>
-        <code>publishing_date</code>
         <code>topics</code>
       </td>
       <td>&#160;</td>
