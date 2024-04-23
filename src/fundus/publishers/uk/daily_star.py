@@ -39,4 +39,4 @@ class DailyStarParser(ParserProxy):
 
         @attribute
         def topics(self) -> List[str]:
-            return generic_topic_parsing(self.precomputed.meta.get("article:tag"))
+            return generic_topic_parsing(self.precomputed.meta.get("keywords"))
