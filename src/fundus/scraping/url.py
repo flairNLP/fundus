@@ -76,8 +76,8 @@ class RSSFeed(URLSource):
         session = session_handler.get_session()
         try:
             response = session.get(self.url, headers=self._request_header)
-        except HTTPError as exception:
-            basic_logger.warning(f"Warning! Couldn't parse rss feed '{self.url}' because of {exception}")
+        except HTTPError as err:
+            basic_logger.warning(f"Warning! Couldn't parse rss feed '{self.url}' because of {err}")
             return
         html = response.text
         rss_feed = feedparser.parse(html)
