@@ -1,43 +1,39 @@
 import datetime
 from typing import List, Optional
 
-from lxml.html import document_fromstring
+import lxml.html
 from lxml.cssselect import CSSSelector
 
-from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute
-from fundus.parser.data import TextSequence
+from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute, function
 from fundus.parser.utility import (
-    generic_author_parsing,
-    generic_date_parsing,
+  extract_article_body_with_selector,
+  generic_author_parsing,
+  generic_date_parsing,
+  parse_title_from_root,
 )
 
 
 class PeopleParser(ParserProxy):
-    class V1(BaseParser):
+  class V1(BaseParser):
+      _paragraph_selector = CSSSelector("div.rm_txt_con > p")
 
-        @attribute
-        def body(self) -> ArticleBody:
-            root = document_fromstring(self.precomputed.html)
-            # rm_txt_con cf
-            selector = CSSSelector('div.rm_txt_con > p')
-            nodes = selector(root)
-            for node in nodes:
-                print(node.text_content().encode("latin-1").decode("gbk"))
-            article = [node.text_content().encode("latin-1").decode("gbk") for node in nodes]
-            return ArticleBody(TextSequence([]), article)
+      @function(priority=0)
+      def fix_encoding(self):
+          self.precomputed.html = self.precomputed.html.encode("latin-1").decode("gbk")
+          self.precomputed.doc = lxml.html.document_fromstring(self.precomputed.html)
 
-        @attribute
-        def title(self) -> Optional[str]:
-            root = document_fromstring(self.precomputed.html)
-            selector = CSSSelector('title')
-            return selector(root)[0].text_content().strip().encode("latin-1").decode("gbk")
+      @attribute
+      def body(self) -> ArticleBody:
+          return extract_article_body_with_selector(self.precomputed.doc, paragraph_selector=self._paragraph_selector)
 
-        @attribute
-        def authors(self) -> List[str]:
-            return generic_author_parsing(self.precomputed.meta.get('author'))
+      @attribute
+      def title(self) -> Optional[str]:
+          return parse_title_from_root(self.precomputed.doc)
 
-        @attribute
-        def published_date(self) -> Optional[datetime.datetime]:
-            return generic_date_parsing(self.precomputed.meta.get('publishdate'))
+      @attribute
+      def authors(self) -> List[str]:
+          return generic_author_parsing(self.precomputed.meta.get("author"))
 
-
+      @attribute
+      def publishing_date(self) -> Optional[datetime.datetime]:
+          return generic_date_parsing(self.precomputed.meta.get("publishdate"))
