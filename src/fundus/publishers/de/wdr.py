@@ -19,7 +19,7 @@ class WDRParser(ParserProxy):
             "//article//p[starts-with(@class,'text') and not(position()=last())  and not(contains(text(), 'Quelle'))]"
         )
         _summary_selector = XPath("//article//p[starts-with(@class,'einleitung')]")
-        _subheadline_selector = XPath("//article//h2")
+        _subheadline_selector = XPath("//article//h2[@class='subtitle small']")
 
         @attribute
         def body(self) -> ArticleBody:
