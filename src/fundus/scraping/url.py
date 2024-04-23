@@ -74,7 +74,11 @@ class URLSource(Iterable[str], ABC):
 class RSSFeed(URLSource):
     def __iter__(self) -> Iterator[str]:
         session = session_handler.get_session()
-        response = session.get(self.url, headers=self._request_header)
+        try:
+            response = session.get(self.url, headers=self._request_header)
+        except HTTPError as err:
+            basic_logger.warning(f"Warning! Couldn't parse rss feed '{self.url}' because of {err}")
+            return
         html = response.text
         rss_feed = feedparser.parse(html)
         if exception := rss_feed.get("bozo_exception"):
