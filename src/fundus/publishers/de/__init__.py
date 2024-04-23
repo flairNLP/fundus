@@ -73,6 +73,8 @@ class DE(PublisherEnum):
         domain="https://www.focus.de/",
         sources=[RSSFeed("https://rss.focus.de/fol/XML/rss_folnews.xml")],
         parser=FocusParser,
+        # Focus blocks access for all user-agents including the term 'Bot'
+        request_header={"user-agent": "Fundus"},
     )
 
     Merkur = PublisherSpec(
