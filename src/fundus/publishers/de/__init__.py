@@ -239,7 +239,7 @@ class DE(PublisherEnum):
         ],
         parser=RheinischePostParser,
     )
-    
+
     ZDF = PublisherSpec(
         name="zdfHeute",
         domain="https://www.zdf.de/",
