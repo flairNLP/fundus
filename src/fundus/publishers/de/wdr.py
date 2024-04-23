@@ -40,7 +40,7 @@ class WDRParser(ParserProxy):
 
         @attribute
         def title(self) -> Optional[str]:
-            return self.precomputed.ld.bf_search("name")
+            return self.precomputed.meta.get("og:title")
 
         @attribute
         def topics(self) -> List[str]:
