@@ -23,7 +23,7 @@ class DailyStarParser(ParserProxy):
             return extract_article_body_with_selector(
                 self.precomputed.doc,
                 summary_selector=self._summary_selector,
-                paragraph_selector=self._paragraph_selector
+                paragraph_selector=self._paragraph_selector,
             )
 
         @attribute
