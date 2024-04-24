@@ -1,6 +1,7 @@
 import datetime
 from typing import List, Optional
 
+import lxml
 from lxml.cssselect import CSSSelector
 
 from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute
@@ -14,9 +15,9 @@ from fundus.parser.utility import (
 
 class RollingStoneParser(ParserProxy):
     class V1(BaseParser):
-        _paragraph_selector = CSSSelector("div.a-content > * > p.paragraph")
-        _summary_selector = CSSSelector("article > header > div.article-excerpt")
-        _subheadline_selector = CSSSelector("article > header > div.article-kicker")
+        _paragraph_selector = CSSSelector("div.a-content > * > p ")
+        _summary_selector = CSSSelector("div.article-excerpt")
+        _subheadline_selector = CSSSelector("div.article-kicker")
 
         @attribute
         def body(self) -> ArticleBody:

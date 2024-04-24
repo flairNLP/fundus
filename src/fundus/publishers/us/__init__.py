@@ -1,5 +1,5 @@
 from fundus.publishers.base_objects import PublisherEnum, PublisherSpec
-from fundus.scraping.filter import inverse, regex_filter
+from fundus.scraping.filter import inverse, lor, regex_filter
 from fundus.scraping.url import NewsMap, RSSFeed, Sitemap
 
 from .ap_news import APNewsParser
@@ -171,7 +171,10 @@ class US(PublisherEnum):
         domain="https://www.rollingstone.com/",
         sources=[
             NewsMap("https://www.rollingstone.com/news-sitemap.xml"),
-            Sitemap("https://www.rollingstone.com/sitemap_index.xml"),
+            Sitemap(
+                "https://www.rollingstone.com/sitemap_index.xml",
+                sitemap_filter=inverse(lor(regex_filter("/pmc_list-sitemap"), regex_filter("/post-sitemap"))),
+            ),
         ],
         parser=RollingStoneParser,
     )
