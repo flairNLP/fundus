@@ -1,6 +1,7 @@
 import datetime
 import gzip
 import json
+import subprocess
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Callable, Dict, Generic, List, Optional, Type, TypeVar
@@ -102,6 +103,8 @@ class JSONFile(Generic[_T]):
         with open(self.path, "w", encoding=self.encoding) as json_file:
             json.dump(content, json_file, **kwargs)
             json_file.write("\n")
+
+        subprocess.call(["git", "add", self.path], stdout=subprocess.PIPE)
 
 
 class ExtractionEncoder(json.JSONEncoder):
