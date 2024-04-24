@@ -2,7 +2,7 @@ from typing import Dict, Iterator, List, Literal, Optional, Type
 
 import more_itertools
 
-from fundus.logging import basic_logger
+from fundus.logging import create_logger
 from fundus.parser import ParserProxy
 from fundus.publishers.base_objects import PublisherEnum
 from fundus.scraping.article import Article
@@ -14,6 +14,8 @@ from fundus.scraping.filter import (
 )
 from fundus.scraping.html import CCNewsSource, HTMLSource, WebSource
 from fundus.scraping.url import URLSource
+
+logger = create_logger(__name__)
 
 
 class BaseScraper:
@@ -37,27 +39,25 @@ class BaseScraper:
                 except Exception as err:
                     if error_handling == "raise":
                         error_message = f"Run into an error processing article '{html.requested_url}'"
-                        basic_logger.error(error_message)
+                        logger.error(error_message)
                         err.args = (str(err) + "\n\n" + error_message,)
                         raise err
                     elif error_handling == "catch":
                         yield Article(html=html, exception=err)
                     elif error_handling == "suppress":
-                        basic_logger.info(f"Skipped article at '{html.requested_url}' because of: {err!r}")
+                        logger.info(f"Skipped article at '{html.requested_url}' because of: {err!r}")
                     else:
                         raise ValueError(f"Unknown value '{error_handling}' for parameter <error_handling>'")
 
                 else:
                     if extraction_filter and (filter_result := extraction_filter(extraction)):
                         if isinstance(filter_result, FilterResultWithMissingAttributes):
-                            basic_logger.debug(
+                            logger.debug(
                                 f"Skipped article at '{html.requested_url}' because attribute(s) "
                                 f"{', '.join(filter_result.missing_attributes)!r} is(are) missing"
                             )
                         else:
-                            basic_logger.debug(
-                                f"Skipped article at '{html.requested_url}' because of extraction filter"
-                            )
+                            logger.debug(f"Skipped article at '{html.requested_url}' because of extraction filter")
                     else:
                         article = Article.from_extracted(html=html, extracted=extraction)
                         yield article
