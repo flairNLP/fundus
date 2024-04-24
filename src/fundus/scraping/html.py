@@ -5,16 +5,19 @@ from typing import Dict, Iterable, Iterator, List, Optional, Protocol
 from urllib.parse import urlparse
 
 import chardet
+import lxml.html
 import requests
 import validators
 from fastwarc import ArchiveIterator, WarcRecord, WarcRecordType
+from lxml.cssselect import CSSSelector
 from requests import ConnectionError, HTTPError
 
 from fundus.logging import create_logger
 from fundus.publishers.base_objects import PublisherEnum
 from fundus.scraping.delay import Delay
 from fundus.scraping.filter import URLFilter
-from fundus.scraping.session import _default_header
+from fundus.scraping.session import _default_header, session_handler
+from fundus.scraping.url import URLSource
 
 __all__ = [
     "HTML",
@@ -26,10 +29,30 @@ __all__ = [
     "CCNewsSource",
 ]
 
-from fundus.scraping.session import session_handler
-from fundus.scraping.url import URLSource
-
 logger = create_logger(__name__)
+
+_content_type_selector = CSSSelector("meta[http-equiv='Content-Type']")
+
+
+def _detect_charset_from_response(response: requests.Response) -> str:
+    """Detects HTML encoding based on meta tag <http-equiv='Content-Type'>
+
+    Args:
+        response: Response to detect encoding for
+
+    Returns:
+        str: detected encoding or response.apparent_encoding
+    """
+    # see https://github.com/flairNLP/fundus/issues/446
+    charset = None
+    if (content_type_nodes := _content_type_selector(lxml.html.document_fromstring(response.content))) and len(
+        content_type_nodes
+    ) == 1:
+        content_type_node = content_type_nodes.pop()
+        for field in content_type_node.attrib.get("content", "").split(";"):
+            if "charset" in field:
+                charset = field.replace("charset=", "").strip()
+    return charset or response.apparent_encoding
 
 
 @dataclass(frozen=True)
@@ -126,6 +149,11 @@ class WebSource:
                 continue
 
             else:
+                if "charset" not in response.headers["content-type"]:
+                    # That's actually the only place requests checks to detect encoding, so if charset
+                    # is not set, requests falls back to default encodings (latin-1/utf-8)
+                    response.encoding = _detect_charset_from_response(response)
+
                 if filter_url(str(response.url)):
                     logger.debug(f"Skipped responded URL '{str(response.url)}' because of URL filter")
                     continue
