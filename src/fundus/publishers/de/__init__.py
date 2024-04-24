@@ -17,6 +17,7 @@ from .faz import FAZParser
 from .focus import FocusParser
 from .mdr import MDRParser
 from .merkur import MerkurParser
+from .motorsport_magazin import MotorSportMagazinParser
 from .ndr import NDRParser
 from .ntv import NTVParser
 from .rheinische_post import RheinischePostParser
@@ -239,4 +240,14 @@ class DE(PublisherEnum):
             Sitemap("https://rp-online.de/sitemap.xml"),
         ],
         parser=RheinischePostParser,
+    )
+
+    MotorSportMagazin = PublisherSpec(
+        name="MotorSport Magazin",
+        domain="https://www.motorsport-magazin.com/",
+        sources=[
+            RSSFeed("https://www.motorsport-magazin.com/rss/alle-rennserien.xml"),
+            Sitemap("https://www.motorsport-magazin.com/sitemap.xml"),
+        ],
+        parser=MotorSportMagazinParser,
     )
