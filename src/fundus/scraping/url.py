@@ -79,12 +79,12 @@ class RSSFeed(URLSource):
         try:
             response = session.get(self.url, headers=self._request_header)
         except HTTPError as err:
-            logger.warning(f"Warning! Couldn't parse rss feed '{self.url}' because of {err}")
+            logger.warning(f"Warning! Couldn't parse rss feed {self.url!r} because of {err}")
             return
         html = response.text
         rss_feed = feedparser.parse(html)
         if exception := rss_feed.get("bozo_exception"):
-            logger.warning(f"Warning! Couldn't parse rss feed '{self.url}' because of {exception}")
+            logger.warning(f"Warning! Couldn't parse rss feed {self.url!r} because of {exception}")
             return
         else:
             for url in (entry["link"] for entry in rss_feed["entries"]):
@@ -105,17 +105,17 @@ class Sitemap(URLSource):
         def yield_recursive(sitemap_url: str) -> Iterator[str]:
             session = session_handler.get_session()
             if not validators.url(sitemap_url):
-                logger.info(f"Skipped sitemap '{sitemap_url}' because the URL is malformed")
+                logger.info(f"Skipped sitemap {sitemap_url!r} because the URL is malformed")
             try:
                 response = session.get(url=sitemap_url, headers=self._request_header)
             except (HTTPError, ConnectionError) as error:
-                logger.warning(f"Warning! Couldn't reach sitemap '{sitemap_url}' because of {error}")
+                logger.warning(f"Warning! Couldn't reach sitemap {sitemap_url!r} because of {error!r}")
                 return
             content = response.content
             if (content_type := response.headers.get("content-type")) in self._decompressor.supported_file_formats:
                 content = self._decompressor.decompress(content, content_type)
             if not content:
-                logger.warning(f"Warning! Empty sitemap at '{sitemap_url}'")
+                logger.warning(f"Warning! Empty sitemap at {sitemap_url!r}")
                 return
             tree = lxml.html.fromstring(content)
             urls = [node.text_content() for node in self._url_selector(tree)]

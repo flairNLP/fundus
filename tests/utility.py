@@ -199,7 +199,7 @@ class HTMLTestFile:
         content = decompressed_content.decode(encoding=encoding)
         publisher = cls._parse_path(path)
         if not (meta_info := get_meta_info_file(publisher).load()):
-            raise ValueError(f"Missing meta info for file '{path.name}'")
+            raise ValueError(f"Missing meta info for file {path.name!r}")
         return cls(content=content, publisher=publisher, encoding=encoding, **meta_info[path.name])
 
     def _register_at_meta_info(self) -> None:
@@ -253,7 +253,7 @@ def load_html_test_file_mapping(publisher: PublisherEnum) -> Dict[Type[BaseParse
     for html_file in html_files:
         versioned_parser = publisher.parser(html_file.crawl_date)
         if html_mapping.get(type(versioned_parser)):
-            raise KeyError(f"Duplicate html files for '{publisher}' and version {type(versioned_parser).__name__}")
+            raise KeyError(f"Duplicate html files for {publisher.name!r} and version {type(versioned_parser).__name__}")
         html_mapping[type(versioned_parser)] = html_file
     return html_mapping
 
@@ -283,7 +283,7 @@ def load_test_case_data(publisher: PublisherEnum) -> Dict[str, Dict[str, Any]]:
 
     if not (test_data := test_case_file.load()):
         raise ValueError(
-            f"Test case (JSON) for parser '{type(publisher.parser).__name__}' is missing. "
+            f"Test case (JSON) for parser {type(publisher.parser).__name__!r} is missing. "
             f"Use 'python -m scripts.generate_parser_test_files --help' for more information"
         )
 
@@ -291,7 +291,7 @@ def load_test_case_data(publisher: PublisherEnum) -> Dict[str, Dict[str, Any]]:
         return test_data
     else:
         raise ValueError(
-            f"Received invalid JSON format for publisher {repr(publisher.name)}. "
+            f"Received invalid JSON format for publisher {publisher.name!r}. "
             f"Expected a JSON with a dictionary as root."
         )
 
@@ -299,7 +299,7 @@ def load_test_case_data(publisher: PublisherEnum) -> Dict[str, Dict[str, Any]]:
 def load_supported_publishers_markdown() -> bytes:
     if not supported_publishers_markdown_path.exists():
         raise FileNotFoundError(
-            f"The '{supported_publishers_markdown_path.name}' is missing. "
+            f"The {supported_publishers_markdown_path.name!r} is missing. "
             f"Run 'python -m fundus.utils.generate_tables'"
         )
 

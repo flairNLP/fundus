@@ -122,11 +122,11 @@ class WebSource:
                 timestamp = time.time()
 
             if not validators.url(url):
-                logger.debug(f"Skipped requested URL '{url}' because the URL is malformed")
+                logger.debug(f"Skipped requested URL {url!r} because the URL is malformed")
                 continue
 
             if filter_url(url):
-                logger.debug(f"Skipped requested URL '{url}' because of URL filter")
+                logger.debug(f"Skipped requested URL {url!r} because of URL filter")
                 continue
 
             session = session_handler.get_session()
@@ -139,13 +139,13 @@ class WebSource:
                 response = session.get(url, headers=self.request_header)
 
             except (HTTPError, ConnectionError) as error:
-                logger.info(f"Skipped requested URL '{url}' because of '{error}'")
+                logger.info(f"Skipped requested URL {url!r} because of {error!r}")
                 if isinstance(error, HTTPError) and error.response.status_code >= 500:
-                    logger.info(f"Skipped {self.publisher} due to server errors: '{error}'")
+                    logger.info(f"Skipped {self.publisher!r} due to server errors: {error!r}")
                 continue
 
             except Exception as error:
-                logger.warning(f"Warning! Skipped  requested URL '{url}' because of an unexpected error {error}")
+                logger.warning(f"Warning! Skipped  requested URL {url!r} because of an unexpected error {error!r}")
                 continue
 
             else:
@@ -155,12 +155,12 @@ class WebSource:
                     response.encoding = _detect_charset_from_response(response)
 
                 if filter_url(str(response.url)):
-                    logger.debug(f"Skipped responded URL '{str(response.url)}' because of URL filter")
+                    logger.debug(f"Skipped responded URL {str(response.url)!r} because of URL filter")
                     continue
                 html = response.text
 
                 if response.history:
-                    logger.info(f"Got redirected {len(response.history)} time(s) from {url} -> {response.url}")
+                    logger.info(f"Got redirected {len(response.history)} time(s) from {url!r} -> {response.url!r}")
 
                 source_info = (
                     WebSourceInfo(self.publisher, type(self.url_source).__name__, self.url_source.url)

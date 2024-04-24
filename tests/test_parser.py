@@ -142,9 +142,9 @@ class TestParser:
                 if annotation := attribute_annotations_mapping[attr.__name__]:
                     assert (
                         attr.__annotations__.get("return") == annotation
-                    ), f"Attribute {attr.__name__} for {versioned_parser.__name__} failed"
+                    ), f"Attribute {attr.__name__!r} for {versioned_parser.__name__!r} failed"
                 else:
-                    raise KeyError(f"Unsupported attribute '{attr.__name__}'")
+                    raise KeyError(f"Unsupported attribute {attr.__name__!r}")
 
     def test_parsing(self, publisher: PublisherEnum) -> None:
         comparative_data = load_test_case_data(publisher)
@@ -155,12 +155,12 @@ class TestParser:
             version_name = versioned_parser.__name__
             assert (
                 version_data := comparative_data.get(version_name)
-            ), f"Missing test data for parser version '{version_name}'"
+            ), f"Missing test data for parser version {version_name!r}"
 
             for key, value in version_data.items():
                 if not value:
                     raise ValueError(
-                        f"There is no value set for key '{key}' in the test JSON. "
+                        f"There is no value set for key {key!r} in the test JSON. "
                         f"Only complete articles should be used as test cases"
                     )
 
@@ -185,7 +185,7 @@ class TestParser:
         parser = publisher.parser
         for attr in attribute_annotations_mapping.keys():
             if value := getattr(parser, attr, None):
-                assert isinstance(value, Attribute), f"The name '{attr}' is reserved for attributes only."
+                assert isinstance(value, Attribute), f"The name {attr!r} is reserved for attributes only."
 
 
 class TestUtility:

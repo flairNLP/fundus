@@ -59,8 +59,8 @@ class PublisherEnum(Enum, metaclass=PublisherEnumMeta):
         for url_source in spec.sources:
             if not isinstance(url_source, URLSource):
                 raise TypeError(
-                    f"Unexpected type '{type(url_source).__name__}' as source for {self.name}. "
-                    f"Allowed are '{', '.join(cls.__name__ for cls in iterate_all_subclasses(URLSource))}'"
+                    f"Unexpected type {type(url_source).__name__!r} as source for {self!r}. "
+                    f"Allowed are {', '.join(repr(cls.__name__) for cls in iterate_all_subclasses(URLSource))}"
                 )
             source_mapping[type(url_source)].append(url_source)
 
@@ -75,8 +75,8 @@ class PublisherEnum(Enum, metaclass=PublisherEnumMeta):
         for source_type in source_types:
             if not inspect.isclass(source_type) or not issubclass(source_type, URLSource):
                 raise TypeError(
-                    f"Got unexpected type '{source_type}'. "
-                    f"Allowed are '{', '.join(cls.__name__ for cls in iterate_all_subclasses(URLSource))}'"
+                    f"Got unexpected type {source_type!r}. "
+                    f"Allowed are {', '.join(repr(cls.__name__) for cls in iterate_all_subclasses(URLSource))}"
                 )
         return all(bool(self.source_mapping.get(source_type)) for source_type in source_types)
 
@@ -137,7 +137,7 @@ class PublisherCollectionMeta(type):
             for publisher_enum in country_enum:  # type: ignore
                 if existing := publisher_mapping.get(publisher_enum.name):
                     raise AttributeError(
-                        f"Found duplicate publisher names in same collection '{name}'. "
+                        f"Found duplicate publisher names in same collection {name!r}: "
                         f"{type(existing).__name__} -> {existing.name} and "
                         f"{type(publisher_enum).__name__} -> {publisher_enum.name}"
                     )
@@ -194,7 +194,7 @@ class PublisherCollectionMeta(type):
         for publisher_enum in self:
             if publisher_enum.name == name:
                 return publisher_enum
-        raise KeyError(f"Publisher '{name}' not present in {self.__name__}")
+        raise KeyError(f"Publisher {name!r} not present in {self.__name__}")
 
     def __len__(cls) -> int:
         """The number of publishers included in the collection.
