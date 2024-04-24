@@ -45,7 +45,7 @@ class BaseScraper:
                     elif error_handling == "catch":
                         yield Article(html=html, exception=error)
                     elif error_handling == "suppress":
-                        logger.info(f"Skipped article at {html.requested_url!r} because of: {error}")
+                        logger.info(f"Skipped article at {html.requested_url!r} because of: {error!r}")
                     else:
                         raise ValueError(f"Unknown value {error_handling!r} for parameter <error_handling>'")
 
