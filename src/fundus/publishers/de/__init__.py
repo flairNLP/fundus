@@ -19,6 +19,7 @@ from .mdr import MDRParser
 from .merkur import MerkurParser
 from .ndr import NDRParser
 from .ntv import NTVParser
+from .postillon import PostillonParser
 from .rheinische_post import RheinischePostParser
 from .spon import SPONParser
 from .stern import SternParser
@@ -239,4 +240,14 @@ class DE(PublisherEnum):
             Sitemap("https://rp-online.de/sitemap.xml"),
         ],
         parser=RheinischePostParser,
+    )
+
+    Postillon = PublisherSpec(
+        name="Postillon",
+        domain="https://www.der-postillon.com/",
+        sources=[
+            RSSFeed("https://follow.it/der-postillon-abo"),
+            Sitemap("https://www.der-postillon.com/sitemap.xml"),
+        ],
+        parser=PostillonParser,
     )
