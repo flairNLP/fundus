@@ -249,6 +249,23 @@
     </tr>
     <tr>
       <td>
+        <code>MotorSportMagazin</code>
+      </td>
+      <td>
+        <div>MotorSport Magazin</div>
+      </td>
+      <td>
+        <a href="https://www.motorsport-magazin.com/">
+          <span>www.motorsport-magazin.com</span>
+        </a>
+      </td>
+      <td>
+        <code>topics</code>
+      </td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
         <code>Merkur</code>
       </td>
       <td>
