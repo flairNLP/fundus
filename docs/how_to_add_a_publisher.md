@@ -18,7 +18,7 @@
     * [XPath](#xpath)
   * [Checking the free_access attribute](#checking-the-free_access-attribute)
   * [Finishing the Parser](#finishing-the-parser)
-* [6. Generate unit tests](#6-generate-unit-tests-and-update-tables)
+* [6. Generate unit tests and update tables](#6-generate-unit-tests-and-update-tables)
   * [Add unit test](#add-unit-tests)
   * [Update tables](#update-tables)
 * [7. Opening a Pull Request](#7-opening-a-pull-request)
@@ -605,6 +605,17 @@ python -m scripts.generate_parser_test_files -p LATimes
 ````
 
 to generate a unit test for our parser.
+
+Note: If you need to modify your parser slightly after already adding a unit test, there's no need to create a new test case and load a new HTML file. 
+You can simply run the script with the `-oj` flag.
+
+In our scenario, the command would be:
+
+````shell
+python -m scripts.generate_parser_test_files -p LATimes -oj
+````
+
+This command will overwrite the existing `.json` file for your test case while retaining the HTML file.
 
 ### Update tables
 

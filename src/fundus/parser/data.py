@@ -149,7 +149,7 @@ class LinkedDataMapping:
         return result
 
     def __repr__(self):
-        return f"LD containing '{', '.join(content)}'" if (content := self.__dict__.keys()) else "Empty LD"
+        return f"LD containing {', '.join(content)!r}" if (content := self.__dict__.keys()) else "Empty LD"
 
 
 class TextSequence(Sequence[str]):

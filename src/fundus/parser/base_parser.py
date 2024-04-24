@@ -70,9 +70,9 @@ class RegisteredFunction(ABC):
 
     def __repr__(self):
         if instance := self.__self__:
-            return f"bound {type(self).__name__} of {instance}: {self.__wrapped__} --> '{self.__name__}'"
+            return f"bound {type(self).__name__} of {instance}: {self.__wrapped__} --> {self.__name__!r}"
         else:
-            return f"registered {type(self).__name__}: {self.__wrapped__} --> '{self.__name__}'"
+            return f"registered {type(self).__name__}: {self.__wrapped__} --> {self.__name__!r}"
 
 
 class Attribute(RegisteredFunction):
@@ -215,7 +215,7 @@ class BaseParser(ABC):
                     elif error_handling == "suppress" or error_handling == "raise":
                         raise err
                     else:
-                        raise ValueError(f"Invalid value '{error_handling}' for parameter <error_handling>")
+                        raise ValueError(f"Invalid value {error_handling!r} for parameter <error_handling>")
 
             else:
                 raise TypeError(f"Invalid type for {func}. Only subclasses of 'RegisteredFunction' are allowed")
@@ -274,8 +274,8 @@ class ParserProxy(ABC):
             validation_date: date
             if prev := mapping.get(validation_date := versioned_parser.VALID_UNTIL):  # type: ignore
                 raise ValueError(
-                    f"Found versions '{prev.factory.__name__}' and '{versioned_parser.__name__}' of "
-                    f"'{self}' with same validation date.\nMake sure you use class attribute VALID_UNTIL "
+                    f"Found versions {prev.factory.__name__!r} and {versioned_parser.__name__!r} of "
+                    f"{str(self)!r} with same validation date.\nMake sure you use class attribute VALID_UNTIL "
                     f"of <class {BaseParser.__name__}> to set validation dates for legacy versions."
                 )
             mapping[validation_date] = _ParserCache(versioned_parser)
@@ -315,7 +315,8 @@ class ParserProxy(ABC):
 
     def __repr__(self) -> str:
         return (
-            f"{type(self).__name__} including versions '{', '.join([cache.factory.__name__ for cache in self._parser_mapping.values()])}'"
+            f"{type(self).__name__} including versions "
+            f"{', '.join([cache.factory.__name__ for cache in self._parser_mapping.values()])!r}"
             if self._parser_mapping
             else f"Empty {type(self).__name__}"
         )
