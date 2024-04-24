@@ -10,6 +10,7 @@ from .free_beacon import FreeBeaconParser
 from .la_times import LATimesParser
 from .occupy_democrats import OccupyDemocratsParser
 from .reuters import ReutersParser
+from .rolling_stone import RollingStoneParser
 from .the_gateway_pundit import TheGatewayPunditParser
 from .the_intercept import TheInterceptParser
 from .the_nation_parser import TheNationParser
@@ -163,4 +164,14 @@ class US(PublisherEnum):
             Sitemap("https://www.businessinsider.com/sitemap/2024-01.xml"),
         ],
         parser=BusinessInsiderParser,
+    )
+
+    RollingStone = PublisherSpec(
+        name="Rolling Stone",
+        domain="https://www.rollingstone.com/",
+        sources=[
+            NewsMap("https://www.rollingstone.com/news-sitemap.xml"),
+            Sitemap("https://www.rollingstone.com/sitemap_index.xml"),
+        ],
+        parser=RollingStoneParser,
     )
