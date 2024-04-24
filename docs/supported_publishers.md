@@ -90,13 +90,11 @@
         <div>People</div>
       </td>
       <td>
-        <a href="https://www.people.com.cn">
+        <a href="http://www.people.com.cn">
           <span>www.people.com.cn</span>
         </a>
       </td>
-      <td>
-        <code>topics</code>
-      </td>
+      <td>&#160;</td>
       <td>&#160;</td>
     </tr>
   </tbody>
