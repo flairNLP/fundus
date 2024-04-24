@@ -157,12 +157,10 @@ class TextSequence(Sequence[str]):
         self._data: Tuple[str, ...] = tuple(texts)
 
     @overload
-    def __getitem__(self, i: int) -> str:
-        ...
+    def __getitem__(self, i: int) -> str: ...
 
     @overload
-    def __getitem__(self, s: slice) -> "TextSequence":
-        ...
+    def __getitem__(self, s: slice) -> "TextSequence": ...
 
     def __getitem__(self, i):
         return self._data[i] if isinstance(i, int) else type(self)(self._data[i])
