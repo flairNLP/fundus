@@ -26,6 +26,7 @@ from .sz import SZParser
 from .tagesschau import TagesschauParser
 from .taz import TazParser
 from .waz import WAZParser
+from .vogue import VogueParser
 
 
 # noinspection PyPep8Naming
@@ -239,4 +240,15 @@ class DE(PublisherEnum):
             Sitemap("https://rp-online.de/sitemap.xml"),
         ],
         parser=RheinischePostParser,
+    )
+
+    Vogue = PublisherSpec(
+        name="Vogue",
+        domain="https://www.vogue.de/",
+        sources=[
+            RSSFeed("https://www.vogue.de/feed/rss"),
+            NewsMap("https://www.vogue.de/feed/sitemap-news/sitemap-google-news"),
+            Sitemap("https://www.vogue.de/sitemap.xml"),
+        ],
+        parser=VogueParser,
     )
