@@ -27,7 +27,11 @@ class PeopleParser(ParserProxy):
 
         @attribute
         def authors(self) -> List[str]:
-            return generic_author_parsing(self.precomputed.meta.get("author"))
+            _selector = CSSSelector("div.edit")
+            authors = [name.strip('()') for name in _selector(self.precomputed.doc)[0].text_content().split("、")]
+            if authors[0].find("：") != -1:
+                authors[0] = authors[0][authors[0].find("：")+1:]
+            return authors
 
         @attribute
         def publishing_date(self) -> Optional[datetime.datetime]:
