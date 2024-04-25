@@ -19,6 +19,7 @@ from .mdr import MDRParser
 from .merkur import MerkurParser
 from .ndr import NDRParser
 from .ntv import NTVParser
+from .rbb24 import RBB24Parser
 from .rheinische_post import RheinischePostParser
 from .spon import SPONParser
 from .stern import SternParser
@@ -26,7 +27,6 @@ from .sz import SZParser
 from .tagesschau import TagesschauParser
 from .taz import TazParser
 from .waz import WAZParser
-from .rbb24 import RBB24Parser
 
 
 # noinspection PyPep8Naming
@@ -180,10 +180,7 @@ class DE(PublisherEnum):
     Taz = PublisherSpec(
         name="Die Tageszeitung (taz)",
         domain="https://taz.de/",
-        sources=[
-            NewsMap("https://taz.de/sitemap-google-news.xml"),
-            Sitemap("https://taz.de/sitemap-index.xml"),
-        ],
+        sources=[NewsMap("https://taz.de/sitemap-google-news.xml"), Sitemap("https://taz.de/sitemap-index.xml"),],
         parser=TazParser,
     )
 
@@ -245,10 +242,6 @@ class DE(PublisherEnum):
     RBB24 = PublisherSpec(
         name="rbb|24",
         domain="https://www.rbb24.de/",
-        sources=[
-            RSSFeed("https://www.rbb24.de/aktuell/index.xml/feed=rss.xml")
-        ],
+        sources=[RSSFeed("https://www.rbb24.de/aktuell/index.xml/feed=rss.xml")],
         parser=RBB24Parser,
     )
-
-
