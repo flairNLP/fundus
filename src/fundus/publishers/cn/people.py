@@ -1,4 +1,5 @@
 import datetime
+import re
 from typing import List, Optional
 
 from lxml.cssselect import CSSSelector
@@ -6,6 +7,7 @@ from lxml.cssselect import CSSSelector
 from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute
 from fundus.parser.utility import (
     extract_article_body_with_selector,
+    generic_author_parsing,
     generic_date_parsing,
     generic_topic_parsing,
     parse_title_from_root,
@@ -15,6 +17,9 @@ from fundus.parser.utility import (
 class PeopleParser(ParserProxy):
     class V1(BaseParser):
         _paragraph_selector = CSSSelector("div.rm_txt_con > p")
+
+        _author_selector = CSSSelector("div.edit")
+        _author_pattern = re.compile(r"：(.*)\)")
 
         @attribute
         def body(self) -> ArticleBody:
@@ -26,11 +31,10 @@ class PeopleParser(ParserProxy):
 
         @attribute
         def authors(self) -> List[str]:
-            _selector = CSSSelector("div.edit")
-            authors = [name.strip("()") for name in _selector(self.precomputed.doc)[0].text_content().split("、")]
-            if authors[0].find("：") != -1:
-                authors[0] = authors[0][authors[0].find("：") + 1 :]
-            return authors
+            if (author_nodes := self._author_selector(self.precomputed.doc)) and len(author_nodes) == 1:
+                if match := re.search(self._author_pattern, author_nodes.pop().text_content()):
+                    return generic_author_parsing(match.group(1), split_on=["、"])
+            return []
 
         @attribute
         def publishing_date(self) -> Optional[datetime.datetime]:
