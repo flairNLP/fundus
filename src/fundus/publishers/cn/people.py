@@ -6,7 +6,6 @@ from lxml.cssselect import CSSSelector
 from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute
 from fundus.parser.utility import (
     extract_article_body_with_selector,
-    generic_author_parsing,
     generic_date_parsing,
     generic_topic_parsing,
     parse_title_from_root,
@@ -28,9 +27,9 @@ class PeopleParser(ParserProxy):
         @attribute
         def authors(self) -> List[str]:
             _selector = CSSSelector("div.edit")
-            authors = [name.strip('()') for name in _selector(self.precomputed.doc)[0].text_content().split("、")]
+            authors = [name.strip("()") for name in _selector(self.precomputed.doc)[0].text_content().split("、")]
             if authors[0].find("：") != -1:
-                authors[0] = authors[0][authors[0].find("：")+1:]
+                authors[0] = authors[0][authors[0].find("：") + 1 :]
             return authors
 
         @attribute
