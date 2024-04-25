@@ -21,6 +21,7 @@ from .ndr import NDRParser
 from .ntv import NTVParser
 from .rheinische_post import RheinischePostParser
 from .spon import SPONParser
+from .sportschau import SportSchauParser
 from .stern import SternParser
 from .sz import SZParser
 from .tagesschau import TagesschauParser
@@ -30,6 +31,17 @@ from .waz import WAZParser
 
 # noinspection PyPep8Naming
 class DE(PublisherEnum):
+    SportSchau = PublisherSpec(
+        name="Sportschau",
+        domain="https://www.sportschau.de/",
+        parser=SportSchauParser,
+        sources=[
+            RSSFeed("https://www.sportschau.de/index~rss2.xml"),
+            Sitemap("https://www.sportschau.de/index~sitemap_p-0.xml"),
+            NewsMap("https://www.sportschau.de/kompakt-sp-100~news.xml"),
+        ],
+    )
+
     DieWelt = PublisherSpec(
         name="Die Welt",
         domain="https://www.welt.de/",
