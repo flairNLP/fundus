@@ -60,14 +60,14 @@ class RBB24Parser(ParserProxy):
                     # Delete last sentence if this sentence just credits the authors
                     if authors_credited:
                         # As the string of the summary is a tuple we can't change it and need to create a new one
-                        article_body.summary._data = ([summary[: potential_end_of_summary + 1]],)
+                        article_body.summary._data = (summary[: potential_end_of_summary + 1],)
             # Often articles end with "Sendung: rbb24 Abendschau, 30.04.2024, 19:30 Uhr" or
             # "Sendung: Der Tag, 26.04.2024, 19:15 Uhr" etc
             # We need to delete this last paragraph
             last_paragraph = article_body.sections[-1].paragraphs._data[-1]
             if last_paragraph.startswith("Sendung:"):
                 # Make tuple to list to delete last element of list, to then make it a tuple again
-                new_data_tuple = (list(article_body.sections[-1].paragraphs._data)[:-1],)
+                new_data_tuple = ((article_body.sections[-1].paragraphs._data)[:-1])
                 article_body.sections[-1].paragraphs._data = new_data_tuple
             return article_body
 
