@@ -5,7 +5,9 @@
     ],
     "body": {
       "summary": [
-        "Das einst beliebte DDR-Hotel Lunik ist seit 30 Jahren geschlossen. Eine Theatergruppe hat die Erinnerungen aufgearbeitet und schlüpft nun in die Rollen der Zeitzeugen. Bei der Premiere wurde das Hotel wieder lebendig."
+        [
+          "Das einst beliebte DDR-Hotel Lunik ist seit 30 Jahren geschlossen. Eine Theatergruppe hat die Erinnerungen aufgearbeitet und schlüpft nun in die Rollen der Zeitzeugen. Bei der Premiere wurde das Hotel wieder lebendig."
+        ]
       ],
       "sections": [
         {
@@ -36,8 +38,10 @@
             "Die Schattenseite hinter der Hotel-Kulisse"
           ],
           "paragraphs": [
-            "Es gibt aber auch Szenen, die zeigen, dass das Leben und Arbeiten im Lunik teils weniger schöne Seiten hatte und vor allem streng überwacht war. Zu Gast waren Reisegruppen aus der Sowjetunion, Politprominenz, aber auch Gastarbeiter aus der BRD und aus Österreich. Jeglicher Kontakt mit diesen Gästen aus dem nicht sozialistischen Ausland war dem Personal verboten, so die bittere und traurige Erinnerung einer einstigen Kellnerin - gespielt von Elisabeth Müller. \"Für meinen Sohn war es nicht ungewöhnlich, ohne Vater aufzuwachsen - weil er nie einen hatte. Er ist aus dem Westen. Wir hatten uns damals verliebt. Aber jemand von der Bedienung hatte mich ausspioniert und angeschissen, wegen dem Kind.\"",
-            "Das Theater erzählt diese und viele andere Geschichten. Nach gut zwei Stunden endet das Stück dann auf der Straße vor dem Haus. Die letzte Szene sind Erinnerungen an die Kündigungswelle nach dem Ende der DDR. Auf die bröckelnde Fassade sind alte Fotos projiziert. Und das Publikum ist begeistert, wie der Applaus und Jubelrufe zeigen. Vorstellung des Stationstheaters \"Hotel Lunik\" in Eisenhüttenstadt gibt es täglich bis zum 12. Mai - außer montags jeweils um 19 Uhr [www.das-letzte-kleinod.de]."
+            [
+              "Es gibt aber auch Szenen, die zeigen, dass das Leben und Arbeiten im Lunik teils weniger schöne Seiten hatte und vor allem streng überwacht war. Zu Gast waren Reisegruppen aus der Sowjetunion, Politprominenz, aber auch Gastarbeiter aus der BRD und aus Österreich. Jeglicher Kontakt mit diesen Gästen aus dem nicht sozialistischen Ausland war dem Personal verboten, so die bittere und traurige Erinnerung einer einstigen Kellnerin - gespielt von Elisabeth Müller. \"Für meinen Sohn war es nicht ungewöhnlich, ohne Vater aufzuwachsen - weil er nie einen hatte. Er ist aus dem Westen. Wir hatten uns damals verliebt. Aber jemand von der Bedienung hatte mich ausspioniert und angeschissen, wegen dem Kind.\"",
+              "Das Theater erzählt diese und viele andere Geschichten. Nach gut zwei Stunden endet das Stück dann auf der Straße vor dem Haus. Die letzte Szene sind Erinnerungen an die Kündigungswelle nach dem Ende der DDR. Auf die bröckelnde Fassade sind alte Fotos projiziert. Und das Publikum ist begeistert, wie der Applaus und Jubelrufe zeigen. Vorstellung des Stationstheaters \"Hotel Lunik\" in Eisenhüttenstadt gibt es täglich bis zum 12. Mai - außer montags jeweils um 19 Uhr [www.das-letzte-kleinod.de]."
+            ]
           ]
         }
       ]
