@@ -26,6 +26,7 @@ from .sz import SZParser
 from .tagesschau import TagesschauParser
 from .taz import TazParser
 from .waz import WAZParser
+from .rbb24 import RBB24Parser
 
 
 # noinspection PyPep8Naming
@@ -240,3 +241,14 @@ class DE(PublisherEnum):
         ],
         parser=RheinischePostParser,
     )
+
+    RBB24 = PublisherSpec(
+        name="rbb|24",
+        domain="https://www.rbb24.de/",
+        sources=[
+            RSSFeed("https://www.rbb24.de/aktuell/index.xml/feed=rss.xml")
+        ],
+        parser=RBB24Parser,
+    )
+
+
