@@ -40,6 +40,7 @@ class DE(PublisherEnum):
             Sitemap("https://www.sportschau.de/index~sitemap_p-0.xml"),
             NewsMap("https://www.sportschau.de/kompakt-sp-100~news.xml"),
         ],
+        url_filter=regex_filter("sportschau.de"),
     )
 
     DieWelt = PublisherSpec(

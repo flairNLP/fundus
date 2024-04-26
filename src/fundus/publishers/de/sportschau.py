@@ -13,8 +13,8 @@ from fundus.parser.utility import (
 
 class SportSchauParser(ParserProxy):
     class V1(BaseParser):
-        _paragraph_selector = CSSSelector("article >p.textabsatz")
         _summary_selector = CSSSelector("p >strong")
+        _paragraph_selector = CSSSelector("article >p.textabsatz:not(p.textabsatz:nth-of-type(1))")
         _subheadline_selector = CSSSelector("article >h2")
 
         @attribute
@@ -41,3 +41,7 @@ class SportSchauParser(ParserProxy):
         @attribute
         def title(self) -> Optional[str]:
             return self.precomputed.meta.get("og:title")
+
+        @attribute
+        def keywords(self) -> Optional[str]:
+            return self.precomputed.meta.get("keywords")
