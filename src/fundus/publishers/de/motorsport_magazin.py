@@ -14,13 +14,15 @@ from fundus.parser.utility import (
 class MotorSportMagazinParser(ParserProxy):
     class V1(BaseParser):
         _paragraph_selector: CSSSelector = CSSSelector("section.article-body > p")
-        _subheadline_selector: CSSSelector = CSSSelector("p.teaser")
+        _summary_selector: CSSSelector = CSSSelector("p.teaser")
+        _subheadline_selector: CSSSelector = CSSSelector("section.article-body > h2")
 
         @attribute
         def body(self) -> ArticleBody:
             return extract_article_body_with_selector(
                 self.precomputed.doc,
                 paragraph_selector=self._paragraph_selector,
+                summary_selector=self._summary_selector,
                 subheadline_selector=self._subheadline_selector,
             )
 
