@@ -25,9 +25,25 @@
 
 # How to add a Publisher
 
-Before contributing a publisher make sure you setup Fundus correctly alongside [this](how_to_contribute.md#setup-fundus) steps.
+Before contributing a publisher make sure you set up Fundus correctly alongside [these](how_to_contribute.md#setup-fundus) steps.
 Then check the [**supported publishers**](supported_publishers.md) table if there is already support for your desired publisher.
 In the following, we will walk you through an example implementation of the [*Los Angeles Times*](https://www.latimes.com/) covering the best practices for adding a new publisher.
+
+**_NOTE:_**: Before proceeding, it's essential to ensure that the publisher you intend to add is crawl-able.
+Fundus keeps track of those who aren't in [this issue](https://github.com/flairNLP/fundus/issues/309).
+To verify, simply replace the three dots `...` in the code snippet below with the URL of an article from the publisher you wish to add, and run the snippet afterward.
+````python
+import urllib.request
+
+url = ...
+
+with urllib.request.urlopen(url) as response:
+    pass
+````
+If you encounter an error like `urllib.error.HTTPError: HTTP Error 403: Forbidden`, it indicates that the publisher uses bot protection, preventing crawling.
+In such cases, please comment on the issue mentioned above, mentioning the publisher you attempted to crawl, preferably with its domain name.
+This helps keep the list accurate and up-to-date.
+
 
 ## 1. Creating a Parser Stub
 
