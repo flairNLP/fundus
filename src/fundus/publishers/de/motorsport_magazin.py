@@ -13,7 +13,7 @@ from fundus.parser.utility import (
 
 class MotorSportMagazinParser(ParserProxy):
     class V1(BaseParser):
-        _paragraph_selector: CSSSelector = CSSSelector("section.article-body")
+        _paragraph_selector: CSSSelector = CSSSelector("section.article-body > p")
         _subheadline_selector: CSSSelector = CSSSelector("p.teaser")
 
         @attribute
