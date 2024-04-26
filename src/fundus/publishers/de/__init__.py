@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import Optional
 
 from dateutil.rrule import MONTHLY, rrule
 
@@ -15,6 +16,7 @@ from .die_zeit import DieZeitParser
 from .dw import DWParser
 from .faz import FAZParser
 from .focus import FocusParser
+from .kicker import KickerParser
 from .mdr import MDRParser
 from .merkur import MerkurParser
 from .ndr import NDRParser
@@ -237,4 +239,15 @@ class DE(PublisherEnum):
             Sitemap("https://rp-online.de/sitemap.xml"),
         ],
         parser=RheinischePostParser,
+    )
+
+    Kicker = PublisherSpec(
+        name="Kicker",
+        domain="https://www.kicker.de/",
+        sources=[
+            RSSFeed("https://newsfeed.kicker.de/news/aktuell"),
+            NewsMap("https://leserservice.kicker.de/sitemap_0.xml"),
+        ],
+        url_filter=regex_filter("/slideshow|/video"),
+        parser=KickerParser,
     )
