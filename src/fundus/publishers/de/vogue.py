@@ -11,15 +11,13 @@ from fundus.parser.utility import (
 
 class VogueParser(ParserProxy):
     class V1(BaseParser):
-        _paragraph_selector = XPath("/html/head/script[position() >= 0]")
-        _summary_selector = XPath("/html/head/meta[7]")
-        _subheadline_selector = XPath("/html/head/meta[14]")
+        _paragraph_selector = XPath("//article//p")
+        _subheadline_selector = XPath("//article//h2")
 
         @attribute
         def body(self) -> ArticleBody:
             return extract_article_body_with_selector(
                 self.precomputed.doc,
-                summary_selector=self._summary_selector,
                 paragraph_selector=self._paragraph_selector,
                 subheadline_selector=self._subheadline_selector,
             )
