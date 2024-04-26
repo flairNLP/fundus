@@ -31,7 +31,8 @@ __all__ = [
 
 logger = create_logger(__name__)
 
-_content_type_selector = CSSSelector("meta[http-equiv='Content-Type']")
+# unfortunately lxml does not support case-insensitive CSSSelectors
+_content_type_selector = CSSSelector("meta[http-equiv='Content-Type'], meta[http-equiv='content-type']")
 
 
 def _detect_charset_from_response(response: requests.Response) -> str:
@@ -44,8 +45,10 @@ def _detect_charset_from_response(response: requests.Response) -> str:
         str: detected encoding or response.apparent_encoding
     """
     # see https://github.com/flairNLP/fundus/issues/446
+    # use response fallback to decode HTML in a first guess
+    guessed_text = response.content.decode(response.encoding or "utf-8")
     charset = None
-    if (content_type_nodes := _content_type_selector(lxml.html.document_fromstring(response.content))) and len(
+    if (content_type_nodes := _content_type_selector(lxml.html.document_fromstring(guessed_text))) and len(
         content_type_nodes
     ) == 1:
         content_type_node = content_type_nodes.pop()
