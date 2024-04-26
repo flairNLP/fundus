@@ -26,7 +26,7 @@ from .sz import SZParser
 from .tagesschau import TagesschauParser
 from .taz import TazParser
 from .waz import WAZParser
-
+from .junge_welt import JungeWeltParser
 
 # noinspection PyPep8Naming
 class DE(PublisherEnum):
@@ -239,4 +239,14 @@ class DE(PublisherEnum):
             Sitemap("https://rp-online.de/sitemap.xml"),
         ],
         parser=RheinischePostParser,
+    )
+
+    JungeWelt = PublisherSpec(
+        name="Junge Welt",
+        domain="https://www.jungewelt.de/",
+        sources=[
+              RSSFeed("https://www.jungewelt.de/feeds/newsticker.rss"),
+              Sitemap("https://www.jungewelt.de/google-sitemap/sitemap.xml"),
+        ],
+        parser=JungeWeltParser,
     )
