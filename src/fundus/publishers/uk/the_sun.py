@@ -16,13 +16,14 @@ class TheSunParser(ParserProxy):
     class V1(BaseParser):
         _summary_selector = CSSSelector("div[data-gu-name='standfirst'] p")
         _paragraph_selector = CSSSelector("div.article__content > p")
-
+        _sub_headline_selector = CSSSelector("div.article__content > h1")
         @attribute
         def body(self) -> ArticleBody:
             return extract_article_body_with_selector(
                 self.precomputed.doc,
                 summary_selector=self._summary_selector,
                 paragraph_selector=self._paragraph_selector,
+                subheadline_selector=self._sub_headline_selector
             )
 
         @attribute
