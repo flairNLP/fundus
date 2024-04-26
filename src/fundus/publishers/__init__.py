@@ -1,4 +1,5 @@
 from fundus.publishers.at import AT
+from fundus.publishers.au import AU
 from fundus.publishers.base_objects import PublisherCollectionMeta
 from fundus.publishers.ch import CH
 from fundus.publishers.de import DE
@@ -13,6 +14,7 @@ class PublisherCollection(metaclass=PublisherCollectionMeta):
     na = NA
     de = DE
     at = AT
+    au = AU
     us = US
     uk = UK
     fr = FR
