@@ -531,6 +531,23 @@
     </tr>
     <tr>
       <td>
+        <code>TheMirror</code>
+      </td>
+      <td>
+        <div>The Mirror</div>
+      </td>
+      <td>
+        <a href="https://www.mirror.co.uk/">
+          <span>www.mirror.co.uk</span>
+        </a>
+      </td>
+      <td>
+        <code>topics</code>
+      </td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
         <code>TheTelegraph</code>
       </td>
       <td>
