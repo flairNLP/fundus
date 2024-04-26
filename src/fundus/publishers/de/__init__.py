@@ -15,6 +15,7 @@ from .die_zeit import DieZeitParser
 from .dw import DWParser
 from .faz import FAZParser
 from .focus import FocusParser
+from .frankfurter_rundschau import FrankfurterRundschauParser
 from .mdr import MDRParser
 from .merkur import MerkurParser
 from .ndr import NDRParser
@@ -239,4 +240,15 @@ class DE(PublisherEnum):
             Sitemap("https://rp-online.de/sitemap.xml"),
         ],
         parser=RheinischePostParser,
+    )
+
+    FrankfurterRundschau = PublisherSpec(
+        name="Frankfurter Rundschau",
+        domain="https://www.fr.de",
+        sources=[
+            RSSFeed("https://fr.de/rssfeed.rdf"),
+            Sitemap("https://www.fr.de/sitemap-index.xml"),
+            NewsMap("https://www.fr.de/news.xml"),
+        ],
+        parser=FrankfurterRundschauParser,
     )
