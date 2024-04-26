@@ -8,6 +8,7 @@ from fundus.parser.utility import (
     extract_article_body_with_selector,
     generic_author_parsing,
     generic_date_parsing,
+    generic_topic_parsing,
 )
 
 
@@ -37,3 +38,10 @@ class MotorSportMagazinParser(ParserProxy):
         @attribute
         def publishing_date(self) -> Optional[datetime.datetime]:
             return generic_date_parsing(self.precomputed.ld.bf_search("datePublished"))
+
+        @attribute
+        def topics(self) -> List[str]:
+            if self.precomputed.meta.get("news_keywords") is not None:
+                return generic_topic_parsing(self.precomputed.meta.get("news_keywords"))
+            else:
+                return generic_topic_parsing(self.precomputed.meta.get("keywords"))
