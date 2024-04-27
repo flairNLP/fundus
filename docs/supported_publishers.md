@@ -234,6 +234,24 @@
     </tr>
     <tr>
       <td>
+        <code>Hessenschau</code>
+      </td>
+      <td>
+        <div>Hessenschau</div>
+      </td>
+      <td>
+        <a href="https://www.hessenschau.de/">
+          <span>www.hessenschau.de</span>
+        </a>
+      </td>
+      <td>
+        <code>authors</code>
+        <code>topics</code>
+      </td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
         <code>MDR</code>
       </td>
       <td>

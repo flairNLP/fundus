@@ -15,6 +15,7 @@ from .die_zeit import DieZeitParser
 from .dw import DWParser
 from .faz import FAZParser
 from .focus import FocusParser
+from .hessenschau import HessenschauParser
 from .mdr import MDRParser
 from .merkur import MerkurParser
 from .ndr import NDRParser
@@ -239,4 +240,14 @@ class DE(PublisherEnum):
             Sitemap("https://rp-online.de/sitemap.xml"),
         ],
         parser=RheinischePostParser,
+    )
+
+    Hessenschau = PublisherSpec(
+        name="Hessenschau",
+        domain="https://www.hessenschau.de/",
+        sources=[
+            RSSFeed("https://www.hessenschau.de/index.rss"),
+            Sitemap("https://www.hessenschau.de/indexsitemap.nc.xml"),
+        ],
+        parser=HessenschauParser,
     )
