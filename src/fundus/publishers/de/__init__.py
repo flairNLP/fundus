@@ -8,6 +8,7 @@ from fundus.scraping.url import NewsMap, RSSFeed, Sitemap
 
 from .berliner_zeitung import BerlinerZeitungParser
 from .bild import BildParser
+from .boersenzeitung import BoersenZeitungParser
 from .braunschweiger_zeitung import BSZParser
 from .business_insider_de import BusinessInsiderDEParser
 from .die_welt import DieWeltParser
@@ -26,7 +27,6 @@ from .sz import SZParser
 from .tagesschau import TagesschauParser
 from .taz import TazParser
 from .waz import WAZParser
-from .boersenzeitung import BoersenZeitungParser
 
 
 # noinspection PyPep8Naming

@@ -1,9 +1,9 @@
 import datetime
-from typing import Optional, List
+from typing import List, Optional
 
 from lxml.cssselect import CSSSelector
 
-from fundus.parser import ParserProxy, BaseParser, attribute, ArticleBody
+from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute
 from fundus.parser.utility import (
     extract_article_body_with_selector,
     generic_author_parsing,
@@ -20,7 +20,10 @@ class BoersenZeitungParser(ParserProxy):
 
         @attribute
         def title(self) -> Optional[str]:
-            return self.precomputed.meta.get("og:title").split("|")[0].strip()
+            fulltitle = self.precomputed.meta.get("og:title")
+            assert isinstance(fulltitle, str) #had to add this for mypy
+            title = str(fulltitle.split("|")[0].strip())
+            return title
 
         @attribute
         def body(self) -> ArticleBody:
