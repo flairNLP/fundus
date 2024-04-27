@@ -26,6 +26,7 @@ from .sz import SZParser
 from .tagesschau import TagesschauParser
 from .taz import TazParser
 from .waz import WAZParser
+from .musikexpress import MusikexpressParser
 
 
 # noinspection PyPep8Naming
@@ -239,4 +240,20 @@ class DE(PublisherEnum):
             Sitemap("https://rp-online.de/sitemap.xml"),
         ],
         parser=RheinischePostParser,
+    )
+
+    musikexpress = PublisherSpec(
+        name="musikexpress",
+        domain="https://www.musikexpress.de",
+        sources=[
+            RSSFeed("http://www.musikexpress.de/feed/"),
+            NewsMap("https://www.musikexpress.de/news-sitemap.xml"),
+            Sitemap(
+                "https://www.musikexpress.de/sitemap_index.xml",
+                sitemap_fiter=regex_filter(
+                    "www.musikexpress.de/attachment-sitemap|www.musikexpress.de/asmb_concert-sitemap|www.musikexpress.de/asmb_tour-sitemap|www.musikexpress.de/artists-sitemap|www.musikexpress.de/qsm_quiz-sitemap|www.musikexpress.de/author-sitemap|www.musikexpress.de/video-sitemap"
+                ),
+            ),
+        ],
+        parser=MusikexpressParser,
     )
