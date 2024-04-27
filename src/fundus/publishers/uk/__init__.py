@@ -4,6 +4,7 @@ from fundus.publishers.base_objects import PublisherEnum, PublisherSpec
 from fundus.scraping.filter import inverse, regex_filter
 from fundus.scraping.url import NewsMap, Sitemap
 
+from .daily_mail import DailyMailParser
 from .i_news import INewsParser
 from .the_guardian import TheGuardianParser
 from .the_independent import TheIndependentParser
@@ -51,4 +52,14 @@ class UK(PublisherEnum):
             ),
         ],
         parser=INewsParser,
+    )
+
+    DailyMail = PublisherSpec(
+        name="Daily Mail",
+        domain="https://www.dailymail.co.uk/",
+        sources=[
+            Sitemap("https://www.dailymail.co.uk/google-news-sitemap.xml"),
+            NewsMap("https://www.dailymail.co.uk/google-news-sitemap1.xml"),
+        ],
+        parser=DailyMailParser,
     )

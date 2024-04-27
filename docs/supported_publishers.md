@@ -501,6 +501,23 @@
   <tbody>
     <tr>
       <td>
+        <code>DailyMail</code>
+      </td>
+      <td>
+        <div>Daily Mail</div>
+      </td>
+      <td>
+        <a href="https://www.dailymail.co.uk/">
+          <span>www.dailymail.co.uk</span>
+        </a>
+      </td>
+      <td>
+        <code>topics</code>
+      </td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
         <code>TheGuardian</code>
       </td>
       <td>
