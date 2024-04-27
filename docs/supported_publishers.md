@@ -384,6 +384,21 @@
       <td>&#160;</td>
       <td>&#160;</td>
     </tr>
+    <tr>
+      <td>
+        <code>HRInforadio</code>
+      </td>
+      <td>
+        <div>hr Inforadio</div>
+      </td>
+      <td>
+        <a href="https://www.hr-inforadio.de/">
+          <span>hr-inforadio.de</span>
+        </a>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
   </tbody>
 </table>
 

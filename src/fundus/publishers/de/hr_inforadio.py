@@ -19,32 +19,22 @@ from fundus.parser.utility import (
 
 class HRInforadioParser(ParserProxy):
     class V1(BaseParser):
-        _author_regex = r"^([A-z]{2,3}\/)*([A-z]{2,3})\s\([A-z\s,\d]*\)$"
-        _paragraph_selector = XPath(
-            f"//div[contains(@class, 'rich-text')] /p[text() and not(re:test(text(), '{_author_regex}'))]",
-            namespaces={"re": "http://exslt.org/regular-expressions"},
-        )
-        _summary_selector = CSSSelector("header > p")
-        _subheadline_selector = CSSSelector("div.rich-text > h2")
-
-        _topic_selector = CSSSelector("aside[data-tracking-name=related-topics] > a")
-
-        _author_substitution_pattern: Pattern[str] = re.compile(r"HR-Inforadio")
+         _summary_selector = CSSSelector("strong[data-cy='intro']")
+        _paragraph_selector = CSSSelector("div[data-cy='article-content'] p")
+        _subheadline_selector = CSSSelector("div[data-cy='article-content'] h2")
 
         @attribute
         def body(self) -> ArticleBody:
             return extract_article_body_with_selector(
                 self.precomputed.doc,
                 summary_selector=self._summary_selector,
-                subheadline_selector=self._subheadline_selector,
                 paragraph_selector=self._paragraph_selector,
+                subheadline_selector=self._subheadline_selector,
             )
 
         @attribute
         def authors(self) -> List[str]:
-            return apply_substitution_pattern_over_list(
-                generic_author_parsing(self.precomputed.ld.bf_search("author")), self._author_substitution_pattern
-            )
+            return generic_author_parsing(self.precomputed.meta.get("author"))
 
         @attribute
         def publishing_date(self) -> Optional[datetime.datetime]:
@@ -52,11 +42,11 @@ class HRInforadioParser(ParserProxy):
 
         @attribute
         def title(self) -> Optional[str]:
-            return self.precomputed.ld.bf_search("headline")
+            return self.precomputed.meta.get("og:title")
 
         @attribute
         def topics(self) -> List[str]:
-            return [node.text_content().strip() for node in self._topic_selector(self.precomputed.doc)]
+            return generic_topic_parsing(self.precomputed.meta.get("keywords"))
 
     class V2_1(V2):
         VALID_UNTIL = datetime.date.today()
