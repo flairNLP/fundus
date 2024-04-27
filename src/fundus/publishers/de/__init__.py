@@ -245,7 +245,6 @@ class DE(PublisherEnum):
         name="Westdeutscher Rundfunk",
         domain="https://www1.wdr.de/",
         sources=[
-            RSSFeed("https://www1.wdr.de/wissen/uebersicht-nachrichten-100.feed"),
             RSSFeed("https://www1.wdr.de/uebersicht-100.feed"),
         ],
         parser=WDRParser,
