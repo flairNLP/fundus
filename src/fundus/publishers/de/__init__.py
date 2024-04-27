@@ -26,7 +26,7 @@ from .sz import SZParser
 from .tagesschau import TagesschauParser
 from .taz import TazParser
 from .waz import WAZParser
-
+from .hr_inforadio import HRInforadioParser
 
 # noinspection PyPep8Naming
 class DE(PublisherEnum):
@@ -239,4 +239,15 @@ class DE(PublisherEnum):
             Sitemap("https://rp-online.de/sitemap.xml"),
         ],
         parser=RheinischePostParser,
+    )
+
+    HRInforadio = PublisherSpec(
+        name="HR Inforadio",
+        domain="http://www.hr-inforadio.de",
+        sources=[
+            RSSFeed("http://www.hr-inforadio.de/index.rss"),
+            Sitemap("https://www.hr-inforadio.de/sitemap.nc.xml"),
+            Newsmap("https://www.hr-inforadio.de/newssitemap.nc.xml"),
+        ],
+        parser=HRInforadioParser,
     )
