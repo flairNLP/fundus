@@ -14,6 +14,7 @@ from .the_gateway_pundit import TheGatewayPunditParser
 from .the_intercept import TheInterceptParser
 from .the_nation_parser import TheNationParser
 from .the_new_yorker import TheNewYorkerParser
+from .voice_of_america import VOAParser
 from .washington_times_parser import WashingtonTimesParser
 from .world_truth import WorldTruthParser
 
@@ -163,4 +164,14 @@ class US(PublisherEnum):
             Sitemap("https://www.businessinsider.com/sitemap/2024-01.xml"),
         ],
         parser=BusinessInsiderParser,
+    )
+
+    VoiceOfAmerica = PublisherSpec(
+        name="Voice Of America",
+        domain="https://www.voanews.com/",
+        sources=[
+            Sitemap("https://www.voanews.com/sitemap.xml"),
+            RSSFeed("https://www.voanews.com/api/zqbomekvi_"),
+        ],
+        parser=VOAParser,
     )
