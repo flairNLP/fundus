@@ -26,6 +26,7 @@ from .sz import SZParser
 from .tagesschau import TagesschauParser
 from .taz import TazParser
 from .waz import WAZParser
+from .mz import MitteldeutscheZeitungParser
 
 
 # noinspection PyPep8Naming
@@ -239,4 +240,14 @@ class DE(PublisherEnum):
             Sitemap("https://rp-online.de/sitemap.xml"),
         ],
         parser=RheinischePostParser,
+    )
+
+    MitteldeutscheZeitung = PublisherSpec(
+        name="Mitteldeutsche Zeitung",
+        domain="https://www.mz.de/",
+        sources=[
+            Sitemap("https://www.mz.de/sitemaps/sitemap-index.xml"),
+            NewsMap("https://www.mz.de/sitemaps/newssitemap-index.xml"),
+        ],
+        parser=MitteldeutscheZeitungParser,
     )
