@@ -19,6 +19,7 @@ from .mdr import MDRParser
 from .merkur import MerkurParser
 from .ndr import NDRParser
 from .ntv import NTVParser
+from .hamburger_abendblatt import HamburgerAbendblattParser
 from .rheinische_post import RheinischePostParser
 from .spon import SPONParser
 from .stern import SternParser
@@ -30,6 +31,17 @@ from .waz import WAZParser
 
 # noinspection PyPep8Naming
 class DE(PublisherEnum):
+    
+    HamburgerAbendblatt = PublisherSpec(
+        name="Hamburger Abendblatt",
+        domain="https://www.abendblatt.de/",
+        sources=[
+            RSSFeed("https://www.abendblatt.de/rss"),
+            Sitemap("https://www.abendblatt.de/sitemaps/news.xml"),
+        ],
+        parser=HamburgerAbendblattParser,
+    )
+    
     DieWelt = PublisherSpec(
         name="Die Welt",
         domain="https://www.welt.de/",
