@@ -234,6 +234,21 @@
     </tr>
     <tr>
       <td>
+        <code>Golem</code>
+      </td>
+      <td>
+        <div>Golem</div>
+      </td>
+      <td>
+        <a href="https://www.golem.de/">
+          <span>www.golem.de</span>
+        </a>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
         <code>MDR</code>
       </td>
       <td>
