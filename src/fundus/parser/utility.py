@@ -118,9 +118,6 @@ def extract_article_body_with_selector(
 
     instructions = more_itertools.split_when(nodes, pred=lambda x, y: type(x) != type(y))
 
-    if len(summary_nodes) > 1:
-        print("DEV")
-
     if not summary_nodes:
         instructions = more_itertools.prepend([], instructions)
     elif not nodes[: len(summary_nodes)] == summary_nodes:
