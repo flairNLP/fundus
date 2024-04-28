@@ -14,7 +14,8 @@ from fundus.parser.utility import (
 
 class RBB24Parser(ParserProxy):
     class V1(BaseParser):
-        _paragraph_selector = XPath("//div[contains(concat(' ', @class , ' '), ' textblock ')]")
+        _paragraph_selector = XPath("//div[contains(concat(' ', @class , ' '), ' textblock ')]/p")
+        _summary_selector = XPath("//div[contains(concat(' ', @class , ' '), ' shorttext ')]/p")
         _subheadline_selector = XPath("//h4[contains(concat(' ', @class , ' '), ' texttitle ')]")
         _author_selector = CSSSelector("span.authorname")
         _date_selector = CSSSelector("div.lineinfo")
@@ -23,7 +24,7 @@ class RBB24Parser(ParserProxy):
         def body(self) -> ArticleBody:
             article_body = extract_article_body_with_selector(
                 self.precomputed.doc,
-                summary_selector=XPath("//div[contains(concat(' ', @class , ' '), ' shorttext ')]/p"),
+                summary_selector=self._summary_selector,
                 paragraph_selector=self._paragraph_selector,
                 subheadline_selector=self._subheadline_selector,
             )
