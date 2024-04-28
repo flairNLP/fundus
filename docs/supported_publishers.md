@@ -234,6 +234,21 @@
     </tr>
     <tr>
       <td>
+        <code>Gamestar</code>
+      </td>
+      <td>
+        <div>Gamestar</div>
+      </td>
+      <td>
+        <a href="https://www.gamestar.de/">
+          <span>www.gamestar.de</span>
+        </a>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
         <code>MDR</code>
       </td>
       <td>

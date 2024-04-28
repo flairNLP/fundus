@@ -15,6 +15,7 @@ from .die_zeit import DieZeitParser
 from .dw import DWParser
 from .faz import FAZParser
 from .focus import FocusParser
+from .gamestar import GamestarParser
 from .mdr import MDRParser
 from .merkur import MerkurParser
 from .ndr import NDRParser
@@ -239,4 +240,14 @@ class DE(PublisherEnum):
             Sitemap("https://rp-online.de/sitemap.xml"),
         ],
         parser=RheinischePostParser,
+    )
+
+    Gamestar = PublisherSpec(
+        name="Gamestar",
+        domain="https://www.gamestar.de/",
+        sources=[
+            NewsMap("https://www.gamestar.de/sitemapnews.xml"),
+            Sitemap("https://www.gamestar.de/artikel_archiv_index.xml"),
+        ],
+        parser=GamestarParser,
     )
