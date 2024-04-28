@@ -403,6 +403,21 @@
   <tbody>
     <tr>
       <td>
+        <code>Euronews</code>
+      </td>
+      <td>
+        <div>Euronews</div>
+      </td>
+      <td>
+        <a href="https://www.euronews.com/">
+          <span>www.euronews.com</span>
+        </a>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
         <code>LeMonde</code>
       </td>
       <td>
