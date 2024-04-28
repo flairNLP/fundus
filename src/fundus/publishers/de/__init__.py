@@ -3,7 +3,7 @@ from datetime import datetime
 from dateutil.rrule import MONTHLY, rrule
 
 from fundus.publishers.base_objects import PublisherEnum, PublisherSpec
-from fundus.scraping.filter import regex_filter
+from fundus.scraping.filter import regex_filter, inverse
 from fundus.scraping.url import NewsMap, RSSFeed, Sitemap
 
 from .berliner_zeitung import BerlinerZeitungParser
@@ -246,7 +246,7 @@ class DE(PublisherEnum):
         domain="https://www.jungewelt.de/",
         sources=[
               RSSFeed("https://www.jungewelt.de/feeds/newsticker.rss"),
-              Sitemap("https://www.jungewelt.de/google-sitemap/sitemap.xml"),
+              Sitemap("https://www.jungewelt.de/google-sitemap/sitemap.xml", sitemap_filter=inverse(regex_filter("aktuell"))),
         ],
         parser=JungeWeltParser,
     )

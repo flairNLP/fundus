@@ -15,9 +15,9 @@ from fundus.parser.utility import (
 
 class JungeWeltParser(ParserProxy):
     class V1(BaseParser):
-        _paragraph_selector = CSSSelector("div > p")
-        _summary_selector = CSSSelector(".teaser")
-        _subheadline_selector = XPath("//div[@class = 'kicker']/div[2]")
+        _paragraph_selector = XPath("//div[@class = 'row']/div[contains(@class,'col')]")
+        _summary_selector = CSSSelector("..teaser.lead")
+        _subheadline_selector = XPath("//div[@class = 'row']/div[contains(@class,'col')]/h3")
 
         @attribute
         def body(self) -> ArticleBody:
@@ -30,7 +30,7 @@ class JungeWeltParser(ParserProxy):
 
         @attribute
         def authors(self) -> List[str]:
-            return generic_author_parsing(self.precomputed.ld.bf_search("author"))
+            return generic_author_parsing(self.precomputed.meta.get("Author"))
 
         @attribute
         def title(self) -> Optional[str]:
