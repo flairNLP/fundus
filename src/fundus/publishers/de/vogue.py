@@ -28,7 +28,7 @@ class VogueParser(ParserProxy):
 
         @attribute
         def publishing_date(self) -> Optional[datetime.datetime]:
-            return generic_date_parsing(self.precomputed.ld.bf_search("article:published_time"))
+            return generic_date_parsing(self.precomputed.meta.get("article:published_time"))
         
         @attribute 
         def title(self) -> Optional[str]:
