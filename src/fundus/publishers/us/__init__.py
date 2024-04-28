@@ -15,6 +15,7 @@ from .the_intercept import TheInterceptParser
 from .the_nation_parser import TheNationParser
 from .the_new_yorker import TheNewYorkerParser
 from .washington_times_parser import WashingtonTimesParser
+from .wired import WiredParser
 from .world_truth import WorldTruthParser
 
 
@@ -163,4 +164,11 @@ class US(PublisherEnum):
             Sitemap("https://www.businessinsider.com/sitemap/2024-01.xml"),
         ],
         parser=BusinessInsiderParser,
+    )
+
+    Wired = PublisherSpec(
+        name="Wired",
+        domain="https://www.wired.com",
+        sources=[Sitemap("https://www.wired.com/sitemap.xml")],
+        parser=WiredParser,
     )

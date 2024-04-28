@@ -786,5 +786,22 @@
       </td>
       <td>&#160;</td>
     </tr>
+    <tr>
+      <td>
+        <code>Wired</code>
+      </td>
+      <td>
+        <div>Wired</div>
+      </td>
+      <td>
+        <a href="https://www.wired.com">
+          <span>www.wired.com</span>
+        </a>
+      </td>
+      <td>
+        <code>topics</code>
+      </td>
+      <td>&#160;</td>
+    </tr>
   </tbody>
 </table>
