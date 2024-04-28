@@ -4,7 +4,6 @@ The tests include a real-time crawl for each publisher's news map and RSS Feed
 checking the received articles for attribute completeness.
 Note that this script does not check the attributes' correctness, only their presence.
 """
-
 import sys
 import traceback
 from enum import EnumMeta

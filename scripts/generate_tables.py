@@ -17,7 +17,8 @@ supported_publishers_markdown_path: Path = root_path / "docs" / "supported_publi
 
 
 class ColumnFactory(Protocol):
-    def __call__(self, spec: PublisherEnum) -> lxml.html.HtmlElement: ...
+    def __call__(self, spec: PublisherEnum) -> lxml.html.HtmlElement:
+        ...
 
 
 column_mapping: Dict[str, ColumnFactory] = {
