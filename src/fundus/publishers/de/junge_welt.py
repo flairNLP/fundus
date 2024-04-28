@@ -16,7 +16,7 @@ from fundus.parser.utility import (
 class JungeWeltParser(ParserProxy):
     class V1(BaseParser):
         _paragraph_selector = XPath("//div[@class = 'row']/div[contains(@class,'col')]")
-        _summary_selector = CSSSelector("..teaser.lead")
+        _summary_selector = CSSSelector(".teaser.lead")
         _subheadline_selector = XPath("//div[@class = 'row']/div[contains(@class,'col')]/h3")
 
         @attribute
