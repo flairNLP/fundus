@@ -14,7 +14,7 @@ from fundus.parser.utility import (
 
 class DailyMailParser(ParserProxy):
     class V1(BaseParser):
-        _paragraph_selector = CSSSelector("#js-article-text > div:nth-child(32)")
+        _paragraph_selector = CSSSelector("#js-article-text > div:nth-child(31)")
 
         @attribute
         def body(self) -> ArticleBody:
@@ -34,3 +34,7 @@ class DailyMailParser(ParserProxy):
         @attribute
         def title(self) -> Optional[str]:
             return self.precomputed.meta.get("og:title")
+        
+        @attribute
+        def topics(self) -> List[str]:
+            return generic_topic_parsing(self.precomputed.meta.get("keywords"))
