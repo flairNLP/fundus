@@ -384,6 +384,21 @@
       <td>&#160;</td>
       <td>&#160;</td>
     </tr>
+    <tr>
+      <td>
+        <code>NetzpolitikOrg</code>
+      </td>
+      <td>
+        <div>netzpolitik.org</div>
+      </td>
+      <td>
+        <a href="https://netzpolitik.org/">
+          <span>netzpolitik.org</span>
+        </a>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
   </tbody>
 </table>
 

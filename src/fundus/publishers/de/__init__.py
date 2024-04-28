@@ -18,6 +18,7 @@ from .focus import FocusParser
 from .mdr import MDRParser
 from .merkur import MerkurParser
 from .ndr import NDRParser
+from .netzpolitik_org import NetzpolitikOrgParser
 from .ntv import NTVParser
 from .rheinische_post import RheinischePostParser
 from .spon import SPONParser
@@ -30,6 +31,13 @@ from .waz import WAZParser
 
 # noinspection PyPep8Naming
 class DE(PublisherEnum):
+    NetzpolitikOrg = PublisherSpec(
+        name="netzpolitik.org",
+        domain="https://netzpolitik.org/",
+        sources=[Sitemap("https://netzpolitik.org/sitemap.xml"), RSSFeed("https://netzpolitik.org/feed/")],
+        parser=NetzpolitikOrgParser,
+    )
+
     DieWelt = PublisherSpec(
         name="Die Welt",
         domain="https://www.welt.de/",
