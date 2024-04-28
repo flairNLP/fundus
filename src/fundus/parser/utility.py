@@ -122,7 +122,7 @@ def extract_article_body_with_selector(
         instructions = more_itertools.prepend([], instructions)
     elif not nodes[0] == summary_nodes[0]:
         raise ValueError(
-            f"The summary should be at the beginning of the article, but nodes started " f"with '{nodes[0]!r}'"
+            f"The summary should be at the beginning of the article, but extracted article starts with '{nodes[0]!r}'"
         )
 
     if not subhead_nodes or (paragraph_nodes and subhead_nodes[0] > paragraph_nodes[0]):
