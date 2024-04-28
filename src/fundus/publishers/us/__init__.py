@@ -124,6 +124,8 @@ class US(PublisherEnum):
         sources=[
             Sitemap("https://www.washingtonpost.com/sitemaps/sitemap.xml.gz"),
             NewsMap("https://www.washingtonpost.com/sitemaps/news-sitemap.xml.gz"),
+            RSSFeed("https://feeds.washingtonpost.com/rss/world"),
+            RSSFeed("https://feeds.washingtonpost.com/rss/national"),
         ],
         parser=WashingtonPostParser,
     )

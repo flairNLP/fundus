@@ -14,14 +14,16 @@ from fundus.parser.utility import (
 class WashingtonPostParser(ParserProxy):
     class V1(BaseParser):
         _paragraph_selector = CSSSelector("div[data-qa='article-body'] > p, div[class='story relative'] > p")
-        _subheadline_selector = CSSSelector("h2[data-qa='subheadline']")
+        _summary_selector = CSSSelector("h2[data-qa='subheadline']")
+        _subheadline_selector = CSSSelector("div[data-qa='article-body'] > h3[data-qa='article-header']> div")
 
         @attribute
         def body(self) -> ArticleBody:
             return extract_article_body_with_selector(
                 self.precomputed.doc,
                 paragraph_selector=self._paragraph_selector,
-                subheadline_selector=self._subheadline_selector,
+                summary_selector=self._summary_selector,
+                subheadline_selector=self._subheadline_selector
             )
 
         @attribute
