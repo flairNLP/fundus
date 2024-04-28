@@ -14,7 +14,7 @@ from fundus.parser.utility import (
 
 class PostillonParser(ParserProxy):
     class V1(BaseParser):
-        _paragraph_selector  = CSSSelector("div[id=post-body] > p")
+        _paragraph_selector  = CSSSelector("div[id=post-body] p")
         _postscript_selector = CSSSelector("div[id=post-body] > span")
 
         @attribute
