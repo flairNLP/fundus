@@ -8,6 +8,17 @@ import datetime
 
 class TagesspiegelParser(ParserProxy):
     class V1(BaseParser):
+        _paragraph_selector = CSSSelector('div[id=story-elements] > p')
+        _subheadline_selector = CSSSelector('.Ha6')
+
+        @attribute
+        def body(self) -> ArticleBody:
+            article_body = extract_article_body_with_selector(
+                self.precomputed.doc,
+                paragraph_selector=self._paragraph_selector,
+                subheadline_selector=self._subheadline_selector,
+            )
+            return article_body
 
         @attribute
         def title(self) -> Optional[str]:
