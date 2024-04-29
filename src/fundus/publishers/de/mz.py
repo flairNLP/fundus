@@ -41,7 +41,4 @@ class MitteldeutscheZeitungParser(ParserProxy):
 
         @attribute
         def topics(self) -> List[str]:
-            kw = generic_topic_parsing(self.precomputed.ld.bf_search("keywords"))
-            if len(kw) >= 1:
-                return kw
-            return ["n/a"]
+            return generic_topic_parsing(self.precomputed.ld.bf_search("keywords"))
