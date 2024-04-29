@@ -41,7 +41,6 @@ class RBB24Parser(ParserProxy):
             # Check if author was specified and if the author was also credited:
             if len(self._author_selector(self.precomputed.doc)) > 0:
                 # Get authors
-                #
                 authors_list = self.authors()
                 # Get summary as string
                 summary = article_body.summary._data[0]
