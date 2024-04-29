@@ -559,6 +559,23 @@
       <td>&#160;</td>
       <td>&#160;</td>
     </tr>
+    <tr>
+      <td>
+        <code>TheStandard</code>
+      </td>
+      <td>
+        <div>the Standard</div>
+      </td>
+      <td>
+        <a href="https://www.standard.co.uk/">
+          <span>www.standard.co.uk</span>
+        </a>
+      </td>
+      <td>
+        <code>body</code>
+      </td>
+      <td>&#160;</td>
+    </tr>
   </tbody>
 </table>
 
