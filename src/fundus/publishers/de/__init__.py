@@ -246,7 +246,7 @@ class DE(PublisherEnum):
         name="Mitteldeutsche Zeitung",
         domain="https://www.mz.de/",
         sources=[
-            Sitemap("https://www.mz.de/sitemaps/sitemap-index.xml"),
+            Sitemap("https://www.mz.de/sitemaps/sitemap-ressort-index.xml"),
             NewsMap("https://www.mz.de/sitemaps/newssitemap-index.xml"),
         ],
         parser=MitteldeutscheZeitungParser,
