@@ -403,6 +403,23 @@
   <tbody>
     <tr>
       <td>
+        <code>LeFigaro</code>
+      </td>
+      <td>
+        <div>Le Figaro</div>
+      </td>
+      <td>
+        <a href="https://www.lefigaro.fr/">
+          <span>www.lefigaro.fr</span>
+        </a>
+      </td>
+      <td>
+        <code>topics</code>
+      </td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
         <code>LeMonde</code>
       </td>
       <td>
