@@ -35,7 +35,9 @@ class DE(PublisherEnum):
         name="netzpolitik.org",
         domain="https://netzpolitik.org/",
         sources=[
-            Sitemap("https://netzpolitik.org/sitemap.xml", sitemap_filter=inverse(regex_filter("post-sitemap"))),
+            Sitemap(
+                "https://netzpolitik.org/sitemap.xml", sitemap_filter=inverse(regex_filter("sitemap-posttype-post"))
+            ),
             RSSFeed("https://netzpolitik.org/feed/"),
         ],
         parser=NetzpolitikOrgParser,
