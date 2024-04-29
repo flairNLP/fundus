@@ -68,7 +68,7 @@ class RBB24Parser(ParserProxy):
             last_paragraph = article_body.sections[-1].paragraphs._data[-1]
             if last_paragraph.startswith("Sendung:"):
                 # Make tuple to list to delete last element of list, to then make it a tuple again
-                new_data_tuple = ((article_body.sections[-1].paragraphs._data)[:-1])
+                new_data_tuple = (article_body.sections[-1].paragraphs._data)[:-1]
                 article_body.sections[-1].paragraphs._data = new_data_tuple
             return article_body
 
