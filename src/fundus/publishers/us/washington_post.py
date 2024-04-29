@@ -23,12 +23,12 @@ class WashingtonPostParser(ParserProxy):
                 self.precomputed.doc,
                 paragraph_selector=self._paragraph_selector,
                 summary_selector=self._summary_selector,
-                subheadline_selector=self._subheadline_selector
+                subheadline_selector=self._subheadline_selector,
             )
 
         @attribute
         def title(self) -> Optional[str]:
-            return self.precomputed.ld.bf_search("headline")
+            return self.precomputed.meta.get("og:title")
 
         @attribute
         def authors(self) -> List[str]:
@@ -36,4 +36,4 @@ class WashingtonPostParser(ParserProxy):
 
         @attribute
         def publishing_date(self) -> Optional[datetime.datetime]:
-            return generic_date_parsing(self.precomputed.ld.bf_search("datePublished"))
+            return generic_date_parsing(self.precomputed.meta.get("article:published_time"))
