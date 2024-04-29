@@ -2,6 +2,7 @@ from datetime import datetime
 from typing import List, Optional
 
 from lxml.cssselect import CSSSelector
+from lxml.etree import XPath
 
 from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute
 from fundus.parser.utility import (
@@ -14,8 +15,10 @@ from fundus.parser.utility import (
 
 class HessenschauParser(ParserProxy):
     class V1(BaseParser):
-        _summary_selector = CSSSelector("div.region--narrow p.copytext__text.text__copytext > strong")
-        _paragraph_selector = CSSSelector("p.copytext__text.text__copytext")
+        _summary_selector = XPath("//p[@class='copytext__text text__copytext'] /strong[position()=1]")
+        _paragraph_selector = XPath(
+            "//p[@class='copytext__text text__copytext' and not(child::strong and position()=1)]"
+        )
         _subheadline_selector = CSSSelector("h2.text__headline.copytext__headline")
 
         @attribute
