@@ -40,8 +40,6 @@ class TechCrunchParser(ParserProxy):
 
         @attribute
         def title(self) -> Optional[str]:
-            # title: Optional[str] = self.precomputed.ld.get_value_by_key_path(["NewsArticle", "headline"])
-            # return title
             return self.precomputed.meta.get("og:title")
 
         @attribute
