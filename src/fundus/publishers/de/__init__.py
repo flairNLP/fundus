@@ -24,6 +24,7 @@ from .spon import SPONParser
 from .stern import SternParser
 from .sz import SZParser
 from .tagesschau import TagesschauParser
+from .tagesspiegel import TagesspiegelParser
 from .taz import TazParser
 from .waz import WAZParser
 
@@ -244,8 +245,9 @@ class DE(PublisherEnum):
     Tagesspiegel = PublisherSpec(
         name="Tagesspiegel",
         domain="https://www.tagesspiegel.de/",
-        parser=TagesspiegelParser,
         sources=[
             NewsMap('https://www.tagesspiegel.de/news.xml'),
-        ]
+
+        ],
+        parser=TagesspiegelParser,
     )
