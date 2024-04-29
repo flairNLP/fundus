@@ -26,6 +26,7 @@ from .sz import SZParser
 from .tagesschau import TagesschauParser
 from .taz import TazParser
 from .waz import WAZParser
+from .winfuture import winfutureParser
 
 
 # noinspection PyPep8Naming
@@ -239,4 +240,16 @@ class DE(PublisherEnum):
             Sitemap("https://rp-online.de/sitemap.xml"),
         ],
         parser=RheinischePostParser,
+    )
+
+    WinFuture = PublisherSpec(
+        name="WinFuture",
+        domain="https://winfuture.de/",
+        sources=[
+            RSSFeed("https://static.winfuture.de/feeds/WinFuture-News-rss2.0.xml"),
+            # NewsMap("https://winfuture.de/sitemap.xml", sitemap_filter=regex_filter("https:////winfuture/.de//sitemap/-news(/-)?([0-9])*"), reverse=True),
+            # Sitemap("https://winfuture.de/sitemap.xml")
+        ],
+        url_filter=regex_filter("https:////winfuture/.de//news*"),
+        parser=winfutureParser,
     )

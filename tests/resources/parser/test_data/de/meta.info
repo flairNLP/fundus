@@ -102,5 +102,9 @@
   "WAZ_2024_03_08.html.gz": {
     "url": "https://www.waz.de/staedte/duisburg/article241847490/Erstes-Bild-So-koennte-die-Duisburger-Seilbahn-aussehen.html",
     "crawl_date": "2024-03-08 19:08:06.071698"
+  },
+  "WinFuture_2024_04_29.html.gz": {
+    "url": "https://winfuture.de/news,142489.html",
+    "crawl_date": "2024-04-29 03:39:37.629099"
   }
 }
