@@ -695,8 +695,8 @@
         <div>TechCrunch</div>
       </td>
       <td>
-        <a href="https://www.techcrunch.com/">
-          <span>www.techcrunch.com</span>
+        <a href="https://techcrunch.com/">
+          <span>techcrunch.com</span>
         </a>
       </td>
       <td>&#160;</td>
