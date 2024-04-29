@@ -15,7 +15,7 @@ from fundus.parser.utility import (
 
 class HessenschauParser(ParserProxy):
     class V1(BaseParser):
-        _summary_selector = XPath("//p[@class='copytext__text text__copytext'] /strong[position()=1]")
+        _summary_selector = XPath("//p[@class='copytext__text text__copytext' and position()=1] /strong")
         _paragraph_selector = XPath(
             "//p[@class='copytext__text text__copytext' and not(child::strong and position()=1)]"
         )
