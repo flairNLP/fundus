@@ -240,3 +240,9 @@ class DE(PublisherEnum):
         ],
         parser=RheinischePostParser,
     )
+
+    Tagesspiegel = PublisherSpec(
+        name="Tagesspiegel",
+        domain="https://www.tagesspiegel.de/",
+        parser=TagesspiegelParser,
+    )
