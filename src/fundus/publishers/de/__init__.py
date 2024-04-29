@@ -3,7 +3,7 @@ from datetime import datetime
 from dateutil.rrule import MONTHLY, rrule
 
 from fundus.publishers.base_objects import PublisherEnum, PublisherSpec
-from fundus.scraping.filter import regex_filter
+from fundus.scraping.filter import inverse, regex_filter
 from fundus.scraping.url import NewsMap, RSSFeed, Sitemap
 
 from .berliner_zeitung import BerlinerZeitungParser
@@ -34,7 +34,10 @@ class DE(PublisherEnum):
     NetzpolitikOrg = PublisherSpec(
         name="netzpolitik.org",
         domain="https://netzpolitik.org/",
-        sources=[Sitemap("https://netzpolitik.org/sitemap.xml"), RSSFeed("https://netzpolitik.org/feed/")],
+        sources=[
+            Sitemap("https://netzpolitik.org/sitemap.xml", sitemap_filter=inverse(regex_filter("post-sitemap"))),
+            RSSFeed("https://netzpolitik.org/feed/"),
+        ],
         parser=NetzpolitikOrgParser,
     )
 

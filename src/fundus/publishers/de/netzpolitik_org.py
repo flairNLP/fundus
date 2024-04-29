@@ -15,7 +15,7 @@ from fundus.parser.utility import (
 
 class NetzpolitikOrgParser(ParserProxy):
     class V1(BaseParser):
-        _paragraph_selector = CSSSelector("div.entry-content > p")
+        _paragraph_selector = CSSSelector("div.entry-content p")
         _summary_selector = CSSSelector("div.entry-excerpt > p")
         _subheadline_selector = CSSSelector("div.entry-content > h3")
         _author_selector = CSSSelector("span > a[rel='author']")
