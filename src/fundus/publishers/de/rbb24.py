@@ -85,10 +85,13 @@ class RBB24Parser(ParserProxy):
             publishing_date_string = self._date_selector(self.precomputed.doc)[0].text
             # publishing_date_string will look like 'Do 25.04.24 | 13:47 Uhr'
             # need to get the date and time to pass it to the generic_date_parsing
-            index = publishing_date_string.index("|")
-            date_string = publishing_date_string[index - 9 : index - 1]
-            time_string = publishing_date_string[index + 1 : index + 7]
-            return generic_date_parsing(date_string + " " + time_string)
+            if publishing_date_string is not None:
+                index = publishing_date_string.index("|")
+                date_string = publishing_date_string[index - 9 : index - 1]
+                time_string = publishing_date_string[index + 1 : index + 7]
+                return generic_date_parsing(date_string + " " + time_string)
+            else:
+                return generic_date_parsing(None)
 
         @attribute
         def title(self) -> Optional[str]:
