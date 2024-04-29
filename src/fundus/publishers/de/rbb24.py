@@ -41,8 +41,8 @@ class RBB24Parser(ParserProxy):
             # Check if author was specified and if the author was also credited:
             if len(self._author_selector(self.precomputed.doc)) > 0:
                 # Get authors
-                authors = self._author_selector(self.precomputed.doc)[0].text
-                authors = generic_author_parsing(authors)
+                #
+                authors_list = self.authors()
                 # Get summary as string
                 summary = article_body.summary._data[0]
                 # Make sure that we choose a period that is not the last character of string,
@@ -54,7 +54,7 @@ class RBB24Parser(ParserProxy):
                 if potential_credits.split(" ", 1)[0] == "Von":
                     authors_credited = True
                     # Are the authors credited ?
-                    for author in authors:
+                    for author in authors_list:
                         if author not in potential_credits:
                             authors_credited = False
                             break
