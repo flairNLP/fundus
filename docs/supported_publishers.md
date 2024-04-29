@@ -371,6 +371,24 @@
     </tr>
     <tr>
       <td>
+        <code>Tagesspiegel</code>
+      </td>
+      <td>
+        <div>Tagesspiegel</div>
+      </td>
+      <td>
+        <a href="https://www.tagesspiegel.de/">
+          <span>www.tagesspiegel.de</span>
+        </a>
+      </td>
+      <td>
+        <code>authors</code>
+        <code>topics</code>
+      </td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
         <code>WAZ</code>
       </td>
       <td>
