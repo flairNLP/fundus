@@ -13,7 +13,7 @@ from fundus.parser.utility import (
 )
 
 
-class winfutureParser(ParserProxy):
+class WinfutureParser(ParserProxy):
     class V1(BaseParser):
         _paragraph_selector = XPath("//div[@id='news_content']")
         _summary_selector = XPath("//div[@id='news_content']/div[@class=teaser_text]")

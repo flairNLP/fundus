@@ -3,7 +3,7 @@ from datetime import datetime
 from dateutil.rrule import MONTHLY, rrule
 
 from fundus.publishers.base_objects import PublisherEnum, PublisherSpec
-from fundus.scraping.filter import regex_filter
+from fundus.scraping.filter import inverse, regex_filter
 from fundus.scraping.url import NewsMap, RSSFeed, Sitemap
 
 from .berliner_zeitung import BerlinerZeitungParser
@@ -26,7 +26,7 @@ from .sz import SZParser
 from .tagesschau import TagesschauParser
 from .taz import TazParser
 from .waz import WAZParser
-from .winfuture import winfutureParser
+from .winfuture import WinfutureParser
 
 
 # noinspection PyPep8Naming
@@ -247,9 +247,9 @@ class DE(PublisherEnum):
         domain="https://winfuture.de/",
         sources=[
             RSSFeed("https://static.winfuture.de/feeds/WinFuture-News-rss2.0.xml"),
-            # NewsMap("https://winfuture.de/sitemap.xml", sitemap_filter=regex_filter("https:////winfuture/.de//sitemap/-news(/-)?([0-9])*"), reverse=True),
-            # Sitemap("https://winfuture.de/sitemap.xml")
+            NewsMap("https://winfuture.de/sitemap-latest-news.xml.gz"),
+            Sitemap("https://winfuture.de/sitemap.xml", sitemap_filter=inverse(regex_filter("sitemap-news"))),
         ],
         url_filter=regex_filter("https:////winfuture/.de//news*"),
-        parser=winfutureParser,
+        parser=WinfutureParser,
     )
