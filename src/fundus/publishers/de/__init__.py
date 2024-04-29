@@ -248,6 +248,7 @@ class DE(PublisherEnum):
         sources=[
             RSSFeed("https://www.hessenschau.de/index.rss"),
             Sitemap("https://www.hessenschau.de/indexsitemap.nc.xml"),
+            Sitemap("https://www.hessenschau.de/sitemap.nc.xml"),
         ],
         parser=HessenschauParser,
     )
