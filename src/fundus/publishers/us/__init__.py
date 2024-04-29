@@ -43,7 +43,7 @@ class US(PublisherEnum):
 
     TechCrunch = PublisherSpec(
         name="TechCrunch",
-        domain="https://www.techcrunch.com/",
+        domain="https://techcrunch.com/",
         sources=[
             Sitemap(
                 "https://techcrunch.com/sitemap_index.xml",
