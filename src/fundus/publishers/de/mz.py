@@ -33,7 +33,7 @@ class MitteldeutscheZeitungParser(ParserProxy):
 
         @attribute
         def authors(self) -> List[str]:
-            return self.precomputed.meta.get("author")
+            return generic_author_parsing(self.precomputed.meta.get("author"))
 
         @attribute
         def publishing_date(self) -> Optional[datetime.datetime]:
