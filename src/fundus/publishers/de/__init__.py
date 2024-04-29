@@ -26,6 +26,7 @@ from .sz import SZParser
 from .tagesschau import TagesschauParser
 from .taz import TazParser
 from .waz import WAZParser
+from .rn import RuhrNachrichtenParser
 
 
 # noinspection PyPep8Naming
@@ -239,4 +240,15 @@ class DE(PublisherEnum):
             Sitemap("https://rp-online.de/sitemap.xml"),
         ],
         parser=RheinischePostParser,
+    )
+
+    RuhrNachrichten = PublisherSpec(
+        name="Ruhr Nachrichten",
+        domain="https://www.ruhrnachrichten.de/",
+        sources=[
+            RSSFeed("https://www.ruhrnachrichten.de/service/feed/"),
+            Sitemap("https://www.ruhrnachrichten.de/sitemap_index.xml"),
+            NewsMap("https://www.ruhrnachrichten.de/news-sitemap.xml"),
+        ],
+        parser=RuhrNachrichtenParser,
     )
