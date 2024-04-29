@@ -246,8 +246,7 @@ class DE(PublisherEnum):
         name="Tagesspiegel",
         domain="https://www.tagesspiegel.de/",
         sources=[
-            NewsMap('https://www.tagesspiegel.de/news.xml'),
-
+            NewsMap("https://www.tagesspiegel.de/news.xml"),
         ],
         parser=TagesspiegelParser,
     )
