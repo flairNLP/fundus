@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from dateutil.rrule import MONTHLY, rrule
+from dateutil.rrule import MONTHLY, YEARLY, rrule
 
 from fundus.publishers.base_objects import PublisherEnum, PublisherSpec
 from fundus.scraping.filter import regex_filter
@@ -247,6 +247,10 @@ class DE(PublisherEnum):
         domain="https://www.tagesspiegel.de/",
         sources=[
             NewsMap("https://www.tagesspiegel.de/news.xml"),
+        ]
+        + [
+            Sitemap(f"https://www.tagesspiegel.de/contentexport/static/sitemap-index_{date.year}.xml")
+            for date in reversed(list(rrule(YEARLY, dtstart=datetime(1996, 1, 1), until=datetime.today())))
         ],
         parser=TagesspiegelParser,
     )
