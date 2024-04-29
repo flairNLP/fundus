@@ -3,7 +3,7 @@ from datetime import datetime
 from dateutil.rrule import MONTHLY, rrule
 
 from fundus.publishers.base_objects import PublisherEnum, PublisherSpec
-from fundus.scraping.filter import regex_filter
+from fundus.scraping.filter import inverse, regex_filter
 from fundus.scraping.url import NewsMap, RSSFeed, Sitemap
 
 from .berliner_zeitung import BerlinerZeitungParser
@@ -40,7 +40,7 @@ class DE(PublisherEnum):
             Sitemap("https://www.sportschau.de/index~sitemap_p-0.xml"),
             NewsMap("https://www.sportschau.de/kompakt-sp-100~news.xml"),
         ],
-        url_filter=regex_filter("sportschau.de"),
+        url_filter=inverse(regex_filter("sportschau.de")),
     )
 
     DieWelt = PublisherSpec(

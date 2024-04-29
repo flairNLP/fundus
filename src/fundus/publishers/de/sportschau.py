@@ -8,6 +8,7 @@ from fundus.parser.utility import (
     extract_article_body_with_selector,
     generic_author_parsing,
     generic_date_parsing,
+    generic_topic_parsing,
 )
 
 
@@ -43,5 +44,5 @@ class SportSchauParser(ParserProxy):
             return self.precomputed.meta.get("og:title")
 
         @attribute
-        def keywords(self) -> Optional[str]:
-            return self.precomputed.meta.get("keywords")
+        def topics(self) -> List[str]:
+            return generic_topic_parsing(self.precomputed.meta.get("keywords"))
