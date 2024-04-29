@@ -26,6 +26,7 @@ from .sz import SZParser
 from .tagesschau import TagesschauParser
 from .taz import TazParser
 from .waz import WAZParser
+from .freiepresse import FreiePresseParser
 
 
 # noinspection PyPep8Naming
@@ -239,4 +240,14 @@ class DE(PublisherEnum):
             Sitemap("https://rp-online.de/sitemap.xml"),
         ],
         parser=RheinischePostParser,
+    )
+
+    FreiePresse = PublisherSpec(
+        name="FreiePresse",
+        domain="https://www.freiepresse.de/",
+        sources=[
+            RSSFeed("https://www.freiepresse.de/rss/"),
+            Sitemap("https://www.freiepresse.de/sitemap.xml"),
+        ],
+        parser=FreiePresseParser,
     )
