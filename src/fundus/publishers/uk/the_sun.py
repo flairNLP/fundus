@@ -16,7 +16,7 @@ class TheSunParser(ParserProxy):
     class V1(BaseParser):
         _summary_selector = CSSSelector("div[data-gu-name='standfirst'] p")
         _paragraph_selector = CSSSelector("div.article__content > p")
-        _sub_headline_selector = CSSSelector("div.toplist_container__jpTyX thesun_container__fty3s > h2")
+        _sub_headline_selector = CSSSelector("div.article__content > h2.wp-block-heading")
 
         @attribute
         def body(self) -> ArticleBody:
