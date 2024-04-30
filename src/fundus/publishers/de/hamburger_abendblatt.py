@@ -8,25 +8,23 @@ from fundus.parser.utility import (
     extract_article_body_with_selector,
     generic_author_parsing,
     generic_date_parsing,
+    generic_topic_parsing,
 )
+
 
 class HamburgerAbendblattParser(ParserProxy):
     class V1(BaseParser):
-        #_paragraph_selector = CSSSelector("div[data-element*=story-body] > p")
-        _paragraph_selector = CSSSelector("div.article-body > p")
+        _summary_selector = CSSSelector("div.article-body > p.font-sans")
+        _paragraph_selector = CSSSelector("div.article-body > p:not(.font-sans)")
+        _subheadline_selector = CSSSelector("div.article-body > h3")
 
         @attribute
         def body(self) -> ArticleBody:
-            #return self.precomputed.meta.get("og:description")
-
-            # return extract_article_body_with_selector(
-            #     self.precomputed.meta.get("og:description"),
-            #     paragraph_selector=self._paragraph_selector,
-            # )
-        
             return extract_article_body_with_selector(
                 self.precomputed.doc,
                 paragraph_selector=self._paragraph_selector,
+                summary_selector=self._summary_selector,
+                subheadline_selector=self._subheadline_selector,
             )
 
         @attribute
@@ -40,3 +38,7 @@ class HamburgerAbendblattParser(ParserProxy):
         @attribute
         def title(self) -> Optional[str]:
             return self.precomputed.meta.get("og:title")
+
+        @attribute
+        def topics(self) -> List[str]:
+            return generic_topic_parsing(self.precomputed.meta.get("keywords"))
