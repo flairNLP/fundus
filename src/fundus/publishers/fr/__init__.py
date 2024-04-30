@@ -20,7 +20,6 @@ class FR(PublisherEnum):
         domain="https://www.lefigaro.fr/",
         sources=[
             Sitemap("https://sitemaps.lefigaro.fr/lefigaro.fr/articles.xml"),
-            Sitemap("https://www.lefigaro.fr/elections/resultats/sitemap.xml"),
             NewsMap("https://www.lefigaro.fr/sitemap_news.xml"),
         ],
         parser=LeFigaroParser,
