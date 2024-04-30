@@ -249,27 +249,6 @@
     </tr>
     <tr>
       <td>
-        <code>Katapult</code>
-      </td>
-      <td>
-        <div>Katapult Magazin</div>
-      </td>
-      <td>
-        <a href="https://katapult-magazin.de/">
-          <span>katapult-magazin.de</span>
-        </a>
-      </td>
-      <td>
-        <code>authors</code>
-        <code>body</code>
-        <code>publishing_date</code>
-        <code>title</code>
-        <code>topics</code>
-      </td>
-      <td>&#160;</td>
-    </tr>
-    <tr>
-      <td>
         <code>MDR</code>
       </td>
       <td>
