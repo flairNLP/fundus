@@ -25,8 +25,8 @@ from .stern import SternParser
 from .sz import SZParser
 from .tagesschau import TagesschauParser
 from .taz import TazParser
-from .waz import WAZParser
 from .vogue_de import VogueDEParser
+from .waz import WAZParser
 
 
 # noinspection PyPep8Naming
