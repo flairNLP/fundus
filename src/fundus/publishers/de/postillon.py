@@ -14,7 +14,7 @@ from fundus.parser.utility import (
 
 class PostillonParser(ParserProxy):
     class V1(BaseParser):
-        _paragraph_selector  = CSSSelector("div[id=post-body] p")
+        _paragraph_selector = CSSSelector("div[id=post-body] p")
         _postscript_selector = CSSSelector("div[id=post-body] > span")
 
         @attribute
@@ -30,11 +30,11 @@ class PostillonParser(ParserProxy):
 
         @attribute
         def authors(self) -> List[str]:
-            postscript = self._postscript_selector(self.precomputed.doc);
-            if postscript is None:
-                return [];
-            author_line = postscript[0].text_content().split(';')[0];
-            return [a.strip() for a in author_line.split(',')];
+            postscript = self._postscript_selector(self.precomputed.doc)
+            if not postscript:
+                return []
+            author_line = postscript[0].text_content().split(";")[0]
+            return [a.strip() for a in author_line.split(",")]
 
         @attribute
         def publishing_date(self) -> Optional[datetime.datetime]:
