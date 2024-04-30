@@ -17,6 +17,7 @@ from .faz import FAZParser
 from .focus import FocusParser
 from .mdr import MDRParser
 from .merkur import MerkurParser
+from .morgenpost_berlin import BerlinerMorgenPostParser
 from .ndr import NDRParser
 from .ntv import NTVParser
 from .rheinische_post import RheinischePostParser
@@ -30,6 +31,15 @@ from .waz import WAZParser
 
 # noinspection PyPep8Naming
 class DE(PublisherEnum):
+    BerlinerMorgenPost = PublisherSpec(
+        name="Berliner Morgenpost",
+        domain="https://www.morgenpost.de/",
+        sources=[  # Sitemap("https://www.morgenpost.de/sitemap.xml"),
+            NewsMap("https://www.morgenpost.de/sitemaps/news.xml")
+        ],
+        parser=BerlinerMorgenPostParser,
+    )
+
     DieWelt = PublisherSpec(
         name="Die Welt",
         domain="https://www.welt.de/",
