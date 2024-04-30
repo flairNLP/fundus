@@ -241,7 +241,7 @@ def generic_text_extraction_with_css(doc, selector: XPath) -> Optional[str]:
 
 def generic_topic_parsing(keywords: Optional[Union[str, List[str]]], delimiter: str = ",") -> List[str]:
     if isinstance(keywords, str):
-        return [keyword.strip() for keyword in keywords.split(delimiter)]
+        return [cleaned for keyword in keywords.split(delimiter) if (cleaned := keyword.strip())]
     elif isinstance(keywords, list) and all(isinstance(s, str) for s in keywords):
         return keywords
     elif keywords is None:
