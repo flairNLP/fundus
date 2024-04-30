@@ -9,6 +9,7 @@ from fundus.parser.utility import (
     extract_article_body_with_selector,
     generic_author_parsing,
     generic_date_parsing,
+    generic_topic_parsing,
 )
 
 
@@ -38,3 +39,7 @@ class LeFigaroParser(ParserProxy):
         @attribute
         def publishing_date(self) -> Optional[datetime.datetime]:
             return generic_date_parsing(self.precomputed.meta.get("article:published_time"))
+
+        @attribute
+        def topics(self) -> List[str]:
+            return generic_topic_parsing(self.precomputed.meta.get("keywords"))
