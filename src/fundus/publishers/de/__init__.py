@@ -17,6 +17,7 @@ from .faz import FAZParser
 from .focus import FocusParser
 from .mdr import MDRParser
 from .merkur import MerkurParser
+from .mz import MitteldeutscheZeitungParser
 from .ndr import NDRParser
 from .ntv import NTVParser
 from .rheinische_post import RheinischePostParser
@@ -26,7 +27,6 @@ from .sz import SZParser
 from .tagesschau import TagesschauParser
 from .taz import TazParser
 from .waz import WAZParser
-from .mz import MitteldeutscheZeitungParser
 
 
 # noinspection PyPep8Naming

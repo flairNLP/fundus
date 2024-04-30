@@ -14,9 +14,9 @@ from fundus.parser.utility import (
 
 class MitteldeutscheZeitungParser(ParserProxy):
     class V1(BaseParser):
-        _paragraph_selector = CSSSelector("body .fp-article-body > p")
+        _paragraph_selector = CSSSelector("p.fp-paragraph")
         _summary_selector = CSSSelector("div.fp-article-heading > p")
-        _subheadline_selector = CSSSelector("div.fp-article-heading > h2")
+        _subheadline_selector = CSSSelector("div.fp-subheading > h2")
 
         @attribute
         def body(self) -> ArticleBody:
@@ -41,4 +41,4 @@ class MitteldeutscheZeitungParser(ParserProxy):
 
         @attribute
         def topics(self) -> List[str]:
-            return generic_topic_parsing(self.precomputed.ld.bf_search("keywords"))
+            return generic_topic_parsing(self.precomputed.meta.get("keywords"))
