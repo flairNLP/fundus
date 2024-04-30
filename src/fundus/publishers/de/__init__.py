@@ -15,6 +15,7 @@ from .die_zeit import DieZeitParser
 from .dw import DWParser
 from .faz import FAZParser
 from .focus import FocusParser
+from .freiepresse import FreiePresseParser
 from .mdr import MDRParser
 from .merkur import MerkurParser
 from .ndr import NDRParser
@@ -26,7 +27,6 @@ from .sz import SZParser
 from .tagesschau import TagesschauParser
 from .taz import TazParser
 from .waz import WAZParser
-from .freiepresse import FreiePresseParser
 
 
 # noinspection PyPep8Naming
@@ -246,8 +246,18 @@ class DE(PublisherEnum):
         name="FreiePresse",
         domain="https://www.freiepresse.de/",
         sources=[
-            RSSFeed("https://www.freiepresse.de/rss/"),
-            Sitemap("https://www.freiepresse.de/sitemap.xml"),
+            RSSFeed("https://www.freiepresse.de/rss/rss_chemnitz.php"),
+            RSSFeed("https://www.freiepresse.de/rss/rss_erzgebirge.php"),
+            RSSFeed("https://www.freiepresse.de/rss/rss_mittelsachsen.php"),
+            RSSFeed("https://www.freiepresse.de/rss/rss_vogtland.php"),
+            RSSFeed("https://www.freiepresse.de/rss/rss_zwickau.php"),
+            RSSFeed("https://www.freiepresse.de/rss/rss_politik.php"),
+            RSSFeed("https://www.freiepresse.de/rss/rss_wirtschaft.php"),
+            RSSFeed("https://www.freiepresse.de/rss/rss_kultur.php"),
+            RSSFeed("https://www.freiepresse.de/rss/rss_sport.php"),
+            RSSFeed("https://www.freiepresse.de/rss/rss_sachsen.php"),
+            RSSFeed("https://www.freiepresse.de/rss/rss_regional.php"),
+            Sitemap("https://www.freiepresse.de/sitemaps/articles_last2years.xml", reverse=True),
         ],
         parser=FreiePresseParser,
     )
