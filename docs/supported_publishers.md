@@ -204,6 +204,21 @@
     </tr>
     <tr>
       <td>
+        <code>EuronewsDE</code>
+      </td>
+      <td>
+        <div>Euronews (DE)</div>
+      </td>
+      <td>
+        <a href="https://de.euronews.com/">
+          <span>de.euronews.com</span>
+        </a>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
         <code>Focus</code>
       </td>
       <td>
@@ -230,6 +245,27 @@
         </a>
       </td>
       <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
+        <code>Katapult</code>
+      </td>
+      <td>
+        <div>Katapult Magazin</div>
+      </td>
+      <td>
+        <a href="https://katapult-magazin.de/">
+          <span>katapult-magazin.de</span>
+        </a>
+      </td>
+      <td>
+        <code>authors</code>
+        <code>body</code>
+        <code>publishing_date</code>
+        <code>title</code>
+        <code>topics</code>
+      </td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -403,14 +439,14 @@
   <tbody>
     <tr>
       <td>
-        <code>Euronews</code>
+        <code>EuronewsFR</code>
       </td>
       <td>
-        <div>Euronews</div>
+        <div>Euronews (FR)</div>
       </td>
       <td>
-        <a href="https://www.euronews.com/">
-          <span>www.euronews.com</span>
+        <a href="https://fr.euronews.com/">
+          <span>fr.euronews.com</span>
         </a>
       </td>
       <td>&#160;</td>
@@ -514,6 +550,21 @@
     </tr>
   </thead>
   <tbody>
+    <tr>
+      <td>
+        <code>EuronewsEN</code>
+      </td>
+      <td>
+        <div>Euronews (EN)</div>
+      </td>
+      <td>
+        <a href="https://www.euronews.com/">
+          <span>www.euronews.com</span>
+        </a>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
     <tr>
       <td>
         <code>TheGuardian</code>

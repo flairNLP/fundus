@@ -4,6 +4,7 @@ from fundus.publishers.base_objects import PublisherEnum, PublisherSpec
 from fundus.scraping.filter import inverse, regex_filter
 from fundus.scraping.url import NewsMap, Sitemap
 
+from ..fr.euronews import EuronewsParser
 from .i_news import INewsParser
 from .the_guardian import TheGuardianParser
 from .the_independent import TheIndependentParser
@@ -51,4 +52,14 @@ class UK(PublisherEnum):
             ),
         ],
         parser=INewsParser,
+    )
+
+    EuronewsEN = PublisherSpec(
+        name="Euronews (EN)",
+        domain="https://www.euronews.com/",
+        sources=[
+            Sitemap("https://www.euronews.com/sitemaps/en/articles.xml"),
+            NewsMap("https://www.euronews.com/sitemaps/en/latest-news.xml"),
+        ],
+        parser=EuronewsParser,
     )

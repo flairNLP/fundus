@@ -16,15 +16,11 @@ class FR(PublisherEnum):
         parser=LeMondeParser,
     )
 
-    Euronews = PublisherSpec(
-        name="Euronews",
-        domain="https://www.euronews.com/",
+    EuronewsFR = PublisherSpec(
+        name="Euronews (FR)",
+        domain="https://fr.euronews.com/",
         sources=[
-            Sitemap("https://www.euronews.com/sitemaps/en/articles.xml"),
-            Sitemap("https://de.euronews.com/sitemaps/de/articles.xml"),
             Sitemap("https://fr.euronews.com/sitemaps/fr/articles.xml"),
-            NewsMap("https://www.euronews.com/sitemaps/en/latest-news.xml"),
-            NewsMap("https://de.euronews.com/sitemaps/de/latest-news.xml"),
             NewsMap("https://fr.euronews.com/sitemaps/fr/latest-news.xml"),
         ],
         parser=EuronewsParser,

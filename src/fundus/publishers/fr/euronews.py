@@ -8,20 +8,21 @@ from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute, utili
 
 class EuronewsParser(ParserProxy):
     class V1(BaseParser):
+        _summary_selector = CSSSelector("p.c-article-summary")
+        _subheadline_selector = CSSSelector("div.c-article-content > h2")
+        _paragraph_selector = CSSSelector("div.c-article-content > p")
+
         @attribute
         def title(self) -> Optional[str]:
             return self.precomputed.meta.get("og:title")
 
         @attribute
         def body(self) -> ArticleBody:
-            summary_selector = CSSSelector("p.c-article-summary")
-            subheadline_selector = CSSSelector("div.c-article-content > h2")
-            paragraph_selector = CSSSelector("div.c-article-content > p")
             article_body = utility.extract_article_body_with_selector(
                 self.precomputed.doc,
-                summary_selector=summary_selector,
-                subheadline_selector=subheadline_selector,
-                paragraph_selector=paragraph_selector,
+                summary_selector=self._summary_selector,
+                subheadline_selector=self._subheadline_selector,
+                paragraph_selector=self._paragraph_selector,
             )
             return article_body
 

@@ -26,6 +26,7 @@ from .sz import SZParser
 from .tagesschau import TagesschauParser
 from .taz import TazParser
 from .waz import WAZParser
+from ..fr.euronews import EuronewsParser
 
 
 # noinspection PyPep8Naming
@@ -240,3 +241,14 @@ class DE(PublisherEnum):
         ],
         parser=RheinischePostParser,
     )
+
+    EuronewsDE = PublisherSpec(
+        name="Euronews (DE)",
+        domain="https://de.euronews.com/",
+        sources=[
+            Sitemap("https://de.euronews.com/sitemaps/de/articles.xml"),
+            NewsMap("https://de.euronews.com/sitemaps/de/latest-news.xml"),
+        ],
+        parser=EuronewsParser,
+    )
+
