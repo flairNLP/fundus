@@ -1,7 +1,7 @@
 from fundus.publishers.base_objects import PublisherEnum, PublisherSpec
 from fundus.scraping.url import NewsMap, Sitemap
 
-from .euronews import EuronewsParser
+from ..shared import EuronewsParser
 from .le_monde import LeMondeParser
 
 

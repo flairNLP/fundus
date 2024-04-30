@@ -6,6 +6,7 @@ from fundus.publishers.base_objects import PublisherEnum, PublisherSpec
 from fundus.scraping.filter import regex_filter
 from fundus.scraping.url import NewsMap, RSSFeed, Sitemap
 
+from ..shared import EuronewsParser
 from .berliner_zeitung import BerlinerZeitungParser
 from .bild import BildParser
 from .braunschweiger_zeitung import BSZParser
@@ -26,7 +27,6 @@ from .sz import SZParser
 from .tagesschau import TagesschauParser
 from .taz import TazParser
 from .waz import WAZParser
-from ..fr.euronews import EuronewsParser
 
 
 # noinspection PyPep8Naming
@@ -251,4 +251,3 @@ class DE(PublisherEnum):
         ],
         parser=EuronewsParser,
     )
-
