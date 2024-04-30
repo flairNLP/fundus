@@ -6,7 +6,9 @@ from lxml.cssselect import CSSSelector
 from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute
 from fundus.parser.utility import (
     extract_article_body_with_selector,
+    generic_author_parsing,
     generic_date_parsing,
+    generic_topic_parsing,
 )
 
 
@@ -15,12 +17,16 @@ class NTVTRParser(ParserProxy):
         _paragraph_selector = CSSSelector(
             "#contentBodyArea > div.category-detail-content-inner > div.content-news-tag-selector > p"
         )
+        _summary_selector = CSSSelector(
+            "body > div.common-container > div > section > div.category-detail.container-has-3-items.js-news-detail > div.container > div.ntv-content > div > div > div.category-detail-left > h2"
+        )
 
         @attribute
         def body(self) -> ArticleBody:
             return extract_article_body_with_selector(
                 self.precomputed.doc,
                 paragraph_selector=self._paragraph_selector,
+                summary_selector=self._summary_selector,
             )
 
         @attribute
@@ -30,3 +36,11 @@ class NTVTRParser(ParserProxy):
         @attribute
         def title(self) -> Optional[str]:
             return self.precomputed.meta.get("og:title")
+
+        @attribute
+        def topics(self) -> List[str]:
+            return generic_topic_parsing(self.precomputed.meta.get("dmp:tags"))
+
+        @attribute
+        def authors(self) -> List[str]:
+            return generic_author_parsing(self.precomputed.meta.get("articleAuthor"))
