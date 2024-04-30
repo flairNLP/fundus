@@ -371,7 +371,7 @@
     </tr>
     <tr>
       <td>
-        <code>Vogue</code>
+        <code>VogueDE</code>
       </td>
       <td>
         <div>Vogue</div>

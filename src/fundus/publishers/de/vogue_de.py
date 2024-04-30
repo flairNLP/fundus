@@ -1,6 +1,7 @@
 import datetime
 from typing import List, Optional
 from lxml.etree import XPath
+from lxml.cssselect import CSSSelector
 from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute
 from fundus.parser.utility import (
     extract_article_body_with_selector,
@@ -9,10 +10,11 @@ from fundus.parser.utility import (
     generic_topic_parsing,
 )
 
-class VogueParser(ParserProxy):
+class VogueDEParser(ParserProxy):
     class V1(BaseParser):
-        _paragraph_selector = XPath("//article//p")
-        _subheadline_selector = XPath("//article//h2")
+        _paragraph_selector = CSSSelector("div.body__inner-container > p")
+        _subheadline_selector = CSSSelector("div.body__inner-container > p > strong")
+        _summary_selector = XPath("//div[contains(@class, 'ContentHeaderDek')]")
 
         @attribute
         def body(self) -> ArticleBody:
@@ -20,6 +22,7 @@ class VogueParser(ParserProxy):
                 self.precomputed.doc,
                 paragraph_selector=self._paragraph_selector,
                 subheadline_selector=self._subheadline_selector,
+                summary_selector=self._summary_selector
             )
 
         @attribute
