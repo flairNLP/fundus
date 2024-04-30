@@ -14,14 +14,17 @@ from fundus.parser.utility import (
 
 class LeFigaroParser(ParserProxy):
     class V1(BaseParser):
-        _paragraph_selector: CSSSelector = CSSSelector("p[class='fig-paragraph']")
-        _subheadline_selector: CSSSelector = CSSSelector("div > h2")
+        _summary_selector: CSSSelector = CSSSelector("article > p.fig-standfirst")
+        _paragraph_selector: CSSSelector = CSSSelector("div.fig-content-body > p.fig-paragraph")
+        _subheadline_selector: CSSSelector = CSSSelector("div.fig-content-body > h2")
 
         @attribute
         def body(self) -> ArticleBody:
             return extract_article_body_with_selector(
                 self.precomputed.doc,
                 paragraph_selector=self._paragraph_selector,
+                summary_selector=self._summary_selector,
+                subheadline_selector=self._subheadline_selector,
             )
 
         @attribute
@@ -35,18 +38,3 @@ class LeFigaroParser(ParserProxy):
         @attribute
         def publishing_date(self) -> Optional[datetime.datetime]:
             return generic_date_parsing(self.precomputed.meta.get("article:published_time"))
-
-        @attribute
-        def description(self) -> Optional[str]:
-            return self.precomputed.meta.get("og:description")
-
-        @attribute
-        def subheadlines(self) -> Optional[List[str]]:
-            root = lxml.html.document_fromstring(self.precomputed.html)
-            nodes = self._subheadline_selector(root)
-            subheadlines = [node.text_content().replace('\xa0', ' ').strip() for node in nodes if
-                            node.text_content().strip()]
-
-            return subheadlines
-
-
