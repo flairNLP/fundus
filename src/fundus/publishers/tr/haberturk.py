@@ -15,14 +15,14 @@ from fundus.parser.utility import (
 class HaberturkParser(ParserProxy):
     class V1(BaseParser):
         _paragraph_selector = CSSSelector("article p")
-        _subheadline_selector = CSSSelector("article h2")
+        _summary_selector = CSSSelector("article h2")
 
         @attribute
         def body(self) -> ArticleBody:
             return extract_article_body_with_selector(
                 self.precomputed.doc,
                 paragraph_selector=self._paragraph_selector,
-                subheadline_selector=self._subheadline_selector,
+                summary_selector=self._summary_selector,
             )
 
         @attribute(validate=False)
