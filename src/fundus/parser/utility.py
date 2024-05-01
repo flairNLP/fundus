@@ -73,6 +73,9 @@ class Node:
     def __str__(self) -> str:
         return self.text_content()
 
+    def __repr__(self):
+        return f"{type(self).__name__}: {self.text_content()}"
+
     def __bool__(self):
         return bool(normalize_whitespace(self.text_content()))
 
@@ -117,6 +120,10 @@ def extract_article_body_with_selector(
 
     if not summary_nodes:
         instructions = more_itertools.prepend([], instructions)
+    elif not nodes[: len(summary_nodes)] == summary_nodes:
+        raise ValueError(
+            f"The summary should be at the beginning of the article, but extracted article starts with '{nodes[0]!r}'"
+        )
 
     if not subhead_nodes or (paragraph_nodes and subhead_nodes[0] > paragraph_nodes[0]):
         first = next(instructions)
@@ -234,7 +241,7 @@ def generic_text_extraction_with_css(doc, selector: XPath) -> Optional[str]:
 
 def generic_topic_parsing(keywords: Optional[Union[str, List[str]]], delimiter: str = ",") -> List[str]:
     if isinstance(keywords, str):
-        return [keyword.strip() for keyword in keywords.split(delimiter)]
+        return [cleaned for keyword in keywords.split(delimiter) if (cleaned := keyword.strip())]
     elif isinstance(keywords, list) and all(isinstance(s, str) for s in keywords):
         return keywords
     elif keywords is None:
