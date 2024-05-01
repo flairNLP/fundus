@@ -248,7 +248,10 @@ class DE(PublisherEnum):
         domain="https://www.kicker.de/",
         sources=[
             RSSFeed("https://newsfeed.kicker.de/news/aktuell"),
-            NewsMap("https://leserservice.kicker.de/sitemap_0.xml"),
+            Sitemap(
+                "https://leserservice.kicker.de/sitemap_0.xml", sitemap_filter=regex_filter("leserservice.kicker.de")
+            ),
+            NewsMap("https://newsfeed.kicker.de/googlesitemapnews.xml"),
         ],
         url_filter=regex_filter("/slideshow|/video"),
         parser=KickerParser,
