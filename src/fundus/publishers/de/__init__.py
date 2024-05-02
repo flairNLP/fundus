@@ -243,11 +243,13 @@ class DE(PublisherEnum):
     )
 
     BoersenZeitung = PublisherSpec(
-        name="Boersen-Zeitung",
+        name="Börsen-Zeitung",
         domain="https://www.boersen-zeitung.de",
         sources=[
             NewsMap("https://www.boersen-zeitung.de/sitemap/news.xml.gz"),
-            Sitemap("https://www.boersen-zeitung.de/sitemap/index.xml.gz"),
+            Sitemap(
+                "https://www.boersen-zeitung.de/sitemap/index.xml.gz", sitemap_filter=regex_filter("/sitemap-0.xml.gz")
+            ),
         ],
         parser=BoersenZeitungParser,
     )

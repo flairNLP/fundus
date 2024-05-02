@@ -1,4 +1,5 @@
 import datetime
+import re
 from typing import List, Optional
 
 from lxml.cssselect import CSSSelector
@@ -13,17 +14,14 @@ from fundus.parser.utility import (
 
 class BoersenZeitungParser(ParserProxy):
     class V1(BaseParser):
-        _paragraph_selector = CSSSelector("p")
-        _subheadline_selector = CSSSelector("h2.no-tts no-tts wp-block-ppi-subheading")
+        _paragraph_selector = CSSSelector("storefront-content-body .no-tts p")
+        _subheadline_selector = CSSSelector("p.wp-block-ppi-interline")
+        _summary_selector = CSSSelector("storefront-html.excerpt > div")
+
         _topic_selector = CSSSelector("a[href^='/thema'] > span")
         _paywall_selector = CSSSelector("storefront-html.paywall-headline > div")
 
-        @attribute
-        def title(self) -> Optional[str]:
-            fulltitle = self.precomputed.meta.get("og:title")
-            assert isinstance(fulltitle, str) #had to add this for mypy
-            title = str(fulltitle.split("|")[0].strip())
-            return title
+        _title_bloat_pattern = re.compile(r"\|.*")
 
         @attribute
         def body(self) -> ArticleBody:
@@ -32,6 +30,12 @@ class BoersenZeitungParser(ParserProxy):
                 subheadline_selector=self._subheadline_selector,
                 paragraph_selector=self._paragraph_selector,
             )
+
+        @attribute
+        def title(self) -> Optional[str]:
+            if fulltitle := self.precomputed.meta.get("og:title"):
+                return re.sub(self._title_bloat_pattern, "", fulltitle).strip()
+            return None
 
         @attribute
         def authors(self) -> List[str]:
