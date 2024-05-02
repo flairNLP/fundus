@@ -247,9 +247,6 @@ class DE(PublisherEnum):
         domain="https://www.jungewelt.de/",
         sources=[
             RSSFeed("https://www.jungewelt.de/feeds/newsticker.rss"),
-            Sitemap(
-                "https://www.jungewelt.de/google-sitemap/sitemap.xml", sitemap_filter=inverse(regex_filter("aktuell"))
-            ),
         ],
         parser=JungeWeltParser,
     )
