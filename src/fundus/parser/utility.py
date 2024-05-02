@@ -243,7 +243,7 @@ def generic_topic_parsing(keywords: Optional[Union[str, List[str]]], delimiter: 
     if not keywords:
         return []
     elif isinstance(keywords, str):
-        return [keyword.strip() for keyword in keywords.split(delimiter)]
+        return [cleaned for keyword in keywords.split(delimiter) if (cleaned := keyword.strip())]
     elif isinstance(keywords, list) and all(isinstance(s, str) for s in keywords):
         return keywords
     else:
