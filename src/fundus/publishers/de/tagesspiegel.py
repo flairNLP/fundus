@@ -11,6 +11,7 @@ from fundus.parser.utility import (
     generic_topic_parsing,
 )
 
+
 class TagesspiegelParser(ParserProxy):
     class V1(BaseParser):
         _summary_selector = CSSSelector("div.Hay.Haz p.Ha6")
@@ -29,13 +30,16 @@ class TagesspiegelParser(ParserProxy):
 
         @attribute
         def title(self) -> Optional[str]:
-            # Use the `get` function to retrieve data from the `meta` precomputed attribute
             return self.precomputed.meta.get("og:title")
+
+        @attribute
+        def authors(self) -> List[str]:
+            return generic_author_parsing(self.precomputed.ld.bf_search("author"))
 
         @attribute
         def publishing_date(self) -> Optional[datetime.datetime]:
             return generic_date_parsing(self.precomputed.ld.bf_search("datePublished"))
-        
+
         @attribute
         def topics(self) -> List[str]:
-            return generic_topic_parsing(self.precomputed.meta.get("keywords"))
+            return generic_topic_parsing(self.precomputed.ld.bf_search("keywords"))

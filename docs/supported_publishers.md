@@ -381,9 +381,7 @@
           <span>www.tagesspiegel.de</span>
         </a>
       </td>
-      <td>
-        <code>authors</code>
-      </td>
+      <td>&#160;</td>
       <td>&#160;</td>
     </tr>
     <tr>
