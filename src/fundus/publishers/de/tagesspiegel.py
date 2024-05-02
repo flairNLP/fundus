@@ -11,9 +11,9 @@ from fundus.parser.utility import (
     generic_topic_parsing,
 )
 
-
 class TagesspiegelParser(ParserProxy):
     class V1(BaseParser):
+        _summary_selector = CSSSelector("div.Hay.Haz p.Ha6")
         _paragraph_selector = CSSSelector("div[id=story-elements] > p")
         _subheadline_selector = CSSSelector(".Ha6")
 
@@ -21,6 +21,7 @@ class TagesspiegelParser(ParserProxy):
         def body(self) -> ArticleBody:
             article_body = extract_article_body_with_selector(
                 self.precomputed.doc,
+                summary_selector=self._summary_selector,
                 paragraph_selector=self._paragraph_selector,
                 subheadline_selector=self._subheadline_selector,
             )
