@@ -7,8 +7,8 @@ from fundus.scraping.url import NewsMap, Sitemap
 from .i_news import INewsParser
 from .the_guardian import TheGuardianParser
 from .the_independent import TheIndependentParser
-from .the_telegraph import TheTelegraphParser
 from .the_mirror import TheMirrorParser
+from .the_telegraph import TheTelegraphParser
 
 
 class UK(PublisherEnum):
@@ -35,9 +35,7 @@ class UK(PublisherEnum):
         name="The Mirror",
         domain="https://www.mirror.co.uk/",
         sources=[
-            Sitemap(
-                "https://www.mirror.co.uk/sitemaps/sitemap_index.xml", reverse=True 
-            ),
+            Sitemap("https://www.mirror.co.uk/sitemaps/sitemap_index.xml", reverse=True),
             NewsMap("https://www.mirror.co.uk/map_news.xml"),
         ],
         parser=TheMirrorParser,
