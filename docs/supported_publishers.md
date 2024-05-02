@@ -244,7 +244,9 @@
           <span>www.gamestar.de</span>
         </a>
       </td>
-      <td>&#160;</td>
+      <td>
+        <code>topics</code>
+      </td>
       <td>&#160;</td>
     </tr>
     <tr>
