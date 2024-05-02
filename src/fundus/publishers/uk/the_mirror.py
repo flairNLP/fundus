@@ -15,7 +15,7 @@ from fundus.parser.utility import (
 class TheMirrorParser(ParserProxy):
     class V1(BaseParser):
         # _paragraph_selector = CSSSelector("div.lead-content__title h1")
-        _paragraph_selector = XPath("/html/body/main/article/div[2]/p[1]")
+        _paragraph_selector = XPath("/html/body/main/article/div[2]/p")
         _summary_selector = XPath("/html/body/main/article/div[1]/p") 
         _datetime_selector = XPath("//li/span[contains(@class, 'time-container')]")
 
