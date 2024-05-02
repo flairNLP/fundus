@@ -2,12 +2,12 @@ from datetime import date
 
 from fundus.publishers.base_objects import PublisherEnum, PublisherSpec
 from fundus.scraping.filter import inverse, regex_filter
-from fundus.scraping.url import NewsMap, Sitemap
+from fundus.scraping.url import NewsMap, RSSFeed, Sitemap
 
+from .evening_standard import EveningStandardParser
 from .i_news import INewsParser
 from .the_guardian import TheGuardianParser
 from .the_independent import TheIndependentParser
-from .the_standard import TheStandardParser
 from .the_telegraph import TheTelegraphParser
 
 
@@ -54,12 +54,15 @@ class UK(PublisherEnum):
         parser=INewsParser,
     )
 
-    TheStandard = PublisherSpec(
-        name="the Standard",
+    EveningStandard = PublisherSpec(
+        name="Evening Standard",
         domain="https://www.standard.co.uk/",
         sources=[
-            Sitemap("https://www.standard.co.uk/sitemap.xml"),
-            NewsMap(f"https://www.standard.co.uk/sitemap.xml"),
+            Sitemap(
+                "https://www.standard.co.uk/sitemap.xml",
+                sitemap_filter=inverse(regex_filter("sitemap-articles|sitemap-recent")),
+            ),
+            RSSFeed("https://www.standard.co.uk/rss"),
         ],
-        parser=TheStandardParser,
+        parser=EveningStandardParser,
     )

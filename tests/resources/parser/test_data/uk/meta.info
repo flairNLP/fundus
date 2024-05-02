@@ -1,4 +1,8 @@
 {
+  "EveningStandard_2024_05_02.html.gz": {
+    "url": "https://www.standard.co.uk/sport/football/chelsea-fc-vs-tottenham-analysis-premier-league-2024-b1155186.html",
+    "crawl_date": "2024-05-02 22:57:24.734563"
+  },
   "TheGuardian_2024_02_24.html.gz": {
     "url": "https://www.theguardian.com/world/2024/feb/24/death-toll-in-valencia-fire-rises-to-10-as-remains-of-last-missing-person-found",
     "crawl_date": "2024-02-24 12:51:15.854319"
@@ -6,10 +10,6 @@
   "TheIndependent_2023_08_14.html.gz": {
     "url": "https://www.independent.co.uk/sport/football/womens-world-cup-england-news-latest-australia-b2392480.html",
     "crawl_date": "2023-08-14 11:24:44.038631"
-  },
-  "TheStandard_2024_04_29.html.gz": {
-    "url": "https://www.standard.co.uk/sport/rugby/karl-dickson-danny-care-harlequins-rfu-referees-b1154562.html",
-    "crawl_date": "2024-04-29 20:39:14.233861"
   },
   "TheTelegraph_2023_08_30.html.gz": {
     "url": "https://www.telegraph.co.uk/recommended/home/best-heated-clothes-airer/",

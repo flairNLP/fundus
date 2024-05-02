@@ -3,7 +3,6 @@ from typing import List, Optional
 
 from lxml.cssselect import CSSSelector
 
-import fundus
 from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute
 from fundus.parser.utility import (
     extract_article_body_with_selector,
@@ -13,14 +12,17 @@ from fundus.parser.utility import (
 )
 
 
-class TheStandardParser(fundus.parser.ParserProxy):
-    class V1(fundus.parser.BaseParser):
-        _paragraph_selector = CSSSelector("div[data-element*=story-body] > p")
+class EveningStandardParser(ParserProxy):
+    class V1(BaseParser):
+        _paragraph_selector = CSSSelector("div.sc-bkSUFG.bdkDcZ")
+        _summary_selector = CSSSelector("div.sc-wkolL.dWZJhQ")
 
+        @attribute
         def body(self) -> ArticleBody:
             return extract_article_body_with_selector(
                 self.precomputed.doc,
                 paragraph_selector=self._paragraph_selector,
+                summary_selector=self._summary_selector,
             )
 
         @attribute
