@@ -2,6 +2,7 @@ import datetime
 from typing import List, Optional
 
 from lxml.cssselect import CSSSelector
+from lxml.etree import XPath
 
 from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute
 from fundus.parser.utility import (
@@ -15,7 +16,7 @@ from fundus.parser.utility import (
 class TheSunParser(ParserProxy):
     class V1(BaseParser):
         _summary_selector = CSSSelector("div[data-gu-name='standfirst'] p")
-        _paragraph_selector = CSSSelector("div.article__content > p")
+        _paragraph_selector = XPath("//div[@class='article__content']/p[not(not(text()) and a[strong])]")
         _sub_headline_selector = CSSSelector("div.article__content > h2.wp-block-heading")
 
         @attribute
