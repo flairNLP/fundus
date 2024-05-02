@@ -3,7 +3,7 @@ from datetime import datetime
 from dateutil.rrule import MONTHLY, rrule
 
 from fundus.publishers.base_objects import PublisherEnum, PublisherSpec
-from fundus.scraping.filter import regex_filter, inverse
+from fundus.scraping.filter import inverse, regex_filter
 from fundus.scraping.url import NewsMap, RSSFeed, Sitemap
 
 from .berliner_zeitung import BerlinerZeitungParser
@@ -15,6 +15,7 @@ from .die_zeit import DieZeitParser
 from .dw import DWParser
 from .faz import FAZParser
 from .focus import FocusParser
+from .junge_welt import JungeWeltParser
 from .mdr import MDRParser
 from .merkur import MerkurParser
 from .ndr import NDRParser
@@ -26,7 +27,7 @@ from .sz import SZParser
 from .tagesschau import TagesschauParser
 from .taz import TazParser
 from .waz import WAZParser
-from .junge_welt import JungeWeltParser
+
 
 # noinspection PyPep8Naming
 class DE(PublisherEnum):
@@ -245,8 +246,10 @@ class DE(PublisherEnum):
         name="Junge Welt",
         domain="https://www.jungewelt.de/",
         sources=[
-              RSSFeed("https://www.jungewelt.de/feeds/newsticker.rss"),
-              Sitemap("https://www.jungewelt.de/google-sitemap/sitemap.xml", sitemap_filter=inverse(regex_filter("aktuell"))),
+            RSSFeed("https://www.jungewelt.de/feeds/newsticker.rss"),
+            Sitemap(
+                "https://www.jungewelt.de/google-sitemap/sitemap.xml", sitemap_filter=inverse(regex_filter("aktuell"))
+            ),
         ],
         parser=JungeWeltParser,
     )
