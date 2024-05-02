@@ -18,6 +18,7 @@ class JungeWeltParser(ParserProxy):
         _paragraph_selector = XPath("//div[@class = 'row']/div[contains(@class, 'col') and not(@class = 'col-md-8 mx-auto mt-4 bg-light')]/p")
         _summary_selector = CSSSelector(".teaser.lead")
         _subheadline_selector = XPath("//div[@class = 'row']/div[contains(@class,'col')]/h3")
+        _free_access_selector = XPath("//h1[text()='Sie sind nun eingeloggt.']|//p[@class='m-1']")
 
         @attribute
         def body(self) -> ArticleBody:
@@ -39,6 +40,10 @@ class JungeWeltParser(ParserProxy):
         @attribute
         def topics(self) -> List[str]:
             return generic_topic_parsing(self.precomputed.meta.get("keywords"))
+
+        @attribute
+        def free_access(self) -> bool:
+            return not bool(self._free_access_selector(self.precomputed.doc))
 
         @attribute
         def publishing_date(self) -> Optional[datetime.datetime]:
