@@ -6,6 +6,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Callable, Dict, Generic, List, Optional, Type, TypeVar
 
+import dateutil.parser
 from typing_extensions import Self
 
 from fundus import PublisherCollection
@@ -118,8 +119,8 @@ class ExtractionEncoder(json.JSONEncoder):
 
 class ExtractionDecoder(json.JSONDecoder):
     deserialization_functions: Dict[str, Callable[[Any], Any]] = {
-        "crawl_date": datetime.datetime.fromisoformat,
-        "publishing_date": datetime.datetime.fromisoformat,
+        "crawl_date": dateutil.parser.isoparse,
+        "publishing_date": dateutil.parser.isoparse,
         "body": ArticleBody.deserialize,
     }
 
