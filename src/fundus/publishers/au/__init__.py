@@ -1,6 +1,6 @@
 from fundus.publishers.base_objects import PublisherEnum, PublisherSpec
-from fundus.scraping.filter import regex_filter
-from fundus.scraping.url import NewsMap, RSSFeed
+from fundus.scraping.filter import inverse, regex_filter
+from fundus.scraping.url import NewsMap, RSSFeed, Sitemap
 
 from .nine_news import NineNewsParser
 
@@ -11,9 +11,7 @@ class AU(PublisherEnum):
         domain="https://www.9news.com.au/",
         sources=[
             RSSFeed("https://www.9news.com.au/rss"),
-            NewsMap(
-                "https://www.9news.com.au/sitemap.xml", sitemap_filter=regex_filter("www.9news.com.au/sitemap-content-")
-            ),
+            Sitemap("https://www.9news.com.au/sitemap.xml", sitemap_filter=inverse(regex_filter("sitemap-content-"))),
         ],
         parser=NineNewsParser,
     )
