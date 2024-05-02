@@ -169,6 +169,11 @@ class US(PublisherEnum):
     Wired = PublisherSpec(
         name="Wired",
         domain="https://www.wired.com",
-        sources=[Sitemap("https://www.wired.com/sitemap.xml")],
+        sources=[
+            RSSFeed("https://www.wired.com/feed/rss"),
+            NewsMap("https://www.wired.com/feed/google-latest-news/sitemap-google-news"),
+            Sitemap("https://www.wired.com/sitemap.xml"),
+            Sitemap("https://www.wired.com/sitemap-archive-1.xml"),
+        ],
         parser=WiredParser,
     )
