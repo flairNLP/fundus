@@ -15,7 +15,7 @@ class TagesspiegelParser(ParserProxy):
     class V1(BaseParser):
         _summary_selector = CSSSelector("div.Hay.Haz p.Ha6")
         _paragraph_selector = CSSSelector("div[id=story-elements] > p")
-        _subheadline_selector = CSSSelector(".Ha6")
+        _subheadline_selector = CSSSelector("div[id=story-elements] > h3")
 
         @attribute
         def body(self) -> ArticleBody:
