@@ -14,7 +14,6 @@ from fundus.parser.utility import (
 
 class TheMirrorParser(ParserProxy):
     class V1(BaseParser):
-        # _paragraph_selector = CSSSelector("div.lead-content__title h1")
         _paragraph_selector = XPath("/html/body/main/article/div[2]/p")
         _summary_selector = XPath("/html/body/main/article/div[1]/p") 
         _datetime_selector = XPath("//li/span[contains(@class, 'time-container')]")
@@ -36,8 +35,8 @@ class TheMirrorParser(ParserProxy):
             return self.precomputed.meta.get("parsely-pub-date")
 
         @attribute
-        def authors(self) -> Optional[str]:
-            return self.precomputed.meta.get("author")
+        def authors(self) -> List[str]:
+            return generic_author_parsing(self.precomputed.meta.get("author"))
 
         @attribute
         def topics(self) -> List[str]:
