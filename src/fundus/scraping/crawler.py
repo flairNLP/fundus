@@ -26,6 +26,7 @@ from typing import (
     Union,
     cast,
 )
+from urllib.parse import urljoin, urlparse
 
 import dill
 import more_itertools
@@ -212,8 +213,11 @@ class CrawlerBase(ABC):
         for article in self._build_article_iterator(
             tuple(fitting_publishers), error_handling, build_extraction_filter(), url_filter
         ):
-            if not only_unique or article.html.responded_url not in response_cache:
-                response_cache.add(article.html.responded_url)
+            cached_url = article.html.responded_url
+            if any(parameter_indicator in cached_url for parameter_indicator in ('?', '#')):
+                cached_url = urljoin(article.html.responded_url, urlparse(article.html.responded_url).path)
+            if not only_unique or cached_url not in response_cache:
+                response_cache.add(cached_url)
                 article_count += 1
                 yield article
             if article_count == max_articles:
