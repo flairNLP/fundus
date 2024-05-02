@@ -34,8 +34,4 @@ class TagesspiegelParser(ParserProxy):
         @attribute
         def publishing_date(self) -> Optional[datetime.datetime]:
             return generic_date_parsing(self.precomputed.ld.bf_search("datePublished"))
-
-        @attribute
-        def free_access(self) -> bool:
-            paywall_headline = self.precomputed.doc.cssselect(".paywall-headline")
-            return len(paywall_headline) == 0
+        
