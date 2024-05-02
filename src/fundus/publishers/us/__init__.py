@@ -128,6 +128,8 @@ class US(PublisherEnum):
             RSSFeed("https://feeds.washingtonpost.com/rss/national"),
         ],
         parser=WashingtonPostParser,
+        # Adds a URL-filter to ignore incomplete URLs
+        url_filter=regex_filter("washingtonpost.com(\/)?$"),
     )
 
     TheNewYorker = PublisherSpec(
