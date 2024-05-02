@@ -61,5 +61,6 @@ class UK(PublisherEnum):
             Sitemap("https://www.thesun.co.uk/sitemap.xml"),
             NewsMap("https://www.thesun.co.uk/news-sitemap.xml"),
         ],
+        url_filter=regex_filter("sun-bingo"),
         parser=TheSunParser,
     )
