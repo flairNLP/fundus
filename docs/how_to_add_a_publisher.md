@@ -651,6 +651,6 @@ pytest
 ## 7. Opening a Pull Request
 
 1. Make sure you tested your parser using `pytest`.
-2. Run `black src`, `isort src`, and `mypy  src` with no errors.
+2. Run `black src`, `isort src`, and `mypy src` with no errors.
 3. Push and open a new PR
 4. Congratulation and thank you very much.
