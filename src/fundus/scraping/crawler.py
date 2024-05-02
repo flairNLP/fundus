@@ -214,7 +214,7 @@ class CrawlerBase(ABC):
             tuple(fitting_publishers), error_handling, build_extraction_filter(), url_filter
         ):
             cached_url = article.html.responded_url
-            if any(parameter_indicator in cached_url for parameter_indicator in ('?', '#')):
+            if any(parameter_indicator in cached_url for parameter_indicator in ("?", "#")):
                 cached_url = urljoin(article.html.responded_url, urlparse(article.html.responded_url).path)
             if not only_unique or cached_url not in response_cache:
                 response_cache.add(cached_url)
