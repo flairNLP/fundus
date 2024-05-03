@@ -102,7 +102,7 @@ def main() -> None:
 
             # load json
             test_data_file = get_test_case_json(publisher)
-            test_data = content if (content := test_data_file.load()) and not arguments.overwrite_json else {}
+            test_data = content if not arguments.overwrite_json and (content := test_data_file.load()) else {}
 
             # load html
             html_mapping = load_html_test_file_mapping(publisher) if not arguments.overwrite else {}
