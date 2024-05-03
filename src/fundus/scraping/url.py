@@ -12,9 +12,11 @@ from lxml.cssselect import CSSSelector
 from lxml.etree import XPath
 from requests import ConnectionError, HTTPError
 
-from fundus.logging import basic_logger
+from fundus.logging import create_logger
 from fundus.scraping.filter import URLFilter, inverse
 from fundus.scraping.session import _default_header, session_handler
+
+logger = create_logger(__name__)
 
 
 class _ArchiveDecompressor:
@@ -45,7 +47,7 @@ class URLSource(Iterable[str], ABC):
         if not self._request_header:
             self._request_header = _default_header
         if not validators.url(self.url, strict_query=False):
-            basic_logger.error(f"{type(self).__name__} initialized with invalid URL {self.url}")
+            logger.error(f"{type(self).__name__} initialized with invalid URL {self.url}")
 
     def set_header(self, request_header: Dict[str, str]) -> None:
         self._request_header = request_header
@@ -74,11 +76,15 @@ class URLSource(Iterable[str], ABC):
 class RSSFeed(URLSource):
     def __iter__(self) -> Iterator[str]:
         session = session_handler.get_session()
-        response = session.get(self.url, headers=self._request_header)
+        try:
+            response = session.get(self.url, headers=self._request_header)
+        except HTTPError as err:
+            logger.warning(f"Warning! Couldn't parse rss feed {self.url!r} because of {err}")
+            return
         html = response.text
         rss_feed = feedparser.parse(html)
         if exception := rss_feed.get("bozo_exception"):
-            basic_logger.warning(f"Warning! Couldn't parse rss feed '{self.url}' because of {exception}")
+            logger.warning(f"Warning! Couldn't parse rss feed {self.url!r} because of {exception}")
             return
         else:
             for url in (entry["link"] for entry in rss_feed["entries"]):
@@ -99,17 +105,17 @@ class Sitemap(URLSource):
         def yield_recursive(sitemap_url: str) -> Iterator[str]:
             session = session_handler.get_session()
             if not validators.url(sitemap_url):
-                basic_logger.info(f"Skipped sitemap '{sitemap_url}' because the URL is malformed")
+                logger.info(f"Skipped sitemap {sitemap_url!r} because the URL is malformed")
             try:
                 response = session.get(url=sitemap_url, headers=self._request_header)
             except (HTTPError, ConnectionError) as error:
-                basic_logger.warning(f"Warning! Couldn't reach sitemap '{sitemap_url}' because of {error}")
+                logger.warning(f"Warning! Couldn't reach sitemap {sitemap_url!r} because of {error!r}")
                 return
             content = response.content
             if (content_type := response.headers.get("content-type")) in self._decompressor.supported_file_formats:
                 content = self._decompressor.decompress(content, content_type)
             if not content:
-                basic_logger.warning(f"Warning! Empty sitemap at '{sitemap_url}'")
+                logger.warning(f"Warning! Empty sitemap at {sitemap_url!r}")
                 return
             tree = lxml.html.fromstring(content)
             urls = [node.text_content() for node in self._url_selector(tree)]

@@ -1,4 +1,4 @@
-from abc import ABC
+from abc import ABC, abstractmethod
 from dataclasses import dataclass, fields
 from typing import (
     Any,
@@ -14,7 +14,7 @@ from typing import (
     overload,
 )
 
-from typing_extensions import TypeAlias
+from typing_extensions import Self, TypeAlias
 
 LDMappingValue: TypeAlias = Union[List[Dict[str, Any]], Dict[str, Any]]
 
@@ -149,7 +149,7 @@ class LinkedDataMapping:
         return result
 
     def __repr__(self):
-        return f"LD containing '{', '.join(content)}'" if (content := self.__dict__.keys()) else "Empty LD"
+        return f"LD containing {', '.join(content)!r}" if (content := self.__dict__.keys()) else "Empty LD"
 
 
 class TextSequence(Sequence[str]):
@@ -179,9 +179,16 @@ class TextSequence(Sequence[str]):
     def __str__(self) -> str:
         return "\n".join(self)
 
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, TextSequence):
+            return NotImplemented
+        return self._data == other._data
+
 
 @dataclass
 class TextSequenceTree(ABC):
+    """Base class to traverse and build trees of TextSequence."""
+
     def as_text_sequence(self) -> TextSequence:
         texts = [text for tl in self.df_traversal() for text in tl]
         return TextSequence(texts)
@@ -202,7 +209,16 @@ class TextSequenceTree(ABC):
         for value in self:
             yield from recursion(value)
 
-    def __iter__(self):
+    @abstractmethod
+    def serialize(self) -> Dict[str, Any]:
+        pass
+
+    @classmethod
+    @abstractmethod
+    def deserialize(cls, serialized: Dict[str, Any]) -> Self:
+        pass
+
+    def __iter__(self) -> Iterator[Any]:
         field_values = [getattr(self, f.name) for f in fields(self)]
         yield from field_values
 
@@ -218,8 +234,37 @@ class ArticleSection(TextSequenceTree):
     headline: TextSequence
     paragraphs: TextSequence
 
+    def serialize(self) -> Dict[str, Any]:
+        return {
+            "headline": list(self.headline),
+            "paragraphs": list(self.paragraphs),
+        }
+
+    @classmethod
+    def deserialize(cls, serialized: Dict[str, Any]) -> Self:
+        return cls(headline=TextSequence(serialized["headline"]), paragraphs=TextSequence(serialized["paragraphs"]))
+
+    def __bool__(self):
+        return bool(self.paragraphs)
+
 
 @dataclass
 class ArticleBody(TextSequenceTree):
     summary: TextSequence
     sections: List[ArticleSection]
+
+    def serialize(self) -> Dict[str, Any]:
+        return {
+            "summary": list(self.summary),
+            "sections": [section.serialize() for section in self.sections],
+        }
+
+    @classmethod
+    def deserialize(cls, serialized: Dict[str, Any]) -> Self:
+        return cls(
+            summary=TextSequence(serialized["summary"]),
+            sections=[ArticleSection.deserialize(section) for section in serialized["sections"]],
+        )
+
+    def __bool__(self):
+        return any(bool(section) for section in self.sections)

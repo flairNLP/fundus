@@ -19,6 +19,7 @@ from .mdr import MDRParser
 from .merkur import MerkurParser
 from .ndr import NDRParser
 from .ntv import NTVParser
+from .rheinische_post import RheinischePostParser
 from .spon import SPONParser
 from .stern import SternParser
 from .sz import SZParser
@@ -72,6 +73,8 @@ class DE(PublisherEnum):
         domain="https://www.focus.de/",
         sources=[RSSFeed("https://rss.focus.de/fol/XML/rss_folnews.xml")],
         parser=FocusParser,
+        # Focus blocks access for all user-agents including the term 'Bot'
+        request_header={"user-agent": "Fundus"},
     )
 
     Merkur = PublisherSpec(
@@ -113,7 +116,6 @@ class DE(PublisherEnum):
                 f"https://www.zeit.de/gsitemaps/index.xml?date={datetime.now().strftime('%Y-%m-%d')}&unit=days&period=1"
             ),
         ],
-        request_header={"user-agent": "Googlebot"},
         url_filter=regex_filter(
             "/zett/|/angebote/|/kaenguru-comics/|/administratives/|/index(?!.)|/elbvertiefung-[0-9]{2}-[0-9]{2}"
         ),
@@ -226,4 +228,15 @@ class DE(PublisherEnum):
             Sitemap("https://www.businessinsider.de/sitemap_index.xml"),
         ],
         parser=BusinessInsiderDEParser,
+    )
+
+    RheinischePost = PublisherSpec(
+        name="Rheinische Post",
+        domain="https://rp-online.de/",
+        sources=[
+            RSSFeed("https://rp-online.de/feed.rss"),
+            NewsMap("https://rp-online.de/sitemap-news.xml"),
+            Sitemap("https://rp-online.de/sitemap.xml"),
+        ],
+        parser=RheinischePostParser,
     )

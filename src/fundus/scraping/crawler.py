@@ -26,6 +26,7 @@ from typing import (
     Union,
     cast,
 )
+from urllib.parse import urljoin, urlparse
 
 import dill
 import more_itertools
@@ -35,7 +36,7 @@ from more_itertools import roundrobin
 from tqdm import tqdm
 from typing_extensions import ParamSpec, TypeAlias
 
-from fundus.logging import basic_logger
+from fundus.logging import create_logger
 from fundus.publishers.base_objects import PublisherCollectionMeta, PublisherEnum
 from fundus.scraping.article import Article
 from fundus.scraping.delay import Delay
@@ -44,6 +45,8 @@ from fundus.scraping.html import CCNewsSource
 from fundus.scraping.scraper import CCNewsScraper, WebScraper
 from fundus.scraping.session import session_handler
 from fundus.scraping.url import URLSource
+
+logger = create_logger(__name__)
 
 _T = TypeVar("_T")
 _P = ParamSpec("_P")
@@ -113,6 +116,12 @@ def pool_queue_iter(handle: MapResult[Any], queue: Queue[_T]) -> Iterator[_T]:
             except TimeoutError:
                 continue
             return
+
+
+def remove_query_parameters_from_url(url: str) -> str:
+    if any(parameter_indicator in url for parameter_indicator in ("?", "#")):
+        return urljoin(url, urlparse(url).path)
+    return url
 
 
 class CrawlerBase(ABC):
@@ -190,7 +199,7 @@ class CrawlerBase(ABC):
                     )
                 )
                 if missing_attributes := extraction_filter.required_attributes - supported_attributes:
-                    basic_logger.warning(
+                    logger.warning(
                         f"The required attribute(s) `{', '.join(missing_attributes)}` "
                         f"is(are) not supported by {publisher.publisher_name}. Skipping publisher"
                     )
@@ -198,7 +207,7 @@ class CrawlerBase(ABC):
                     fitting_publishers.append(publisher)
 
             if not fitting_publishers:
-                basic_logger.error(
+                logger.error(
                     f"Could not find any fitting publishers for required attributes  "
                     f"`{', '.join(extraction_filter.required_attributes)}`"
                 )
@@ -210,8 +219,9 @@ class CrawlerBase(ABC):
         for article in self._build_article_iterator(
             tuple(fitting_publishers), error_handling, build_extraction_filter(), url_filter
         ):
-            if not only_unique or article.html.responded_url not in response_cache:
-                response_cache.add(article.html.responded_url)
+            url_without_query_parameters = remove_query_parameters_from_url(article.html.responded_url)
+            if not only_unique or url_without_query_parameters not in response_cache:
+                response_cache.add(url_without_query_parameters)
                 article_count += 1
                 yield article
             if article_count == max_articles:
