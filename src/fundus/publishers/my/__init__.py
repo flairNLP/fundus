@@ -9,7 +9,7 @@ class MY(PublisherEnum):
         domain="https://www.malaymail.com/",
         sources=[
             Sitemap("https://www.malaymail.com/sitemap.xml"),
-            RSSFeed("https://www.malaymail.com/feed/rss/malaysia"),
+            RSSFeed("https://www.malaymail.com/feed/rss/"),
         ],
         parser=MalayMailParser,
     )
