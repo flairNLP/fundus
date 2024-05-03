@@ -8,10 +8,10 @@ class TR(PublisherEnum):
     NTVTR = PublisherSpec(
         name="NTVTR",
         domain="https://www.ntv.com.tr/",
-        parser=NTVTRParser,
         sources=[
             RSSFeed("https://www.ntv.com.tr/gundem.rss"),
             NewsMap("https://www.ntv.com.tr/sitemaps/news-sitemap.xml"),
             Sitemap("https://www.ntv.com.tr/sitemaps", sitemap_filter=regex_filter("news-sitemap.xml")),
         ],
+        parser=NTVTRParser,
     )

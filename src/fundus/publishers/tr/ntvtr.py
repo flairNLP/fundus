@@ -14,12 +14,8 @@ from fundus.parser.utility import (
 
 class NTVTRParser(ParserProxy):
     class V1(BaseParser):
-        _paragraph_selector = CSSSelector(
-            "#contentBodyArea > div.category-detail-content-inner > div.content-news-tag-selector > p"
-        )
-        _summary_selector = CSSSelector(
-            "body > div.common-container > div > section > div.category-detail.container-has-3-items.js-news-detail > div.container > div.ntv-content > div > div > div.category-detail-left > h2"
-        )
+        _paragraph_selector = CSSSelector("div.content-news-tag-selector > p")
+        _summary_selector = CSSSelector("h2.category-detail-sub-title")
 
         @attribute
         def body(self) -> ArticleBody:
