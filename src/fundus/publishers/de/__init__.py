@@ -17,7 +17,7 @@ from .faz import FAZParser
 from .focus import FocusParser
 from .mdr import MDRParser
 from .merkur import MerkurParser
-from .morgenpost_berlin import BerlinerMorgenPostParser
+from .morgenpost_berlin import BerlinerMorgenpostParser
 from .ndr import NDRParser
 from .ntv import NTVParser
 from .rheinische_post import RheinischePostParser
@@ -31,13 +31,15 @@ from .waz import WAZParser
 
 # noinspection PyPep8Naming
 class DE(PublisherEnum):
-    BerlinerMorgenPost = PublisherSpec(
+    BerlinerMorgenpost = PublisherSpec(
         name="Berliner Morgenpost",
         domain="https://www.morgenpost.de/",
-        sources=[  # Sitemap("https://www.morgenpost.de/sitemap.xml"),
-            NewsMap("https://www.morgenpost.de/sitemaps/news.xml")
+        sources=[NewsMap("https://www.morgenpost.de/sitemaps/news.xml")]
+        + [
+            Sitemap(f"https://www.morgenpost.de/sitemaps/archive/sitemap-{d.year}-{str(d.month).zfill(2)}-p00.xml.gz")
+            for d in reversed(list(rrule(MONTHLY, dtstart=datetime(2003, 2, 1), until=datetime.now())))
         ],
-        parser=BerlinerMorgenPostParser,
+        parser=BerlinerMorgenpostParser,
     )
 
     DieWelt = PublisherSpec(
@@ -225,7 +227,7 @@ class DE(PublisherEnum):
             Sitemap(
                 f"https://www.braunschweiger-zeitung.de/sitemaps/archive/sitemap-{d.year}-{str(d.month).zfill(2)}-p00.xml.gz"
             )
-            for d in reversed(list(rrule(MONTHLY, dtstart=datetime(2016, 9, 1), until=datetime.now())))
+            for d in list(rrule(MONTHLY, dtstart=datetime(2005, 12, 1), until=datetime.now()))
         ],
         parser=BSZParser,
     )

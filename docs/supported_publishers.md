@@ -84,7 +84,7 @@
   <tbody>
     <tr>
       <td>
-        <code>BerlinerMorgenPost</code>
+        <code>BerlinerMorgenpost</code>
       </td>
       <td>
         <div>Berliner Morgenpost</div>
@@ -94,9 +94,7 @@
           <span>www.morgenpost.de</span>
         </a>
       </td>
-      <td>
-        <code>topics</code>
-      </td>
+      <td>&#160;</td>
       <td>&#160;</td>
     </tr>
     <tr>
