@@ -3,7 +3,7 @@ from datetime import datetime
 from dateutil.rrule import MONTHLY, rrule
 
 from fundus.publishers.base_objects import PublisherEnum, PublisherSpec
-from fundus.scraping.filter import regex_filter
+from fundus.scraping.filter import inverse, regex_filter
 from fundus.scraping.url import NewsMap, RSSFeed, Sitemap
 
 from .berliner_zeitung import BerlinerZeitungParser
@@ -20,13 +20,13 @@ from .merkur import MerkurParser
 from .ndr import NDRParser
 from .ntv import NTVParser
 from .rheinische_post import RheinischePostParser
+from .rn import RuhrNachrichtenParser
 from .spon import SPONParser
 from .stern import SternParser
 from .sz import SZParser
 from .tagesschau import TagesschauParser
 from .taz import TazParser
 from .waz import WAZParser
-from .rn import RuhrNachrichtenParser
 
 
 # noinspection PyPep8Naming
@@ -247,8 +247,12 @@ class DE(PublisherEnum):
         domain="https://www.ruhrnachrichten.de/",
         sources=[
             RSSFeed("https://www.ruhrnachrichten.de/service/feed/"),
-            Sitemap("https://www.ruhrnachrichten.de/sitemap_index.xml"),
             NewsMap("https://www.ruhrnachrichten.de/news-sitemap.xml"),
+            Sitemap(
+                "https://www.ruhrnachrichten.de/sitemap_index.xml",
+                reverse=True,
+                sitemap_filter=inverse(regex_filter("post-sitemap")),
+            ),
         ],
         parser=RuhrNachrichtenParser,
     )
