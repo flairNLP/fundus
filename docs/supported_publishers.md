@@ -429,7 +429,6 @@
       <td>
         <code>topics</code>
       </td>
-       <td>&#160;</td>
       <td>&#160;</td>
     </tr>
   </tbody>
