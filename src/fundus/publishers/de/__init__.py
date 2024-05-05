@@ -8,6 +8,7 @@ from fundus.scraping.url import NewsMap, RSSFeed, Sitemap
 
 from .berliner_zeitung import BerlinerZeitungParser
 from .bild import BildParser
+from .br import BRParser
 from .braunschweiger_zeitung import BSZParser
 from .business_insider_de import BusinessInsiderDEParser
 from .die_welt import DieWeltParser
@@ -27,6 +28,8 @@ from .sz import SZParser
 from .tagesschau import TagesschauParser
 from .taz import TazParser
 from .waz import WAZParser
+from .wdr import WDRParser
+from .zdf import ZDFParser
 
 
 # noinspection PyPep8Naming
@@ -251,4 +254,32 @@ class DE(PublisherEnum):
             Sitemap("https://www.hessenschau.de/sitemap.nc.xml"),
         ],
         parser=HessenschauParser,
+    )
+
+    WDR = PublisherSpec(
+        name="Westdeutscher Rundfunk",
+        domain="https://www1.wdr.de/",
+        sources=[RSSFeed("https://www1.wdr.de/uebersicht-100.feed")],
+        parser=WDRParser,
+    )
+
+    BR = PublisherSpec(
+        name="Bayerischer Rundfunk (BR)",
+        domain="https://www.br.de/",
+        sources=[
+            Sitemap("https://www.br.de/sitemapIndex.xml"),
+            NewsMap("https://www.br.de/nachrichten/sitemaps/news.xml"),
+        ],
+        parser=BRParser,
+    )
+
+    ZDF = PublisherSpec(
+        name="zdfHeute",
+        domain="https://www.zdf.de/",
+        sources=[
+            Sitemap("https://www.zdf.de/sitemap.xml", reverse=True),
+            NewsMap("https://www.zdf.de/news-sitemap.xml"),
+            RSSFeed("https://www.zdf.de/rss/zdf/nachrichten"),
+        ],
+        parser=ZDFParser,
     )
