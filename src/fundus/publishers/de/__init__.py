@@ -247,9 +247,7 @@ class DE(PublisherEnum):
     WDR = PublisherSpec(
         name="Westdeutscher Rundfunk",
         domain="https://www1.wdr.de/",
-        sources=[
-            RSSFeed("https://www1.wdr.de/uebersicht-100.feed"),
-        ],
+        sources=[RSSFeed("https://www1.wdr.de/uebersicht-100.feed")],
         parser=WDRParser,
     )
 
