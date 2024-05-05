@@ -89,7 +89,7 @@ class DE(PublisherEnum):
         domain="https://www.focus.de/",
         sources=[RSSFeed("https://rss.focus.de/fol/XML/rss_folnews.xml")],
         parser=FocusParser,
-        # Focus blocks access for all user-agents including the term 'Bot'
+        # Focus blocks access for all user-agents including the term 'bot'
         request_header={"user-agent": "Fundus"},
     )
 
