@@ -8,6 +8,7 @@ from fundus.scraping.url import NewsMap, RSSFeed, Sitemap
 
 from .berliner_zeitung import BerlinerZeitungParser
 from .bild import BildParser
+from .br import BRParser
 from .braunschweiger_zeitung import BSZParser
 from .business_insider_de import BusinessInsiderDEParser
 from .die_welt import DieWeltParser
@@ -240,6 +241,16 @@ class DE(PublisherEnum):
             Sitemap("https://rp-online.de/sitemap.xml"),
         ],
         parser=RheinischePostParser,
+    )
+
+    BR = PublisherSpec(
+        name="Bayerischer Rundfunk (BR)",
+        domain="https://www.br.de/",
+        sources=[
+            Sitemap("https://www.br.de/sitemapIndex.xml"),
+            NewsMap("https://www.br.de/nachrichten/sitemaps/news.xml"),
+        ],
+        parser=BRParser,
     )
 
     ZDF = PublisherSpec(
