@@ -27,6 +27,7 @@ from .sz import SZParser
 from .tagesschau import TagesschauParser
 from .taz import TazParser
 from .waz import WAZParser
+from .wdr import WDRParser
 from .zdf import ZDFParser
 
 
@@ -241,6 +242,13 @@ class DE(PublisherEnum):
             Sitemap("https://rp-online.de/sitemap.xml"),
         ],
         parser=RheinischePostParser,
+    )
+
+    WDR = PublisherSpec(
+        name="Westdeutscher Rundfunk",
+        domain="https://www1.wdr.de/",
+        sources=[RSSFeed("https://www1.wdr.de/uebersicht-100.feed")],
+        parser=WDRParser,
     )
 
     BR = PublisherSpec(
