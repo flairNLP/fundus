@@ -26,6 +26,7 @@ from .sz import SZParser
 from .tagesschau import TagesschauParser
 from .taz import TazParser
 from .waz import WAZParser
+from .zdf import ZDFParser
 
 
 # noinspection PyPep8Naming
@@ -239,4 +240,15 @@ class DE(PublisherEnum):
             Sitemap("https://rp-online.de/sitemap.xml"),
         ],
         parser=RheinischePostParser,
+    )
+
+    ZDF = PublisherSpec(
+        name="zdfHeute",
+        domain="https://www.zdf.de/",
+        sources=[
+            Sitemap("https://www.zdf.de/sitemap.xml", reverse=True),
+            NewsMap("https://www.zdf.de/news-sitemap.xml"),
+            RSSFeed("https://www.zdf.de/rss/zdf/nachrichten"),
+        ],
+        parser=ZDFParser,
     )

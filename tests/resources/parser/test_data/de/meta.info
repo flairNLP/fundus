@@ -102,5 +102,13 @@
   "WAZ_2024_03_08.html.gz": {
     "url": "https://www.waz.de/staedte/duisburg/article241847490/Erstes-Bild-So-koennte-die-Duisburger-Seilbahn-aussehen.html",
     "crawl_date": "2024-03-08 19:08:06.071698"
+  },
+  "ZDF_2024_04_20.html.gz": {
+    "url": "https://www.zdf.de/nachrichten/wirtschaft/volkswagen-china-hacking-industriespionage-emobilitaet-100.html",
+    "crawl_date": "2024-04-20 10:16:00.515536"
+  },
+  "ZDF_2024_04_22.html.gz": {
+    "url": "https://www.zdf.de/nachrichten/wirtschaft/deutschland-iran-handel-sanktionen-100.html",
+    "crawl_date": "2024-04-22 17:22:43.812721"
   }
 }
