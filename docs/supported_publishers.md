@@ -99,6 +99,21 @@
     </tr>
     <tr>
       <td>
+        <code>BR</code>
+      </td>
+      <td>
+        <div>Bayerischer Rundfunk (BR)</div>
+      </td>
+      <td>
+        <a href="https://www.br.de/">
+          <span>www.br.de</span>
+        </a>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
         <code>BerlinerZeitung</code>
       </td>
       <td>
@@ -242,6 +257,21 @@
       <td>
         <a href="https://www.faz.net/">
           <span>www.faz.net</span>
+        </a>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
+        <code>Hessenschau</code>
+      </td>
+      <td>
+        <div>Hessenschau</div>
+      </td>
+      <td>
+        <a href="https://www.hessenschau.de/">
+          <span>www.hessenschau.de</span>
         </a>
       </td>
       <td>&#160;</td>
@@ -397,6 +427,38 @@
         </a>
       </td>
       <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
+        <code>WDR</code>
+      </td>
+      <td>
+        <div>Westdeutscher Rundfunk</div>
+      </td>
+      <td>
+        <a href="https://www1.wdr.de/">
+          <span>www1.wdr.de</span>
+        </a>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
+        <code>ZDF</code>
+      </td>
+      <td>
+        <div>zdfHeute</div>
+      </td>
+      <td>
+        <a href="https://www.zdf.de/">
+          <span>www.zdf.de</span>
+        </a>
+      </td>
+      <td>
+        <code>topics</code>
+      </td>
       <td>&#160;</td>
     </tr>
   </tbody>
