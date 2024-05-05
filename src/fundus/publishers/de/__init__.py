@@ -19,6 +19,7 @@ from .focus import FocusParser
 from .hessenschau import HessenschauParser
 from .mdr import MDRParser
 from .merkur import MerkurParser
+from .morgenpost_berlin import BerlinerMorgenpostParser
 from .ndr import NDRParser
 from .ntv import NTVParser
 from .rheinische_post import RheinischePostParser
@@ -34,6 +35,17 @@ from .zdf import ZDFParser
 
 # noinspection PyPep8Naming
 class DE(PublisherEnum):
+    BerlinerMorgenpost = PublisherSpec(
+        name="Berliner Morgenpost",
+        domain="https://www.morgenpost.de/",
+        sources=[NewsMap("https://www.morgenpost.de/sitemaps/news.xml")]
+        + [
+            Sitemap(f"https://www.morgenpost.de/sitemaps/archive/sitemap-{d.year}-{str(d.month).zfill(2)}-p00.xml.gz")
+            for d in reversed(list(rrule(MONTHLY, dtstart=datetime(2003, 2, 1), until=datetime.now())))
+        ],
+        parser=BerlinerMorgenpostParser,
+    )
+
     DieWelt = PublisherSpec(
         name="Die Welt",
         domain="https://www.welt.de/",
@@ -77,7 +89,7 @@ class DE(PublisherEnum):
         domain="https://www.focus.de/",
         sources=[RSSFeed("https://rss.focus.de/fol/XML/rss_folnews.xml")],
         parser=FocusParser,
-        # Focus blocks access for all user-agents including the term 'Bot'
+        # Focus blocks access for all user-agents including the term 'bot'
         request_header={"user-agent": "Fundus"},
     )
 
@@ -219,7 +231,7 @@ class DE(PublisherEnum):
             Sitemap(
                 f"https://www.braunschweiger-zeitung.de/sitemaps/archive/sitemap-{d.year}-{str(d.month).zfill(2)}-p00.xml.gz"
             )
-            for d in reversed(list(rrule(MONTHLY, dtstart=datetime(2016, 9, 1), until=datetime.now())))
+            for d in list(rrule(MONTHLY, dtstart=datetime(2005, 12, 1), until=datetime.now()))
         ],
         parser=BSZParser,
     )
