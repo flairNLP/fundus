@@ -84,21 +84,6 @@
   <tbody>
     <tr>
       <td>
-        <code>BerlinerMorgenpost</code>
-      </td>
-      <td>
-        <div>Berliner Morgenpost</div>
-      </td>
-      <td>
-        <a href="https://www.morgenpost.de/">
-          <span>www.morgenpost.de</span>
-        </a>
-      </td>
-      <td>&#160;</td>
-      <td>&#160;</td>
-    </tr>
-    <tr>
-      <td>
         <code>BR</code>
       </td>
       <td>
@@ -107,6 +92,21 @@
       <td>
         <a href="https://www.br.de/">
           <span>www.br.de</span>
+        </a>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
+        <code>BerlinerMorgenpost</code>
+      </td>
+      <td>
+        <div>Berliner Morgenpost</div>
+      </td>
+      <td>
+        <a href="https://www.morgenpost.de/">
+          <span>www.morgenpost.de</span>
         </a>
       </td>
       <td>&#160;</td>
