@@ -251,8 +251,8 @@ class DE(PublisherEnum):
             NewsMap("https://www.br.de/nachrichten/sitemaps/news.xml"),
         ],
         parser=BRParser,
-      }
-     
+    )
+
     ZDF = PublisherSpec(
         name="zdfHeute",
         domain="https://www.zdf.de/",
