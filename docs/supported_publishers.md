@@ -399,6 +399,23 @@
       <td>&#160;</td>
       <td>&#160;</td>
     </tr>
+    <tr>
+      <td>
+        <code>ZDF</code>
+      </td>
+      <td>
+        <div>zdfHeute</div>
+      </td>
+      <td>
+        <a href="https://www.zdf.de/">
+          <span>www.zdf.de</span>
+        </a>
+      </td>
+      <td>
+        <code>topics</code>
+      </td>
+      <td>&#160;</td>
+    </tr>
   </tbody>
 </table>
 

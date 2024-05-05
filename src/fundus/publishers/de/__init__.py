@@ -27,6 +27,7 @@ from .sz import SZParser
 from .tagesschau import TagesschauParser
 from .taz import TazParser
 from .waz import WAZParser
+from .zdf import ZDFParser
 
 
 # noinspection PyPep8Naming
@@ -74,6 +75,8 @@ class DE(PublisherEnum):
         domain="https://www.focus.de/",
         sources=[RSSFeed("https://rss.focus.de/fol/XML/rss_folnews.xml")],
         parser=FocusParser,
+        # Focus blocks access for all user-agents including the term 'Bot'
+        request_header={"user-agent": "Fundus"},
     )
 
     Merkur = PublisherSpec(
@@ -115,7 +118,6 @@ class DE(PublisherEnum):
                 f"https://www.zeit.de/gsitemaps/index.xml?date={datetime.now().strftime('%Y-%m-%d')}&unit=days&period=1"
             ),
         ],
-        request_header={"user-agent": "Googlebot"},
         url_filter=regex_filter(
             "/zett/|/angebote/|/kaenguru-comics/|/administratives/|/index(?!.)|/elbvertiefung-[0-9]{2}-[0-9]{2}"
         ),
@@ -249,4 +251,15 @@ class DE(PublisherEnum):
             NewsMap("https://www.br.de/nachrichten/sitemaps/news.xml"),
         ],
         parser=BRParser,
+      }
+     
+    ZDF = PublisherSpec(
+        name="zdfHeute",
+        domain="https://www.zdf.de/",
+        sources=[
+            Sitemap("https://www.zdf.de/sitemap.xml", reverse=True),
+            NewsMap("https://www.zdf.de/news-sitemap.xml"),
+            RSSFeed("https://www.zdf.de/rss/zdf/nachrichten"),
+        ],
+        parser=ZDFParser,
     )
