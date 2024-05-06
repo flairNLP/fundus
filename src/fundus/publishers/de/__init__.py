@@ -20,10 +20,10 @@ from .dw import DWParser
 from .faz import FAZParser
 from .focus import FocusParser
 from .frankfurter_rundschau import FrankfurterRundschauParser
+from .hamburger_abendblatt import HamburgerAbendblattParser
 from .hessenschau import HessenschauParser
 from .junge_welt import JungeWeltParser
 from .kicker import KickerParser
-from .hamburger_abendblatt import HamburgerAbendblattParser
 from .mdr import MDRParser
 from .merkur import MerkurParser
 from .morgenpost_berlin import BerlinerMorgenpostParser
