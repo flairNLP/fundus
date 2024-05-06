@@ -1,10 +1,13 @@
-from datetime import date
+from datetime import date, datetime
+
+from dateutil.rrule import YEARLY, rrule
 
 from fundus.publishers.base_objects import PublisherEnum, PublisherSpec
 from fundus.scraping.filter import inverse, regex_filter
 from fundus.scraping.url import NewsMap, Sitemap
 
 from ..shared import EuronewsParser
+from .daily_mail import DailyMailParser
 from .daily_star import DailyStarParser
 from .i_news import INewsParser
 from .the_guardian import TheGuardianParser
@@ -96,4 +99,17 @@ class UK(PublisherEnum):
         ],
         url_filter=regex_filter("sun-bingo|web-stories"),
         parser=TheSunParser,
+    )
+
+    DailyMail = PublisherSpec(
+        name="Daily Mail",
+        domain="https://www.dailymail.co.uk/",
+        sources=[
+            NewsMap("https://www.dailymail.co.uk/google-news-sitemap.xml"),
+        ]
+        + [
+            Sitemap(f"https://www.dailymail.co.uk/sitemap-articles-year~{year.year}.xml")
+            for year in rrule(YEARLY, dtstart=datetime(2021, 1, 1), until=datetime.today())
+        ],
+        parser=DailyMailParser,
     )
