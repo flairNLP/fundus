@@ -20,6 +20,7 @@ from .dw import DWParser
 from .faz import FAZParser
 from .focus import FocusParser
 from .frankfurter_rundschau import FrankfurterRundschauParser
+from .hamburger_abendblatt import HamburgerAbendblattParser
 from .hessenschau import HessenschauParser
 from .junge_welt import JungeWeltParser
 from .kicker import KickerParser
@@ -81,6 +82,20 @@ class DE(PublisherEnum):
             for d in reversed(list(rrule(MONTHLY, dtstart=datetime(2003, 2, 1), until=datetime.now())))
         ],
         parser=BerlinerMorgenpostParser,
+    )
+
+    HamburgerAbendblatt = PublisherSpec(
+        name="Hamburger Abendblatt",
+        domain="https://www.abendblatt.de/",
+        sources=[
+            RSSFeed("https://www.abendblatt.de/rss"),
+            NewsMap("https://www.abendblatt.de/sitemaps/news.xml"),
+        ]
+        + [
+            Sitemap(f"https://www.abendblatt.de/sitemaps/archive/sitemap-{d.year}-{str(d.month).zfill(2)}-p00.xml.gz")
+            for d in reversed(list(rrule(MONTHLY, dtstart=datetime(2000, 4, 1), until=datetime.today())))
+        ],
+        parser=HamburgerAbendblattParser,
     )
 
     DieWelt = PublisherSpec(

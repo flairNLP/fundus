@@ -394,6 +394,21 @@
     </tr>
     <tr>
       <td>
+        <code>HamburgerAbendblatt</code>
+      </td>
+      <td>
+        <div>Hamburger Abendblatt</div>
+      </td>
+      <td>
+        <a href="https://www.abendblatt.de/">
+          <span>www.abendblatt.de</span>
+        </a>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
         <code>Hessenschau</code>
       </td>
       <td>
