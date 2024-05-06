@@ -199,6 +199,19 @@ def generic_author_parsing(
     Returns:
         A parsed and striped list of authors
     """
+
+    def parse_author_dict(author_dict: Dict[str, str]) -> Optional[str]:
+        if (author_name := author_dict.get("name")) is not None:
+            return author_name
+
+        given_name = author_dict.get("givenName", "")
+        additional_name = author_dict.get("additionalName", "")
+        family_name = author_dict.get("familyName", "")
+        if given_name and family_name:
+            return " ".join(filter(bool, [given_name, additional_name, family_name]))
+        else:
+            return None
+
     if not value:
         return []
 
@@ -212,7 +225,10 @@ def generic_author_parsing(
         authors = list(filter(bool, re.split(r"|".join(split_on or common_delimiters), value)))
 
     elif isinstance(value, dict):
-        authors = [name] if (name := value.get("name")) else []
+        if author := parse_author_dict(value):
+            return [author]
+        else:
+            return []
 
     elif isinstance(value, list):
         if isinstance(value[0], str):
@@ -221,7 +237,7 @@ def generic_author_parsing(
 
         elif isinstance(value[0], dict):
             value = cast(List[Dict[str, str]], value)
-            authors = [name for author in value if (name := author.get("name"))]
+            authors = [name for author in value if (name := parse_author_dict(author))]
 
         else:
             raise parameter_type_error
@@ -240,12 +256,12 @@ def generic_text_extraction_with_css(doc, selector: XPath) -> Optional[str]:
 
 
 def generic_topic_parsing(keywords: Optional[Union[str, List[str]]], delimiter: str = ",") -> List[str]:
-    if isinstance(keywords, str):
+    if not keywords:
+        return []
+    elif isinstance(keywords, str):
         return [cleaned for keyword in keywords.split(delimiter) if (cleaned := keyword.strip())]
     elif isinstance(keywords, list) and all(isinstance(s, str) for s in keywords):
         return keywords
-    elif keywords is None:
-        return []
     else:
         raise TypeError(f"Encountered unexpected type {type(keywords)} as keyword parameter")
 
