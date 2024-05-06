@@ -201,7 +201,7 @@ def generic_author_parsing(
     """
 
     def parse_author_dict(author_dict: Dict[str, str]) -> Optional[str]:
-        if author_name := author_dict.get("name") is not None:
+        if (author_name := author_dict.get("name")) is not None:
             return author_name
 
         given_name = author_dict.get("givenName", "")
