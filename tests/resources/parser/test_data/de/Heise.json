@@ -3,6 +3,31 @@
     "authors": [
       "Dirk Knop"
     ],
+    "body": {
+      "summary": [
+        "Das Phishingradar warnt vor einer Phishing-Masche, bei der Ionos-Kunden angeblich zu neuen EU-Richtlinien zustimmen müssen."
+      ],
+      "sections": [
+        {
+          "headline": [],
+          "paragraphs": [
+            "Aktuell sehen es Cyberkriminelle auf Daten von 1&1- beziehungsweise Ionos-Kunden ab. Aufhänger der betrügerischen Phishing-Masche sind angebliche neue EU-Richtlinien, denen die Kunden zustimmen müssten.",
+            "Das Phishingradar der Verbraucherzentrale warnt, dass derzeit zahlreiche Nachrichten mit Betreffzeilen wie \"Bitte bestätigen Sie Ihre E-Mail-Adresse: <persönliche E-Mail-Adresse>\" zugeschickt würden. Der Nachrichtentext enthalte eine persönliche Ansprache mit korrektem Namen."
+          ]
+        },
+        {
+          "headline": [
+            "Phishing-Masche \"Zustimmung zu neuen EU-Richtlinien\""
+          ],
+          "paragraphs": [
+            "Die betrügerischen Nachrichten erläutern sodann, dass Ionos-Kunden die Nutzungsbedingungen zu neuen EU-Richtlinien akzeptieren müssten. Wer versäume zuzustimmen, erhalte eine vorübergehende Sperre der E-Mail-Adresse. Die Richtlinien würden dazu dienen, \"das Risiko von Datenlecks oder dem unerlaubten Zugriff Dritter auf Ihre Informationen zu minimieren\". Empfänger der Nachricht werden dann aufgefordert, den \"unten stehenden Button\" zu nutzen, um die Bedingungen zu akzeptieren.",
+            "Der Text kann für einige Empfänger überzeugend wirken. Lediglich einige fehlende Absätze fallen besonders auf. Die persönliche Ansprache ist indes kein Hinweis auf die Echtheit einer Mail. Bei den zahlreichen Datenlecks der Vergangenheit haben Cyberkriminelle viele Daten aus unterschiedlichen Quellen verknüpft. Sie stehen teils sogar kostenlos im digitalen Untergrund bereit; Betrügern können sie direkt für echter wirkende Phishing-Mails missbrauchen.",
+            "Die Verbraucherzentrale erläutert, dass sich die Betrugsabsicht etwa anhand der fehlerhaften Absenderadresse der Mail erkennen lasse, anhand der Drohung sowie am frei erfundenen Vorwand. Allerdings können viele gerade die letzten beiden Punkte nicht unbedingt erkennen, da dazu etwa eine umfassende Übersicht über die aktuelle Nachrichtenlage nötig ist. Zudem gab es in jüngerer Vergangenheit EU-Richtlinien, die verabschiedet wurden und IT-Sicherheit zum Gegenstand haben. Die Absenderadresse lässt sich jedoch einfach prüfen: Im Mail-Client oder Webmailer wird die Adresse in der Statusleiste angezeigt, wenn die Maus kurz über dem Absender ruht. Die Domain (hinter dem @-Zeichen) sollte beispielsweise zum in der E-Mail genannten Anbieter führen.",
+            "Am Donnerstag dieser Woche haben internationale Strafverfolger eine große Pishing-as-a-service-Plattform vom Netz genommen. Natürlich ist unklar, ob die aktuelle Betrugs-Mail-Welle über Labhost gestartet wurde. Die Hoffnung ist jedoch, dass Phishing-Angriffe dadurch wieder etwas seltener werden."
+          ]
+        }
+      ]
+    },
     "publishing_date": "2024-04-19 13:37:00+02:00",
     "title": "Ionos-Phishing: Masche mit neuen EU-Richtlinien soll Opfer überzeugen",
     "topics": [

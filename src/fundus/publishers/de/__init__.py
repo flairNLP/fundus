@@ -22,10 +22,10 @@ from .focus import FocusParser
 from .frankfurter_rundschau import FrankfurterRundschauParser
 from .freiepresse import FreiePresseParser
 from .hamburger_abendblatt import HamburgerAbendblattParser
+from .heise import HeiseParser
 from .hessenschau import HessenschauParser
 from .junge_welt import JungeWeltParser
 from .kicker import KickerParser
-from .heise import HeiseParser
 from .mdr import MDRParser
 from .merkur import MerkurParser
 from .morgenpost_berlin import BerlinerMorgenpostParser
