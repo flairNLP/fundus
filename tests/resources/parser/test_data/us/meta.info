@@ -39,6 +39,18 @@
     "url": "https://www.reuters.com/world/middle-east/israeli-tank-likely-scenario-fired-machine-gun-reporters-after-deadly-shelling-2024-03-07/",
     "crawl_date": "2024-03-07 13:30:03.931664"
   },
+  "RollingStone_2024_04_24.html.gz": {
+    "url": "https://www.rollingstone.com/tv-movies/tv-movie-features/shogun-finale-review-1235007316/",
+    "crawl_date": "2024-04-24 16:34:23.763178"
+  },
+  "RollingStone_2024_04_25.html.gz": {
+    "url": "https://www.rollingstone.com/music/music-news/donna-kelce-taylor-swift-the-tortured-poets-department-best-work-1235010328/",
+    "crawl_date": "2024-04-25 11:47:22.799761"
+  },
+  "TechCrunch_2024_04_28.html.gz": {
+    "url": "https://techcrunch.com/2024/04/28/how-rpa-vendors-aim-to-remain-relevant-in-a-world-of-ai-agents/",
+    "crawl_date": "2024-04-28 15:58:36.182113"
+  },
   "TheGatewayPundit_2023_04_28.html.gz": {
     "url": "https://www.thegatewaypundit.com/2023/04/new-plot-twist-in-idaho-quadruple-murders-case-surviving-roommate-agrees-to-interview-with-kohbergers-defense-lawyers/",
     "crawl_date": "2023-04-28 20:33:02.500510"
@@ -62,6 +74,14 @@
   "TheNewYorker_2023_05_16.html.gz": {
     "url": "https://www.newyorker.com/news/the-control-of-nature/a-heat-shield-for-the-most-important-ice-on-earth",
     "crawl_date": "2023-05-16 14:55:06.350230"
+  },
+  "VoiceOfAmerica_2024_04_28.html.gz": {
+    "url": "https://www.voanews.com/a/america-s-child-care-crisis-is-holding-back-moms-without-college-degrees-/7585813.html",
+    "crawl_date": "2024-04-28 11:54:11.503866"
+  },
+  "WashingtonPost_2024_04_26.html.gz": {
+    "url": "https://www.washingtonpost.com/weather/2024/04/26/storms-tornadoes-iowa-kansas-nebraska-oklahoma/",
+    "crawl_date": "2024-04-26 17:38:15.805977"
   },
   "WashingtonTimes_2023_04_28.html.gz": {
     "url": "https://www.washingtontimes.com/news/2023/apr/28/indiana-governor-endorses-revised-gop-state-budget/?utm_source=RSS_Feed&utm_medium=RSS",
