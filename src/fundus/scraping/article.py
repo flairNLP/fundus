@@ -8,9 +8,11 @@ import lxml.html
 import more_itertools
 from colorama import Fore, Style
 
-from fundus.logging.logger import basic_logger
+from fundus.logging import create_logger
 from fundus.parser import ArticleBody
 from fundus.scraping.html import HTML
+
+logger = create_logger(__name__)
 
 
 @dataclass(frozen=True)
@@ -54,7 +56,7 @@ class Article:
             try:
                 language = langdetect.detect(self.plaintext)
             except langdetect.LangDetectException:
-                basic_logger.debug(f"Unable to detect language for article '{self.html.responded_url}'")
+                logger.debug(f"Unable to detect language for article {self.html.responded_url!r}")
 
         # use @lang attribute of <html> tag as fallback
         if not language or language == langdetect.detector_factory.Detector.UNKNOWN_LANG:
@@ -65,7 +67,7 @@ class Article:
         return language
 
     def __getattr__(self, item: object) -> Any:
-        raise AttributeError(f"'{type(self).__name__}' object has no attribute '{item}'")
+        raise AttributeError(f"{type(self).__name__!r} object has no attribute {str(item)!r}")
 
     def __str__(self):
         # the subsequent indent here is a bit wacky, but textwrapper.dedent won't work with tabs, so we have to use

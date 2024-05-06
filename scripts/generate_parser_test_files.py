@@ -6,14 +6,16 @@ from typing import List, Optional
 from tqdm import tqdm
 
 from fundus import Crawler, PublisherCollection
-from fundus.logging import basic_logger
+from fundus.logging import create_logger
 from fundus.publishers.base_objects import PublisherEnum
 from fundus.scraping.article import Article
 from fundus.scraping.filter import RequiresAll
 from fundus.scraping.html import WebSource
-from fundus.scraping.scraper import BaseScraper, WebScraper
+from fundus.scraping.scraper import BaseScraper
 from tests.test_parser import attributes_required_to_cover
 from tests.utility import HTMLTestFile, get_test_case_json, load_html_test_file_mapping
+
+logger = create_logger(__name__)
 
 
 def get_test_article(enum: PublisherEnum, url: Optional[str] = None) -> Optional[Article]:
@@ -84,7 +86,7 @@ def main() -> None:
     # sort args.attributes for consistency
     arguments.attributes = sorted(set(arguments.attributes) or attributes_required_to_cover)
 
-    basic_logger.setLevel(WARN)
+    logger.setLevel(WARN)
 
     publishers: List[PublisherEnum] = (
         list(PublisherCollection)
@@ -100,14 +102,14 @@ def main() -> None:
 
             # load json
             test_data_file = get_test_case_json(publisher)
-            test_data = content if (content := test_data_file.load()) and not arguments.overwrite_json else {}
+            test_data = content if not arguments.overwrite_json and (content := test_data_file.load()) else {}
 
             # load html
             html_mapping = load_html_test_file_mapping(publisher) if not arguments.overwrite else {}
 
             if arguments.overwrite or not html_mapping.get(publisher.parser.latest_version):
                 if not (article := get_test_article(publisher, url)):
-                    basic_logger.error(f"Couldn't get article for {publisher.name}. Skipping")
+                    logger.error(f"Couldn't get article for {publisher.name}. Skipping")
                     continue
                 html = HTMLTestFile(
                     url=article.html.responded_url,

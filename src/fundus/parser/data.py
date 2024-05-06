@@ -149,7 +149,7 @@ class LinkedDataMapping:
         return result
 
     def __repr__(self):
-        return f"LD containing '{', '.join(content)}'" if (content := self.__dict__.keys()) else "Empty LD"
+        return f"LD containing {', '.join(content)!r}" if (content := self.__dict__.keys()) else "Empty LD"
 
 
 class TextSequence(Sequence[str]):
@@ -244,6 +244,9 @@ class ArticleSection(TextSequenceTree):
     def deserialize(cls, serialized: Dict[str, Any]) -> Self:
         return cls(headline=TextSequence(serialized["headline"]), paragraphs=TextSequence(serialized["paragraphs"]))
 
+    def __bool__(self):
+        return bool(self.paragraphs)
+
 
 @dataclass
 class ArticleBody(TextSequenceTree):
@@ -262,3 +265,6 @@ class ArticleBody(TextSequenceTree):
             summary=TextSequence(serialized["summary"]),
             sections=[ArticleSection.deserialize(section) for section in serialized["sections"]],
         )
+
+    def __bool__(self):
+        return any(bool(section) for section in self.sections)
