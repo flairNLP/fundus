@@ -21,6 +21,7 @@ from .hessenschau import HessenschauParser
 from .mdr import MDRParser
 from .merkur import MerkurParser
 from .morgenpost_berlin import BerlinerMorgenpostParser
+from .motorsport_magazin import MotorSportMagazinParser
 from .ndr import NDRParser
 from .netzpolitik_org import NetzpolitikOrgParser
 from .ntv import NTVParser
@@ -333,4 +334,14 @@ class DE(PublisherEnum):
             RSSFeed("https://www.zdf.de/rss/zdf/nachrichten"),
         ],
         parser=ZDFParser,
+    )
+
+    MotorSportMagazin = PublisherSpec(
+        name="MotorSport Magazin",
+        domain="https://www.motorsport-magazin.com/",
+        sources=[
+            RSSFeed("https://www.motorsport-magazin.com/rss/alle-rennserien.xml"),
+            Sitemap("https://www.motorsport-magazin.com/sitemap.xml"),
+        ],
+        parser=MotorSportMagazinParser,
     )
