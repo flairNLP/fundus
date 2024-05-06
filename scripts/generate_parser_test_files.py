@@ -6,14 +6,16 @@ from typing import List, Optional
 from tqdm import tqdm
 
 from fundus import Crawler, PublisherCollection
-from fundus.logging import basic_logger
+from fundus.logging import create_logger
 from fundus.publishers.base_objects import PublisherEnum
 from fundus.scraping.article import Article
 from fundus.scraping.filter import RequiresAll
 from fundus.scraping.html import WebSource
-from fundus.scraping.scraper import BaseScraper, WebScraper
+from fundus.scraping.scraper import BaseScraper
 from tests.test_parser import attributes_required_to_cover
 from tests.utility import HTMLTestFile, get_test_case_json, load_html_test_file_mapping
+
+logger = create_logger(__name__)
 
 
 def get_test_article(enum: PublisherEnum, url: Optional[str] = None) -> Optional[Article]:
@@ -23,7 +25,7 @@ def get_test_article(enum: PublisherEnum, url: Optional[str] = None) -> Optional
         return next(scraper.scrape(error_handling="suppress", extraction_filter=RequiresAll()), None)
 
     crawler = Crawler(enum)
-    return next(crawler.crawl(max_articles=1, error_handling="suppress", only_complete=True), None)
+    return next(crawler.crawl(max_articles=1, error_handling="suppress", only_complete=RequiresAll()), None)
 
 
 def parse_arguments() -> Namespace:
@@ -82,9 +84,9 @@ def main() -> None:
     arguments = parse_arguments()
 
     # sort args.attributes for consistency
-    arguments.attributes = list(sorted(arguments.attributes)) or attributes_required_to_cover
+    arguments.attributes = sorted(set(arguments.attributes) or attributes_required_to_cover)
 
-    basic_logger.setLevel(WARN)
+    logger.setLevel(WARN)
 
     publishers: List[PublisherEnum] = (
         list(PublisherCollection)
@@ -100,14 +102,14 @@ def main() -> None:
 
             # load json
             test_data_file = get_test_case_json(publisher)
-            test_data = content if (content := test_data_file.load()) and not arguments.overwrite_json else {}
+            test_data = content if not arguments.overwrite_json and (content := test_data_file.load()) else {}
 
             # load html
             html_mapping = load_html_test_file_mapping(publisher) if not arguments.overwrite else {}
 
             if arguments.overwrite or not html_mapping.get(publisher.parser.latest_version):
                 if not (article := get_test_article(publisher, url)):
-                    basic_logger.error(f"Couldn't get article for {publisher.name}. Skipping")
+                    logger.error(f"Couldn't get article for {publisher.name}. Skipping")
                     continue
                 html = HTMLTestFile(
                     url=article.html.responded_url,
@@ -124,11 +126,15 @@ def main() -> None:
             for html in html_mapping.values():
                 versioned_parser = html.publisher.parser(html.crawl_date)
                 extraction = versioned_parser.parse(html.content)
-                new = {attr: value for attr, value in extraction.items() if attr in arguments.attributes}
+                missing_attributes = set(arguments.attributes) - set(
+                    test_data.get(type(versioned_parser).__name__) or {}
+                )
+                new = {attr: value for attr, value in extraction.items() if attr in missing_attributes}
                 if not (entry := test_data.get(type(versioned_parser).__name__)):
                     test_data[type(versioned_parser).__name__] = new
                 else:
                     entry.update(new)
+                    test_data[type(versioned_parser).__name__] = dict(sorted(entry.items()))
 
             test_data_file.write(test_data)
             bar.update()

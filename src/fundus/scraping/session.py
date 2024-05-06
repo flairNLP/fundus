@@ -5,7 +5,9 @@ from typing import Iterator, Optional
 import requests.adapters
 from typing_extensions import Self
 
-from fundus.logging import basic_logger
+from fundus.logging import create_logger
+
+logger = create_logger(__name__)
 
 _default_header = {"user-agent": "Fundus"}
 
@@ -40,14 +42,14 @@ class SessionHandler:
             A new requests.Session
         """
 
-        basic_logger.debug("Creating new session")
+        logger.debug("Creating new session")
         session = requests.Session()
 
         def _response_log(response: requests.Response, *args, **kwargs) -> None:
             history = response.history
             previous_status_codes = [f"({response.status_code})" for response in history] if history else []
             status_code_chain = " -> ".join(previous_status_codes + [f"({response.status_code})"])
-            basic_logger.debug(
+            logger.debug(
                 f"{status_code_chain} <{response.request.method} {response.url!r}> "
                 f"took {response.elapsed.total_seconds()} second(s)"
             )
@@ -92,7 +94,7 @@ class SessionHandler:
         """
         if self.session is not None:
             session = self.get_session()
-            basic_logger.debug(f"Close session {session}")
+            logger.debug(f"Close session {session}")
             session.close()
             self.session = None
 
