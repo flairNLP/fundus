@@ -1,4 +1,16 @@
 {
+  "DailyMail_2024_04_27.html.gz": {
+    "url": "https://www.dailymail.co.uk/yourmoney/article-13357113/dollar-bill-worth-THOUSANDS-check.html",
+    "crawl_date": "2024-04-27 17:00:10.853579"
+  },
+  "DailyStar_2024_04_23.html.gz": {
+    "url": "https://www.dailystar.co.uk/travel/travel-news/i-sell-walt-disney-world-32645619",
+    "crawl_date": "2024-04-23 13:00:40.272329"
+  },
+  "EuronewsEN_2024_04_30.html.gz": {
+    "url": "https://www.euronews.com/2024/04/30/swedish-police-to-investigate-reports-of-information-leaks-to-violent-gangs",
+    "crawl_date": "2024-04-30 16:52:48.230575"
+  },
   "TheGuardian_2024_02_24.html.gz": {
     "url": "https://www.theguardian.com/world/2024/feb/24/death-toll-in-valencia-fire-rises-to-10-as-remains-of-last-missing-person-found",
     "crawl_date": "2024-02-24 12:51:15.854319"
@@ -6,6 +18,14 @@
   "TheIndependent_2023_08_14.html.gz": {
     "url": "https://www.independent.co.uk/sport/football/womens-world-cup-england-news-latest-australia-b2392480.html",
     "crawl_date": "2023-08-14 11:24:44.038631"
+  },
+  "TheMirror_2024_04_28.html.gz": {
+    "url": "https://www.mirror.co.uk/lifestyle/gardening/gorgeous-houseplants-can-rid-unwanted-32676317",
+    "crawl_date": "2024-04-28 15:00:25.779100"
+  },
+  "TheSun_2024_04_22.html.gz": {
+    "url": "https://www.thesun.co.uk/sport/12603994/phil-foden-girlfriend-rebecca-cooke/",
+    "crawl_date": "2024-04-22 23:07:31.381326"
   },
   "TheTelegraph_2023_08_30.html.gz": {
     "url": "https://www.telegraph.co.uk/recommended/home/best-heated-clothes-airer/",
