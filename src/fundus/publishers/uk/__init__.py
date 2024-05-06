@@ -9,6 +9,7 @@ from .daily_star import DailyStarParser
 from .i_news import INewsParser
 from .the_guardian import TheGuardianParser
 from .the_independent import TheIndependentParser
+from .the_mirror import TheMirrorParser
 from .the_sun import TheSunParser
 from .the_telegraph import TheTelegraphParser
 
@@ -31,6 +32,16 @@ class UK(PublisherEnum):
             NewsMap("https://www.independent.co.uk/sitemaps/googlenews"),
         ],
         parser=TheIndependentParser,
+    )
+
+    TheMirror = PublisherSpec(
+        name="The Mirror",
+        domain="https://www.mirror.co.uk/",
+        sources=[
+            Sitemap("https://www.mirror.co.uk/sitemaps/sitemap_index.xml", reverse=True),
+            NewsMap("https://www.mirror.co.uk/map_news.xml"),
+        ],
+        parser=TheMirrorParser,
     )
 
     TheTelegraph = PublisherSpec(
