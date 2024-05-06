@@ -25,6 +25,7 @@ from .motorsport_magazin import MotorSportMagazinParser
 from .ndr import NDRParser
 from .netzpolitik_org import NetzpolitikOrgParser
 from .ntv import NTVParser
+from .postillon import PostillonParser
 from .rheinische_post import RheinischePostParser
 from .spon import SPONParser
 from .sportschau import SportSchauParser
@@ -357,4 +358,14 @@ class DE(PublisherEnum):
             Sitemap("https://www.motorsport-magazin.com/sitemap.xml"),
         ],
         parser=MotorSportMagazinParser,
+    )
+
+    Postillon = PublisherSpec(
+        name="Postillon",
+        domain="https://www.der-postillon.com/",
+        sources=[
+            RSSFeed("https://follow.it/der-postillon-abo"),
+            Sitemap("https://www.der-postillon.com/sitemap.xml"),
+        ],
+        parser=PostillonParser,
     )

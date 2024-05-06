@@ -420,6 +420,23 @@
     </tr>
     <tr>
       <td>
+        <code>Postillon</code>
+      </td>
+      <td>
+        <div>Postillon</div>
+      </td>
+      <td>
+        <a href="https://www.der-postillon.com/">
+          <span>www.der-postillon.com</span>
+        </a>
+      </td>
+      <td>
+        <code>topics</code>
+      </td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
         <code>RheinischePost</code>
       </td>
       <td>
