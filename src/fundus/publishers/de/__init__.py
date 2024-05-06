@@ -49,7 +49,7 @@ class DE(PublisherEnum):
         ],
         parser=NetzpolitikOrgParser,
     )
-    
+
     BerlinerMorgenpost = PublisherSpec(
         name="Berliner Morgenpost",
         domain="https://www.morgenpost.de/",
