@@ -18,6 +18,7 @@ from .die_zeit import DieZeitParser
 from .dw import DWParser
 from .faz import FAZParser
 from .focus import FocusParser
+from .frankfurter_rundschau import FrankfurterRundschauParser
 from .hessenschau import HessenschauParser
 from .junge_welt import JungeWeltParser
 from .kicker import KickerParser
@@ -394,4 +395,15 @@ class DE(PublisherEnum):
         ],
         url_filter=regex_filter("/slideshow|/video"),
         parser=KickerParser,
+    )
+
+    FrankfurterRundschau = PublisherSpec(
+        name="Frankfurter Rundschau",
+        domain="https://www.fr.de",
+        sources=[
+            RSSFeed("https://fr.de/rssfeed.rdf"),
+            Sitemap("https://www.fr.de/sitemap-index.xml"),
+            NewsMap("https://www.fr.de/news.xml"),
+        ],
+        parser=FrankfurterRundschauParser,
     )
