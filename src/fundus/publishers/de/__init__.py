@@ -35,6 +35,7 @@ from .netzpolitik_org import NetzpolitikOrgParser
 from .ntv import NTVParser
 from .postillon import PostillonParser
 from .rheinische_post import RheinischePostParser
+from .rn import RuhrNachrichtenParser
 from .spon import SPONParser
 from .sportschau import SportSchauParser
 from .stern import SternParser
@@ -478,4 +479,19 @@ class DE(PublisherEnum):
             Sitemap("https://www.freiepresse.de/sitemaps/articles_last2years.xml", reverse=True),
         ],
         parser=FreiePresseParser,
+    )
+
+    RuhrNachrichten = PublisherSpec(
+        name="Ruhr Nachrichten",
+        domain="https://www.ruhrnachrichten.de/",
+        sources=[
+            RSSFeed("https://www.ruhrnachrichten.de/service/feed/"),
+            NewsMap("https://www.ruhrnachrichten.de/news-sitemap.xml"),
+            Sitemap(
+                "https://www.ruhrnachrichten.de/sitemap_index.xml",
+                reverse=True,
+                sitemap_filter=inverse(regex_filter("post-sitemap")),
+            ),
+        ],
+        parser=RuhrNachrichtenParser,
     )

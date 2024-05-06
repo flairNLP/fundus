@@ -595,6 +595,21 @@
     </tr>
     <tr>
       <td>
+        <code>RuhrNachrichten</code>
+      </td>
+      <td>
+        <div>Ruhr Nachrichten</div>
+      </td>
+      <td>
+        <a href="https://www.ruhrnachrichten.de/">
+          <span>www.ruhrnachrichten.de</span>
+        </a>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
         <code>SpiegelOnline</code>
       </td>
       <td>
