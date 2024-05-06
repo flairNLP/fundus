@@ -83,6 +83,7 @@ class WebScraper(BaseScraper):
                 publisher=publisher.publisher_name,
                 request_header=publisher.request_header,
                 delay=delay,
+                url_filter=publisher.url_filter,
                 query_parameters=publisher.query_parameter,
             )
             for url_source in url_sources
