@@ -16,6 +16,23 @@
   <tbody>
     <tr>
       <td>
+        <code>DerStandard</code>
+      </td>
+      <td>
+        <div>Der Standard</div>
+      </td>
+      <td>
+        <a href="https://derstandard.at">
+          <span>derstandard.at</span>
+        </a>
+      </td>
+      <td>
+        <code>topics</code>
+      </td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
         <code>ORF</code>
       </td>
       <td>
@@ -69,6 +86,38 @@
 </table>
 
 
+## CN-Publishers
+
+<table class="publishers cn">
+  <thead>
+    <tr>
+      <th>Class&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</th>
+      <th>Source&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</th>
+      <th>URL&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</th>
+      <th>Missing&#160;Attributes</th>
+      <th>Additional&#160;Attributes&#160;&#160;&#160;&#160;</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <code>People</code>
+      </td>
+      <td>
+        <div>People</div>
+      </td>
+      <td>
+        <a href="http://www.people.com.cn">
+          <span>www.people.com.cn</span>
+        </a>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+  </tbody>
+</table>
+
+
 ## DE-Publishers
 
 <table class="publishers de">
@@ -82,6 +131,36 @@
     </tr>
   </thead>
   <tbody>
+    <tr>
+      <td>
+        <code>BR</code>
+      </td>
+      <td>
+        <div>Bayerischer Rundfunk (BR)</div>
+      </td>
+      <td>
+        <a href="https://www.br.de/">
+          <span>www.br.de</span>
+        </a>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
+        <code>BerlinerMorgenpost</code>
+      </td>
+      <td>
+        <div>Berliner Morgenpost</div>
+      </td>
+      <td>
+        <a href="https://www.morgenpost.de/">
+          <span>www.morgenpost.de</span>
+        </a>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
     <tr>
       <td>
         <code>BerlinerZeitung</code>
@@ -204,6 +283,21 @@
     </tr>
     <tr>
       <td>
+        <code>EuronewsDE</code>
+      </td>
+      <td>
+        <div>Euronews (DE)</div>
+      </td>
+      <td>
+        <a href="https://de.euronews.com/">
+          <span>de.euronews.com</span>
+        </a>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
         <code>Focus</code>
       </td>
       <td>
@@ -251,6 +345,53 @@
     </tr>
     <tr>
       <td>
+        <code>Hessenschau</code>
+      </td>
+      <td>
+        <div>Hessenschau</div>
+      </td>
+      <td>
+        <a href="https://www.hessenschau.de/">
+          <span>www.hessenschau.de</span>
+        </a>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
+        <code>JungeWelt</code>
+      </td>
+      <td>
+        <div>Junge Welt</div>
+      </td>
+      <td>
+        <a href="https://www.jungewelt.de/">
+          <span>www.jungewelt.de</span>
+        </a>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
+        <code>Kicker</code>
+      </td>
+      <td>
+        <div>Kicker</div>
+      </td>
+      <td>
+        <a href="https://www.kicker.de/">
+          <span>www.kicker.de</span>
+        </a>
+      </td>
+      <td>
+        <code>topics</code>
+      </td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
         <code>MDR</code>
       </td>
       <td>
@@ -259,6 +400,21 @@
       <td>
         <a href="https://www.mdr.de/">
           <span>www.mdr.de</span>
+        </a>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
+        <code>MotorSportMagazin</code>
+      </td>
+      <td>
+        <div>MotorSport Magazin</div>
+      </td>
+      <td>
+        <a href="https://www.motorsport-magazin.com/">
+          <span>www.motorsport-magazin.com</span>
         </a>
       </td>
       <td>&#160;</td>
@@ -313,6 +469,23 @@
     </tr>
     <tr>
       <td>
+        <code>Postillon</code>
+      </td>
+      <td>
+        <div>Postillon</div>
+      </td>
+      <td>
+        <a href="https://www.der-postillon.com/">
+          <span>www.der-postillon.com</span>
+        </a>
+      </td>
+      <td>
+        <code>topics</code>
+      </td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
         <code>RheinischePost</code>
       </td>
       <td>
@@ -336,6 +509,21 @@
       <td>
         <a href="https://www.spiegel.de/">
           <span>www.spiegel.de</span>
+        </a>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
+        <code>SportSchau</code>
+      </td>
+      <td>
+        <div>Sportschau</div>
+      </td>
+      <td>
+        <a href="https://www.sportschau.de/">
+          <span>www.sportschau.de</span>
         </a>
       </td>
       <td>&#160;</td>
@@ -388,6 +576,21 @@
     </tr>
     <tr>
       <td>
+        <code>Tagesspiegel</code>
+      </td>
+      <td>
+        <div>Tagesspiegel</div>
+      </td>
+      <td>
+        <a href="https://www.tagesspiegel.de/">
+          <span>www.tagesspiegel.de</span>
+        </a>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
         <code>WAZ</code>
       </td>
       <td>
@@ -399,6 +602,53 @@
         </a>
       </td>
       <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
+        <code>WDR</code>
+      </td>
+      <td>
+        <div>Westdeutscher Rundfunk</div>
+      </td>
+      <td>
+        <a href="https://www1.wdr.de/">
+          <span>www1.wdr.de</span>
+        </a>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
+        <code>NetzpolitikOrg</code>
+      </td>
+      <td>
+        <div>netzpolitik.org</div>
+      </td>
+      <td>
+        <a href="https://netzpolitik.org/">
+          <span>netzpolitik.org</span>
+        </a>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
+        <code>ZDF</code>
+      </td>
+      <td>
+        <div>zdfHeute</div>
+      </td>
+      <td>
+        <a href="https://www.zdf.de/">
+          <span>www.zdf.de</span>
+        </a>
+      </td>
+      <td>
+        <code>topics</code>
+      </td>
       <td>&#160;</td>
     </tr>
   </tbody>
@@ -418,6 +668,21 @@
     </tr>
   </thead>
   <tbody>
+    <tr>
+      <td>
+        <code>EuronewsFR</code>
+      </td>
+      <td>
+        <div>Euronews (FR)</div>
+      </td>
+      <td>
+        <a href="https://fr.euronews.com/">
+          <span>fr.euronews.com</span>
+        </a>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
     <tr>
       <td>
         <code>LeMonde</code>
@@ -518,6 +783,36 @@
   <tbody>
     <tr>
       <td>
+        <code>DailyStar</code>
+      </td>
+      <td>
+        <div>Daily Star</div>
+      </td>
+      <td>
+        <a href="https://www.dailystar.co.uk/">
+          <span>www.dailystar.co.uk</span>
+        </a>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
+        <code>EuronewsEN</code>
+      </td>
+      <td>
+        <div>Euronews (EN)</div>
+      </td>
+      <td>
+        <a href="https://www.euronews.com/">
+          <span>www.euronews.com</span>
+        </a>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
         <code>TheGuardian</code>
       </td>
       <td>
@@ -541,6 +836,21 @@
       <td>
         <a href="https://www.independent.co.uk/">
           <span>www.independent.co.uk</span>
+        </a>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
+        <code>TheSun</code>
+      </td>
+      <td>
+        <div>The Sun</div>
+      </td>
+      <td>
+        <a href="https://www.thesun.co.uk/">
+          <span>www.thesun.co.uk</span>
         </a>
       </td>
       <td>&#160;</td>
@@ -706,6 +1016,21 @@
     </tr>
     <tr>
       <td>
+        <code>RollingStone</code>
+      </td>
+      <td>
+        <div>Rolling Stone</div>
+      </td>
+      <td>
+        <a href="https://www.rollingstone.com/">
+          <span>www.rollingstone.com</span>
+        </a>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
         <code>TheGatewayPundit</code>
       </td>
       <td>
@@ -796,6 +1121,23 @@
       <td>
         <a href="https://www.washingtontimes.com/">
           <span>www.washingtontimes.com</span>
+        </a>
+      </td>
+      <td>
+        <code>topics</code>
+      </td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
+        <code>WashingtonPost</code>
+      </td>
+      <td>
+        <div>Washington Post</div>
+      </td>
+      <td>
+        <a href="https://www.washingtonpost.com/">
+          <span>www.washingtonpost.com</span>
         </a>
       </td>
       <td>
