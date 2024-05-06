@@ -8,6 +8,7 @@ from fundus.scraping.url import NewsMap, RSSFeed, Sitemap
 
 from .berliner_zeitung import BerlinerZeitungParser
 from .bild import BildParser
+from .br import BRParser
 from .braunschweiger_zeitung import BSZParser
 from .business_insider_de import BusinessInsiderDEParser
 from .die_welt import DieWeltParser
@@ -15,8 +16,10 @@ from .die_zeit import DieZeitParser
 from .dw import DWParser
 from .faz import FAZParser
 from .focus import FocusParser
+from .hessenschau import HessenschauParser
 from .mdr import MDRParser
 from .merkur import MerkurParser
+from .morgenpost_berlin import BerlinerMorgenpostParser
 from .ndr import NDRParser
 from .ntv import NTVParser
 from .rheinische_post import RheinischePostParser
@@ -26,10 +29,23 @@ from .sz import SZParser
 from .tagesschau import TagesschauParser
 from .taz import TazParser
 from .waz import WAZParser
+from .wdr import WDRParser
+from .zdf import ZDFParser
 
 
 # noinspection PyPep8Naming
 class DE(PublisherEnum):
+    BerlinerMorgenpost = PublisherSpec(
+        name="Berliner Morgenpost",
+        domain="https://www.morgenpost.de/",
+        sources=[NewsMap("https://www.morgenpost.de/sitemaps/news.xml")]
+        + [
+            Sitemap(f"https://www.morgenpost.de/sitemaps/archive/sitemap-{d.year}-{str(d.month).zfill(2)}-p00.xml.gz")
+            for d in reversed(list(rrule(MONTHLY, dtstart=datetime(2003, 2, 1), until=datetime.now())))
+        ],
+        parser=BerlinerMorgenpostParser,
+    )
+
     DieWelt = PublisherSpec(
         name="Die Welt",
         domain="https://www.welt.de/",
@@ -73,6 +89,8 @@ class DE(PublisherEnum):
         domain="https://www.focus.de/",
         sources=[RSSFeed("https://rss.focus.de/fol/XML/rss_folnews.xml")],
         parser=FocusParser,
+        # Focus blocks access for all user-agents including the term 'bot'
+        request_header={"user-agent": "Fundus"},
     )
 
     Merkur = PublisherSpec(
@@ -114,6 +132,7 @@ class DE(PublisherEnum):
                 f"https://www.zeit.de/gsitemaps/index.xml?date={datetime.now().strftime('%Y-%m-%d')}&unit=days&period=1"
             ),
         ],
+        request_header={"user-agent": "Googlebot"},
         url_filter=regex_filter(
             "/zett/|/angebote/|/kaenguru-comics/|/administratives/|/index(?!.)|/elbvertiefung-[0-9]{2}-[0-9]{2}"
         ),
@@ -213,7 +232,7 @@ class DE(PublisherEnum):
             Sitemap(
                 f"https://www.braunschweiger-zeitung.de/sitemaps/archive/sitemap-{d.year}-{str(d.month).zfill(2)}-p00.xml.gz"
             )
-            for d in reversed(list(rrule(MONTHLY, dtstart=datetime(2016, 9, 1), until=datetime.now())))
+            for d in list(rrule(MONTHLY, dtstart=datetime(2005, 12, 1), until=datetime.now()))
         ],
         parser=BSZParser,
     )
@@ -237,4 +256,43 @@ class DE(PublisherEnum):
             Sitemap("https://rp-online.de/sitemap.xml"),
         ],
         parser=RheinischePostParser,
+    )
+
+    Hessenschau = PublisherSpec(
+        name="Hessenschau",
+        domain="https://www.hessenschau.de/",
+        sources=[
+            RSSFeed("https://www.hessenschau.de/index.rss"),
+            Sitemap("https://www.hessenschau.de/indexsitemap.nc.xml"),
+            Sitemap("https://www.hessenschau.de/sitemap.nc.xml"),
+        ],
+        parser=HessenschauParser,
+    )
+
+    WDR = PublisherSpec(
+        name="Westdeutscher Rundfunk",
+        domain="https://www1.wdr.de/",
+        sources=[RSSFeed("https://www1.wdr.de/uebersicht-100.feed")],
+        parser=WDRParser,
+    )
+
+    BR = PublisherSpec(
+        name="Bayerischer Rundfunk (BR)",
+        domain="https://www.br.de/",
+        sources=[
+            Sitemap("https://www.br.de/sitemapIndex.xml"),
+            NewsMap("https://www.br.de/nachrichten/sitemaps/news.xml"),
+        ],
+        parser=BRParser,
+    )
+
+    ZDF = PublisherSpec(
+        name="zdfHeute",
+        domain="https://www.zdf.de/",
+        sources=[
+            Sitemap("https://www.zdf.de/sitemap.xml", reverse=True),
+            NewsMap("https://www.zdf.de/news-sitemap.xml"),
+            RSSFeed("https://www.zdf.de/rss/zdf/nachrichten"),
+        ],
+        parser=ZDFParser,
     )
