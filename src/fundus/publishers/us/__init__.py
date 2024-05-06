@@ -15,6 +15,7 @@ from .the_gateway_pundit import TheGatewayPunditParser
 from .the_intercept import TheInterceptParser
 from .the_nation_parser import TheNationParser
 from .the_new_yorker import TheNewYorkerParser
+from .voice_of_america import VOAParser
 from .washington_post import WashingtonPostParser
 from .washington_times_parser import WashingtonTimesParser
 from .world_truth import WorldTruthParser
@@ -192,4 +193,16 @@ class US(PublisherEnum):
             ),
         ],
         parser=RollingStoneParser,
+    )
+
+    VoiceOfAmerica = PublisherSpec(
+        name="Voice Of America",
+        domain="https://www.voanews.com/",
+        sources=[
+            NewsMap("https://www.voanews.com/sitemap_415_news.xml.gz"),
+            Sitemap(
+                "https://www.voanews.com/sitemap.xml", sitemap_filter=inverse(regex_filter(r"sitemap_[\d_]*\.xml\.gz"))
+            ),
+        ],
+        parser=VOAParser,
     )
