@@ -39,6 +39,7 @@ from .sz import SZParser
 from .tagesschau import TagesschauParser
 from .tagesspiegel import TagesspiegelParser
 from .taz import TazParser
+from .vogue_de import VogueDEParser
 from .waz import WAZParser
 from .wdr import WDRParser
 from .zdf import ZDFParser
@@ -419,4 +420,15 @@ class DE(PublisherEnum):
             ),
         ],
         parser=BoersenZeitungParser,
+    )
+
+    VogueDE = PublisherSpec(
+        name="Vogue",
+        domain="https://www.vogue.de/",
+        sources=[
+            RSSFeed("https://www.vogue.de/feed/rss"),
+            NewsMap("https://www.vogue.de/feed/sitemap-news/sitemap-google-news"),
+            Sitemap("https://www.vogue.de/sitemap.xml"),
+        ],
+        parser=VogueDEParser,
     )

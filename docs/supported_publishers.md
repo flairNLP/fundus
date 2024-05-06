@@ -640,6 +640,21 @@
     </tr>
     <tr>
       <td>
+        <code>VogueDE</code>
+      </td>
+      <td>
+        <div>Vogue</div>
+      </td>
+      <td>
+        <a href="https://www.vogue.de/">
+          <span>www.vogue.de</span>
+        </a>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
         <code>WAZ</code>
       </td>
       <td>
