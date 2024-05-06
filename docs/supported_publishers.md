@@ -640,21 +640,6 @@
   <tbody>
     <tr>
       <td>
-        <code>EuronewsEN</code>
-      </td>
-      <td>
-        <div>Euronews (EN)</div>
-      </td>
-      <td>
-        <a href="https://www.euronews.com/">
-          <span>www.euronews.com</span>
-        </a>
-      </td>
-      <td>&#160;</td>
-      <td>&#160;</td>
-  </tr>
-    <tr>
-      <td>
         <code>DailyStar</code>
       </td>
       <td>
@@ -663,6 +648,21 @@
       <td>
         <a href="https://www.dailystar.co.uk/">
           <span>www.dailystar.co.uk</span>
+        </a>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
+        <code>EuronewsEN</code>
+      </td>
+      <td>
+        <div>Euronews (EN)</div>
+      </td>
+      <td>
+        <a href="https://www.euronews.com/">
+          <span>www.euronews.com</span>
         </a>
       </td>
       <td>&#160;</td>
