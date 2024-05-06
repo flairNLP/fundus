@@ -920,6 +920,21 @@
     </tr>
     <tr>
       <td>
+        <code>RollingStone</code>
+      </td>
+      <td>
+        <div>Rolling Stone</div>
+      </td>
+      <td>
+        <a href="https://www.rollingstone.com/">
+          <span>www.rollingstone.com</span>
+        </a>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
         <code>TheGatewayPundit</code>
       </td>
       <td>
