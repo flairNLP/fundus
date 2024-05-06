@@ -27,6 +27,7 @@ from .mdr import MDRParser
 from .merkur import MerkurParser
 from .morgenpost_berlin import BerlinerMorgenpostParser
 from .motorsport_magazin import MotorSportMagazinParser
+from .mz import MitteldeutscheZeitungParser
 from .ndr import NDRParser
 from .netzpolitik_org import NetzpolitikOrgParser
 from .ntv import NTVParser
@@ -431,4 +432,14 @@ class DE(PublisherEnum):
             Sitemap("https://www.vogue.de/sitemap.xml"),
         ],
         parser=VogueDEParser,
+    )
+
+    MitteldeutscheZeitung = PublisherSpec(
+        name="Mitteldeutsche Zeitung",
+        domain="https://www.mz.de/",
+        sources=[
+            Sitemap("https://www.mz.de/sitemaps/sitemap-ressort-index.xml"),
+            NewsMap("https://www.mz.de/sitemaps/newssitemap-index.xml"),
+        ],
+        parser=MitteldeutscheZeitungParser,
     )
