@@ -19,6 +19,7 @@ from .the_new_yorker import TheNewYorkerParser
 from .voice_of_america import VOAParser
 from .washington_post import WashingtonPostParser
 from .washington_times_parser import WashingtonTimesParser
+from .wired import WiredParser
 from .world_truth import WorldTruthParser
 
 
@@ -220,4 +221,16 @@ class US(PublisherEnum):
             ),
         ],
         parser=VOAParser,
+    )
+
+    Wired = PublisherSpec(
+        name="Wired",
+        domain="https://www.wired.com",
+        sources=[
+            RSSFeed("https://www.wired.com/feed/rss"),
+            NewsMap("https://www.wired.com/feed/google-latest-news/sitemap-google-news"),
+            Sitemap("https://www.wired.com/sitemap.xml"),
+            Sitemap("https://www.wired.com/sitemap-archive-1.xml"),
+        ],
+        parser=WiredParser,
     )
