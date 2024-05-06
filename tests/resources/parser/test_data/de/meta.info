@@ -1,7 +1,15 @@
 {
+  "BR_2024_04_22.html.gz": {
+    "url": "https://www.br.de/nachrichten/bayern/evangelische-kirche-landeskirche-will-missbrauch-aufarbeiten,UAf9GNd",
+    "crawl_date": "2024-04-22 17:33:43.091856"
+  },
   "BSZ_2024_01_29.html.gz": {
     "url": "https://www.braunschweiger-zeitung.de/niedersachsen/article241536118/Heide-Park-Eroeffnungstermin-fuer-neue-Attraktion-steht-fest.html",
     "crawl_date": "2024-01-29 19:29:19.952428"
+  },
+  "BerlinerMorgenpost_2024_05_03.html.gz": {
+    "url": "https://www.morgenpost.de/berlin/article242242744/feuer-brand-warnung-berlin-lichterfelde-brandgase-aktuell-news.html",
+    "crawl_date": "2024-05-03 17:27:55.160009"
   },
   "BerlinerZeitung_2023_04_28.html.gz": {
     "url": "https://www.berliner-zeitung.de/news/550-kinder-gezeugt-gericht-stoppt-uebereifrigen-samenspender-in-den-niederlanden-li.343191",
@@ -10,6 +18,10 @@
   "Bild_2023_05_15.html.gz": {
     "url": "https://www.bild.de/sport/fussball/fortuna-duesseldorf/bubi-bomber-wieder-da-thioune-fordert-geduld-mit-niemiec-83936220.bild.html",
     "crawl_date": "2023-05-15 13:55:04.823203"
+  },
+  "BoersenZeitung_2024_04_27.html.gz": {
+    "url": "https://www.boersen-zeitung.de/meinung-analyse/spaniens-neuer-drang-zum-interventionismus",
+    "crawl_date": "2024-04-27 20:40:42.807211"
   },
   "BusinessInsiderDE_2024_01_29.html.gz": {
     "url": "https://www.businessinsider.de/wirtschaft/international-business/wie-gross-ist-evergrande-chinas-sterbender-immobilienriese/",
@@ -35,6 +47,10 @@
     "url": "https://www.zeit.de/news/2023-04/28/nach-massenschlaegerei-real-star-llull-entschuldigt-sich",
     "crawl_date": "2023-04-28 20:25:15.245087"
   },
+  "EuronewsDE_2024_04_30.html.gz": {
+    "url": "https://de.euronews.com/my-europe/2024/04/30/georgien-tausende-unterstutzen-das-russische-agentengesetz",
+    "crawl_date": "2024-04-30 16:52:27.324714"
+  },
   "FAZ_2023_04_28.html.gz": {
     "url": "https://www.faz.net/aktuell/rhein-main/frankfurt/49-euro-ticket-pendler-zahlen-60-prozent-weniger-18857107.html",
     "crawl_date": "2023-04-28 20:22:44.281765"
@@ -47,6 +63,30 @@
     "url": "https://www.focus.de/kaufberatung/deals_angebote/may-the-4th-be-with-you-lego-feiert-den-star-wars-tag-mit-neuen-sets-und-exklusiven-geschenken_id_92942238.html",
     "crawl_date": "2023-04-28 20:21:13.976503"
   },
+  "FrankfurterRundschau_2024_04_26.html.gz": {
+    "url": "https://www.fr.de/ratgeber/wohnen/ambrosia-giftig-garten-allergische-reaktionen-pflanze-erkennen-bekaempfen-zr-93036630.html",
+    "crawl_date": "2024-04-26 20:56:09.171006"
+  },
+  "FreiePresse_2024_04_30.html.gz": {
+    "url": "https://www.freiepresse.de/chemnitz/chemnitzer-hutfestival-wann-das-fest-steigt-was-neu-ist-und-wer-fuer-eine-gute-show-sorgen-wird-artikel13351201",
+    "crawl_date": "2024-04-30 15:23:59.090631"
+  },
+  "HamburgerAbendblatt_2024_04_28.html.gz": {
+    "url": "https://www.abendblatt.de/hamburg/article242192802/Hamburg-Marathon-2024-Royaler-Besuch-auf-der-Laufstrecke-1.html",
+    "crawl_date": "2024-04-28 17:22:58.422635"
+  },
+  "Hessenschau_2024_04_27.html.gz": {
+    "url": "https://www.hessenschau.de/wirtschaft/schnellere-integration-job-turbo-hilft-gefluechteten-auf-dem-arbeitsmarkt-v1,ukrainer-arbeitsmarkt-100.html",
+    "crawl_date": "2024-04-27 09:45:52.803598"
+  },
+  "JungeWelt_2024_04_26.html.gz": {
+    "url": "https://www.jungewelt.de/artikel/474126.nationaler-veteranentag-orden-f%C3%BCrs-morden.html",
+    "crawl_date": "2024-04-26 10:19:03.483980"
+  },
+  "Kicker_2024_04_26.html.gz": {
+    "url": "https://www.kicker.de/interimstrainer-schubert-nicht-mehr-viel-zu-verlieren-1019241/artikel#omrss",
+    "crawl_date": "2024-04-26 15:37:39.609270"
+  },
   "MDR_2023_04_28.html.gz": {
     "url": "https://www.mdr.de/nachrichten/thueringen/sued-thueringen/schmalkalden-meiningen/schlachtung-fleisch-schwein-wirtschaft-landstolz-100.html",
     "crawl_date": "2023-04-28 20:22:36.765570"
@@ -55,6 +95,14 @@
     "url": "https://www.merkur.de/welt/england-koenig-king-charles-iii-kroenung-zeremonie-nostradamus-vorhersage-prophezeiung-thronfolger-92243692.html",
     "crawl_date": "2023-04-28 20:21:14.813377"
   },
+  "MitteldeutscheZeitung_2024_04_30.html.gz": {
+    "url": "https://www.mz.de/deutschland-und-welt/politik/bericht-aktivistin-getotet-irans-justiz-dementiert-3835898",
+    "crawl_date": "2024-04-30 22:52:24.974820"
+  },
+  "MotorSportMagazin_2024_04_24.html.gz": {
+    "url": "https://www.motorsport-magazin.com/superbike/news-288299-superbike-hammer-erklaert-kawasaki-steigt-ende-2024-aus-und-doch-wieder-nicht/",
+    "crawl_date": "2024-04-24 22:39:23.665987"
+  },
   "NDR_2023_04_28.html.gz": {
     "url": "https://www.ndr.de/nachrichten/schleswig-holstein/Einschlag-in-Elmshorn-Es-war-ein-Meteorit,meteorit146.html",
     "crawl_date": "2023-04-28 20:32:14.447579"
@@ -62,6 +110,18 @@
   "NTV_2023_04_28.html.gz": {
     "url": "https://www.n-tv.de/leben/Judy-Lybke-ganz-und-gar-nicht-eigenartig-article24075843.html",
     "crawl_date": "2023-04-28 20:32:13.689394"
+  },
+  "NetzpolitikOrg_2024_04_28.html.gz": {
+    "url": "https://netzpolitik.org/2024/breakpoint-hilfe-die-fundis-kommen/",
+    "crawl_date": "2024-04-28 21:01:08.349153"
+  },
+  "Postillon_2024_04_25.html.gz": {
+    "url": "https://www.der-postillon.com/2018/04/ostsee-krokodil.html",
+    "crawl_date": "2024-04-25 11:02:43.363056"
+  },
+  "RBB24_2024_04_25.html.gz": {
+    "url": "https://www.rbb24.de/kultur/beitrag/2024/04/theater-hotel-lunik-eisenhuettenstadt-premiere-ddr-publikum-zeitzeugen.html",
+    "crawl_date": "2024-04-25 16:32:41.657620"
   },
   "RheinischePost_2024_04_15.html.gz": {
     "url": "https://rp-online.de/nrw/staedte/neuss/neuss-biobaeckerei-schomaker-an-der-niederstrasse-schliesst_aid-110715299",
@@ -87,6 +147,10 @@
     "url": "https://www.spiegel.de/wirtschaft/unternehmen/silicon-valley-bank-federal-reserve-raeumt-versaeumnisse-bei-aufsicht-ein-a-60a0111a-c2d2-46c8-9e93-b16a374e6ba8#ref=rss",
     "crawl_date": "2023-04-28 20:21:16.250027"
   },
+  "SportSchau_2024_04_25.html.gz": {
+    "url": "https://www.sportschau.de/fussball/premier-league/rueckschlag-im-titelkampf-liverpool-verliert-bei-everton,nachholspiele-everton-liverpool-100.html",
+    "crawl_date": "2024-04-25 07:06:01.384569"
+  },
   "Stern_2023_04_28.html.gz": {
     "url": "https://www.stern.de/wirtschaft/geld/epi-zahlungssystem--so-kann-europa-paypal--apple-pay-und-visa-schlagen-33420056.html?utm_campaign=alle-nachrichten&utm_medium=rss-feed&utm_source=standard",
     "crawl_date": "2023-04-28 20:32:03.502152"
@@ -95,16 +159,36 @@
     "url": "https://www.tagesschau.de/inland/innenpolitik/ahrtal-flut-bilanz-100.html",
     "crawl_date": "2023-04-28 20:25:17.117496"
   },
+  "Tagesspiegel_2024_04_29.html.gz": {
+    "url": "https://www.tagesspiegel.de/wissen/eskalation-im-nordatlantik-wenn-die-ozeane-uberhitzen-fuhrt-das-potenziell-zu-mehr-wetterextremen-11561990.html",
+    "crawl_date": "2024-04-29 12:44:10.813529"
+  },
   "Taz_2023_04_28.html.gz": {
     "url": "https://taz.de/Entwurf-des-Selbstbestimmungsgesetzes/!5928990/",
     "crawl_date": "2023-04-28 20:32:15.077826"
   },
-  "WAZ_2023_06_20.html.gz": {
-    "url": "https://www.waz.de/staedte/witten/witten-street-food-festival-sorgt-fuer-internationales-flair-id238719673.html",
-    "crawl_date": "2023-06-20 17:12:11.301003"
+  "VogueDE_2024_04_30.html.gz": {
+    "url": "https://www.vogue.de/artikel/kate-moss-cover-model-interview",
+    "crawl_date": "2024-04-30 22:04:19.222837"
+  },
+  "WAZ_2023_06_29.html.gz": {
+    "url": "https://www.waz.de/leben/uebergewicht-adipositas-wegovy-abnehmspritze-stars-kosten-id238819313.html",
+    "crawl_date": "2023-06-29 15:43:21+00:00"
   },
   "WAZ_2024_03_08.html.gz": {
     "url": "https://www.waz.de/staedte/duisburg/article241847490/Erstes-Bild-So-koennte-die-Duisburger-Seilbahn-aussehen.html",
     "crawl_date": "2024-03-08 19:08:06.071698"
+  },
+  "WDR_2024_04_22.html.gz": {
+    "url": "https://www1.wdr.de/nachrichten/landespolitik/feuerwehr-rentenalter-erhoehung-100.html",
+    "crawl_date": "2024-04-22 14:41:05.704325"
+  },
+  "ZDF_2024_04_20.html.gz": {
+    "url": "https://www.zdf.de/nachrichten/wirtschaft/volkswagen-china-hacking-industriespionage-emobilitaet-100.html",
+    "crawl_date": "2024-04-20 10:16:00.515536"
+  },
+  "ZDF_2024_04_22.html.gz": {
+    "url": "https://www.zdf.de/nachrichten/wirtschaft/deutschland-iran-handel-sanktionen-100.html",
+    "crawl_date": "2024-04-22 17:22:43.812721"
   }
 }
