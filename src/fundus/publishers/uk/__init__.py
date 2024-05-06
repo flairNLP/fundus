@@ -7,8 +7,8 @@ from fundus.scraping.filter import inverse, regex_filter
 from fundus.scraping.url import NewsMap, Sitemap
 
 from ..shared import EuronewsParser
-from .daily_star import DailyStarParser
 from .daily_mail import DailyMailParser
+from .daily_star import DailyStarParser
 from .i_news import INewsParser
 from .the_guardian import TheGuardianParser
 from .the_independent import TheIndependentParser
