@@ -450,6 +450,21 @@
     </tr>
     <tr>
       <td>
+        <code>SportSchau</code>
+      </td>
+      <td>
+        <div>Sportschau</div>
+      </td>
+      <td>
+        <a href="https://www.sportschau.de/">
+          <span>www.sportschau.de</span>
+        </a>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
         <code>Stern</code>
       </td>
       <td>
