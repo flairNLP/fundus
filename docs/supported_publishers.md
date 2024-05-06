@@ -1111,5 +1111,22 @@
       </td>
       <td>&#160;</td>
     </tr>
+    <tr>
+      <td>
+        <code>WashingtonPost</code>
+      </td>
+      <td>
+        <div>Washington Post</div>
+      </td>
+      <td>
+        <a href="https://www.washingtonpost.com/">
+          <span>www.washingtonpost.com</span>
+        </a>
+      </td>
+      <td>
+        <code>topics</code>
+      </td>
+      <td>&#160;</td>
+    </tr>
   </tbody>
 </table>

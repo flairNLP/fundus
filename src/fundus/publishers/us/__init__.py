@@ -15,6 +15,7 @@ from .the_gateway_pundit import TheGatewayPunditParser
 from .the_intercept import TheInterceptParser
 from .the_nation_parser import TheNationParser
 from .the_new_yorker import TheNewYorkerParser
+from .washington_post import WashingtonPostParser
 from .washington_times_parser import WashingtonTimesParser
 from .world_truth import WorldTruthParser
 
@@ -116,6 +117,20 @@ class US(PublisherEnum):
             Sitemap("https://www.washingtontimes.com/sitemap-entries.xml"),
         ],
         parser=WashingtonTimesParser,
+    )
+
+    WashingtonPost = PublisherSpec(
+        name="Washington Post",
+        domain="https://www.washingtonpost.com/",
+        sources=[
+            Sitemap("https://www.washingtonpost.com/sitemaps/sitemap.xml.gz"),
+            NewsMap("https://www.washingtonpost.com/sitemaps/news-sitemap.xml.gz"),
+            RSSFeed("https://feeds.washingtonpost.com/rss/world"),
+            RSSFeed("https://feeds.washingtonpost.com/rss/national"),
+        ],
+        parser=WashingtonPostParser,
+        # Adds a URL-filter to ignore incomplete URLs
+        url_filter=regex_filter("washingtonpost.com(\/)?$"),
     )
 
     TheNewYorker = PublisherSpec(
