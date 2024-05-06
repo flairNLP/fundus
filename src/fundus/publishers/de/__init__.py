@@ -268,7 +268,7 @@ class DE(PublisherEnum):
         ],
         parser=EuronewsParser,
     )
-    
+
     Hessenschau = PublisherSpec(
         name="Hessenschau",
         domain="https://www.hessenschau.de/",

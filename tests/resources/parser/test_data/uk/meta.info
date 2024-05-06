@@ -1,11 +1,11 @@
 {
-  "EuronewsEN_2024_04_30.html.gz": {
-    "url": "https://www.euronews.com/2024/04/30/swedish-police-to-investigate-reports-of-information-leaks-to-violent-gangs",
-    "crawl_date": "2024-04-30 16:52:48.230575"
-  },
   "DailyStar_2024_04_23.html.gz": {
     "url": "https://www.dailystar.co.uk/travel/travel-news/i-sell-walt-disney-world-32645619",
     "crawl_date": "2024-04-23 13:00:40.272329"
+  },
+  "EuronewsEN_2024_04_30.html.gz": {
+    "url": "https://www.euronews.com/2024/04/30/swedish-police-to-investigate-reports-of-information-leaks-to-violent-gangs",
+    "crawl_date": "2024-04-30 16:52:48.230575"
   },
   "TheGuardian_2024_02_24.html.gz": {
     "url": "https://www.theguardian.com/world/2024/feb/24/death-toll-in-valencia-fire-rises-to-10-as-remains-of-last-missing-person-found",

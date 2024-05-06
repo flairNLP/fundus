@@ -65,7 +65,7 @@ class UK(PublisherEnum):
         ],
         parser=EuronewsParser,
     )
-    
+
     DailyStar = PublisherSpec(
         name="Daily Star",
         domain="https://www.dailystar.co.uk/",
