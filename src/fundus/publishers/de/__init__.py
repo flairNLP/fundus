@@ -10,6 +10,7 @@ from fundus.scraping.url import NewsMap, RSSFeed, Sitemap
 from ..shared import EuronewsParser
 from .berliner_zeitung import BerlinerZeitungParser
 from .bild import BildParser
+from .boersenzeitung import BoersenZeitungParser
 from .br import BRParser
 from .braunschweiger_zeitung import BSZParser
 from .business_insider_de import BusinessInsiderDEParser
@@ -406,4 +407,16 @@ class DE(PublisherEnum):
             NewsMap("https://www.fr.de/news.xml"),
         ],
         parser=FrankfurterRundschauParser,
+    )
+
+    BoersenZeitung = PublisherSpec(
+        name="Börsen-Zeitung",
+        domain="https://www.boersen-zeitung.de",
+        sources=[
+            NewsMap("https://www.boersen-zeitung.de/sitemap/news.xml.gz"),
+            Sitemap(
+                "https://www.boersen-zeitung.de/sitemap/index.xml.gz", sitemap_filter=regex_filter("/sitemap-0.xml.gz")
+            ),
+        ],
+        parser=BoersenZeitungParser,
     )

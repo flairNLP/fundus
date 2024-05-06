@@ -257,6 +257,21 @@
     </tr>
     <tr>
       <td>
+        <code>BoersenZeitung</code>
+      </td>
+      <td>
+        <div>B&#246;rsen-Zeitung</div>
+      </td>
+      <td>
+        <a href="https://www.boersen-zeitung.de">
+          <span>www.boersen-zeitung.de</span>
+        </a>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
         <code>DW</code>
       </td>
       <td>
