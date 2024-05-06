@@ -1,6 +1,8 @@
 from fundus.publishers.base_objects import PublisherEnum, PublisherSpec
-from fundus.publishers.fr.le_monde import LeMondeParser
 from fundus.scraping.url import NewsMap, Sitemap
+
+from ..shared import EuronewsParser
+from .le_monde import LeMondeParser
 
 
 class FR(PublisherEnum):
@@ -12,4 +14,14 @@ class FR(PublisherEnum):
             NewsMap("https://www.lemonde.fr/sitemap_news.xml"),
         ],
         parser=LeMondeParser,
+    )
+
+    EuronewsFR = PublisherSpec(
+        name="Euronews (FR)",
+        domain="https://fr.euronews.com/",
+        sources=[
+            Sitemap("https://fr.euronews.com/sitemaps/fr/articles.xml"),
+            NewsMap("https://fr.euronews.com/sitemaps/fr/latest-news.xml"),
+        ],
+        parser=EuronewsParser,
     )
