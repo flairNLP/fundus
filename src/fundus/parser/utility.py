@@ -240,12 +240,12 @@ def generic_text_extraction_with_css(doc, selector: XPath) -> Optional[str]:
 
 
 def generic_topic_parsing(keywords: Optional[Union[str, List[str]]], delimiter: str = ",") -> List[str]:
-    if isinstance(keywords, str):
+    if not keywords:
+        return []
+    elif isinstance(keywords, str):
         return [cleaned for keyword in keywords.split(delimiter) if (cleaned := keyword.strip())]
     elif isinstance(keywords, list) and all(isinstance(s, str) for s in keywords):
         return keywords
-    elif keywords is None:
-        return []
     else:
         raise TypeError(f"Encountered unexpected type {type(keywords)} as keyword parameter")
 

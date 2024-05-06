@@ -4,9 +4,12 @@ from fundus.publishers.base_objects import PublisherEnum, PublisherSpec
 from fundus.scraping.filter import inverse, regex_filter
 from fundus.scraping.url import NewsMap, Sitemap
 
+from ..shared import EuronewsParser
+from .daily_star import DailyStarParser
 from .i_news import INewsParser
 from .the_guardian import TheGuardianParser
 from .the_independent import TheIndependentParser
+from .the_sun import TheSunParser
 from .the_telegraph import TheTelegraphParser
 
 
@@ -51,4 +54,35 @@ class UK(PublisherEnum):
             ),
         ],
         parser=INewsParser,
+    )
+
+    EuronewsEN = PublisherSpec(
+        name="Euronews (EN)",
+        domain="https://www.euronews.com/",
+        sources=[
+            Sitemap("https://www.euronews.com/sitemaps/en/articles.xml"),
+            NewsMap("https://www.euronews.com/sitemaps/en/latest-news.xml"),
+        ],
+        parser=EuronewsParser,
+    )
+
+    DailyStar = PublisherSpec(
+        name="Daily Star",
+        domain="https://www.dailystar.co.uk/",
+        sources=[
+            Sitemap("https://www.dailystar.co.uk/sitemaps/sitemap_index.xml", reverse=True),
+            NewsMap("https://www.dailystar.co.uk/map_news.xml"),
+        ],
+        parser=DailyStarParser,
+    )
+
+    TheSun = PublisherSpec(
+        name="The Sun",
+        domain="https://www.thesun.co.uk/",
+        sources=[
+            Sitemap("https://www.thesun.co.uk/sitemap.xml"),
+            NewsMap("https://www.thesun.co.uk/news-sitemap.xml"),
+        ],
+        url_filter=regex_filter("sun-bingo|web-stories"),
+        parser=TheSunParser,
     )
