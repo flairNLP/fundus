@@ -23,5 +23,6 @@ class AT(PublisherEnum):
             NewsMap("https://www.derstandard.at/sitemaps/news.xml"),
             Sitemap("https://www.derstandard.at/sitemaps/sitemap.xml"),
         ],
+        request_header={"user-agent": "Googlebot"},
         parser=DerStandardParser,
     )
