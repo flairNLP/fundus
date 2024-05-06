@@ -19,8 +19,8 @@ from .die_zeit import DieZeitParser
 from .dw import DWParser
 from .faz import FAZParser
 from .focus import FocusParser
-from .freiepresse import FreiePresseParser
 from .frankfurter_rundschau import FrankfurterRundschauParser
+from .freiepresse import FreiePresseParser
 from .hamburger_abendblatt import HamburgerAbendblattParser
 from .hessenschau import HessenschauParser
 from .junge_welt import JungeWeltParser
