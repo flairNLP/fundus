@@ -394,6 +394,21 @@
     </tr>
     <tr>
       <td>
+        <code>FreiePresse</code>
+      </td>
+      <td>
+        <div>FreiePresse</div>
+      </td>
+      <td>
+        <a href="https://www.freiepresse.de/">
+          <span>www.freiepresse.de</span>
+        </a>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
         <code>HamburgerAbendblatt</code>
       </td>
       <td>

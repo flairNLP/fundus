@@ -20,6 +20,7 @@ from .dw import DWParser
 from .faz import FAZParser
 from .focus import FocusParser
 from .frankfurter_rundschau import FrankfurterRundschauParser
+from .freiepresse import FreiePresseParser
 from .hamburger_abendblatt import HamburgerAbendblattParser
 from .hessenschau import HessenschauParser
 from .junge_welt import JungeWeltParser
@@ -457,4 +458,24 @@ class DE(PublisherEnum):
             NewsMap("https://www.mz.de/sitemaps/newssitemap-index.xml"),
         ],
         parser=MitteldeutscheZeitungParser,
+    )
+
+    FreiePresse = PublisherSpec(
+        name="FreiePresse",
+        domain="https://www.freiepresse.de/",
+        sources=[
+            RSSFeed("https://www.freiepresse.de/rss/rss_chemnitz.php"),
+            RSSFeed("https://www.freiepresse.de/rss/rss_erzgebirge.php"),
+            RSSFeed("https://www.freiepresse.de/rss/rss_mittelsachsen.php"),
+            RSSFeed("https://www.freiepresse.de/rss/rss_vogtland.php"),
+            RSSFeed("https://www.freiepresse.de/rss/rss_zwickau.php"),
+            RSSFeed("https://www.freiepresse.de/rss/rss_politik.php"),
+            RSSFeed("https://www.freiepresse.de/rss/rss_wirtschaft.php"),
+            RSSFeed("https://www.freiepresse.de/rss/rss_kultur.php"),
+            RSSFeed("https://www.freiepresse.de/rss/rss_sport.php"),
+            RSSFeed("https://www.freiepresse.de/rss/rss_sachsen.php"),
+            RSSFeed("https://www.freiepresse.de/rss/rss_regional.php"),
+            Sitemap("https://www.freiepresse.de/sitemaps/articles_last2years.xml", reverse=True),
+        ],
+        parser=FreiePresseParser,
     )
