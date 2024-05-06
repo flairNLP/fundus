@@ -892,6 +892,21 @@
         <code>description</code>
       </td>
     </tr>
+    <tr>
+      <td>
+        <code>NTVTR</code>
+      </td>
+      <td>
+        <div>NTVTR</div>
+      </td>
+      <td>
+        <a href="https://www.ntv.com.tr/">
+          <span>www.ntv.com.tr</span>
+        </a>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
   </tbody>
 </table>
 
