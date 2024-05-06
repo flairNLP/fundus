@@ -1209,6 +1209,21 @@
     </tr>
     <tr>
       <td>
+        <code>VoiceOfAmerica</code>
+      </td>
+      <td>
+        <div>Voice Of America</div>
+      </td>
+      <td>
+        <a href="https://www.voanews.com/">
+          <span>www.voanews.com</span>
+        </a>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
         <code>WashingtonPost</code>
       </td>
       <td>
