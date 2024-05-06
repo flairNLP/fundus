@@ -11,6 +11,7 @@ from .la_times import LATimesParser
 from .occupy_democrats import OccupyDemocratsParser
 from .reuters import ReutersParser
 from .rolling_stone import RollingStoneParser
+from .techcrunch import TechCrunchParser
 from .the_gateway_pundit import TheGatewayPunditParser
 from .the_intercept import TheInterceptParser
 from .the_nation_parser import TheNationParser
@@ -41,6 +42,20 @@ class US(PublisherEnum):
         domain="https://www.cnbc.com/",
         sources=[Sitemap("https://www.cnbc.com/sitemapAll.xml"), NewsMap("https://www.cnbc.com/sitemap_news.xml")],
         parser=CNBCParser,
+    )
+
+    TechCrunch = PublisherSpec(
+        name="TechCrunch",
+        domain="https://techcrunch.com/",
+        sources=[
+            Sitemap(
+                "https://techcrunch.com/sitemap_index.xml",
+                sitemap_filter=inverse(regex_filter("post-sitemap")),
+                reverse=True,
+            ),
+            NewsMap("https://techcrunch.com/news-sitemap.xml"),
+        ],
+        parser=TechCrunchParser,
     )
 
     TheIntercept = PublisherSpec(

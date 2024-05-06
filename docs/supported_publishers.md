@@ -1159,6 +1159,21 @@
     </tr>
     <tr>
       <td>
+        <code>TechCrunch</code>
+      </td>
+      <td>
+        <div>TechCrunch</div>
+      </td>
+      <td>
+        <a href="https://techcrunch.com/">
+          <span>techcrunch.com</span>
+        </a>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
         <code>TheGatewayPundit</code>
       </td>
       <td>
