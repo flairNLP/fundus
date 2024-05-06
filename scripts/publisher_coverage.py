@@ -13,6 +13,7 @@ from fundus import Crawler, NewsMap, PublisherCollection, RSSFeed
 from fundus.publishers.base_objects import PublisherEnum
 from fundus.scraping.article import Article
 from fundus.scraping.filter import RequiresAll
+from scripts.utility import timeout
 
 
 def main() -> None:
@@ -31,18 +32,16 @@ def main() -> None:
         ):
             publisher_name: str = publisher.name  # type: ignore[attr-defined]
 
-            if not (publisher.source_mapping[RSSFeed] or publisher.source_mapping[NewsMap]):  # type: ignore[attr-defined]
-                # skip publishers providing no NewsMap or RSSFeed
-                print(f"⏩  SKIPPED: {publisher_name!r} - NO NewsMap or RSSFeed found")
-                continue
+            crawler: Crawler = Crawler(publisher, delay=0.4)
 
-            crawler: Crawler = Crawler(publisher, restrict_sources_to=[NewsMap, RSSFeed])
-            complete_article: Optional[Article] = next(
+            timed_next = timeout(next, time=20, silent=True)
+
+            complete_article: Optional[Article] = timed_next(  # type: ignore[call-arg]
                 crawler.crawl(max_articles=1, only_complete=RequiresAll(), error_handling="catch"), None
             )
 
             if complete_article is None:
-                incomplete_article: Optional[Article] = next(
+                incomplete_article: Optional[Article] = timed_next(  # type: ignore[call-arg]
                     crawler.crawl(max_articles=1, only_complete=False, error_handling="suppress"), None
                 )
 
