@@ -272,7 +272,7 @@ class DE(PublisherEnum):
         ],
         parser=TagesspiegelParser,
     )
-    
+
     EuronewsDE = PublisherSpec(
         name="Euronews (DE)",
         domain="https://de.euronews.com/",
