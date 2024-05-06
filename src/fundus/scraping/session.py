@@ -9,7 +9,7 @@ from fundus.logging import create_logger
 
 logger = create_logger(__name__)
 
-_default_header = {"user-agent": "FundusBot"}
+_default_header = {"user-agent": "Fundus"}
 
 
 class SessionHandler:
