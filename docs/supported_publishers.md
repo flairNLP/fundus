@@ -358,6 +358,23 @@
     </tr>
     <tr>
       <td>
+        <code>Kicker</code>
+      </td>
+      <td>
+        <div>Kicker</div>
+      </td>
+      <td>
+        <a href="https://www.kicker.de/">
+          <span>www.kicker.de</span>
+        </a>
+      </td>
+      <td>
+        <code>topics</code>
+      </td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
         <code>MDR</code>
       </td>
       <td>

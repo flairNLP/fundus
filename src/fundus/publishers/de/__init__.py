@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import Optional
 
 from dateutil.rrule import MONTHLY, YEARLY, rrule
 
@@ -19,6 +20,7 @@ from .faz import FAZParser
 from .focus import FocusParser
 from .hessenschau import HessenschauParser
 from .junge_welt import JungeWeltParser
+from .kicker import KickerParser
 from .mdr import MDRParser
 from .merkur import MerkurParser
 from .morgenpost_berlin import BerlinerMorgenpostParser
@@ -378,4 +380,18 @@ class DE(PublisherEnum):
             Sitemap("https://www.der-postillon.com/sitemap.xml"),
         ],
         parser=PostillonParser,
+    )
+
+    Kicker = PublisherSpec(
+        name="Kicker",
+        domain="https://www.kicker.de/",
+        sources=[
+            RSSFeed("https://newsfeed.kicker.de/news/aktuell"),
+            Sitemap(
+                "https://leserservice.kicker.de/sitemap_0.xml", sitemap_filter=regex_filter("leserservice.kicker.de")
+            ),
+            NewsMap("https://newsfeed.kicker.de/googlesitemapnews.xml"),
+        ],
+        url_filter=regex_filter("/slideshow|/video"),
+        parser=KickerParser,
     )
