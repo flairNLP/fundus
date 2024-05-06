@@ -3,7 +3,7 @@ from datetime import datetime
 from dateutil.rrule import MONTHLY, YEARLY, rrule
 
 from fundus.publishers.base_objects import PublisherEnum, PublisherSpec
-from fundus.scraping.filter import regex_filter
+from fundus.scraping.filter import inverse, regex_filter
 from fundus.scraping.url import NewsMap, RSSFeed, Sitemap
 
 from ..shared import EuronewsParser
@@ -22,6 +22,7 @@ from .mdr import MDRParser
 from .merkur import MerkurParser
 from .morgenpost_berlin import BerlinerMorgenpostParser
 from .ndr import NDRParser
+from .netzpolitik_org import NetzpolitikOrgParser
 from .ntv import NTVParser
 from .rheinische_post import RheinischePostParser
 from .spon import SPONParser
@@ -37,6 +38,18 @@ from .zdf import ZDFParser
 
 # noinspection PyPep8Naming
 class DE(PublisherEnum):
+    NetzpolitikOrg = PublisherSpec(
+        name="netzpolitik.org",
+        domain="https://netzpolitik.org/",
+        sources=[
+            Sitemap(
+                "https://netzpolitik.org/sitemap.xml", sitemap_filter=inverse(regex_filter("sitemap-posttype-post"))
+            ),
+            RSSFeed("https://netzpolitik.org/feed/"),
+        ],
+        parser=NetzpolitikOrgParser,
+    )
+
     BerlinerMorgenpost = PublisherSpec(
         name="Berliner Morgenpost",
         domain="https://www.morgenpost.de/",
