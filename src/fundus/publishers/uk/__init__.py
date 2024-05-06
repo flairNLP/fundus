@@ -4,11 +4,12 @@ from dateutil.rrule import YEARLY, rrule
 
 from fundus.publishers.base_objects import PublisherEnum, PublisherSpec
 from fundus.scraping.filter import inverse, regex_filter
-from fundus.scraping.url import NewsMap, Sitemap
+from fundus.scraping.url import NewsMap, RSSFeed, Sitemap
 
 from ..shared import EuronewsParser
 from .daily_mail import DailyMailParser
 from .daily_star import DailyStarParser
+from .evening_standard import EveningStandardParser
 from .i_news import INewsParser
 from .the_guardian import TheGuardianParser
 from .the_independent import TheIndependentParser
@@ -112,4 +113,17 @@ class UK(PublisherEnum):
             for year in rrule(YEARLY, dtstart=datetime(2021, 1, 1), until=datetime.today())
         ],
         parser=DailyMailParser,
+    )
+
+    EveningStandard = PublisherSpec(
+        name="Evening Standard",
+        domain="https://www.standard.co.uk/",
+        sources=[
+            Sitemap(
+                "https://www.standard.co.uk/sitemap.xml",
+                sitemap_filter=inverse(regex_filter("sitemap-articles|sitemap-recent")),
+            ),
+            RSSFeed("https://www.standard.co.uk/rss"),
+        ],
+        parser=EveningStandardParser,
     )

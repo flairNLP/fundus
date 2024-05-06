@@ -1001,6 +1001,21 @@
     </tr>
     <tr>
       <td>
+        <code>EveningStandard</code>
+      </td>
+      <td>
+        <div>Evening Standard</div>
+      </td>
+      <td>
+        <a href="https://www.standard.co.uk/">
+          <span>www.standard.co.uk</span>
+        </a>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
         <code>TheGuardian</code>
       </td>
       <td>
