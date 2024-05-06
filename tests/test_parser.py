@@ -130,6 +130,8 @@ class TestParserProxy:
 # because this is also used for the generate_parser_test_files script we export it here
 attributes_required_to_cover = {"title", "authors", "topics", "publishing_date", "body"}
 
+attributes_parsers_are_required_to_cover = {"body"}
+
 
 @pytest.mark.parametrize(
     "publisher", list(PublisherCollection), ids=[publisher.name for publisher in PublisherCollection]
@@ -138,6 +140,9 @@ class TestParser:
     def test_annotations(self, publisher: PublisherEnum) -> None:
         parser_proxy = publisher.parser
         for versioned_parser in parser_proxy:
+            assert attributes_parsers_are_required_to_cover.issubset(
+                set(versioned_parser.attributes().validated.names)
+            ), f"{versioned_parser.__name__!r} should implement at least {attributes_parsers_are_required_to_cover!r}"
             for attr in versioned_parser.attributes().validated:
                 if annotation := attribute_annotations_mapping[attr.__name__]:
                     assert (
