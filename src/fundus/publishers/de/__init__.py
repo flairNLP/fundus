@@ -6,6 +6,7 @@ from fundus.publishers.base_objects import PublisherEnum, PublisherSpec
 from fundus.scraping.filter import regex_filter
 from fundus.scraping.url import NewsMap, RSSFeed, Sitemap
 
+from ..shared import EuronewsParser
 from .berliner_zeitung import BerlinerZeitungParser
 from .bild import BildParser
 from .br import BRParser
@@ -256,6 +257,16 @@ class DE(PublisherEnum):
             Sitemap("https://rp-online.de/sitemap.xml"),
         ],
         parser=RheinischePostParser,
+    )
+
+    EuronewsDE = PublisherSpec(
+        name="Euronews (DE)",
+        domain="https://de.euronews.com/",
+        sources=[
+            Sitemap("https://de.euronews.com/sitemaps/de/articles.xml"),
+            NewsMap("https://de.euronews.com/sitemaps/de/latest-news.xml"),
+        ],
+        parser=EuronewsParser,
     )
 
     Hessenschau = PublisherSpec(
