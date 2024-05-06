@@ -1,6 +1,6 @@
 from fundus.publishers.base_objects import PublisherEnum, PublisherSpec
 from fundus.scraping.filter import inverse, regex_filter
-from fundus.scraping.url import RSSFeed, NewsMap, Sitemap
+from fundus.scraping.url import NewsMap, RSSFeed, Sitemap
 
 from .haberturk import HaberturkParser
 from .ntvtr import NTVTRParser
