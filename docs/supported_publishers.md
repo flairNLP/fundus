@@ -343,6 +343,21 @@
     </tr>
     <tr>
       <td>
+        <code>JungeWelt</code>
+      </td>
+      <td>
+        <div>Junge Welt</div>
+      </td>
+      <td>
+        <a href="https://www.jungewelt.de/">
+          <span>www.jungewelt.de</span>
+        </a>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
         <code>MDR</code>
       </td>
       <td>

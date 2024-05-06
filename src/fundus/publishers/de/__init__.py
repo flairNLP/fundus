@@ -18,6 +18,7 @@ from .dw import DWParser
 from .faz import FAZParser
 from .focus import FocusParser
 from .hessenschau import HessenschauParser
+from .junge_welt import JungeWeltParser
 from .mdr import MDRParser
 from .merkur import MerkurParser
 from .morgenpost_berlin import BerlinerMorgenpostParser
@@ -286,6 +287,15 @@ class DE(PublisherEnum):
             Sitemap("https://rp-online.de/sitemap.xml"),
         ],
         parser=RheinischePostParser,
+    )
+
+    JungeWelt = PublisherSpec(
+        name="Junge Welt",
+        domain="https://www.jungewelt.de/",
+        sources=[
+            RSSFeed("https://www.jungewelt.de/feeds/newsticker.rss"),
+        ],
+        parser=JungeWeltParser,
     )
 
     Tagesspiegel = PublisherSpec(
