@@ -602,23 +602,6 @@
       </td>
       <td>&#160;</td>
     </tr>
-    <tr>
-      <td>
-        <code>RBB24</code>
-      </td>
-      <td>
-        <div>rbb|24</div>
-      </td>
-      <td>
-        <a href="https://www.rbb24.de/">
-          <span>www.rbb24.de</span>
-        </a>
-      </td>
-      <td>
-        <code>topics</code>
-      </td>
-      <td>&#160;</td>
-    </tr>
   </tbody>
 </table>
 
