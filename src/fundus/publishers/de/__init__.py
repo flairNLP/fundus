@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from dateutil.rrule import MONTHLY, rrule
+from dateutil.rrule import MONTHLY, YEARLY, rrule
 
 from fundus.publishers.base_objects import PublisherEnum, PublisherSpec
 from fundus.scraping.filter import regex_filter
@@ -28,6 +28,7 @@ from .spon import SPONParser
 from .stern import SternParser
 from .sz import SZParser
 from .tagesschau import TagesschauParser
+from .tagesspiegel import TagesspiegelParser
 from .taz import TazParser
 from .waz import WAZParser
 from .wdr import WDRParser
@@ -257,6 +258,19 @@ class DE(PublisherEnum):
             Sitemap("https://rp-online.de/sitemap.xml"),
         ],
         parser=RheinischePostParser,
+    )
+
+    Tagesspiegel = PublisherSpec(
+        name="Tagesspiegel",
+        domain="https://www.tagesspiegel.de/",
+        sources=[
+            NewsMap("https://www.tagesspiegel.de/news.xml"),
+        ]
+        + [
+            Sitemap(f"https://www.tagesspiegel.de/contentexport/static/sitemap-index_{date.year}.xml")
+            for date in reversed(list(rrule(YEARLY, dtstart=datetime(1996, 1, 1), until=datetime.today())))
+        ],
+        parser=TagesspiegelParser,
     )
 
     EuronewsDE = PublisherSpec(
