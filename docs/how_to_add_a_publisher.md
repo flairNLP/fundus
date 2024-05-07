@@ -37,8 +37,10 @@ import urllib.request
 
 url = ...
 
-with urllib.request.urlopen(url) as response:
-    pass
+request = urllib.request.Request(url, headers={'User-Agent': 'FundusBot'})
+
+with urllib.request.urlopen(request) as response:
+    content = response.read()
 ````
 If you encounter an error like `urllib.error.HTTPError: HTTP Error 403: Forbidden`, it indicates that the publisher uses bot protection, preventing crawling.
 In such cases, please comment on the issue mentioned above, mentioning the publisher you attempted to crawl, preferably with its domain name.
