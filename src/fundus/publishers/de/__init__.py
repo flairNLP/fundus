@@ -21,11 +21,11 @@ from .faz import FAZParser
 from .focus import FocusParser
 from .frankfurter_rundschau import FrankfurterRundschauParser
 from .freiepresse import FreiePresseParser
+from .gamestar import GamestarParser
 from .hamburger_abendblatt import HamburgerAbendblattParser
 from .hessenschau import HessenschauParser
 from .junge_welt import JungeWeltParser
 from .kicker import KickerParser
-from .gamestar import GamestarParser
 from .mdr import MDRParser
 from .merkur import MerkurParser
 from .morgenpost_berlin import BerlinerMorgenpostParser

@@ -409,6 +409,23 @@
     </tr>
     <tr>
       <td>
+        <code>Gamestar</code>
+      </td>
+      <td>
+        <div>Gamestar</div>
+      </td>
+      <td>
+        <a href="https://www.gamestar.de/">
+          <span>www.gamestar.de</span>
+        </a>
+      </td>
+      <td>
+        <code>topics</code>
+      </td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
         <code>HamburgerAbendblatt</code>
       </td>
       <td>
