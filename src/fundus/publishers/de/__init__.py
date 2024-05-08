@@ -46,6 +46,7 @@ from .taz import TazParser
 from .vogue_de import VogueDEParser
 from .waz import WAZParser
 from .wdr import WDRParser
+from .winfuture import WinfutureParser
 from .zdf import ZDFParser
 
 
@@ -311,6 +312,18 @@ class DE(PublisherEnum):
             Sitemap("https://rp-online.de/sitemap.xml"),
         ],
         parser=RheinischePostParser,
+    )
+
+    WinFuture = PublisherSpec(
+        name="WinFuture",
+        domain="https://winfuture.de/",
+        sources=[
+            RSSFeed("https://static.winfuture.de/feeds/WinFuture-News-rss2.0.xml"),
+            NewsMap("https://winfuture.de/sitemap-latest-news.xml.gz"),
+            Sitemap("https://winfuture.de/sitemap.xml", sitemap_filter=inverse(regex_filter("sitemap-news"))),
+        ],
+        url_filter=regex_filter("https:////winfuture/.de//news*"),
+        parser=WinfutureParser,
     )
 
     JungeWelt = PublisherSpec(
