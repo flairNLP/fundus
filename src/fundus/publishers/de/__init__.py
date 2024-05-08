@@ -45,8 +45,8 @@ from .tagesspiegel import TagesspiegelParser
 from .taz import TazParser
 from .vogue_de import VogueDEParser
 from .waz import WAZParser
-from .winfuture import WinfutureParser
 from .wdr import WDRParser
+from .winfuture import WinfutureParser
 from .zdf import ZDFParser
 
 
@@ -325,7 +325,7 @@ class DE(PublisherEnum):
         url_filter=regex_filter("https:////winfuture/.de//news*"),
         parser=WinfutureParser,
     )
-    
+
     JungeWelt = PublisherSpec(
         name="Junge Welt",
         domain="https://www.jungewelt.de/",
