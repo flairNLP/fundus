@@ -164,10 +164,10 @@ class Requires:
 
 class RequiresAll(Requires):
     def __init__(self, eval_booleans: bool = False) -> None:
-        """Name wrap for Requires()
+        """Name wrap for Requires(eval_booleans=False)
 
         This is for readability only. By default, it requires all non-boolean attributes of the extraction
-        to evaluate to True. Set `skip_boolean=False` to alter this behaviour.
+        to evaluate to True. Set `eval_booleans=True` to include boolean values in the evaluation as well.
         See class:Requires docstring for more information.
 
         Args:

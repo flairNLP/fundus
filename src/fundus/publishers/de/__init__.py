@@ -1,13 +1,17 @@
 from datetime import datetime
+from typing import Optional
 
-from dateutil.rrule import MONTHLY, rrule
+from dateutil.rrule import MONTHLY, YEARLY, rrule
 
 from fundus.publishers.base_objects import PublisherEnum, PublisherSpec
-from fundus.scraping.filter import regex_filter
+from fundus.scraping.filter import inverse, regex_filter
 from fundus.scraping.url import NewsMap, RSSFeed, Sitemap
 
+from ..shared import EuronewsParser
 from .berliner_zeitung import BerlinerZeitungParser
 from .bild import BildParser
+from .boersenzeitung import BoersenZeitungParser
+from .br import BRParser
 from .braunschweiger_zeitung import BSZParser
 from .business_insider_de import BusinessInsiderDEParser
 from .die_welt import DieWeltParser
@@ -15,22 +19,89 @@ from .die_zeit import DieZeitParser
 from .dw import DWParser
 from .faz import FAZParser
 from .focus import FocusParser
+from .frankfurter_rundschau import FrankfurterRundschauParser
+from .freiepresse import FreiePresseParser
+from .hamburger_abendblatt import HamburgerAbendblattParser
+from .hessenschau import HessenschauParser
+from .junge_welt import JungeWeltParser
+from .kicker import KickerParser
 from .gamestar import GamestarParser
 from .mdr import MDRParser
 from .merkur import MerkurParser
+from .morgenpost_berlin import BerlinerMorgenpostParser
+from .motorsport_magazin import MotorSportMagazinParser
+from .mz import MitteldeutscheZeitungParser
 from .ndr import NDRParser
+from .netzpolitik_org import NetzpolitikOrgParser
 from .ntv import NTVParser
+from .postillon import PostillonParser
 from .rheinische_post import RheinischePostParser
+from .rn import RuhrNachrichtenParser
 from .spon import SPONParser
+from .sportschau import SportSchauParser
 from .stern import SternParser
 from .sz import SZParser
 from .tagesschau import TagesschauParser
+from .tagesspiegel import TagesspiegelParser
 from .taz import TazParser
+from .vogue_de import VogueDEParser
 from .waz import WAZParser
+from .wdr import WDRParser
+from .winfuture import WinfutureParser
+from .zdf import ZDFParser
 
 
 # noinspection PyPep8Naming
 class DE(PublisherEnum):
+    SportSchau = PublisherSpec(
+        name="Sportschau",
+        domain="https://www.sportschau.de/",
+        parser=SportSchauParser,
+        sources=[
+            RSSFeed("https://www.sportschau.de/index~rss2.xml"),
+            Sitemap("https://www.sportschau.de/index~sitemap_p-0.xml"),
+            NewsMap("https://www.sportschau.de/kompakt-sp-100~news.xml"),
+        ],
+        url_filter=inverse(regex_filter("sportschau.de")),
+    )
+
+    NetzpolitikOrg = PublisherSpec(
+        name="netzpolitik.org",
+        domain="https://netzpolitik.org/",
+        sources=[
+            Sitemap(
+                "https://netzpolitik.org/sitemap.xml", sitemap_filter=inverse(regex_filter("sitemap-posttype-post"))
+            ),
+            RSSFeed("https://netzpolitik.org/feed/"),
+        ],
+        parser=NetzpolitikOrgParser,
+    )
+
+    BerlinerMorgenpost = PublisherSpec(
+        name="Berliner Morgenpost",
+        domain="https://www.morgenpost.de/",
+        sources=[NewsMap("https://www.morgenpost.de/sitemaps/news.xml")]
+        + [
+            Sitemap(f"https://www.morgenpost.de/sitemaps/archive/sitemap-{d.year}-{str(d.month).zfill(2)}-p00.xml.gz")
+            for d in reversed(list(rrule(MONTHLY, dtstart=datetime(2003, 2, 1), until=datetime.now())))
+        ],
+        parser=BerlinerMorgenpostParser,
+    )
+
+    HamburgerAbendblatt = PublisherSpec(
+        name="Hamburger Abendblatt",
+        domain="https://www.abendblatt.de/",
+        sources=[
+            RSSFeed("https://www.abendblatt.de/rss"),
+            NewsMap("https://www.abendblatt.de/sitemaps/news.xml"),
+        ]
+        + [
+            Sitemap(f"https://www.abendblatt.de/sitemaps/archive/sitemap-{d.year}-{str(d.month).zfill(2)}-p00.xml.gz")
+            for d in reversed(list(rrule(MONTHLY, dtstart=datetime(2000, 4, 1), until=datetime.today())))
+        ],
+        parser=HamburgerAbendblattParser,
+    )
+
     DieWelt = PublisherSpec(
         name="Die Welt",
         domain="https://www.welt.de/",
@@ -74,7 +145,7 @@ class DE(PublisherEnum):
         domain="https://www.focus.de/",
         sources=[RSSFeed("https://rss.focus.de/fol/XML/rss_folnews.xml")],
         parser=FocusParser,
-        # Focus blocks access for all user-agents including the term 'Bot'
+        # Focus blocks access for all user-agents including the term 'bot'
         request_header={"user-agent": "Fundus"},
     )
 
@@ -104,6 +175,7 @@ class DE(PublisherEnum):
             Sitemap("https://www.spiegel.de/sitemap.xml"),
             NewsMap("https://www.spiegel.de/sitemaps/news-de.xml"),
         ],
+        request_header={"User-Agent": "Googlebot"},
         parser=SPONParser,
     )
 
@@ -117,6 +189,7 @@ class DE(PublisherEnum):
                 f"https://www.zeit.de/gsitemaps/index.xml?date={datetime.now().strftime('%Y-%m-%d')}&unit=days&period=1"
             ),
         ],
+        request_header={"user-agent": "Googlebot"},
         url_filter=regex_filter(
             "/zett/|/angebote/|/kaenguru-comics/|/administratives/|/index(?!.)|/elbvertiefung-[0-9]{2}-[0-9]{2}"
         ),
@@ -216,7 +289,7 @@ class DE(PublisherEnum):
             Sitemap(
                 f"https://www.braunschweiger-zeitung.de/sitemaps/archive/sitemap-{d.year}-{str(d.month).zfill(2)}-p00.xml.gz"
             )
-            for d in reversed(list(rrule(MONTHLY, dtstart=datetime(2016, 9, 1), until=datetime.now())))
+            for d in list(rrule(MONTHLY, dtstart=datetime(2005, 12, 1), until=datetime.now()))
         ],
         parser=BSZParser,
     )
@@ -240,6 +313,202 @@ class DE(PublisherEnum):
             Sitemap("https://rp-online.de/sitemap.xml"),
         ],
         parser=RheinischePostParser,
+    )
+
+    WinFuture = PublisherSpec(
+        name="WinFuture",
+        domain="https://winfuture.de/",
+        sources=[
+            RSSFeed("https://static.winfuture.de/feeds/WinFuture-News-rss2.0.xml"),
+            NewsMap("https://winfuture.de/sitemap-latest-news.xml.gz"),
+            Sitemap("https://winfuture.de/sitemap.xml", sitemap_filter=inverse(regex_filter("sitemap-news"))),
+        ],
+        url_filter=regex_filter("https:////winfuture/.de//news*"),
+        parser=WinfutureParser,
+    )
+
+    JungeWelt = PublisherSpec(
+        name="Junge Welt",
+        domain="https://www.jungewelt.de/",
+        sources=[
+            RSSFeed("https://www.jungewelt.de/feeds/newsticker.rss"),
+        ],
+        parser=JungeWeltParser,
+    )
+
+    Tagesspiegel = PublisherSpec(
+        name="Tagesspiegel",
+        domain="https://www.tagesspiegel.de/",
+        sources=[
+            NewsMap("https://www.tagesspiegel.de/news.xml"),
+        ]
+        + [
+            Sitemap(f"https://www.tagesspiegel.de/contentexport/static/sitemap-index_{date.year}.xml")
+            for date in reversed(list(rrule(YEARLY, dtstart=datetime(1996, 1, 1), until=datetime.today())))
+        ],
+        parser=TagesspiegelParser,
+    )
+
+    EuronewsDE = PublisherSpec(
+        name="Euronews (DE)",
+        domain="https://de.euronews.com/",
+        sources=[
+            Sitemap("https://de.euronews.com/sitemaps/de/articles.xml"),
+            NewsMap("https://de.euronews.com/sitemaps/de/latest-news.xml"),
+        ],
+        parser=EuronewsParser,
+    )
+
+    Hessenschau = PublisherSpec(
+        name="Hessenschau",
+        domain="https://www.hessenschau.de/",
+        sources=[
+            RSSFeed("https://www.hessenschau.de/index.rss"),
+            Sitemap("https://www.hessenschau.de/indexsitemap.nc.xml"),
+            Sitemap("https://www.hessenschau.de/sitemap.nc.xml"),
+        ],
+        parser=HessenschauParser,
+    )
+
+    WDR = PublisherSpec(
+        name="Westdeutscher Rundfunk",
+        domain="https://www1.wdr.de/",
+        sources=[RSSFeed("https://www1.wdr.de/uebersicht-100.feed")],
+        parser=WDRParser,
+    )
+
+    BR = PublisherSpec(
+        name="Bayerischer Rundfunk (BR)",
+        domain="https://www.br.de/",
+        sources=[
+            Sitemap("https://www.br.de/sitemapIndex.xml"),
+            NewsMap("https://www.br.de/nachrichten/sitemaps/news.xml"),
+        ],
+        parser=BRParser,
+    )
+
+    ZDF = PublisherSpec(
+        name="zdfHeute",
+        domain="https://www.zdf.de/",
+        sources=[
+            Sitemap("https://www.zdf.de/sitemap.xml", reverse=True),
+            NewsMap("https://www.zdf.de/news-sitemap.xml"),
+            RSSFeed("https://www.zdf.de/rss/zdf/nachrichten"),
+        ],
+        parser=ZDFParser,
+    )
+
+    MotorSportMagazin = PublisherSpec(
+        name="MotorSport Magazin",
+        domain="https://www.motorsport-magazin.com/",
+        sources=[
+            RSSFeed("https://www.motorsport-magazin.com/rss/alle-rennserien.xml"),
+            Sitemap("https://www.motorsport-magazin.com/sitemap.xml"),
+        ],
+        parser=MotorSportMagazinParser,
+    )
+
+    Postillon = PublisherSpec(
+        name="Postillon",
+        domain="https://www.der-postillon.com/",
+        sources=[
+            RSSFeed("https://follow.it/der-postillon-abo"),
+            Sitemap("https://www.der-postillon.com/sitemap.xml"),
+        ],
+        parser=PostillonParser,
+    )
+
+    Kicker = PublisherSpec(
+        name="Kicker",
+        domain="https://www.kicker.de/",
+        sources=[
+            RSSFeed("https://newsfeed.kicker.de/news/aktuell"),
+            Sitemap(
+                "https://leserservice.kicker.de/sitemap_0.xml", sitemap_filter=regex_filter("leserservice.kicker.de")
+            ),
+            NewsMap("https://newsfeed.kicker.de/googlesitemapnews.xml"),
+        ],
+        url_filter=regex_filter("/slideshow|/video"),
+        parser=KickerParser,
+    )
+
+    FrankfurterRundschau = PublisherSpec(
+        name="Frankfurter Rundschau",
+        domain="https://www.fr.de",
+        sources=[
+            RSSFeed("https://fr.de/rssfeed.rdf"),
+            Sitemap("https://www.fr.de/sitemap-index.xml"),
+            NewsMap("https://www.fr.de/news.xml"),
+        ],
+        parser=FrankfurterRundschauParser,
+    )
+
+    BoersenZeitung = PublisherSpec(
+        name="Börsen-Zeitung",
+        domain="https://www.boersen-zeitung.de",
+        sources=[
+            NewsMap("https://www.boersen-zeitung.de/sitemap/news.xml.gz"),
+            Sitemap(
+                "https://www.boersen-zeitung.de/sitemap/index.xml.gz", sitemap_filter=regex_filter("/sitemap-0.xml.gz")
+            ),
+        ],
+        parser=BoersenZeitungParser,
+    )
+
+    VogueDE = PublisherSpec(
+        name="Vogue",
+        domain="https://www.vogue.de/",
+        sources=[
+            RSSFeed("https://www.vogue.de/feed/rss"),
+            NewsMap("https://www.vogue.de/feed/sitemap-news/sitemap-google-news"),
+            Sitemap("https://www.vogue.de/sitemap.xml"),
+        ],
+        parser=VogueDEParser,
+    )
+
+    MitteldeutscheZeitung = PublisherSpec(
+        name="Mitteldeutsche Zeitung",
+        domain="https://www.mz.de/",
+        sources=[
+            Sitemap("https://www.mz.de/sitemaps/sitemap-ressort-index.xml"),
+            NewsMap("https://www.mz.de/sitemaps/newssitemap-index.xml"),
+        ],
+        parser=MitteldeutscheZeitungParser,
+    )
+
+    FreiePresse = PublisherSpec(
+        name="FreiePresse",
+        domain="https://www.freiepresse.de/",
+        sources=[
+            RSSFeed("https://www.freiepresse.de/rss/rss_chemnitz.php"),
+            RSSFeed("https://www.freiepresse.de/rss/rss_erzgebirge.php"),
+            RSSFeed("https://www.freiepresse.de/rss/rss_mittelsachsen.php"),
+            RSSFeed("https://www.freiepresse.de/rss/rss_vogtland.php"),
+            RSSFeed("https://www.freiepresse.de/rss/rss_zwickau.php"),
+            RSSFeed("https://www.freiepresse.de/rss/rss_politik.php"),
+            RSSFeed("https://www.freiepresse.de/rss/rss_wirtschaft.php"),
+            RSSFeed("https://www.freiepresse.de/rss/rss_kultur.php"),
+            RSSFeed("https://www.freiepresse.de/rss/rss_sport.php"),
+            RSSFeed("https://www.freiepresse.de/rss/rss_sachsen.php"),
+            RSSFeed("https://www.freiepresse.de/rss/rss_regional.php"),
+            Sitemap("https://www.freiepresse.de/sitemaps/articles_last2years.xml", reverse=True),
+        ],
+        parser=FreiePresseParser,
+    )
+
+    RuhrNachrichten = PublisherSpec(
+        name="Ruhr Nachrichten",
+        domain="https://www.ruhrnachrichten.de/",
+        sources=[
+            RSSFeed("https://www.ruhrnachrichten.de/service/feed/"),
+            NewsMap("https://www.ruhrnachrichten.de/news-sitemap.xml"),
+            Sitemap(
+                "https://www.ruhrnachrichten.de/sitemap_index.xml",
+                reverse=True,
+                sitemap_filter=inverse(regex_filter("post-sitemap")),
+            ),
+        ],
+        parser=RuhrNachrichtenParser,
     )
 
     Gamestar = PublisherSpec(
