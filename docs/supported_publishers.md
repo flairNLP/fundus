@@ -730,21 +730,6 @@
     </tr>
     <tr>
       <td>
-        <code>WinFuture</code>
-      </td>
-      <td>
-        <div>WinFuture</div>
-      </td>
-      <td>
-        <a href="https://winfuture.de/">
-          <span>winfuture.de</span>
-        </a>
-      </td>
-      <td>&#160;</td>
-      <td>&#160;</td>
-    </tr>
-    <tr>
-      <td>
         <code>WDR</code>
       </td>
       <td>
@@ -753,6 +738,21 @@
       <td>
         <a href="https://www1.wdr.de/">
           <span>www1.wdr.de</span>
+        </a>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
+        <code>WinFuture</code>
+      </td>
+      <td>
+        <div>WinFuture</div>
+      </td>
+      <td>
+        <a href="https://winfuture.de/">
+          <span>winfuture.de</span>
         </a>
       </td>
       <td>&#160;</td>
