@@ -262,7 +262,10 @@ class DE(PublisherEnum):
     Heise = PublisherSpec(
         name="Heise",
         domain="https://www.heise.de",
-        sources=[RSSFeed("https://www.heise.de/rss/heise.rdf"), Sitemap("https://www.heise.de/ct/sitemap.xml")],
+        sources=[
+            RSSFeed("https://www.heise.de/rss/heise.rdf"),
+            Sitemap("https://www.heise.de/sitemapindex.xml", sitemap_filter=inverse(regex_filter("/news/"))),
+        ],
         parser=HeiseParser,
         query_parameter={"seite": "all"},
     )
