@@ -5,6 +5,8 @@
 data
 
 
+# MacOS specific
+.DS_Store
 
 
 # Byte-compiled / optimized / DLL files

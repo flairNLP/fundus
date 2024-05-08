@@ -244,6 +244,9 @@ class ArticleSection(TextSequenceTree):
     def deserialize(cls, serialized: Dict[str, Any]) -> Self:
         return cls(headline=TextSequence(serialized["headline"]), paragraphs=TextSequence(serialized["paragraphs"]))
 
+    def __bool__(self):
+        return bool(self.paragraphs)
+
 
 @dataclass
 class ArticleBody(TextSequenceTree):
@@ -262,3 +265,6 @@ class ArticleBody(TextSequenceTree):
             summary=TextSequence(serialized["summary"]),
             sections=[ArticleSection.deserialize(section) for section in serialized["sections"]],
         )
+
+    def __bool__(self):
+        return any(bool(section) for section in self.sections)
