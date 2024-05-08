@@ -21,6 +21,7 @@ from .faz import FAZParser
 from .focus import FocusParser
 from .frankfurter_rundschau import FrankfurterRundschauParser
 from .freiepresse import FreiePresseParser
+from .gamestar import GamestarParser
 from .hamburger_abendblatt import HamburgerAbendblattParser
 from .hessenschau import HessenschauParser
 from .junge_welt import JungeWeltParser
@@ -508,4 +509,14 @@ class DE(PublisherEnum):
             ),
         ],
         parser=RuhrNachrichtenParser,
+    )
+
+    Gamestar = PublisherSpec(
+        name="Gamestar",
+        domain="https://www.gamestar.de/",
+        sources=[
+            NewsMap("https://www.gamestar.de/sitemapnews.xml"),
+            Sitemap("https://www.gamestar.de/artikel_archiv_index.xml"),
+        ],
+        parser=GamestarParser,
     )
