@@ -156,7 +156,7 @@ class Precomputed:
 class BaseParser(ABC):
     VALID_UNTIL: date = date.today()
     precomputed: Precomputed
-    _ld_selector: XPath = XPath("//script[@type='application/ld+json']")
+    _ld_selector: XPath = XPath("//script[@type='application/ld+json' and contains(text(), 'Article')]")
 
     def __init__(self):
         predicate: Callable[[object], bool] = lambda x: isinstance(x, RegisteredFunction)
