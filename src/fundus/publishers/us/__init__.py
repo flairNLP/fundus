@@ -14,11 +14,11 @@ from .rolling_stone import RollingStoneParser
 from .techcrunch import TechCrunchParser
 from .the_gateway_pundit import TheGatewayPunditParser
 from .the_intercept import TheInterceptParser
-from .the_nation_parser import TheNationParser
+from .the_nation import TheNationParser
 from .the_new_yorker import TheNewYorkerParser
 from .voice_of_america import VOAParser
 from .washington_post import WashingtonPostParser
-from .washington_times_parser import WashingtonTimesParser
+from .washington_times import WashingtonTimesParser
 from .wired import WiredParser
 from .world_truth import WorldTruthParser
 
