@@ -1,7 +1,7 @@
 import _thread as thread
 import threading
 from functools import wraps
-from typing import Callable, Optional, TypeVar, overload
+from typing import Callable, Literal, Optional, TypeVar, overload
 
 from typing_extensions import ParamSpec
 
@@ -14,16 +14,16 @@ def _interrupt_handler() -> None:
 
 
 @overload
-def timeout(func: Callable[P, T], time: float, silent: bool = False) -> Callable[P, T]:
+def timeout(func: Callable[P, T], time: int, silent: Literal[False] = ...) -> Callable[P, T]:
     ...
 
 
 @overload
-def timeout(func: Callable[P, T], time: float, silent: bool = True) -> Callable[P, Optional[T]]:
+def timeout(func: Callable[P, T], time: int, silent: Literal[True]) -> Callable[P, Optional[T]]:
     ...
 
 
-def timeout(func: Callable[P, T], time: float, silent: bool = False) -> Callable[P, Optional[T]]:
+def timeout(func: Callable[P, T], time: int, silent: bool = False) -> Callable[P, Optional[T]]:
     @wraps(func)
     def wrapper(*args: P.args, **kwargs: P.kwargs) -> Optional[T]:
         # register interrupt handler
