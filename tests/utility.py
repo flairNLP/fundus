@@ -1,6 +1,7 @@
 import datetime
 import gzip
 import json
+import os
 import subprocess
 from dataclasses import dataclass
 from pathlib import Path
@@ -201,6 +202,15 @@ class HTMLTestFile:
         if not (meta_info := get_meta_info_file(publisher).load()):
             raise ValueError(f"Missing meta info for file {path.name!r}")
         return cls(content=content, publisher=publisher, encoding=encoding, **meta_info[path.name])
+
+    def remove(self) -> None:
+        if meta_info_file := get_meta_info_file(self.publisher):
+            meta_info = meta_info_file.load() or {}
+            meta_info.pop(self.path.name)
+            meta_info_file.write(meta_info)
+
+        if self.path.exists():
+            os.remove(self.path)
 
     def _register_at_meta_info(self) -> None:
         """Writes meta information about the file to the corresponding meta.info file.
