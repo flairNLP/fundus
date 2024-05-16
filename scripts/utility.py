@@ -14,23 +14,23 @@ def _interrupt_handler() -> None:
 
 
 @overload
-def timeout(func: Callable[P, T], time: int, silent: bool = False) -> Callable[P, T]:
+def timeout(func: Callable[P, T], time: float, silent: bool = False) -> Callable[P, T]:
     ...
 
 
 @overload
-def timeout(func: Callable[P, T], time: int, silent: bool = True) -> Callable[P, Optional[T]]:
+def timeout(func: Callable[P, T], time: float, silent: bool = True) -> Callable[P, Optional[T]]:
     ...
 
 
-def timeout(func: Callable[P, T], time: int, silent: bool = False) -> Callable[P, Optional[T]]:
+def timeout(func: Callable[P, T], time: float, silent: bool = False) -> Callable[P, Optional[T]]:
     @wraps(func)
     def wrapper(*args: P.args, **kwargs: P.kwargs) -> Optional[T]:
         # register interrupt handler
         timer = threading.Timer(time, _interrupt_handler)
-        timer.start()
 
         try:
+            timer.start()
             result = func(*args, **kwargs)
         except KeyboardInterrupt as err:
             if silent:
