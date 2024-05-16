@@ -25,6 +25,8 @@ jobs:
         run: pip install -e .
 
       - name: Validate Crawlers
+        env:
+          PYTHONPATH: .
         run: |
           set -o pipefail
           exec python scripts/publisher_coverage.py | tee publisher_coverage.txt
