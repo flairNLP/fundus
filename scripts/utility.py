@@ -1,13 +1,9 @@
+import _thread as thread
 import threading
 from functools import wraps
 from typing import Callable, Optional, TypeVar, overload
 
 from typing_extensions import ParamSpec
-
-try:
-    import thread
-except ImportError:
-    import _thread as thread
 
 P = ParamSpec("P")
 T = TypeVar("T")
