@@ -105,7 +105,7 @@ def main() -> None:
             test_data = content if not arguments.overwrite_json and (content := test_data_file.load()) else {}
 
             # load html
-            html_mapping = load_html_test_file_mapping(publisher) if not arguments.overwrite else {}
+            html_mapping = load_html_test_file_mapping(publisher)
 
             if arguments.overwrite or not html_mapping.get(publisher.parser.latest_version):
                 if not (article := get_test_article(publisher, url)):
@@ -119,6 +119,10 @@ def main() -> None:
                 )
                 html.write()
                 subprocess.call(["git", "add", html.path], stdout=subprocess.PIPE)
+
+                # remove previous file
+                if previous_file := html_mapping.get(publisher.parser.latest_version):
+                    previous_file.remove()
 
                 html_mapping[publisher.parser.latest_version] = html
                 test_data[publisher.parser.latest_version.__name__] = {}
