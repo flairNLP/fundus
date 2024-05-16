@@ -10,9 +10,9 @@ from typing import (
     Optional,
     Sequence,
     Tuple,
+    TypeVar,
     Union,
     overload,
-    TypeVar
 )
 
 from typing_extensions import Self, TypeAlias
