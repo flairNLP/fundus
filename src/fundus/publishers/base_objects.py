@@ -2,7 +2,7 @@ import inspect
 from dataclasses import dataclass, field
 from enum import Enum, EnumMeta, unique
 from itertools import islice
-from typing import Any, Dict, Iterator, List, Optional, Type
+from typing import Any, Dict, Iterator, List, Optional, Type, Union, Self
 
 from fundus.parser.base_parser import ParserProxy
 from fundus.scraping.filter import URLFilter
@@ -20,34 +20,20 @@ class PublisherSpec:
     url_filter: Optional[URLFilter] = field(default=None)
     request_header: Dict[str, str] = field(default_factory=dict)
 
-
-class PublisherEnumMeta(EnumMeta):
-    def __str__(self) -> str:
-        representation = f"Region {self.__name__!r} containing {len(self)} publisher(s):"
-        publisher: str
-        for publisher in self.__members__.values():
-            representation += f"\n\t {publisher}"
-        return representation
+# TODO: string representation of everything
 
 
 @unique
-class PublisherEnum(Enum, metaclass=PublisherEnumMeta):
-    def __new__(cls, *args, **kwargs):
-        value = len(cls.__members__) + 1
-        obj = object.__new__(cls)
-        obj._value_ = value
-        return obj
-
+class Publisher(object):
     def __init__(self, spec: PublisherSpec):
         if not isinstance(spec, PublisherSpec):
-            raise ValueError("Your only allowed to generate 'PublisherEnum's from 'PublisherSpec")
+            raise ValueError("You're only allowed to generate a 'Publisher' from 'PublisherSpec")
         self.domain = spec.domain
         self.parser = spec.parser()
         self.publisher_name = spec.name
         self.query_parameter = spec.query_parameter
         self.url_filter = spec.url_filter
         self.request_header = spec.request_header
-
         # we define the dict here manually instead of using default dict so that we can control
         # the order in which sources are proceeded.
         source_mapping: Dict[Type[URLSource], List[URLSource]] = {
@@ -55,7 +41,6 @@ class PublisherEnum(Enum, metaclass=PublisherEnumMeta):
             NewsMap: [],
             Sitemap: [],
         }
-
         for url_source in spec.sources:
             if not isinstance(url_source, URLSource):
                 raise TypeError(
@@ -63,7 +48,6 @@ class PublisherEnum(Enum, metaclass=PublisherEnumMeta):
                     f"Allowed are {', '.join(repr(cls.__name__) for cls in iterate_all_subclasses(URLSource))}"
                 )
             source_mapping[type(url_source)].append(url_source)
-
         self.source_mapping = source_mapping
 
     def __str__(self) -> str:
@@ -80,69 +64,30 @@ class PublisherEnum(Enum, metaclass=PublisherEnumMeta):
                 )
         return all(bool(self.source_mapping.get(source_type)) for source_type in source_types)
 
-    @classmethod
-    def search(
-        cls, attributes: Optional[List[str]] = None, source_types: Optional[List[Type[URLSource]]] = None
-    ) -> List["PublisherEnum"]:
-        if not (attributes or source_types):
-            raise ValueError("You have to define at least one search condition")
-        if not attributes:
-            attributes = []
-        matched = []
-        unique_attributes = set(attributes)
-        spec: PublisherEnum
-        for spec in list(cls):
-            if unique_attributes.issubset(spec.parser().attributes().names) and (
+
+def search(
+        attributes: Optional[List[str]] = None, source_types: Optional[List[Type[URLSource]]] = None
+) -> List[Publisher]:
+    if not (attributes or source_types):
+        raise ValueError("You have to define at least one search condition")
+    if not attributes:
+        attributes = []
+    matched = []
+    unique_attributes = set(attributes)
+    spec: Publisher
+    for element in :
+        if unique_attributes.issubset(spec.parser().attributes().names) and (
                 spec.supports(source_types) if source_types else True
-            ):
-                matched.append(spec)
-        return matched
-
-    def __get__(self, instance, owner):
-        return self
+        ):
+            matched.append(spec)
+    return matched
 
 
-class PublisherCollectionMeta(type):
-    """This class is the meta-class for creating Publisher Collections.
+class PublisherGroup(object):
 
-    Publishers used in the collection have to be of type PublisherEnum, e.g.
+    # TODO: Duplicate Testing
 
-    >>> class PoliticalPublisher(PublisherEnum):
-    >>>     ...
-    >>>
-    >>> class NewCollection(metaclass=PublisherCollectionMeta):
-    >>>     political = PoliticalPublisher
-
-    You can still use methods or non-PublisherEnum class attributes, e.g.
-
-    >>> class NewCollection(metaclass=PublisherCollectionMeta):
-    >>>     _id: int = 1
-    >>>     political = PoliticalPublisher
-    >>>
-    >>>     @property
-    >>>     def id(self) -> int:
-    >>>         return self._id
-
-    will work perfectly fine.
-    """
-
-    @staticmethod
-    def _is_publisher_enum(obj: Any) -> bool:
-        return inspect.isclass(obj) and issubclass(obj, PublisherEnum)
-
-    def __new__(mcs, name, bases, attrs):
-        included_enums: List[EnumMeta] = [value for value in attrs.values() if mcs._is_publisher_enum(value)]
-        publisher_mapping: Dict[str, PublisherEnum] = {}
-        for country_enum in included_enums:
-            for publisher_enum in country_enum:  # type: ignore
-                if existing := publisher_mapping.get(publisher_enum.name):
-                    raise AttributeError(
-                        f"Found duplicate publisher names in same collection {name!r}: "
-                        f"{type(existing).__name__} -> {existing.name} and "
-                        f"{type(publisher_enum).__name__} -> {publisher_enum.name}"
-                    )
-                publisher_mapping[publisher_enum.name] = publisher_enum
-        return super().__new__(mcs, name, bases, attrs)
+    __members__: Union[List[Publisher], List[Self]] = list()
 
     def get_publisher_enum_mapping(cls) -> Dict[str, EnumMeta]:
         """Returns all PublisherEnums included in the publisher collection as dictionary.
@@ -171,7 +116,7 @@ class PublisherCollectionMeta(type):
     def __contains__(cls, __x: object) -> bool:
         return __x in cls.get_publisher_enum_mapping().values()
 
-    def __iter__(cls) -> Iterator[PublisherEnum]:
+    def __iter__(cls) -> Iterator[Publisher]:
         """This will iterate over all publishers included in the enums and not the enums itself.
 
         Returns:
@@ -181,7 +126,7 @@ class PublisherCollectionMeta(type):
         for enum in cls.get_publisher_enum_mapping().values():
             yield from enum
 
-    def __getitem__(self, name: str) -> PublisherEnum:
+    def __getitem__(self, name: str) -> Publisher:
         """Get a publisher from the collection by name represented as string.
 
         Args:
