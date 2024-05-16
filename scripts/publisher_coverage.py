@@ -32,6 +32,11 @@ def main() -> None:
         ):
             publisher_name: str = publisher.name  # type: ignore[attr-defined]
 
+            if not any(publisher.source_mapping.values()):  # type: ignore[attr-defined]
+                # skip publishers providing no sources for forward crawling
+                print(f"⏩  SKIPPED: {publisher_name!r} - No sources defined")
+                continue
+
             crawler: Crawler = Crawler(publisher, delay=0.4)
 
             timed_next = timeout(next, time=20, silent=True)

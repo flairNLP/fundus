@@ -14,16 +14,16 @@ def _interrupt_handler() -> None:
 
 
 @overload
-def timeout(func: Callable[P, T], time: int, silent: Literal[False] = ...) -> Callable[P, T]:
+def timeout(func: Callable[P, T], time: float, silent: Literal[False] = ...) -> Callable[P, T]:
     ...
 
 
 @overload
-def timeout(func: Callable[P, T], time: int, silent: Literal[True]) -> Callable[P, Optional[T]]:
+def timeout(func: Callable[P, T], time: float, silent: Literal[True]) -> Callable[P, Optional[T]]:
     ...
 
 
-def timeout(func: Callable[P, T], time: int, silent: bool = False) -> Callable[P, Optional[T]]:
+def timeout(func: Callable[P, T], time: float, silent: bool = False) -> Callable[P, Optional[T]]:
     @wraps(func)
     def wrapper(*args: P.args, **kwargs: P.kwargs) -> Optional[T]:
         # register interrupt handler
