@@ -39,7 +39,6 @@ def timeout(func: Callable[P, T], time: float, silent: bool = False) -> Callable
                 raise TimeoutError from err
         finally:
             timer.cancel()
-            timer.join()
         return result
 
     return wrapper
