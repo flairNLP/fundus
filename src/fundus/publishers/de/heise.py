@@ -17,18 +17,21 @@ class HeiseParser(ParserProxy):
         _summary_selector = XPath(
             "//article[not(@data-component='TeaserContainer')]//p[@class='a-article-header__lead']"
         )
-        _subheadline_selector = XPath("//article[not(@data-component='TeaserContainer')]//h3[@class='subheading']")
+        _subheadline_selector = XPath(
+            "//article[not(@data-component='TeaserContainer')]//h3[contains(@class,'subheading')]"
+        )
         _paragraph_selector = XPath(
-            "//div[@class='article-layout__content article-content']//p[not(@class"
+            "//div[@class='article-layout__content article-content']/p[not(@class"
             " or ((string-length(text()) < 3) and (contains(text(), '(') or contains(span, '(')))"
             " or contains(text(), '=== Anzeige / Sponsorenhinweis')"
             " or contains(text(), 'Tipp: Wir sind bei WhatsApp!')"
             " or contains(a, 'heise+ abonnieren')"
             " or contains(text(), '► '))"
             " or @class='antwort rte__abs--antwort'"
-            " or @class='frage rte__abs--frage'] "
+            " or @class='frage rte__abs--frage'"
+            " or @class='json-ld-paid-content-marker'] "
             " | //div[@class='article-layout__content article-content']//ul["
-            "@class='rte__list rte__list--unordered' or @class='boxtext']"
+            "@class='rte__list rte__list--unordered' or @class='boxtext']/li"
         )
 
         @attribute
