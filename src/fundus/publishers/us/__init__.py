@@ -121,7 +121,7 @@ class US(PublisherEnum):
     FreeBeacon = PublisherSpec(
         name="The Washington Free Beacon",
         domain="https://freebeacon.com/",
-        sources=[NewsMap("https://freebeacon.com/post_google_news.xml")],
+        sources=[],
         parser=FreeBeaconParser,
     )
 
@@ -147,7 +147,7 @@ class US(PublisherEnum):
         ],
         parser=WashingtonPostParser,
         # Adds a URL-filter to ignore incomplete URLs
-        url_filter=regex_filter("washingtonpost.com(\/)?$"),
+        url_filter=regex_filter(r"washingtonpost.com(\/)?$"),
     )
 
     TheNewYorker = PublisherSpec(
