@@ -1,12 +1,13 @@
-from fundus.publishers.base_objects import PublisherEnum, PublisherSpec
+from fundus.publishers.base_objects import PublisherGroup, Publisher
 from fundus.scraping.filter import inverse, regex_filter
 from fundus.scraping.url import RSSFeed, Sitemap
 
 from .the_namibian import TheNamibianParser
 
 
-class NA(PublisherEnum):
-    TheNamibian = PublisherSpec(
+class NA(PublisherGroup):
+
+    TheNamibian = Publisher(
         name="The Namibian",
         domain="https://www.namibian.com.na/",
         sources=[
