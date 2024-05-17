@@ -299,7 +299,11 @@ class DE(PublisherEnum):
         domain="https://www.businessinsider.de/",
         sources=[
             NewsMap("https://www.businessinsider.de/news-sitemap.xml"),
-            Sitemap("https://www.businessinsider.de/sitemap_index.xml"),
+            Sitemap(
+                "https://www.businessinsider.de/sitemap_index.xml",
+                sitemap_filter=inverse(regex_filter("post-sitemap")),
+                reverse=True,
+            ),
         ],
         parser=BusinessInsiderDEParser,
     )
