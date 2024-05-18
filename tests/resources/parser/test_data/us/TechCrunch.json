@@ -65,7 +65,7 @@
       ]
     },
     "publishing_date": "2024-04-28 13:30:00+00:00",
-    "title": "How RPA vendors aim to remain relevant in a world of AI agents | TechCrunch",
+    "title": "How RPA vendors aim to remain relevant in a world of AI agents",
     "topics": [
       "AI",
       "Generative AI",
@@ -73,7 +73,7 @@
       "RPA"
     ]
   },
-  "V2": {
+  "V1_1": {
     "authors": [
       "Paul Sawers"
     ],
@@ -134,7 +134,7 @@
       ]
     },
     "publishing_date": "2024-05-16 18:00:00+00:00",
-    "title": "Strava taps AI to weed out leaderboard cheats, unveils 'family' plan, dark mode and more | TechCrunch",
+    "title": "Strava taps AI to weed out leaderboard cheats, unveils 'family' plan, dark mode and more",
     "topics": [
       "Dark Mode",
       "leaderboards",
