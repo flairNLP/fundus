@@ -121,7 +121,18 @@ class US(PublisherEnum):
     FreeBeacon = PublisherSpec(
         name="The Washington Free Beacon",
         domain="https://freebeacon.com/",
-        sources=[],
+        sources=[
+            Sitemap(
+                "https://freebeacon.com/wp-sitemap.xml",
+                sitemap_filter=inverse(regex_filter("posts-post")),
+                reverse=True,
+            ),
+            Sitemap(
+                "https://freebeacon.com/wp-sitemap.xml",
+                sitemap_filter=inverse(regex_filter("posts-blog")),
+                reverse=True,
+            ),
+        ],
         parser=FreeBeaconParser,
     )
 
