@@ -298,6 +298,7 @@ class DE(PublisherEnum):
         name="Business Insider DE",
         domain="https://www.businessinsider.de/",
         sources=[
+            RSSFeed("https://www.businessinsider.de/feed/businessinsider-alle-artikel"),
             NewsMap("https://www.businessinsider.de/news-sitemap.xml"),
             Sitemap(
                 "https://www.businessinsider.de/sitemap_index.xml",
