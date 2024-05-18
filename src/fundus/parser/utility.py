@@ -148,6 +148,21 @@ _meta_node_selector = CSSSelector("head > meta, body > meta")
 
 
 def get_meta_content(root: lxml.html.HtmlElement) -> Dict[str, str]:
+    """Parse metadata from HTML.
+
+    This function parses single values (i.e. charset=...), nodes containing name, property, http-equiv or
+    itemprop attributes. When multiple values for the same key occur, they will be joined using `,`. This
+    is in order to ease typing and avoid list as additional type.
+
+    In case an HTML tag consists a class, it will be appended as namespace to avoid key collisions.
+    I.e. <meta class="swiftype" name="author" ... > will be stored using `swiftype:author` as a key.
+
+    Args:
+        root: The HTML document given as a lxml.html.HtmlElement.
+
+    Returns:
+        The metadata as a dictionary
+    """
     data = defaultdict(list)
     for node in _meta_node_selector(root):
         attributes = node.attrib

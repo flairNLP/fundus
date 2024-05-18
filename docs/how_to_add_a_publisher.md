@@ -381,6 +381,9 @@ def title(self) -> Optional[str]:
    return self.precomputed.meta.get("og:title")
 ```
 
+**_NOTE:_** In case a `class` is present in the HTML `meta` tag, it will be appended as a namespace to avoid collisions.
+I.e. the content of the following meta tag `<meta class="swiftype" name="author" ...` can be accessed with the key `swiftype:author`.
+
 ### Extracting Attributes with XPath and CSS-Select
 
 When parsing the `ArticleBody`, or the desired information cannot be extracted from the `ld` or `meta` attributes, you need to directly obtain information from the [Document Object Model](https://en.wikipedia.org/wiki/Document_Object_Model) (DOM) of the HTML/XML.
