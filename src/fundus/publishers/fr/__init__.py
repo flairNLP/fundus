@@ -1,4 +1,4 @@
-from fundus.publishers.base_objects import PublisherEnum, PublisherSpec
+from fundus.publishers.base_objects import PublisherGroup, Publisher
 from fundus.scraping.url import NewsMap, Sitemap
 
 from ..shared import EuronewsParser
@@ -6,8 +6,8 @@ from .le_figaro import LeFigaroParser
 from .le_monde import LeMondeParser
 
 
-class FR(PublisherEnum):
-    LeMonde = PublisherSpec(
+class FR(PublisherGroup):
+    LeMonde = Publisher(
         name="Le Monde",
         domain="https://www.lemonde.fr/",
         sources=[
@@ -17,7 +17,7 @@ class FR(PublisherEnum):
         parser=LeMondeParser,
     )
 
-    EuronewsFR = PublisherSpec(
+    EuronewsFR = Publisher(
         name="Euronews (FR)",
         domain="https://fr.euronews.com/",
         sources=[
@@ -27,7 +27,7 @@ class FR(PublisherEnum):
         parser=EuronewsParser,
     )
 
-    LeFigaro = PublisherSpec(
+    LeFigaro = Publisher(
         name="Le Figaro",
         domain="https://www.lefigaro.fr/",
         sources=[

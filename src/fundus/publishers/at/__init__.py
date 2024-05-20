@@ -1,4 +1,4 @@
-from fundus.publishers.base_objects import PublisherEnum, PublisherSpec
+from fundus.publishers.base_objects import PublisherGroup, Publisher
 from fundus.scraping.url import NewsMap, RSSFeed, Sitemap
 
 from .derstandard import DerStandardParser
@@ -7,15 +7,15 @@ from .orf import OrfParser
 # noinspection PyPep8Naming
 
 
-class AT(PublisherEnum):
-    ORF = PublisherSpec(
+class AT(PublisherGroup):
+    ORF = Publisher(
         name="Österreichischer Rundfunk",
         domain="https://www.orf.at",
         sources=[RSSFeed("https://rss.orf.at/news.xml")],
         parser=OrfParser,
     )
 
-    DerStandard = PublisherSpec(
+    DerStandard = Publisher(
         name="Der Standard",
         domain="https://derstandard.at",
         sources=[

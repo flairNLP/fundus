@@ -1,4 +1,4 @@
-from fundus.publishers.base_objects import PublisherEnum, PublisherSpec
+from fundus.publishers.base_objects import PublisherGroup, Publisher
 from fundus.scraping.filter import inverse, lor, regex_filter
 from fundus.scraping.url import NewsMap, RSSFeed, Sitemap
 
@@ -23,8 +23,8 @@ from .wired import WiredParser
 from .world_truth import WorldTruthParser
 
 
-class US(PublisherEnum):
-    APNews = PublisherSpec(
+class US(PublisherGroup):
+    APNews = Publisher(
         name="Associated Press News",
         domain="https://apnews.com/",
         sources=[
@@ -38,14 +38,14 @@ class US(PublisherEnum):
         parser=APNewsParser,
     )
 
-    CNBC = PublisherSpec(
+    CNBC = Publisher(
         name="CNBC",
         domain="https://www.cnbc.com/",
         sources=[Sitemap("https://www.cnbc.com/sitemapAll.xml"), NewsMap("https://www.cnbc.com/sitemap_news.xml")],
         parser=CNBCParser,
     )
 
-    TechCrunch = PublisherSpec(
+    TechCrunch = Publisher(
         name="TechCrunch",
         domain="https://techcrunch.com/",
         sources=[
@@ -59,7 +59,7 @@ class US(PublisherEnum):
         parser=TechCrunchParser,
     )
 
-    TheIntercept = PublisherSpec(
+    TheIntercept = Publisher(
         name="The Intercept",
         domain="https://theintercept.com/",
         sources=[
@@ -73,7 +73,7 @@ class US(PublisherEnum):
         parser=TheInterceptParser,
     )
 
-    TheGatewayPundit = PublisherSpec(
+    TheGatewayPundit = Publisher(
         name="The Gateway Pundit",
         domain="https://www.thegatewaypundit.com/",
         sources=[
@@ -87,7 +87,7 @@ class US(PublisherEnum):
         parser=TheGatewayPunditParser,
     )
 
-    FoxNews = PublisherSpec(
+    FoxNews = Publisher(
         name="Fox News",
         domain="https://www.foxnews.com/",
         sources=[
@@ -97,7 +97,7 @@ class US(PublisherEnum):
         parser=FoxNewsParser,
     )
 
-    TheNation = PublisherSpec(
+    TheNation = Publisher(
         name="The Nation",
         domain="https://www.thenation.com/",
         sources=[
@@ -111,21 +111,21 @@ class US(PublisherEnum):
         parser=TheNationParser,
     )
 
-    # WorldTruth = PublisherSpec(
+    # WorldTruth = Publisher(
     #     name="World Truth",
     #     domain="https://www.worldtruth.tv/",
     #     sources=[RSSFeed("https://feeds.feedburner.com/ConsciousnessTv")],
     #     parser=WorldTruthParser,
     # )
 
-    FreeBeacon = PublisherSpec(
+    FreeBeacon = Publisher(
         name="The Washington Free Beacon",
         domain="https://freebeacon.com/",
         sources=[NewsMap("https://freebeacon.com/post_google_news.xml")],
         parser=FreeBeaconParser,
     )
 
-    WashingtonTimes = PublisherSpec(
+    WashingtonTimes = Publisher(
         name="The Washington Times",
         domain="https://www.washingtontimes.com/",
         sources=[
@@ -136,7 +136,7 @@ class US(PublisherEnum):
         parser=WashingtonTimesParser,
     )
 
-    WashingtonPost = PublisherSpec(
+    WashingtonPost = Publisher(
         name="Washington Post",
         domain="https://www.washingtonpost.com/",
         sources=[
@@ -150,7 +150,7 @@ class US(PublisherEnum):
         url_filter=regex_filter("washingtonpost.com(\/)?$"),
     )
 
-    TheNewYorker = PublisherSpec(
+    TheNewYorker = Publisher(
         name="The New Yorker",
         domain="https://www.newyorker.com/",
         sources=[
@@ -160,7 +160,7 @@ class US(PublisherEnum):
         parser=TheNewYorkerParser,
     )
 
-    Reuters = PublisherSpec(
+    Reuters = Publisher(
         name="Reuters",
         domain="https://www.reuters.com/",
         sources=[
@@ -170,7 +170,7 @@ class US(PublisherEnum):
         parser=ReutersParser,
     )
 
-    OccupyDemocrats = PublisherSpec(
+    OccupyDemocrats = Publisher(
         name="Occupy Democrats",
         domain="https://occupydemocrats.com/",
         sources=[
@@ -181,14 +181,14 @@ class US(PublisherEnum):
         parser=OccupyDemocratsParser,
     )
 
-    LATimes = PublisherSpec(
+    LATimes = Publisher(
         name="Los Angeles Times",
         domain="https://www.latimes.com/",
         sources=[Sitemap("https://www.latimes.com/sitemap.xml"), NewsMap("https://www.latimes.com/news-sitemap.xml")],
         parser=LATimesParser,
     )
 
-    BusinessInsider = PublisherSpec(
+    BusinessInsider = Publisher(
         name="Business Insider",
         domain="https://www.businessinsider.com/",
         sources=[
@@ -198,7 +198,7 @@ class US(PublisherEnum):
         parser=BusinessInsiderParser,
     )
 
-    RollingStone = PublisherSpec(
+    RollingStone = Publisher(
         name="Rolling Stone",
         domain="https://www.rollingstone.com/",
         sources=[
@@ -211,7 +211,7 @@ class US(PublisherEnum):
         parser=RollingStoneParser,
     )
 
-    VoiceOfAmerica = PublisherSpec(
+    VoiceOfAmerica = Publisher(
         name="Voice Of America",
         domain="https://www.voanews.com/",
         sources=[
@@ -223,7 +223,7 @@ class US(PublisherEnum):
         parser=VOAParser,
     )
 
-    Wired = PublisherSpec(
+    Wired = Publisher(
         name="Wired",
         domain="https://www.wired.com",
         sources=[

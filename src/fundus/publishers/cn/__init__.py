@@ -1,11 +1,11 @@
-from fundus.publishers.base_objects import PublisherEnum, PublisherSpec
-from fundus.scraping.url import NewsMap, RSSFeed, Sitemap
+from fundus.publishers.base_objects import PublisherGroup, Publisher
+from fundus.scraping.url import RSSFeed, Sitemap
 
 from .people import PeopleParser
 
 
-class CN(PublisherEnum):
-    People = PublisherSpec(
+class CN(PublisherGroup):
+    People = Publisher(
         name="People",
         domain="http://www.people.com.cn",
         sources=[

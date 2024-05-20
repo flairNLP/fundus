@@ -1,4 +1,4 @@
-from fundus.publishers.base_objects import PublisherEnum, PublisherSpec
+from fundus.publishers.base_objects import PublisherGroup, Publisher
 from fundus.scraping.filter import inverse, regex_filter
 from fundus.scraping.url import NewsMap, RSSFeed, Sitemap
 
@@ -6,8 +6,8 @@ from .haberturk import HaberturkParser
 from .ntvtr import NTVTRParser
 
 
-class TR(PublisherEnum):
-    Haberturk = PublisherSpec(
+class TR(PublisherGroup):
+    Haberturk = Publisher(
         name="Haberturk",
         domain="https://www.haberturk.com/",
         sources=[
@@ -21,7 +21,7 @@ class TR(PublisherEnum):
         parser=HaberturkParser,
     )
 
-    NTVTR = PublisherSpec(
+    NTVTR = Publisher(
         name="NTVTR",
         domain="https://www.ntv.com.tr/",
         sources=[

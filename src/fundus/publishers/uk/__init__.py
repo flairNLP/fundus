@@ -2,7 +2,7 @@ from datetime import date, datetime
 
 from dateutil.rrule import YEARLY, rrule
 
-from fundus.publishers.base_objects import PublisherEnum, PublisherSpec
+from fundus.publishers.base_objects import PublisherGroup, Publisher
 from fundus.scraping.filter import inverse, regex_filter
 from fundus.scraping.url import NewsMap, RSSFeed, Sitemap
 
@@ -18,15 +18,15 @@ from .the_sun import TheSunParser
 from .the_telegraph import TheTelegraphParser
 
 
-class UK(PublisherEnum):
-    TheGuardian = PublisherSpec(
+class UK(PublisherGroup):
+    TheGuardian = Publisher(
         name="The Guardian",
         domain="https://www.theguardian.com/",
         sources=[NewsMap("https://www.theguardian.com/sitemaps/news.xml")],
         parser=TheGuardianParser,
     )
 
-    TheIndependent = PublisherSpec(
+    TheIndependent = Publisher(
         name="The Independent",
         domain="https://www.independent.co.uk/",
         sources=[
@@ -38,7 +38,7 @@ class UK(PublisherEnum):
         parser=TheIndependentParser,
     )
 
-    TheMirror = PublisherSpec(
+    TheMirror = Publisher(
         name="The Mirror",
         domain="https://www.mirror.co.uk/",
         sources=[
@@ -48,7 +48,7 @@ class UK(PublisherEnum):
         parser=TheMirrorParser,
     )
 
-    TheTelegraph = PublisherSpec(
+    TheTelegraph = Publisher(
         name="The Telegraph",
         domain="https://www.telegraph.co.uk/",
         sources=[
@@ -58,7 +58,7 @@ class UK(PublisherEnum):
         parser=TheTelegraphParser,
     )
 
-    iNews = PublisherSpec(
+    iNews = Publisher(
         name="i",
         domain="https://inews.co.uk/",
         sources=[
@@ -71,7 +71,7 @@ class UK(PublisherEnum):
         parser=INewsParser,
     )
 
-    EuronewsEN = PublisherSpec(
+    EuronewsEN = Publisher(
         name="Euronews (EN)",
         domain="https://www.euronews.com/",
         sources=[
@@ -81,7 +81,7 @@ class UK(PublisherEnum):
         parser=EuronewsParser,
     )
 
-    DailyStar = PublisherSpec(
+    DailyStar = Publisher(
         name="Daily Star",
         domain="https://www.dailystar.co.uk/",
         sources=[
@@ -91,7 +91,7 @@ class UK(PublisherEnum):
         parser=DailyStarParser,
     )
 
-    TheSun = PublisherSpec(
+    TheSun = Publisher(
         name="The Sun",
         domain="https://www.thesun.co.uk/",
         sources=[
@@ -102,7 +102,7 @@ class UK(PublisherEnum):
         parser=TheSunParser,
     )
 
-    DailyMail = PublisherSpec(
+    DailyMail = Publisher(
         name="Daily Mail",
         domain="https://www.dailymail.co.uk/",
         sources=[
@@ -115,7 +115,7 @@ class UK(PublisherEnum):
         parser=DailyMailParser,
     )
 
-    EveningStandard = PublisherSpec(
+    EveningStandard = Publisher(
         name="Evening Standard",
         domain="https://www.standard.co.uk/",
         sources=[

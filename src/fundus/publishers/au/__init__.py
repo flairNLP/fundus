@@ -1,12 +1,12 @@
-from fundus.publishers.base_objects import PublisherEnum, PublisherSpec
+from fundus.publishers.base_objects import Publisher, PublisherGroup
 from fundus.scraping.filter import inverse, regex_filter
-from fundus.scraping.url import NewsMap, RSSFeed, Sitemap
+from fundus.scraping.url import RSSFeed, Sitemap
 
 from .nine_news import NineNewsParser
 
 
-class AU(PublisherEnum):
-    NineNews = PublisherSpec(
+class AU(PublisherGroup):
+    NineNews = Publisher(
         name="Nine News",
         domain="https://www.9news.com.au/",
         sources=[

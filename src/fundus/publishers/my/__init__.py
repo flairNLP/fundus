@@ -1,10 +1,10 @@
-from fundus.publishers.base_objects import PublisherEnum, PublisherSpec
+from fundus.publishers.base_objects import PublisherGroup, Publisher
 from fundus.publishers.my.malay_mail import MalayMailParser
 from fundus.scraping.url import RSSFeed, Sitemap
 
 
-class MY(PublisherEnum):
-    MalayMail = PublisherSpec(
+class MY(PublisherGroup):
+    MalayMail = Publisher(
         name="Malay Mail",
         domain="https://www.malaymail.com/",
         sources=[

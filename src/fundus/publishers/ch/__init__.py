@@ -1,4 +1,4 @@
-from fundus.publishers.base_objects import PublisherEnum, PublisherSpec
+from fundus.publishers.base_objects import PublisherGroup, Publisher
 from fundus.scraping.url import NewsMap, RSSFeed, Sitemap
 
 from .srf import SRFParser
@@ -6,8 +6,8 @@ from .srf import SRFParser
 # noinspection PyPep8Naming
 
 
-class CH(PublisherEnum):
-    SRF = PublisherSpec(
+class CH(PublisherGroup):
+    SRF = Publisher(
         name="Schweizer Radio und Fernsehen",
         domain="https://www.srf.ch/",
         sources=[

@@ -3,7 +3,7 @@ from typing import Optional
 
 from dateutil.rrule import MONTHLY, YEARLY, rrule
 
-from fundus.publishers.base_objects import PublisherEnum, PublisherSpec
+from fundus.publishers.base_objects import PublisherGroup, Publisher
 from fundus.scraping.filter import inverse, regex_filter
 from fundus.scraping.url import NewsMap, RSSFeed, Sitemap
 
@@ -52,8 +52,8 @@ from .zdf import ZDFParser
 
 
 # noinspection PyPep8Naming
-class DE(PublisherEnum):
-    SportSchau = PublisherSpec(
+class DE(PublisherGroup):
+    SportSchau = Publisher(
         name="Sportschau",
         domain="https://www.sportschau.de/",
         parser=SportSchauParser,
@@ -65,7 +65,7 @@ class DE(PublisherEnum):
         url_filter=inverse(regex_filter("sportschau.de")),
     )
 
-    NetzpolitikOrg = PublisherSpec(
+    NetzpolitikOrg = Publisher(
         name="netzpolitik.org",
         domain="https://netzpolitik.org/",
         sources=[
@@ -77,7 +77,7 @@ class DE(PublisherEnum):
         parser=NetzpolitikOrgParser,
     )
 
-    BerlinerMorgenpost = PublisherSpec(
+    BerlinerMorgenpost = Publisher(
         name="Berliner Morgenpost",
         domain="https://www.morgenpost.de/",
         sources=[NewsMap("https://www.morgenpost.de/sitemaps/news.xml")]
@@ -88,7 +88,7 @@ class DE(PublisherEnum):
         parser=BerlinerMorgenpostParser,
     )
 
-    HamburgerAbendblatt = PublisherSpec(
+    HamburgerAbendblatt = Publisher(
         name="Hamburger Abendblatt",
         domain="https://www.abendblatt.de/",
         sources=[
@@ -102,7 +102,7 @@ class DE(PublisherEnum):
         parser=HamburgerAbendblattParser,
     )
 
-    DieWelt = PublisherSpec(
+    DieWelt = Publisher(
         name="Die Welt",
         domain="https://www.welt.de/",
         sources=[
@@ -114,7 +114,7 @@ class DE(PublisherEnum):
         parser=DieWeltParser,
     )
 
-    MDR = PublisherSpec(
+    MDR = Publisher(
         name="Mitteldeutscher Rundfunk (MDR)",
         domain="https://www.mdr.de/",
         sources=[
@@ -125,7 +125,7 @@ class DE(PublisherEnum):
         parser=MDRParser,
     )
 
-    FAZ = PublisherSpec(
+    FAZ = Publisher(
         name="Frankfurter Allgemeine Zeitung",
         domain="https://www.faz.net/",
         sources=[
@@ -140,7 +140,7 @@ class DE(PublisherEnum):
         parser=FAZParser,
     )
 
-    Focus = PublisherSpec(
+    Focus = Publisher(
         name="Focus Online",
         domain="https://www.focus.de/",
         sources=[RSSFeed("https://rss.focus.de/fol/XML/rss_folnews.xml")],
@@ -149,7 +149,7 @@ class DE(PublisherEnum):
         request_header={"user-agent": "Fundus"},
     )
 
-    Merkur = PublisherSpec(
+    Merkur = Publisher(
         name="Münchner Merkur",
         domain="https://www.merkur.de/",
         sources=[
@@ -160,14 +160,14 @@ class DE(PublisherEnum):
         parser=MerkurParser,
     )
 
-    SZ = PublisherSpec(
+    SZ = Publisher(
         name="Süddeutsche Zeitung",
         domain="https://www.sueddeutsche.de/",
         sources=[RSSFeed("https://rss.sueddeutsche.de/alles")],
         parser=SZParser,
     )
 
-    SpiegelOnline = PublisherSpec(
+    SpiegelOnline = Publisher(
         name="Spiegel Online",
         domain="https://www.spiegel.de/",
         sources=[
@@ -179,7 +179,7 @@ class DE(PublisherEnum):
         parser=SPONParser,
     )
 
-    DieZeit = PublisherSpec(
+    DieZeit = Publisher(
         name="Die Zeit",
         domain="https://www.zeit.de/",
         sources=[
@@ -196,7 +196,7 @@ class DE(PublisherEnum):
         parser=DieZeitParser,
     )
 
-    BerlinerZeitung = PublisherSpec(
+    BerlinerZeitung = Publisher(
         name="Berliner Zeitung",
         domain="https://www.berliner-zeitung.de/",
         sources=[
@@ -208,14 +208,14 @@ class DE(PublisherEnum):
         parser=BerlinerZeitungParser,
     )
 
-    Tagesschau = PublisherSpec(
+    Tagesschau = Publisher(
         name="Tagesschau",
         domain="https://www.tagesschau.de/",
         sources=[RSSFeed("https://www.tagesschau.de/xml/rss2/")],
         parser=TagesschauParser,
     )
 
-    DW = PublisherSpec(
+    DW = Publisher(
         name="Deutsche Welle",
         domain="https://www.dw.com/",
         sources=[
@@ -225,21 +225,21 @@ class DE(PublisherEnum):
         ],
         parser=DWParser,
     )
-    Stern = PublisherSpec(
+    Stern = Publisher(
         name="Stern",
         domain="https://www.stern.de/",
         sources=[RSSFeed("https://www.stern.de/feed/standard/alle-nachrichten/")],
         parser=SternParser,
     )
 
-    NTV = PublisherSpec(
+    NTV = Publisher(
         name="N-Tv",
         domain="https://www.n-tv.de/",
         sources=[NewsMap("https://www.n-tv.de/news.xml"), Sitemap("https://www.n-tv.de/sitemap.xml")],
         parser=NTVParser,
     )
 
-    NDR = PublisherSpec(
+    NDR = Publisher(
         name="Norddeutscher Rundfunk (NDR)",
         domain="https://www.ndr.de/",
         sources=[
@@ -250,7 +250,7 @@ class DE(PublisherEnum):
         url_filter=regex_filter("podcast[0-9]{4}|/index.html"),
     )
 
-    Taz = PublisherSpec(
+    Taz = Publisher(
         name="Die Tageszeitung (taz)",
         domain="https://taz.de/",
         sources=[
@@ -260,7 +260,7 @@ class DE(PublisherEnum):
         parser=TazParser,
     )
 
-    Bild = PublisherSpec(
+    Bild = Publisher(
         name="Bild",
         domain="https://www.bild.de/",
         sources=[
@@ -271,14 +271,14 @@ class DE(PublisherEnum):
         parser=BildParser,
     )
 
-    WAZ = PublisherSpec(
+    WAZ = Publisher(
         name="Westdeutsche Allgemeine Zeitung (WAZ)",
         domain="https://www.waz.de/",
         sources=[NewsMap("https://www.waz.de/sitemaps/news.xml")],
         parser=WAZParser,
     )
 
-    BSZ = PublisherSpec(
+    BSZ = Publisher(
         name="Braunschweiger Zeitung",
         domain="https://www.braunschweiger-zeitung.de/",
         sources=[
@@ -294,7 +294,7 @@ class DE(PublisherEnum):
         parser=BSZParser,
     )
 
-    BusinessInsiderDE = PublisherSpec(
+    BusinessInsiderDE = Publisher(
         name="Business Insider DE",
         domain="https://www.businessinsider.de/",
         sources=[
@@ -304,7 +304,7 @@ class DE(PublisherEnum):
         parser=BusinessInsiderDEParser,
     )
 
-    RheinischePost = PublisherSpec(
+    RheinischePost = Publisher(
         name="Rheinische Post",
         domain="https://rp-online.de/",
         sources=[
@@ -315,7 +315,7 @@ class DE(PublisherEnum):
         parser=RheinischePostParser,
     )
 
-    WinFuture = PublisherSpec(
+    WinFuture = Publisher(
         name="WinFuture",
         domain="https://winfuture.de/",
         sources=[
@@ -327,7 +327,7 @@ class DE(PublisherEnum):
         parser=WinfutureParser,
     )
 
-    JungeWelt = PublisherSpec(
+    JungeWelt = Publisher(
         name="Junge Welt",
         domain="https://www.jungewelt.de/",
         sources=[
@@ -336,7 +336,7 @@ class DE(PublisherEnum):
         parser=JungeWeltParser,
     )
 
-    Tagesspiegel = PublisherSpec(
+    Tagesspiegel = Publisher(
         name="Tagesspiegel",
         domain="https://www.tagesspiegel.de/",
         sources=[
@@ -349,7 +349,7 @@ class DE(PublisherEnum):
         parser=TagesspiegelParser,
     )
 
-    EuronewsDE = PublisherSpec(
+    EuronewsDE = Publisher(
         name="Euronews (DE)",
         domain="https://de.euronews.com/",
         sources=[
@@ -359,7 +359,7 @@ class DE(PublisherEnum):
         parser=EuronewsParser,
     )
 
-    Hessenschau = PublisherSpec(
+    Hessenschau = Publisher(
         name="Hessenschau",
         domain="https://www.hessenschau.de/",
         sources=[
@@ -370,14 +370,14 @@ class DE(PublisherEnum):
         parser=HessenschauParser,
     )
 
-    WDR = PublisherSpec(
+    WDR = Publisher(
         name="Westdeutscher Rundfunk",
         domain="https://www1.wdr.de/",
         sources=[RSSFeed("https://www1.wdr.de/uebersicht-100.feed")],
         parser=WDRParser,
     )
 
-    BR = PublisherSpec(
+    BR = Publisher(
         name="Bayerischer Rundfunk (BR)",
         domain="https://www.br.de/",
         sources=[
@@ -387,7 +387,7 @@ class DE(PublisherEnum):
         parser=BRParser,
     )
 
-    ZDF = PublisherSpec(
+    ZDF = Publisher(
         name="zdfHeute",
         domain="https://www.zdf.de/",
         sources=[
@@ -398,7 +398,7 @@ class DE(PublisherEnum):
         parser=ZDFParser,
     )
 
-    MotorSportMagazin = PublisherSpec(
+    MotorSportMagazin = Publisher(
         name="MotorSport Magazin",
         domain="https://www.motorsport-magazin.com/",
         sources=[
@@ -408,7 +408,7 @@ class DE(PublisherEnum):
         parser=MotorSportMagazinParser,
     )
 
-    Postillon = PublisherSpec(
+    Postillon = Publisher(
         name="Postillon",
         domain="https://www.der-postillon.com/",
         sources=[
@@ -418,7 +418,7 @@ class DE(PublisherEnum):
         parser=PostillonParser,
     )
 
-    Kicker = PublisherSpec(
+    Kicker = Publisher(
         name="Kicker",
         domain="https://www.kicker.de/",
         sources=[
@@ -432,7 +432,7 @@ class DE(PublisherEnum):
         parser=KickerParser,
     )
 
-    FrankfurterRundschau = PublisherSpec(
+    FrankfurterRundschau = Publisher(
         name="Frankfurter Rundschau",
         domain="https://www.fr.de",
         sources=[
@@ -443,7 +443,7 @@ class DE(PublisherEnum):
         parser=FrankfurterRundschauParser,
     )
 
-    BoersenZeitung = PublisherSpec(
+    BoersenZeitung = Publisher(
         name="Börsen-Zeitung",
         domain="https://www.boersen-zeitung.de",
         sources=[
@@ -455,7 +455,7 @@ class DE(PublisherEnum):
         parser=BoersenZeitungParser,
     )
 
-    VogueDE = PublisherSpec(
+    VogueDE = Publisher(
         name="Vogue",
         domain="https://www.vogue.de/",
         sources=[
@@ -466,7 +466,7 @@ class DE(PublisherEnum):
         parser=VogueDEParser,
     )
 
-    MitteldeutscheZeitung = PublisherSpec(
+    MitteldeutscheZeitung = Publisher(
         name="Mitteldeutsche Zeitung",
         domain="https://www.mz.de/",
         sources=[
@@ -476,7 +476,7 @@ class DE(PublisherEnum):
         parser=MitteldeutscheZeitungParser,
     )
 
-    FreiePresse = PublisherSpec(
+    FreiePresse = Publisher(
         name="FreiePresse",
         domain="https://www.freiepresse.de/",
         sources=[
@@ -496,7 +496,7 @@ class DE(PublisherEnum):
         parser=FreiePresseParser,
     )
 
-    RuhrNachrichten = PublisherSpec(
+    RuhrNachrichten = Publisher(
         name="Ruhr Nachrichten",
         domain="https://www.ruhrnachrichten.de/",
         sources=[
@@ -511,7 +511,7 @@ class DE(PublisherEnum):
         parser=RuhrNachrichtenParser,
     )
 
-    Gamestar = PublisherSpec(
+    Gamestar = Publisher(
         name="Gamestar",
         domain="https://www.gamestar.de/",
         sources=[
