@@ -92,20 +92,25 @@ class PublisherGroup(object):
                 raise AttributeError(f'Element {element} of type {type(element)} is not supported')
 
     def get_publisher_enum_mapping(self) -> Dict[str, Publisher]:
-        return {name: value for name, value in self.__dict__.items() if self._is_publisher_enum(value)}
+        return {name: value for name, value in self if self._is_publisher_enum(value)}
 
-    def __contains__(cls, __x: object) -> bool:
-        return __x in cls.get_publisher_enum_mapping().values()
+    def __contains__(self, __x: object) -> bool:
+        return __x in self._contents
 
-    def __iter__(cls) -> Iterator[Publisher]:
-        """This will iterate over all publishers included in the enums and not the enums itself.
+    def __iter__(self) -> Iterator[Publisher]:
+        """This will iterate over all publishers included in the group and its subgroups.
 
         Returns:
-            Iterator[PublisherEnum]: Iterator over publishers included in the enums.
+            Iterator[Publisher]: Iterator over publishers included in the group and its subgroups.
 
         """
-        for enum in cls.get_publisher_enum_mapping().values():
-            yield from enum
+        for element_name in self._contents:
+            if isinstance(element := getattr(self, element_name), Publisher):
+                yield element
+            elif isinstance(element, PublisherGroup):
+                yield from element
+            else:
+                raise AttributeError(f"Element {element} of invalid type {type(element)}")
 
     def __getitem__(self, name: str) -> Publisher:
         """Get a publisher from the collection by name represented as string.
@@ -117,10 +122,10 @@ class PublisherGroup(object):
             PublisherEnum: The corresponding publisher.
 
         """
+        if name in self._contents and isinstance(publisher := getattr(self, name), Publisher):
+            return publisher
         for element in self._contents:
-            if element == name and isinstance(publisher := getattr(self, element), Publisher):
-                return publisher
-            elif isinstance(publisher_group := getattr(self, element), PublisherGroup):
+            if isinstance(publisher_group := getattr(self, element), PublisherGroup):
                 try:
                     return publisher_group[name]
                 except KeyError:
@@ -136,23 +141,26 @@ class PublisherGroup(object):
         return self._length
 
     def __str__(self) -> str:
-        enum_mapping = self.get_publisher_enum_mapping()
-        enum_mapping_keys = enum_mapping.keys()
         representation = (
-            f"The {self.__name__!r} consists of {len(self)} publishers from {len(enum_mapping_keys)} , including:"
+            f"The {type(self).__name__!r} consists of {len(self)} publishers:"
         )
         publisher: str
-        country: str
-        for country in enum_mapping_keys:
-            representation += f"\n\t {country}:"
-            for publisher in islice(enum_mapping[country], 0, 5):
-                representation += f"\n\t\t {publisher}"
-            if len(enum_mapping[country]) > 5:
+        group: str
+        for element_name in self._contents:
+            element = getattr(self, element_name)
+            if isinstance(element, Publisher):
+                representation += f"\t{str(element)}\n"
+            elif isinstance(element, PublisherGroup):
+                representation += f"\n\t {type(element).__name__}:"
+                for publisher in islice(element, 0, 5):
+                    representation += f"\n\t\t {publisher}"
+            if len(element) > 5:
                 representation += f"\n\t\t ..."
         return representation
 
-    def search(
-            attributes: Optional[List[str]] = None, source_types: Optional[List[Type[URLSource]]] = None
+    def search(self,
+               attributes: Optional[List[str]] = None,
+               source_types: Optional[List[Type[URLSource]]] = None
     ) -> List[Publisher]:
         if not (attributes or source_types):
             raise ValueError("You have to define at least one search condition")
@@ -161,11 +169,11 @@ class PublisherGroup(object):
         matched = []
         unique_attributes = set(attributes)
         spec: Publisher
-        for element in attributes:
-            if unique_attributes.issubset(spec.parser().attributes().names) and (
-                    spec.supports(source_types) if source_types else True
+        for publisher in self:
+            if unique_attributes.issubset(publisher.parser().attributes().names) and (
+                    publisher.supports(source_types) if source_types else True
             ):
-                matched.append(spec)
+                matched.append(publisher)
         return matched
 
 
