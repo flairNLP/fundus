@@ -79,21 +79,20 @@ class PublisherGroup(object):
 
     _length: int
     _contents: set
-    _only_publishers: bool
 
     def __init__(self):
         self._contents = set(dir(self)) - set(dir(PublisherGroup))
         self._length = 0
         for element in self._contents:
-            if isinstance(getattr(self, element), PublisherGroup):
-                self._length += element._length
+            if isinstance(publisher_group := getattr(self, element), PublisherGroup):
+                self._length += len(publisher_group)
             elif isinstance(getattr(self, element), Publisher):
                 self._length += 1
             else:
                 raise AttributeError(f'Element {element} of type {type(element)} is not supported')
 
-    def get_publisher_enum_mapping(cls) -> Dict[str, EnumMeta]:
-        return {name: value for name, value in cls.__dict__.items() if cls._is_publisher_enum(value)}
+    def get_publisher_enum_mapping(self) -> Dict[str, Publisher]:
+        return {name: value for name, value in self.__dict__.items() if self._is_publisher_enum(value)}
 
     def __contains__(cls, __x: object) -> bool:
         return __x in cls.get_publisher_enum_mapping().values()
@@ -118,9 +117,14 @@ class PublisherGroup(object):
             PublisherEnum: The corresponding publisher.
 
         """
-        for publisher_enum in self:
-            if publisher_enum.name == name:
-                return publisher_enum
+        for element in self._contents:
+            if element == name and isinstance(publisher := getattr(self, element), Publisher):
+                return publisher
+            elif isinstance(publisher_group := getattr(self, element), PublisherGroup):
+                try:
+                    return publisher_group[name]
+                except KeyError:
+                    pass
         raise KeyError(f"Publisher {name!r} not present in {self.__name__}")
 
     def __len__(self) -> int:
