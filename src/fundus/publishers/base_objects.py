@@ -20,14 +20,14 @@ class Publisher(object):
     request_header: Dict[str, str] = field(default_factory=dict)
 
     def __init__(
-        self,
-        name: str,
-        domain: str,
-        parser: Type[ParserProxy],
-        sources: List[URLSource],
-        query_parameter: Dict[str, str] = None,
-        url_filter: Optional[URLFilter] = None,
-        request_header: Dict[str, str] = None,
+            self,
+            name: str,
+            domain: str,
+            parser: Type[ParserProxy],
+            sources: List[URLSource],
+            query_parameter: Dict[str, str] = None,
+            url_filter: Optional[URLFilter] = None,
+            request_header: Dict[str, str] = None,
     ):
         if not (name and domain and parser and sources):
             raise ValueError("Failed to create Publisher. Name, Domain, Parser and Sources are mandatory")
@@ -97,6 +97,7 @@ class PublisherGroup(object):
                 raise AttributeError(f"Element {element} is already contained within this publisher group")
             else:
                 testing_set.add(element)
+        super().__init__(self)
 
     def get_publisher_enum_mapping(self) -> Dict[str, Publisher]:
         return {publisher.name: publisher for publisher in self}
@@ -164,7 +165,7 @@ class PublisherGroup(object):
         return representation
 
     def search(
-        self, attributes: Optional[List[str]] = None, source_types: Optional[List[Type[URLSource]]] = None
+            self, attributes: Optional[List[str]] = None, source_types: Optional[List[Type[URLSource]]] = None
     ) -> List[Publisher]:
         if not (attributes or source_types):
             raise ValueError("You have to define at least one search condition")
@@ -175,7 +176,7 @@ class PublisherGroup(object):
         spec: Publisher
         for publisher in self:
             if unique_attributes.issubset(publisher.parser().attributes().names) and (
-                publisher.supports(source_types) if source_types else True
+                    publisher.supports(source_types) if source_types else True
             ):
                 matched.append(publisher)
         return matched

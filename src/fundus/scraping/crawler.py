@@ -37,7 +37,7 @@ from tqdm import tqdm
 from typing_extensions import ParamSpec, TypeAlias
 
 from fundus.logging import create_logger
-from fundus.publishers.base_objects import PublisherCollectionMeta, PublisherEnum
+from fundus.publishers.base_objects import PublisherGroup, Publisher
 from fundus.scraping.article import Article
 from fundus.scraping.delay import Delay
 from fundus.scraping.filter import ExtractionFilter, Requires, RequiresAll, URLFilter
@@ -51,7 +51,7 @@ logger = create_logger(__name__)
 _T = TypeVar("_T")
 _P = ParamSpec("_P")
 
-Publisher: TypeAlias = Union[PublisherEnum, Type[PublisherEnum], PublisherCollectionMeta]
+Publisher: TypeAlias = Union[Publisher, PublisherGroup]
 
 
 # noinspection PyPep8Naming
@@ -129,12 +129,12 @@ class CrawlerBase(ABC):
         if not publishers:
             raise ValueError("param <publishers> of <Crawler.__init__> has to be non empty")
 
-        self.publishers: List[PublisherEnum] = list(set(more_itertools.collapse(publishers)))
+        self.publishers: List[Publisher] = list(set(more_itertools.collapse(publishers)))
 
     @abstractmethod
     def _build_article_iterator(
         self,
-        publishers: Tuple[PublisherEnum, ...],
+        publishers: Tuple[Publisher, ...],
         error_handling: Literal["suppress", "catch", "raise"],
         extraction_filter: Optional[ExtractionFilter],
         url_filter: Optional[URLFilter],
@@ -189,7 +189,7 @@ class CrawlerBase(ABC):
         response_cache: Set[str] = set()
 
         extraction_filter = build_extraction_filter()
-        fitting_publishers: List[PublisherEnum] = []
+        fitting_publishers: List[Publisher] = []
 
         if isinstance(extraction_filter, Requires):
             for publisher in self.publishers:
@@ -201,7 +201,7 @@ class CrawlerBase(ABC):
                 if missing_attributes := extraction_filter.required_attributes - supported_attributes:
                     logger.warning(
                         f"The required attribute(s) `{', '.join(missing_attributes)}` "
-                        f"is(are) not supported by {publisher.publisher_name}. Skipping publisher"
+                        f"is(are) not supported by {publisher.name}. Skipping publisher"
                     )
                 else:
                     fitting_publishers.append(publisher)
@@ -248,7 +248,7 @@ class Crawler(CrawlerBase):
             >>>     print(article)
 
         Args:
-            *publishers (Union[PublisherEnum, Type[PublisherEnum], PublisherCollectionMeta]): The publishers to crawl.
+            *publishers (Union[Publisher, Type[Publisher], PublisherGroup]): The publishers to crawl.
             restrict_sources_to (Optional[List[Type[URLSource]]]): Lets you restrict
                 sources defined in the publisher specs. If set, only articles from given source types
                 will be yielded.
@@ -269,7 +269,7 @@ class Crawler(CrawlerBase):
 
     def _fetch_articles(
         self,
-        publisher: PublisherEnum,
+        publisher: Publisher,
         error_handling: Literal["suppress", "catch", "raise"],
         extraction_filter: Optional[ExtractionFilter] = None,
         url_filter: Optional[URLFilter] = None,
@@ -294,14 +294,14 @@ class Crawler(CrawlerBase):
 
     @staticmethod
     def _single_crawl(
-        publishers: Tuple[PublisherEnum, ...], article_task: Callable[[PublisherEnum], Iterator[Article]]
+        publishers: Tuple[Publisher, ...], article_task: Callable[[Publisher], Iterator[Article]]
     ) -> Iterator[Article]:
         article_iterators = [article_task(publisher) for publisher in publishers]
         yield from roundrobin(*article_iterators)
 
     @staticmethod
     def _threaded_crawl(
-        publishers: Tuple[PublisherEnum, ...], article_task: Callable[[PublisherEnum], Iterator[Article]]
+        publishers: Tuple[Publisher, ...], article_task: Callable[[Publisher], Iterator[Article]]
     ) -> Iterator[Article]:
         article_queue: Queue[Article] = Queue(len(publishers))
         wrapped_article_task = queue_wrapper(article_queue, article_task)
@@ -311,7 +311,7 @@ class Crawler(CrawlerBase):
 
     def _build_article_iterator(
         self,
-        publishers: Tuple[PublisherEnum, ...],
+        publishers: Tuple[Publisher, ...],
         error_handling: Literal["suppress", "catch", "raise"],
         extraction_filter: Optional[ExtractionFilter],
         url_filter: Optional[URLFilter],
@@ -359,7 +359,7 @@ class CCNewsCrawler(CrawlerBase):
     @staticmethod
     def _fetch_articles(
         warc_path: str,
-        publishers: Tuple[PublisherEnum, ...],
+        publishers: Tuple[Publisher, ...],
         error_handling: Literal["suppress", "catch", "raise"],
         extraction_filter: Optional[ExtractionFilter] = None,
         url_filter: Optional[URLFilter] = None,
@@ -447,7 +447,7 @@ class CCNewsCrawler(CrawlerBase):
 
     def _build_article_iterator(
         self,
-        publishers: Tuple[PublisherEnum, ...],
+        publishers: Tuple[Publisher, ...],
         error_handling: Literal["suppress", "catch", "raise"],
         extraction_filter: Optional[ExtractionFilter],
         url_filter: Optional[URLFilter],
