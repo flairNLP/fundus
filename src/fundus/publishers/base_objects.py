@@ -2,15 +2,12 @@ import inspect
 from dataclasses import dataclass, field
 from enum import Enum, EnumMeta, unique
 from itertools import islice
-from typing import Any, Dict, Iterator, List, Optional, Type, Union
+from typing import Any, Dict, Iterator, List, Optional, Type, Union, Set
 
 from fundus.parser.base_parser import ParserProxy
 from fundus.scraping.filter import URLFilter
 from fundus.scraping.url import NewsMap, RSSFeed, Sitemap, URLSource
 from fundus.utils.iteration import iterate_all_subclasses
-
-
-# TODO: string representation of everything
 
 
 class Publisher(object):
@@ -59,6 +56,9 @@ class Publisher(object):
 
         self.source_mapping = source_mapping
 
+    def __hash__(self):
+        return hash(self.name)
+
     def __str__(self) -> str:
         return f"{self.name}"
 
@@ -75,7 +75,6 @@ class Publisher(object):
 
 
 class PublisherGroup(object):
-    # TODO: Duplicate Testing
 
     _length: int
     _contents: set
@@ -90,9 +89,15 @@ class PublisherGroup(object):
                 self._length += 1
             else:
                 raise AttributeError(f'Element {element} of type {type(element)} is not supported')
+        testing_set: Set[Publisher] = set()
+        for element in self:
+            if element in testing_set:
+                raise AttributeError(f"Element {element} is already contained within this publisher group")
+            else:
+                testing_set.add(element)
 
     def get_publisher_enum_mapping(self) -> Dict[str, Publisher]:
-        return {name: value for name, value in self if self._is_publisher_enum(value)}
+        return {publisher.name: publisher for publisher in self}
 
     def __contains__(self, __x: object) -> bool:
         return __x in self._contents
