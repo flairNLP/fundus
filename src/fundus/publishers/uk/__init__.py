@@ -2,7 +2,7 @@ from datetime import date, datetime
 
 from dateutil.rrule import YEARLY, rrule
 
-from fundus.publishers.base_objects import PublisherGroup, Publisher
+from fundus.publishers.base_objects import Publisher, PublisherGroup
 from fundus.scraping.filter import inverse, regex_filter
 from fundus.scraping.url import NewsMap, RSSFeed, Sitemap
 
@@ -19,111 +19,75 @@ from .the_telegraph import TheTelegraphParser
 
 
 class UK(metaclass=PublisherGroup):
-    TheGuardian = Publisher(
-        name="The Guardian",
-        domain="https://www.theguardian.com/",
-        sources=[NewsMap("https://www.theguardian.com/sitemaps/news.xml")],
-        parser=TheGuardianParser,
-    )
+    TheGuardian = Publisher(name="The Guardian", domain="https://www.theguardian.com/", parser=TheGuardianParser,
+                            sources=[NewsMap("https://www.theguardian.com/sitemaps/news.xml")])
 
-    TheIndependent = Publisher(
-        name="The Independent",
-        domain="https://www.independent.co.uk/",
-        sources=[
+    TheIndependent = Publisher(name="The Independent", domain="https://www.independent.co.uk/",
+                               parser=TheIndependentParser, sources=[
             Sitemap(
                 "https://www.independent.co.uk/sitemap.xml", sitemap_filter=inverse(regex_filter(f"sitemap-articles"))
             ),
             NewsMap("https://www.independent.co.uk/sitemaps/googlenews"),
-        ],
-        parser=TheIndependentParser,
-    )
+        ])
 
-    TheMirror = Publisher(
-        name="The Mirror",
-        domain="https://www.mirror.co.uk/",
-        sources=[
-            Sitemap("https://www.mirror.co.uk/sitemaps/sitemap_index.xml", reverse=True),
-            NewsMap("https://www.mirror.co.uk/map_news.xml"),
-        ],
-        parser=TheMirrorParser,
-    )
+    TheMirror = Publisher(name="The Mirror", domain="https://www.mirror.co.uk/", parser=TheMirrorParser, sources=[
+        Sitemap("https://www.mirror.co.uk/sitemaps/sitemap_index.xml", reverse=True),
+        NewsMap("https://www.mirror.co.uk/map_news.xml"),
+    ])
 
-    TheTelegraph = Publisher(
-        name="The Telegraph",
-        domain="https://www.telegraph.co.uk/",
-        sources=[
-            Sitemap("https://www.telegraph.co.uk/sitemap.xml"),
-            NewsMap("https://www.telegraph.co.uk/custom/daily-news/sitemap.xml"),
-        ],
-        parser=TheTelegraphParser,
-    )
+    TheTelegraph = Publisher(name="The Telegraph", domain="https://www.telegraph.co.uk/", parser=TheTelegraphParser,
+                             sources=[
+                                 Sitemap("https://www.telegraph.co.uk/sitemap.xml"),
+                                 NewsMap("https://www.telegraph.co.uk/custom/daily-news/sitemap.xml"),
+                             ])
 
-    iNews = Publisher(
-        name="i",
-        domain="https://inews.co.uk/",
-        sources=[
-            Sitemap("https://inews.co.uk/sitemap.xml"),
-            NewsMap(
-                f"https://inews.co.uk/sitemap.xml"
-                f"?yyyy={date.today().year}&mm={str(date.today().month).zfill(2)}&dd={str(date.today().day).zfill(2)}"
-            ),
-        ],
-        parser=INewsParser,
-    )
+    iNews = Publisher(name="i", domain="https://inews.co.uk/", parser=INewsParser, sources=[
+        Sitemap("https://inews.co.uk/sitemap.xml"),
+        NewsMap(
+            f"https://inews.co.uk/sitemap.xml"
+            f"?yyyy={date.today().year}&mm={str(date.today().month).zfill(2)}&dd={str(date.today().day).zfill(2)}"
+        ),
+    ])
 
-    EuronewsEN = Publisher(
-        name="Euronews (EN)",
-        domain="https://www.euronews.com/",
-        sources=[
-            Sitemap("https://www.euronews.com/sitemaps/en/articles.xml"),
-            NewsMap("https://www.euronews.com/sitemaps/en/latest-news.xml"),
-        ],
-        parser=EuronewsParser,
-    )
+    EuronewsEN = Publisher(name="Euronews (EN)", domain="https://www.euronews.com/", parser=EuronewsParser, sources=[
+        Sitemap("https://www.euronews.com/sitemaps/en/articles.xml"),
+        NewsMap("https://www.euronews.com/sitemaps/en/latest-news.xml"),
+    ])
 
-    DailyStar = Publisher(
-        name="Daily Star",
-        domain="https://www.dailystar.co.uk/",
-        sources=[
-            Sitemap("https://www.dailystar.co.uk/sitemaps/sitemap_index.xml", reverse=True),
-            NewsMap("https://www.dailystar.co.uk/map_news.xml"),
-        ],
-        parser=DailyStarParser,
-    )
+    DailyStar = Publisher(name="Daily Star", domain="https://www.dailystar.co.uk/", parser=DailyStarParser, sources=[
+        Sitemap("https://www.dailystar.co.uk/sitemaps/sitemap_index.xml", reverse=True),
+        NewsMap("https://www.dailystar.co.uk/map_news.xml"),
+    ])
 
-    TheSun = Publisher(
-        name="The Sun",
-        domain="https://www.thesun.co.uk/",
-        sources=[
-            Sitemap("https://www.thesun.co.uk/sitemap.xml"),
-            NewsMap("https://www.thesun.co.uk/news-sitemap.xml"),
-        ],
-        url_filter=regex_filter("sun-bingo|web-stories"),
-        parser=TheSunParser,
-    )
+    TheSun = Publisher(name="The Sun", domain="https://www.thesun.co.uk/", parser=TheSunParser, sources=[
+        Sitemap("https://www.thesun.co.uk/sitemap.xml"),
+        NewsMap("https://www.thesun.co.uk/news-sitemap.xml"),
+    ], url_filter=regex_filter("sun-bingo|web-stories"))
 
-    DailyMail = Publisher(
-        name="Daily Mail",
-        domain="https://www.dailymail.co.uk/",
-        sources=[
-            NewsMap("https://www.dailymail.co.uk/google-news-sitemap.xml"),
-        ]
-        + [
-            Sitemap(f"https://www.dailymail.co.uk/sitemap-articles-year~{year.year}.xml")
-            for year in rrule(YEARLY, dtstart=datetime(2021, 1, 1), until=datetime.today())
-        ],
-        parser=DailyMailParser,
-    )
+    DailyMail = Publisher(name="Daily Mail", domain="https://www.dailymail.co.uk/", parser=DailyMailParser, sources=[
+                                                                                                                        NewsMap(
+                                                                                                                            "https://www.dailymail.co.uk/google-news-sitemap.xml"),
+                                                                                                                    ]
+                                                                                                                    + [
+                                                                                                                        Sitemap(
+                                                                                                                            f"https://www.dailymail.co.uk/sitemap-articles-year~{year.year}.xml")
+                                                                                                                        for
+                                                                                                                        year
+                                                                                                                        in
+                                                                                                                        rrule(
+                                                                                                                            YEARLY,
+                                                                                                                            dtstart=datetime(
+                                                                                                                                2021,
+                                                                                                                                1,
+                                                                                                                                1),
+                                                                                                                            until=datetime.today())
+                                                                                                                    ])
 
-    EveningStandard = Publisher(
-        name="Evening Standard",
-        domain="https://www.standard.co.uk/",
-        sources=[
+    EveningStandard = Publisher(name="Evening Standard", domain="https://www.standard.co.uk/",
+                                parser=EveningStandardParser, sources=[
             Sitemap(
                 "https://www.standard.co.uk/sitemap.xml",
                 sitemap_filter=inverse(regex_filter("sitemap-articles|sitemap-recent")),
             ),
             RSSFeed("https://www.standard.co.uk/rss"),
-        ],
-        parser=EveningStandardParser,
-    )
+        ])

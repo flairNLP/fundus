@@ -11,7 +11,7 @@ from typing_extensions import Self
 from fundus import PublisherCollection
 from fundus.parser import ArticleBody, BaseParser
 from fundus.parser.data import TextSequenceTree
-from fundus.publishers.base_objects import PublisherEnum
+from fundus.publishers.base_objects import Publisher
 from fundus.scraping.article import Article
 from fundus.scraping.html import HTML, SourceInfo
 from scripts.generate_tables import supported_publishers_markdown_path
@@ -20,7 +20,7 @@ from tests.resources.parser.test_data import __module_path__ as test_resource_pa
 _T = TypeVar("_T")
 
 
-def get_test_articles(publisher: PublisherEnum) -> List[Article]:
+def get_test_articles(publisher: Publisher) -> List[Article]:
     articles = []
     html_mapping = load_html_test_file_mapping(publisher)
     for html_test_file in html_mapping.values():
@@ -30,7 +30,7 @@ def get_test_articles(publisher: PublisherEnum) -> List[Article]:
             crawl_date=html_test_file.crawl_date,
             requested_url=html_test_file.url,
             responded_url=html_test_file.url,
-            source_info=SourceInfo(publisher.publisher_name),
+            source_info=SourceInfo(publisher.name),
         )
         article = Article.from_extracted(extracted=extraction, html=html)
         articles.append(article)
@@ -156,7 +156,7 @@ class HTMLTestFile:
     url: str
     content: str
     crawl_date: datetime.datetime
-    publisher: PublisherEnum
+    publisher: Publisher
     encoding: str = "utf-8"
 
     @property
@@ -173,7 +173,7 @@ class HTMLTestFile:
         return None
 
     @staticmethod
-    def _parse_path(path: Path) -> PublisherEnum:
+    def _parse_path(path: Path) -> Publisher:
         assert path.name.endswith(".html.gz")
         file_name: str = path.name.rsplit(".html.gz")[0]
         publisher_name, date = file_name.split("_", maxsplit=1)
@@ -246,7 +246,7 @@ class HTMLTestFile:
         self._register_at_meta_info()
 
 
-def load_html_test_file_mapping(publisher: PublisherEnum) -> Dict[Type[BaseParser], HTMLTestFile]:
+def load_html_test_file_mapping(publisher: Publisher) -> Dict[Type[BaseParser], HTMLTestFile]:
     html_paths = (test_resource_path / Path(f"{type(publisher).__name__.lower()}")).glob(f"{publisher.name}*.html.gz")
     html_files = [HTMLTestFile.load(path) for path in html_paths]
     html_mapping: Dict[Type[BaseParser], HTMLTestFile] = {}
@@ -258,27 +258,27 @@ def load_html_test_file_mapping(publisher: PublisherEnum) -> Dict[Type[BaseParse
     return html_mapping
 
 
-def generate_absolute_section_path(publisher: PublisherEnum) -> Path:
+def generate_absolute_section_path(publisher: Publisher) -> Path:
     return test_resource_path / type(publisher).__name__.lower()
 
 
-def generate_meta_info_path(publisher: PublisherEnum) -> Path:
+def generate_meta_info_path(publisher: Publisher) -> Path:
     return generate_absolute_section_path(publisher) / "meta.info"
 
 
-def get_meta_info_file(publisher: PublisherEnum) -> JSONFile[Dict[str, Dict[str, Any]]]:
+def get_meta_info_file(publisher: Publisher) -> JSONFile[Dict[str, Dict[str, Any]]]:
     return JSONFileWithExtractionDecoderEncoder(generate_meta_info_path(publisher))
 
 
-def generate_parser_test_case_json_path(publisher: PublisherEnum) -> Path:
+def generate_parser_test_case_json_path(publisher: Publisher) -> Path:
     return generate_absolute_section_path(publisher) / f"{publisher.name}.json"
 
 
-def get_test_case_json(publisher: PublisherEnum) -> JSONFile[Dict[str, Dict[str, Any]]]:
+def get_test_case_json(publisher: Publisher) -> JSONFile[Dict[str, Dict[str, Any]]]:
     return JSONFileWithExtractionDecoderEncoder(generate_parser_test_case_json_path(publisher))
 
 
-def load_test_case_data(publisher: PublisherEnum) -> Dict[str, Dict[str, Any]]:
+def load_test_case_data(publisher: Publisher) -> Dict[str, Dict[str, Any]]:
     test_case_file = get_test_case_json(publisher)
 
     if not (test_data := test_case_file.load()):

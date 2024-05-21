@@ -13,7 +13,7 @@ from fundus.parser.base_parser import (
 )
 from fundus.parser.utility import generic_author_parsing
 from fundus.publishers import PublisherCollection
-from fundus.publishers.base_objects import PublisherEnum
+from fundus.publishers.base_objects import Publisher
 from tests.resources import attribute_annotations_mapping
 from tests.utility import (
     get_meta_info_file,
@@ -137,7 +137,7 @@ attributes_parsers_are_required_to_cover = {"body"}
     "publisher", list(PublisherCollection), ids=[publisher.name for publisher in PublisherCollection]
 )
 class TestParser:
-    def test_annotations(self, publisher: PublisherEnum) -> None:
+    def test_annotations(self, publisher: Publisher) -> None:
         parser_proxy = publisher.parser
         for versioned_parser in parser_proxy:
             assert attributes_parsers_are_required_to_cover.issubset(
@@ -151,7 +151,7 @@ class TestParser:
                 else:
                     raise KeyError(f"Unsupported attribute {attr.__name__!r}")
 
-    def test_parsing(self, publisher: PublisherEnum) -> None:
+    def test_parsing(self, publisher: Publisher) -> None:
         comparative_data = load_test_case_data(publisher)
         html_mapping = load_html_test_file_mapping(publisher)
 
@@ -186,7 +186,7 @@ class TestParser:
             for key, value in version_data.items():
                 assert value == extraction[key]
 
-    def test_reserved_attribute_names(self, publisher: PublisherEnum):
+    def test_reserved_attribute_names(self, publisher: Publisher):
         parser = publisher.parser
         for attr in attribute_annotations_mapping.keys():
             if value := getattr(parser, attr, None):

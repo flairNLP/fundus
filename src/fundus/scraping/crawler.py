@@ -37,7 +37,7 @@ from tqdm import tqdm
 from typing_extensions import ParamSpec, TypeAlias
 
 from fundus.logging import create_logger
-from fundus.publishers.base_objects import PublisherGroup, Publisher
+from fundus.publishers.base_objects import Publisher, PublisherGroup
 from fundus.scraping.article import Article
 from fundus.scraping.delay import Delay
 from fundus.scraping.filter import ExtractionFilter, Requires, RequiresAll, URLFilter

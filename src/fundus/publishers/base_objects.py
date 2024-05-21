@@ -11,16 +11,15 @@ from fundus.utils.iteration import iterate_all_subclasses
 
 
 class Publisher(object):
-
     def __init__(
-            self,
-            name: str,
-            domain: str,
-            parser: Type[ParserProxy],
-            sources: List[URLSource],
-            query_parameter: Dict[str, str] = None,
-            url_filter: Optional[URLFilter] = None,
-            request_header: Dict[str, str] = None,
+        self,
+        name: str,
+        domain: str,
+        parser: Type[ParserProxy],
+        sources: List[URLSource],
+        query_parameter: Optional[Dict[str, str]] = None,
+        url_filter: Optional[URLFilter] = None,
+        request_header: Optional[Dict[str, str]] = None,
     ):
         if not (name and domain and parser and sources):
             raise ValueError("Failed to create Publisher. Name, Domain, Parser and Sources are mandatory")
@@ -69,7 +68,9 @@ class Publisher(object):
 
 class PublisherGroup(type):
     _length: int
-    _contents: set
+    _contents: set[str]
+
+    # TODO: fix __in__
 
     def __new__(cls, *args, **kwargs):
         created_type = super().__new__(cls, *args, **kwargs)
@@ -85,7 +86,6 @@ class PublisherGroup(type):
             else:
                 raise AttributeError(f"Element {element} of type {type(element)} is not supported")
         testing_set = set()
-        # TODO: iteration
         for element in created_type._contents:
             if element in testing_set:
                 raise AttributeError(f"Element {element} is already contained within this publisher group")
@@ -121,7 +121,7 @@ class PublisherGroup(type):
             name: A string referencing the publisher in the corresponding enum.
 
         Returns:
-            PublisherEnum: The corresponding publisher.
+            Publisher: The corresponding publisher.
 
         """
         if name in self._contents and isinstance(publisher := getattr(self, name), Publisher):
@@ -144,8 +144,6 @@ class PublisherGroup(type):
 
     def __str__(self) -> str:
         representation = f"The {type(self).__name__!r} consists of {len(self)} publishers:"
-        publisher: str
-        group: str
         for element_name in self._contents:
             element = getattr(self, element_name)
             if isinstance(element, Publisher):
@@ -159,7 +157,7 @@ class PublisherGroup(type):
         return representation
 
     def search(
-            self, attributes: Optional[List[str]] = None, source_types: Optional[List[Type[URLSource]]] = None
+        self, attributes: Optional[List[str]] = None, source_types: Optional[List[Type[URLSource]]] = None
     ) -> List[Publisher]:
         if not (attributes or source_types):
             raise ValueError("You have to define at least one search condition")
@@ -170,7 +168,7 @@ class PublisherGroup(type):
         spec: Publisher
         for publisher in self:
             if unique_attributes.issubset(publisher.parser().attributes().names) and (
-                    publisher.supports(source_types) if source_types else True
+                publisher.supports(source_types) if source_types else True
             ):
                 matched.append(publisher)
         return matched

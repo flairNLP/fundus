@@ -1,6 +1,6 @@
 import itertools
 from pathlib import Path
-from typing import Dict, Iterable, List, Protocol, Sequence, cast
+from typing import Dict, Iterable, List, Protocol, Sequence
 from urllib.parse import urlparse
 
 import lxml.etree
@@ -10,14 +10,14 @@ from lxml.html.builder import CLASS, CODE, DIV, SPAN, TABLE, TBODY, TD, TH, THEA
 
 from fundus import PublisherCollection
 from fundus import __development_base_path__ as root_path
-from fundus.publishers.base_objects import PublisherEnum
+from fundus.publishers.base_objects import Publisher
 from tests.resources import attribute_annotations_mapping
 
 supported_publishers_markdown_path: Path = root_path / "docs" / "supported_publishers.md"
 
 
 class ColumnFactory(Protocol):
-    def __call__(self, spec: PublisherEnum) -> lxml.html.HtmlElement:
+    def __call__(self, spec: Publisher) -> lxml.html.HtmlElement:
         ...
 
 
@@ -48,9 +48,9 @@ def generate_thead() -> lxml.html.HtmlElement:
     return thead
 
 
-def generate_tbody(country: Iterable[PublisherEnum]) -> lxml.html.HtmlElement:
+def generate_tbody(country: Iterable[Publisher]) -> lxml.html.HtmlElement:
     content: List[lxml.html.HtmlElement] = []
-    for spec in sorted(country, key=lambda enum: enum.publisher_name):
+    for spec in sorted(country, key=lambda enum: enum.name):
         tds = [column(spec) for column in column_mapping.values()]
         tr = TR(*tds)
         content.append(tr)
