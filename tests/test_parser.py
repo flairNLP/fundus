@@ -231,7 +231,7 @@ class TestUtility:
 
 class TestMetaInfo:
     def test_order(self):
-        for cc in PublisherCollection.get_publisher_enum_mapping().values():
+        for cc in PublisherCollection.get_subgroup_mapping().values():
             meta_file = get_meta_info_file(next(iter(cc)))
             meta_info = meta_file.load()
             assert meta_info, f"Meta info file {meta_file.path} is missing"

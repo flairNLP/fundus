@@ -3,6 +3,7 @@ from dataclasses import dataclass, field
 from enum import Enum, EnumMeta, unique
 from itertools import islice
 from typing import Any, Dict, Iterator, List, Optional, Set, Type, Union
+from typing_extensions import Self
 
 from fundus.parser.base_parser import ParserProxy
 from fundus.scraping.filter import URLFilter
@@ -93,8 +94,11 @@ class PublisherGroup(type):
                 testing_set.add(element)
         return created_type
 
-    def get_publisher_enum_mapping(self) -> Dict[str, Publisher]:
+    def get_publishers_mapping(self) -> Dict[str, Publisher]:
         return {publisher.name: publisher for publisher in self}
+
+    def get_subgroup_mapping(self) -> Dict[str, Self]:
+        return {element: publisher_group for element in self._contents if isinstance((publisher_group := getattr(self, element)), PublisherGroup)}
 
     def __contains__(self, __x: object) -> bool:
         return __x in self._contents
