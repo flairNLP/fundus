@@ -87,7 +87,7 @@ def align_tables(tables: Sequence[lxml.html.HtmlElement]) -> None:
 def build_publisher_tables() -> Dict[str, lxml.html.HtmlElement]:
     tables: Dict[str, lxml.html.HtmlElement] = {
         country_code: TABLE(generate_thead(), generate_tbody(enum), CLASS(f"publishers {country_code}"))
-        for country_code, enum in sorted(PublisherCollection.get_publisher_enum_mapping().items())
+        for country_code, enum in sorted(PublisherCollection.get_subgroup_mapping().items())
     }
     align_tables(tuple(tables.values()))
     return tables

@@ -13,8 +13,7 @@ from lxml.cssselect import CSSSelector
 from requests import ConnectionError, HTTPError
 
 from fundus.logging import create_logger
-from fundus.publishers import PublisherGroup
-from fundus.publishers.base_objects import Publisher
+from fundus.publishers.base_objects import Publisher, PublisherGroup
 from fundus.scraping.delay import Delay
 from fundus.scraping.filter import URLFilter
 from fundus.scraping.session import _default_header, session_handler
@@ -186,7 +185,6 @@ class CCNewsSource:
         self.publishers = publishers
         self.warc_path = warc_path
         self.headers = headers or _default_header
-
         self._publisher_mapping: Dict[str, Publisher] = {
             urlparse(publisher.domain).netloc: publisher for publisher in publishers
         }

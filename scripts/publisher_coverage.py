@@ -6,11 +6,10 @@ Note that this script does not check the attributes' correctness, only their pre
 """
 import sys
 import traceback
-from enum import EnumMeta
 from typing import List, Optional, cast
 
 from fundus import Crawler, NewsMap, PublisherCollection, RSSFeed
-from fundus.publishers.base_objects import PublisherEnum
+from fundus.publishers.base_objects import PublisherGroup, Publisher
 from fundus.scraping.article import Article
 from fundus.scraping.filter import RequiresAll
 
@@ -18,20 +17,20 @@ from fundus.scraping.filter import RequiresAll
 def main() -> None:
     failed: int = 0
 
-    publisher_regions: List[EnumMeta] = sorted(
-        PublisherCollection.get_publisher_enum_mapping().values(), key=lambda region: region.__name__
+    publisher_regions: List[PublisherGroup] = sorted(
+        PublisherCollection.get_subgroup_mapping().values(), key=lambda region: region.__name__
     )
 
     for publisher_region in publisher_regions:
         print(f"{publisher_region.__name__:-^50}")
 
-        publisher: PublisherEnum
+        publisher: Publisher
         for publisher in sorted(
-            publisher_region, key=lambda p: cast(PublisherEnum, p).name  # type: ignore[no-any-return]
+            publisher_region, key=lambda p: p.name
         ):
-            publisher_name: str = publisher.name  # type: ignore[attr-defined]
+            publisher_name: str = publisher.name
 
-            if not (publisher.source_mapping[RSSFeed] or publisher.source_mapping[NewsMap]):  # type: ignore[attr-defined]
+            if not (publisher.source_mapping[RSSFeed] or publisher.source_mapping[NewsMap]):
                 # skip publishers providing no NewsMap or RSSFeed
                 print(f"⏩  SKIPPED: {publisher_name!r} - NO NewsMap or RSSFeed found")
                 continue
