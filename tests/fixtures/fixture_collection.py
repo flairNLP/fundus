@@ -1,10 +1,7 @@
 import pytest
 
 from fundus import NewsMap, RSSFeed, Sitemap
-from fundus.publishers.base_objects import (
-    PublisherGroup,
-    Publisher,
-)
+from fundus.publishers.base_objects import Publisher, PublisherGroup
 
 
 @pytest.fixture

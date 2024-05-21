@@ -7,6 +7,9 @@ from .lrt import LRTParser
 
 
 class LT(metaclass=PublisherGroup):
-    LRT = Publisher(name="Lithuanian National Radio and Television", domain="https://www.lrt.lt", parser=LRTParser,
-                    sources=[Sitemap("https://www.lrt.lt/servisai/sitemap/sitemap-index.xml"),
-                             RSSFeed("https://www.lrt.lt/?rss")])
+    LRT = Publisher(
+        name="Lithuanian National Radio and Television",
+        domain="https://www.lrt.lt",
+        parser=LRTParser,
+        sources=[Sitemap("https://www.lrt.lt/servisai/sitemap/sitemap-index.xml"), RSSFeed("https://www.lrt.lt/?rss")],
+    )

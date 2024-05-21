@@ -9,7 +9,7 @@ import traceback
 from typing import List, Optional, cast
 
 from fundus import Crawler, NewsMap, PublisherCollection, RSSFeed
-from fundus.publishers.base_objects import PublisherGroup, Publisher
+from fundus.publishers.base_objects import Publisher, PublisherGroup
 from fundus.scraping.article import Article
 from fundus.scraping.filter import RequiresAll
 
@@ -25,9 +25,7 @@ def main() -> None:
         print(f"{publisher_region.__name__:-^50}")
 
         publisher: Publisher
-        for publisher in sorted(
-            publisher_region, key=lambda p: p.name
-        ):
+        for publisher in sorted(publisher_region, key=lambda p: p.name):
             publisher_name: str = publisher.name
 
             if not (publisher.source_mapping[RSSFeed] or publisher.source_mapping[NewsMap]):

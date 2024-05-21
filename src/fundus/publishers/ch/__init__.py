@@ -7,8 +7,13 @@ from .srf import SRFParser
 
 
 class CH(metaclass=PublisherGroup):
-    SRF = Publisher(name="Schweizer Radio und Fernsehen", domain="https://www.srf.ch/", parser=SRFParser, sources=[
-        RSSFeed("https://www.srf.ch/news/bnf/rss/1646"),
-        NewsMap("https://www.srf.ch/sitemaps/newsmap/news/index.xml"),
-        Sitemap("https://www.srf.ch/new-news-sitemap"),
-    ])
+    SRF = Publisher(
+        name="Schweizer Radio und Fernsehen",
+        domain="https://www.srf.ch/",
+        parser=SRFParser,
+        sources=[
+            RSSFeed("https://www.srf.ch/news/bnf/rss/1646"),
+            NewsMap("https://www.srf.ch/sitemaps/newsmap/news/index.xml"),
+            Sitemap("https://www.srf.ch/new-news-sitemap"),
+        ],
+    )

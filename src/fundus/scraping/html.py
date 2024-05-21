@@ -1,7 +1,7 @@
 import time
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Dict, Iterable, Iterator, List, Optional, Protocol
+from typing import Dict, Iterable, Iterator, List, Optional, Protocol, Tuple, Union
 from urllib.parse import urlparse
 
 import chardet
@@ -10,6 +10,7 @@ import requests
 import validators
 from fastwarc import ArchiveIterator, WarcRecord, WarcRecordType
 from lxml.cssselect import CSSSelector
+from more_itertools import collapse
 from requests import ConnectionError, HTTPError
 
 from fundus.logging import create_logger
@@ -181,12 +182,17 @@ class WebSource:
 
 
 class CCNewsSource:
-    def __init__(self, *publishers: PublisherGroup, warc_path: str, headers: Optional[Dict[str, str]] = None):
-        self.publishers = publishers
+    def __init__(
+        self,
+        *publishers: Tuple[Union[PublisherGroup, Publisher], ...],
+        warc_path: str,
+        headers: Optional[Dict[str, str]] = None,
+    ):
+        self.publishers = list(collapse(publishers))
         self.warc_path = warc_path
         self.headers = headers or _default_header
         self._publisher_mapping: Dict[str, Publisher] = {
-            urlparse(publisher.domain).netloc: publisher for publisher in publishers
+            urlparse(publisher.domain).netloc: publisher for publisher in self.publishers
         }
 
     def fetch(self, url_filter: Optional[URLFilter] = None) -> Iterator[HTML]:

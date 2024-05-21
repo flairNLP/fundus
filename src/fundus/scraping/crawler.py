@@ -129,7 +129,7 @@ class CrawlerBase(ABC):
         if not publishers:
             raise ValueError("param <publishers> of <Crawler.__init__> has to be non empty")
 
-        self.publishers: List[PublisherType] = list(set(more_itertools.collapse(publishers)))
+        self.publishers: List[Publisher] = list(set(more_itertools.collapse(publishers)))
 
     @abstractmethod
     def _build_article_iterator(
@@ -189,7 +189,7 @@ class CrawlerBase(ABC):
         response_cache: Set[str] = set()
 
         extraction_filter = build_extraction_filter()
-        fitting_publishers: List[PublisherType] = []
+        fitting_publishers: List[Publisher] = []
 
         if isinstance(extraction_filter, Requires):
             for publisher in self.publishers:
@@ -269,7 +269,7 @@ class Crawler(CrawlerBase):
 
     def _fetch_articles(
         self,
-        publisher: PublisherType,
+        publisher: Publisher,
         error_handling: Literal["suppress", "catch", "raise"],
         extraction_filter: Optional[ExtractionFilter] = None,
         url_filter: Optional[URLFilter] = None,
@@ -364,7 +364,7 @@ class CCNewsCrawler(CrawlerBase):
         extraction_filter: Optional[ExtractionFilter] = None,
         url_filter: Optional[URLFilter] = None,
     ) -> Iterator[Article]:
-        source = CCNewsSource(*publishers, warc_path=warc_path)
+        source = CCNewsSource(publishers, warc_path=warc_path)
         scraper = CCNewsScraper(source)
         yield from scraper.scrape(error_handling, extraction_filter, url_filter)
 

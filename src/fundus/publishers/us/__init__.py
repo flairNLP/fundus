@@ -24,61 +24,92 @@ from .world_truth import WorldTruthParser
 
 
 class US(metaclass=PublisherGroup):
-    APNews = Publisher(name="Associated Press News", domain="https://apnews.com/", parser=APNewsParser, sources=[
-        Sitemap(
-            "https://apnews.com/sitemap.xml",
-            sitemap_filter=regex_filter("apnews.com/hub/|apnews.com/video/"),
-            reverse=True,
-        ),
-        NewsMap("https://apnews.com/news-sitemap-content.xml"),
-    ])
+    APNews = Publisher(
+        name="Associated Press News",
+        domain="https://apnews.com/",
+        parser=APNewsParser,
+        sources=[
+            Sitemap(
+                "https://apnews.com/sitemap.xml",
+                sitemap_filter=regex_filter("apnews.com/hub/|apnews.com/video/"),
+                reverse=True,
+            ),
+            NewsMap("https://apnews.com/news-sitemap-content.xml"),
+        ],
+    )
 
-    CNBC = Publisher(name="CNBC", domain="https://www.cnbc.com/", parser=CNBCParser,
-                     sources=[Sitemap("https://www.cnbc.com/sitemapAll.xml"),
-                              NewsMap("https://www.cnbc.com/sitemap_news.xml")])
+    CNBC = Publisher(
+        name="CNBC",
+        domain="https://www.cnbc.com/",
+        parser=CNBCParser,
+        sources=[Sitemap("https://www.cnbc.com/sitemapAll.xml"), NewsMap("https://www.cnbc.com/sitemap_news.xml")],
+    )
 
-    TechCrunch = Publisher(name="TechCrunch", domain="https://techcrunch.com/", parser=TechCrunchParser, sources=[
-        Sitemap(
-            "https://techcrunch.com/sitemap_index.xml",
-            sitemap_filter=inverse(regex_filter("post-sitemap")),
-            reverse=True,
-        ),
-        NewsMap("https://techcrunch.com/news-sitemap.xml"),
-    ])
+    TechCrunch = Publisher(
+        name="TechCrunch",
+        domain="https://techcrunch.com/",
+        parser=TechCrunchParser,
+        sources=[
+            Sitemap(
+                "https://techcrunch.com/sitemap_index.xml",
+                sitemap_filter=inverse(regex_filter("post-sitemap")),
+                reverse=True,
+            ),
+            NewsMap("https://techcrunch.com/news-sitemap.xml"),
+        ],
+    )
 
-    TheIntercept = Publisher(name="The Intercept", domain="https://theintercept.com/", parser=TheInterceptParser,
-                             sources=[
-                                 RSSFeed("https://theintercept.com/feed/?lang=en"),
-                                 Sitemap(
-                                     "https://theintercept.com/sitemap_index.xml",
-                                     reverse=True,
-                                     sitemap_filter=inverse(regex_filter("post-sitemap")),
-                                 ),
-                             ])
+    TheIntercept = Publisher(
+        name="The Intercept",
+        domain="https://theintercept.com/",
+        parser=TheInterceptParser,
+        sources=[
+            RSSFeed("https://theintercept.com/feed/?lang=en"),
+            Sitemap(
+                "https://theintercept.com/sitemap_index.xml",
+                reverse=True,
+                sitemap_filter=inverse(regex_filter("post-sitemap")),
+            ),
+        ],
+    )
 
-    TheGatewayPundit = Publisher(name="The Gateway Pundit", domain="https://www.thegatewaypundit.com/",
-                                 parser=TheGatewayPunditParser, sources=[
+    TheGatewayPundit = Publisher(
+        name="The Gateway Pundit",
+        domain="https://www.thegatewaypundit.com/",
+        parser=TheGatewayPunditParser,
+        sources=[
             Sitemap(
                 "https://www.thegatewaypundit.com/sitemap_index.xml",
                 sitemap_filter=inverse(regex_filter("post-sitemap")),
                 reverse=True,
             ),
             NewsMap("https://www.thegatewaypundit.com/news-sitemap.xml"),
-        ])
+        ],
+    )
 
-    FoxNews = Publisher(name="Fox News", domain="https://www.foxnews.com/", parser=FoxNewsParser, sources=[
-        Sitemap("https://www.foxnews.com/sitemap.xml", sitemap_filter=inverse(regex_filter("type=articles"))),
-        NewsMap("https://www.foxnews.com/sitemap.xml?type=news"),
-    ])
+    FoxNews = Publisher(
+        name="Fox News",
+        domain="https://www.foxnews.com/",
+        parser=FoxNewsParser,
+        sources=[
+            Sitemap("https://www.foxnews.com/sitemap.xml", sitemap_filter=inverse(regex_filter("type=articles"))),
+            NewsMap("https://www.foxnews.com/sitemap.xml?type=news"),
+        ],
+    )
 
-    TheNation = Publisher(name="The Nation", domain="https://www.thenation.com/", parser=TheNationParser, sources=[
-        Sitemap(
-            "https://www.thenation.com/sitemap_index.xml",
-            sitemap_filter=inverse(regex_filter("article-sitemap")),
-            reverse=True,
-        ),
-        NewsMap("https://www.thenation.com/news-sitemap.xml"),
-    ])
+    TheNation = Publisher(
+        name="The Nation",
+        domain="https://www.thenation.com/",
+        parser=TheNationParser,
+        sources=[
+            Sitemap(
+                "https://www.thenation.com/sitemap_index.xml",
+                sitemap_filter=inverse(regex_filter("article-sitemap")),
+                reverse=True,
+            ),
+            NewsMap("https://www.thenation.com/news-sitemap.xml"),
+        ],
+    )
 
     # WorldTruth = Publisher(
     #     name="World Truth",
@@ -87,72 +118,118 @@ class US(metaclass=PublisherGroup):
     #     parser=WorldTruthParser,
     # )
 
-    FreeBeacon = Publisher(name="The Washington Free Beacon", domain="https://freebeacon.com/", parser=FreeBeaconParser,
-                           sources=[NewsMap("https://freebeacon.com/post_google_news.xml")])
+    FreeBeacon = Publisher(
+        name="The Washington Free Beacon",
+        domain="https://freebeacon.com/",
+        parser=FreeBeaconParser,
+        sources=[NewsMap("https://freebeacon.com/post_google_news.xml")],
+    )
 
-    WashingtonTimes = Publisher(name="The Washington Times", domain="https://www.washingtontimes.com/",
-                                parser=WashingtonTimesParser, sources=[
+    WashingtonTimes = Publisher(
+        name="The Washington Times",
+        domain="https://www.washingtontimes.com/",
+        parser=WashingtonTimesParser,
+        sources=[
             RSSFeed("https://www.washingtontimes.com/rss/headlines/news/politics/"),
             Sitemap("https://www.washingtontimes.com/sitemap-stories.xml"),
             Sitemap("https://www.washingtontimes.com/sitemap-entries.xml"),
-        ])
+        ],
+    )
 
-    WashingtonPost = Publisher(name="Washington Post", domain="https://www.washingtonpost.com/",
-                               parser=WashingtonPostParser, sources=[
+    WashingtonPost = Publisher(
+        name="Washington Post",
+        domain="https://www.washingtonpost.com/",
+        parser=WashingtonPostParser,
+        sources=[
             Sitemap("https://www.washingtonpost.com/sitemaps/sitemap.xml.gz"),
             NewsMap("https://www.washingtonpost.com/sitemaps/news-sitemap.xml.gz"),
             RSSFeed("https://feeds.washingtonpost.com/rss/world"),
             RSSFeed("https://feeds.washingtonpost.com/rss/national"),
-        ], url_filter=regex_filter("washingtonpost.com(\/)?$"))
+        ],
+        url_filter=regex_filter("washingtonpost.com(\/)?$"),
+    )
 
-    TheNewYorker = Publisher(name="The New Yorker", domain="https://www.newyorker.com/", parser=TheNewYorkerParser,
-                             sources=[
-                                 Sitemap("https://www.newyorker.com/sitemap.xml"),
-                                 NewsMap("https://www.newyorker.com/feed/google-news-sitemap-feed/sitemap-google-news"),
-                             ])
+    TheNewYorker = Publisher(
+        name="The New Yorker",
+        domain="https://www.newyorker.com/",
+        parser=TheNewYorkerParser,
+        sources=[
+            Sitemap("https://www.newyorker.com/sitemap.xml"),
+            NewsMap("https://www.newyorker.com/feed/google-news-sitemap-feed/sitemap-google-news"),
+        ],
+    )
 
-    Reuters = Publisher(name="Reuters", domain="https://www.reuters.com/", parser=ReutersParser, sources=[
-        Sitemap("https://www.reuters.com/arc/outboundfeeds/sitemap-index/?outputType=xml"),
-        NewsMap("https://www.reuters.com/arc/outboundfeeds/news-sitemap-index/?outputType=xml"),
-    ])
+    Reuters = Publisher(
+        name="Reuters",
+        domain="https://www.reuters.com/",
+        parser=ReutersParser,
+        sources=[
+            Sitemap("https://www.reuters.com/arc/outboundfeeds/sitemap-index/?outputType=xml"),
+            NewsMap("https://www.reuters.com/arc/outboundfeeds/news-sitemap-index/?outputType=xml"),
+        ],
+    )
 
-    OccupyDemocrats = Publisher(name="Occupy Democrats", domain="https://occupydemocrats.com/",
-                                parser=OccupyDemocratsParser, sources=[
+    OccupyDemocrats = Publisher(
+        name="Occupy Democrats",
+        domain="https://occupydemocrats.com/",
+        parser=OccupyDemocratsParser,
+        sources=[
             Sitemap(
                 url="https://occupydemocrats.com/sitemap.xml", sitemap_filter=inverse(regex_filter(r"post-sitemap"))
             )
-        ])
+        ],
+    )
 
-    LATimes = Publisher(name="Los Angeles Times", domain="https://www.latimes.com/", parser=LATimesParser,
-                        sources=[Sitemap("https://www.latimes.com/sitemap.xml"),
-                                 NewsMap("https://www.latimes.com/news-sitemap.xml")])
+    LATimes = Publisher(
+        name="Los Angeles Times",
+        domain="https://www.latimes.com/",
+        parser=LATimesParser,
+        sources=[Sitemap("https://www.latimes.com/sitemap.xml"), NewsMap("https://www.latimes.com/news-sitemap.xml")],
+    )
 
-    BusinessInsider = Publisher(name="Business Insider", domain="https://www.businessinsider.com/",
-                                parser=BusinessInsiderParser, sources=[
+    BusinessInsider = Publisher(
+        name="Business Insider",
+        domain="https://www.businessinsider.com/",
+        parser=BusinessInsiderParser,
+        sources=[
             NewsMap("https://www.businessinsider.com/sitemap/google-news.xml"),
             Sitemap("https://www.businessinsider.com/sitemap/2024-01.xml"),
-        ])
+        ],
+    )
 
-    RollingStone = Publisher(name="Rolling Stone", domain="https://www.rollingstone.com/", parser=RollingStoneParser,
-                             sources=[
-                                 NewsMap("https://www.rollingstone.com/news-sitemap.xml"),
-                                 Sitemap(
-                                     "https://www.rollingstone.com/sitemap_index.xml",
-                                     sitemap_filter=inverse(
-                                         lor(regex_filter("/pmc_list-sitemap"), regex_filter("/post-sitemap"))),
-                                 ),
-                             ])
+    RollingStone = Publisher(
+        name="Rolling Stone",
+        domain="https://www.rollingstone.com/",
+        parser=RollingStoneParser,
+        sources=[
+            NewsMap("https://www.rollingstone.com/news-sitemap.xml"),
+            Sitemap(
+                "https://www.rollingstone.com/sitemap_index.xml",
+                sitemap_filter=inverse(lor(regex_filter("/pmc_list-sitemap"), regex_filter("/post-sitemap"))),
+            ),
+        ],
+    )
 
-    VoiceOfAmerica = Publisher(name="Voice Of America", domain="https://www.voanews.com/", parser=VOAParser, sources=[
-        NewsMap("https://www.voanews.com/sitemap_415_news.xml.gz"),
-        Sitemap(
-            "https://www.voanews.com/sitemap.xml", sitemap_filter=inverse(regex_filter(r"sitemap_[\d_]*\.xml\.gz"))
-        ),
-    ])
+    VoiceOfAmerica = Publisher(
+        name="Voice Of America",
+        domain="https://www.voanews.com/",
+        parser=VOAParser,
+        sources=[
+            NewsMap("https://www.voanews.com/sitemap_415_news.xml.gz"),
+            Sitemap(
+                "https://www.voanews.com/sitemap.xml", sitemap_filter=inverse(regex_filter(r"sitemap_[\d_]*\.xml\.gz"))
+            ),
+        ],
+    )
 
-    Wired = Publisher(name="Wired", domain="https://www.wired.com", parser=WiredParser, sources=[
-        RSSFeed("https://www.wired.com/feed/rss"),
-        NewsMap("https://www.wired.com/feed/google-latest-news/sitemap-google-news"),
-        Sitemap("https://www.wired.com/sitemap.xml"),
-        Sitemap("https://www.wired.com/sitemap-archive-1.xml"),
-    ])
+    Wired = Publisher(
+        name="Wired",
+        domain="https://www.wired.com",
+        parser=WiredParser,
+        sources=[
+            RSSFeed("https://www.wired.com/feed/rss"),
+            NewsMap("https://www.wired.com/feed/google-latest-news/sitemap-google-news"),
+            Sitemap("https://www.wired.com/sitemap.xml"),
+            Sitemap("https://www.wired.com/sitemap-archive-1.xml"),
+        ],
+    )
