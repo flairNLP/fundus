@@ -67,30 +67,31 @@ class Publisher(object):
         return all(bool(self.source_mapping.get(source_type)) for source_type in source_types)
 
 
-# TODO: An Metaclass anpassen
-
 class PublisherGroup(type):
     _length: int
     _contents: set
 
     def __new__(cls, *args, **kwargs):
-        cls._contents = set(dir(cls)) - set(dir(PublisherGroup))
-        cls._length = 0
-        for element in cls._contents:
-            if isinstance(publisher_group := getattr(cls, element), PublisherGroup):
-                cls._length += len(publisher_group)
-            elif isinstance(getattr(cls, element), Publisher):
-                cls._length += 1
+        created_type = super().__new__(cls, *args, **kwargs)
+        attributes = dir(created_type)
+        attributes.remove("__weakref__")
+        created_type._contents = set(attributes) - set(dir(PublisherGroup))
+        created_type._length = 0
+        for element in created_type._contents:
+            if isinstance(publisher_group := getattr(created_type, element), PublisherGroup):
+                created_type._length += len(publisher_group)
+            elif isinstance(getattr(created_type, element), Publisher):
+                created_type._length += 1
             else:
                 raise AttributeError(f"Element {element} of type {type(element)} is not supported")
-        testing_set: Set[Publisher] = set()
+        testing_set = set()
         # TODO: iteration
-        for element in cls._contents:
+        for element in created_type._contents:
             if element in testing_set:
                 raise AttributeError(f"Element {element} is already contained within this publisher group")
             else:
                 testing_set.add(element)
-        return super().__new__(cls, *args, **kwargs)
+        return created_type
 
     def get_publisher_enum_mapping(self) -> Dict[str, Publisher]:
         return {publisher.name: publisher for publisher in self}

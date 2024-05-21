@@ -51,7 +51,7 @@ logger = create_logger(__name__)
 _T = TypeVar("_T")
 _P = ParamSpec("_P")
 
-Publisher: TypeAlias = Union[Publisher, PublisherGroup]
+PublisherType: TypeAlias = Union[Publisher, PublisherGroup]
 
 
 # noinspection PyPep8Naming
@@ -125,16 +125,16 @@ def remove_query_parameters_from_url(url: str) -> str:
 
 
 class CrawlerBase(ABC):
-    def __init__(self, *publishers: Publisher):
+    def __init__(self, *publishers: PublisherType):
         if not publishers:
             raise ValueError("param <publishers> of <Crawler.__init__> has to be non empty")
 
-        self.publishers: List[Publisher] = list(set(more_itertools.collapse(publishers)))
+        self.publishers: List[PublisherType] = list(set(more_itertools.collapse(publishers)))
 
     @abstractmethod
     def _build_article_iterator(
         self,
-        publishers: Tuple[Publisher, ...],
+        publishers: Tuple[PublisherType, ...],
         error_handling: Literal["suppress", "catch", "raise"],
         extraction_filter: Optional[ExtractionFilter],
         url_filter: Optional[URLFilter],
@@ -189,7 +189,7 @@ class CrawlerBase(ABC):
         response_cache: Set[str] = set()
 
         extraction_filter = build_extraction_filter()
-        fitting_publishers: List[Publisher] = []
+        fitting_publishers: List[PublisherType] = []
 
         if isinstance(extraction_filter, Requires):
             for publisher in self.publishers:
@@ -233,7 +233,7 @@ class CrawlerBase(ABC):
 class Crawler(CrawlerBase):
     def __init__(
         self,
-        *publishers: Publisher,
+        *publishers: PublisherType,
         restrict_sources_to: Optional[List[Type[URLSource]]] = None,
         delay: Optional[Union[float, Delay]] = 1.0,
         threading: bool = True,
@@ -269,7 +269,7 @@ class Crawler(CrawlerBase):
 
     def _fetch_articles(
         self,
-        publisher: Publisher,
+        publisher: PublisherType,
         error_handling: Literal["suppress", "catch", "raise"],
         extraction_filter: Optional[ExtractionFilter] = None,
         url_filter: Optional[URLFilter] = None,
@@ -294,14 +294,14 @@ class Crawler(CrawlerBase):
 
     @staticmethod
     def _single_crawl(
-        publishers: Tuple[Publisher, ...], article_task: Callable[[Publisher], Iterator[Article]]
+        publishers: Tuple[PublisherType, ...], article_task: Callable[[PublisherType], Iterator[Article]]
     ) -> Iterator[Article]:
         article_iterators = [article_task(publisher) for publisher in publishers]
         yield from roundrobin(*article_iterators)
 
     @staticmethod
     def _threaded_crawl(
-        publishers: Tuple[Publisher, ...], article_task: Callable[[Publisher], Iterator[Article]]
+        publishers: Tuple[PublisherType, ...], article_task: Callable[[PublisherType], Iterator[Article]]
     ) -> Iterator[Article]:
         article_queue: Queue[Article] = Queue(len(publishers))
         wrapped_article_task = queue_wrapper(article_queue, article_task)
@@ -311,7 +311,7 @@ class Crawler(CrawlerBase):
 
     def _build_article_iterator(
         self,
-        publishers: Tuple[Publisher, ...],
+        publishers: Tuple[PublisherType, ...],
         error_handling: Literal["suppress", "catch", "raise"],
         extraction_filter: Optional[ExtractionFilter],
         url_filter: Optional[URLFilter],
@@ -332,7 +332,7 @@ class Crawler(CrawlerBase):
 class CCNewsCrawler(CrawlerBase):
     def __init__(
         self,
-        *publishers: Publisher,
+        *publishers: PublisherType,
         start: datetime = datetime(2016, 8, 1),
         end: datetime = datetime.now(),
         processes: int = -1,
@@ -359,7 +359,7 @@ class CCNewsCrawler(CrawlerBase):
     @staticmethod
     def _fetch_articles(
         warc_path: str,
-        publishers: Tuple[Publisher, ...],
+        publishers: Tuple[PublisherType, ...],
         error_handling: Literal["suppress", "catch", "raise"],
         extraction_filter: Optional[ExtractionFilter] = None,
         url_filter: Optional[URLFilter] = None,
@@ -447,7 +447,7 @@ class CCNewsCrawler(CrawlerBase):
 
     def _build_article_iterator(
         self,
-        publishers: Tuple[Publisher, ...],
+        publishers: Tuple[PublisherType, ...],
         error_handling: Literal["suppress", "catch", "raise"],
         extraction_filter: Optional[ExtractionFilter],
         url_filter: Optional[URLFilter],
