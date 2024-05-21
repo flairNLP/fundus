@@ -18,7 +18,7 @@ from .the_sun import TheSunParser
 from .the_telegraph import TheTelegraphParser
 
 
-class UK(PublisherGroup):
+class UK(metaclass=PublisherGroup):
     TheGuardian = Publisher(
         name="The Guardian",
         domain="https://www.theguardian.com/",

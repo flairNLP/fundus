@@ -23,7 +23,7 @@ from .wired import WiredParser
 from .world_truth import WorldTruthParser
 
 
-class US(PublisherGroup):
+class US(metaclass=PublisherGroup):
     APNews = Publisher(
         name="Associated Press News",
         domain="https://apnews.com/",

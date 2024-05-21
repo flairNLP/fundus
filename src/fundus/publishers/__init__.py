@@ -13,7 +13,7 @@ from fundus.publishers.uk import UK
 from fundus.publishers.us import US
 
 
-class PublisherCollection(PublisherGroup):
+class PublisherCollection(metaclass=PublisherGroup):
     na = NA
     de = DE
     at = AT

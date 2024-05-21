@@ -6,7 +6,7 @@ from .srf import SRFParser
 # noinspection PyPep8Naming
 
 
-class CH(PublisherGroup):
+class CH(metaclass=PublisherGroup):
     SRF = Publisher(
         name="Schweizer Radio und Fernsehen",
         domain="https://www.srf.ch/",

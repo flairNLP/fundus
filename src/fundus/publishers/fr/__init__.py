@@ -6,7 +6,7 @@ from .le_figaro import LeFigaroParser
 from .le_monde import LeMondeParser
 
 
-class FR(PublisherGroup):
+class FR(metaclass=PublisherGroup):
     LeMonde = Publisher(
         name="Le Monde",
         domain="https://www.lemonde.fr/",

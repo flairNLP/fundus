@@ -5,7 +5,7 @@ from fundus.scraping.url import RSSFeed, Sitemap
 from .nine_news import NineNewsParser
 
 
-class AU(PublisherGroup):
+class AU(metaclass=PublisherGroup):
     NineNews = Publisher(
         name="Nine News",
         domain="https://www.9news.com.au/",

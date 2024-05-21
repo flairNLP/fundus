@@ -1,5 +1,4 @@
 from datetime import datetime
-from typing import Optional
 
 from dateutil.rrule import MONTHLY, YEARLY, rrule
 
@@ -52,7 +51,7 @@ from .zdf import ZDFParser
 
 
 # noinspection PyPep8Naming
-class DE(PublisherGroup):
+class DE(metaclass=PublisherGroup):
     SportSchau = Publisher(
         name="Sportschau",
         domain="https://www.sportschau.de/",

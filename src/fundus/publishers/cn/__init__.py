@@ -4,7 +4,7 @@ from fundus.scraping.url import RSSFeed, Sitemap
 from .people import PeopleParser
 
 
-class CN(PublisherGroup):
+class CN(metaclass=PublisherGroup):
     People = Publisher(
         name="People",
         domain="http://www.people.com.cn",

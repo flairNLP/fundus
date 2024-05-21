@@ -3,7 +3,7 @@ from fundus.publishers.my.malay_mail import MalayMailParser
 from fundus.scraping.url import RSSFeed, Sitemap
 
 
-class MY(PublisherGroup):
+class MY(metaclass=PublisherGroup):
     MalayMail = Publisher(
         name="Malay Mail",
         domain="https://www.malaymail.com/",

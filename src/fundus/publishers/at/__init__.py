@@ -7,7 +7,7 @@ from .orf import OrfParser
 # noinspection PyPep8Naming
 
 
-class AT(PublisherGroup):
+class AT(metaclass=PublisherGroup):
     ORF = Publisher(
         name="Österreichischer Rundfunk",
         domain="https://www.orf.at",

@@ -11,13 +11,6 @@ from fundus.utils.iteration import iterate_all_subclasses
 
 
 class Publisher(object):
-    name: str
-    domain: str
-    parser: Type[ParserProxy]
-    sources: List[URLSource]
-    query_parameter: Dict[str, str] = field(default_factory=dict)
-    url_filter: Optional[URLFilter] = field(default=None)
-    request_header: Dict[str, str] = field(default_factory=dict)
 
     def __init__(
             self,
@@ -32,15 +25,12 @@ class Publisher(object):
         if not (name and domain and parser and sources):
             raise ValueError("Failed to create Publisher. Name, Domain, Parser and Sources are mandatory")
         self.name = name
-        self.parser = parser
+        self.parser = parser()
         self.domain = domain
         self.sources = sources
-        if query_parameter:
-            self.query_parameter = query_parameter
-        if url_filter:
-            self.url_filter = url_filter
-        if request_header:
-            self.request_header = request_header
+        self.query_parameter = query_parameter
+        self.url_filter = url_filter
+        self.request_header = request_header
         # we define the dict here manually instead of using default dict so that we can control
         # the order in which sources are proceeded.
         source_mapping: Dict[Type[URLSource], List[URLSource]] = {
@@ -77,27 +67,30 @@ class Publisher(object):
         return all(bool(self.source_mapping.get(source_type)) for source_type in source_types)
 
 
-class PublisherGroup(object):
+# TODO: An Metaclass anpassen
+
+class PublisherGroup(type):
     _length: int
     _contents: set
 
-    def __init__(self):
-        self._contents = set(dir(self)) - set(dir(PublisherGroup))
-        self._length = 0
-        for element in self._contents:
-            if isinstance(publisher_group := getattr(self, element), PublisherGroup):
-                self._length += len(publisher_group)
-            elif isinstance(getattr(self, element), Publisher):
-                self._length += 1
+    def __new__(cls, *args, **kwargs):
+        cls._contents = set(dir(cls)) - set(dir(PublisherGroup))
+        cls._length = 0
+        for element in cls._contents:
+            if isinstance(publisher_group := getattr(cls, element), PublisherGroup):
+                cls._length += len(publisher_group)
+            elif isinstance(getattr(cls, element), Publisher):
+                cls._length += 1
             else:
                 raise AttributeError(f"Element {element} of type {type(element)} is not supported")
         testing_set: Set[Publisher] = set()
-        for element in self:
+        # TODO: iteration
+        for element in cls._contents:
             if element in testing_set:
                 raise AttributeError(f"Element {element} is already contained within this publisher group")
             else:
                 testing_set.add(element)
-        super().__init__(self)
+        return super().__new__(cls, *args, **kwargs)
 
     def get_publisher_enum_mapping(self) -> Dict[str, Publisher]:
         return {publisher.name: publisher for publisher in self}

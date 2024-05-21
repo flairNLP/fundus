@@ -6,7 +6,7 @@ from .haberturk import HaberturkParser
 from .ntvtr import NTVTRParser
 
 
-class TR(PublisherGroup):
+class TR(metaclass=PublisherGroup):
     Haberturk = Publisher(
         name="Haberturk",
         domain="https://www.haberturk.com/",

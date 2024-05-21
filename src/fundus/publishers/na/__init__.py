@@ -5,7 +5,7 @@ from fundus.scraping.url import RSSFeed, Sitemap
 from .the_namibian import TheNamibianParser
 
 
-class NA(PublisherGroup):
+class NA(metaclass=PublisherGroup):
     TheNamibian = Publisher(
         name="The Namibian",
         domain="https://www.namibian.com.na/",

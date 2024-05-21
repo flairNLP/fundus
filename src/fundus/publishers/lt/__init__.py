@@ -6,7 +6,7 @@ from .lrt import LRTParser
 # noinspection PyPep8Naming
 
 
-class LT(PublisherGroup):
+class LT(metaclass=PublisherGroup):
     LRT = Publisher(
         name="Lithuanian National Radio and Television",
         domain="https://www.lrt.lt",
