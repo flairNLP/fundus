@@ -23,6 +23,7 @@ from .frankfurter_rundschau import FrankfurterRundschauParser
 from .freiepresse import FreiePresseParser
 from .gamestar import GamestarParser
 from .hamburger_abendblatt import HamburgerAbendblattParser
+from .heise import HeiseParser
 from .hessenschau import HessenschauParser
 from .junge_welt import JungeWeltParser
 from .kicker import KickerParser
@@ -258,6 +259,17 @@ class DE(PublisherEnum):
             Sitemap("https://taz.de/sitemap-index.xml"),
         ],
         parser=TazParser,
+    )
+
+    Heise = PublisherSpec(
+        name="Heise",
+        domain="https://www.heise.de",
+        sources=[
+            RSSFeed("https://www.heise.de/rss/heise.rdf"),
+            Sitemap("https://www.heise.de/sitemapindex.xml", sitemap_filter=inverse(regex_filter("/news/"))),
+        ],
+        parser=HeiseParser,
+        query_parameter={"seite": "all"},
     )
 
     Bild = PublisherSpec(
