@@ -14,8 +14,8 @@ from fundus.parser.utility import (
 
 class GolemParser(ParserProxy):
     class V1(BaseParser):
-        _summary_selector = CSSSelector("hroup > p")
-        _paragraph_selector = CSSSelector("section > p")
+        _summary_selector = CSSSelector("hgroup > p")
+        _paragraph_selector = CSSSelector("section > p:not([class='meta'])")
         _subheadline_selector = CSSSelector("div > section > h2")
 
         @attribute
@@ -37,7 +37,10 @@ class GolemParser(ParserProxy):
 
         @attribute
         def title(self) -> Optional[str]:
-            return self.precomputed.meta.get("title")
+            if title := self.precomputed.meta.get("title"):
+                return title.replace(" - Golem.de", "")
+            else:
+                return None
 
         @attribute
         def topics(self) -> List[str]:
