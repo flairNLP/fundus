@@ -19,10 +19,10 @@ from .die_zeit import DieZeitParser
 from .dw import DWParser
 from .faz import FAZParser
 from .focus import FocusParser
-from .golem import GolemParser
 from .frankfurter_rundschau import FrankfurterRundschauParser
 from .freiepresse import FreiePresseParser
 from .gamestar import GamestarParser
+from .golem import GolemParser
 from .hamburger_abendblatt import HamburgerAbendblattParser
 from .heise import HeiseParser
 from .hessenschau import HessenschauParser
@@ -343,7 +343,7 @@ class DE(PublisherEnum):
         ],
         parser=GolemParser,
     )
-    
+
     WinFuture = PublisherSpec(
         name="WinFuture",
         domain="https://winfuture.de/",
