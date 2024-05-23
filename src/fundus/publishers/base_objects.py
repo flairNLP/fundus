@@ -1,6 +1,6 @@
 import inspect
 from itertools import islice
-from typing import Dict, Iterator, List, Optional, Type, Union, overload
+from typing import Dict, Iterator, List, Optional, Set, Type, Union, overload
 
 from fundus.parser.base_parser import ParserProxy
 from fundus.scraping.filter import URLFilter
@@ -81,7 +81,7 @@ class Publisher(object):
 
 class PublisherGroup(type):
     _length: int
-    _contents: set[str]
+    _contents: Set[str]
 
     def __hash__(self):
         return hash(self.__name__)
@@ -99,10 +99,10 @@ class PublisherGroup(type):
                 created_type._length += 1
             else:
                 raise ValueError(f"Element {element} of type {type(element)} is not supported")
-        created_type._recursive_contents = set()
+        testing_set = set()
         for element in created_type._contents:
             attribute = getattr(created_type, element)
-            if attribute in created_type._recursive_contents:
+            if attribute in testing_set:
                 raise AttributeError(
                     f"The element {element} of type {type(attribute)} is already contained within this publisher group"
                 )
@@ -114,7 +114,7 @@ class PublisherGroup(type):
                     raise AttributeError(
                         f"One or more publishers within {attribute} are already contained within this publisher group"
                     )
-            created_type._recursive_contents.add(attribute)
+            testing_set.add(attribute)
         return created_type
 
     def get_publisher_mapping(self) -> Dict[str, Publisher]:
