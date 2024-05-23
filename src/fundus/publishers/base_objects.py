@@ -117,7 +117,7 @@ class PublisherGroup(type):
             created_type._recursive_contents.add(attribute)
         return created_type
 
-    def get_publishers_mapping(self) -> Dict[str, Publisher]:
+    def get_publisher_mapping(self) -> Dict[str, Publisher]:
         return {publisher.name: publisher for publisher in self}
 
     def get_subgroup_mapping(self) -> Dict[str, "PublisherGroup"]:

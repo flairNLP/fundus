@@ -5,22 +5,22 @@ from fundus.publishers.base_objects import PublisherGroup
 
 
 class TestCollection:
-    def test_iter_empty_collection(self, empty_publisher_group):
+    def test_iter_empty_group(self, empty_publisher_group):
         assert list(empty_publisher_group) == []
 
-    def test_iter_collection_with_empty_publisher_enum(self, collection_with_empty_publisher_enum):
-        assert list(collection_with_empty_publisher_enum) == []
+    def test_iter_group_with_empty_publisher_subgroup(self, group_with_empty_publisher_subgroup):
+        assert list(group_with_empty_publisher_subgroup) == []
 
-    def test_iter_collection_with_publisher_enum(self, group_with_valid_publisher_subgroup):
+    def test_iter_group_with_publisher_subgroup(self, group_with_valid_publisher_subgroup):
         assert list(group_with_valid_publisher_subgroup) == [group_with_valid_publisher_subgroup.pub.value]
 
-    def test_publisher_enum_with_wrong_enum_value(self):
+    def test_publisher_group_with_wrong_publisher_value(self):
         with pytest.raises(ValueError):
 
             class PublisherGroupWithWrongValue(metaclass=PublisherGroup):
                 value = "Enum"
 
-    def test_duplicate_publisher_names_in_same_collection(self, publisher_group_with_news_map):
+    def test_duplicate_publisher_names_in_same_group(self, publisher_group_with_news_map):
         with pytest.raises(AttributeError):
 
             class Test(metaclass=PublisherGroup):

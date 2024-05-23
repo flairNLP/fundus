@@ -13,11 +13,11 @@ def empty_publisher_group():
 
 
 @pytest.fixture
-def collection_with_empty_publisher_enum(empty_publisher_group):
-    class CollectionWithEmptyPublisherEnum(metaclass=PublisherGroup):
+def group_with_empty_publisher_subgroup(empty_publisher_group):
+    class GroupWithEmptyPublisherSubgroup(metaclass=PublisherGroup):
         empty = empty_publisher_group
 
-    return CollectionWithEmptyPublisherEnum
+    return GroupWithEmptyPublisherSubgroup
 
 
 @pytest.fixture
