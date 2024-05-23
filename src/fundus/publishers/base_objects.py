@@ -1,6 +1,6 @@
 import inspect
 from itertools import islice
-from typing import Dict, Iterator, List, Optional, Type, overload, Union
+from typing import Dict, Iterator, List, Optional, Type, Union, overload
 
 from fundus.parser.base_parser import ParserProxy
 from fundus.scraping.filter import URLFilter
@@ -103,13 +103,17 @@ class PublisherGroup(type):
         for element in created_type._contents:
             attribute = getattr(created_type, element)
             if attribute in created_type._recursive_contents:
-                raise AttributeError(f"The element {element} of type {type(attribute)} is already contained within this publisher group")
+                raise AttributeError(
+                    f"The element {element} of type {type(attribute)} is already contained within this publisher group"
+                )
             if isinstance(attribute, Publisher):
                 attribute.contained_in = created_type.__name__.lower()
                 attribute.publisher_name = element
             elif isinstance(attribute, PublisherGroup):
                 if created_type._contents & attribute._contents:
-                    raise AttributeError(f"One or more publishers within {attribute} are already contained within this publisher group")
+                    raise AttributeError(
+                        f"One or more publishers within {attribute} are already contained within this publisher group"
+                    )
             created_type._recursive_contents.add(attribute)
         return created_type
 
@@ -127,7 +131,10 @@ class PublisherGroup(type):
         if isinstance(__x, PublisherGroup):
             search_string = __x.__name__.lower()
         elif isinstance(__x, Publisher):
-            search_string = __x.publisher_name
+            if __x.publisher_name:
+                search_string = __x.publisher_name
+            else:
+                return False
         else:
             search_string = __x
         if search_string in self._contents:
@@ -137,7 +144,6 @@ class PublisherGroup(type):
                 if search_string in attribute:
                     return True
         return False
-
 
     def __iter__(self) -> Iterator[Publisher]:
         """This will iterate over all publishers included in the group and its subgroups.

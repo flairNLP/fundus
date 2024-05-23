@@ -259,6 +259,8 @@ def load_html_test_file_mapping(publisher: Publisher) -> Dict[Type[BaseParser], 
 
 
 def generate_absolute_section_path(publisher: Publisher) -> Path:
+    if not publisher.contained_in:
+        raise ValueError("Initialize tests with PublisherCollection for accurate files structure")
     return test_resource_path / publisher.contained_in
 
 
