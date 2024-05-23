@@ -426,6 +426,21 @@
     </tr>
     <tr>
       <td>
+        <code>Golem</code>
+      </td>
+      <td>
+        <div>Golem</div>
+      </td>
+      <td>
+        <a href="https://www.golem.de/">
+          <span>www.golem.de</span>
+        </a>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
         <code>HamburgerAbendblatt</code>
       </td>
       <td>
@@ -710,21 +725,6 @@
       <td>
         <a href="https://www.tagesschau.de/">
           <span>www.tagesschau.de</span>
-        </a>
-      </td>
-      <td>&#160;</td>
-      <td>&#160;</td>
-    </tr>
-    <tr>
-      <td>
-        <code>Golem</code>
-      </td>
-      <td>
-        <div>Golem</div>
-      </td>
-      <td>
-        <a href="https://www.golem.de/">
-          <span>www.golem.de</span>
         </a>
       </td>
       <td>&#160;</td>
