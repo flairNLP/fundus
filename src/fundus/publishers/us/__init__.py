@@ -134,7 +134,6 @@ class US(metaclass=PublisherGroup):
             ),
         ],
         parser=FreeBeaconParser,
-        sources=[NewsMap("https://freebeacon.com/post_google_news.xml")],
     )
 
     WashingtonTimes = Publisher(
@@ -158,7 +157,6 @@ class US(metaclass=PublisherGroup):
             RSSFeed("https://feeds.washingtonpost.com/rss/world"),
             RSSFeed("https://feeds.washingtonpost.com/rss/national"),
         ],
-        parser=WashingtonPostParser,
         # Adds a URL-filter to ignore incomplete URLs
         url_filter=regex_filter(r"washingtonpost.com(\/)?$"),
     )

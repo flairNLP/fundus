@@ -27,7 +27,7 @@ def test_supported_publishers_table():
     root = lxml.html.fromstring(load_supported_publishers_markdown())
     parsed_names: List[str] = root.xpath("//table[contains(@class,'publishers')]//code/text()")
     for publisher in PublisherCollection:
-        assert publisher.publisher_name in parsed_names, (
+        assert publisher.name in parsed_names, (
             f"Publisher {publisher.name} is not included in docs/supported_news.md. "
             f"Run 'python -m scripts.generate_tables'"
         )
