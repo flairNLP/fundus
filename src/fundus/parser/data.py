@@ -10,6 +10,7 @@ from typing import (
     Optional,
     Sequence,
     Tuple,
+    TypeVar,
     Union,
     overload,
 )
@@ -19,6 +20,8 @@ from typing_extensions import Self, TypeAlias
 LDMappingValue: TypeAlias = Union[List[Dict[str, Any]], Dict[str, Any]]
 
 _sentinel = object()
+
+_T = TypeVar("_T")
 
 
 class LinkedDataMapping:
@@ -85,7 +88,7 @@ class LinkedDataMapping:
             tmp = nxt
         return tmp
 
-    def bf_search(self, key: str, depth: Optional[int] = None, default: Any = None) -> Optional[Any]:
+    def bf_search(self, key: str, depth: Optional[int] = None, default: Optional[_T] = None) -> Union[Any, _T]:
         """
         This is a classic BF search on the nested dicts representing the JSON-LD. <key> specifies the dict key to
         search, <depth> the depth level. If the depth level is set to None, this method will search through the whole
@@ -244,6 +247,9 @@ class ArticleSection(TextSequenceTree):
     def deserialize(cls, serialized: Dict[str, Any]) -> Self:
         return cls(headline=TextSequence(serialized["headline"]), paragraphs=TextSequence(serialized["paragraphs"]))
 
+    def __bool__(self):
+        return bool(self.paragraphs)
+
 
 @dataclass
 class ArticleBody(TextSequenceTree):
@@ -262,3 +268,6 @@ class ArticleBody(TextSequenceTree):
             summary=TextSequence(serialized["summary"]),
             sections=[ArticleSection.deserialize(section) for section in serialized["sections"]],
         )
+
+    def __bool__(self):
+        return any(bool(section) for section in self.sections)

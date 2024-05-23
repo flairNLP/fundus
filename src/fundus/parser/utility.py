@@ -1,5 +1,6 @@
 import itertools
 import re
+from collections import defaultdict
 from copy import copy
 from dataclasses import dataclass, field
 from datetime import datetime
@@ -73,6 +74,9 @@ class Node:
     def __str__(self) -> str:
         return self.text_content()
 
+    def __repr__(self):
+        return f"{type(self).__name__}: {self.text_content()}"
+
     def __bool__(self):
         return bool(normalize_whitespace(self.text_content()))
 
@@ -117,6 +121,10 @@ def extract_article_body_with_selector(
 
     if not summary_nodes:
         instructions = more_itertools.prepend([], instructions)
+    elif not nodes[: len(summary_nodes)] == summary_nodes:
+        raise ValueError(
+            f"The summary should be at the beginning of the article, but extracted article starts with '{nodes[0]!r}'"
+        )
 
     if not subhead_nodes or (paragraph_nodes and subhead_nodes[0] > paragraph_nodes[0]):
         first = next(instructions)
@@ -136,18 +144,50 @@ def extract_article_body_with_selector(
     return ArticleBody(summary=summary, sections=sections)
 
 
-_meta_node_selector = CSSSelector("meta[name], meta[property]")
+_meta_node_selector = CSSSelector("head > meta, body > meta")
 
 
-def get_meta_content(tree: lxml.html.HtmlElement) -> Dict[str, str]:
-    meta_nodes = _meta_node_selector(tree)
-    meta: Dict[str, str] = {}
-    for node in meta_nodes:
-        key = node.attrib.get("name") or node.attrib.get("property")
-        value = node.attrib.get("content")
-        if key and value:
-            meta[key] = value
-    return meta
+def get_meta_content(root: lxml.html.HtmlElement) -> Dict[str, str]:
+    """Parse metadata from HTML.
+
+    This function parses single values (i.e. charset=...), nodes containing name, property, http-equiv or
+    itemprop attributes. When multiple values for the same key occur, they will be joined using `,`. This
+    is in order to ease typing and avoid list as additional type.
+
+    In case an HTML tag consists a class, it will be appended as namespace to avoid key collisions.
+    I.e. <meta class="swiftype" name="author" ... > will be stored using `swiftype:author` as a key.
+
+    Args:
+        root: The HTML document given as a lxml.html.HtmlElement.
+
+    Returns:
+        The metadata as a dictionary
+    """
+    data = defaultdict(list)
+    for node in _meta_node_selector(root):
+        attributes = node.attrib
+        if len(attributes) == 1:
+            data[attributes.keys()[0]].append(attributes.values()[0])
+        elif key := (  # these keys are ordered by frequency
+            attributes.get("name")
+            or attributes.get("property")
+            or attributes.get("http-equiv")
+            or attributes.get("itemprop")
+        ):
+            if ns := attributes.get("class"):
+                key = f"{ns}:{key}"
+            if content := attributes.get("content"):
+                data[key].append(content)
+
+    metadata: Dict[str, str] = {}
+    for name, listed_content in data.items():
+        if len(listed_content) == 1:
+            metadata[name] = listed_content[0]
+        else:
+            # for ease of typing we join multiple contents for the same key using ','
+            metadata[name] = ",".join(listed_content)
+
+    return metadata
 
 
 def strip_nodes_to_text(text_nodes: List[lxml.html.HtmlElement], join_on: str = "\n\n") -> Optional[str]:
@@ -192,6 +232,19 @@ def generic_author_parsing(
     Returns:
         A parsed and striped list of authors
     """
+
+    def parse_author_dict(author_dict: Dict[str, str]) -> Optional[str]:
+        if (author_name := author_dict.get("name")) is not None:
+            return author_name
+
+        given_name = author_dict.get("givenName", "")
+        additional_name = author_dict.get("additionalName", "")
+        family_name = author_dict.get("familyName", "")
+        if given_name and family_name:
+            return " ".join(filter(bool, [given_name, additional_name, family_name]))
+        else:
+            return None
+
     if not value:
         return []
 
@@ -205,7 +258,10 @@ def generic_author_parsing(
         authors = list(filter(bool, re.split(r"|".join(split_on or common_delimiters), value)))
 
     elif isinstance(value, dict):
-        authors = [name] if (name := value.get("name")) else []
+        if author := parse_author_dict(value):
+            return [author]
+        else:
+            return []
 
     elif isinstance(value, list):
         if isinstance(value[0], str):
@@ -214,7 +270,7 @@ def generic_author_parsing(
 
         elif isinstance(value[0], dict):
             value = cast(List[Dict[str, str]], value)
-            authors = [name for author in value if (name := author.get("name"))]
+            authors = [name for author in value if (name := parse_author_dict(author))]
 
         else:
             raise parameter_type_error
@@ -233,12 +289,12 @@ def generic_text_extraction_with_css(doc, selector: XPath) -> Optional[str]:
 
 
 def generic_topic_parsing(keywords: Optional[Union[str, List[str]]], delimiter: str = ",") -> List[str]:
-    if isinstance(keywords, str):
-        return [keyword.strip() for keyword in keywords.split(delimiter)]
+    if not keywords:
+        return []
+    elif isinstance(keywords, str):
+        return [cleaned for keyword in keywords.split(delimiter) if (cleaned := keyword.strip())]
     elif isinstance(keywords, list) and all(isinstance(s, str) for s in keywords):
         return keywords
-    elif keywords is None:
-        return []
     else:
         raise TypeError(f"Encountered unexpected type {type(keywords)} as keyword parameter")
 

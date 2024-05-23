@@ -21,7 +21,10 @@ logger = create_logger(__name__)
 
 class _ArchiveDecompressor:
     def __init__(self):
-        self.archive_mapping: Dict[str, Callable[[bytes], bytes]] = {"application/x-gzip": self._decompress_gzip}
+        self.archive_mapping: Dict[str, Callable[[bytes], bytes]] = {
+            "application/x-gzip": self._decompress_gzip,
+            "gzip": self._decompress_gzip,
+        }
 
     @staticmethod
     def _decompress_gzip(compressed_content: bytes) -> bytes:

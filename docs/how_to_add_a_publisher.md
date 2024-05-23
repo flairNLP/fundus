@@ -37,8 +37,10 @@ import urllib.request
 
 url = ...
 
-with urllib.request.urlopen(url) as response:
-    pass
+request = urllib.request.Request(url, headers={'User-Agent': 'FundusBot'})
+
+with urllib.request.urlopen(request) as response:
+    content = response.read()
 ````
 If you encounter an error like `urllib.error.HTTPError: HTTP Error 403: Forbidden`, it indicates that the publisher uses bot protection, preventing crawling.
 In such cases, please comment on the issue mentioned above, mentioning the publisher you attempted to crawl, preferably with its domain name.
@@ -378,6 +380,9 @@ def title(self) -> Optional[str]:
    # Use the `get` function to retrieve data from the `meta` precomputed attribute
    return self.precomputed.meta.get("og:title")
 ```
+
+**_NOTE:_** In case a `class` is present in the HTML `meta` tag, it will be appended as a namespace to avoid collisions.
+I.e. the content of the following meta tag `<meta class="swiftype" name="author" ...` can be accessed with the key `swiftype:author`.
 
 ### Extracting Attributes with XPath and CSS-Select
 
