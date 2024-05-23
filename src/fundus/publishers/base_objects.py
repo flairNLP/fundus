@@ -1,10 +1,6 @@
 import inspect
-from dataclasses import dataclass, field
-from enum import Enum, EnumMeta, unique
 from itertools import islice
-from typing import Any, Dict, Iterator, List, Optional, Set, Type, Union
-
-from typing_extensions import Self
+from typing import Dict, Iterator, List, Optional, Type
 
 from fundus.parser.base_parser import ParserProxy
 from fundus.scraping.filter import URLFilter
@@ -32,6 +28,8 @@ class Publisher(object):
         self.query_parameter = query_parameter
         self.url_filter = url_filter
         self.request_header = request_header
+        self.contained_in: Optional[str] = None
+        self.referenced_name: Optional[str] = None
         # we define the dict here manually instead of using default dict so that we can control
         # the order in which sources are proceeded.
         source_mapping: Dict[Type[URLSource], List[URLSource]] = {
@@ -74,6 +72,9 @@ class PublisherGroup(type):
 
     # TODO: fix __in__
 
+    def __hash__(self):
+        return hash(self.__name__)
+
     def __new__(cls, *args, **kwargs):
         created_type = super().__new__(cls, *args, **kwargs)
         attributes = dir(created_type)
@@ -86,13 +87,19 @@ class PublisherGroup(type):
             elif isinstance(getattr(created_type, element), Publisher):
                 created_type._length += 1
             else:
-                raise AttributeError(f"Element {element} of type {type(element)} is not supported")
+                raise ValueError(f"Element {element} of type {type(element)} is not supported")
         testing_set = set()
         for element in created_type._contents:
-            if element in testing_set:
-                raise AttributeError(f"Element {element} is already contained within this publisher group")
-            else:
-                testing_set.add(element)
+            attribute = getattr(created_type, element)
+            if attribute in testing_set:
+                raise AttributeError(f"The element {element} of type {type(attribute)} is already contained within this publisher group")
+            if isinstance(attribute, Publisher):
+                attribute.contained_in = created_type.__name__.lower()
+                attribute.referenced_name = element
+            elif isinstance(attribute, PublisherGroup):
+                if created_type._contents & attribute._contents:
+                    raise AttributeError(f"One or more publishers within {attribute} are already contained within this publisher group")
+            testing_set.add(attribute)
         return created_type
 
     def get_publishers_mapping(self) -> Dict[str, Publisher]:
