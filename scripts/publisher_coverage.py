@@ -8,10 +8,11 @@ import sys
 import traceback
 from typing import List, Optional, cast
 
-from fundus import Crawler, NewsMap, PublisherCollection, RSSFeed
+from fundus import Crawler, PublisherCollection
 from fundus.publishers.base_objects import Publisher, PublisherGroup
 from fundus.scraping.article import Article
 from fundus.scraping.filter import RequiresAll
+from scripts.utility import timeout
 
 
 def main() -> None:
@@ -28,43 +29,44 @@ def main() -> None:
         for publisher in sorted(publisher_region, key=lambda p: p.name):
             publisher_name: str = publisher.name
 
-            if not (publisher.source_mapping[RSSFeed] or publisher.source_mapping[NewsMap]):
-                # skip publishers providing no NewsMap or RSSFeed
-                print(f"⏩  SKIPPED: {publisher_name!r} - NO NewsMap or RSSFeed found")
+            if not any(publisher.source_mapping.values()):  # type: ignore[attr-defined]
+                # skip publishers providing no sources for forward crawling
+                print(f"⏩  SKIPPED: {publisher_name!r} - No sources defined")
                 continue
 
-            crawler: Crawler = Crawler(publisher, restrict_sources_to=[NewsMap, RSSFeed])
-            complete_article: Optional[Article] = next(
-                crawler.crawl(max_articles=1, only_complete=RequiresAll(), error_handling="catch"), None
+            crawler: Crawler = Crawler(publisher, delay=0.4)
+
+            timed_next = timeout(next, time=20, silent=True)
+
+            complete_article: Optional[Article] = timed_next(  # type: ignore[call-arg]
+                crawler.crawl(max_articles=1, only_complete=RequiresAll(), error_handling="suppress"), None
             )
 
             if complete_article is None:
-                incomplete_article: Optional[Article] = next(
-                    crawler.crawl(max_articles=1, only_complete=False, error_handling="suppress"), None
+                incomplete_article: Optional[Article] = timed_next(  # type: ignore[call-arg]
+                    crawler.crawl(max_articles=1, only_complete=False, error_handling="catch"), None
                 )
 
                 if incomplete_article is None:
                     print(f"❌ FAILED: {publisher_name!r} - No articles received")
+
+                elif incomplete_article.exception is not None:
+                    print(
+                        f"❌ FAILED: {publisher_name!r} - Encountered exception during crawling "
+                        f"(URL: {incomplete_article.html.requested_url})"
+                    )
+                    traceback.print_exception(
+                        etype=type(incomplete_article.exception),
+                        value=incomplete_article.exception,
+                        tb=incomplete_article.exception.__traceback__,
+                        file=sys.stdout,
+                    )
+
                 else:
                     print(
                         f"❌ FAILED: {publisher_name!r} - No complete articles received "
                         f"(URL of an incomplete article: {incomplete_article.html.requested_url})"
                     )
-                failed += 1
-                continue
-
-            if complete_article.exception is not None:
-                print(
-                    f"❌ FAILED: {publisher_name!r} - Encountered exception during crawling "
-                    f"(URL: {complete_article.html.requested_url})"
-                )
-                traceback.print_exception(
-                    etype=type(complete_article.exception),
-                    value=complete_article.exception,
-                    tb=complete_article.exception.__traceback__,
-                    file=sys.stdout,
-                )
-
                 failed += 1
                 continue
 

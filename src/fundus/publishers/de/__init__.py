@@ -22,6 +22,7 @@ from .frankfurter_rundschau import FrankfurterRundschauParser
 from .freiepresse import FreiePresseParser
 from .gamestar import GamestarParser
 from .hamburger_abendblatt import HamburgerAbendblattParser
+from .heise import HeiseParser
 from .hessenschau import HessenschauParser
 from .junge_welt import JungeWeltParser
 from .kicker import KickerParser
@@ -258,6 +259,17 @@ class DE(metaclass=PublisherGroup):
         ],
     )
 
+    Heise = Publisher(
+        name="Heise",
+        domain="https://www.heise.de",
+        sources=[
+            RSSFeed("https://www.heise.de/rss/heise.rdf"),
+            Sitemap("https://www.heise.de/sitemapindex.xml", sitemap_filter=inverse(regex_filter("/news/"))),
+        ],
+        parser=HeiseParser,
+        query_parameter={"seite": "all"},
+    )
+
     Bild = Publisher(
         name="Bild",
         domain="https://www.bild.de/",
@@ -297,8 +309,13 @@ class DE(metaclass=PublisherGroup):
         domain="https://www.businessinsider.de/",
         parser=BusinessInsiderDEParser,
         sources=[
+            RSSFeed("https://www.businessinsider.de/feed/businessinsider-alle-artikel"),
             NewsMap("https://www.businessinsider.de/news-sitemap.xml"),
-            Sitemap("https://www.businessinsider.de/sitemap_index.xml"),
+            Sitemap(
+                "https://www.businessinsider.de/sitemap_index.xml",
+                sitemap_filter=inverse(regex_filter("post-sitemap")),
+                reverse=True,
+            ),
         ],
     )
 

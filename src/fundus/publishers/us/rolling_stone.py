@@ -33,12 +33,12 @@ class RollingStoneParser(ParserProxy):
 
         @attribute
         def publishing_date(self) -> Optional[datetime.datetime]:
-            return generic_date_parsing(self.precomputed.meta.get("published_at"))
+            return generic_date_parsing(self.precomputed.meta.get("swiftype:published_at"))
 
         @attribute
         def title(self) -> Optional[str]:
-            return self.precomputed.meta.get("title")
+            return self.precomputed.meta.get("swiftype:title")
 
         @attribute
         def topics(self) -> List[str]:
-            return generic_topic_parsing(self.precomputed.meta.get("topics"))
+            return generic_topic_parsing(self.precomputed.meta.get("swiftype:topics"))

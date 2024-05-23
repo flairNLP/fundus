@@ -14,11 +14,11 @@ from .rolling_stone import RollingStoneParser
 from .techcrunch import TechCrunchParser
 from .the_gateway_pundit import TheGatewayPunditParser
 from .the_intercept import TheInterceptParser
-from .the_nation_parser import TheNationParser
+from .the_nation import TheNationParser
 from .the_new_yorker import TheNewYorkerParser
 from .voice_of_america import VOAParser
 from .washington_post import WashingtonPostParser
-from .washington_times_parser import WashingtonTimesParser
+from .washington_times import WashingtonTimesParser
 from .wired import WiredParser
 from .world_truth import WorldTruthParser
 
@@ -121,6 +121,18 @@ class US(metaclass=PublisherGroup):
     FreeBeacon = Publisher(
         name="The Washington Free Beacon",
         domain="https://freebeacon.com/",
+        sources=[
+            Sitemap(
+                "https://freebeacon.com/wp-sitemap.xml",
+                sitemap_filter=inverse(regex_filter("posts-post")),
+                reverse=True,
+            ),
+            Sitemap(
+                "https://freebeacon.com/wp-sitemap.xml",
+                sitemap_filter=inverse(regex_filter("posts-blog")),
+                reverse=True,
+            ),
+        ],
         parser=FreeBeaconParser,
         sources=[NewsMap("https://freebeacon.com/post_google_news.xml")],
     )
@@ -146,7 +158,9 @@ class US(metaclass=PublisherGroup):
             RSSFeed("https://feeds.washingtonpost.com/rss/world"),
             RSSFeed("https://feeds.washingtonpost.com/rss/national"),
         ],
-        url_filter=regex_filter("washingtonpost.com(\/)?$"),
+        parser=WashingtonPostParser,
+        # Adds a URL-filter to ignore incomplete URLs
+        url_filter=regex_filter(r"washingtonpost.com(\/)?$"),
     )
 
     TheNewYorker = Publisher(

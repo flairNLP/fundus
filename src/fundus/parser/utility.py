@@ -1,5 +1,6 @@
 import itertools
 import re
+from collections import defaultdict
 from copy import copy
 from dataclasses import dataclass, field
 from datetime import datetime
@@ -143,18 +144,50 @@ def extract_article_body_with_selector(
     return ArticleBody(summary=summary, sections=sections)
 
 
-_meta_node_selector = CSSSelector("meta[name], meta[property]")
+_meta_node_selector = CSSSelector("head > meta, body > meta")
 
 
-def get_meta_content(tree: lxml.html.HtmlElement) -> Dict[str, str]:
-    meta_nodes = _meta_node_selector(tree)
-    meta: Dict[str, str] = {}
-    for node in meta_nodes:
-        key = node.attrib.get("name") or node.attrib.get("property")
-        value = node.attrib.get("content")
-        if key and value:
-            meta[key] = value
-    return meta
+def get_meta_content(root: lxml.html.HtmlElement) -> Dict[str, str]:
+    """Parse metadata from HTML.
+
+    This function parses single values (i.e. charset=...), nodes containing name, property, http-equiv or
+    itemprop attributes. When multiple values for the same key occur, they will be joined using `,`. This
+    is in order to ease typing and avoid list as additional type.
+
+    In case an HTML tag consists a class, it will be appended as namespace to avoid key collisions.
+    I.e. <meta class="swiftype" name="author" ... > will be stored using `swiftype:author` as a key.
+
+    Args:
+        root: The HTML document given as a lxml.html.HtmlElement.
+
+    Returns:
+        The metadata as a dictionary
+    """
+    data = defaultdict(list)
+    for node in _meta_node_selector(root):
+        attributes = node.attrib
+        if len(attributes) == 1:
+            data[attributes.keys()[0]].append(attributes.values()[0])
+        elif key := (  # these keys are ordered by frequency
+            attributes.get("name")
+            or attributes.get("property")
+            or attributes.get("http-equiv")
+            or attributes.get("itemprop")
+        ):
+            if ns := attributes.get("class"):
+                key = f"{ns}:{key}"
+            if content := attributes.get("content"):
+                data[key].append(content)
+
+    metadata: Dict[str, str] = {}
+    for name, listed_content in data.items():
+        if len(listed_content) == 1:
+            metadata[name] = listed_content[0]
+        else:
+            # for ease of typing we join multiple contents for the same key using ','
+            metadata[name] = ",".join(listed_content)
+
+    return metadata
 
 
 def strip_nodes_to_text(text_nodes: List[lxml.html.HtmlElement], join_on: str = "\n\n") -> Optional[str]:

@@ -8,7 +8,6 @@ from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute
 from fundus.parser.utility import (
     apply_substitution_pattern_over_list,
     extract_article_body_with_selector,
-    generic_author_parsing,
     generic_date_parsing,
     generic_topic_parsing,
 )
@@ -49,8 +48,12 @@ class BSZParser(ParserProxy):
 
         @attribute
         def authors(self) -> List[str]:
+            authors = []
+            for author in self.precomputed.ld.bf_search("author", default=[]):
+                name_string = author.get("name")
+                authors.extend(re.split(r"und|,", name_string))
             return apply_substitution_pattern_over_list(
-                generic_author_parsing(self.precomputed.ld.bf_search("author")), self._author_substitution_pattern
+                [author.strip() for author in authors], self._author_substitution_pattern
             )
 
         @attribute

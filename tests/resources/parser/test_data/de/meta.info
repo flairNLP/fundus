@@ -3,9 +3,9 @@
     "url": "https://www.br.de/nachrichten/bayern/evangelische-kirche-landeskirche-will-missbrauch-aufarbeiten,UAf9GNd",
     "crawl_date": "2024-04-22 17:33:43.091856"
   },
-  "BSZ_2024_01_29.html.gz": {
-    "url": "https://www.braunschweiger-zeitung.de/niedersachsen/article241536118/Heide-Park-Eroeffnungstermin-fuer-neue-Attraktion-steht-fest.html",
-    "crawl_date": "2024-01-29 19:29:19.952428"
+  "BSZ_2024_05_16.html.gz": {
+    "url": "https://www.braunschweiger-zeitung.de/sport/mehr-sport/article242348272/Fury-und-Usyk-kaempfen-um-Schwergewichts-Krone.html",
+    "crawl_date": "2024-05-16 13:25:13.687319"
   },
   "BerlinerMorgenpost_2024_05_03.html.gz": {
     "url": "https://www.morgenpost.de/berlin/article242242744/feuer-brand-warnung-berlin-lichterfelde-brandgase-aktuell-news.html",
@@ -78,6 +78,10 @@
   "HamburgerAbendblatt_2024_04_28.html.gz": {
     "url": "https://www.abendblatt.de/hamburg/article242192802/Hamburg-Marathon-2024-Royaler-Besuch-auf-der-Laufstrecke-1.html",
     "crawl_date": "2024-04-28 17:22:58.422635"
+  },
+  "Heise_2024_04_19.html.gz": {
+    "url": "https://www.heise.de/news/Ionos-Phishing-Masche-mit-neuen-EU-Richtlinien-soll-Opfer-ueberzeugen-9691259.html?wt_mc=rss.red.ho.ho.rdf.beitrag.beitrag&seite=all",
+    "crawl_date": "2024-04-19 13:53:52.691555"
   },
   "Hessenschau_2024_04_27.html.gz": {
     "url": "https://www.hessenschau.de/wirtschaft/schnellere-integration-job-turbo-hilft-gefluechteten-auf-dem-arbeitsmarkt-v1,ukrainer-arbeitsmarkt-100.html",
