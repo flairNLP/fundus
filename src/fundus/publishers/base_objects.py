@@ -1,6 +1,6 @@
 import inspect
 from itertools import islice
-from typing import Dict, Iterator, List, Optional, Type
+from typing import Dict, Iterator, List, Optional, Type, overload, Union
 
 from fundus.parser.base_parser import ParserProxy
 from fundus.scraping.filter import URLFilter
@@ -19,6 +19,17 @@ class Publisher(object):
         url_filter: Optional[URLFilter] = None,
         request_header: Optional[Dict[str, str]] = None,
     ):
+        """
+        Initialization of a new Publisher object
+
+        @param name: Name of the publisher, as it would appear on the website
+        @param domain: The domain of the publishers website
+        @param parser: Corresponding ParserProxy Object
+        @param sources: List of sources for articles from the publishers
+        @param query_parameter: Dictionary of query parameter: content to be appended to crawled URLs
+        @param url_filter: Regex filter to apply determining URLs to be skipped
+        @param request_header: Request header to be used for the GET-request
+        """
         if not (name and domain and parser and sources):
             raise ValueError("Failed to create Publisher. Name, Domain, Parser and Sources are mandatory")
         self.name = name
@@ -29,7 +40,9 @@ class Publisher(object):
         self.url_filter = url_filter
         self.request_header = request_header
         self.contained_in: Optional[str] = None
-        self.referenced_name: Optional[str] = None
+        # This variable has been chosed for backwards compatibility, where publisher_name used to be the name of the
+        # publisher in the PublisherEnum
+        self.publisher_name: Optional[str] = None
         # we define the dict here manually instead of using default dict so that we can control
         # the order in which sources are proceeded.
         source_mapping: Dict[Type[URLSource], List[URLSource]] = {
@@ -70,8 +83,6 @@ class PublisherGroup(type):
     _length: int
     _contents: set[str]
 
-    # TODO: fix __in__
-
     def __hash__(self):
         return hash(self.__name__)
 
@@ -88,18 +99,18 @@ class PublisherGroup(type):
                 created_type._length += 1
             else:
                 raise ValueError(f"Element {element} of type {type(element)} is not supported")
-        testing_set = set()
+        created_type._recursive_contents = set()
         for element in created_type._contents:
             attribute = getattr(created_type, element)
-            if attribute in testing_set:
+            if attribute in created_type._recursive_contents:
                 raise AttributeError(f"The element {element} of type {type(attribute)} is already contained within this publisher group")
             if isinstance(attribute, Publisher):
                 attribute.contained_in = created_type.__name__.lower()
-                attribute.referenced_name = element
+                attribute.publisher_name = element
             elif isinstance(attribute, PublisherGroup):
                 if created_type._contents & attribute._contents:
                     raise AttributeError(f"One or more publishers within {attribute} are already contained within this publisher group")
-            testing_set.add(attribute)
+            created_type._recursive_contents.add(attribute)
         return created_type
 
     def get_publishers_mapping(self) -> Dict[str, Publisher]:
@@ -112,8 +123,21 @@ class PublisherGroup(type):
             if isinstance((publisher_group := getattr(self, element)), PublisherGroup)
         }
 
-    def __contains__(self, __x: object) -> bool:
-        return __x in self._contents
+    def __contains__(self, __x: Union[str, Publisher, "PublisherGroup"]) -> bool:
+        if isinstance(__x, PublisherGroup):
+            search_string = __x.__name__.lower()
+        elif isinstance(__x, Publisher):
+            search_string = __x.publisher_name
+        else:
+            search_string = __x
+        if search_string in self._contents:
+            return True
+        for element in self._contents:
+            if isinstance(attribute := getattr(self, element), PublisherGroup):
+                if search_string in attribute:
+                    return True
+        return False
+
 
     def __iter__(self) -> Iterator[Publisher]:
         """This will iterate over all publishers included in the group and its subgroups.

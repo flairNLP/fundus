@@ -247,7 +247,7 @@ class HTMLTestFile:
 
 
 def load_html_test_file_mapping(publisher: Publisher) -> Dict[Type[BaseParser], HTMLTestFile]:
-    html_paths = (test_resource_path / Path(f"{publisher.contained_in}")).glob(f"{publisher.referenced_name}*.html.gz")
+    html_paths = (test_resource_path / Path(f"{publisher.contained_in}")).glob(f"{publisher.publisher_name}*.html.gz")
     html_files = [HTMLTestFile.load(path) for path in html_paths]
     html_mapping: Dict[Type[BaseParser], HTMLTestFile] = {}
     for html_file in html_files:
@@ -271,7 +271,7 @@ def get_meta_info_file(publisher: Publisher) -> JSONFile[Dict[str, Dict[str, Any
 
 
 def generate_parser_test_case_json_path(publisher: Publisher) -> Path:
-    return generate_absolute_section_path(publisher) / f"{publisher.referenced_name}.json"
+    return generate_absolute_section_path(publisher) / f"{publisher.publisher_name}.json"
 
 
 def get_test_case_json(publisher: Publisher) -> JSONFile[Dict[str, Dict[str, Any]]]:
