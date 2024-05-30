@@ -18,13 +18,13 @@ from tests.utility import HTMLTestFile, get_test_case_json, load_html_test_file_
 logger = create_logger(__name__)
 
 
-def get_test_article(pub: Publisher, url: Optional[str] = None) -> Optional[Article]:
+def get_test_article(publisher: Publisher, url: Optional[str] = None) -> Optional[Article]:
     if url is not None:
-        source = WebSource([url], publisher=pub.name)
-        scraper = BaseScraper(source, parser_mapping={pub.name: pub.parser})
+        source = WebSource([url], publisher=publisher.name)
+        scraper = BaseScraper(source, parser_mapping={publisher.name: publisher.parser})
         return next(scraper.scrape(error_handling="suppress", extraction_filter=RequiresAll()), None)
 
-    crawler = Crawler(pub)
+    crawler = Crawler(publisher)
     return next(crawler.crawl(max_articles=1, error_handling="suppress", only_complete=RequiresAll()), None)
 
 

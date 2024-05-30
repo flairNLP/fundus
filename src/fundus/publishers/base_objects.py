@@ -8,7 +8,7 @@ from fundus.scraping.url import NewsMap, RSSFeed, Sitemap, URLSource
 from fundus.utils.iteration import iterate_all_subclasses
 
 
-class Publisher(object):
+class Publisher:
     def __init__(
         self,
         name: str,
@@ -35,7 +35,6 @@ class Publisher(object):
         self.name = name
         self.parser = parser()
         self.domain = domain
-        self.sources = sources
         self.query_parameter = query_parameter
         self.url_filter = url_filter
         self.request_header = request_header
@@ -51,7 +50,7 @@ class Publisher(object):
             Sitemap: [],
         }
 
-        for url_source in self.sources:
+        for url_source in sources:
             if not isinstance(url_source, URLSource):
                 raise TypeError(
                     f"Unexpected type {type(url_source).__name__!r} as source for {self!r}. "
@@ -80,25 +79,16 @@ class Publisher(object):
 
 
 class PublisherGroup(type):
-    _length: int
     _contents: Set[str]
 
     def __hash__(self):
         return hash(self.__name__)
 
-    def __new__(cls, *args, **kwargs):
-        created_type = super().__new__(cls, *args, **kwargs)
+    def __new__(cls, name, bases, attributes):
+        created_type = super().__new__(cls, name, bases, attributes)
         attributes = dir(created_type)
         attributes.remove("__weakref__")
         created_type._contents = set(attributes) - set(dir(PublisherGroup))
-        created_type._length = 0
-        for element in created_type._contents:
-            if isinstance(publisher_group := getattr(created_type, element), PublisherGroup):
-                created_type._length += len(publisher_group)
-            elif isinstance(getattr(created_type, element), Publisher):
-                created_type._length += 1
-            else:
-                raise ValueError(f"Element {element} of type {type(element)} is not supported")
         testing_set = set()
         for element in created_type._contents:
             attribute = getattr(created_type, element)
@@ -118,7 +108,7 @@ class PublisherGroup(type):
         return created_type
 
     def get_publisher_mapping(self) -> Dict[str, Publisher]:
-        return {publisher.name: publisher for publisher in self}
+        return {publisher.publisher_name: publisher for publisher in self}
 
     def get_subgroup_mapping(self) -> Dict[str, "PublisherGroup"]:
         return {
@@ -152,13 +142,11 @@ class PublisherGroup(type):
             Iterator[Publisher]: Iterator over publishers included in the group and its subgroups.
 
         """
-        for element_name in self._contents:
-            if isinstance(element := getattr(self, element_name), Publisher):
-                yield element
-            elif isinstance(element, PublisherGroup):
-                yield from element
-            else:
-                raise AttributeError(f"Element {element} of invalid type {type(element)}")
+        for attribute in self.__dict__.values():
+            if isinstance(attribute, Publisher):
+                yield attribute
+            elif isinstance(attribute, PublisherGroup):
+                yield from attribute
 
     def __getitem__(self, name: str) -> Publisher:
         """Get a publisher from the collection by name represented as string.
@@ -167,18 +155,12 @@ class PublisherGroup(type):
             name: A string referencing the publisher in the corresponding enum.
 
         Returns:
-            Publisher: The corresponding publisher.
+            Publisher: The corresponding publisher.^
 
         """
-        if name in self._contents and isinstance(publisher := getattr(self, name), Publisher):
-            return publisher
-        for element in self._contents:
-            if isinstance(publisher_group := getattr(self, element), PublisherGroup):
-                try:
-                    return publisher_group[name]
-                except KeyError:
-                    pass
-        raise KeyError(f"Publisher {name!r} not present in {self.__name__}")
+        if (publisher := self.get_publisher_mapping().get(name)) is None:
+            raise KeyError(f"Publisher {name!r} not present in {self.__name__}")
+        return publisher
 
     def __len__(self) -> int:
         """The number of publishers included in the group.
@@ -186,10 +168,10 @@ class PublisherGroup(type):
         Returns:
             int: The number of publishers.
         """
-        return self._length
+        return len(list(self.__iter__()))
 
     def __str__(self) -> str:
-        representation = f"The {type(self).__name__!r} consists of {len(self)} publishers:"
+        representation = f"The {self.__name__!r} PublisherGroup consists of {len(self)} publishers:\n"
         for element_name in self._contents:
             element = getattr(self, element_name)
             if isinstance(element, Publisher):
@@ -198,8 +180,8 @@ class PublisherGroup(type):
                 representation += f"\n\t {type(element).__name__}:"
                 for publisher in islice(element, 0, 5):
                     representation += f"\n\t\t {publisher}"
-            if len(element) > 5:
-                representation += f"\n\t\t ..."
+                if len(element) > 5:
+                    representation += f"\n\t\t ..."
         return representation
 
     def search(

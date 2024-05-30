@@ -61,3 +61,6 @@ class TestCollection:
 
         with pytest.raises(ValueError):
             publisher_group_with_news_map.search([], [])
+
+    def test_publisher_group_string_representation(self, group_with_two_valid_publisher_subgroups):
+        assert str(group_with_two_valid_publisher_subgroups) == ""

@@ -29,7 +29,7 @@ def main() -> None:
         for publisher in sorted(publisher_region, key=lambda p: p.name):
             publisher_name: str = publisher.name
 
-            if not any(publisher.source_mapping.values()):  # type: ignore[attr-defined]
+            if not any(publisher.source_mapping.values()):
                 # skip publishers providing no sources for forward crawling
                 print(f"⏩  SKIPPED: {publisher_name!r} - No sources defined")
                 continue
