@@ -182,13 +182,8 @@ class WebSource:
 
 
 class CCNewsSource:
-    def __init__(
-        self,
-        *publishers: Tuple[Union[PublisherGroup, Publisher], ...],
-        warc_path: str,
-        headers: Optional[Dict[str, str]] = None,
-    ):
-        self.publishers = list(collapse(publishers))
+    def __init__(self, *publishers: Publisher, warc_path: str, headers: Optional[Dict[str, str]] = None):
+        self.publishers = publishers
         self.warc_path = warc_path
         self.headers = headers or _default_header
         self._publisher_mapping: Dict[str, Publisher] = {
