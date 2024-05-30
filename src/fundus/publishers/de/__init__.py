@@ -341,6 +341,7 @@ class DE(PublisherEnum):
             NewsMap("https://www.golem.de/news/gsitemap-2404.xml"),
             Sitemap("https://www.golem.de/gsiteindex.xml"),
         ],
+        request_header={"User-Agent": "Googlebot"},
         parser=GolemParser,
     )
 
