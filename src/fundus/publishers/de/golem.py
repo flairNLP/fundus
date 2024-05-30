@@ -2,6 +2,7 @@ import datetime
 from typing import List, Optional
 
 from lxml.cssselect import CSSSelector
+from lxml.etree import XPath
 
 from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute
 from fundus.parser.utility import (
@@ -14,8 +15,12 @@ from fundus.parser.utility import (
 
 class GolemParser(ParserProxy):
     class V1(BaseParser):
+        _bloat_regex = r"^Dieser Artikel enthält sogenannte Affiliate-Links"
         _summary_selector = CSSSelector("hgroup > p")
-        _paragraph_selector = CSSSelector("section > p:not([class='meta'])")
+        _paragraph_selector = XPath(
+            f"//section /p[not(@class='meta' or re:test(string(), '{_bloat_regex}'))]",
+            namespaces={"re": "http://exslt.org/regular-expressions"},
+        )
         _subheadline_selector = CSSSelector("div > section > h2")
 
         @attribute
