@@ -22,6 +22,7 @@ from .focus import FocusParser
 from .frankfurter_rundschau import FrankfurterRundschauParser
 from .freiepresse import FreiePresseParser
 from .gamestar import GamestarParser
+from .golem import GolemParser
 from .hamburger_abendblatt import HamburgerAbendblattParser
 from .heise import HeiseParser
 from .hessenschau import HessenschauParser
@@ -330,6 +331,18 @@ class DE(PublisherEnum):
             Sitemap("https://rp-online.de/sitemap.xml"),
         ],
         parser=RheinischePostParser,
+    )
+
+    Golem = PublisherSpec(
+        name="Golem",
+        domain="https://www.golem.de/",
+        sources=[
+            RSSFeed("https://www.golem.de/rss"),
+            NewsMap("https://www.golem.de/news/gsitemap-2404.xml"),
+            Sitemap("https://www.golem.de/gsiteindex.xml"),
+        ],
+        request_header={"User-Agent": "Googlebot"},
+        parser=GolemParser,
     )
 
     WinFuture = PublisherSpec(
