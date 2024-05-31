@@ -11,6 +11,7 @@ from colorama import Fore, Style
 from fundus.logging import create_logger
 from fundus.parser import ArticleBody
 from fundus.scraping.html import HTML
+from fundus.utils.caching import cached_attribute
 
 logger = create_logger(__name__)
 
@@ -44,12 +45,17 @@ class Article:
 
         return article
 
-    @property
+    @cached_attribute
     def plaintext(self) -> Optional[str]:
         return str(self.body) if self.body else None
 
-    @property
+    @cached_attribute
     def lang(self) -> Optional[str]:
+        """
+        computes used language
+        Returns:
+
+        """
         language: Optional[str] = None
 
         if self.plaintext:
