@@ -124,12 +124,12 @@ class US(metaclass=PublisherGroup):
         sources=[
             Sitemap(
                 "https://freebeacon.com/wp-sitemap.xml",
-                sitemap_filter=inverse(regex_filter("posts-post")),
+                sitemap_filter=inverse(regex_filter("post-sitemap")),
                 reverse=True,
             ),
             Sitemap(
                 "https://freebeacon.com/wp-sitemap.xml",
-                sitemap_filter=inverse(regex_filter("posts-blog")),
+                sitemap_filter=inverse(regex_filter("blog-sitemap")),
                 reverse=True,
             ),
         ],

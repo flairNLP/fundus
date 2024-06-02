@@ -1,0 +1,43 @@
+{
+  "V1": {
+    "authors": [
+      "Tobias Költzsch"
+    ],
+    "body": {
+      "summary": [
+        "Samsung hat vor Gericht die Patentklage eines chinesischen Unternehmens verloren. Nun drohen Entschädigungszahlungen und zerstörte Smartphones. Samsung dürfte in Berufung gehen."
+      ],
+      "sections": [
+        {
+          "headline": [],
+          "paragraphs": [
+            "Samsung drohen in Deutschland Probleme für seine Galaxy-Smartphones. Das Landgericht München I hat in einer Patentklage für das chinesische Unternehmen Datang Mobile entschieden, die den deutschen Teil des europäischen Patents EP2237607 besitzt. Dem Gericht zufolge drohen Samsung Strafzahlungen, zudem müssen alle im Handel verbliebenen 4G-fähigen Smartphones zerstört werden – das entspricht de facto einem Verkaufsstopp aller Modelle.",
+            "Das Patent regelt die Übergabe von Funkzellen in LTE-Netzen. Durch die Technik behalten Smartphones den Empfang bei, wenn Nutzer mit ihnen von einer Funkzelle in eine andere wechseln. Samsung argumentierte vor Gericht, dass das Unternehmen nicht gewusst habe, dass Datang Mobile einen länderspezifischen Teil des Patents halte.",
+            "Heise liegt die redigierte Version des Urteils vom 12. April 2024 vor; demnach kann Samsung dem Gericht nach nicht mit diesem Nichtwissen argumentieren. Entsprechend wurde auch eine Wiederklage Samsungs abgewiesen. Darin beklagt Samsung zusätzlich, dass Datang Mobile kein FRAND-Lizenzangebot unterbreitet habe."
+          ]
+        },
+        {
+          "headline": [
+            "Samsung soll Entschädigung zahlen"
+          ],
+          "paragraphs": [
+            "Das Gericht entschied, dass für alle LTE-fähigen Samsung-Geräte, die seit dem 21. August 2021 in Deutschland verkauft wurden, eine noch festzusetzende Entschädigung an Datang Mobile geleistet werden muss. Das chinesische Unternehmen ist seit dem 20. August 2021 Inhaber des Patents. Das Urteil ist allerdings noch nicht rechtskräftig.",
+            "Samsung wird Heise zufolge das Urteil \"gründlich prüfen\" und \"geeignete rechtliche Schritte festlegen\". Es dürfte wahrscheinlich sein, dass der südkoreanische Hersteller gegen das Urteil Berufung einlegt. Für Nutzer von Samsung-Smartphones dürfte sich so lange nichts ändern, bis der Rechtsstreit endgültig beigelegt ist. Das kann erfahrungsgemäß noch einige Zeit dauern."
+          ]
+        }
+      ]
+    },
+    "publishing_date": "2024-04-28 14:26:01+00:00",
+    "title": "LTE-Patent: Samsung soll wegen Patentklage Smartphones zerstören",
+    "topics": [
+      "Samsung",
+      "Mobile Endgeräte",
+      "Patent",
+      "Smartphone",
+      "Technik/Hardware",
+      "Unternehmen",
+      "Wirtschaft",
+      "Mobil"
+    ]
+  }
+}
