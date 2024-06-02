@@ -104,6 +104,8 @@ class PublisherGroup(type):
                     raise AttributeError(
                         f"One or more publishers within {attribute} are already contained within this publisher group"
                     )
+            else:
+                raise ValueError(f"Attribute of type {type(attribute)} is not allowd and should be Publisher or PublisherGroup")
             testing_set.add(attribute)
         return created_type
 
@@ -175,9 +177,9 @@ class PublisherGroup(type):
         for element_name in self._contents:
             element = getattr(self, element_name)
             if isinstance(element, Publisher):
-                representation += f"\t{str(element)}\n"
+                representation += f"\t{str(element)}"
             elif isinstance(element, PublisherGroup):
-                representation += f"\n\t {type(element).__name__}:"
+                representation += f"\n\t {element.__name__}:"
                 for publisher in islice(element, 0, 5):
                     representation += f"\n\t\t {publisher}"
                 if len(element) > 5:
