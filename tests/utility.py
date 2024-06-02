@@ -265,7 +265,7 @@ class HTMLTestFile:
 def load_html_test_file_mapping(
     publisher: Publisher, parent_group: PublisherGroup
 ) -> Dict[Type[BaseParser], HTMLTestFile]:
-    html_paths = (test_resource_path / Path(f"{parent_group.__name__}")).glob(f"{publisher.name}*.html.gz")
+    html_paths = (test_resource_path / Path(f"{parent_group.__name__.lower()}")).glob(f"{publisher.name}*.html.gz")
     html_files = [HTMLTestFile.load(path) for path in html_paths]
     html_mapping: Dict[Type[BaseParser], HTMLTestFile] = {}
     for html_file in html_files:
@@ -279,7 +279,7 @@ def load_html_test_file_mapping(
 
 
 def generate_absolute_section_path(parent_group: PublisherGroup) -> Path:
-    return test_resource_path / parent_group.__name__
+    return test_resource_path / parent_group.__name__.lower()
 
 
 def generate_meta_info_path(parent_group: PublisherGroup) -> Path:
