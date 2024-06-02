@@ -40,7 +40,7 @@ class Publisher:
         self.url_filter = url_filter
         self.request_header = request_header
         self.contained_in: Optional[str] = None
-        # This variable has been chosed for backwards compatibility, where publisher_name used to be the name of the
+        # This variable has been chosen for backwards compatibility, where name used to be the name of the
         # publisher in the PublisherEnum
         self.name: Optional[str] = None
         # we define the dict here manually instead of using default dict so that we can control
@@ -74,24 +74,20 @@ class Publisher:
             if not inspect.isclass(source_type) or not issubclass(source_type, URLSource):
                 raise TypeError(
                     f"Got unexpected type {source_type!r}. "
-                    f"Allowed are {', '.join(repr(cls.__name__) for cls in iterate_all_subclasses(URLSource))}"
+                    f"Allowed are {', '.join(repr(self.__name__) for self in iterate_all_subclasses(URLSource))}"
                 )
         return all(bool(self.source_mapping.get(source_type)) for source_type in source_types)
 
 
 class PublisherGroup(type):
-    _contents: Set[str]
-
-    def __hash__(self):
-        return hash(self.__name__)
+    def __hash__(cls):
+        return hash(cls.__name__)
 
     def __new__(cls, name, bases, attributes):
         created_type = super().__new__(cls, name, bases, attributes)
-        attributes = dir(created_type)
-        attributes.remove("__weakref__")
-        created_type._contents = set(attributes) - set(dir(PublisherGroup))
+        created_type.contents = set(attributes) - set(dir(PublisherGroup))
         testing_set = set()
-        for element in created_type._contents:
+        for element in created_type.contents:
             attribute = getattr(created_type, element)
             if attribute in testing_set:
                 raise AttributeError(
@@ -112,17 +108,29 @@ class PublisherGroup(type):
             testing_set.add(attribute)
         return created_type
 
-    def get_publisher_mapping(self) -> Dict[str, Publisher]:
-        return {publisher.name: publisher for publisher in self if publisher.name is not None}
+    def _get_contents(cls):
+        return cls._contents
 
-    def get_subgroup_mapping(self) -> Dict[str, "PublisherGroup"]:
+    def _set_contents(cls, value):
+        cls._contents = value
+
+    contents = property(
+        fget=_get_contents,
+        fset=_set_contents,
+        doc="Set containing the names of all direct children of this publisher group",
+    )
+
+    def get_publisher_mapping(cls) -> Dict[str, Publisher]:
+        return {publisher.name: publisher for publisher in cls if publisher.name is not None}
+
+    def get_subgroup_mapping(cls) -> Dict[str, "PublisherGroup"]:
         return {
             element: publisher_group
-            for element in self._contents
-            if isinstance((publisher_group := getattr(self, element)), PublisherGroup)
+            for element in cls.contents
+            if isinstance((publisher_group := getattr(cls, element)), PublisherGroup)
         }
 
-    def __contains__(self, __x: Union[str, Publisher, "PublisherGroup"]) -> bool:
+    def __contains__(cls, __x: Union[str, Publisher, "PublisherGroup"]) -> bool:
         if isinstance(__x, PublisherGroup):
             search_string = __x.__name__.lower()
         elif isinstance(__x, Publisher):
@@ -132,28 +140,28 @@ class PublisherGroup(type):
                 return False
         else:
             search_string = __x
-        if search_string in self._contents:
+        if search_string in cls.contents:
             return True
-        for element in self._contents:
-            if isinstance(attribute := getattr(self, element), PublisherGroup):
+        for element in cls.contents:
+            if isinstance(attribute := getattr(cls, element), PublisherGroup):
                 if search_string in attribute:
                     return True
         return False
 
-    def __iter__(self) -> Iterator[Publisher]:
+    def __iter__(cls) -> Iterator[Publisher]:
         """This will iterate over all publishers included in the group and its subgroups.
 
         Returns:
             Iterator[Publisher]: Iterator over publishers included in the group and its subgroups.
 
         """
-        for attribute in self.__dict__.values():
+        for attribute in cls.__dict__.values():
             if isinstance(attribute, Publisher):
                 yield attribute
             elif isinstance(attribute, PublisherGroup):
                 yield from attribute
 
-    def __getitem__(self, name: str) -> Publisher:
+    def __getitem__(cls, name: str) -> Publisher:
         """Get a publisher from the collection by name represented as string.
 
         Args:
@@ -163,22 +171,22 @@ class PublisherGroup(type):
             Publisher: The corresponding publisher.^
 
         """
-        if (publisher := self.get_publisher_mapping().get(name)) is None:
-            raise KeyError(f"Publisher {name!r} not present in {self.__name__}")
+        if (publisher := cls.get_publisher_mapping().get(name)) is None:
+            raise KeyError(f"Publisher {name!r} not present in {cls.__name__}")
         return publisher
 
-    def __len__(self) -> int:
+    def __len__(cls) -> int:
         """The number of publishers included in the group.
 
         Returns:
             int: The number of publishers.
         """
-        return len(list(self.__iter__()))
+        return len(list(cls.__iter__()))
 
-    def __str__(self) -> str:
-        representation = f"The {self.__name__!r} PublisherGroup consists of {len(self)} publishers:"
-        for element_name in self._contents:
-            element = getattr(self, element_name)
+    def __str__(cls) -> str:
+        representation = f"The {cls.__name__!r} PublisherGroup consists of {len(cls)} publishers:"
+        for element_name in cls.contents:
+            element = getattr(cls, element_name)
             if isinstance(element, Publisher):
                 representation += f"\n\t{str(element)}"
             elif isinstance(element, PublisherGroup):
@@ -190,7 +198,7 @@ class PublisherGroup(type):
         return representation
 
     def search(
-        self, attributes: Optional[List[str]] = None, source_types: Optional[List[Type[URLSource]]] = None
+        cls, attributes: Optional[List[str]] = None, source_types: Optional[List[Type[URLSource]]] = None
     ) -> List[Publisher]:
         if not (attributes or source_types):
             raise ValueError("You have to define at least one search condition")
@@ -199,7 +207,7 @@ class PublisherGroup(type):
         matched = []
         unique_attributes = set(attributes)
         spec: Publisher
-        for publisher in self:
+        for publisher in cls:
             if unique_attributes.issubset(publisher.parser().attributes().names) and (
                 publisher.supports(source_types) if source_types else True
             ):
