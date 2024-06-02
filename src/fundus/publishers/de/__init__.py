@@ -331,7 +331,7 @@ class DE(metaclass=PublisherGroup):
         ],
     )
 
-    Golem = PublisherSpec(
+    Golem = Publisher(
         name="Golem",
         domain="https://www.golem.de/",
         sources=[
