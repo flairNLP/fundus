@@ -1,7 +1,7 @@
 import subprocess
 from argparse import ArgumentParser, Namespace
 from logging import WARN
-from typing import List, Optional, Union, Tuple
+from typing import List, Optional, Tuple, Union
 
 from tqdm import tqdm
 
@@ -120,7 +120,7 @@ def main() -> None:
                     content=article.html.content,
                     crawl_date=article.html.crawl_date,
                     publisher=publisher,
-                    parent_group=parent_group
+                    parent_group=parent_group,
                 )
                 html.write()
                 subprocess.call(["git", "add", html.path], stdout=subprocess.PIPE)

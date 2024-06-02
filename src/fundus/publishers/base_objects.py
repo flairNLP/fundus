@@ -1,6 +1,6 @@
 import inspect
 from itertools import islice
-from typing import Dict, Iterator, List, Optional, Set, Type, Union, overload, Tuple
+from typing import Dict, Iterator, List, Optional, Set, Tuple, Type, Union, overload
 
 from fundus.parser.base_parser import ParserProxy
 from fundus.scraping.filter import URLFilter
