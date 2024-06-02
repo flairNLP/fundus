@@ -134,7 +134,7 @@ class CrawlerBase(ABC):
     @abstractmethod
     def _build_article_iterator(
         self,
-        publishers: Tuple[PublisherType, ...],
+        publishers: Tuple[Publisher, ...],
         error_handling: Literal["suppress", "catch", "raise"],
         extraction_filter: Optional[ExtractionFilter],
         url_filter: Optional[URLFilter],
@@ -248,7 +248,7 @@ class Crawler(CrawlerBase):
             >>>     print(article)
 
         Args:
-            *publishers (Union[Publisher, Type[Publisher], PublisherGroup]): The publishers to crawl.
+            *publishers (Union[Publisher, PublisherGroup]): The publishers to crawl.
             restrict_sources_to (Optional[List[Type[URLSource]]]): Lets you restrict
                 sources defined in the publisher specs. If set, only articles from given source types
                 will be yielded.
@@ -294,14 +294,14 @@ class Crawler(CrawlerBase):
 
     @staticmethod
     def _single_crawl(
-        publishers: Tuple[PublisherType, ...], article_task: Callable[[PublisherType], Iterator[Article]]
+        publishers: Tuple[Publisher, ...], article_task: Callable[[Publisher], Iterator[Article]]
     ) -> Iterator[Article]:
         article_iterators = [article_task(publisher) for publisher in publishers]
         yield from roundrobin(*article_iterators)
 
     @staticmethod
     def _threaded_crawl(
-        publishers: Tuple[PublisherType, ...], article_task: Callable[[PublisherType], Iterator[Article]]
+        publishers: Tuple[Publisher, ...], article_task: Callable[[Publisher], Iterator[Article]]
     ) -> Iterator[Article]:
         article_queue: Queue[Article] = Queue(len(publishers))
         wrapped_article_task = queue_wrapper(article_queue, article_task)
@@ -311,7 +311,7 @@ class Crawler(CrawlerBase):
 
     def _build_article_iterator(
         self,
-        publishers: Tuple[PublisherType, ...],
+        publishers: Tuple[Publisher, ...],
         error_handling: Literal["suppress", "catch", "raise"],
         extraction_filter: Optional[ExtractionFilter],
         url_filter: Optional[URLFilter],
@@ -359,12 +359,12 @@ class CCNewsCrawler(CrawlerBase):
     @staticmethod
     def _fetch_articles(
         warc_path: str,
-        publishers: Tuple[PublisherType, ...],
+        publishers: Tuple[Publisher, ...],
         error_handling: Literal["suppress", "catch", "raise"],
         extraction_filter: Optional[ExtractionFilter] = None,
         url_filter: Optional[URLFilter] = None,
     ) -> Iterator[Article]:
-        source = CCNewsSource(publishers, warc_path=warc_path)
+        source = CCNewsSource(*publishers, warc_path=warc_path)
         scraper = CCNewsScraper(source)
         yield from scraper.scrape(error_handling, extraction_filter, url_filter)
 
@@ -447,7 +447,7 @@ class CCNewsCrawler(CrawlerBase):
 
     def _build_article_iterator(
         self,
-        publishers: Tuple[PublisherType, ...],
+        publishers: Tuple[Publisher, ...],
         error_handling: Literal["suppress", "catch", "raise"],
         extraction_filter: Optional[ExtractionFilter],
         url_filter: Optional[URLFilter],

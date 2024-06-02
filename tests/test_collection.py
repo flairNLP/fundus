@@ -66,10 +66,13 @@ class TestCollection:
         representation = str(group_with_two_valid_publisher_subgroups)
         # This splitting into different testcases is necessary, since the usage of the set within the PublisherGroup does not guarantee any sort of ordering
         assert (
-            "The 'GroupWithTwoValidatePublisherSubGroups' PublisherGroup consists of 2 publishers:\n\n\t " in representation and 
-            "PubGroupNews:\n\t\t test_pub" in representation and 
-            "PubGroupSitemap:\n\t\t test_pub" in representation
+            "The 'GroupWithTwoValidatePublisherSubGroups' PublisherGroup consists of 2 publishers:\n\t "
+            in representation
+            and "PubGroupNews:\n\t\t test_pub" in representation
+            and "PubGroupSitemap:\n\t\t test_pub" in representation
         )
-    
+
     def test_publisher_group_with_publisher_string_representation(self, publisher_group_with_news_map):
-        assert(str(publisher_group_with_news_map) == "The 'PubGroup' PublisherGroup consists of 1 publishers:\n\ttest_pub")
+        assert (
+            str(publisher_group_with_news_map) == "The 'PubGroup' PublisherGroup consists of 1 publishers:\n\ttest_pub"
+        )

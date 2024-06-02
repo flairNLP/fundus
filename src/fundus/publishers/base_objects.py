@@ -19,16 +19,17 @@ class Publisher:
         url_filter: Optional[URLFilter] = None,
         request_header: Optional[Dict[str, str]] = None,
     ):
-        """
-        Initialization of a new Publisher object
+        """Initialization of a new Publisher object
 
-        @param name: Name of the publisher, as it would appear on the website
-        @param domain: The domain of the publishers website
-        @param parser: Corresponding ParserProxy Object
-        @param sources: List of sources for articles from the publishers
-        @param query_parameter: Dictionary of query parameter: content to be appended to crawled URLs
-        @param url_filter: Regex filter to apply determining URLs to be skipped
-        @param request_header: Request header to be used for the GET-request
+        Args:
+            name (str): Name of the publisher, as it would appear on the website
+            domain (str): The domain of the publishers website
+            parser (Type[ParserProxy]): Corresponding ParserProxy Object
+            sources (List[URLSource]): List of sources for articles from the publishers
+            query_parameter (Optional[Dict[str, str]]): Dictionary of query parameter: content to be appended to crawled URLs
+            url_filter (Optional[URLFilter]): Regex filter to apply determining URLs to be skipped
+            request_header (Optional[Dict[str, str]]): Request header to be used for the GET-request
+
         """
         if not (name and domain and parser and sources):
             raise ValueError("Failed to create Publisher. Name, Domain, Parser and Sources are mandatory")
@@ -105,12 +106,14 @@ class PublisherGroup(type):
                         f"One or more publishers within {attribute} are already contained within this publisher group"
                     )
             else:
-                raise ValueError(f"Attribute of type {type(attribute)} is not allowd and should be Publisher or PublisherGroup")
+                raise ValueError(
+                    f"Attribute of type {type(attribute)} is not allowd and should be Publisher or PublisherGroup"
+                )
             testing_set.add(attribute)
         return created_type
 
     def get_publisher_mapping(self) -> Dict[str, Publisher]:
-        return {publisher.name: publisher for publisher in self}
+        return {publisher.name: publisher for publisher in self if publisher.name is not None}
 
     def get_subgroup_mapping(self) -> Dict[str, "PublisherGroup"]:
         return {
@@ -173,11 +176,11 @@ class PublisherGroup(type):
         return len(list(self.__iter__()))
 
     def __str__(self) -> str:
-        representation = f"The {self.__name__!r} PublisherGroup consists of {len(self)} publishers:\n"
+        representation = f"The {self.__name__!r} PublisherGroup consists of {len(self)} publishers:"
         for element_name in self._contents:
             element = getattr(self, element_name)
             if isinstance(element, Publisher):
-                representation += f"\t{str(element)}"
+                representation += f"\n\t{str(element)}"
             elif isinstance(element, PublisherGroup):
                 representation += f"\n\t {element.__name__}:"
                 for publisher in islice(element, 0, 5):
