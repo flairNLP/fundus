@@ -31,7 +31,7 @@ def get_test_articles(publisher: Publisher) -> List[Article]:
             crawl_date=html_test_file.crawl_date,
             requested_url=html_test_file.url,
             responded_url=html_test_file.url,
-            source_info=SourceInfo(publisher.name),
+            source_info=SourceInfo(publisher.publisher_name),
         )
         article = Article.from_extracted(extracted=extraction, html=html)
         articles.append(article)
@@ -164,7 +164,7 @@ class HTMLTestFile:
     def path(self) -> Path:
         return (
             generate_absolute_section_path(self.publisher)
-            / f"{self.publisher.name}_{self.crawl_date.strftime('%Y_%m_%d')}.html.gz"
+            / f"{self.publisher.publisher_name}_{self.crawl_date.strftime('%Y_%m_%d')}.html.gz"
         )
 
     @property
@@ -257,13 +257,13 @@ class HTMLTestFile:
 
 
 def load_html_test_file_mapping(publisher: Publisher) -> Dict[Type[BaseParser], HTMLTestFile]:
-    html_paths = (test_resource_path / Path(f"{publisher.contained_in}")).glob(f"{publisher.publisher_name}*.html.gz")
+    html_paths = (test_resource_path / Path(f"{publisher.contained_in}")).glob(f"{publisher.name}*.html.gz")
     html_files = [HTMLTestFile.load(path) for path in html_paths]
     html_mapping: Dict[Type[BaseParser], HTMLTestFile] = {}
     for html_file in html_files:
         versioned_parser = publisher.parser(html_file.crawl_date)
         if html_mapping.get(type(versioned_parser)):
-            raise KeyError(f"Duplicate html files for {publisher.name!r} and version {type(versioned_parser).__name__}")
+            raise KeyError(f"Duplicate html files for {publisher.publisher_name!r} and version {type(versioned_parser).__name__}")
         html_mapping[type(versioned_parser)] = html_file
     return html_mapping
 
@@ -283,7 +283,7 @@ def get_meta_info_file(publisher: Publisher) -> JSONFile[Dict[str, Dict[str, Any
 
 
 def generate_parser_test_case_json_path(publisher: Publisher) -> Path:
-    return generate_absolute_section_path(publisher) / f"{publisher.publisher_name}.json"
+    return generate_absolute_section_path(publisher) / f"{publisher.name}.json"
 
 
 def get_test_case_json(publisher: Publisher) -> JSONFile[Dict[str, Dict[str, Any]]]:
@@ -303,7 +303,7 @@ def load_test_case_data(publisher: Publisher) -> Dict[str, Dict[str, Any]]:
         return test_data
     else:
         raise ValueError(
-            f"Received invalid JSON format for publisher {publisher.name!r}. "
+            f"Received invalid JSON format for publisher {publisher.publisher_name!r}. "
             f"Expected a JSON with a dictionary as root."
         )
 

@@ -26,8 +26,8 @@ def main() -> None:
         print(f"{publisher_region.__name__:-^50}")
 
         publisher: Publisher
-        for publisher in sorted(publisher_region, key=lambda p: p.name):
-            publisher_name: str = publisher.name
+        for publisher in sorted(publisher_region, key=lambda p: p.publisher_name):
+            publisher_name: str = publisher.publisher_name
 
             if not any(publisher.source_mapping.values()):
                 # skip publishers providing no sources for forward crawling

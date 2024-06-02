@@ -253,7 +253,7 @@ class CCNewsSource:
                     content=content,
                     crawl_date=warc_record.record_date,
                     source_info=WarcSourceInfo(
-                        publisher=publisher.name,
+                        publisher=publisher.publisher_name,
                         warc_path=self.warc_path,
                         warc_headers=dict(warc_record.headers),
                         http_headers=dict(warc_record.http_headers),

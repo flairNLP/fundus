@@ -20,8 +20,8 @@ logger = create_logger(__name__)
 
 def get_test_article(publisher: Publisher, url: Optional[str] = None) -> Optional[Article]:
     if url is not None:
-        source = WebSource([url], publisher=publisher.name)
-        scraper = BaseScraper(source, parser_mapping={publisher.name: publisher.parser})
+        source = WebSource([url], publisher=publisher.publisher_name)
+        scraper = BaseScraper(source, parser_mapping={publisher.publisher_name: publisher.parser})
         return next(scraper.scrape(error_handling="suppress", extraction_filter=RequiresAll()), None)
 
     crawler = Crawler(publisher)
@@ -98,7 +98,7 @@ def main() -> None:
 
     with tqdm(total=len(publishers)) as bar:
         for url, publisher in zip(urls, publishers):
-            bar.set_description(desc=publisher.name, refresh=True)
+            bar.set_description(desc=publisher.publisher_name, refresh=True)
 
             # load json
             test_data_file = get_test_case_json(publisher)
@@ -109,7 +109,7 @@ def main() -> None:
 
             if arguments.overwrite or not html_mapping.get(publisher.parser.latest_version):
                 if not (article := get_test_article(publisher, url)):
-                    logger.error(f"Couldn't get article for {publisher.name}. Skipping")
+                    logger.error(f"Couldn't get article for {publisher.publisher_name}. Skipping")
                     continue
                 html = HTMLTestFile(
                     url=article.html.responded_url,

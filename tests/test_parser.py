@@ -134,7 +134,7 @@ attributes_parsers_are_required_to_cover = {"body"}
 
 
 @pytest.mark.parametrize(
-    "publisher", list(PublisherCollection), ids=[publisher.name for publisher in PublisherCollection]
+    "publisher", list(PublisherCollection), ids=[publisher.publisher_name for publisher in PublisherCollection]
 )
 class TestParser:
     def test_annotations(self, publisher: Publisher) -> None:

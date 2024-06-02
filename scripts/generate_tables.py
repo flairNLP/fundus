@@ -50,7 +50,7 @@ def generate_thead() -> lxml.html.HtmlElement:
 
 def generate_tbody(country: Iterable[Publisher]) -> lxml.html.HtmlElement:
     content: List[lxml.html.HtmlElement] = []
-    for spec in sorted(country, key=lambda enum: enum.name):
+    for spec in sorted(country, key=lambda enum: enum.publisher_name):
         tds = [column(spec) for column in column_mapping.values()]
         tr = TR(*tds)
         content.append(tr)

@@ -32,7 +32,7 @@ class Publisher:
         """
         if not (name and domain and parser and sources):
             raise ValueError("Failed to create Publisher. Name, Domain, Parser and Sources are mandatory")
-        self.name = name
+        self.publisher_name = name
         self.parser = parser()
         self.domain = domain
         self.query_parameter = query_parameter
@@ -41,7 +41,7 @@ class Publisher:
         self.contained_in: Optional[str] = None
         # This variable has been chosed for backwards compatibility, where publisher_name used to be the name of the
         # publisher in the PublisherEnum
-        self.publisher_name: Optional[str] = None
+        self.name: Optional[str] = None
         # we define the dict here manually instead of using default dict so that we can control
         # the order in which sources are proceeded.
         source_mapping: Dict[Type[URLSource], List[URLSource]] = {
@@ -61,10 +61,10 @@ class Publisher:
         self.source_mapping = source_mapping
 
     def __hash__(self):
-        return hash(self.name)
+        return hash(self.publisher_name)
 
     def __str__(self) -> str:
-        return f"{self.name}"
+        return f"{self.publisher_name}"
 
     def supports(self, source_types: List[Type[URLSource]]) -> bool:
         if not source_types:
@@ -98,7 +98,7 @@ class PublisherGroup(type):
                 )
             if isinstance(attribute, Publisher):
                 attribute.contained_in = created_type.__name__.lower()
-                attribute.publisher_name = element
+                attribute.name = element
             elif isinstance(attribute, PublisherGroup):
                 if created_type._contents & attribute._contents:
                     raise AttributeError(
@@ -108,7 +108,7 @@ class PublisherGroup(type):
         return created_type
 
     def get_publisher_mapping(self) -> Dict[str, Publisher]:
-        return {publisher.publisher_name: publisher for publisher in self}
+        return {publisher.name: publisher for publisher in self}
 
     def get_subgroup_mapping(self) -> Dict[str, "PublisherGroup"]:
         return {
@@ -121,8 +121,8 @@ class PublisherGroup(type):
         if isinstance(__x, PublisherGroup):
             search_string = __x.__name__.lower()
         elif isinstance(__x, Publisher):
-            if __x.publisher_name:
-                search_string = __x.publisher_name
+            if __x.name:
+                search_string = __x.name
             else:
                 return False
         else:

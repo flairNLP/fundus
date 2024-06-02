@@ -201,7 +201,7 @@ class CrawlerBase(ABC):
                 if missing_attributes := extraction_filter.required_attributes - supported_attributes:
                     logger.warning(
                         f"The required attribute(s) `{', '.join(missing_attributes)}` "
-                        f"is(are) not supported by {publisher.name}. Skipping publisher"
+                        f"is(are) not supported by {publisher.publisher_name}. Skipping publisher"
                     )
                 else:
                     fitting_publishers.append(publisher)
