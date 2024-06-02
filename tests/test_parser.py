@@ -152,8 +152,15 @@ class TestParser:
                     raise KeyError(f"Unsupported attribute {attr.__name__!r}")
 
     def test_parsing(self, publisher: Publisher) -> None:
-        comparative_data = load_test_case_data(publisher)
-        html_mapping = load_html_test_file_mapping(publisher)
+        parent_group = None
+        for subgroup in PublisherCollection.get_subgroup_mapping().values():
+            if publisher in subgroup:
+                parent_group = subgroup
+                break
+        if not parent_group:
+            raise ValueError(f"Publisher {publisher!r} not contained within a subgroup of the PublisherCollection")
+        comparative_data = load_test_case_data(publisher, parent_group)
+        html_mapping = load_html_test_file_mapping(publisher, parent_group)
 
         for versioned_parser in publisher.parser:
             # validate json
@@ -232,7 +239,7 @@ class TestUtility:
 class TestMetaInfo:
     def test_order(self):
         for cc in PublisherCollection.get_subgroup_mapping().values():
-            meta_file = get_meta_info_file(next(iter(cc)))
+            meta_file = get_meta_info_file(cc)
             meta_info = meta_file.load()
             assert meta_info, f"Meta info file {meta_file.path} is missing"
             assert sorted(meta_info.keys()) == list(meta_info.keys()), (

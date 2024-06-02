@@ -39,7 +39,6 @@ class Publisher:
         self.query_parameter = query_parameter
         self.url_filter = url_filter
         self.request_header = request_header
-        self.contained_in: Optional[str] = None
         # This variable has been chosen for backwards compatibility, where name used to be the name of the
         # publisher in the PublisherEnum
         self.name: Optional[str] = None
@@ -94,7 +93,6 @@ class PublisherGroup(type):
                     f"The element {element} of type {type(attribute)} is already contained within this publisher group"
                 )
             if isinstance(attribute, Publisher):
-                attribute.contained_in = created_type.__name__.lower()
                 attribute.name = element
             elif isinstance(attribute, PublisherGroup):
                 if created_type._contents & attribute._contents:
