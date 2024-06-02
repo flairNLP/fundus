@@ -1,6 +1,6 @@
 import inspect
 from itertools import islice
-from typing import Dict, Iterator, List, Optional, Set, Type, Union, overload
+from typing import Dict, Iterator, List, Optional, Set, Type, Union, overload, Tuple
 
 from fundus.parser.base_parser import ParserProxy
 from fundus.scraping.filter import URLFilter
@@ -158,6 +158,13 @@ class PublisherGroup(type):
                 yield attribute
             elif isinstance(attribute, PublisherGroup):
                 yield from attribute
+
+    def parent_iterator(cls) -> Iterator[Tuple[Publisher, "PublisherGroup"]]:
+        for attribute in cls.__dict__.values():
+            if isinstance(attribute, Publisher):
+                yield attribute, cls
+            elif isinstance(attribute, PublisherGroup):
+                yield from attribute.parent_iterator()
 
     def __getitem__(cls, name: str) -> Publisher:
         """Get a publisher from the collection by name represented as string.

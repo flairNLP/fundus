@@ -1,7 +1,7 @@
 import subprocess
 from argparse import ArgumentParser, Namespace
 from logging import WARN
-from typing import List, Optional, Union
+from typing import List, Optional, Union, Tuple
 
 from tqdm import tqdm
 
@@ -87,25 +87,28 @@ def main() -> None:
     arguments.attributes = sorted(set(arguments.attributes) or attributes_required_to_cover)
 
     logger.setLevel(WARN)
+    publishers_with_parent_groups: List[Tuple[Publisher, PublisherGroup]]
+    if arguments.publishers is None:
+        publishers_with_parent_groups = list(PublisherCollection.parent_iterator())
+    else:
+        publishers_with_parent_groups = list()
+        for item in PublisherCollection.parent_iterator():
+            if item[0] in arguments.publishers:
+                publishers_with_parent_groups.append(item)
 
-    publishers: List[Publisher] = (
-        list(PublisherCollection)
-        if arguments.publishers is None
-        else [PublisherCollection[pub] for pub in arguments.publishers]
-    )
+    urls = arguments.urls if arguments.urls is not None else [None] * len(publishers_with_parent_groups)
 
-    urls = arguments.urls if arguments.urls is not None else [None] * len(publishers)
-
-    with tqdm(total=len(publishers)) as bar:
-        for url, publisher in zip(urls, publishers):
+    with tqdm(total=len(publishers_with_parent_groups)) as bar:
+        for url, element in zip(urls, publishers_with_parent_groups):
+            publisher, parent_group = element
             bar.set_description(desc=publisher.publisher_name, refresh=True)
 
             # load json
-            test_data_file = get_test_case_json(publisher)
+            test_data_file = get_test_case_json(publisher, parent_group)
             test_data = content if not arguments.overwrite_json and (content := test_data_file.load()) else {}
 
             # load html
-            html_mapping = load_html_test_file_mapping(publisher)
+            html_mapping = load_html_test_file_mapping(publisher, parent_group)
 
             if arguments.overwrite or not html_mapping.get(publisher.parser.latest_version):
                 if not (article := get_test_article(publisher, url)):
@@ -116,6 +119,7 @@ def main() -> None:
                     content=article.html.content,
                     crawl_date=article.html.crawl_date,
                     publisher=publisher,
+                    parent_group=parent_group
                 )
                 html.write()
                 subprocess.call(["git", "add", html.path], stdout=subprocess.PIPE)
