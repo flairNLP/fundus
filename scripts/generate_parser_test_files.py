@@ -93,7 +93,8 @@ def main() -> None:
     else:
         publishers_with_parent_groups = list()
         for item in PublisherCollection.parent_iterator():
-            if item[0] in arguments.publishers:
+            publisher, parent_group = item
+            if publisher.name in arguments.publishers:
                 publishers_with_parent_groups.append(item)
 
     urls = arguments.urls if arguments.urls is not None else [None] * len(publishers_with_parent_groups)
