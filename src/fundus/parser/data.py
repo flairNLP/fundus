@@ -49,6 +49,9 @@ class LinkedDataMapping:
             else:
                 self.add_ld(ld)
 
+    def to_dict(self) -> Dict[str, Any]:
+        return {attribute: value for attribute, value in self.__dict__.items() if "__" not in attribute}
+
     def add_ld(self, ld: Dict[str, Any]) -> None:
         if ld_type := ld.get("@type"):
             if isinstance(ld_type, list):

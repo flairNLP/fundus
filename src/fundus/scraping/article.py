@@ -1,7 +1,8 @@
+import json
 from dataclasses import dataclass, field, fields
 from datetime import datetime
 from textwrap import TextWrapper, dedent
-from typing import Any, Dict, Iterator, List, Optional, Set, Tuple
+from typing import Any, Dict, Iterator, List, Optional, Set, Tuple, Union, get_args
 
 import langdetect
 import lxml.html
@@ -10,7 +11,9 @@ from colorama import Fore, Style
 
 from fundus.logging import create_logger
 from fundus.parser import ArticleBody
+from fundus.parser.data import LinkedDataMapping
 from fundus.scraping.html import HTML
+from fundus.utils.serialization import JSONVal
 
 logger = create_logger(__name__)
 
@@ -39,8 +42,11 @@ class Article:
         )
 
         article: Article = cls(html, exception, **dict(extracted_validated))
+        unvalidated_attributes: List[str] = []
         for attribute, value in extracted_unvalidated:
             object.__setattr__(article, attribute, value)  # Sets attributes on a frozen dataclass
+            unvalidated_attributes.append(attribute)
+        object.__setattr__(article, "_unvalidated_attributes", unvalidated_attributes)
 
         return article
 
@@ -68,6 +74,28 @@ class Article:
 
     def __getattr__(self, item: object) -> Any:
         raise AttributeError(f"{type(self).__name__!r} object has no attribute {str(item)!r}")
+
+    def to_json(self) -> Dict[str, JSONVal]:
+        data: Dict[str, JSONVal] = {
+            "title": self.title,
+            "plaintext": self.plaintext,
+            "authors": self.authors,
+            "publishing_date": str(self.publishing_date),
+            "topics": self.topics,
+            "free_access": self.free_access,
+        }
+
+        for attribute in self.__dict__.get("_unvalidated_attributes", []):
+            value = getattr(self, attribute)
+
+            if value is None or isinstance(value, (bool, str, float, int, list, dict)):
+                data[attribute] = value
+            elif isinstance(value, LinkedDataMapping):
+                data[attribute] = value.to_dict()
+            else:
+                raise TypeError(f"{attribute} of type {type(value)!r} is not JSON serializable")
+
+        return data
 
     def __str__(self):
         # the subsequent indent here is a bit wacky, but textwrapper.dedent won't work with tabs, so we have to use
