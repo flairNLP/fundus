@@ -75,7 +75,7 @@ class Article:
     def __getattr__(self, item: object) -> Any:
         raise AttributeError(f"{type(self).__name__!r} object has no attribute {str(item)!r}")
 
-    def to_json(self) -> Dict[str, JSONVal]:
+    def to_json(self, include_ld: bool = False, include_meta: bool = False) -> Dict[str, JSONVal]:
         data: Dict[str, JSONVal] = {
             "title": self.title,
             "plaintext": self.plaintext,
@@ -86,6 +86,8 @@ class Article:
         }
 
         for attribute in self.__dict__.get("_unvalidated_attributes", []):
+            if ((not include_ld) and attribute == "ld") or ((not include_meta) and attribute == "meta"):
+                continue
             value = getattr(self, attribute)
 
             if value is None or isinstance(value, (bool, str, float, int, list, dict)):

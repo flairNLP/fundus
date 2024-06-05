@@ -5,6 +5,7 @@
   * [The articles' body](#the-articles-body)
   * [HTML](#html)
   * [Language detection](#language-detection)
+  * [Saving an Article](#saving-an-article)
 
 # The Article class
 
@@ -45,7 +46,7 @@ You can find those attributes under the [**supported publisher**](supported_publ
 
 Sometimes an attribute listed in the attribute guidelines isn't supported at all by a specific parser.
 You can find this information under the `Missing Attributes` tab within the supported publisher tables.
-There is also a built-in search mechanic you can learn about [here](5_how_to_search_for_publishers)
+There is also a built-in search mechanic you can learn about [here](5_advanced_topics)
 
 ## The articles' body
 
@@ -136,5 +137,11 @@ Should print this:
 ```console
 en
 ```
+
+## Saving an Article
+
+In case you want to save some or all of the articles (refer to the [`save_to_file` parameter](5_advanced_topics.md#saving-the-crawled-articles) in the next section for the latter), the `Article` class provides a `to_json()` function.
+The function expects two boolean parameters `include_ld` and `include_meta` which are set to `False` by default and allow you to control whether or not the parsed `ld+json` or `meta` data respectively are included in the output.
+It returns a dictionary object containing serializable attribute-value pairs.
 
 In the [**next section**](4_how_to_filter_articles.md) we will show you how to filter articles.

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import gzip
+import json
 import os
 import re
 from abc import ABC, abstractmethod
@@ -148,6 +149,7 @@ class CrawlerBase(ABC):
         only_complete: Union[bool, ExtractionFilter] = Requires("title", "body", "publishing_date"),
         url_filter: Optional[URLFilter] = None,
         only_unique: bool = True,
+        save_to_file: Optional[str] = None,
     ) -> Iterator[Article]:
         """Yields articles from initialized scrapers
 
@@ -169,6 +171,8 @@ class CrawlerBase(ABC):
                 URLs before download. This filter applies on both requested and responded URL. Defaults to None.
             only_unique (bool): If set to True, articles yielded will be unique on the responded URL.
                 Always returns the first encountered article. Defaults to True.
+            save_to_file (Optional[str]): If set, the value should correspond to the filepath of the output file.
+                The articles will be collected in a list which is JSON-encoded and saved to the specified file
 
         Returns:
             Iterator[Article]: An iterator yielding objects of type Article.
@@ -216,6 +220,8 @@ class CrawlerBase(ABC):
             fitting_publishers = self.publishers
 
         article_count = 0
+        if save_to_file:
+            crawled_articles = list()
         for article in self._build_article_iterator(
             tuple(fitting_publishers), error_handling, build_extraction_filter(), url_filter
         ):
@@ -223,11 +229,17 @@ class CrawlerBase(ABC):
             if not only_unique or url_without_query_parameters not in response_cache:
                 response_cache.add(url_without_query_parameters)
                 article_count += 1
+                if save_to_file:
+                    crawled_articles.append(article)
                 yield article
             if article_count == max_articles:
                 break
 
         session_handler.close_current_session()
+        if save_to_file:
+            with open(save_to_file, "w") as file:
+                logger.info(f"Writing crawled articles to {save_to_file}")
+                file.write(json.dumps(crawled_articles, default=lambda o: o.to_json()))
 
 
 class Crawler(CrawlerBase):
