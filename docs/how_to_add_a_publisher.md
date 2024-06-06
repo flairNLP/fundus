@@ -58,36 +58,36 @@ For example:
 - ...
 
 In case you don't see a directory labelled with the corresponding country code, feel free to create one. 
-Within this directory add a file called `__init__.py` and create a class inheriting the PublisherEnum behaviour.
+Within this directory add a file called `__init__.py` and create a class inheriting the PublisherGroup behaviour.
 As an example, if you were to add the US, it should look something like this:
 
 ```python
-from fundus.publishers.base_objects import PublisherEnum
+from fundus.publishers.base_objects import PublisherGroup
 
-class US(PublisherEnum):
+class US(metaclass=PublisherGroup):
     pass
 ```
 
 Next, you should open the file `fundus/publishers/__init__.py` and make sure that the class PublisherCollection has an attribute corresponding to your newly added country:
 
 ```python
-from fundus.publishers.base_objects import PublisherCollectionMeta
+from fundus.publishers.base_objects import PublisherGroup
 from fundus.publishers.us import US
 
-class PublisherCollection(metaclass=PublisherCollectionMeta):
+class PublisherCollection(metaclass=PublisherGroup):
     us = US
 ```
 
 Now create an empty file in the corresponding country section using the publishers' name or some abbreviation as the file name.
 For the Los Angeles Times, the correct country section is `fundus/publishers/us/`, since they are a newspaper based in the United States, with a filename like `la_times.py` or `los_angeles_times.py`.
-We will continue here with `la_times.py`.
+We will continue here with `reuters.py`.
 In the newly created file, add an empty parser class inheriting from `ParserProxy` and a parser version `V1` subclassing `BaseParser`.
 
 ``` python
 from fundus.parser import ParserProxy, BaseParser
 
 
-class LATimesParser(ParserProxy):
+class ReutersParser(ParserProxy):
     class V1(BaseParser):
         pass
 ```
@@ -100,29 +100,29 @@ Since Fundus' parsers are handcrafted and usually tied to specific layouts, this
 Next, add a new publisher specification for the publisher you want to cover.
 The publisher specification links information about the publisher, sources from where to get the HTML to parse, and the corresponding parser used by Fundus' `Crawler`.
 
-You can add a new entry to the country-specific `PublisherEnum` in the `__init__.py` of the country section you want to contribute to, i.e. `fundus/publishers/<country_code>/__init__.py`.
+You can add a new entry to the country-specific `PublisherGroup` in the `__init__.py` of the country section you want to contribute to, i.e. `fundus/publishers/<country_code>/__init__.py`.
 For now, we only specify the publisher's name, domain, and parser.
 We will cover sources in the next step.
 
-For the Los Angeles Times (LA Times), we add the following entry to `fundus/publishers/us/__init__.py`.
+For Reuters, we add the following entry to `fundus/publishers/us/__init__.py`.
 
 ``` python
-class US(PublisherEnum):
-    LATimes = PublisherSpec(
-        name="Los Angeles Times",
-        domain="https://www.latimes.com/",
-        parser=LATimesParser,
+class US(PublisherGroup):
+    LATimes = Publisher(
+        name="Reuters",
+        domain="https://www.reuters.com/",
+        parser=ReutersParser,
     )
 ```
 
-If the country section for your publisher did not exist before step 1, please add the `PublisherEnum` to the `PublisherCollection` in `fundus/publishers/__init__.py'`.
+If the country section for your publisher did not exist before step 1, please add the `PublisherGroup` to the `PublisherCollection` in `fundus/publishers/__init__.py'`.
 
 ### Adding Sources
 
 For your newly added publisher to work you first need to specify where to find articles - in the form of HTML - to parse.
 Fundus adopts a unique approach by utilizing access points provided by the publishers, rather than resorting to generic web spiders.
 Publishers offer various methods to access their articles, with the most common being RSS feeds, APIs, or sitemaps. 
-Presently, Fundus supports RSS feeds and sitemaps by adding them as corresponding `URLSource` using the `source` parameter of `PublisherSpec`.
+Presently, Fundus supports RSS feeds and sitemaps by adding them as corresponding `URLSource` using the `source` parameter of `Publisher`.
 
 #### Different `URLSource` types
 
@@ -175,24 +175,24 @@ You can find a plugin to resolve this issue [here](https://addons.mozilla.org/de
 
 Links to sitemaps are typically found within the `robots.txt` file provided by the publisher, often located at the end of it.
 To access this file, append `robots.txt` at the end of the publisher's domain.
-For example, to access the LA Times' `robots.txt`, use https://www.latimes.com/robots.txt in your preferred browser.
- This will give you the following two sitemap links:
+For example, to access Reuters' `robots.txt`, use https://www.reuters.com/robots.txt in your preferred browser.
+This will give you the following two sitemap links:
 
 ```console
-Sitemap: https://www.latimes.com/sitemap.xml
-Sitemap: https://www.latimes.com/news-sitemap.xml
+Sitemap: https://www.reuters.com/arc/outboundfeeds/sitemap-index/?outputType=xml
+Sitemap: https://www.reuters.com/arc/outboundfeeds/news-sitemap-index/?outputType=xml
 ````
 
 The former refers to a regular sitemap, and the latter points to a NewsMap, which is a special kind of sitemap.
 To have a look at how to differentiate between those two, refer to [this](#how-to-differentiate-between-sitemap-and-newsmap) section.
 
 Most `Sitemaps`, and sometimes `NewsMaps` as well, will be index maps.
-E.g. accessing `https://www.latimes.com/news-sitemap.xml` will give you something like this:
+E.g. accessing `https://www.reuters.com/arc/outboundfeeds/news-sitemap-index/?outputType=xml` will give you something like this:
 ```
 <sitemapindex ... >
    <sitemap>
-      <loc>https://www.latimes.com/news-sitemap-content.xml</loc>
-      <lastmod>2023-08-02T07:10-04:00</lastmod>
+      <loc>https://www.reuters.com/arc/outboundfeeds/news-sitemap/?outputType=xml</loc>
+      <lastmod>2024-06-06T09:45:15.030Z</lastmod>
    </sitemap>
    ...
 </sitemapindex>
@@ -209,7 +209,7 @@ Now building a new `URLSource` for a `NewsMap` covering the LA Times looks like 
 
 from fundus import NewsMap
 
-NewsMap("https://www.latimes.com/news-sitemap.xml", reverse=True)
+NewsMap("https://www.reuters.com/arc/outboundfeeds/news-sitemap-index/?outputType=xml", reverse=True)
 ````
 
 #### How to differentiate between `Sitemap` and `NewsMap`
@@ -236,19 +236,21 @@ You can check if a sitemap is a news map by:
    Will filter out all URLs encountered within the processing of the `Sitemap` object including either the string `apnews.com/hub/` or `apnews.com/video/`.  
 2. If your publisher requires to use custom request headers to work properly you can alter it by using the `request_header` parameter of `PublisherSpec`.
    The default is: `{"user_agent": "Fundus"}`.
-3. If you want to block URLs for the entire publisher use the `url_filter` parameter of `PublisherSpec`.
+3. If you want to block URLs for the entire publisher use the `url_filter` parameter of `Publisher`.
 4. In some cases it can be necessary to append query parameters to the end of the URL, e.g. to load the article as one page. This can be achieved by adding the `query_parameter` attribute of `PublisherSpec` and assigning it a dictionary object containing the key - value pairs: e.g. `{"page": "all"}`. These key  - value pairs will be appended to all crawled URLs.
 
 Now, let's put it all together to specify the LA Times as a new publisher in Fundus:
 
 ``` python
-class US(PublisherEnum):
-    LATimes = PublisherSpec(
-        name="Los Angeles Times",
-        domain="https://www.latimes.com/",
-        sources=[Sitemap("https://www.latimes.com/sitemap.xml"), 
-                 NewsMap("https://www.latimes.com/news-sitemap.xml")],
-        parser=LATimesParser,
+class US(PublisherGroup):
+    Reuters = Publisher(
+        name="Reuters",
+        domain="https://www.reuters.com/",
+        sources=[
+            Sitemap("https://www.reuters.com/arc/outboundfeeds/sitemap-index/?outputType=xml"), 
+            NewsMap("https://www.reuters.com/arc/outboundfeeds/news-sitemap-index/?outputType=xml"),
+        ],
+        parser=ReuterssParser,
     )
 ```
 
@@ -262,7 +264,7 @@ from fundus import PublisherCollection, Crawler
 
 # Change to:
 # PublisherCollection.<country_section>.<publisher_specification>
-publisher = PublisherCollection.us.LosAngelesTimes
+publisher = PublisherCollection.us.Reuters
 
 crawler = Crawler(publisher)
 
@@ -276,13 +278,13 @@ If everything has been implemented correctly, the script should output text arti
 Fundus-Article:
 - Title: "--missing title--"
 - Text:  "--missing plaintext--"
-- URL:    https://www.latimes.com/sports/story/2023-06-26/100-years-los-angeles-coliseum-historical-events
-- From:   Los Angeles Times
+- URL:    https://www.reuters.com/world/uk/bank-england-allots-record-19-bln-stg-weekly-repo-2024-06-06/
+- From:   Reuters
 Fundus-Article:
 - Title: "--missing title--"
 - Text:  "--missing plaintext--"
-- URL:    https://www.latimes.com/sports/sparks/story/2023-06-25/los-angeles-sparks-dallas-wings-wnba-game-analysis
-- From:   Los Angeles Times
+- URL:    https://www.reuters.com/world/asia-pacific/malaysia-evicts-500-sea-nomads-crackdown-migrants-activists-say-2024-06-06/
+- From:   Reuters
 ```
 
 Since we didn't add any specific implementation to the parser yet, most entries are empty.
@@ -319,7 +321,7 @@ Attributes marked with `validate=False` will not be validated through unit tests
 Now, once we have identified the attribute we want to extract, we add it to the parser by defining a method using the associated name, in our case `title`, and marking it as an attribute using the `@attribute` decorator.
 
 ``` python
-class LATimesParser(ParserProxy):
+class ReutersParser(ParserProxy):
     class V1(BaseParser):
 
         @attribute
@@ -540,44 +542,72 @@ the element asking to purchase a subscription to view the article.
 
 ### Finishing the Parser
 
-Bringing all the above together, the Los Angeles Times now looks like this.
+Bringing all the above together, the Reuters Parser now looks like this.
 
 ```python
-import datetime
+from datetime import date, datetime
 from typing import List, Optional
 
-from lxml.cssselect import CSSSelector
+import lxml.html
+from lxml.etree import XPath
 
-from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute
+from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute, function
 from fundus.parser.utility import (
     extract_article_body_with_selector,
     generic_author_parsing,
     generic_date_parsing,
+    generic_topic_parsing,
 )
 
 
-class LATimesParser(ParserProxy):
+class ReutersParser(ParserProxy):
     class V1(BaseParser):
-        _paragraph_selector = CSSSelector("div[data-element*=story-body] > p")
+        _paragraph_selector = XPath("(//div[starts-with(@data-testid, 'paragraph')])[position() > 1]")
+        _summary_selector = XPath("(//div[starts-with(@data-testid, 'paragraph')])[1]")
+        _subheadline_selector = XPath("//div[contains(@class, 'article-body')] /h2[@data-testid='Heading']")
 
         @attribute
         def body(self) -> ArticleBody:
             return extract_article_body_with_selector(
                 self.precomputed.doc,
+                summary_selector=self._summary_selector,
                 paragraph_selector=self._paragraph_selector,
+                subheadline_selector=self._subheadline_selector,
             )
 
         @attribute
-        def publishing_date(self) -> Optional[datetime.datetime]:
-            return generic_date_parsing(self.precomputed.ld.bf_search("datePublished"))
+        def authors(self) -> List[str]:
+            return generic_author_parsing(self.precomputed.meta.get("article:author"))
 
         @attribute
-        def authors(self) -> List[str]:
-            return generic_author_parsing(self.precomputed.ld.bf_search("author"))
+        def publishing_date(self) -> Optional[datetime]:
+            return generic_date_parsing(self.precomputed.ld.get_value_by_key_path(["NewsArticle", "datePublished"]))
 
         @attribute
         def title(self) -> Optional[str]:
-            return self.precomputed.meta.get("og:title")
+            return self.precomputed.ld.get_value_by_key_path(["NewsArticle", "headline"])
+
+        @attribute
+        def topics(self) -> List[str]:
+            # As mentioned above, the first place to check for topics is within the "keywords" meta, but
+            # Reuters does not have very meaningful topics in the "keywords" meta.
+            # Example: ['BLR', 'EGS', 'SOC', 'SOCC', 'SPO', ...]
+            # But interesting topics from the meta may be found in these fields:
+            #   - article:section                       ("Aerospace & Defense")
+            #   - analyticsAttributes.topicChannel      ("Business")
+            #   - analyticsAttributes.topicSubChannel   ("Aerospace & Defense")
+            #   - DCSext.ChannelList                    ("Business;Asia Pacific;World")
+            topics: List[Optional[str]] = [
+                self.precomputed.meta.get("article:section"),
+                self.precomputed.meta.get("analyticsAttributes.topicChannel"),
+                self.precomputed.meta.get("analyticsAttributes.topicSubChannel"),
+                ]
+            topics.extend(generic_topic_parsing(self.precomputed.meta.get("DCSext.ChannelList"), delimiter=";"))
+            # Remove empty topics and duplicates deterministically
+            processed_topics = list(dict.fromkeys(topic for topic in topics if topic))
+            return processed_topics
+
+
 ```
 
 Now, execute the example script from step 4 to validate your implementation.
