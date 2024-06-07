@@ -1455,23 +1455,6 @@
     </tr>
     <tr>
       <td>
-        <code>WashingtonTimes</code>
-      </td>
-      <td>
-        <div>The Washington Times</div>
-      </td>
-      <td>
-        <a href="https://www.washingtontimes.com/">
-          <span>www.washingtontimes.com</span>
-        </a>
-      </td>
-      <td>
-        <code>topics</code>
-      </td>
-      <td>&#160;</td>
-    </tr>
-    <tr>
-      <td>
         <code>VoiceOfAmerica</code>
       </td>
       <td>

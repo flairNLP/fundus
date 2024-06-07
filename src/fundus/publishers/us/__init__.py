@@ -18,7 +18,6 @@ from .the_nation import TheNationParser
 from .the_new_yorker import TheNewYorkerParser
 from .voice_of_america import VOAParser
 from .washington_post import WashingtonPostParser
-from .washington_times import WashingtonTimesParser
 from .wired import WiredParser
 from .world_truth import WorldTruthParser
 
@@ -134,17 +133,6 @@ class US(PublisherEnum):
             ),
         ],
         parser=FreeBeaconParser,
-    )
-
-    WashingtonTimes = PublisherSpec(
-        name="The Washington Times",
-        domain="https://www.washingtontimes.com/",
-        sources=[
-            RSSFeed("https://www.washingtontimes.com/rss/headlines/news/politics/"),
-            Sitemap("https://www.washingtontimes.com/sitemap-stories.xml"),
-            Sitemap("https://www.washingtontimes.com/sitemap-entries.xml"),
-        ],
-        parser=WashingtonTimesParser,
     )
 
     WashingtonPost = PublisherSpec(
