@@ -9,7 +9,6 @@ from .fox_news import FoxNewsParser
 from .free_beacon import FreeBeaconParser
 from .la_times import LATimesParser
 from .occupy_democrats import OccupyDemocratsParser
-from .reuters import ReutersParser
 from .rolling_stone import RollingStoneParser
 from .techcrunch import TechCrunchParser
 from .the_gateway_pundit import TheGatewayPunditParser
@@ -169,16 +168,6 @@ class US(PublisherEnum):
             NewsMap("https://www.newyorker.com/feed/google-news-sitemap-feed/sitemap-google-news"),
         ],
         parser=TheNewYorkerParser,
-    )
-
-    Reuters = PublisherSpec(
-        name="Reuters",
-        domain="https://www.reuters.com/",
-        sources=[
-            Sitemap("https://www.reuters.com/arc/outboundfeeds/sitemap-index/?outputType=xml"),
-            NewsMap("https://www.reuters.com/arc/outboundfeeds/news-sitemap-index/?outputType=xml"),
-        ],
-        parser=ReutersParser,
     )
 
     OccupyDemocrats = PublisherSpec(
