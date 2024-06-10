@@ -24,7 +24,8 @@ fitting_publishers = PublisherCollection.us.search(attributes=["topics"], source
 crawler = Crawler(fitting_publishers)
 ````
 
-## Saving the crawled articles
+## Save crawled articles to a file
 
-When trying to save all parsed articles within a single file, the `crawl()` function provides the `save_to_file` parameter.
-The parameter can be assigned a filepath specifying the location for the articles to be saved.
+To save all crawled articles to a file use the `save_to_file` parameter of the `crawl` method.
+When given a path, the crawled articles will be saved as a JSON list using the 
+[default article serialization](3_the_article_class.md#saving-an-article) and `UTF-8` encoding.
