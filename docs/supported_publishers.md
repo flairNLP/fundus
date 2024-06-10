@@ -1328,21 +1328,6 @@
     </tr>
     <tr>
       <td>
-        <code>Reuters</code>
-      </td>
-      <td>
-        <div>Reuters</div>
-      </td>
-      <td>
-        <a href="https://www.reuters.com/">
-          <span>www.reuters.com</span>
-        </a>
-      </td>
-      <td>&#160;</td>
-      <td>&#160;</td>
-    </tr>
-    <tr>
-      <td>
         <code>RollingStone</code>
       </td>
       <td>
