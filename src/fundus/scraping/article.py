@@ -1,8 +1,7 @@
-import json
 from dataclasses import dataclass, field, fields
 from datetime import datetime
 from textwrap import TextWrapper, dedent
-from typing import Any, Dict, Iterator, List, Optional, Set, Tuple, Union, get_args
+from typing import Any, Dict, Iterator, List, Optional, Set, Tuple
 
 import langdetect
 import lxml.html
