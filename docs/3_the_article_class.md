@@ -140,8 +140,19 @@ en
 
 ## Saving an Article
 
-In case you want to save some or all of the articles (refer to the [`save_to_file` parameter](5_advanced_topics.md#saving-the-crawled-articles) in the next section for the latter), the `Article` class provides a `to_json()` function.
-The function expects two boolean parameters `include_ld` and `include_meta` which are set to `False` by default and allow you to control whether or not the parsed `ld+json` or `meta` data respectively are included in the output.
-It returns a dictionary object containing serializable attribute-value pairs.
+In case you want to save an article in JSON format, the `Article` class provides a `to_json` method, returning a JSON serializable dictionary.
+The function accepts string values to specify which attributes should be serialized.
+Per default, all extracted attributes and the `plaintext` attribute of `Article` are included in the serialization.
+
+````python
+for article in crawler.crawl(max_articles=10):
+    
+    # use the default serialization
+    article_json = article.to_json()
+    # or only serialize specific attributes
+    article_json = article.to_json("title", "plaintext", "lang")
+````
+
+To save all articles at once, using the default serialization and only specifying a location, refer to [this section](5_advanced_topics.md#saving-the-crawled-articles).
 
 In the [**next section**](4_how_to_filter_articles.md) we will show you how to filter articles.

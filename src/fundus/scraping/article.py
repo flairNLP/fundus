@@ -10,9 +10,8 @@ from colorama import Fore, Style
 
 from fundus.logging import create_logger
 from fundus.parser import ArticleBody
-from fundus.parser.data import LinkedDataMapping
 from fundus.scraping.html import HTML
-from fundus.utils.serialization import JSONVal
+from fundus.utils.serialization import JSONVal, is_jsonable
 
 logger = create_logger(__name__)
 
@@ -74,29 +73,40 @@ class Article:
     def __getattr__(self, item: object) -> Any:
         raise AttributeError(f"{type(self).__name__!r} object has no attribute {str(item)!r}")
 
-    def to_json(self, include_ld: bool = False, include_meta: bool = False) -> Dict[str, JSONVal]:
-        data: Dict[str, JSONVal] = {
-            "title": self.title,
-            "plaintext": self.plaintext,
-            "authors": self.authors,
-            "publishing_date": str(self.publishing_date),
-            "topics": self.topics,
-            "free_access": self.free_access,
-        }
+    def to_json(self, *attributes: str) -> Dict[str, JSONVal]:
+        """Converts article object into a JSON serializable dictionary.
 
-        for attribute in self.__dict__.get("_unvalidated_attributes", []):
-            if ((not include_ld) and attribute == "ld") or ((not include_meta) and attribute == "meta"):
+        One can specify which attributes should be included by passing attribute names as parameters.
+
+        Args:
+            *attributes: The attributes to serialize. Default: All validated and unvalidated attributes included.
+
+        Returns:
+            A json serializable dictionary
+        """
+
+        # default value for attributes
+        if not attributes:
+            validated = ["title", "plaintext", "authors", "publishing_date", "topics", "free_access"]
+            unvalidated = self.__dict__.get("_unvalidated_attributes", [])
+            attributes = tuple(validated + unvalidated)
+
+        serialization = {}
+        for attribute in attributes:
+            if not hasattr(self, attribute):
                 continue
             value = getattr(self, attribute)
 
-            if value is None or isinstance(value, (bool, str, float, int, list, dict)):
-                data[attribute] = value
-            elif isinstance(value, LinkedDataMapping):
-                data[attribute] = value.to_dict()
-            else:
-                raise TypeError(f"{attribute} of type {type(value)!r} is not JSON serializable")
+            if hasattr(value, "serialize"):
+                value = value.serialize()
+            elif isinstance(value, datetime):
+                value = str(value)
+            elif not is_jsonable(value):
+                raise TypeError(f"Attribute {attribute!r} of type {type(value)!r} is not JSON serializable")
 
-        return data
+            serialization[attribute] = value
+
+        return serialization
 
     def __str__(self):
         # the subsequent indent here is a bit wacky, but textwrapper.dedent won't work with tabs, so we have to use
