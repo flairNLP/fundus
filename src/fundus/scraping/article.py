@@ -40,10 +40,10 @@ class Article:
         )
 
         article: Article = cls(html, exception, **dict(extracted_validated))
-        unvalidated_attributes: List[str] = []
+        unvalidated_attributes: Set[str] = set()
         for attribute, value in extracted_unvalidated:
             object.__setattr__(article, attribute, value)  # Sets attributes on a frozen dataclass
-            unvalidated_attributes.append(attribute)
+            unvalidated_attributes.add(attribute)
         object.__setattr__(article, "_unvalidated_attributes", unvalidated_attributes)
 
         return article
@@ -77,9 +77,10 @@ class Article:
         """Converts article object into a JSON serializable dictionary.
 
         One can specify which attributes should be included by passing attribute names as parameters.
+        Default: title, plaintext, authors, publishing_date, topics, free_access + unvalidated attributes
 
         Args:
-            *attributes: The attributes to serialize. Default: All validated and unvalidated attributes included.
+            *attributes: The attributes to serialize. Default: see docstring.
 
         Returns:
             A json serializable dictionary
@@ -88,7 +89,7 @@ class Article:
         # default value for attributes
         if not attributes:
             validated = ["title", "plaintext", "authors", "publishing_date", "topics", "free_access"]
-            unvalidated = self.__dict__.get("_unvalidated_attributes", [])
+            unvalidated = list(self.__dict__.get("_unvalidated_attributes", set()) - {"meta", "ld"})
             attributes = tuple(validated + unvalidated)
 
         serialization = {}
