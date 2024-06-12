@@ -204,7 +204,10 @@ class CrawlerBase(ABC):
                         f"is(are) not supported by {publisher.publisher_name}. Skipping publisher"
                     )
                 else:
-                    fitting_publishers.append(publisher)
+                    if not publisher.deprecated:
+                        fitting_publishers.append(publisher)
+                    else:
+                        logger.warning(f"Skipping deprecated publisher: {publisher.publisher_name}")
 
             if not fitting_publishers:
                 logger.error(
