@@ -11,6 +11,7 @@ from colorama import Fore, Style
 from fundus.logging import create_logger
 from fundus.parser import ArticleBody
 from fundus.scraping.html import HTML
+from fundus.utils.serialization import JSONVal, is_jsonable
 
 logger = create_logger(__name__)
 
@@ -39,8 +40,11 @@ class Article:
         )
 
         article: Article = cls(html, exception, **dict(extracted_validated))
+        unvalidated_attributes: Set[str] = set()
         for attribute, value in extracted_unvalidated:
             object.__setattr__(article, attribute, value)  # Sets attributes on a frozen dataclass
+            unvalidated_attributes.add(attribute)
+        object.__setattr__(article, "_unvalidated_attributes", unvalidated_attributes)
 
         return article
 
@@ -68,6 +72,42 @@ class Article:
 
     def __getattr__(self, item: object) -> Any:
         raise AttributeError(f"{type(self).__name__!r} object has no attribute {str(item)!r}")
+
+    def to_json(self, *attributes: str) -> Dict[str, JSONVal]:
+        """Converts article object into a JSON serializable dictionary.
+
+        One can specify which attributes should be included by passing attribute names as parameters.
+        Default: title, plaintext, authors, publishing_date, topics, free_access + unvalidated attributes
+
+        Args:
+            *attributes: The attributes to serialize. Default: see docstring.
+
+        Returns:
+            A json serializable dictionary
+        """
+
+        # default value for attributes
+        if not attributes:
+            validated = ["title", "plaintext", "authors", "publishing_date", "topics", "free_access"]
+            unvalidated = list(self.__dict__.get("_unvalidated_attributes", set()) - {"meta", "ld"})
+            attributes = tuple(validated + unvalidated)
+
+        serialization = {}
+        for attribute in attributes:
+            if not hasattr(self, attribute):
+                continue
+            value = getattr(self, attribute)
+
+            if hasattr(value, "serialize"):
+                value = value.serialize()
+            elif isinstance(value, datetime):
+                value = str(value)
+            elif not is_jsonable(value):
+                raise TypeError(f"Attribute {attribute!r} of type {type(value)!r} is not JSON serializable")
+
+            serialization[attribute] = value
+
+        return serialization
 
     def __str__(self):
         # the subsequent indent here is a bit wacky, but textwrapper.dedent won't work with tabs, so we have to use
