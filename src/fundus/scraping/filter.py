@@ -137,16 +137,16 @@ class Requires:
 
             Requires("free_access")({"free_access": False}) -> will be filtered out
 
-        You can alter this behaviour by setting `skip_bool=True`
+        You can alter this behaviour by setting `eval_bool=False`
 
         I.e.,
 
-           Requires("free_access", skip_bool=True)({"free_access": False}) -> will pass
+           Requires("free_access", eval_bool=False)({"free_access": False}) -> will pass
 
         Args:
             *required_attributes: Attributes required to evaluate to True in order to
                 pass the filter. If no attributes are given, all attributes will be evaluated
-            eval_booleans: If True the boolean values will also be evaluated with bool(<value>).
+            eval_bool: If True the boolean values will also be evaluated with bool(<value>).
                 If False, all boolean values evaluate to True. Defaults to True.
         """
         self.required_attributes = set(required_attributes)
