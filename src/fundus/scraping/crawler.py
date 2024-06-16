@@ -148,6 +148,7 @@ class CrawlerBase(ABC):
         only_complete: Union[bool, ExtractionFilter] = Requires("title", "body", "publishing_date"),
         url_filter: Optional[URLFilter] = None,
         only_unique: bool = True,
+        ignore_deprecated: bool = False,
     ) -> Iterator[Article]:
         """Yields articles from initialized scrapers
 
@@ -169,6 +170,8 @@ class CrawlerBase(ABC):
                 URLs before download. This filter applies on both requested and responded URL. Defaults to None.
             only_unique (bool): If set to True, articles yielded will be unique on the responded URL.
                 Always returns the first encountered article. Defaults to True.
+            ignore_deprecated (bool): If set to True, Publishers marked as deprecated will not be skipped.
+                Defaults to False
 
         Returns:
             Iterator[Article]: An iterator yielding objects of type Article.
@@ -204,7 +207,7 @@ class CrawlerBase(ABC):
                         f"is(are) not supported by {publisher.publisher_name}. Skipping publisher"
                     )
                 else:
-                    if not publisher.deprecated:
+                    if (not publisher.deprecated) or ignore_deprecated:
                         fitting_publishers.append(publisher)
                     else:
                         logger.warning(f"Skipping deprecated publisher: {publisher.publisher_name}")
