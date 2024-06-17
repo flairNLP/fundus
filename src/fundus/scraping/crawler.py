@@ -150,7 +150,7 @@ class CrawlerBase(ABC):
         only_complete: Union[bool, ExtractionFilter] = Requires("title", "body", "publishing_date"),
         url_filter: Optional[URLFilter] = None,
         only_unique: bool = True,
-        ignore_deprecated: bool = False,
+        ignore_deprecated: bool = True,
         save_to_file: Union[None, str, Path] = None,
     ) -> Iterator[Article]:
         """Yields articles from initialized scrapers
@@ -224,7 +224,11 @@ class CrawlerBase(ABC):
                 )
                 return
         else:
-            fitting_publishers = self.publishers
+            for publisher in self.publishers:
+                if (not publisher.deprecated) or ignore_deprecated:
+                    fitting_publishers.append(publisher)
+                else:
+                    logger.warning(f"Skipping deprecated publisher: {publisher.publisher_name}")
 
         article_count = 0
         if save_to_file is not None:
