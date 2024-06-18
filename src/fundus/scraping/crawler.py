@@ -128,10 +128,9 @@ def remove_query_parameters_from_url(url: str) -> str:
 
 class CrawlerBase(ABC):
     def __init__(self, *publishers: Publisher):
-        if not publishers:
-            raise ValueError("param <publishers> of <Crawler.__init__> has to be non empty")
-
         self.publishers: List[PublisherEnum] = list(set(more_itertools.collapse(publishers)))
+        if not self.publishers:
+            raise ValueError("param <publishers> of <Crawler.__init__> must include at least one publisher.")
 
     @abstractmethod
     def _build_article_iterator(
@@ -150,7 +149,6 @@ class CrawlerBase(ABC):
         only_complete: Union[bool, ExtractionFilter] = Requires("title", "body", "publishing_date"),
         url_filter: Optional[URLFilter] = None,
         only_unique: bool = True,
-        ignore_deprecated: bool = True,
         save_to_file: Union[None, str, Path] = None,
     ) -> Iterator[Article]:
         """Yields articles from initialized scrapers
@@ -173,8 +171,6 @@ class CrawlerBase(ABC):
                 URLs before download. This filter applies on both requested and responded URL. Defaults to None.
             only_unique (bool): If set to True, articles yielded will be unique on the responded URL.
                 Always returns the first encountered article. Defaults to True.
-            ignore_deprecated (bool): If set to True, Publishers marked as deprecated will not be skipped.
-                Defaults to True.
             save_to_file (Union[None, str, Path]): If set, the crawled articles will be collected saved to the
                 specified file as a JSON list.
 
@@ -199,11 +195,8 @@ class CrawlerBase(ABC):
         extraction_filter = build_extraction_filter()
         fitting_publishers: List[PublisherEnum] = []
 
-        for publisher in self.publishers:
-            if publisher.deprecated and not ignore_deprecated:
-                logger.warning(f"Skipping deprecated publisher: {publisher.publisher_name}")
-                continue
-            elif isinstance(extraction_filter, Requires):
+        if isinstance(extraction_filter, Requires):
+            for publisher in self.publishers:
                 supported_attributes = set(
                     more_itertools.flatten(
                         collection.names for collection in publisher.parser.attribute_mapping.values()
@@ -214,18 +207,20 @@ class CrawlerBase(ABC):
                         f"The required attribute(s) `{', '.join(missing_attributes)}` "
                         f"is(are) not supported by {publisher.publisher_name}. Skipping publisher"
                     )
-                    continue
-            fitting_publishers.append(publisher)
+                else:
+                    fitting_publishers.append(publisher)
 
-        if not fitting_publishers:
-            logger.error(
-                f"Could not find any publisher which either isn't deprecated or supports all required attributes. "
-                f"Try using more publisher, set <ignore_deprecated> = 'True' or require less attributes."
-            )
-            return
+            if not fitting_publishers:
+                logger.error(
+                    f"Could not find any fitting publishers for required attributes  "
+                    f"`{', '.join(extraction_filter.required_attributes)}`"
+                )
+                return
+        else:
+            fitting_publishers = self.publishers
 
         article_count = 0
-        crawled_articles: List[Article] = []
+        crawled_articles = []
 
         try:
             for article in self._build_article_iterator(
@@ -255,6 +250,7 @@ class Crawler(CrawlerBase):
         self,
         *publishers: Publisher,
         restrict_sources_to: Optional[List[Type[URLSource]]] = None,
+        ignore_deprecated: bool = False,
         delay: Optional[Union[float, Delay]] = 1.0,
         threading: bool = True,
     ):
@@ -269,19 +265,34 @@ class Crawler(CrawlerBase):
 
         Args:
             *publishers (Union[PublisherEnum, Type[PublisherEnum], PublisherCollectionMeta]): The publishers to crawl.
-            restrict_sources_to (Optional[List[Type[URLSource]]]): Lets you restrict
-                sources defined in the publisher specs. If set, only articles from given source types
-                will be yielded.
+            restrict_sources_to (Optional[List[Type[URLSource]]]): Lets you restrict sources defined in the publisher
+                specs. If set, only articles from given source types will be yielded.
+            ignore_deprecated (bool): If set to True, Publishers marked as deprecated will be skipped.
+                Defaults to False.
             delay (Optional[Union[float, Delay]]): Set a delay time in seconds to be used between article
                 downloads. You can set a delay directly using float or any callable satisfying the Delay
                 protocol. If set to None, no delay will be used between batches. See Delay for more
                 information. Defaults to None.
             threading (bool): If True, the crawler will use a dedicated thread per publisher, if set to False,
-                the crawler will use a single thread for all publishers and load articles successively. This will greatly
-                influence performance, and it is highly recommended to use a threaded crawler. Deafults to True.
+                the crawler will use a single thread for all publishers and load articles successively. This will
+                greatly influence performance, and it is highly recommended to use a threaded crawler.
+                Defaults to True.
         """
 
-        super().__init__(*publishers)
+        def filter_publishers(publisher: PublisherEnum) -> bool:
+            if publisher.deprecated and ignore_deprecated:
+                logger.warning(f"Skipping deprecated publisher: {publisher.publisher_name}")
+                return False
+            return True
+
+        fitting_publishers = list(filter(filter_publishers, more_itertools.collapse(publishers)))
+        if not fitting_publishers:
+            raise ValueError(
+                f"All given publishers are deprecated. Either set <ignore_deprecated> to `False` or "
+                f"include at least one publisher that isn't deprecated."
+            )
+
+        super().__init__(*fitting_publishers)
 
         self.restrict_sources_to = restrict_sources_to
         self.delay = delay
