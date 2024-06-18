@@ -174,7 +174,7 @@ class CrawlerBase(ABC):
             only_unique (bool): If set to True, articles yielded will be unique on the responded URL.
                 Always returns the first encountered article. Defaults to True.
             ignore_deprecated (bool): If set to True, Publishers marked as deprecated will not be skipped.
-                Defaults to False
+                Defaults to True.
             save_to_file (Union[None, str, Path]): If set, the crawled articles will be collected saved to the
                 specified file as a JSON list.
 
