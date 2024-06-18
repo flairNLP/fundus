@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import gzip
 import json
-import math
 import os
 import re
 from abc import ABC, abstractmethod
@@ -148,7 +147,7 @@ class CrawlerBase(ABC):
     def crawl(
         self,
         max_articles: Optional[int] = None,
-        max_seconds: Optional[float] = None,
+        max_seconds: Optional[int] = None,
         error_handling: Literal["suppress", "catch", "raise"] = "suppress",
         only_complete: Union[bool, ExtractionFilter] = Requires("title", "body", "publishing_date"),
         url_filter: Optional[URLFilter] = None,
@@ -192,7 +191,7 @@ class CrawlerBase(ABC):
             max_articles = -1
 
         if max_seconds is None:
-            max_seconds = math.inf
+            max_seconds = -1
 
         def build_extraction_filter() -> Optional[ExtractionFilter]:
             if isinstance(only_complete, bool):
@@ -230,7 +229,7 @@ class CrawlerBase(ABC):
             fitting_publishers = self.publishers
 
         article_count = 0
-        start_time = time()
+        start_time = int(time())
         if save_to_file is not None:
             crawled_articles = list()
 
@@ -247,8 +246,9 @@ class CrawlerBase(ABC):
                     yield article
                 if article_count == max_articles:
                     break
-                if (time() - start_time) > max_seconds:
-                    break
+                if max_seconds != -1:
+                    if (int(time()) - start_time) > max_seconds:
+                        break
         finally:
             session_handler.close_current_session()
             if save_to_file is not None:
