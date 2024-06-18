@@ -4,6 +4,7 @@ import gzip
 import json
 import os
 import re
+import time
 from abc import ABC, abstractmethod
 from datetime import datetime
 from functools import lru_cache, partial, wraps
@@ -28,9 +29,11 @@ from typing import (
     Union,
     cast,
 )
+from urllib.error import HTTPError
 from urllib.parse import urljoin, urlparse
 
 import dill
+import fastwarc.stream_io
 import more_itertools
 import requests
 from dateutil.rrule import MONTHLY, rrule
@@ -383,7 +386,14 @@ class CCNewsCrawler(CrawlerBase):
     ) -> Iterator[Article]:
         source = CCNewsSource(*publishers, warc_path=warc_path)
         scraper = CCNewsScraper(source)
-        yield from scraper.scrape(error_handling, extraction_filter, url_filter)
+        try:
+            yield from scraper.scrape(error_handling, extraction_filter, url_filter)
+        except HTTPError as exception:
+            logger.error(f"Could not load WARC file {warc_path!r}: {exception!r}")
+            time.sleep(10)
+        except fastwarc.stream_io.StreamError:
+            logger.error(f"Error during streaming of {warc_path!r}")
+            time.sleep(10)
 
     @staticmethod
     def _single_crawl(
