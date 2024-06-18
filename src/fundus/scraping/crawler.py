@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import gzip
 import json
+import math
 import os
 import re
 from abc import ABC, abstractmethod
@@ -12,6 +13,7 @@ from multiprocessing.context import TimeoutError
 from multiprocessing.pool import MapResult, Pool, ThreadPool
 from pathlib import Path
 from queue import Empty, Queue
+from time import time
 from typing import (
     Any,
     Callable,
@@ -146,6 +148,7 @@ class CrawlerBase(ABC):
     def crawl(
         self,
         max_articles: Optional[int] = None,
+        max_seconds: Optional[float] = None,
         error_handling: Literal["suppress", "catch", "raise"] = "suppress",
         only_complete: Union[bool, ExtractionFilter] = Requires("title", "body", "publishing_date"),
         url_filter: Optional[URLFilter] = None,
@@ -158,6 +161,9 @@ class CrawlerBase(ABC):
             max_articles (Optional[int]): Number of articles to crawl. If there are fewer articles
                 than max_articles the Iterator will stop before max_articles. If None, all retrievable
                 articles are returned. Defaults to None.
+            max_seconds (Optional[int]): Seconds to crawl for before timing out. The Iterator will check at
+                the end of each loop and will stop the crawl if the timer is exceeded. Note that this does
+                not stop mid fetch so the total time may still exceed this. Defaults to None.
             error_handling (Literal["suppress", "catch", "raise"]): Define how to handle errors
                 encountered during extraction. If set to "suppress", all errors will be skipped, either
                 with None values for respective attributes in the extraction or by skipping entire articles.
@@ -179,11 +185,14 @@ class CrawlerBase(ABC):
             Iterator[Article]: An iterator yielding objects of type Article.
         """
 
-        if max_articles == 0:
+        if max_articles == 0 or max_seconds == 0:
             return
 
         if max_articles is None:
             max_articles = -1
+
+        if max_seconds is None:
+            max_seconds = math.inf
 
         def build_extraction_filter() -> Optional[ExtractionFilter]:
             if isinstance(only_complete, bool):
@@ -221,6 +230,7 @@ class CrawlerBase(ABC):
             fitting_publishers = self.publishers
 
         article_count = 0
+        start_time = time()
         if save_to_file is not None:
             crawled_articles = list()
 
@@ -236,6 +246,8 @@ class CrawlerBase(ABC):
                         crawled_articles.append(article)
                     yield article
                 if article_count == max_articles:
+                    break
+                if (time() - start_time) > max_seconds:
                     break
         finally:
             session_handler.close_current_session()

@@ -83,5 +83,13 @@ for article in crawler.crawl():
     print(article)
 ````
 
+Additionally you can specify a time limit to crawl for:
+```` python
+# crawl for ten seconds and print count of articles
+articles = []
+for article in crawler.crawl(max_seconds=10):
+    articles.append(article)
+print(len(articles))
+````
 
 In the [next](2_crawl_from_cc_news.md) section we will show you how to crawl articles from the CC-NEWS dataset.
