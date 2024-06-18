@@ -1,19 +1,48 @@
 # Table of Contents
 
-* [How to filter articles](#how-to-filter-articles)
-  * [Extraction filter](#extraction-filter)
-    * [Custom extraction filter](#custom-extraction-filter)
-      * [Some more extraction filter examples:](#some-more-extraction-filter-examples)
-  * [URL filter](#url-filter)
-    * [Combine filters](#combine-filters)
-  * [Filter sources](#filter-sources)
-  * [Filter unique articles](#filter-unique-articles)
+* [Filtering](#filtering)
+  * [How to filter publishers](#how-to-filter-publishers)
+    * [Using `search()`](#using-search)
+    * [Using the `deprecated` flag](#using-the-deprecated-flag)
+  * [How to filter articles](#how-to-filter-articles)
+    * [Extraction filter](#extraction-filter)
+      * [Custom extraction filter](#custom-extraction-filter)
+        * [Some more extraction filter examples:](#some-more-extraction-filter-examples)
+    * [URL filter](#url-filter)
+      * [Combine filters](#combine-filters)
+    * [Filter sources](#filter-sources)
+    * [Filter unique articles](#filter-unique-articles)
 
-# How to filter articles
+# How to filter
 
-This tutorial shows you how to filter articles based on their attribute values, URLs, and news sources.
+This tutorial shows you how to filter publishers and articles based on their attribute values, URLs, and news sources.
 
-## Extraction filter
+## How to filter publishers
+
+For now, there are two main options when filtering publishers: `search()` and using the `deprecated` flag.
+
+### Using `search()`
+
+There are quite a few differences between the publishers, especially in the attributes the underlying parser supports.
+You can search through the collection to get only publishers fitting your use case by utilizing the `search()` method.
+
+Let's get some publishers based in the US, supporting an attribute called `topics` and `NewsMap` as a source, and use them to initialize a crawler afterward.
+
+````python
+from fundus import Crawler, PublisherCollection, NewsMap
+
+fitting_publishers = PublisherCollection.us.search(attributes=["topics"], source_types=[NewsMap])
+crawler = Crawler(fitting_publishers)
+````
+
+### Using the `deprecated` flag
+
+When publishers are uncrawlable for whatever reason, they will be marked as `deprecated`.
+While they are still included in the crawl process by default, you can exclude them by setting `ignore_deprecated=True` when initiating the `Crawler`
+
+## How to filter articles
+
+### Extraction filter
 
 A specific article may not contain all attributes the parser is capable of extracting.
 By default, Fundus drops all articles without at least a title, body, and publishing date extracted to ensure data quality.
@@ -36,7 +65,7 @@ for article in crawler.crawl(max_articles=2, only_complete=Requires("title", "bo
 
 **_NOTE:_** We recommend thinking about what kind of data is needed first and then running Fundus with a configured extraction filter afterward.
 
-### Custom extraction filter
+#### Custom extraction filter
 
 Writing custom extraction filters is supported and encouraged.
 To do so you need to define a `Callable` satisfying the `ExtractionFilter` protocol which you can find [here](../src/fundus/scraping/filter.py).
@@ -67,7 +96,7 @@ for us_themed_article in crawler.crawl(only_complete=topic_filter):
 A filter in Fundus describes what is filtered out and not what's kept.
 If a filter returns True on a specific element the element will be dropped.
 
-#### Some more extraction filter examples:
+##### Some more extraction filter examples:
 
 ````python
 # only select articles from the past seven days
@@ -87,7 +116,7 @@ def body_filter(extracted: Dict[str, Any]) -> bool:
     return True
 ````
 
-## URL filter
+### URL filter
 
 Fundus allows you to filter articles by URL both before and after the HTML is downloaded.
 You do so by making use of the `url_filter` parameter of the `crawl()` method.
@@ -132,7 +161,7 @@ https://www.reuters.com/business/autos-transportation/volkswagens-china-chief-we
 
 **_NOTE:_** As with the `ExtractionFilter` you can also write custom URL filters satisfying the `URLFilter` protocol.
 
-### Combine filters
+#### Combine filters
 
 Sometimes it is useful to combine filters of the same kind.
 You can do so by using the `lor` (logic `or`) and `land` (logic `and`) operators from `fundus.scraping.filter.py`.
@@ -171,7 +200,7 @@ https://www.thegatewaypundit.com/2023/06/breaking-poll-trump-most-popular-politi
 **_NOTE:_** You can use the `combine`, `lor`, and `land` operators on `ExtractionFilter` as well.
 Make sure to only use them on filters of the same kind.
 
-## Filter sources
+### Filter sources
 
 Fundus supports different sources for articles which are split into two categories:
 
@@ -191,7 +220,7 @@ crawler = Crawler(PublisherCollection.us, restrict_sources_to=[NewsMap])
 
 **_NOTE:_** The `restrict_sources_to` parameter expects a list as value to specify multiple sources at once, e.g. `[RSSFeed, NewsMap]`
 
-## Filter unique articles
+### Filter unique articles
 
 The `crawl()` method supports functionality to filter out articles with URLs previously encountered in this run.
 You can alter this behavior by setting the `only_unique` parameter.
