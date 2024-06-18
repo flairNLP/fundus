@@ -199,8 +199,11 @@ class CrawlerBase(ABC):
         extraction_filter = build_extraction_filter()
         fitting_publishers: List[PublisherEnum] = []
 
-        if isinstance(extraction_filter, Requires):
-            for publisher in self.publishers:
+        for publisher in self.publishers:
+            if publisher.deprecated and not ignore_deprecated:
+                logger.warning(f"Skipping deprecated publisher: {publisher.publisher_name}")
+                continue
+            elif isinstance(extraction_filter, Requires):
                 supported_attributes = set(
                     more_itertools.flatten(
                         collection.names for collection in publisher.parser.attribute_mapping.values()
@@ -211,28 +214,18 @@ class CrawlerBase(ABC):
                         f"The required attribute(s) `{', '.join(missing_attributes)}` "
                         f"is(are) not supported by {publisher.publisher_name}. Skipping publisher"
                     )
-                else:
-                    if (not publisher.deprecated) or ignore_deprecated:
-                        fitting_publishers.append(publisher)
-                    else:
-                        logger.warning(f"Skipping deprecated publisher: {publisher.publisher_name}")
+                    continue
+            fitting_publishers.append(publisher)
 
-            if not fitting_publishers:
-                logger.error(
-                    f"Could not find any fitting publishers for required attributes  "
-                    f"`{', '.join(extraction_filter.required_attributes)}`"
-                )
-                return
-        else:
-            for publisher in self.publishers:
-                if (not publisher.deprecated) or ignore_deprecated:
-                    fitting_publishers.append(publisher)
-                else:
-                    logger.warning(f"Skipping deprecated publisher: {publisher.publisher_name}")
+        if not fitting_publishers:
+            logger.error(
+                f"Could not find any publisher which either isn't deprecated or supports all required attributes. "
+                f"Try using more publisher, set <ignore_deprecated> = 'True' or require less attributes."
+            )
+            return
 
         article_count = 0
-        if save_to_file is not None:
-            crawled_articles = list()
+        crawled_articles: List[Article] = []
 
         try:
             for article in self._build_article_iterator(
