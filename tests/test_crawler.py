@@ -5,16 +5,14 @@ from fundus import Crawler, NewsMap, RSSFeed
 
 class TestPipeline:
     def test_crawler_with_empty_collection(self, collection_with_empty_publisher_enum):
-        crawler = Crawler(collection_with_empty_publisher_enum)
-        assert crawler.publishers == list()
-        assert next(crawler.crawl(), None) is None
+        with pytest.raises(ValueError):
+            Crawler(collection_with_empty_publisher_enum)
 
         with pytest.raises(ValueError):
             Crawler(*collection_with_empty_publisher_enum)
 
     def test_crawler_with_collection(self, collection_with_valid_publisher_enum):
         crawler = Crawler(*collection_with_valid_publisher_enum)
-        publisher = collection_with_valid_publisher_enum.pub.value
         assert len(crawler.publishers) == 1
 
     def test_crawler_with_two_collections(
