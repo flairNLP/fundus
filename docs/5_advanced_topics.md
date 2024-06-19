@@ -3,6 +3,7 @@
 * [How to search for publishers](#how-to-search-for-publishers)
   * [Using `search()`](#using-search)
 * [Saving the crawled articles](#saving-the-crawled-articles)
+* [Working with deprecated publishers](#working-with-deprecated-publishers)
 
 # Advanced Topics
 
@@ -29,3 +30,9 @@ crawler = Crawler(fitting_publishers)
 To save all crawled articles to a file use the `save_to_file` parameter of the `crawl` method.
 When given a path, the crawled articles will be saved as a JSON list using the 
 [default article serialization](3_the_article_class.md#saving-an-article) and `UTF-8` encoding.
+
+## Working with deprecated publishers
+
+When we notice that a publisher is uncrawlable for whatever reason, we will mark it with a deprecated flag.
+This mostly has internal usages, since the default value for the `Crawler` `ignore_deprecated` flag is `False`.
+You can alter this behaviour when initiating the `Crawler` and setting the `ignore_deprecated` flag.
