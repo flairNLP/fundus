@@ -132,10 +132,9 @@ def remove_query_parameters_from_url(url: str) -> str:
 
 class CrawlerBase(ABC):
     def __init__(self, *publishers: Publisher):
-        if not publishers:
-            raise ValueError("param <publishers> of <Crawler.__init__> has to be non empty")
-
         self.publishers: List[PublisherEnum] = list(set(more_itertools.collapse(publishers)))
+        if not self.publishers:
+            raise ValueError("param <publishers> of <Crawler.__init__> must include at least one publisher.")
 
     @abstractmethod
     def _build_article_iterator(
@@ -225,8 +224,7 @@ class CrawlerBase(ABC):
             fitting_publishers = self.publishers
 
         article_count = 0
-        if save_to_file is not None:
-            crawled_articles = list()
+        crawled_articles = []
 
         try:
             for article in self._build_article_iterator(
@@ -256,6 +254,7 @@ class Crawler(CrawlerBase):
         self,
         *publishers: Publisher,
         restrict_sources_to: Optional[List[Type[URLSource]]] = None,
+        ignore_deprecated: bool = False,
         delay: Optional[Union[float, Delay]] = 1.0,
         threading: bool = True,
     ):
@@ -270,19 +269,34 @@ class Crawler(CrawlerBase):
 
         Args:
             *publishers (Union[PublisherEnum, Type[PublisherEnum], PublisherCollectionMeta]): The publishers to crawl.
-            restrict_sources_to (Optional[List[Type[URLSource]]]): Lets you restrict
-                sources defined in the publisher specs. If set, only articles from given source types
-                will be yielded.
+            restrict_sources_to (Optional[List[Type[URLSource]]]): Lets you restrict sources defined in the publisher
+                specs. If set, only articles from given source types will be yielded.
+            ignore_deprecated (bool): If set to True, Publishers marked as deprecated will be skipped.
+                Defaults to False.
             delay (Optional[Union[float, Delay]]): Set a delay time in seconds to be used between article
                 downloads. You can set a delay directly using float or any callable satisfying the Delay
                 protocol. If set to None, no delay will be used between batches. See Delay for more
                 information. Defaults to None.
             threading (bool): If True, the crawler will use a dedicated thread per publisher, if set to False,
-                the crawler will use a single thread for all publishers and load articles successively. This will greatly
-                influence performance, and it is highly recommended to use a threaded crawler. Deafults to True.
+                the crawler will use a single thread for all publishers and load articles successively. This will
+                greatly influence performance, and it is highly recommended to use a threaded crawler.
+                Defaults to True.
         """
 
-        super().__init__(*publishers)
+        def filter_publishers(publisher: PublisherEnum) -> bool:
+            if publisher.deprecated and ignore_deprecated:
+                logger.warning(f"Skipping deprecated publisher: {publisher.publisher_name}")
+                return False
+            return True
+
+        fitting_publishers = list(filter(filter_publishers, more_itertools.collapse(publishers)))
+        if not fitting_publishers:
+            raise ValueError(
+                f"All given publishers are deprecated. Either set <ignore_deprecated> to `False` or "
+                f"include at least one publisher that isn't deprecated."
+            )
+
+        super().__init__(*fitting_publishers)
 
         self.restrict_sources_to = restrict_sources_to
         self.delay = delay
