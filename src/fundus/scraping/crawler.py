@@ -356,16 +356,25 @@ class CCNewsCrawler(CrawlerBase):
         start: datetime = datetime(2016, 8, 1),
         end: datetime = datetime.now(),
         processes: int = -1,
+        retries: int = 3,
         server_address: str = "https://data.commoncrawl.org/",
     ):
         """Initializes a crawler for the CC-NEWS dataset.
 
+        The crawler crawls the CC-NEWS dataset from <end> to <start>.
+
         Args:
             *publishers: The publishers to crawl.
+            start: The date to start crawling from. Refers to the date the WARC record was added to CC-NEWS,
+                not when it was published. Defaults to 2016/8/1.
+            end: The date to end crawling. Refers to the date the WARC record was added to CC-NEWS, not when
+                it was published. Defaults to datetime.now().
             processes: Number of additional process to use for crawling.
                 If -1, the number of processes is set to `os.cpu_count()`.
                 If `os.cpu_count()` is not available, the number of processes is set to 0.
                 If 0, only the main process is used. Defaults to -1.
+            retries: The number of times to retry crawling a WARC record when a connection error occurs. Between
+                retries, the crawler sleeps for <current-try> * 30 seconds. Defaults to 3.
             server_address: The CC-NEWS dataset server address. Defaults to 'https://data.commoncrawl.org/'.
         """
 
@@ -374,26 +383,34 @@ class CCNewsCrawler(CrawlerBase):
         self.start = start
         self.end = end
         self.processes = os.cpu_count() or 0 if processes == -1 else processes
+        self.retries = retries
         self.server_address = server_address
 
-    @staticmethod
     def _fetch_articles(
+        self,
         warc_path: str,
         publishers: Tuple[PublisherEnum, ...],
         error_handling: Literal["suppress", "catch", "raise"],
         extraction_filter: Optional[ExtractionFilter] = None,
         url_filter: Optional[URLFilter] = None,
     ) -> Iterator[Article]:
-        source = CCNewsSource(*publishers, warc_path=warc_path)
-        scraper = CCNewsScraper(source)
-        try:
-            yield from scraper.scrape(error_handling, extraction_filter, url_filter)
-        except HTTPError as exception:
-            logger.error(f"Could not load WARC file {warc_path!r}: {exception!r}")
-            time.sleep(30)
-        except fastwarc.stream_io.StreamError:
-            logger.error(f"Error during streaming of {warc_path!r}")
-            time.sleep(30)
+        retries: int = 0
+        while True and retries <= self.retries:
+            source = CCNewsSource(*publishers, warc_path=warc_path)
+            scraper = CCNewsScraper(source)
+            try:
+                yield from scraper.scrape(error_handling, extraction_filter, url_filter)
+            except (HTTPError, fastwarc.stream_io.StreamError) as exception:
+                retries += 1
+                # depending on the spawning method, the current log level will be reset to basic configuration when
+                # spawning a new process, so this log massage will not be displayed on Windows machines
+                logger.warning(
+                    f"Could not load WARC file {warc_path!r}. Retry after {30*retries} seconds: {exception!r}"
+                )
+                time.sleep(30 * retries)
+            else:
+                return
+        logger.error(f"Failed to load WARC file {warc_path!r} after {retries} retries")
 
     @staticmethod
     def _single_crawl(
