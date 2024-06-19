@@ -3,6 +3,7 @@ from __future__ import annotations
 import gzip
 import json
 import os
+import random
 import re
 import time
 from abc import ABC, abstractmethod
@@ -405,7 +406,7 @@ class CCNewsCrawler(CrawlerBase):
                 # depending on the spawning method, the current log level will be reset to basic configuration when
                 # spawning a new process, so this log massage will not be displayed on Windows machines
                 logger.warning(
-                    f"Could not load WARC file {warc_path!r}. Retry after {30*retries} seconds: {exception!r}"
+                    f"Could not load WARC file {warc_path!r}. Retry after {30 * retries} seconds: {exception!r}"
                 )
                 time.sleep(30 * retries)
             else:
@@ -464,6 +465,14 @@ class CCNewsCrawler(CrawlerBase):
                     bar.update()
                     return paths
 
+            def random_sleep(func: Callable[_P, _T], between: Tuple[float, float]) -> Callable[_P, _T]:
+                @wraps(func)
+                def wrapper(*args: _P.args, **kwargs: _P.kwargs) -> _T:
+                    time.sleep(random.uniform(*between))
+                    return func(*args, **kwargs)
+
+                return wrapper
+
             if self.processes == 0:
                 nested_warc_paths = [load_paths(url) for url in urls]
             else:
@@ -471,7 +480,7 @@ class CCNewsCrawler(CrawlerBase):
                 max_number_of_threads = self.processes * 2
 
                 with ThreadPool(processes=min(len(urls), max_number_of_threads)) as pool:
-                    nested_warc_paths = pool.map(load_paths, urls)
+                    nested_warc_paths = pool.map(random_sleep(load_paths, (0, 3)), urls)
 
         warc_paths: Iterator[str] = more_itertools.flatten(nested_warc_paths)
 
