@@ -3,7 +3,9 @@ from __future__ import annotations
 import gzip
 import json
 import os
+import random
 import re
+import time
 from abc import ABC, abstractmethod
 from datetime import datetime
 from functools import lru_cache, partial, wraps
@@ -31,10 +33,12 @@ from typing import (
 from urllib.parse import urljoin, urlparse
 
 import dill
+import fastwarc.stream_io
 import more_itertools
 import requests
 from dateutil.rrule import MONTHLY, rrule
 from more_itertools import roundrobin
+from requests import HTTPError
 from tqdm import tqdm
 from typing_extensions import ParamSpec, TypeAlias
 
@@ -353,16 +357,25 @@ class CCNewsCrawler(CrawlerBase):
         start: datetime = datetime(2016, 8, 1),
         end: datetime = datetime.now(),
         processes: int = -1,
+        retries: int = 3,
         server_address: str = "https://data.commoncrawl.org/",
     ):
         """Initializes a crawler for the CC-NEWS dataset.
 
+        The crawler crawls the CC-NEWS dataset from <end> to <start>.
+
         Args:
             *publishers: The publishers to crawl.
+            start: The date to start crawling from. Refers to the date the WARC record was added to CC-NEWS,
+                not when it was published. Defaults to 2016/8/1.
+            end: The date to end crawling. Refers to the date the WARC record was added to CC-NEWS, not when
+                it was published. Defaults to datetime.now().
             processes: Number of additional process to use for crawling.
                 If -1, the number of processes is set to `os.cpu_count()`.
                 If `os.cpu_count()` is not available, the number of processes is set to 0.
                 If 0, only the main process is used. Defaults to -1.
+            retries: The number of times to retry crawling a WARC record when a connection error occurs. Between
+                retries, the crawler sleeps for <current-try> * 30 seconds. Defaults to 3.
             server_address: The CC-NEWS dataset server address. Defaults to 'https://data.commoncrawl.org/'.
         """
 
@@ -371,19 +384,34 @@ class CCNewsCrawler(CrawlerBase):
         self.start = start
         self.end = end
         self.processes = os.cpu_count() or 0 if processes == -1 else processes
+        self.retries = retries
         self.server_address = server_address
 
-    @staticmethod
     def _fetch_articles(
+        self,
         warc_path: str,
         publishers: Tuple[PublisherEnum, ...],
         error_handling: Literal["suppress", "catch", "raise"],
         extraction_filter: Optional[ExtractionFilter] = None,
         url_filter: Optional[URLFilter] = None,
     ) -> Iterator[Article]:
-        source = CCNewsSource(*publishers, warc_path=warc_path)
-        scraper = CCNewsScraper(source)
-        yield from scraper.scrape(error_handling, extraction_filter, url_filter)
+        retries: int = 0
+        while retries <= self.retries:
+            source = CCNewsSource(*publishers, warc_path=warc_path)
+            scraper = CCNewsScraper(source)
+            try:
+                yield from scraper.scrape(error_handling, extraction_filter, url_filter)
+            except (HTTPError, fastwarc.stream_io.StreamError) as exception:
+                retries += 1
+                # depending on the spawning method, the current log level will be reset to basic configuration when
+                # spawning a new process, so this log massage will not be displayed on Windows machines
+                logger.warning(
+                    f"Could not load WARC file {warc_path!r}. Retry after {30 * retries} seconds: {exception!r}"
+                )
+                time.sleep(30 * retries)
+            else:
+                return
+        logger.error(f"Failed to load WARC file {warc_path!r} after {retries} retries")
 
     @staticmethod
     def _single_crawl(
@@ -437,6 +465,14 @@ class CCNewsCrawler(CrawlerBase):
                     bar.update()
                     return paths
 
+            def random_sleep(func: Callable[_P, _T], between: Tuple[float, float]) -> Callable[_P, _T]:
+                @wraps(func)
+                def wrapper(*args: _P.args, **kwargs: _P.kwargs) -> _T:
+                    time.sleep(random.uniform(*between))
+                    return func(*args, **kwargs)
+
+                return wrapper
+
             if self.processes == 0:
                 nested_warc_paths = [load_paths(url) for url in urls]
             else:
@@ -444,7 +480,7 @@ class CCNewsCrawler(CrawlerBase):
                 max_number_of_threads = self.processes * 2
 
                 with ThreadPool(processes=min(len(urls), max_number_of_threads)) as pool:
-                    nested_warc_paths = pool.map(load_paths, urls)
+                    nested_warc_paths = pool.map(random_sleep(load_paths, (0, 3)), urls)
 
         warc_paths: Iterator[str] = more_itertools.flatten(nested_warc_paths)
 
