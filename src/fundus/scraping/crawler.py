@@ -395,7 +395,7 @@ class CCNewsCrawler(CrawlerBase):
         url_filter: Optional[URLFilter] = None,
     ) -> Iterator[Article]:
         retries: int = 0
-        while True and retries <= self.retries:
+        while retries <= self.retries:
             source = CCNewsSource(*publishers, warc_path=warc_path)
             scraper = CCNewsScraper(source)
             try:
