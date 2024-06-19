@@ -29,7 +29,6 @@ from typing import (
     Union,
     cast,
 )
-from urllib.error import HTTPError
 from urllib.parse import urljoin, urlparse
 
 import dill
@@ -38,6 +37,7 @@ import more_itertools
 import requests
 from dateutil.rrule import MONTHLY, rrule
 from more_itertools import roundrobin
+from requests import HTTPError
 from tqdm import tqdm
 from typing_extensions import ParamSpec, TypeAlias
 
@@ -390,10 +390,10 @@ class CCNewsCrawler(CrawlerBase):
             yield from scraper.scrape(error_handling, extraction_filter, url_filter)
         except HTTPError as exception:
             logger.error(f"Could not load WARC file {warc_path!r}: {exception!r}")
-            time.sleep(10)
+            time.sleep(30)
         except fastwarc.stream_io.StreamError:
             logger.error(f"Error during streaming of {warc_path!r}")
-            time.sleep(10)
+            time.sleep(30)
 
     @staticmethod
     def _single_crawl(
