@@ -155,4 +155,4 @@ for article in crawler.crawl(max_articles=10):
 
 To save all articles at once, using the default serialization and only specifying a location, refer to [this section](5_advanced_topics.md#saving-the-crawled-articles).
 
-In the [**next section**](4_how_to_filter) we will show you how to filter articles and publishers.
+In the [**next section**](4_how_to_filter_articles.md) we will show you how to filter articles.
