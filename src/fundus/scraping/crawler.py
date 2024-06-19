@@ -124,6 +124,15 @@ def pool_queue_iter(handle: MapResult[Any], queue: Queue[_T]) -> Iterator[_T]:
             return
 
 
+def random_sleep(func: Callable[_P, _T], between: Tuple[float, float]) -> Callable[_P, _T]:
+    @wraps(func)
+    def wrapper(*args: _P.args, **kwargs: _P.kwargs) -> _T:
+        time.sleep(random.uniform(*between))
+        return func(*args, **kwargs)
+
+    return wrapper
+
+
 def remove_query_parameters_from_url(url: str) -> str:
     if any(parameter_indicator in url for parameter_indicator in ("?", "#")):
         return urljoin(url, urlparse(url).path)
@@ -447,8 +456,11 @@ class CCNewsCrawler(CrawlerBase):
             # we wrap the article_task to write the articles to a queue instead of returning them directly.
             wrapped_article_task: Callable[[str], None] = queue_wrapper(article_queue, article_task)
 
+            # To avoid 503 errors we spread tasks to not start all at once
+            spread_article_task = random_sleep(wrapped_article_task, (0, 3))
+
             # To avoid restricting the article_task to use only pickleable objects, we serialize it using dill.
-            serialized_article_task = dill_wrapper(wrapped_article_task)
+            serialized_article_task = dill_wrapper(spread_article_task)
 
             # Finally, we build an iterator around the queue, exhausting the queue until the pool is finished.
             yield from pool_queue_iter(pool.map_async(serialized_article_task, warc_paths), article_queue)
@@ -478,14 +490,6 @@ class CCNewsCrawler(CrawlerBase):
                     paths = gzip.decompress(session.get(url).content).decode("utf-8").split()
                     bar.update()
                     return paths
-
-            def random_sleep(func: Callable[_P, _T], between: Tuple[float, float]) -> Callable[_P, _T]:
-                @wraps(func)
-                def wrapper(*args: _P.args, **kwargs: _P.kwargs) -> _T:
-                    time.sleep(random.uniform(*between))
-                    return func(*args, **kwargs)
-
-                return wrapper
 
             if self.processes == 0:
                 nested_warc_paths = [load_paths(url) for url in urls]
