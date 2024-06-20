@@ -405,7 +405,7 @@ class CCNewsCrawler(CrawlerBase):
                 retries += 1
                 # depending on the spawning method, the current log level will be reset to basic configuration when
                 # spawning a new process, so this log massage will not be displayed on Windows machines
-                logger.error(
+                logger.warning(
                     f"Could not load WARC file {warc_path!r}. Retry after {30 * retries} seconds: {exception!r}"
                 )
                 time.sleep(30 * retries)
