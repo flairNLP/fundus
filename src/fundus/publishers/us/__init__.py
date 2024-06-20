@@ -145,6 +145,7 @@ class US(PublisherEnum):
             Sitemap("https://www.washingtontimes.com/sitemap-entries.xml"),
         ],
         parser=WashingtonTimesParser,
+        deprecated=True,
     )
 
     WashingtonPost = PublisherSpec(
@@ -179,6 +180,7 @@ class US(PublisherEnum):
             NewsMap("https://www.reuters.com/arc/outboundfeeds/news-sitemap-index/?outputType=xml"),
         ],
         parser=ReutersParser,
+        deprecated=True,
     )
 
     OccupyDemocrats = PublisherSpec(

@@ -1,8 +1,9 @@
 import logging
+from typing import Dict
 
-__all__ = ["set_log_level", "create_logger"]
+__all__ = ["set_log_level", "add_handler", "create_logger", "loggers"]
 
-_loggers = []
+loggers: Dict[str, logging.Logger] = {}
 
 _stream_handler = logging.StreamHandler()
 _formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
@@ -13,10 +14,15 @@ def create_logger(name: str) -> logging.Logger:
     logger = logging.getLogger(name)
     logger.setLevel(logging.ERROR)
     logger.addHandler(_stream_handler)
-    _loggers.append(logger)
+    loggers[name] = logger
     return logger
 
 
 def set_log_level(level: int):
-    for logger in _loggers:
+    for logger in loggers.values():
         logger.setLevel(level)
+
+
+def add_handler(handler: logging.Handler):
+    for logger in loggers.values():
+        logger.addHandler(handler)

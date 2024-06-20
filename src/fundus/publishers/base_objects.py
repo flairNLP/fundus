@@ -19,6 +19,7 @@ class PublisherSpec:
     query_parameter: Dict[str, str] = field(default_factory=dict)
     url_filter: Optional[URLFilter] = field(default=None)
     request_header: Dict[str, str] = field(default_factory=dict)
+    deprecated: bool = False
 
 
 class PublisherEnumMeta(EnumMeta):
@@ -47,6 +48,7 @@ class PublisherEnum(Enum, metaclass=PublisherEnumMeta):
         self.query_parameter = spec.query_parameter
         self.url_filter = spec.url_filter
         self.request_header = spec.request_header
+        self.deprecated = spec.deprecated
 
         # we define the dict here manually instead of using default dict so that we can control
         # the order in which sources are proceeded.
