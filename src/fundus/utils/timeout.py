@@ -124,6 +124,7 @@ def timeout(
     return wrapper
 
 
+# noinspection PyPep8Naming
 @contextlib.contextmanager
 def Timeout(seconds: float, silent: bool = False, callback: Optional[Callable[[], None]] = None) -> Iterator[Timer]:
     """Context manager applying a resettable timeout.
