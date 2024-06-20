@@ -131,7 +131,8 @@ We provide **quick tutorials** to get you started with the library:
 2. [**Tutorial 2: How to crawl articles from CC-NEWS**](docs/2_crawl_from_cc_news.md)
 3. [**Tutorial 3: The Article Class**](docs/3_the_article_class.md)
 4. [**Tutorial 4: How to filter articles**](docs/4_how_to_filter_articles.md)
-5. [**Tutorial 5: How to search for publishers**](docs/5_advanced_topics)
+5. [**Tutorial 5: Advanced topics**](docs/5_advanced_topics)
+6. [**Tutorial 6: Logging**](docs/6_logging.md)
 
 If you wish to contribute check out these tutorials:
 1. [**How to contribute**](docs/how_to_contribute.md)
