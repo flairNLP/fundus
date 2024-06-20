@@ -381,6 +381,7 @@ class CCNewsCrawler(CrawlerBase):
         end: datetime = datetime.now(),
         processes: int = -1,
         retries: int = 3,
+        disable_tqdm: bool = False,
         server_address: str = "https://data.commoncrawl.org/",
     ):
         """Initializes a crawler for the CC-NEWS dataset.
@@ -399,6 +400,7 @@ class CCNewsCrawler(CrawlerBase):
                 If 0, only the main process is used. Defaults to -1.
             retries: The number of times to retry crawling a WARC record when a connection error occurs. Between
                 retries, the crawler sleeps for <current-try> * 30 seconds. Defaults to 3.
+            disable_tqdm: Disable the usage of tqdm within the crawler. Defaults to False.
             server_address: The CC-NEWS dataset server address. Defaults to 'https://data.commoncrawl.org/'.
         """
 
@@ -408,6 +410,7 @@ class CCNewsCrawler(CrawlerBase):
         self.end = end
         self.processes = os.cpu_count() or 0 if processes == -1 else processes
         self.retries = retries
+        self.disable_tqdm = disable_tqdm
         self.server_address = server_address
 
     def _fetch_articles(
@@ -417,24 +420,31 @@ class CCNewsCrawler(CrawlerBase):
         error_handling: Literal["suppress", "catch", "raise"],
         extraction_filter: Optional[ExtractionFilter] = None,
         url_filter: Optional[URLFilter] = None,
+        bar: Optional[tqdm] = None,
     ) -> Iterator[Article]:
         retries: int = 0
-        while retries < self.retries:
+        while True:
             source = CCNewsSource(*publishers, warc_path=warc_path)
             scraper = CCNewsScraper(source)
             try:
                 yield from scraper.scrape(error_handling, extraction_filter, url_filter)
             except (requests.HTTPError, fastwarc.stream_io.StreamError, urllib3.exceptions.HTTPError) as exception:
-                retries += 1
-                # depending on the spawning method, the current log level will be reset to basic configuration when
-                # spawning a new process, so this log massage will not be displayed on Windows machines
-                logger.warning(
-                    f"Could not load WARC file {warc_path!r}. Retry after {30 * retries} seconds: {exception!r}"
-                )
-                time.sleep(30 * retries)
+                if retries >= self.retries:
+                    logger.error(f"Failed to load WARC file {warc_path!r} after {retries} retries")
+                    break
+                else:
+                    retries += 1
+                    # depending on the spawning method, the current log level will be reset to basic configuration when
+                    # spawning a new process, so this log massage will not be displayed on Windows machines
+                    logger.warning(
+                        f"Could not load WARC file {warc_path!r}. Retry after {30 * retries} seconds: {exception!r}"
+                    )
+                    time.sleep(30 * retries)
             else:
-                return
-        logger.error(f"Failed to load WARC file {warc_path!r} after {retries} retries")
+                break
+
+        if bar is not None:
+            bar.update()
 
     @staticmethod
     def _single_crawl(
@@ -483,7 +493,7 @@ class CCNewsCrawler(CrawlerBase):
             f"{self.server_address}crawl-data/CC-NEWS/{date.strftime('%Y/%m')}/warc.paths.gz" for date in date_sequence
         ]
 
-        with tqdm(total=len(urls), desc="Loading WARC Paths", leave=False) as bar:
+        with tqdm(total=len(urls), desc="Loading WARC Paths", leave=False, disable=self.disable_tqdm) as bar:
 
             def load_paths(url: str) -> List[str]:
                 with requests.Session() as session:
@@ -525,15 +535,17 @@ class CCNewsCrawler(CrawlerBase):
     ) -> Iterator[Article]:
         warc_paths = tuple(self._get_warc_paths())
 
-        article_task = partial(
-            self._fetch_articles,
-            publishers=publishers,
-            error_handling=error_handling,
-            extraction_filter=extraction_filter,
-            url_filter=url_filter,
-        )
+        with tqdm(total=len(warc_paths), desc="Process WARC files", disable=self.disable_tqdm) as bar:
+            article_task = partial(
+                self._fetch_articles,
+                publishers=publishers,
+                error_handling=error_handling,
+                extraction_filter=extraction_filter,
+                url_filter=url_filter,
+                bar=bar,
+            )
 
-        if self.processes == 0:
-            yield from self._single_crawl(warc_paths, article_task)
-        else:
-            yield from self._parallel_crawl(warc_paths, article_task)
+            if self.processes == 0:
+                yield from self._single_crawl(warc_paths, article_task)
+            else:
+                yield from self._parallel_crawl(warc_paths, article_task)
