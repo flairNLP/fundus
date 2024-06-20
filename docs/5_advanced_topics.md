@@ -1,9 +1,10 @@
 # Table of Contents
 
-* [How to search for publishers](#how-to-search-for-publishers)
-  * [Using `search()`](#using-search)
-* [Saving the crawled articles](#saving-the-crawled-articles)
-* [Working with deprecated publishers](#working-with-deprecated-publishers)
+* [Advanced Topics](#advanced-topics)
+  * [How to search for publishers](#how-to-search-for-publishers)
+    * [Using `search()`](#using-search)
+  * [Save crawled articles to a file](#save-crawled-articles-to-a-file)
+  * [Working with deprecated publishers](#working-with-deprecated-publishers)
 
 # Advanced Topics
 
@@ -36,3 +37,5 @@ When given a path, the crawled articles will be saved as a JSON list using the
 When we notice that a publisher is uncrawlable for whatever reason, we will mark it with a deprecated flag.
 This mostly has internal usages, since the default value for the `Crawler` `ignore_deprecated` flag is `False`.
 You can alter this behaviour when initiating the `Crawler` and setting the `ignore_deprecated` flag.
+
+In the [next section](6_logging.md) we introduce you to Fundus logging mechanics.
