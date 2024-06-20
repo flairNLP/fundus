@@ -36,9 +36,9 @@ import dill
 import fastwarc.stream_io
 import more_itertools
 import requests
+import urllib3.exceptions
 from dateutil.rrule import MONTHLY, rrule
 from more_itertools import roundrobin
-from requests import HTTPError
 from tqdm import tqdm
 from typing_extensions import ParamSpec, TypeAlias
 
@@ -396,16 +396,16 @@ class CCNewsCrawler(CrawlerBase):
         url_filter: Optional[URLFilter] = None,
     ) -> Iterator[Article]:
         retries: int = 0
-        while retries <= self.retries:
+        while retries < self.retries:
             source = CCNewsSource(*publishers, warc_path=warc_path)
             scraper = CCNewsScraper(source)
             try:
                 yield from scraper.scrape(error_handling, extraction_filter, url_filter)
-            except (HTTPError, fastwarc.stream_io.StreamError) as exception:
+            except (requests.HTTPError, fastwarc.stream_io.StreamError, urllib3.exceptions.HTTPError) as exception:
                 retries += 1
                 # depending on the spawning method, the current log level will be reset to basic configuration when
                 # spawning a new process, so this log massage will not be displayed on Windows machines
-                logger.warning(
+                logger.error(
                     f"Could not load WARC file {warc_path!r}. Retry after {30 * retries} seconds: {exception!r}"
                 )
                 time.sleep(30 * retries)
