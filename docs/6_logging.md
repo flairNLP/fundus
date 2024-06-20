@@ -39,6 +39,12 @@ Or find a collection of all existing loggers with their module names here:
 
 ````python
 from fundus.logging import loggers
+
+# print all modules having loggers
+print("\n".join(sorted(loggers.keys())))
+
+# accessing the 'url' logger
+url_logger = loggers["fundus.scraping.url"]
 ````
 
 ## Changing log levels
