@@ -15,12 +15,15 @@ This tutorial will introduce you to the logging mechanics used in Fundus
 Fundus uses module scoped logging with module names as logger names.
 Not every module has a logger per se, but every module that logs a message has.
 All module related implementation is centralized in Fundus' logging module under `fundus.logging`.
+
 Fundus uses 4 different log levels:
+
 - DEBUG: Not relevant to the average user and mainly used for debugging.
 - INFO: Could be interesting to the user, but not necessarily.
 - WARNING: Something went wrong, but we're trying to fix it.
 - ERROR: Either we tried or not even bothering to resolve this.
-With the default one being `ERROR`.
+
+with default log level for all Fundus loggers being `ERROR`.
 
 *__NOTE__*: Depending on the spawn method (spawn) your OS uses to spawn new processes in python (this effects mostly Windows), log messages beneath `ERROR` won't be received when using multiprocessing. 
 

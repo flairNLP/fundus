@@ -38,4 +38,4 @@ When we notice that a publisher is uncrawlable for whatever reason, we will mark
 This mostly has internal usages, since the default value for the `Crawler` `ignore_deprecated` flag is `False`.
 You can alter this behaviour when initiating the `Crawler` and setting the `ignore_deprecated` flag.
 
-In the [next section](6_logging.md) introduce you to Fundus logging mechanics.
+In the [next section](6_logging.md) we introduce you to Fundus logging mechanics.
