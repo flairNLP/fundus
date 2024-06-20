@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import contextlib
 import gzip
 import json
 import os
@@ -11,6 +12,7 @@ from datetime import datetime
 from functools import lru_cache, partial, wraps
 from multiprocessing import Manager
 from multiprocessing.context import TimeoutError
+from multiprocessing.managers import BaseManager
 from multiprocessing.pool import MapResult, Pool, ThreadPool
 from pathlib import Path
 from queue import Empty, Queue
@@ -58,6 +60,31 @@ _T = TypeVar("_T")
 _P = ParamSpec("_P")
 
 Publisher: TypeAlias = Union[PublisherEnum, Type[PublisherEnum], PublisherCollectionMeta]
+
+
+class TQDMManager(BaseManager):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.register("_tqdm", tqdm)
+
+    def tqdm(self, *args, **kwargs) -> tqdm:
+        return getattr(self, "_tqdm")(*args, **kwargs)
+
+
+@contextlib.contextmanager
+def get_proxy_tqdm(*args, **kwargs) -> tqdm:
+    """
+    This functions returns a proxy to a tqdm instance. Init args are the same as for any other tqdm instance.
+    :param args: tqdm args
+    :param kwargs: tqdm kwargs
+    :return: a self-managed, proxied tqdm instance
+    """
+    manager = TQDMManager()
+    try:
+        manager.start()
+        yield manager.tqdm(*args, **kwargs)
+    finally:
+        manager.shutdown()
 
 
 # noinspection PyPep8Naming
@@ -535,7 +562,7 @@ class CCNewsCrawler(CrawlerBase):
     ) -> Iterator[Article]:
         warc_paths = tuple(self._get_warc_paths())
 
-        with tqdm(total=len(warc_paths), desc="Process WARC files", disable=self.disable_tqdm) as bar:
+        with get_proxy_tqdm(total=len(warc_paths), desc="Process WARC files", disable=self.disable_tqdm) as bar:
             article_task = partial(
                 self._fetch_articles,
                 publishers=publishers,
