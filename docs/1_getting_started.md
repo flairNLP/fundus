@@ -83,13 +83,13 @@ for article in crawler.crawl():
     print(article)
 ````
 
-Additionally you can specify a time limit to crawl for:
+Additionally, you can set a timeout for the crawler in seconds.
+If the crawler does not receive a new article within the specified timeout period, it will terminate automatically.
 ```` python
-# crawl for ten seconds and print count of articles
-articles = []
-for article in crawler.crawl(max_seconds=10):
-    articles.append(article)
-print(len(articles))
+for article in crawler.crawl(timeout=10):
+    print(article)
 ````
+This is especially useful when working with date-related article filters.
+Refer to [this section](4_how_to_filter_articles.md) to learn more about how to filter articles.
 
 In the [next](2_crawl_from_cc_news.md) section we will show you how to crawl articles from the CC-NEWS dataset.

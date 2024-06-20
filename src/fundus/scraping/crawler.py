@@ -1,9 +1,12 @@
 from __future__ import annotations
 
+import _thread
 import gzip
 import json
 import os
 import re
+import threading
+import time
 from abc import ABC, abstractmethod
 from datetime import datetime
 from functools import lru_cache, partial, wraps
@@ -12,7 +15,6 @@ from multiprocessing.context import TimeoutError
 from multiprocessing.pool import MapResult, Pool, ThreadPool
 from pathlib import Path
 from queue import Empty, Queue
-from time import time
 from typing import (
     Any,
     Callable,
@@ -48,6 +50,7 @@ from fundus.scraping.html import CCNewsSource
 from fundus.scraping.scraper import CCNewsScraper, WebScraper
 from fundus.scraping.session import session_handler
 from fundus.scraping.url import URLSource
+from fundus.utils.timeout import Timeout
 
 logger = create_logger(__name__)
 
@@ -55,6 +58,8 @@ _T = TypeVar("_T")
 _P = ParamSpec("_P")
 
 Publisher: TypeAlias = Union[PublisherEnum, Type[PublisherEnum], PublisherCollectionMeta]
+
+_stop_event = threading.Event()
 
 
 # noinspection PyPep8Naming
@@ -117,6 +122,9 @@ def pool_queue_iter(handle: MapResult[Any], queue: Queue[_T]) -> Iterator[_T]:
             try:
                 handle.get(timeout=0.1)
             except TimeoutError:
+                if _stop_event.is_set():
+                    _stop_event.clear()
+                    break
                 continue
             return
 
@@ -147,7 +155,7 @@ class CrawlerBase(ABC):
     def crawl(
         self,
         max_articles: Optional[int] = None,
-        max_seconds: Optional[int] = None,
+        timeout: Optional[int] = None,
         error_handling: Literal["suppress", "catch", "raise"] = "suppress",
         only_complete: Union[bool, ExtractionFilter] = Requires("title", "body", "publishing_date"),
         url_filter: Optional[URLFilter] = None,
@@ -160,9 +168,8 @@ class CrawlerBase(ABC):
             max_articles (Optional[int]): Number of articles to crawl. If there are fewer articles
                 than max_articles the Iterator will stop before max_articles. If None, all retrievable
                 articles are returned. Defaults to None.
-            max_seconds (Optional[int]): Seconds to crawl for before timing out. The Iterator will check at
-                the end of each loop and will stop the crawl if the timer is exceeded. Note that this does
-                not stop mid fetch so the total time may still exceed this. Defaults to None.
+            timeout (Optional[int]): If given, the crawler stops after receiving no articles for <timeout>
+                seconds. If set to <= 0 or None, no timeout will be applied. Defaults to None.
             error_handling (Literal["suppress", "catch", "raise"]): Define how to handle errors
                 encountered during extraction. If set to "suppress", all errors will be skipped, either
                 with None values for respective attributes in the extraction or by skipping entire articles.
@@ -184,14 +191,11 @@ class CrawlerBase(ABC):
             Iterator[Article]: An iterator yielding objects of type Article.
         """
 
-        if max_articles == 0 or max_seconds == 0:
+        if max_articles == 0 or timeout == 0:
             return
 
-        if max_articles is None:
-            max_articles = -1
-
-        if max_seconds is None:
-            max_seconds = -1
+        max_articles = max_articles or -1
+        timeout = timeout or -1
 
         def build_extraction_filter() -> Optional[ExtractionFilter]:
             if isinstance(only_complete, bool):
@@ -229,25 +233,39 @@ class CrawlerBase(ABC):
             fitting_publishers = self.publishers
 
         article_count = 0
-        start_time = int(time())
         if save_to_file is not None:
             crawled_articles = list()
 
+        # Unfortunately we relly on this little workaround here to terminate the 'Pool' used within
+        # the 'CCNewsCrawler'. The 'Timeout' contextmanager utilizes '_thread.interrupt_main',
+        # throwing a KeyboardInterrupt in the main thread after <time> seconds. My guess (MaxDall)
+        # is, that within 'queue_wrapper's 'handle.get(timeout=0.1)', the main thread cannot be
+        # interrupted via a KeyboardInterrupt. The workaround is to have a modul global event
+        # that can be set within the 'Timeout' thread using a callback.
+        # With Python 3.10 we can pass a signum to '_thread.interrupt_main', maybe that's the way to go
+        callback: Optional[Callable[[], None]]
+        if isinstance(self, CCNewsCrawler) and self.processes > 0:
+
+            def callback() -> None:
+                _stop_event.set()
+
+        else:
+            callback = None
+
         try:
-            for article in self._build_article_iterator(
-                tuple(fitting_publishers), error_handling, build_extraction_filter(), url_filter
-            ):
-                url_without_query_parameters = remove_query_parameters_from_url(article.html.responded_url)
-                if not only_unique or url_without_query_parameters not in response_cache:
-                    response_cache.add(url_without_query_parameters)
-                    article_count += 1
-                    if save_to_file is not None:
-                        crawled_articles.append(article)
-                    yield article
-                if article_count == max_articles:
-                    break
-                if max_seconds != -1:
-                    if (int(time()) - start_time) > max_seconds:
+            with Timeout(seconds=timeout, silent=True, callback=callback) as timer:
+                for article in self._build_article_iterator(
+                    tuple(fitting_publishers), error_handling, build_extraction_filter(), url_filter
+                ):
+                    timer.reset()
+                    url_without_query_parameters = remove_query_parameters_from_url(article.html.responded_url)
+                    if not only_unique or url_without_query_parameters not in response_cache:
+                        response_cache.add(url_without_query_parameters)
+                        article_count += 1
+                        if save_to_file is not None:
+                            crawled_articles.append(article)
+                        yield article
+                    if article_count == max_articles:
                         break
         finally:
             session_handler.close_current_session()
@@ -480,6 +498,7 @@ class CCNewsCrawler(CrawlerBase):
         error_handling: Literal["suppress", "catch", "raise"],
         extraction_filter: Optional[ExtractionFilter],
         url_filter: Optional[URLFilter],
+        **kwargs,
     ) -> Iterator[Article]:
         warc_paths = tuple(self._get_warc_paths())
 
