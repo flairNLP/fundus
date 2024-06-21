@@ -126,7 +126,9 @@ def timeout(
 
 # noinspection PyPep8Naming
 @contextlib.contextmanager
-def Timeout(seconds: float, silent: bool = False, callback: Optional[Callable[[], None]] = None) -> Iterator[Timer]:
+def Timeout(
+    seconds: float, silent: bool = False, callback: Optional[Callable[[], None]] = None, disable: bool = False
+) -> Iterator[Timer]:
     """Context manager applying a resettable timeout.
 
     Contextmanager implementation of timeout which does not relly on a function.
@@ -138,13 +140,14 @@ def Timeout(seconds: float, silent: bool = False, callback: Optional[Callable[[]
         silent: If True, the KeyboardInterrupt will be silently ignored and None returned instead.
             Defaults to False.
         callback: If given, will be called instead of raising KeyboardInterrupt. Defaults to None.
+        disable: If True, the timer will never start effectively disable the timeout.
 
     Returns:
-        Timer: A timer that can be reset or canceled
+        Timer: A timer to reset or cancel the timeout.
     """
     timer = Timer(seconds, callback or _interrupt_handler)
     try:
-        if seconds > 0:
+        if not disable:
             timer.start()
         yield timer
     except KeyboardInterrupt as err:

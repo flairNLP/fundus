@@ -178,8 +178,9 @@ class CrawlerBase(ABC):
             max_articles (Optional[int]): Number of articles to crawl. If there are fewer articles
                 than max_articles the Iterator will stop before max_articles. If None, all retrievable
                 articles are returned. Defaults to None.
-            timeout (Optional[int]): If given, the crawler stops after receiving no articles for <timeout>
-                seconds. If set to <= 0 or None, no timeout will be applied. Defaults to None.
+            timeout (Optional[int]): timeout (Optional[int]): Specifies the duration in seconds the crawler
+                will wait without receiving any articles before stopping. If set <= 0, or if not provided,
+                the crawler will run until all sources are exhausted. Defaults to None.
             error_handling (Literal["suppress", "catch", "raise"]): Define how to handle errors
                 encountered during extraction. If set to "suppress", all errors will be skipped, either
                 with None values for respective attributes in the extraction or by skipping entire articles.
@@ -201,7 +202,7 @@ class CrawlerBase(ABC):
             Iterator[Article]: An iterator yielding objects of type Article.
         """
 
-        if max_articles == 0 or timeout == 0:
+        if max_articles == 0:
             return
 
         max_articles = max_articles or -1
@@ -251,7 +252,7 @@ class CrawlerBase(ABC):
         # is, that within 'queue_wrapper's 'handle.get(timeout=0.1)', the main thread cannot be
         # interrupted via a KeyboardInterrupt. The workaround is to have a modul global event
         # that can be set within the 'Timeout' thread using a callback.
-        # With Python 3.10 we can pass a signum to '_thread.interrupt_main', maybe that's the way to go
+        # With Python 3.10 we can pass a signum to '_thread.interrupt_main', maybe that's the way to go.
         callback: Optional[Callable[[], None]]
         if isinstance(self, CCNewsCrawler) and self.processes > 0:
 
@@ -262,7 +263,7 @@ class CrawlerBase(ABC):
             callback = None
 
         try:
-            with Timeout(seconds=timeout, silent=True, callback=callback) as timer:
+            with Timeout(seconds=timeout, silent=True, callback=callback, disable=timeout < 0) as timer:
                 for article in self._build_article_iterator(
                     tuple(fitting_publishers), error_handling, build_extraction_filter(), url_filter
                 ):
