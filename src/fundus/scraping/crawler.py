@@ -263,7 +263,7 @@ class CrawlerBase(ABC):
             callback = None
 
         try:
-            with Timeout(seconds=timeout, silent=True, callback=callback, disable=timeout < 0) as timer:
+            with Timeout(seconds=timeout, silent=True, callback=callback, disable=timeout <= 0) as timer:
                 for article in self._build_article_iterator(
                     tuple(fitting_publishers), error_handling, build_extraction_filter(), url_filter
                 ):
