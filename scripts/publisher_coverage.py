@@ -13,7 +13,7 @@ from fundus import Crawler, PublisherCollection
 from fundus.publishers.base_objects import PublisherEnum
 from fundus.scraping.article import Article
 from fundus.scraping.filter import RequiresAll
-from scripts.utility import timeout
+from fundus.utils.timeout import timeout
 
 
 def main() -> None:
@@ -41,7 +41,7 @@ def main() -> None:
                 continue
             crawler: Crawler = Crawler(publisher, delay=0.4)
 
-            timed_next = timeout(next, time=20, silent=True)
+            timed_next = timeout(next, seconds=20, silent=True)
 
             complete_article: Optional[Article] = timed_next(  # type: ignore[call-arg]
                 crawler.crawl(max_articles=1, only_complete=RequiresAll(), error_handling="suppress"), None
