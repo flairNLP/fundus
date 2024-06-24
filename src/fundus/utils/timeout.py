@@ -23,7 +23,7 @@ class Stopwatch:
         self._start = time.time()
 
 
-class Timer(threading.Thread):
+class ResettableTimer(threading.Thread):
     def __init__(
         self,
         seconds: float,
@@ -128,7 +128,7 @@ def timeout(
 @contextlib.contextmanager
 def Timeout(
     seconds: float, silent: bool = False, callback: Optional[Callable[[], None]] = None, disable: bool = False
-) -> Iterator[Timer]:
+) -> Iterator[ResettableTimer]:
     """Context manager applying a resettable timeout.
 
     Contextmanager implementation of timeout which does not relly on a function.
@@ -143,9 +143,9 @@ def Timeout(
         disable: If True, the timer will never start effectively disable the timeout.
 
     Returns:
-        Timer: A timer to reset or cancel the timeout.
+        ResettableTimer: A timer to reset or cancel the timeout.
     """
-    timer = Timer(seconds, callback or _interrupt_handler)
+    timer = ResettableTimer(seconds, callback or _interrupt_handler)
     try:
         if not disable:
             timer.start()
