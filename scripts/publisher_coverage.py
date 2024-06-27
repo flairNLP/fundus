@@ -70,7 +70,12 @@ def main() -> None:
                 else:
                     print(
                         f"❌ FAILED: {publisher_name!r} - No complete articles received "
-                        f"(URL of an incomplete article: {incomplete_article.html.requested_url})"
+                        f"(URL of an incomplete article: {incomplete_article.html.requested_url}) with attributes:\n"
+                        f"title: {incomplete_article.title is not None}\n"
+                        f"plaintext: {incomplete_article.plaintext is not None}\n"
+                        f"publishing_date: {incomplete_article.publishing_date is not None}\n"
+                        f"authors: {incomplete_article.authors is not None and not len(incomplete_article.authors) == 0}\n"
+                        f"topics: {incomplete_article.topics is not None and not len(incomplete_article.topics) == 0}\n"
                     )
                 failed += 1
                 continue
