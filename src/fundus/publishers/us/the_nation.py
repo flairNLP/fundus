@@ -78,6 +78,12 @@ class TheNationParser(ParserProxy):
         def topics(self) -> List[str]:
             return generic_topic_parsing(self.precomputed.meta.get("keywords"))
 
+        @attribute
+        def free_access(self) -> bool:
+            # The Nation sets the corresponding JSON Value to False by default. Access Control is done in away that
+            # is irrelevant for fundus
+            return True
+
     class V2(V1):
         VALID_UNTIL = date.today()
 

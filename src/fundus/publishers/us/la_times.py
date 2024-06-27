@@ -37,3 +37,8 @@ class LATimesParser(ParserProxy):
         @attribute
         def title(self) -> Optional[str]:
             return self.precomputed.meta.get("og:title")
+
+        @attribute
+        def free_access(self) -> bool:
+            # LA Times sets the corresponding JSON Element to False by default, but all articles are still available
+            return True

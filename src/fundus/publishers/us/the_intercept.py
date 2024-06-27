@@ -59,6 +59,12 @@ class TheInterceptParser(ParserProxy):
 
             return [keyword[9:] for keyword in keywords if keyword.startswith("Subject: ")]
 
+        @attribute
+        def free_access(self) -> bool:
+            # The Intercept set the corresponding JSON Value to False by default, it seems like they don't really have
+            # a paywall that would block fundus
+            return True
+
     class V1_1(V1):
         VALID_UNTIL = date.today()
         _summary_selector = XPath(
