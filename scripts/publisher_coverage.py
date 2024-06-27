@@ -12,7 +12,7 @@ from typing import List, Optional, cast
 from fundus import Crawler, PublisherCollection
 from fundus.publishers.base_objects import PublisherEnum
 from fundus.scraping.article import Article
-from fundus.scraping.filter import RequiresAll
+from fundus.scraping.filter import Requires, RequiresAll
 from fundus.utils.timeout import timeout
 
 
@@ -44,12 +44,13 @@ def main() -> None:
             timed_next = timeout(next, seconds=20, silent=True)
 
             complete_article: Optional[Article] = timed_next(  # type: ignore[call-arg]
-                crawler.crawl(max_articles=1, only_complete=RequiresAll(), error_handling="suppress"), None
+                crawler.crawl(max_articles=1, only_complete=RequiresAll(eval_booleans=True), error_handling="suppress"),
+                None,
             )
 
             if complete_article is None:
                 incomplete_article: Optional[Article] = timed_next(  # type: ignore[call-arg]
-                    crawler.crawl(max_articles=1, only_complete=False, error_handling="catch"), None
+                    crawler.crawl(max_articles=1, only_complete=Requires("free_access"), error_handling="catch"), None
                 )
 
                 if incomplete_article is None:
