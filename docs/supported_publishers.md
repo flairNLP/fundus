@@ -1314,7 +1314,9 @@
         <code>OccupyDemocrats</code>
       </td>
       <td>
-        <div>Occupy Democrats</div>
+        <div>
+          <strike>Occupy Democrats</strike>
+        </div>
       </td>
       <td>
         <a href="https://occupydemocrats.com/">
