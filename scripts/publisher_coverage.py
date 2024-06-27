@@ -54,7 +54,7 @@ def main() -> None:
                 )
 
                 if incomplete_article is None:
-                    print(f"❌ FAILED: {publisher_name!r} - No articles received")
+                    print(f"❌ FAILED: {publisher_name!r} - No free articles received")
 
                 elif incomplete_article.exception is not None:
                     print(
