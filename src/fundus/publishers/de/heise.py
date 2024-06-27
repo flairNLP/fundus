@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime
 from typing import List, Optional
 
 from lxml.etree import XPath
@@ -15,13 +15,13 @@ from fundus.parser.utility import (
 class HeiseParser(ParserProxy):
     class V1(BaseParser):
         _summary_selector = XPath(
-            "//article[not(@data-component='TeaserContainer')]//p[@class='a-article-header__lead']"
+            "//article[not(@data-component='TeaserContainer')]//p[@class='a-article-header__lead'] | //article[not(@data-component='TeaserContainer')]//div[@id='lead']/p"
         )
         _subheadline_selector = XPath(
-            "//article[not(@data-component='TeaserContainer')]//h3[contains(@class,'subheading')]"
+            "//article[not(@data-component='TeaserContainer')]//h3[contains(@class,'subheading')] | //article[not(@data-component='TeaserContainer')]//h2[@class='heading-h2 replaced-h1']"
         )
         _paragraph_selector = XPath(
-            "//div[@class='article-layout__content article-content']/p[not(@class"
+            "//div[contains(class, article-content)]/p[not(@class"
             " or ((string-length(text()) < 3) and (contains(text(), '(') or contains(span, '(')))"
             " or contains(text(), '=== Anzeige / Sponsorenhinweis')"
             " or contains(text(), 'Tipp: Wir sind bei WhatsApp!')"
@@ -30,12 +30,25 @@ class HeiseParser(ParserProxy):
             " or @class='antwort rte__abs--antwort'"
             " or @class='frage rte__abs--frage'"
             " or @class='json-ld-paid-content-marker'] "
-            " | //div[@class='article-layout__content article-content']//ul["
+            " | //div[contains(class, article-content)]//ul["
+            "@class='rte__list rte__list--unordered' or @class='boxtext']/li | "
+            "//div[@class='ringCommonDetail ringBlockType-paragraph ']/p[not(@class"
+            " or ((string-length(text()) < 3) and (contains(text(), '(') or contains(span, '(')))"
+            " or contains(text(), '=== Anzeige / Sponsorenhinweis')"
+            " or contains(text(), 'Tipp: Wir sind bei WhatsApp!')"
+            " or contains(a, 'heise+ abonnieren')"
+            " or contains(text(), '► '))"
+            " or @class='antwort rte__abs--antwort'"
+            " or @class='frage rte__abs--frage'"
+            " or @class='json-ld-paid-content-marker'] "
+            " | //div[@class='ringCommonDetail ringBlockType-paragraph ']//ul["
             "@class='rte__list rte__list--unordered' or @class='boxtext']/li"
         )
 
         @attribute
         def body(self) -> ArticleBody:
+            # with open(f"E:\\Temp\\{self.precomputed.ld.bf_search('headline')}.html", 'w', encoding='utf-8') as file:
+            #    file.write(self.precomputed.html)
             return extract_article_body_with_selector(
                 self.precomputed.doc,
                 summary_selector=self._summary_selector,
@@ -48,7 +61,7 @@ class HeiseParser(ParserProxy):
             return generic_author_parsing(self.precomputed.ld.bf_search("author"))
 
         @attribute
-        def publishing_date(self) -> Optional[datetime.datetime]:
+        def publishing_date(self) -> Optional[datetime]:
             return generic_date_parsing(self.precomputed.ld.bf_search("datePublished"))
 
         @attribute
