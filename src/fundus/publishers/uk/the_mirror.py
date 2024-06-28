@@ -15,8 +15,13 @@ from fundus.parser.utility import (
 
 class TheMirrorParser(ParserProxy):
     class V1(BaseParser):
-        _paragraph_selector = XPath("/html/body/main/article/div[2]/p[text()]")
-        _summary_selector = XPath("/html/body/main/article/div[1]/p")
+        _paragraph_selector = XPath(
+            "/html/body/main/article/div[@class='article-body']/p[text()] | //div[@class='article-body']//div[@class='live-event-lead-entry']/p[text()] | //div[@class='article-body']//div[@class='entry-content']/p[text()]"
+        )
+        _summary_selector = XPath("/html/body/main/article/div[@class='lead-content']/p")
+        _subheadline_selector = XPath(
+            "//div[@class='article-body']/h3 | //div[@class='article-body']//div[@class='entry-content']/h3"
+        )
         _datetime_selector = XPath("//li/span[contains(@class, 'time-container')]")
 
         @attribute
@@ -25,6 +30,7 @@ class TheMirrorParser(ParserProxy):
                 self.precomputed.doc,
                 summary_selector=self._summary_selector,
                 paragraph_selector=self._paragraph_selector,
+                subheadline_selector=self._subheadline_selector,
             )
             return body
 
