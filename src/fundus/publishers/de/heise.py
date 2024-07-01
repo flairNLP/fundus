@@ -21,7 +21,7 @@ class HeiseParser(ParserProxy):
             "//article[not(@data-component='TeaserContainer')]//h3[contains(@class,'subheading')]"
         )
         _paragraph_selector = XPath(
-            "//div[@class='article-layout__content article-content']/p[not(@class"
+            "//div[contains(@class, 'article-content')]/p[not(@class"
             " or ((string-length(text()) < 3) and (contains(text(), '(') or contains(span, '(')))"
             " or contains(text(), '=== Anzeige / Sponsorenhinweis')"
             " or contains(text(), 'Tipp: Wir sind bei WhatsApp!')"
@@ -30,7 +30,7 @@ class HeiseParser(ParserProxy):
             " or @class='antwort rte__abs--antwort'"
             " or @class='frage rte__abs--frage'"
             " or @class='json-ld-paid-content-marker'] "
-            " | //div[@class='article-layout__content article-content']//ul["
+            " | //div[contains(@class, 'article-content')]//ul["
             "@class='rte__list rte__list--unordered' or @class='boxtext']/li"
         )
 
