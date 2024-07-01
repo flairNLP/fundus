@@ -12,12 +12,11 @@ from typing import List, Optional, cast
 from fundus import Crawler, PublisherCollection
 from fundus.publishers.base_objects import PublisherEnum
 from fundus.scraping.article import Article
-from fundus.scraping.filter import RequiresAll
-from fundus.utils.timeout import timeout
 
 
 def main() -> None:
     failed: int = 0
+    timeout_in_seconds: int = 20
 
     publisher_regions: List[EnumMeta] = sorted(
         PublisherCollection.get_publisher_enum_mapping().values(), key=lambda region: region.__name__
@@ -41,15 +40,19 @@ def main() -> None:
                 continue
             crawler: Crawler = Crawler(publisher, delay=0.4)
 
-            timed_next = timeout(next, seconds=20, silent=True)
-
-            complete_article: Optional[Article] = timed_next(  # type: ignore[call-arg]
-                crawler.crawl(max_articles=1, only_complete=RequiresAll(), error_handling="suppress"), None
+            complete_article: Optional[Article] = next(
+                crawler.crawl(
+                    max_articles=1, timeout=timeout_in_seconds, only_complete=True, error_handling="suppress"
+                ),
+                None,
             )
 
             if complete_article is None:
-                incomplete_article: Optional[Article] = timed_next(  # type: ignore[call-arg]
-                    crawler.crawl(max_articles=1, only_complete=False, error_handling="catch"), None
+                incomplete_article: Optional[Article] = next(
+                    crawler.crawl(
+                        max_articles=1, timeout=timeout_in_seconds, only_complete=False, error_handling="catch"
+                    ),
+                    None,
                 )
 
                 if incomplete_article is None:
