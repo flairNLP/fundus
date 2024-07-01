@@ -32,17 +32,9 @@ class HeiseParser(ParserProxy):
             " or @class='json-ld-paid-content-marker'] "
             " | //div[contains(class, article-content)]//ul["
             "@class='rte__list rte__list--unordered' or @class='boxtext']/li | "
-            "//div[@class='ringCommonDetail ringBlockType-paragraph ']/p[not(@class"
-            " or ((string-length(text()) < 3) and (contains(text(), '(') or contains(span, '(')))"
-            " or contains(text(), '=== Anzeige / Sponsorenhinweis')"
-            " or contains(text(), 'Tipp: Wir sind bei WhatsApp!')"
-            " or contains(a, 'heise+ abonnieren')"
-            " or contains(text(), '► '))"
-            " or @class='antwort rte__abs--antwort'"
-            " or @class='frage rte__abs--frage'"
-            " or @class='json-ld-paid-content-marker'] "
-            " | //div[@class='ringCommonDetail ringBlockType-paragraph ']//ul["
-            "@class='rte__list rte__list--unordered' or @class='boxtext']/li"
+            # The selectors below this line are specific for heise's blog: techstage.de
+            "//div[@class='ringCommonDetail ringBlockType-paragraph ']/p"
+            " | //div[@class='ringCommonDetail ringBlockType-paragraph ']//ul/li"
         )
 
         @attribute
