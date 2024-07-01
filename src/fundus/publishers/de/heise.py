@@ -47,8 +47,6 @@ class HeiseParser(ParserProxy):
 
         @attribute
         def body(self) -> ArticleBody:
-            # with open(f"E:\\Temp\\{self.precomputed.ld.bf_search('headline')}.html", 'w', encoding='utf-8') as file:
-            #    file.write(self.precomputed.html)
             return extract_article_body_with_selector(
                 self.precomputed.doc,
                 summary_selector=self._summary_selector,
