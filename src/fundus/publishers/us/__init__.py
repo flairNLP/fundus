@@ -192,6 +192,7 @@ class US(PublisherEnum):
             )
         ],
         parser=OccupyDemocratsParser,
+        deprecated=True,
     )
 
     LATimes = PublisherSpec(
