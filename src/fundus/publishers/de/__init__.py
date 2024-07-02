@@ -416,7 +416,7 @@ class DE(metaclass=PublisherGroup):
     )
 
     ZDF = Publisher(
-        name="zdfHeute",
+        name="ZDF",
         domain="https://www.zdf.de/",
         parser=ZDFParser,
         sources=[
