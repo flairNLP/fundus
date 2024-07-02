@@ -13,7 +13,7 @@ from fundus.parser.base_parser import (
 )
 from fundus.parser.utility import generic_author_parsing
 from fundus.publishers import PublisherCollection
-from fundus.publishers.base_objects import PublisherEnum
+from fundus.publishers.base_objects import Publisher
 from tests.resources import attribute_annotations_mapping
 from tests.utility import (
     get_meta_info_file,
@@ -25,9 +25,9 @@ from tests.utility import (
 
 def test_supported_publishers_table():
     root = lxml.html.fromstring(load_supported_publishers_markdown())
-    parsed_names: List[str] = root.xpath("//table[contains(@class,'publishers')]//code/text()")
+    parsed_names: List[str] = root.xpath("//table[contains(@class,'publishers')]//td[1]/code/text()")
     for publisher in PublisherCollection:
-        assert publisher.name in parsed_names, (
+        assert publisher.__name__ in parsed_names, (
             f"Publisher {publisher.name} is not included in docs/supported_news.md. "
             f"Run 'python -m scripts.generate_tables'"
         )
@@ -134,10 +134,10 @@ attributes_parsers_are_required_to_cover = {"body"}
 
 
 @pytest.mark.parametrize(
-    "publisher", list(PublisherCollection), ids=[publisher.name for publisher in PublisherCollection]
+    "publisher", list(PublisherCollection), ids=[publisher.__name__ for publisher in PublisherCollection]
 )
 class TestParser:
-    def test_annotations(self, publisher: PublisherEnum) -> None:
+    def test_annotations(self, publisher: Publisher) -> None:
         parser_proxy = publisher.parser
         for versioned_parser in parser_proxy:
             assert attributes_parsers_are_required_to_cover.issubset(
@@ -151,7 +151,7 @@ class TestParser:
                 else:
                     raise KeyError(f"Unsupported attribute {attr.__name__!r}")
 
-    def test_parsing(self, publisher: PublisherEnum) -> None:
+    def test_parsing(self, publisher: Publisher) -> None:
         comparative_data = load_test_case_data(publisher)
         html_mapping = load_html_test_file_mapping(publisher)
 
@@ -186,7 +186,7 @@ class TestParser:
             for key, value in version_data.items():
                 assert value == extraction[key]
 
-    def test_reserved_attribute_names(self, publisher: PublisherEnum):
+    def test_reserved_attribute_names(self, publisher: Publisher):
         parser = publisher.parser
         for attr in attribute_annotations_mapping.keys():
             if value := getattr(parser, attr, None):
@@ -231,8 +231,8 @@ class TestUtility:
 
 class TestMetaInfo:
     def test_order(self):
-        for cc in PublisherCollection.get_publisher_enum_mapping().values():
-            meta_file = get_meta_info_file(next(iter(cc)))
+        for cc in PublisherCollection.get_subgroup_mapping().values():
+            meta_file = get_meta_info_file(cc)
             meta_info = meta_file.load()
             assert meta_info, f"Meta info file {meta_file.path} is missing"
             assert sorted(meta_info.keys()) == list(meta_info.keys()), (

@@ -7,7 +7,7 @@ from tqdm import tqdm
 
 from fundus import Crawler, PublisherCollection
 from fundus.logging import create_logger
-from fundus.publishers.base_objects import PublisherEnum
+from fundus.publishers.base_objects import Publisher
 from fundus.scraping.article import Article
 from fundus.scraping.filter import RequiresAll
 from fundus.scraping.html import WebSource
@@ -18,13 +18,13 @@ from tests.utility import HTMLTestFile, get_test_case_json, load_html_test_file_
 logger = create_logger(__name__)
 
 
-def get_test_article(enum: PublisherEnum, url: Optional[str] = None) -> Optional[Article]:
+def get_test_article(publisher: Publisher, url: Optional[str] = None) -> Optional[Article]:
     if url is not None:
-        source = WebSource([url], publisher=enum.publisher_name)
-        scraper = BaseScraper(source, parser_mapping={enum.publisher_name: enum.parser})
+        source = WebSource([url], publisher=publisher.name)
+        scraper = BaseScraper(source, parser_mapping={publisher.name: publisher.parser})
         return next(scraper.scrape(error_handling="suppress", extraction_filter=RequiresAll()), None)
 
-    crawler = Crawler(enum)
+    crawler = Crawler(publisher)
     return next(crawler.crawl(max_articles=1, error_handling="suppress", only_complete=RequiresAll()), None)
 
 
@@ -88,7 +88,7 @@ def main() -> None:
 
     logger.setLevel(WARN)
 
-    publishers: List[PublisherEnum] = (
+    publishers: List[Publisher] = (
         list(PublisherCollection)
         if arguments.publishers is None
         else [PublisherCollection[pub] for pub in arguments.publishers]
