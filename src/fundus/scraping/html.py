@@ -1,7 +1,7 @@
 import time
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Dict, Iterable, Iterator, List, Optional, Protocol, Tuple, Union
+from typing import Dict, Iterable, Iterator, List, Optional, Protocol
 from urllib.parse import urlparse
 
 import chardet
@@ -10,11 +10,10 @@ import requests
 import validators
 from fastwarc import ArchiveIterator, WarcRecord, WarcRecordType
 from lxml.cssselect import CSSSelector
-from more_itertools import collapse
 from requests import ConnectionError, HTTPError
 
 from fundus.logging import create_logger
-from fundus.publishers.base_objects import Publisher, PublisherGroup
+from fundus.publishers.base_objects import Publisher
 from fundus.scraping.delay import Delay
 from fundus.scraping.filter import URLFilter
 from fundus.scraping.session import _default_header, session_handler
@@ -253,7 +252,7 @@ class CCNewsSource:
                     content=content,
                     crawl_date=warc_record.record_date,
                     source_info=WarcSourceInfo(
-                        publisher=publisher.publisher_name,
+                        publisher=publisher.name,
                         warc_path=self.warc_path,
                         warc_headers=dict(warc_record.headers),
                         http_headers=dict(warc_record.http_headers),

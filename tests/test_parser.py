@@ -25,9 +25,9 @@ from tests.utility import (
 
 def test_supported_publishers_table():
     root = lxml.html.fromstring(load_supported_publishers_markdown())
-    parsed_names: List[str] = root.xpath("//table[contains(@class,'publishers')]//code/text()")
+    parsed_names: List[str] = root.xpath("//table[contains(@class,'publishers')]//td[1]/code/text()")
     for publisher in PublisherCollection:
-        assert publisher.name in parsed_names, (
+        assert publisher.__name__ in parsed_names, (
             f"Publisher {publisher.name} is not included in docs/supported_news.md. "
             f"Run 'python -m scripts.generate_tables'"
         )
@@ -134,7 +134,7 @@ attributes_parsers_are_required_to_cover = {"body"}
 
 
 @pytest.mark.parametrize(
-    "publisher", list(PublisherCollection), ids=[publisher.publisher_name for publisher in PublisherCollection]
+    "publisher", list(PublisherCollection), ids=[publisher.__name__ for publisher in PublisherCollection]
 )
 class TestParser:
     def test_annotations(self, publisher: Publisher) -> None:
@@ -152,15 +152,8 @@ class TestParser:
                     raise KeyError(f"Unsupported attribute {attr.__name__!r}")
 
     def test_parsing(self, publisher: Publisher) -> None:
-        parent_group = None
-        for subgroup in PublisherCollection.get_subgroup_mapping().values():
-            if publisher in subgroup:
-                parent_group = subgroup
-                break
-        if not parent_group:
-            raise ValueError(f"Publisher {publisher!r} not contained within a subgroup of the PublisherCollection")
-        comparative_data = load_test_case_data(publisher, parent_group)
-        html_mapping = load_html_test_file_mapping(publisher, parent_group)
+        comparative_data = load_test_case_data(publisher)
+        html_mapping = load_html_test_file_mapping(publisher)
 
         for versioned_parser in publisher.parser:
             # validate json

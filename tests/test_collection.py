@@ -1,10 +1,21 @@
 import pytest
 
 from fundus import NewsMap, RSSFeed, Sitemap
-from fundus.publishers.base_objects import PublisherGroup
 
 
 class TestCollection:
+    def test_len(
+        self,
+        empty_publisher_group,
+        group_with_empty_publisher_subgroup,
+        group_with_valid_publisher_subgroup,
+        group_with_two_valid_publisher_subgroups,
+    ):
+        assert len(empty_publisher_group) == 0
+        assert len(group_with_empty_publisher_subgroup) == 0
+        assert len(group_with_valid_publisher_subgroup) == 1
+        assert len(group_with_two_valid_publisher_subgroups) == 2
+
     def test_iter_empty_group(self, empty_publisher_group):
         assert list(empty_publisher_group) == []
 
@@ -13,19 +24,6 @@ class TestCollection:
 
     def test_iter_group_with_publisher_subgroup(self, group_with_valid_publisher_subgroup):
         assert list(group_with_valid_publisher_subgroup) == [group_with_valid_publisher_subgroup.pub.value]
-
-    def test_publisher_group_with_wrong_publisher_value(self):
-        with pytest.raises(ValueError):
-
-            class PublisherGroupWithWrongValue(metaclass=PublisherGroup):
-                value = "Enum"
-
-    def test_duplicate_publisher_names_in_same_group(self, publisher_group_with_news_map):
-        with pytest.raises(AttributeError):
-
-            class Test(metaclass=PublisherGroup):
-                a = publisher_group_with_news_map
-                b = publisher_group_with_news_map
 
     def test_supports(self, publisher_group_with_news_map):
         assert publisher_group_with_news_map.value.supports([NewsMap])
@@ -64,15 +62,16 @@ class TestCollection:
 
     def test_publisher_group_with_subgroup_string_representation(self, group_with_two_valid_publisher_subgroups):
         representation = str(group_with_two_valid_publisher_subgroups)
-        # This splitting into different testcases is necessary, since the usage of the set within the PublisherGroup does not guarantee any sort of ordering
-        assert (
-            "The 'GroupWithTwoValidatePublisherSubGroups' PublisherGroup consists of 2 publishers:\n\t "
-            in representation
-            and "PubGroupNews:\n\t\t test_pub" in representation
-            and "PubGroupSitemap:\n\t\t test_pub" in representation
+        assertion = (
+            "<GroupWithTwoValidatePublisherSubGroups: 2>"
+            "\n\t<PubGroupNews: 1>"
+            "\n\t\ttest_pub"
+            "\n\t<PubGroupSitemap: 1>"
+            "\n\t\ttest_pub"
         )
+        assert representation == assertion
 
     def test_publisher_group_with_publisher_string_representation(self, publisher_group_with_news_map):
-        assert (
-            str(publisher_group_with_news_map) == "The 'PubGroup' PublisherGroup consists of 1 publishers:\n\ttest_pub"
-        )
+        representation = str(publisher_group_with_news_map)
+        assertion = "<PubGroup: 1>\n\ttest_pub"
+        assert representation == assertion

@@ -80,7 +80,7 @@ class WebScraper(BaseScraper):
         html_sources = [
             WebSource(
                 url_source=url_source,
-                publisher=publisher.publisher_name,
+                publisher=publisher.name,
                 request_header=publisher.request_header,
                 delay=delay,
                 url_filter=publisher.url_filter,
@@ -88,13 +88,11 @@ class WebScraper(BaseScraper):
             )
             for url_source in url_sources
         ]
-        parser_mapping: Dict[str, ParserProxy] = {publisher.publisher_name: publisher.parser}
+        parser_mapping: Dict[str, ParserProxy] = {publisher.name: publisher.parser}
         super().__init__(*html_sources, parser_mapping=parser_mapping)
 
 
 class CCNewsScraper(BaseScraper):
     def __init__(self, source: CCNewsSource):
-        parser_mapping: Dict[str, ParserProxy] = {
-            publisher.publisher_name: publisher.parser for publisher in source.publishers
-        }
+        parser_mapping: Dict[str, ParserProxy] = {publisher.name: publisher.parser for publisher in source.publishers}
         super().__init__(source, parser_mapping=parser_mapping)

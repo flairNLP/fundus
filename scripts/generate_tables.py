@@ -17,25 +17,25 @@ supported_publishers_markdown_path: Path = root_path / "docs" / "supported_publi
 
 
 class ColumnFactory(Protocol):
-    def __call__(self, spec: Publisher) -> lxml.html.HtmlElement:
+    def __call__(self, publisher: Publisher) -> lxml.html.HtmlElement:
         ...
 
 
 column_mapping: Dict[str, ColumnFactory] = {
-    "Class": lambda spec: TD(CODE(spec.name)),
-    "Source": lambda spec: TD(DIV(f"{spec.publisher_name}")),
-    "URL": lambda spec: TD(A(SPAN(urlparse(spec.domain).netloc), href=spec.domain)),
-    "Missing Attributes": lambda spec: (
+    "Class": lambda publisher: TD(CODE(publisher.__name__)),
+    "Name": lambda publisher: TD(DIV(f"{publisher.name}")),
+    "URL": lambda publisher: TD(A(SPAN(urlparse(publisher.domain).netloc), href=publisher.domain)),
+    "Missing Attributes": lambda publisher: (
         TD(*[CODE(a) for a in sorted(attributes)])
         if (
             attributes := set(attribute_annotations_mapping.keys())
-            - set(spec.parser.latest_version.attributes().validated.names)
+            - set(publisher.parser.latest_version.attributes().validated.names)
         )
         else lxml.html.fromstring("<td>&nbsp;</td>")
     ),
-    "Additional Attributes": lambda spec: (
+    "Additional Attributes": lambda publisher: (
         TD(*[CODE(a) for a in sorted(attributes)])
-        if (attributes := spec.parser.latest_version.attributes().unvalidated.names)
+        if (attributes := publisher.parser.latest_version.attributes().unvalidated.names)
         else lxml.html.fromstring("<td>&nbsp;</td>")
     ),
 }
@@ -50,8 +50,8 @@ def generate_thead() -> lxml.html.HtmlElement:
 
 def generate_tbody(country: Iterable[Publisher]) -> lxml.html.HtmlElement:
     content: List[lxml.html.HtmlElement] = []
-    for spec in sorted(country, key=lambda enum: enum.publisher_name):
-        tds = [column(spec) for column in column_mapping.values()]
+    for publisher in sorted(country, key=lambda enum: enum.name):
+        tds = [column(publisher) for column in column_mapping.values()]
         tr = TR(*tds)
         content.append(tr)
     return TBODY(*content)

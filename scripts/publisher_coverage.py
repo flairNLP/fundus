@@ -6,7 +6,7 @@ Note that this script does not check the attributes' correctness, only their pre
 """
 import sys
 import traceback
-from typing import List, Optional, cast
+from typing import List, Optional
 
 from fundus import Crawler, PublisherCollection
 from fundus.publishers.base_objects import Publisher, PublisherGroup
@@ -26,8 +26,8 @@ def main() -> None:
         print(f"{publisher_region.__name__:-^50}")
 
         publisher: Publisher
-        for publisher in sorted(publisher_region, key=lambda p: p.publisher_name):
-            publisher_name: str = publisher.publisher_name
+        for publisher in sorted(publisher_region, key=lambda p: p.name):
+            publisher_name: str = publisher.name
 
             if not any(publisher.source_mapping.values()):
                 # skip publishers providing no sources for forward crawling
