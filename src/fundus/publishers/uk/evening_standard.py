@@ -14,6 +14,7 @@ from fundus.parser.utility import (
 
 class EveningStandardParser(ParserProxy):
     class V1(BaseParser):
+        VALID_UNTIL = datetime.date(2024, 6, 30)
         _paragraph_selector = CSSSelector("div.sc-bkSUFG.bdkDcZ")
         _summary_selector = CSSSelector("div.sc-wkolL.dWZJhQ")
 
@@ -40,3 +41,18 @@ class EveningStandardParser(ParserProxy):
         @attribute
         def topics(self) -> List[str]:
             return generic_topic_parsing(self.precomputed.meta.get("keywords"))
+
+    class V1_1(V1):
+        VALID_UNTIL = datetime.date.today()
+        _summary_selector = CSSSelector("div.sc-jgyXzG")
+        _subheadline_selector = CSSSelector("div#main div.sc-dFfFtc > h3")
+        _paragraph_selector = CSSSelector("div#main > div.sc-gEvEer p")
+
+        @attribute
+        def body(self) -> ArticleBody:
+            return extract_article_body_with_selector(
+                self.precomputed.doc,
+                summary_selector=self._summary_selector,
+                subheadline_selector=self._subheadline_selector,
+                paragraph_selector=self._paragraph_selector,
+            )
