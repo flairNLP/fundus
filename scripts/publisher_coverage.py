@@ -6,11 +6,10 @@ Note that this script does not check the attributes' correctness, only their pre
 """
 import sys
 import traceback
-from enum import EnumMeta
-from typing import List, Optional, cast
+from typing import List, Optional
 
 from fundus import Crawler, PublisherCollection
-from fundus.publishers.base_objects import PublisherEnum
+from fundus.publishers.base_objects import Publisher, PublisherGroup
 from fundus.scraping.article import Article
 
 
@@ -18,20 +17,18 @@ def main() -> None:
     failed: int = 0
     timeout_in_seconds: int = 20
 
-    publisher_regions: List[EnumMeta] = sorted(
-        PublisherCollection.get_publisher_enum_mapping().values(), key=lambda region: region.__name__
+    publisher_regions: List[PublisherGroup] = sorted(
+        PublisherCollection.get_subgroup_mapping().values(), key=lambda region: region.__name__
     )
 
     for publisher_region in publisher_regions:
         print(f"{publisher_region.__name__:-^50}")
 
-        publisher: PublisherEnum
-        for publisher in sorted(
-            publisher_region, key=lambda p: cast(PublisherEnum, p).name  # type: ignore[no-any-return]
-        ):
-            publisher_name: str = publisher.name  # type: ignore[attr-defined]
+        publisher: Publisher
+        for publisher in sorted(publisher_region, key=lambda p: p.name):
+            publisher_name: str = publisher.name
 
-            if not any(publisher.source_mapping.values()):  # type: ignore[attr-defined]
+            if not any(publisher.source_mapping.values()):
                 # skip publishers providing no sources for forward crawling
                 print(f"⏩  SKIPPED: {publisher_name!r} - No sources defined")
                 continue

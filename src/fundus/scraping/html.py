@@ -13,7 +13,7 @@ from lxml.cssselect import CSSSelector
 from requests import ConnectionError, HTTPError
 
 from fundus.logging import create_logger
-from fundus.publishers.base_objects import PublisherEnum
+from fundus.publishers.base_objects import Publisher
 from fundus.scraping.delay import Delay
 from fundus.scraping.filter import URLFilter
 from fundus.scraping.session import _default_header, session_handler
@@ -181,13 +181,12 @@ class WebSource:
 
 
 class CCNewsSource:
-    def __init__(self, *publishers: PublisherEnum, warc_path: str, headers: Optional[Dict[str, str]] = None):
+    def __init__(self, *publishers: Publisher, warc_path: str, headers: Optional[Dict[str, str]] = None):
         self.publishers = publishers
         self.warc_path = warc_path
         self.headers = headers or _default_header
-
-        self._publisher_mapping: Dict[str, PublisherEnum] = {
-            urlparse(publisher.domain).netloc: publisher for publisher in publishers
+        self._publisher_mapping: Dict[str, Publisher] = {
+            urlparse(publisher.domain).netloc: publisher for publisher in self.publishers
         }
 
     def fetch(self, url_filter: Optional[URLFilter] = None) -> Iterator[HTML]:
@@ -254,7 +253,7 @@ class CCNewsSource:
                     content=content,
                     crawl_date=warc_record.record_date,
                     source_info=WarcSourceInfo(
-                        publisher=publisher.publisher_name,
+                        publisher=publisher.name,
                         warc_path=self.warc_path,
                         warc_headers=dict(warc_record.headers),
                         http_headers=dict(warc_record.http_headers),
