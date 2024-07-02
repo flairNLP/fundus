@@ -174,8 +174,8 @@ def remove_query_parameters_from_url(url: str) -> str:
 
 
 class CrawlerBase(ABC):
-    def __init__(self, *publishers: Publisher):
-        self.publishers: List[PublisherEnum] = list(set(more_itertools.collapse(publishers)))
+    def __init__(self, *publishers: PublisherType):
+        self.publishers: List[Publisher] = list(set(more_itertools.collapse(publishers)))
         if not self.publishers:
             raise ValueError("param <publishers> of <Crawler.__init__> must include at least one publisher.")
 
@@ -348,9 +348,9 @@ class Crawler(CrawlerBase):
                 Defaults to True.
         """
 
-        def filter_publishers(publisher: PublisherEnum) -> bool:
+        def filter_publishers(publisher: Publisher) -> bool:
             if publisher.deprecated and ignore_deprecated:
-                logger.warning(f"Skipping deprecated publisher: {publisher.publisher_name}")
+                logger.warning(f"Skipping deprecated publisher: {publisher.name}")
                 return False
             return True
 

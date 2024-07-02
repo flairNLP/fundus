@@ -37,8 +37,8 @@ class ColumnFactory(Protocol):
 column_mapping: Dict[str, ColumnFactory] = {
     "Class": lambda publisher: TD(CODE(publisher.__name__)),
     "Name": lambda publisher: TD(DIV(f"{publisher.name}"))
-    if not spec.deprecated
-    else TD(DIV(STRIKE(f"{spec.publisher_name}"))),
+    if not publisher.deprecated
+    else TD(DIV(STRIKE(f"{publisher.name}"))),
     "URL": lambda publisher: TD(A(SPAN(urlparse(publisher.domain).netloc), href=publisher.domain)),
     "Missing Attributes": lambda publisher: (
         TD(*[CODE(a) for a in sorted(attributes)])
