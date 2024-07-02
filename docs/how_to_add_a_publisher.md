@@ -73,7 +73,7 @@ Next, you should open the file `fundus/publishers/__init__.py` and make sure tha
 ```python
 from fundus.publishers.us import US
 
-class PublisherCollection(metaclass=_PublisherCollectionMeta):
+class PublisherCollection(metaclass=PublisherCollectionMeta):
     us = US
 ```
 

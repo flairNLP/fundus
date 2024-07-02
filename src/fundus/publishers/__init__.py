@@ -18,7 +18,7 @@ from fundus.publishers.us import US
 __all__ = ["Publisher", "PublisherGroup"]
 
 
-class _PublisherCollectionMeta(PublisherGroup):
+class PublisherCollectionMeta(PublisherGroup):
     def __new__(cls, name, bases, attributes):
         publishers: Set[str] = set()
         for attribute, value in attributes.items():
@@ -46,7 +46,7 @@ class _PublisherCollectionMeta(PublisherGroup):
         return super().__new__(cls, name, bases, attributes)
 
 
-class PublisherCollection(metaclass=_PublisherCollectionMeta):
+class PublisherCollection(metaclass=PublisherCollectionMeta):
     na = NA
     de = DE
     at = AT
