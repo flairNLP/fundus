@@ -21,6 +21,7 @@ class Publisher:
         query_parameter: Optional[Dict[str, str]] = None,
         url_filter: Optional[URLFilter] = None,
         request_header: Optional[Dict[str, str]] = None,
+        deprecated: bool = False,
     ):
         """Initialization of a new Publisher object
 
@@ -42,6 +43,7 @@ class Publisher:
         self.query_parameter = query_parameter
         self.url_filter = url_filter
         self.request_header = request_header
+        self.deprecated = deprecated
         # we define the dict here manually instead of using default dict so that we can control
         # the order in which sources are proceeded.
         source_mapping: Dict[Type[URLSource], List[URLSource]] = {

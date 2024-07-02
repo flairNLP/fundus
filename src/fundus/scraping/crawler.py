@@ -1,14 +1,21 @@
 from __future__ import annotations
 
+import contextlib
 import gzip
+import json
 import os
+import random
 import re
+import threading
+import time
 from abc import ABC, abstractmethod
 from datetime import datetime
 from functools import lru_cache, partial, wraps
 from multiprocessing import Manager
 from multiprocessing.context import TimeoutError
+from multiprocessing.managers import BaseManager
 from multiprocessing.pool import MapResult, Pool, ThreadPool
+from pathlib import Path
 from queue import Empty, Queue
 from typing import (
     Any,
@@ -29,8 +36,10 @@ from typing import (
 from urllib.parse import urljoin, urlparse
 
 import dill
+import fastwarc.stream_io
 import more_itertools
 import requests
+import urllib3.exceptions
 from dateutil.rrule import MONTHLY, rrule
 from more_itertools import roundrobin
 from tqdm import tqdm
@@ -45,6 +54,7 @@ from fundus.scraping.html import CCNewsSource
 from fundus.scraping.scraper import CCNewsScraper, WebScraper
 from fundus.scraping.session import session_handler
 from fundus.scraping.url import URLSource
+from fundus.utils.timeout import Timeout
 
 logger = create_logger(__name__)
 
@@ -52,6 +62,33 @@ _T = TypeVar("_T")
 _P = ParamSpec("_P")
 
 PublisherType: TypeAlias = Union[Publisher, PublisherGroup]
+
+_stop_event = threading.Event()
+
+
+class TQDMManager(BaseManager):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.register("_tqdm", tqdm)
+
+    def tqdm(self, *args, **kwargs) -> tqdm:
+        return getattr(self, "_tqdm")(*args, **kwargs)
+
+
+@contextlib.contextmanager
+def get_proxy_tqdm(*args, **kwargs) -> tqdm:
+    """
+    This functions returns a proxy to a tqdm instance. Init args are the same as for any other tqdm instance.
+    :param args: tqdm args
+    :param kwargs: tqdm kwargs
+    :return: a self-managed, proxied tqdm instance
+    """
+    manager = TQDMManager()
+    try:
+        manager.start()
+        yield manager.tqdm(*args, **kwargs)
+    finally:
+        manager.shutdown()
 
 
 # noinspection PyPep8Naming
@@ -114,8 +151,20 @@ def pool_queue_iter(handle: MapResult[Any], queue: Queue[_T]) -> Iterator[_T]:
             try:
                 handle.get(timeout=0.1)
             except TimeoutError:
+                if _stop_event.is_set():
+                    _stop_event.clear()
+                    break
                 continue
             return
+
+
+def random_sleep(func: Callable[_P, _T], between: Tuple[float, float]) -> Callable[_P, _T]:
+    @wraps(func)
+    def wrapper(*args: _P.args, **kwargs: _P.kwargs) -> _T:
+        time.sleep(random.uniform(*between))
+        return func(*args, **kwargs)
+
+    return wrapper
 
 
 def remove_query_parameters_from_url(url: str) -> str:
@@ -125,11 +174,10 @@ def remove_query_parameters_from_url(url: str) -> str:
 
 
 class CrawlerBase(ABC):
-    def __init__(self, *publishers: PublisherType):
-        if not publishers:
-            raise ValueError("param <publishers> of <Crawler.__init__> has to be non empty")
-
-        self.publishers: List[Publisher] = list(set(more_itertools.collapse(publishers)))
+    def __init__(self, *publishers: Publisher):
+        self.publishers: List[PublisherEnum] = list(set(more_itertools.collapse(publishers)))
+        if not self.publishers:
+            raise ValueError("param <publishers> of <Crawler.__init__> must include at least one publisher.")
 
     @abstractmethod
     def _build_article_iterator(
@@ -144,10 +192,12 @@ class CrawlerBase(ABC):
     def crawl(
         self,
         max_articles: Optional[int] = None,
+        timeout: Optional[int] = None,
         error_handling: Literal["suppress", "catch", "raise"] = "suppress",
         only_complete: Union[bool, ExtractionFilter] = Requires("title", "body", "publishing_date"),
         url_filter: Optional[URLFilter] = None,
         only_unique: bool = True,
+        save_to_file: Union[None, str, Path] = None,
     ) -> Iterator[Article]:
         """Yields articles from initialized scrapers
 
@@ -155,6 +205,9 @@ class CrawlerBase(ABC):
             max_articles (Optional[int]): Number of articles to crawl. If there are fewer articles
                 than max_articles the Iterator will stop before max_articles. If None, all retrievable
                 articles are returned. Defaults to None.
+            timeout (Optional[int]): timeout (Optional[int]): Specifies the duration in seconds the crawler
+                will wait without receiving any articles before stopping. If set <= 0, or if not provided,
+                the crawler will run until all sources are exhausted. Defaults to None.
             error_handling (Literal["suppress", "catch", "raise"]): Define how to handle errors
                 encountered during extraction. If set to "suppress", all errors will be skipped, either
                 with None values for respective attributes in the extraction or by skipping entire articles.
@@ -169,6 +222,8 @@ class CrawlerBase(ABC):
                 URLs before download. This filter applies on both requested and responded URL. Defaults to None.
             only_unique (bool): If set to True, articles yielded will be unique on the responded URL.
                 Always returns the first encountered article. Defaults to True.
+            save_to_file (Union[None, str, Path]): If set, the crawled articles will be collected saved to the
+                specified file as a JSON list.
 
         Returns:
             Iterator[Article]: An iterator yielding objects of type Article.
@@ -177,8 +232,8 @@ class CrawlerBase(ABC):
         if max_articles == 0:
             return
 
-        if max_articles is None:
-            max_articles = -1
+        max_articles = max_articles or -1
+        timeout = timeout or -1
 
         def build_extraction_filter() -> Optional[ExtractionFilter]:
             if isinstance(only_complete, bool):
@@ -216,18 +271,47 @@ class CrawlerBase(ABC):
             fitting_publishers = self.publishers
 
         article_count = 0
-        for article in self._build_article_iterator(
-            tuple(fitting_publishers), error_handling, build_extraction_filter(), url_filter
-        ):
-            url_without_query_parameters = remove_query_parameters_from_url(article.html.responded_url)
-            if not only_unique or url_without_query_parameters not in response_cache:
-                response_cache.add(url_without_query_parameters)
-                article_count += 1
-                yield article
-            if article_count == max_articles:
-                break
+        crawled_articles = []
 
-        session_handler.close_current_session()
+        # Unfortunately we relly on this little workaround here to terminate the 'Pool' used within
+        # the 'CCNewsCrawler'. The 'Timeout' contextmanager utilizes '_thread.interrupt_main',
+        # throwing a KeyboardInterrupt in the main thread after <time> seconds. My guess (MaxDall)
+        # is, that within 'queue_wrapper's 'handle.get(timeout=0.1)', the main thread cannot be
+        # interrupted via a KeyboardInterrupt. The workaround is to have a modul global event
+        # that can be set within the 'Timeout' thread using a callback.
+        # With Python 3.10 we can pass a signum to '_thread.interrupt_main', maybe that's the way to go.
+        callback: Optional[Callable[[], None]]
+        if isinstance(self, CCNewsCrawler) and self.processes > 0:
+
+            def callback() -> None:
+                _stop_event.set()
+
+        else:
+            callback = None
+
+        try:
+            with Timeout(seconds=timeout, silent=True, callback=callback, disable=timeout <= 0) as timer:
+                for article in self._build_article_iterator(
+                    tuple(fitting_publishers), error_handling, build_extraction_filter(), url_filter
+                ):
+                    timer.reset()
+                    url_without_query_parameters = remove_query_parameters_from_url(article.html.responded_url)
+                    if not only_unique or url_without_query_parameters not in response_cache:
+                        response_cache.add(url_without_query_parameters)
+                        article_count += 1
+                        if save_to_file is not None:
+                            crawled_articles.append(article)
+                        yield article
+                    if article_count == max_articles:
+                        break
+        finally:
+            session_handler.close_current_session()
+            if save_to_file is not None:
+                with open(save_to_file, "w", encoding="utf-8") as file:
+                    logger.info(f"Writing crawled articles to {save_to_file!r}")
+                    file.write(
+                        json.dumps(crawled_articles, default=lambda o: o.to_json(), ensure_ascii=False, indent=4)
+                    )
 
 
 class Crawler(CrawlerBase):
@@ -235,6 +319,7 @@ class Crawler(CrawlerBase):
         self,
         *publishers: PublisherType,
         restrict_sources_to: Optional[List[Type[URLSource]]] = None,
+        ignore_deprecated: bool = False,
         delay: Optional[Union[float, Delay]] = 1.0,
         threading: bool = True,
     ):
@@ -249,19 +334,34 @@ class Crawler(CrawlerBase):
 
         Args:
             *publishers (Union[Publisher, PublisherGroup]): The publishers to crawl.
-            restrict_sources_to (Optional[List[Type[URLSource]]]): Lets you restrict
-                sources defined in the publisher specs. If set, only articles from given source types
-                will be yielded.
+            restrict_sources_to (Optional[List[Type[URLSource]]]): Lets you restrict sources defined in the publisher
+                specs. If set, only articles from given source types will be yielded.
+            ignore_deprecated (bool): If set to True, Publishers marked as deprecated will be skipped.
+                Defaults to False.
             delay (Optional[Union[float, Delay]]): Set a delay time in seconds to be used between article
                 downloads. You can set a delay directly using float or any callable satisfying the Delay
                 protocol. If set to None, no delay will be used between batches. See Delay for more
                 information. Defaults to None.
             threading (bool): If True, the crawler will use a dedicated thread per publisher, if set to False,
-                the crawler will use a single thread for all publishers and load articles successively. This will greatly
-                influence performance, and it is highly recommended to use a threaded crawler. Deafults to True.
+                the crawler will use a single thread for all publishers and load articles successively. This will
+                greatly influence performance, and it is highly recommended to use a threaded crawler.
+                Defaults to True.
         """
 
-        super().__init__(*publishers)
+        def filter_publishers(publisher: PublisherEnum) -> bool:
+            if publisher.deprecated and ignore_deprecated:
+                logger.warning(f"Skipping deprecated publisher: {publisher.publisher_name}")
+                return False
+            return True
+
+        fitting_publishers = list(filter(filter_publishers, more_itertools.collapse(publishers)))
+        if not fitting_publishers:
+            raise ValueError(
+                f"All given publishers are deprecated. Either set <ignore_deprecated> to `False` or "
+                f"include at least one publisher that isn't deprecated."
+            )
+
+        super().__init__(*fitting_publishers)
 
         self.restrict_sources_to = restrict_sources_to
         self.delay = delay
@@ -336,16 +436,27 @@ class CCNewsCrawler(CrawlerBase):
         start: datetime = datetime(2016, 8, 1),
         end: datetime = datetime.now(),
         processes: int = -1,
+        retries: int = 3,
+        disable_tqdm: bool = False,
         server_address: str = "https://data.commoncrawl.org/",
     ):
         """Initializes a crawler for the CC-NEWS dataset.
 
+        The crawler crawls the CC-NEWS dataset from <end> to <start>.
+
         Args:
             *publishers: The publishers to crawl.
+            start: The date to start crawling from. Refers to the date the WARC record was added to CC-NEWS,
+                not when it was published. Defaults to 2016/8/1.
+            end: The date to end crawling. Refers to the date the WARC record was added to CC-NEWS, not when
+                it was published. Defaults to datetime.now().
             processes: Number of additional process to use for crawling.
                 If -1, the number of processes is set to `os.cpu_count()`.
                 If `os.cpu_count()` is not available, the number of processes is set to 0.
                 If 0, only the main process is used. Defaults to -1.
+            retries: The number of times to retry crawling a WARC record when a connection error occurs. Between
+                retries, the crawler sleeps for <current-try> * 30 seconds. Defaults to 3.
+            disable_tqdm: Disable the usage of tqdm within the crawler. Defaults to False.
             server_address: The CC-NEWS dataset server address. Defaults to 'https://data.commoncrawl.org/'.
         """
 
@@ -354,19 +465,42 @@ class CCNewsCrawler(CrawlerBase):
         self.start = start
         self.end = end
         self.processes = os.cpu_count() or 0 if processes == -1 else processes
+        self.retries = retries
+        self.disable_tqdm = disable_tqdm
         self.server_address = server_address
 
-    @staticmethod
     def _fetch_articles(
+        self,
         warc_path: str,
         publishers: Tuple[Publisher, ...],
         error_handling: Literal["suppress", "catch", "raise"],
         extraction_filter: Optional[ExtractionFilter] = None,
         url_filter: Optional[URLFilter] = None,
+        bar: Optional[tqdm] = None,
     ) -> Iterator[Article]:
-        source = CCNewsSource(*publishers, warc_path=warc_path)
-        scraper = CCNewsScraper(source)
-        yield from scraper.scrape(error_handling, extraction_filter, url_filter)
+        retries: int = 0
+        while True:
+            source = CCNewsSource(*publishers, warc_path=warc_path)
+            scraper = CCNewsScraper(source)
+            try:
+                yield from scraper.scrape(error_handling, extraction_filter, url_filter)
+            except (requests.HTTPError, fastwarc.stream_io.StreamError, urllib3.exceptions.HTTPError) as exception:
+                if retries >= self.retries:
+                    logger.error(f"Failed to load WARC file {warc_path!r} after {retries} retries")
+                    break
+                else:
+                    retries += 1
+                    # depending on the spawning method, the current log level will be reset to basic configuration when
+                    # spawning a new process, so this log massage will not be displayed on Windows machines
+                    logger.warning(
+                        f"Could not load WARC file {warc_path!r}. Retry after {30 * retries} seconds: {exception!r}"
+                    )
+                    time.sleep(30 * retries)
+            else:
+                break
+
+        if bar is not None:
+            bar.update()
 
     @staticmethod
     def _single_crawl(
@@ -388,8 +522,11 @@ class CCNewsCrawler(CrawlerBase):
             # we wrap the article_task to write the articles to a queue instead of returning them directly.
             wrapped_article_task: Callable[[str], None] = queue_wrapper(article_queue, article_task)
 
+            # To avoid 503 errors we spread tasks to not start all at once
+            spread_article_task = random_sleep(wrapped_article_task, (0, 3))
+
             # To avoid restricting the article_task to use only pickleable objects, we serialize it using dill.
-            serialized_article_task = dill_wrapper(wrapped_article_task)
+            serialized_article_task = dill_wrapper(spread_article_task)
 
             # Finally, we build an iterator around the queue, exhausting the queue until the pool is finished.
             yield from pool_queue_iter(pool.map_async(serialized_article_task, warc_paths), article_queue)
@@ -412,7 +549,7 @@ class CCNewsCrawler(CrawlerBase):
             f"{self.server_address}crawl-data/CC-NEWS/{date.strftime('%Y/%m')}/warc.paths.gz" for date in date_sequence
         ]
 
-        with tqdm(total=len(urls), desc="Loading WARC Paths", leave=False) as bar:
+        with tqdm(total=len(urls), desc="Loading WARC Paths", leave=False, disable=self.disable_tqdm) as bar:
 
             def load_paths(url: str) -> List[str]:
                 with requests.Session() as session:
@@ -427,7 +564,7 @@ class CCNewsCrawler(CrawlerBase):
                 max_number_of_threads = self.processes * 2
 
                 with ThreadPool(processes=min(len(urls), max_number_of_threads)) as pool:
-                    nested_warc_paths = pool.map(load_paths, urls)
+                    nested_warc_paths = pool.map(random_sleep(load_paths, (0, 3)), urls)
 
         warc_paths: Iterator[str] = more_itertools.flatten(nested_warc_paths)
 
@@ -451,18 +588,21 @@ class CCNewsCrawler(CrawlerBase):
         error_handling: Literal["suppress", "catch", "raise"],
         extraction_filter: Optional[ExtractionFilter],
         url_filter: Optional[URLFilter],
+        **kwargs,
     ) -> Iterator[Article]:
         warc_paths = tuple(self._get_warc_paths())
 
-        article_task = partial(
-            self._fetch_articles,
-            publishers=publishers,
-            error_handling=error_handling,
-            extraction_filter=extraction_filter,
-            url_filter=url_filter,
-        )
+        with get_proxy_tqdm(total=len(warc_paths), desc="Process WARC files", disable=self.disable_tqdm) as bar:
+            article_task = partial(
+                self._fetch_articles,
+                publishers=publishers,
+                error_handling=error_handling,
+                extraction_filter=extraction_filter,
+                url_filter=url_filter,
+                bar=bar,
+            )
 
-        if self.processes == 0:
-            yield from self._single_crawl(warc_paths, article_task)
-        else:
-            yield from self._parallel_crawl(warc_paths, article_task)
+            if self.processes == 0:
+                yield from self._single_crawl(warc_paths, article_task)
+            else:
+                yield from self._parallel_crawl(warc_paths, article_task)

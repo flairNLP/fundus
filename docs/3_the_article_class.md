@@ -5,6 +5,7 @@
   * [The articles' body](#the-articles-body)
   * [HTML](#html)
   * [Language detection](#language-detection)
+  * [Saving an Article](#saving-an-article)
 
 # The Article class
 
@@ -45,7 +46,7 @@ You can find those attributes under the [**supported publisher**](supported_publ
 
 Sometimes an attribute listed in the attribute guidelines isn't supported at all by a specific parser.
 You can find this information under the `Missing Attributes` tab within the supported publisher tables.
-There is also a built-in search mechanic you can learn about [here](5_how_to_search_for_publishers)
+There is also a built-in search mechanic you can learn about [here](5_advanced_topics)
 
 ## The articles' body
 
@@ -136,5 +137,22 @@ Should print this:
 ```console
 en
 ```
+
+## Saving an Article
+
+In case you want to save an article in JSON format, the `Article` class provides a `to_json` method, returning a JSON serializable dictionary.
+The function accepts string values to specify which attributes should be serialized.
+Per default, all extracted attributes and the `plaintext` attribute of `Article` are included in the serialization.
+
+````python
+for article in crawler.crawl(max_articles=10):
+    
+    # use the default serialization
+    article_json = article.to_json()
+    # or only serialize specific attributes
+    article_json = article.to_json("title", "plaintext", "lang")
+````
+
+To save all articles at once, using the default serialization and only specifying a location, refer to [this section](5_advanced_topics.md#saving-the-crawled-articles).
 
 In the [**next section**](4_how_to_filter_articles.md) we will show you how to filter articles.

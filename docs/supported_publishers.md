@@ -1314,7 +1314,9 @@
         <code>OccupyDemocrats</code>
       </td>
       <td>
-        <div>Occupy Democrats</div>
+        <div>
+          <strike>Occupy Democrats</strike>
+        </div>
       </td>
       <td>
         <a href="https://occupydemocrats.com/">
@@ -1331,7 +1333,9 @@
         <code>Reuters</code>
       </td>
       <td>
-        <div>Reuters</div>
+        <div>
+          <strike>Reuters</strike>
+        </div>
       </td>
       <td>
         <a href="https://www.reuters.com/">
@@ -1458,7 +1462,9 @@
         <code>WashingtonTimes</code>
       </td>
       <td>
-        <div>The Washington Times</div>
+        <div>
+          <strike>The Washington Times</strike>
+        </div>
       </td>
       <td>
         <a href="https://www.washingtontimes.com/">

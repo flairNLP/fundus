@@ -6,7 +6,20 @@ from urllib.parse import urlparse
 import lxml.etree
 import lxml.html
 import more_itertools
-from lxml.html.builder import CLASS, CODE, DIV, SPAN, TABLE, TBODY, TD, TH, THEAD, TR, A
+from lxml.html.builder import (
+    CLASS,
+    CODE,
+    DIV,
+    SPAN,
+    STRIKE,
+    TABLE,
+    TBODY,
+    TD,
+    TH,
+    THEAD,
+    TR,
+    A,
+)
 
 from fundus import PublisherCollection
 from fundus import __development_base_path__ as root_path
@@ -23,7 +36,9 @@ class ColumnFactory(Protocol):
 
 column_mapping: Dict[str, ColumnFactory] = {
     "Class": lambda publisher: TD(CODE(publisher.__name__)),
-    "Name": lambda publisher: TD(DIV(f"{publisher.name}")),
+    "Name": lambda publisher: TD(DIV(f"{publisher.name}"))
+    if not spec.deprecated
+    else TD(DIV(STRIKE(f"{spec.publisher_name}"))),
     "URL": lambda publisher: TD(A(SPAN(urlparse(publisher.domain).netloc), href=publisher.domain)),
     "Missing Attributes": lambda publisher: (
         TD(*[CODE(a) for a in sorted(attributes)])

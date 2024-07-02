@@ -220,9 +220,10 @@ class CCNewsSource:
             return None
 
         with requests.Session() as session:
-            stream = session.get(self.warc_path, stream=True, headers=self.headers).raw
+            response = session.get(self.warc_path, stream=True, headers=self.headers)
+            response.raise_for_status()
 
-            for warc_record in ArchiveIterator(stream, record_types=WarcRecordType.response, verify_digests=True):
+            for warc_record in ArchiveIterator(response.raw, record_types=WarcRecordType.response, verify_digests=True):
                 target_url = str(warc_record.headers["WARC-Target-URI"])
 
                 if url_filter is not None and url_filter(target_url):

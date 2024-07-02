@@ -145,6 +145,7 @@ class US(metaclass=PublisherGroup):
             Sitemap("https://www.washingtontimes.com/sitemap-stories.xml"),
             Sitemap("https://www.washingtontimes.com/sitemap-entries.xml"),
         ],
+        deprecated=True,
     )
 
     WashingtonPost = Publisher(
@@ -179,6 +180,7 @@ class US(metaclass=PublisherGroup):
             Sitemap("https://www.reuters.com/arc/outboundfeeds/sitemap-index/?outputType=xml"),
             NewsMap("https://www.reuters.com/arc/outboundfeeds/news-sitemap-index/?outputType=xml"),
         ],
+        deprecated=True,
     )
 
     OccupyDemocrats = Publisher(
@@ -190,6 +192,7 @@ class US(metaclass=PublisherGroup):
                 url="https://occupydemocrats.com/sitemap.xml", sitemap_filter=inverse(regex_filter(r"post-sitemap"))
             )
         ],
+        deprecated=True,
     )
 
     LATimes = Publisher(

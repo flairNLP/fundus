@@ -11,12 +11,11 @@ from typing import List, Optional
 from fundus import Crawler, PublisherCollection
 from fundus.publishers.base_objects import Publisher, PublisherGroup
 from fundus.scraping.article import Article
-from fundus.scraping.filter import RequiresAll
-from scripts.utility import timeout
 
 
 def main() -> None:
     failed: int = 0
+    timeout_in_seconds: int = 20
 
     publisher_regions: List[PublisherGroup] = sorted(
         PublisherCollection.get_subgroup_mapping().values(), key=lambda region: region.__name__
@@ -33,18 +32,24 @@ def main() -> None:
                 # skip publishers providing no sources for forward crawling
                 print(f"⏩  SKIPPED: {publisher_name!r} - No sources defined")
                 continue
-
+            if publisher.deprecated:  # type: ignore[attr-defined]
+                print(f"⏩  SKIPPED: {publisher_name!r} - Deprecated")
+                continue
             crawler: Crawler = Crawler(publisher, delay=0.4)
 
-            timed_next = timeout(next, time=20, silent=True)
-
-            complete_article: Optional[Article] = timed_next(  # type: ignore[call-arg]
-                crawler.crawl(max_articles=1, only_complete=RequiresAll(), error_handling="suppress"), None
+            complete_article: Optional[Article] = next(
+                crawler.crawl(
+                    max_articles=1, timeout=timeout_in_seconds, only_complete=True, error_handling="suppress"
+                ),
+                None,
             )
 
             if complete_article is None:
-                incomplete_article: Optional[Article] = timed_next(  # type: ignore[call-arg]
-                    crawler.crawl(max_articles=1, only_complete=False, error_handling="catch"), None
+                incomplete_article: Optional[Article] = next(
+                    crawler.crawl(
+                        max_articles=1, timeout=timeout_in_seconds, only_complete=False, error_handling="catch"
+                    ),
+                    None,
                 )
 
                 if incomplete_article is None:
@@ -65,7 +70,12 @@ def main() -> None:
                 else:
                     print(
                         f"❌ FAILED: {publisher_name!r} - No complete articles received "
-                        f"(URL of an incomplete article: {incomplete_article.html.requested_url})"
+                        f"(URL of an incomplete article: {incomplete_article.html.requested_url}) with attributes:\n"
+                        f"title: {incomplete_article.title is not None}\n"
+                        f"plaintext: {incomplete_article.plaintext is not None}\n"
+                        f"publishing_date: {incomplete_article.publishing_date is not None}\n"
+                        f"authors: {incomplete_article.authors is not None and not len(incomplete_article.authors) == 0}\n"
+                        f"topics: {incomplete_article.topics is not None and not len(incomplete_article.topics) == 0}\n"
                     )
                 failed += 1
                 continue
