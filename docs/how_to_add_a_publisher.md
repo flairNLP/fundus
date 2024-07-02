@@ -71,10 +71,9 @@ class US(metaclass=PublisherGroup):
 Next, you should open the file `fundus/publishers/__init__.py` and make sure that the class PublisherCollection has an attribute corresponding to your newly added country:
 
 ```python
-from fundus.publishers.base_objects import PublisherGroup
 from fundus.publishers.us import US
 
-class PublisherCollection(metaclass=PublisherGroup):
+class PublisherCollection(metaclass=_PublisherCollectionMeta):
     us = US
 ```
 
