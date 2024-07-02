@@ -1,5 +1,6 @@
 # Supported Publishers
 
+
 ## AT-Publishers
 
 <table class="publishers at">
@@ -50,6 +51,7 @@
   </tbody>
 </table>
 
+
 ## AU-Publishers
 
 <table class="publishers au">
@@ -82,6 +84,7 @@
     </tr>
   </tbody>
 </table>
+
 
 ## CH-Publishers
 
@@ -116,6 +119,7 @@
   </tbody>
 </table>
 
+
 ## CN-Publishers
 
 <table class="publishers cn">
@@ -146,6 +150,7 @@
     </tr>
   </tbody>
 </table>
+
 
 ## DE-Publishers
 
@@ -835,6 +840,7 @@
   </tbody>
 </table>
 
+
 ## FR-Publishers
 
 <table class="publishers fr">
@@ -896,6 +902,7 @@
   </tbody>
 </table>
 
+
 ## LT-Publishers
 
 <table class="publishers lt">
@@ -927,6 +934,7 @@
   </tbody>
 </table>
 
+
 ## MY-Publishers
 
 <table class="publishers my">
@@ -957,6 +965,7 @@
     </tr>
   </tbody>
 </table>
+
 
 ## NA-Publishers
 
@@ -990,6 +999,7 @@
     </tr>
   </tbody>
 </table>
+
 
 ## TR-Publishers
 
@@ -1038,6 +1048,7 @@
     </tr>
   </tbody>
 </table>
+
 
 ## UK-Publishers
 
@@ -1204,6 +1215,7 @@
     </tr>
   </tbody>
 </table>
+
 
 ## US-Publishers
 
