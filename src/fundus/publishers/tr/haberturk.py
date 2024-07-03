@@ -2,6 +2,7 @@ import datetime
 from typing import List, Optional
 
 from lxml.cssselect import CSSSelector
+from lxml.etree import XPath
 
 from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute
 from fundus.parser.utility import (
@@ -14,8 +15,9 @@ from fundus.parser.utility import (
 
 class HaberturkParser(ParserProxy):
     class V1(BaseParser):
+        _summary_selector = XPath("//article//h2[preceding-sibling::h1]")
         _paragraph_selector = CSSSelector("article p")
-        _summary_selector = CSSSelector("article h2")
+        _subheadline_Selector = XPath("//article//h2[not(preceding-sibling::h1)]")
 
         @attribute
         def body(self) -> ArticleBody:
@@ -23,6 +25,7 @@ class HaberturkParser(ParserProxy):
                 self.precomputed.doc,
                 paragraph_selector=self._paragraph_selector,
                 summary_selector=self._summary_selector,
+                subheadline_selector=self._subheadline_Selector,
             )
 
         @attribute(validate=False)
