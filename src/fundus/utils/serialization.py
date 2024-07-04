@@ -1,5 +1,5 @@
 import json
-from typing import Dict, Sequence, Union, cast
+from typing import Dict, Sequence, Union
 
 from typing_extensions import TypeAlias
 

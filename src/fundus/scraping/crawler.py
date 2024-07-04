@@ -3,6 +3,8 @@ from __future__ import annotations
 import contextlib
 import gzip
 import json
+import logging.config
+import multiprocessing
 import os
 import random
 import re
@@ -45,7 +47,7 @@ from more_itertools import roundrobin
 from tqdm import tqdm
 from typing_extensions import ParamSpec, TypeAlias
 
-from fundus.logging import create_logger
+from fundus.logging import create_logger, get_current_config
 from fundus.publishers.base_objects import Publisher, PublisherGroup
 from fundus.scraping.article import Article
 from fundus.scraping.delay import Delay
@@ -512,10 +514,21 @@ class CCNewsCrawler(CrawlerBase):
     def _parallel_crawl(
         self, warc_paths: Tuple[str, ...], article_task: Callable[[str], Iterator[Article]]
     ) -> Iterator[Article]:
+        # because logging configurations are overwritten when using 'spawn' as start method,
+        # we have to get current logging configurations and initialize them in the new process
+        if multiprocessing.get_start_method() == "spawn":
+            logging_config = get_current_config()
+            initializer = partial(logging.config.dictConfig, config=logging_config)
+        else:
+            initializer = None
+
         # As one could think, because we're downloading a bunch of files, this task is IO-bound, but it is actually
         # process-bound. The reason is that we stream the data and process it on the fly rather than downloading all
         # files and processing them afterward. Therefore, we utilize multiprocessing here instead of multithreading.
-        with Manager() as manager, Pool(processes=min(self.processes, len(warc_paths))) as pool:
+        with Manager() as manager, Pool(
+            processes=min(self.processes, len(warc_paths)),
+            initializer=initializer,
+        ) as pool:
             article_queue: Queue[Article] = manager.Queue(maxsize=1000)
 
             # Because multiprocessing.Pool does not support iterators as targets,
