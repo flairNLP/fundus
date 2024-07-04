@@ -15,7 +15,7 @@ from fundus.parser.utility import (
 class FreiePresseParser(ParserProxy):
     class V1(BaseParser):
         _summary_selector = CSSSelector("#artikel-content > p.bold")
-        _paragraph_selector = CSSSelector("#artikel-content > p:not(.bold)")
+        _paragraph_selector = CSSSelector("#artikel-content p:not(.bold)")
         _subheadline_selector = CSSSelector("#artikel-content h2")
 
         @attribute
