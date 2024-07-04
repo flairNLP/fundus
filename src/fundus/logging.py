@@ -82,7 +82,7 @@ def get_current_config() -> JSONVal:
         return {"format": formatter._fmt}
 
     def get_handler_config(handler: logging.Handler) -> JSONVal:
-        config: Dict[str, Union[int, str]] = {
+        config: Dict[str, JSONVal] = {
             "level": handler.level,
             "formatter": hex(id(handler.formatter)),
             "class": handler.__class__.__module__ + "." + handler.__class__.__name__,
@@ -93,7 +93,7 @@ def get_current_config() -> JSONVal:
             if handler.encoding is not None:
                 config["encoding"] = handler.encoding
             config["delay"] = handler.delay
-        return config  # type: ignore[return-value]
+        return config
 
     def get_logger_config(logger: logging.Logger) -> JSONVal:
         return {
