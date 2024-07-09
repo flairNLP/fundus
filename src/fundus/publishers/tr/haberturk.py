@@ -34,7 +34,9 @@ class HaberturkParser(ParserProxy):
 
         @attribute
         def publishing_date(self) -> Optional[datetime.datetime]:
-            return generic_date_parsing(self.precomputed.ld.bf_search("datePublished"))
+            return generic_date_parsing(
+                self.precomputed.ld.bf_search("datePublished") or self.precomputed.meta.get("datePublished")
+            )
 
         @attribute
         def authors(self) -> List[str]:
