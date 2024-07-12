@@ -1,6 +1,6 @@
 from datetime import datetime
 from textwrap import TextWrapper, dedent
-from typing import Any, Dict, List, Mapping, Optional
+from typing import Any, Dict, List, Mapping, Optional, Tuple
 
 import langdetect
 import lxml.html
@@ -8,12 +8,35 @@ from colorama import Fore, Style
 
 from fundus.logging import create_logger
 from fundus.parser import ArticleBody
+from fundus.scraping.filter import guarded_bool
 from fundus.scraping.html import HTML
 from fundus.utils.serialization import JSONVal, is_jsonable
 
 logger = create_logger(__name__)
 
 _sentinel = object()
+
+
+class Stat(Dict[str, bool]):
+    @property
+    def missing_attributes(self) -> Tuple[str, ...]:
+        return tuple(key for key, value in self.items() if value is False)
+
+    @property
+    def completeness(self) -> float:
+        return (len(self) - len(self.missing_attributes)) / len(self)
+
+    def __repr__(self) -> str:
+        if (completeness := self.completeness) < 1:
+            return f"{completeness:.2%} extracted"
+        else:
+            return "Fully extracted"
+
+    def __str__(self) -> str:
+        return self.__repr__()
+
+    def __bool__(self):
+        return not bool(self.missing_attributes)
 
 
 class AttributeView:
@@ -109,10 +132,14 @@ class Article:
 
         return language
 
+    @property
+    def complete(self) -> Stat:
+        return Stat({key: guarded_bool(value) for key, value in self.__extraction__.items()})
+
     def to_json(self, *attributes: str) -> Dict[str, JSONVal]:
         """Converts article object into a JSON serializable dictionary.
 
-        One can specify which attributes should be included by passing attribute names as parameters.
+        One can specify which attributes should be included baddy passing attribute names as parameters.
         Default: title, plaintext, authors, publishing_date, topics, free_access + unvalidated attributes
 
         Args:
