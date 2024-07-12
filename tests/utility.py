@@ -33,7 +33,7 @@ def get_test_articles(publisher: Publisher, parent_group: PublisherGroup) -> Lis
             responded_url=html_test_file.url,
             source_info=SourceInfo(publisher.name),
         )
-        article = Article.from_extracted(extracted=extraction, html=html)
+        article = Article(**extraction, html=html)
         articles.append(article)
     return articles
 
