@@ -56,7 +56,7 @@ class TestArticle:
         assert article.test_attribute
         assert article.test_attribute == "test_value"
 
-        article.__extraction__["test_attribute"] = "very_secret_stuff"
+        article.__extraction__["test_attribute"] = "very_secret_stuff"  # type: ignore[index]
 
         assert article.test_attribute == "very_secret_stuff"
 
