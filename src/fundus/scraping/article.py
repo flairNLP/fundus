@@ -13,8 +13,6 @@ from fundus.utils.serialization import JSONVal, is_jsonable
 
 logger = create_logger(__name__)
 
-_sentinel = object()
-
 
 class AttributeView:
     def __init__(self, key: str, extraction: Mapping[str, Any]):
@@ -77,7 +75,7 @@ class Article:
 
     def __setattr__(self, key: str, value: object):
         if hasattr(self, key):
-            # we can't use getattr here, because it would invoke __get__, so unfortunately no _sentinel value
+            # we can't use getattr here, because it would invoke __get__, so unfortunately no default value
             attribute = object.__getattribute__(self, key)
             if hasattr(attribute, "__set__"):
                 attribute.__set__(key, value)
