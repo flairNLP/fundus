@@ -107,19 +107,31 @@ for article in crawler.crawl(max_articles=2):
     print(article)
 ```
 
-## Example 3: Crawl articles from CC-NEWS
+## Example 3: Crawl 1 Million articles
 
-If you're not familiar with CC-NEWS, check out their [paper](https://paperswithcode.com/dataset/cc-news).
+To crawl such a vast amount of data, Fundus relies on the `CommonCrawl` web archive, in particular the news crawl `CC-NEWS`.
+If you're not familiar with [`CommonCraw`](https://commoncrawl.org/) or [`CC-NEWS`](https://commoncrawl.org/blog/news-dataset-available) check out their websites.
+Simply import our `CCNewsCrawler` and make sure to check out our [tutorial](docs/2_crawl_from_cc_news.md) beforehand.
 
 ````python
 from fundus import PublisherCollection, CCNewsCrawler
 
 # initialize the crawler for news publishers based in the US
-crawler = CCNewsCrawler(*PublisherCollection.us)
+crawler = CCNewsCrawler(*PublisherCollection)
 
 # crawl 2 articles and print
-for article in crawler.crawl(max_articles=2):
+for article in crawler.crawl(max_articles=1000000):
   print(article)
+````
+
+**Note**: By default, the crawler utilizes all available CPU cores on your system. 
+For optimal performance, we recommend manually setting the number of processes using the `processes` parameter. 
+A good rule of thumb is to allocate `one process per 200 Mbps of bandwidth`. This can vary depending on core speed.
+
+
+````python
+# for a system utilizing 950MBit/s bandwidth you should use 5 processes
+crawler = CCNewsCrawler(*PublisherCollection, processes=5)
 ````
 
 

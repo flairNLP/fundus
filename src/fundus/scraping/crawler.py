@@ -466,7 +466,18 @@ class CCNewsCrawler(CrawlerBase):
 
         self.start = start
         self.end = end
-        self.processes = os.cpu_count() or 0 if processes == -1 else processes
+
+        if processes < 0:
+            print(
+                f"{type(self).__name__} will automatically use all available cores: {os.cpu_count()}. "
+                f"For optimal performance, we recommend manually setting the number of processes "
+                f"using the <processes> parameter. A good rule of thumb is to allocate `one process per "
+                f"200 Mbps of bandwidth`."
+            )
+            self.processes = os.cpu_count() or 0
+        else:
+            self.processes = processes
+
         self.retries = retries
         self.disable_tqdm = disable_tqdm
         self.server_address = server_address
