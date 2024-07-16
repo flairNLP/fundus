@@ -1,4 +1,5 @@
 import datetime
+import re
 from typing import List, Optional
 
 from lxml.cssselect import CSSSelector
@@ -49,7 +50,9 @@ class WAZParser(ParserProxy):
                 return [topic for topic in topics if topic not in authors]
             else:
                 pass
-            return [node.text_content().split(":")[0].strip() for node in self._topics_selector(self.precomputed.doc)]
+            return [
+                re.sub(r" :.+", "", node.text_content()).strip() for node in self._topics_selector(self.precomputed.doc)
+            ]
 
     class V1_1(V1):
         VALID_UNTIL = datetime.date.today()

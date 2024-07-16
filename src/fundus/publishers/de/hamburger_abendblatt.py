@@ -1,4 +1,5 @@
 import datetime
+import re
 from typing import List, Optional
 
 from lxml.cssselect import CSSSelector
@@ -47,5 +48,6 @@ class HamburgerAbendblattParser(ParserProxy):
                 return topics
             else:
                 return [
-                    node.text_content().split("–")[0].strip() for node in self._topics_selector(self.precomputed.doc)
+                    re.sub(r" –.+", "", node.text_content()).strip()
+                    for node in self._topics_selector(self.precomputed.doc)
                 ]

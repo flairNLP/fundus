@@ -49,7 +49,9 @@ class BSZParser(ParserProxy):
                 return topics
             else:
                 pass
-            return [node.text_content().split("–")[0].strip() for node in self._topics_selector(self.precomputed.doc)]
+            return [
+                re.sub(r" –.+", "", node.text_content()).strip() for node in self._topics_selector(self.precomputed.doc)
+            ]
 
         @attribute
         def authors(self) -> List[str]:
