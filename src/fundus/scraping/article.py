@@ -30,7 +30,7 @@ class AttributeView:
 class Article:
     __extraction__: Mapping[str, Any] = {}
 
-    def __init__(self, *, html: HTML, exception: Optional[Exception] = None, **extraction: Mapping[str, Any]) -> None:
+    def __init__(self, *, html: HTML, exception: Optional[Exception] = None, **extraction: Any) -> None:
         self.html = html
         self.exception = exception
         self.__extraction__ = extraction
