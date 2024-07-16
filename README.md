@@ -110,28 +110,39 @@ for article in crawler.crawl(max_articles=2):
 ## Example 3: Crawl 1 Million articles
 
 To crawl such a vast amount of data, Fundus relies on the `CommonCrawl` web archive, in particular the news crawl `CC-NEWS`.
-If you're not familiar with [`CommonCraw`](https://commoncrawl.org/) or [`CC-NEWS`](https://commoncrawl.org/blog/news-dataset-available) check out their websites.
+If you're not familiar with [`CommonCrawl`](https://commoncrawl.org/) or [`CC-NEWS`](https://commoncrawl.org/blog/news-dataset-available) check out their websites.
 Simply import our `CCNewsCrawler` and make sure to check out our [tutorial](docs/2_crawl_from_cc_news.md) beforehand.
 
 ````python
 from fundus import PublisherCollection, CCNewsCrawler
 
-# initialize the crawler for news publishers based in the US
+# initialize the crawler using all publishers supported by fundus
 crawler = CCNewsCrawler(*PublisherCollection)
 
-# crawl 2 articles and print
+# crawl 1 million articles and print
 for article in crawler.crawl(max_articles=1000000):
   print(article)
 ````
 
-**Note**: By default, the crawler utilizes all available CPU cores on your system. 
+**_Note_**: By default, the crawler utilizes all available CPU cores on your system. 
 For optimal performance, we recommend manually setting the number of processes using the `processes` parameter. 
-A good rule of thumb is to allocate `one process per 200 Mbps of bandwidth`. This can vary depending on core speed.
+A good rule of thumb is to allocate `one process per 200 Mbps of bandwidth`.
+This can vary depending on core speed.
 
+**_Note_**: The crawl above took ~7 hours using the entire `PublisherCollection` on a machine with 1000 Mbps connection, Core i9-13905H, 64GB Ram, Windows 11 and without printing the articles.
+The estimated time can vary substantially depending on the publisher used and the available bandwidth.
+Additionally, not all publishers are included in the `CC-NEWS` crawl (especially US based publishers).
+For large corpus creation, one can also use the regular crawler by utilizing only sitemaps, which requires significantly less bandwidth.
 
 ````python
-# for a system utilizing 950MBit/s bandwidth you should use 5 processes
-crawler = CCNewsCrawler(*PublisherCollection, processes=5)
+from fundus import PublisherCollection, Crawler, Sitemap
+
+# initialize a crawler for us/uk based publishers and restrict to Sitemaps only
+crawler = Crawler(PublisherCollection.us, PublisherCollection.uk, restrict_sources_to=[Sitemap])
+
+# crawl 1 million articles and print
+for article in crawler.crawl(max_articles=1000000):
+  print(article)
 ````
 
 
