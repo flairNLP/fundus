@@ -1,11 +1,9 @@
-from dataclasses import dataclass, field, fields
 from datetime import datetime
 from textwrap import TextWrapper, dedent
-from typing import Any, Dict, Iterator, List, Optional, Set, Tuple
+from typing import Any, Dict, List, Mapping, Optional
 
 import langdetect
 import lxml.html
-import more_itertools
 from colorama import Fore, Style
 
 from fundus.logging import create_logger
@@ -16,37 +14,76 @@ from fundus.utils.serialization import JSONVal, is_jsonable
 logger = create_logger(__name__)
 
 
-@dataclass(frozen=True)
+class AttributeView:
+    def __init__(self, key: str, extraction: Mapping[str, Any]):
+        self.ref = extraction
+        self.key = key
+
+    def __get__(self, instance: object, owner: type):
+        return self.ref[self.key]
+
+    def __set__(self, obj, value):
+        # For now, this is read-only
+        raise AttributeError("attribute is read only")
+
+
 class Article:
-    html: HTML
-    exception: Optional[Exception] = None
+    __extraction__: Mapping[str, Any] = {}
 
-    # supported (validated) attributes as defined in the guidelines
-    title: Optional[str] = None
-    authors: List[str] = field(default_factory=list)
-    body: Optional[ArticleBody] = None
-    publishing_date: Optional[datetime] = None
-    topics: List[str] = field(default_factory=list)
-    free_access: bool = True
+    def __init__(self, *, html: HTML, exception: Optional[Exception] = None, **extraction: Any) -> None:
+        self.html = html
+        self.exception = exception
+        self.__extraction__ = extraction
 
-    @classmethod
-    def from_extracted(cls, html: HTML, extracted: Dict[str, Any], exception: Optional[Exception] = None) -> "Article":
-        validated_attributes: Set[str] = {article_field.name for article_field in fields(cls)}
+        # create descriptors for attributes that aren't pre-defined as properties.
+        for attribute in extraction.keys():
+            if not hasattr(self, attribute):
+                setattr(self, attribute, AttributeView(attribute, self.__extraction__))
 
-        extracted_unvalidated: Iterator[Tuple[str, Any]]
-        extracted_validated: Iterator[Tuple[str, Any]]
-        extracted_unvalidated, extracted_validated = more_itertools.partition(
-            lambda attribute_and_value: attribute_and_value[0] in validated_attributes, extracted.items()
-        )
+    @property
+    def title(self) -> Optional[str]:
+        return self.__extraction__.get("title")
 
-        article: Article = cls(html, exception, **dict(extracted_validated))
-        unvalidated_attributes: Set[str] = set()
-        for attribute, value in extracted_unvalidated:
-            object.__setattr__(article, attribute, value)  # Sets attributes on a frozen dataclass
-            unvalidated_attributes.add(attribute)
-        object.__setattr__(article, "_unvalidated_attributes", unvalidated_attributes)
+    @property
+    def body(self) -> Optional[ArticleBody]:
+        return self.__extraction__.get("body")
 
-        return article
+    @property
+    def authors(self) -> List[str]:
+        return self.__extraction__.get("authors") or []
+
+    @property
+    def publishing_date(self) -> Optional[datetime]:
+        return self.__extraction__.get("publishing_date")
+
+    @property
+    def topics(self) -> List[str]:
+        return self.__extraction__.get("topics") or []
+
+    @property
+    def free_access(self) -> bool:
+        return self.__extraction__.get("free_access") or False
+
+    @property
+    def publisher(self) -> str:
+        return self.html.source_info.publisher
+
+    def __getattribute__(self, item: str):
+        if (attribute := object.__getattribute__(self, item)) and hasattr(attribute, "__get__"):
+            return attribute.__get__(self, type(self))
+        return attribute
+
+    def __setattr__(self, key: str, value: object):
+        if hasattr(self, key):
+            # we can't use getattr here, because it would invoke __get__, so unfortunately no default value
+            attribute = object.__getattribute__(self, key)
+            if hasattr(attribute, "__set__"):
+                attribute.__set__(key, value)
+                return
+        object.__setattr__(self, key, value)
+
+    def __getattr__(self, item: str):
+        raise AttributeError(f"{type(self).__name__!r} object has no attribute {str(item)!r}")
 
     @property
     def plaintext(self) -> Optional[str]:
@@ -70,9 +107,6 @@ class Article:
 
         return language
 
-    def __getattr__(self, item: object) -> Any:
-        raise AttributeError(f"{type(self).__name__!r} object has no attribute {str(item)!r}")
-
     def to_json(self, *attributes: str) -> Dict[str, JSONVal]:
         """Converts article object into a JSON serializable dictionary.
 
@@ -88,9 +122,7 @@ class Article:
 
         # default value for attributes
         if not attributes:
-            validated = ["title", "plaintext", "authors", "publishing_date", "topics", "free_access"]
-            unvalidated = list(self.__dict__.get("_unvalidated_attributes", set()) - {"meta", "ld"})
-            attributes = tuple(validated + unvalidated)
+            attributes = tuple(set(self.__extraction__.keys()) - {"meta", "ld"})
 
         serialization = {}
         for attribute in attributes:
@@ -126,7 +158,7 @@ class Article:
             f'\n- Title: "{wrapped_title}"'
             f'\n- Text:  "{wrapped_plaintext}"'
             f"\n- URL:    {self.html.requested_url}"
-            f"\n- From:   {self.html.source_info.publisher}"
+            f"\n- From:   {self.publisher}"
             f'{" (" + self.publishing_date.strftime("%Y-%m-%d %H:%M") + ")" if self.publishing_date else ""}'
         )
 

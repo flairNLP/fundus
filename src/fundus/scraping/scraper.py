@@ -59,7 +59,7 @@ class BaseScraper:
                         else:
                             logger.debug(f"Skipped article at {html.requested_url!r} because of extraction filter")
                     else:
-                        article = Article.from_extracted(html=html, extracted=extraction)
+                        article = Article(html=html, **extraction)
                         yield article
 
 
