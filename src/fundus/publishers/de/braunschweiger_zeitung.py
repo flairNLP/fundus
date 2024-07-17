@@ -50,7 +50,7 @@ class BSZParser(ParserProxy):
             else:
                 pass
             return [
-                re.sub(r" –.+", "", node.text_content()).strip() for node in self._topics_selector(self.precomputed.doc)
+                re.sub(r"\s*–.+", "", node.text_content()).strip() for node in self._topics_selector(self.precomputed.doc)
             ]
 
         @attribute
