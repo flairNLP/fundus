@@ -14,8 +14,6 @@ from fundus.utils.serialization import JSONVal, is_jsonable
 
 logger = create_logger(__name__)
 
-_sentinel = object()
-
 
 class Stat(Dict[str, bool]):
     @property
@@ -40,11 +38,11 @@ class Stat(Dict[str, bool]):
 
 
 class AttributeView:
-    def __init__(self, key: Any, extraction: Dict[str, Any]):
+    def __init__(self, key: str, extraction: Mapping[str, Any]):
         self.ref = extraction
         self.key = key
 
-    def __get__(self, instance, owner):
+    def __get__(self, instance: object, owner: type):
         return self.ref[self.key]
 
     def __set__(self, obj, value):
@@ -53,14 +51,14 @@ class AttributeView:
 
 
 class Article:
-    __extraction__: Dict[str, Any] = {}
+    __extraction__: Mapping[str, Any] = {}
 
-    def __init__(self, *, html: HTML, exception: Optional[Exception] = None, **extraction: Mapping[str, Any]) -> None:
+    def __init__(self, *, html: HTML, exception: Optional[Exception] = None, **extraction: Any) -> None:
         self.html = html
         self.exception = exception
         self.__extraction__ = extraction
 
-        # create AttributeViews for attributes that aren't pre-defined as properties.
+        # create descriptors for attributes that aren't pre-defined as properties.
         for attribute in extraction.keys():
             if not hasattr(self, attribute):
                 setattr(self, attribute, AttributeView(attribute, self.__extraction__))
@@ -90,24 +88,24 @@ class Article:
         return self.__extraction__.get("free_access") or False
 
     @property
-    def publishers(self) -> str:
+    def publisher(self) -> str:
         return self.html.source_info.publisher
 
-    def __getattribute__(self, item):
+    def __getattribute__(self, item: str):
         if (attribute := object.__getattribute__(self, item)) and hasattr(attribute, "__get__"):
             return attribute.__get__(self, type(self))
         return attribute
 
-    def __setattr__(self, key, value):
+    def __setattr__(self, key: str, value: object):
         if hasattr(self, key):
-            # we can't use getattr here, because it would invoke __get__, so unfortunately no _sentinel value
+            # we can't use getattr here, because it would invoke __get__, so unfortunately no default value
             attribute = object.__getattribute__(self, key)
             if hasattr(attribute, "__set__"):
                 attribute.__set__(key, value)
                 return
         object.__setattr__(self, key, value)
 
-    def __getattr__(self, item):
+    def __getattr__(self, item: str):
         raise AttributeError(f"{type(self).__name__!r} object has no attribute {str(item)!r}")
 
     @property
@@ -187,7 +185,7 @@ class Article:
             f'\n- Title: "{wrapped_title}"'
             f'\n- Text:  "{wrapped_plaintext}"'
             f"\n- URL:    {self.html.requested_url}"
-            f"\n- From:   {self.publishers}"
+            f"\n- From:   {self.publisher}"
             f'{" (" + self.publishing_date.strftime("%Y-%m-%d %H:%M") + ")" if self.publishing_date else ""}'
         )
 

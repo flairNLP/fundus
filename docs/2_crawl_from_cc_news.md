@@ -59,11 +59,15 @@ The CC-NEWS dataset consists of multiple terabytes of articles.
 Due to the sheer amount of data, the crawler utilizes multiple processes.
 Per default, it uses all CPUs available in your system.
 You can alter the number of additional processes used for crawling with the `processes` parameter of `CCNewsCrawler`.
+For optimal performance, we recommend setting the amount of process used manually.
+A good rule of thumb is to allocate `one process per 200 Mbps of bandwidth`.
+This can vary depending on the actual speed of your cpu cores.
 
 ````python
 from fundus import CCNewsCrawler, PublisherCollection
 
-crawler = CCNewsCrawler(*PublisherCollection, processes=4)
+# having a bandwidth of 950 Mbps you should set processes to 5 
+crawler = CCNewsCrawler(*PublisherCollection, processes=5)
 ````
 
 To omit multiprocessing, pass `-1` to the `processes` parameter.

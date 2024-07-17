@@ -138,7 +138,7 @@ Should print this:
 en
 ```
 
-## Saving an Article
+## Serialization
 
 In case you want to save an article in JSON format, the `Article` class provides a `to_json` method, returning a JSON serializable dictionary.
 The function accepts string values to specify which attributes should be serialized.

@@ -1,4 +1,5 @@
 import datetime
+import re
 from typing import List, Optional
 
 from lxml.cssselect import CSSSelector
@@ -19,6 +20,7 @@ class WAZParser(ParserProxy):
         _paragraph_selector: XPath = CSSSelector(".article__body > p")
         _summary_selector: XPath = CSSSelector(".article__header__intro__text")
         _subheadline_selector: XPath = CSSSelector(".article__body > h3")
+        _topics_selector = XPath("//div[@class='not-prose  mb-4 mx-5 font-sans']/ul/li")
 
         @attribute
         def body(self) -> ArticleBody:
@@ -44,8 +46,14 @@ class WAZParser(ParserProxy):
         @attribute
         def topics(self) -> List[str]:
             authors = generic_author_parsing(self.precomputed.meta.get("author"))
-            topics = generic_topic_parsing(self.precomputed.meta.get("keywords"))
-            return [topic for topic in topics if topic not in authors]
+            if topics := generic_topic_parsing(self.precomputed.meta.get("keywords")):
+                return [topic for topic in topics if topic not in authors]
+            else:
+                pass
+            return [
+                re.sub(r"\s*:.+", "", node.text_content()).strip()
+                for node in self._topics_selector(self.precomputed.doc)
+            ]
 
     class V1_1(V1):
         VALID_UNTIL = datetime.date.today()

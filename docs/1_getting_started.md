@@ -4,6 +4,7 @@
   * [What is the `PublisherCollection`](#what-is-the-publishercollection)
   * [What is a `Crawler`](#what-is-a-crawler)
 * [How to crawl articles](#how-to-crawl-articles)
+* [Saving crawled articles](#saving-crawled-articles)
 
 # Basics
 
@@ -91,5 +92,11 @@ for article in crawler.crawl(timeout=10):
 ````
 This is especially useful when working with date-related article filters.
 Refer to [this section](4_how_to_filter_articles.md) to learn more about how to filter articles.
+
+# Saving crawled articles
+
+To save all crawled articles to a file use the `save_to_file` parameter of the `crawl` method.
+When given a path, the crawled articles will be saved as a JSON list using the 
+[default article serialization](3_the_article_class.md#saving-an-article) and `UTF-8` encoding.
 
 In the [next](2_crawl_from_cc_news.md) section we will show you how to crawl articles from the CC-NEWS dataset.

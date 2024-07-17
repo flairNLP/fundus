@@ -15,14 +15,14 @@ class TestArticle:
         extraction = {"authors": ["Author"], "title": "title"}
 
         with pytest.raises(TypeError):
-            article = Article(extraction, html=html)
+            article = Article(extraction, html=html)  # type: ignore[arg-type, misc]
 
         with pytest.raises(TypeError):
-            article = Article(**extraction)
+            article = Article(**extraction)  # type: ignore[arg-type]
 
         article = Article(**{}, html=html)
-        article = Article(**extraction, html=html)
-        article = Article(html=html, **extraction)
+        article = Article(**extraction, html=html, exception=None)
+        article = Article(html=html, **extraction, exception=None)
         article = Article(**extraction, html=html, exception=TypeError())
 
     def test_default_values(self):
@@ -43,7 +43,7 @@ class TestArticle:
             "title": "<TITLE>",
         }
 
-        article = Article(**extraction, html=html)
+        article = Article(**extraction, html=html, exception=None)
 
         assert article.title == "<TITLE>"
         assert article.authors == ["Author1", "Author2", "Author3"]
@@ -51,18 +51,18 @@ class TestArticle:
     def test_extraction_view_getter(self):
         extraction = {"test_attribute": "test_value"}
 
-        article = Article(**extraction, html=html)
+        article = Article(**extraction, html=html, exception=None)
 
         assert article.test_attribute
         assert article.test_attribute == "test_value"
 
-        article.__extraction__["test_attribute"] = "very_secret_stuff"
+        article.__extraction__["test_attribute"] = "very_secret_stuff"  # type: ignore[index]
 
         assert article.test_attribute == "very_secret_stuff"
 
     def test_extraction_view_setter(self):
         extraction = {"test_attribute": "test_value"}
 
-        article = Article(**extraction, html=html)
+        article = Article(**extraction, html=html, exception=None)
         with pytest.raises(AttributeError):
             article.test_attribute = "another_value"
