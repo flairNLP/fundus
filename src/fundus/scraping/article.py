@@ -65,7 +65,7 @@ class Article:
         return self.__extraction__.get("free_access") or False
 
     @property
-    def publishers(self) -> str:
+    def publisher(self) -> str:
         return self.html.source_info.publisher
 
     def __getattribute__(self, item: str):
@@ -158,7 +158,7 @@ class Article:
             f'\n- Title: "{wrapped_title}"'
             f'\n- Text:  "{wrapped_plaintext}"'
             f"\n- URL:    {self.html.requested_url}"
-            f"\n- From:   {self.publishers}"
+            f"\n- From:   {self.publisher}"
             f'{" (" + self.publishing_date.strftime("%Y-%m-%d %H:%M") + ")" if self.publishing_date else ""}'
         )
 
