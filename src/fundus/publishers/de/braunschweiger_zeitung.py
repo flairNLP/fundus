@@ -28,6 +28,7 @@ class BSZParser(ParserProxy):
             " or contains(text(), 'Auch interessant')"
             " or contains(text(), 'Weitere News'))]"
         )
+        _topics_selector = XPath("//div[@class='not-prose  mb-4 mx-5 font-sans']/ul/li")
 
         @attribute
         def body(self) -> ArticleBody:
@@ -44,7 +45,14 @@ class BSZParser(ParserProxy):
 
         @attribute
         def topics(self) -> List[str]:
-            return generic_topic_parsing(self.precomputed.meta.get("news_keywords"))
+            if topics := generic_topic_parsing(self.precomputed.meta.get("news_keywords")):
+                return topics
+            else:
+                pass
+            return [
+                re.sub(r"\s*–.+", "", node.text_content()).strip()
+                for node in self._topics_selector(self.precomputed.doc)
+            ]
 
         @attribute
         def authors(self) -> List[str]:

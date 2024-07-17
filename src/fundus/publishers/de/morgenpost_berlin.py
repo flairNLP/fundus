@@ -1,7 +1,9 @@
 import datetime
+import re
 from typing import List, Optional
 
 from lxml.cssselect import CSSSelector
+from lxml.etree import XPath
 
 from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute
 from fundus.parser.utility import (
@@ -17,6 +19,7 @@ class BerlinerMorgenpostParser(ParserProxy):
         _summary_selector = CSSSelector("div.article-body > p.font-sans.font-medium")
         _paragraph_selector = CSSSelector("div.article-body > p:not([class])")
         _subheadline_selector = CSSSelector("div.article-body > h3")
+        _topics_selector = XPath("//div[@class='not-prose  mb-4 mx-5 font-sans']/ul/li")
 
         @attribute
         def body(self) -> ArticleBody:
@@ -41,4 +44,10 @@ class BerlinerMorgenpostParser(ParserProxy):
 
         @attribute
         def topics(self) -> List[str]:
-            return generic_topic_parsing(self.precomputed.meta.get("keywords"))
+            if topics := generic_topic_parsing(self.precomputed.meta.get("keywords")):
+                return topics
+            else:
+                return [
+                    re.sub(r"\s*–.+", "", node.text_content()).strip()
+                    for node in self._topics_selector(self.precomputed.doc)
+                ]
