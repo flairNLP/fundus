@@ -107,18 +107,41 @@ for article in crawler.crawl(max_articles=2):
     print(article)
 ```
 
-## Example 3: Crawl articles from CC-NEWS
+## Example 3: Crawl 1 Million articles
 
-If you're not familiar with CC-NEWS, check out their [paper](https://paperswithcode.com/dataset/cc-news).
+To crawl such a vast amount of data, Fundus relies on the `CommonCrawl` web archive, in particular the news crawl `CC-NEWS`.
+If you're not familiar with [`CommonCrawl`](https://commoncrawl.org/) or [`CC-NEWS`](https://commoncrawl.org/blog/news-dataset-available) check out their websites.
+Simply import our `CCNewsCrawler` and make sure to check out our [tutorial](docs/2_crawl_from_cc_news.md) beforehand.
 
 ````python
 from fundus import PublisherCollection, CCNewsCrawler
 
-# initialize the crawler for news publishers based in the US
-crawler = CCNewsCrawler(*PublisherCollection.us)
+# initialize the crawler using all publishers supported by fundus
+crawler = CCNewsCrawler(*PublisherCollection)
 
-# crawl 2 articles and print
-for article in crawler.crawl(max_articles=2):
+# crawl 1 million articles and print
+for article in crawler.crawl(max_articles=1000000):
+  print(article)
+````
+
+**_Note_**: By default, the crawler utilizes all available CPU cores on your system. 
+For optimal performance, we recommend manually setting the number of processes using the `processes` parameter. 
+A good rule of thumb is to allocate `one process per 200 Mbps of bandwidth`.
+This can vary depending on core speed.
+
+**_Note_**: The crawl above took ~7 hours using the entire `PublisherCollection` on a machine with 1000 Mbps connection, Core i9-13905H, 64GB Ram, Windows 11 and without printing the articles.
+The estimated time can vary substantially depending on the publisher used and the available bandwidth.
+Additionally, not all publishers are included in the `CC-NEWS` crawl (especially US based publishers).
+For large corpus creation, one can also use the regular crawler by utilizing only sitemaps, which requires significantly less bandwidth.
+
+````python
+from fundus import PublisherCollection, Crawler, Sitemap
+
+# initialize a crawler for us/uk based publishers and restrict to Sitemaps only
+crawler = Crawler(PublisherCollection.us, PublisherCollection.uk, restrict_sources_to=[Sitemap])
+
+# crawl 1 million articles and print
+for article in crawler.crawl(max_articles=1000000):
   print(article)
 ````
 
