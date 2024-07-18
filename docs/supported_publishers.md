@@ -1125,6 +1125,21 @@
     </tr>
     <tr>
       <td>
+        <code>Metro</code>
+      </td>
+      <td>
+        <div>Metro</div>
+      </td>
+      <td>
+        <a href="https://metro.co.uk/">
+          <span>metro.co.uk</span>
+        </a>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
         <code>TheGuardian</code>
       </td>
       <td>

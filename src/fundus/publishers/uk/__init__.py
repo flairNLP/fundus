@@ -11,6 +11,7 @@ from .daily_mail import DailyMailParser
 from .daily_star import DailyStarParser
 from .evening_standard import EveningStandardParser
 from .i_news import INewsParser
+from .metro import MetroParser
 from .the_guardian import TheGuardianParser
 from .the_independent import TheIndependentParser
 from .the_mirror import TheMirrorParser
@@ -125,5 +126,15 @@ class UK(metaclass=PublisherGroup):
                 sitemap_filter=inverse(regex_filter("sitemap-articles|sitemap-recent")),
             ),
             RSSFeed("https://www.standard.co.uk/rss"),
+        ],
+    )
+
+    Metro = Publisher(
+        name="Metro",
+        domain="https://metro.co.uk/",
+        parser=MetroParser,
+        sources=[
+            NewsMap("https://metro.co.uk/news-sitemap.xml"),
+            Sitemap("https://metro.co.uk/sitemap.xml"),
         ],
     )
