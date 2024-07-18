@@ -1065,6 +1065,21 @@
   <tbody>
     <tr>
       <td>
+        <code>Express</code>
+      </td>
+      <td>
+        <div>Daily Express</div>
+      </td>
+      <td>
+        <a href="https://www.express.co.uk/">
+          <span>www.express.co.uk</span>
+        </a>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
         <code>DailyMail</code>
       </td>
       <td>
