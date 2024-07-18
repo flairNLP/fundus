@@ -1,3 +1,4 @@
+import logging
 import subprocess
 from argparse import ArgumentParser, Namespace
 from logging import WARN
@@ -6,7 +7,7 @@ from typing import List, Optional
 from tqdm import tqdm
 
 from fundus import Crawler, PublisherCollection
-from fundus.logging import create_logger
+from fundus.logging import create_logger, set_log_level
 from fundus.publishers.base_objects import Publisher
 from fundus.scraping.article import Article
 from fundus.scraping.filter import RequiresAll
@@ -55,6 +56,7 @@ def parse_arguments() -> Namespace:
         nargs="+",
         help="use given URL instead of searching for an article. if set the urls will be mapped to the order of -p",
     )
+    parser.add_argument("-d", "--debug", action="store_true", default=False, help="enable debug output")
     group = parser.add_mutually_exclusive_group()
     group.add_argument(
         "-o",
@@ -70,6 +72,9 @@ def parse_arguments() -> Namespace:
     )
 
     arguments = parser.parse_args()
+
+    if arguments.debug:
+        set_log_level(logging.DEBUG)
 
     if arguments.urls is not None:
         if arguments.publishers is None:

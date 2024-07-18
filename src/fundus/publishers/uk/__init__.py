@@ -10,6 +10,7 @@ from ..shared import EuronewsParser
 from .daily_mail import DailyMailParser
 from .daily_star import DailyStarParser
 from .evening_standard import EveningStandardParser
+from .express import ExpressParser
 from .i_news import INewsParser
 from .metro import MetroParser
 from .the_guardian import TheGuardianParser
@@ -136,5 +137,15 @@ class UK(metaclass=PublisherGroup):
         sources=[
             NewsMap("https://metro.co.uk/news-sitemap.xml"),
             Sitemap("https://metro.co.uk/sitemap.xml"),
+        ],
+    )
+
+    Express = Publisher(
+        name="Daily Express",
+        domain="https://www.express.co.uk/",
+        parser=ExpressParser,
+        sources=[
+            NewsMap("https://www.express.co.uk/googlenews.xml"),
+            Sitemap("https://www.express.co.uk/sitemap.xml"),
         ],
     )
