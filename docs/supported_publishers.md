@@ -899,6 +899,21 @@
       <td>&#160;</td>
       <td>&#160;</td>
     </tr>
+    <tr>
+      <td>
+        <code>LesEchos</code>
+      </td>
+      <td>
+        <div>Les &#201;chos</div>
+      </td>
+      <td>
+        <a href="https://www.lesechos.fr/">
+          <span>www.lesechos.fr</span>
+        </a>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
   </tbody>
 </table>
 
