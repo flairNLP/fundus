@@ -21,7 +21,7 @@ from tests.resources.parser.test_data import __module_path__ as test_resource_pa
 _T = TypeVar("_T")
 
 
-def get_test_articles(publisher: Publisher, parent_group: PublisherGroup) -> List[Article]:
+def get_test_articles(publisher: Publisher) -> List[Article]:
     articles = []
     html_mapping = load_html_test_file_mapping(publisher)
     for html_test_file in html_mapping.values():
@@ -164,7 +164,7 @@ class HTMLTestFile:
     def path(self) -> Path:
         return (
             generate_absolute_section_path(self.publisher.__group__)
-            / f"{self.publisher.name}_{self.crawl_date.strftime('%Y_%m_%d')}.html.gz"
+            / f"{self.publisher.__name__}_{self.crawl_date.strftime('%Y_%m_%d')}.html.gz"
         )
 
     @property
