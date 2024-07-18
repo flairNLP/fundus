@@ -39,8 +39,9 @@ class LesEchosParser(ParserProxy):
 
         @attribute
         def title(self) -> Optional[str]:
-            # Use the `get` function to retrieve data from the `meta` precomputed attribute
-            return normalize_whitespace(self.precomputed.meta.get("og:title"))
+            if title := self.precomputed.meta.get("og:title"):
+                return normalize_whitespace(title)
+            return None
 
         @attribute
         def topics(self) -> List[str]:
