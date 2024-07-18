@@ -101,6 +101,23 @@
   <tbody>
     <tr>
       <td>
+        <code>NZZ</code>
+      </td>
+      <td>
+        <div>Neue Z&#252;rcher Zeitung (NZZ)</div>
+      </td>
+      <td>
+        <a href="https://www.nzz.ch/">
+          <span>www.nzz.ch</span>
+        </a>
+      </td>
+      <td>
+        <code>topics</code>
+      </td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
         <code>SRF</code>
       </td>
       <td>
