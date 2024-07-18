@@ -18,7 +18,8 @@ class NZZParser(ParserProxy):
         _summary_selector = CSSSelector("div.headline p.headline__lead")
         _subheadline_selector = CSSSelector("div.article h2.subtitle, div.article h5.articlecomponent")
         _paragraph_selector = CSSSelector(
-            "div.article p.articlecomponent:not(.footnote), div.article div.articlecomponent li"
+            "div.article section[data-nzz-tid='article'] p.articlecomponent:not(.footnote), "
+            "div.article div.articlecomponent:not(.content-table) li"
         )
 
         _author_substitution_pattern: Pattern[str] = re.compile(r"\(.+\)$")
