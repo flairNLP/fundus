@@ -10,6 +10,7 @@ from fundus.parser.utility import (
     generic_author_parsing,
     generic_date_parsing,
     generic_nodes_to_text,
+    normalize_whitespace,
 )
 
 
@@ -18,7 +19,7 @@ class LesEchosParser(ParserProxy):
         _summary_selector = CSSSelector("article header > p")
         _subheadline_selector = CSSSelector("article div.post-paywall > h3")
 
-        _bloat_regex_ = r"^Pour ne rien rater de l'actualité politique"
+        _bloat_regex_ = r"^\s*Pour ne rien rater de l'actualité politique"
 
         _paragraph_selector = XPath(
             f'//article //div[contains(@class, "post-paywall")] /p[not(re:test(string(), "{_bloat_regex_}"))]',
@@ -39,12 +40,12 @@ class LesEchosParser(ParserProxy):
         @attribute
         def title(self) -> Optional[str]:
             # Use the `get` function to retrieve data from the `meta` precomputed attribute
-            return self.precomputed.meta.get("og:title")
+            return normalize_whitespace(self.precomputed.meta.get("og:title"))
 
         @attribute
         def topics(self) -> List[str]:
             topic_nodes = self._topic_selector(self.precomputed.doc)
-            return generic_nodes_to_text(topic_nodes)
+            return [normalize_whitespace(text) for text in generic_nodes_to_text(topic_nodes)]
 
         @attribute
         def publishing_date(self) -> Optional[datetime.datetime]:
