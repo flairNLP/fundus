@@ -68,7 +68,7 @@ jobs:
         run: echo "RED_THRESHOLD=$(( ${{ env.TOTAL_PUBLISHERS }} - 1 ))" >> $GITHUB_ENV
 
       - name: Create Badge
-        uses: schneegans/dynamic-badges-action@v1.6.0
+        uses: schneegans/dynamic-badges-action@v1.7.0
         with:
           auth: ${{ secrets.DOBBERSC_GIST_SECRET }}
           gistID: ca0ae056b05cbfeaf30fa42f84ddf458
