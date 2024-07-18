@@ -10,5 +10,9 @@
   "LeMonde_2023_09_01.html.gz": {
     "url": "https://www.lemonde.fr/politique/article/2023/08/30/sophie-binet-met-en-garde-emmanuel-macron-sur-la-gravite-de-la-situation-dans-le-pays_6187099_823448.html",
     "crawl_date": "2023-09-01 14:33:17.294657"
+  },
+  "LesEchos_2024_07_18.html.gz": {
+    "url": "https://www.lesechos.fr/monde/enjeux-internationaux/le-fil-info-les-principales-infos-de-ce-jeudi-18-juillet-2108558",
+    "crawl_date": "2024-07-18 09:17:34.013021"
   }
 }
