@@ -214,6 +214,7 @@ def generic_author_parsing(
         List[Dict[str, str]],
     ],
     split_on: Optional[List[str]] = None,
+    default_authors=None,
 ) -> List[str]:
     """This function tries to parse the given <value> to a list of authors (List[str]) based on the type of value.
 
@@ -232,10 +233,15 @@ def generic_author_parsing(
         value:      An input value representing author(s) which get parsed based on type
         split_on:   Only relevant for type(<value>) = str. If set, split <value> on <split_on>,
             else (default) split <value> on common delimiters
+        default_authors: Allows to filter out default authors like 'NewsDesk' or 'Redaktion'
 
     Returns:
         A parsed and striped list of authors
+        @param default_authors:
     """
+
+    if default_authors is None:
+        default_authors = list()
 
     def parse_author_dict(author_dict: Dict[str, str]) -> Optional[str]:
         if (author_name := author_dict.get("name")) is not None:
@@ -262,7 +268,7 @@ def generic_author_parsing(
         authors = list(filter(bool, re.split(r"|".join(split_on or common_delimiters), value)))
 
     elif isinstance(value, dict):
-        if author := parse_author_dict(value):
+        if (author := parse_author_dict(value)) and author not in default_authors:
             return [author]
         else:
             return []
@@ -274,7 +280,7 @@ def generic_author_parsing(
 
         elif isinstance(value[0], dict):
             value = cast(List[Dict[str, str]], value)
-            authors = [name for author in value if (name := parse_author_dict(author))]
+            authors = [name for author in value if (name := parse_author_dict(author)) and name not in default_authors]
 
         else:
             raise parameter_type_error
@@ -284,7 +290,7 @@ def generic_author_parsing(
 
     authors = list(more_itertools.collapse(authors, base_type=str))
 
-    return [name.strip() for name in authors]
+    return [name.strip() for name in authors if name.strip() not in default_authors]
 
 
 def generic_text_extraction_with_css(doc, selector: XPath) -> Optional[str]:
