@@ -224,7 +224,7 @@ def generic_author_parsing(
         value (list[str]):  value\n
         value (list[dict]): [dict["name"] for dict in list if dict["name"]] \n
 
-    with common delimiters := [",", ";", " und ", " and "]
+    with common delimiters := [",", ";", " und ", " and ", " & "]
 
     All values are stripped with default strip() method before returned.
 
@@ -258,7 +258,7 @@ def generic_author_parsing(
     )
 
     if isinstance(value, str):
-        common_delimiters = [",", ";", " und ", " and "]
+        common_delimiters = [",", ";", " und ", " and ", " & "]
         authors = list(filter(bool, re.split(r"|".join(split_on or common_delimiters), value)))
 
     elif isinstance(value, dict):
