@@ -4,12 +4,17 @@
       "BBC Sport"
     ],
     "body": {
-      "summary": [],
+      "summary": [
+        "July"
+      ],
       "sections": [
         {
           "headline": [],
           "paragraphs": [
-            "July25-29 Only Test, StormontPlay starts at 11:00 BSTScorecardNB Fixtures and start times are subject to change. The BBC is not responsible for any changes that may be made"
+            "25-29 Only Test, Stormont",
+            "Play starts at 11:00 BST",
+            "Scorecard",
+            "NB Fixtures and start times are subject to change. The BBC is not responsible for any changes that may be made"
           ]
         }
       ]
