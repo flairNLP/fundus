@@ -2,6 +2,7 @@ import datetime
 from typing import List, Optional
 
 from lxml.cssselect import CSSSelector
+from lxml.etree import XPath
 
 from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute
 from fundus.parser.utility import (
@@ -14,13 +15,18 @@ from fundus.parser.utility import (
 class TheBBCParser(ParserProxy):
     class V1(BaseParser):
         _subheadline_selector = CSSSelector("div[data-component='subheadline-block']")
-        _paragraph_selector = CSSSelector("div[data-component='text-block']")
+        _summary_selector = CSSSelector("div[data-component='text-block'] p:first-child b")
+        _paragraph_selector = XPath(
+            "//div[@data-component='text-block'][1]//p[not(b) or position() > 1] "
+            "| //div[@data-component='text-block'][position()>1]//p"
+        )
 
         @attribute
         def body(self) -> ArticleBody:
             return extract_article_body_with_selector(
                 self.precomputed.doc,
                 subheadline_selector=self._subheadline_selector,
+                summary_selector=self._summary_selector,
                 paragraph_selector=self._paragraph_selector,
             )
 
