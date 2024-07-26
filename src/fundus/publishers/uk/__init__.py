@@ -157,5 +157,7 @@ class UK(metaclass=PublisherGroup):
         parser=TheBBCParser,
         sources=[
             NewsMap("https://www.bbc.co.uk/sitemaps/https-index-uk-news.xml"),
+            Sitemap("https://www.bbc.co.uk/sitemaps/https-index-com-archive.xml", reverse=True),
         ],
+        url_filter=regex_filter("video|live"),
     )
