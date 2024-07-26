@@ -20,7 +20,7 @@ class TheBBCParser(ParserProxy):
         def body(self) -> ArticleBody:
             return extract_article_body_with_selector(
                 self.precomputed.doc,
-                summary_selector=self._subheadline_selector,
+                subheadline_selector=self._subheadline_selector,
                 paragraph_selector=self._paragraph_selector,
             )
 
