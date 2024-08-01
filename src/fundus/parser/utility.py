@@ -9,13 +9,13 @@ from typing import (
     Callable,
     ClassVar,
     Dict,
+    Iterable,
     List,
     Match,
     Optional,
     Pattern,
     Type,
     Union,
-    Iterable
 )
 
 import lxml.html
@@ -94,10 +94,10 @@ class ParagraphNode(Node):
 
 
 def extract_article_body_with_selector(
-        doc: lxml.html.HtmlElement,
-        paragraph_selector: XPath,
-        summary_selector: Optional[XPath] = None,
-        subheadline_selector: Optional[XPath] = None,
+    doc: lxml.html.HtmlElement,
+    paragraph_selector: XPath,
+    summary_selector: Optional[XPath] = None,
+    subheadline_selector: Optional[XPath] = None,
 ) -> ArticleBody:
     # depth first index for each element in tree
     df_idx_by_ref = {element: i for i, element in enumerate(doc.iter())}
@@ -167,10 +167,10 @@ def get_meta_content(root: lxml.html.HtmlElement) -> Dict[str, str]:
         if len(attributes) == 1:
             data[attributes.keys()[0]].append(attributes.values()[0])
         elif key := (  # these keys are ordered by frequency
-                attributes.get("name")
-                or attributes.get("property")
-                or attributes.get("http-equiv")
-                or attributes.get("itemprop")
+            attributes.get("name")
+            or attributes.get("property")
+            or attributes.get("http-equiv")
+            or attributes.get("itemprop")
         ):
             if ns := attributes.get("class"):
                 key = f"{ns}:{key}"
@@ -201,19 +201,20 @@ def generic_nodes_to_text(nodes: List[lxml.html.HtmlElement]) -> List[str]:
 
 
 def apply_substitution_pattern_over_list(
-        input_list: List[str], pattern: Pattern[str], replacement: Union[str, Callable[[Match[str]], str]] = ""
+    input_list: List[str], pattern: Pattern[str], replacement: Union[str, Callable[[Match[str]], str]] = ""
 ) -> List[str]:
     return [subbed for text in input_list if (subbed := re.sub(pattern, replacement, text).strip())]
 
+
 def generic_author_parsing(
-        value: Union[
-            Optional[str],
-            Dict[str, str],
-            List[str],
-            List[Dict[str, str]],
-        ],
-        split_on: Optional[List[str]] = None,
-        normalize: bool = True,
+    value: Union[
+        Optional[str],
+        Dict[str, str],
+        List[str],
+        List[Dict[str, str]],
+    ],
+    split_on: Optional[List[str]] = None,
+    normalize: bool = True,
 ) -> List[str]:
     """This function tries to parse the given <value> to a list of authors (List[str]) based on the type of value.
 
@@ -263,7 +264,6 @@ def generic_author_parsing(
     authors: List[str] = []
 
     for item in value if isinstance(value, list) else [value]:
-
         if isinstance(item, str):
             authors.append(item)
 
@@ -275,6 +275,7 @@ def generic_author_parsing(
             raise parameter_type_error
 
     if normalize or split_on:
+
         def split(text: str) -> Iterable[str]:
             return filter(bool, re.split(r"|".join(split_on or common_delimiters), text))
 

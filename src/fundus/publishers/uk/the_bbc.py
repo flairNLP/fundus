@@ -9,16 +9,22 @@ from fundus.parser.utility import (
     extract_article_body_with_selector,
     generic_author_parsing,
     generic_date_parsing,
+    normalize_whitespace,
 )
 
 
 class TheBBCParser(ParserProxy):
     class V1(BaseParser):
         _subheadline_selector = CSSSelector("div[data-component='subheadline-block']")
-        _summary_selector = CSSSelector("div[data-component='text-block'] p:first-child b")
+        _summary_selector = XPath("//div[@data-component='text-block'][1] //p[b]")
         _paragraph_selector = XPath(
-            "//div[@data-component='text-block'][1]//p[not(b) or position() > 1] "
-            "| //div[@data-component='text-block'][position()>1]//p"
+            "//div[@data-component='text-block'][1]//p[not(b) and text()] |"
+            "//div[@data-component='text-block'][position()>1] //p[text()] |"
+            "//div[@data-component='text-block'] //ul /li[text()]"
+        )
+
+        _topic_selector = CSSSelector(
+            "div[data-component='topic-list'] > div > div > ul > li ," "div[data-component='tags'] a"
         )
 
         @attribute
@@ -36,17 +42,7 @@ class TheBBCParser(ParserProxy):
 
         @attribute
         def authors(self) -> List[str]:
-            article_type = self.precomputed.ld.serialize().keys()
-            if "Article" in article_type:
-                authors = self.precomputed.ld.get_value_by_key_path(["Article", "author", "name"])
-                return generic_author_parsing(authors)
-            if "ReportageNewsArticle" in article_type:
-                author_objects = self.precomputed.ld.get_value_by_key_path(["ReportageNewsArticle", "author"])
-                authors = []
-                for obj in author_objects or []:
-                    authors.extend(generic_author_parsing(obj.get("name", "")))
-                return authors
-            return []
+            return generic_author_parsing(self.precomputed.ld.bf_search("author"))
 
         @attribute
         def title(self) -> Optional[str]:
@@ -54,6 +50,5 @@ class TheBBCParser(ParserProxy):
 
         @attribute
         def topics(self) -> List[str]:
-            related_topics_selector = CSSSelector("div[data-component='topic-list'] > div > div > ul > li")
-            topics = [str(node.text_content()) for node in related_topics_selector(self.precomputed.doc)]
-            return topics
+            topic_nodes = self._topic_selector(self.precomputed.doc)
+            return [normalize_whitespace(node.text_content()) for node in topic_nodes]
