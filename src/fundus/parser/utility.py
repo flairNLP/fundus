@@ -15,7 +15,7 @@ from typing import (
     Pattern,
     Type,
     Union,
-    cast,
+    Iterable
 )
 
 import lxml.html
@@ -94,10 +94,10 @@ class ParagraphNode(Node):
 
 
 def extract_article_body_with_selector(
-    doc: lxml.html.HtmlElement,
-    paragraph_selector: XPath,
-    summary_selector: Optional[XPath] = None,
-    subheadline_selector: Optional[XPath] = None,
+        doc: lxml.html.HtmlElement,
+        paragraph_selector: XPath,
+        summary_selector: Optional[XPath] = None,
+        subheadline_selector: Optional[XPath] = None,
 ) -> ArticleBody:
     # depth first index for each element in tree
     df_idx_by_ref = {element: i for i, element in enumerate(doc.iter())}
@@ -167,10 +167,10 @@ def get_meta_content(root: lxml.html.HtmlElement) -> Dict[str, str]:
         if len(attributes) == 1:
             data[attributes.keys()[0]].append(attributes.values()[0])
         elif key := (  # these keys are ordered by frequency
-            attributes.get("name")
-            or attributes.get("property")
-            or attributes.get("http-equiv")
-            or attributes.get("itemprop")
+                attributes.get("name")
+                or attributes.get("property")
+                or attributes.get("http-equiv")
+                or attributes.get("itemprop")
         ):
             if ns := attributes.get("class"):
                 key = f"{ns}:{key}"
@@ -201,19 +201,19 @@ def generic_nodes_to_text(nodes: List[lxml.html.HtmlElement]) -> List[str]:
 
 
 def apply_substitution_pattern_over_list(
-    input_list: List[str], pattern: Pattern[str], replacement: Union[str, Callable[[Match[str]], str]] = ""
+        input_list: List[str], pattern: Pattern[str], replacement: Union[str, Callable[[Match[str]], str]] = ""
 ) -> List[str]:
     return [subbed for text in input_list if (subbed := re.sub(pattern, replacement, text).strip())]
 
-
 def generic_author_parsing(
-    value: Union[
-        Optional[str],
-        Dict[str, str],
-        List[str],
-        List[Dict[str, str]],
-    ],
-    split_on: Optional[List[str]] = None,
+        value: Union[
+            Optional[str],
+            Dict[str, str],
+            List[str],
+            List[Dict[str, str]],
+        ],
+        split_on: Optional[List[str]] = None,
+        normalize: bool = True,
 ) -> List[str]:
     """This function tries to parse the given <value> to a list of authors (List[str]) based on the type of value.
 
@@ -237,6 +237,13 @@ def generic_author_parsing(
         A parsed and striped list of authors
     """
 
+    common_delimiters = [",", ";", " und ", " and ", " & "]
+
+    parameter_type_error: TypeError = TypeError(
+        f"<value> '{value}' has an unsupported type {type(value)}. "
+        f"Supported types are 'Optional[str], Dict[str, str], List[str], List[Dict[str, str]],'"
+    )
+
     def parse_author_dict(author_dict: Dict[str, str]) -> Optional[str]:
         if (author_name := author_dict.get("name")) is not None:
             return author_name
@@ -252,39 +259,30 @@ def generic_author_parsing(
     if not value:
         return []
 
-    parameter_type_error: TypeError = TypeError(
-        f"<value> '{value}' has an unsupported type {type(value)}. "
-        f"Supported types are 'Optional[str], Dict[str, str], List[str], List[Dict[str, str]],'"
-    )
+    # collapse
+    authors: List[str] = []
 
-    if isinstance(value, str):
-        common_delimiters = [",", ";", " und ", " and ", " & "]
-        authors = list(filter(bool, re.split(r"|".join(split_on or common_delimiters), value)))
+    for item in value if isinstance(value, list) else [value]:
 
-    elif isinstance(value, dict):
-        if author := parse_author_dict(value):
-            return [author]
-        else:
-            return []
+        if isinstance(item, str):
+            authors.append(item)
 
-    elif isinstance(value, list):
-        if isinstance(value[0], str):
-            value = cast(List[str], value)
-            authors = value
-
-        elif isinstance(value[0], dict):
-            value = cast(List[Dict[str, str]], value)
-            authors = [name for author in value if (name := parse_author_dict(author))]
+        elif isinstance(item, dict):
+            if (author := parse_author_dict(item)) is not None:
+                authors.append(author)
 
         else:
             raise parameter_type_error
 
-    else:
-        raise parameter_type_error
+    if normalize or split_on:
+        def split(text: str) -> Iterable[str]:
+            return filter(bool, re.split(r"|".join(split_on or common_delimiters), text))
 
-    authors = list(more_itertools.collapse(authors, base_type=str))
+        authors = list(more_itertools.flatten([split(author) for author in authors]))
+        normalized_authors = [normalize_whitespace(author) for author in authors]
+        return normalized_authors
 
-    return [name.strip() for name in authors]
+    return authors
 
 
 def generic_text_extraction_with_css(doc, selector: XPath) -> Optional[str]:
