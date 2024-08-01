@@ -1,30 +1,89 @@
 {
   "V1": {
     "authors": [
-      "BBC Sport"
+      "BBC News"
     ],
     "body": {
       "summary": [
-        "July"
+        "The Office for Budget Responsibility (OBR) monitors the UK government's spending plans and performance."
       ],
       "sections": [
         {
           "headline": [],
           "paragraphs": [
-            "25-29 Only Test, Stormont",
-            "Play starts at 11:00 BST",
-            "Scorecard",
-            "NB Fixtures and start times are subject to change. The BBC is not responsible for any changes that may be made"
+            "Twice a year, it releases forecasts on the state of the economy and the public finances."
+          ]
+        },
+        {
+          "headline": [
+            "What is the OBR and what does it do?"
+          ],
+          "paragraphs": [
+            "The OBR assesses the health of the UK's economy. It is independent of government but works closely with the Treasury.",
+            "Its reports are usually released alongside big government events such as the Budget and Autumn Statement.",
+            "Before these announcements, the government gives the OBR details of its plans to raise or lower taxes and how it intends to spend public money.",
+            "The OBR checks the information and makes economic forecasts covering the next five years.",
+            "These forecasts cover things like whether the government will spend more money than it raises, and whether the UK's economy will grow or shrink."
+          ]
+        },
+        {
+          "headline": [
+            "Why do OBR forecasts matter?"
+          ],
+          "paragraphs": [
+            "The OBR uses its forecasts to assess whether the government is likely to meet the rules it has set for managing the economy.",
+            "Its judgement on whether the government's plans are sound is important to financial investors. They help fund government spending by buying its bonds - which are a type of IOU.",
+            "This means some of the government's borrowing costs are determined by how the financial markets respond to the OBR's assessments and forecasts."
+          ]
+        },
+        {
+          "headline": [
+            "Does the government have to follow OBR advice?"
+          ],
+          "paragraphs": [
+            "A new law is set to prevent any future government sidelining the OBR.",
+            "The OBR would be given powers to make judgements on any major taxation or spending announcements, to deliver \"stability\", the Treasury has said.",
+            "In September 2022, Liz Truss's government put forward a set of unfunded tax cuts in its mini-budget without consulting the OBR first.",
+            "The value of the pound crashed, signalling that international investors had no confidence in the government's measures, and the Bank of England was forced to step in to protect pension funds.",
+            "The OBR had offered to prepare a draft economic forecast, but the government rejected the offer.",
+            "Many said the decision not to consult the OBR was a key reason for the lack of investor confidence.",
+            "Jeremy Hunt, who replaced Kwasi Kwarteng as chancellor shortly afterwards, said it was a mistake by the government to \"fly blind\" without the OBR's input.",
+            "After Rachel Reeves' first major speech as chancellor, the OBR also suggested there were billions of pounds of spending pressures that it did not know about when preparing its last forecast in March.",
+            "While the Conservatives have said they have always provided the necessary information, Rachel Reeves has pledged to further strengthen the OBR to avoid any future \"cliff edge\" being identified.",
+            "In a letter, she said the OBR would be able to question government assumptions about spending by departments, as well as demand more details on whether departments were likely to overspend or underspend.",
+            "She also said that spending reviews would now happen every two years, with detailed plans being set out in advance."
+          ]
+        },
+        {
+          "headline": [
+            "Why was the OBR created?"
+          ],
+          "paragraphs": [
+            "The OBR was set up in 2010 under the Conservative-Liberal Democrat coalition government.",
+            "Before that, the government produced its own economic forecasts.",
+            "The OBR was designed to provide independent analysis of the UK economy that was not influenced by party politics.",
+            "It also assesses some aspects of the financial policy decided by the Scottish and Welsh governments."
+          ]
+        },
+        {
+          "headline": [
+            "Who runs the OBR?"
+          ],
+          "paragraphs": [
+            "The OBR is led by a Budget Responsibility Committee.",
+            "It has three members, including the current chair Richard Hughes, whose five-year term began in October 2020."
           ]
         }
       ]
     },
-    "publishing_date": "2024-05-12 12:52:40.566000+00:00",
-    "title": "Zimbabwe in Ireland 2024 - fixtures, results & scorecards",
+    "publishing_date": "2022-10-10 13:21:17+00:00",
+    "title": "Office for Budget Responsibility: What is the OBR and what does it do?",
     "topics": [
-      "Ireland",
-      "Zimbabwe",
-      "Cricket"
+      "Recession",
+      "GDP",
+      "UK economy",
+      "Jeremy Hunt",
+      "Office for Budget Responsibility"
     ]
   }
 }
