@@ -15,7 +15,6 @@ from fundus.parser.utility import (
 
 class DagbladetParser(ParserProxy):
     class V1(BaseParser):
-
         _paragraph_selector = CSSSelector("#main > article > div.body-copy > p")
         _sub_headline_selector = CSSSelector("#main > article > div.article-top.expand > div > header > h3")
         _paywall_selector = CSSSelector("button[data-paywall-id]")

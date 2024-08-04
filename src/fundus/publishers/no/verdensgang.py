@@ -15,7 +15,6 @@ from fundus.parser.utility import (
 
 class VerdensGangParser(ParserProxy):
     class V1(BaseParser):
-
         _paragraph_selector = CSSSelector("article > section.article-body > p")
         _sub_headline_selector = CSSSelector("article > header > p")
         _paywall_selector = CSSSelector("#paywall-login-link")

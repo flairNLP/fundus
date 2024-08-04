@@ -15,7 +15,6 @@ from fundus.parser.utility import (
 
 class NettavisenParser(ParserProxy):
     class V1(BaseParser):
-
         _paragraph_selector = CSSSelector(
             "#main-content-begin > article > div.inner-article.article--c-PJLV.article--c-PJLV-bfVKEM-cv > div.body-text.article--c-cmpvrW.article--c-cmpvrW-hEmTrk-design-nettavisen > div > p"
         )

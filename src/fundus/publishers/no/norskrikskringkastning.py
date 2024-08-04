@@ -15,7 +15,6 @@ from fundus.parser.utility import (
 
 class NRKParser(ParserProxy):
     class V1(BaseParser):
-
         _paragraph_selector = CSSSelector("div.article-body > p")
         _summary_selector = CSSSelector("div.text-body.text-body-sans-serif.article-lead p")
 
