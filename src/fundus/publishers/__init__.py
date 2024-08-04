@@ -14,6 +14,7 @@ from fundus.publishers.na import NA
 from fundus.publishers.tr import TR
 from fundus.publishers.uk import UK
 from fundus.publishers.us import US
+from fundus.publishers.no import NO
 
 __all__ = ["Publisher", "PublisherGroup"]
 
@@ -59,3 +60,4 @@ class PublisherCollection(metaclass=PublisherCollectionMeta):
     cn = CN
     tr = TR
     my = MY
+    no = NO
