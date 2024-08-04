@@ -11,10 +11,10 @@ from fundus.publishers.fr import FR
 from fundus.publishers.lt import LT
 from fundus.publishers.my import MY
 from fundus.publishers.na import NA
+from fundus.publishers.no import NO
 from fundus.publishers.tr import TR
 from fundus.publishers.uk import UK
 from fundus.publishers.us import US
-from fundus.publishers.no import NO
 
 __all__ = ["Publisher", "PublisherGroup"]
 

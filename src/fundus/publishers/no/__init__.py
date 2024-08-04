@@ -1,12 +1,11 @@
 from fundus.publishers.base_objects import Publisher, PublisherGroup
-from fundus.scraping.url import NewsMap, RSSFeed, Sitemap
 from fundus.scraping.filter import inverse, regex_filter
+from fundus.scraping.url import NewsMap, RSSFeed, Sitemap
 
-from .verdensgang import VerdensGangParser
 from .dagbladet import DagbladetParser
 from .nettavisen import NettavisenParser
 from .norskrikskringkastning import NRKParser
-
+from .verdensgang import VerdensGangParser
 
 
 class NO(metaclass=PublisherGroup):
@@ -15,11 +14,13 @@ class NO(metaclass=PublisherGroup):
         domain="https://www.vg.no/",
         parser=VerdensGangParser,
         sources=[
-            Sitemap("https://www.vg.no/sitemap.xml",
-                    sitemap_filter=inverse(regex_filter("vg\.no\/sitemaps/\d{4}\-\d{2}-articles.xml")), 
-                    reverse=True),
+            Sitemap(
+                "https://www.vg.no/sitemap.xml",
+                sitemap_filter=inverse(regex_filter("vg\.no\/sitemaps/\d{4}\-\d{2}-articles.xml")),
+                reverse=True,
+            ),
             NewsMap("https://www.vg.no/sitemap/files/articles-48hrs.xml"),
-        ]
+        ],
     )
 
     Dagbladet = Publisher(
@@ -29,7 +30,7 @@ class NO(metaclass=PublisherGroup):
         sources=[
             Sitemap("https://www.dagbladet.no/app/jw-api-proxy/sitemap/index/dagbladet.xml", reverse=True),
             NewsMap("https://www.dagbladet.no/sitemap"),
-        ]
+        ],
     )
 
     Nettavisen = Publisher(
@@ -38,7 +39,7 @@ class NO(metaclass=PublisherGroup):
         parser=NettavisenParser,
         sources=[
             RSSFeed("https://www.nettavisen.no/service/rich-rss"),
-        ]
+        ],
     )
 
     NRK = Publisher(
@@ -52,6 +53,6 @@ class NO(metaclass=PublisherGroup):
             RSSFeed("https://www.nrk.no/kultur/toppsaker.rss"),
             RSSFeed("https://www.nrk.no/livsstil/toppsaker.rss"),
             RSSFeed("https://www.nrk.no/viten/toppsaker.rss"),
-            RSSFeed("https://www.nrk.no/dokumentar/toppsaker.rss")
-        ]
+            RSSFeed("https://www.nrk.no/dokumentar/toppsaker.rss"),
+        ],
     )

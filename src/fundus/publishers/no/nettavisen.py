@@ -1,3 +1,9 @@
+import datetime
+from typing import List, Optional
+
+from lxml.cssselect import CSSSelector
+from lxml.etree import XPath
+
 from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute
 from fundus.parser.utility import (
     extract_article_body_with_selector,
@@ -5,15 +11,14 @@ from fundus.parser.utility import (
     generic_date_parsing,
     generic_topic_parsing,
 )
-from lxml.cssselect import CSSSelector
-from lxml.etree import XPath
-from typing import Optional, List
-import datetime
+
 
 class NettavisenParser(ParserProxy):
     class V1(BaseParser):
-         
-        _paragraph_selector = CSSSelector("#main-content-begin > article > div.inner-article.article--c-PJLV.article--c-PJLV-bfVKEM-cv > div.body-text.article--c-cmpvrW.article--c-cmpvrW-hEmTrk-design-nettavisen > div > p")
+
+        _paragraph_selector = CSSSelector(
+            "#main-content-begin > article > div.inner-article.article--c-PJLV.article--c-PJLV-bfVKEM-cv > div.body-text.article--c-cmpvrW.article--c-cmpvrW-hEmTrk-design-nettavisen > div > p"
+        )
         _paywall_selector = CSSSelector("div.incentive-block")
 
         @attribute
@@ -26,16 +31,15 @@ class NettavisenParser(ParserProxy):
         @attribute
         def title(self) -> Optional[str]:
             return self.precomputed.meta.get("og:title")
-        
+
         @attribute
         def publishing_date(self) -> Optional[datetime.datetime]:
             return generic_date_parsing(self.precomputed.meta.get("article:published_time"))
-        
+
         @attribute
         def authors(self) -> List[str]:
             return generic_author_parsing(self.precomputed.meta.get("article:author"))
-        
-    
+
         @attribute
         def topics(self) -> List[str]:
             filtered_topics = []
