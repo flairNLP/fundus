@@ -2,29 +2,31 @@ import datetime
 from typing import List, Optional
 
 from lxml.cssselect import CSSSelector
-from lxml.etree import XPath
 
 from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute
 from fundus.parser.utility import (
     extract_article_body_with_selector,
-    generic_author_parsing,
     generic_date_parsing,
+    generic_nodes_to_text,
     generic_topic_parsing,
 )
 
 
 class DagbladetParser(ParserProxy):
     class V1(BaseParser):
+        _summary_selector = CSSSelector("#main > article > div.article-top.expand > div > header > h3")
+        _subheadline_selector = CSSSelector("#main > article > div.body-copy > h2")
         _paragraph_selector = CSSSelector("#main > article > div.body-copy > p")
-        _sub_headline_selector = CSSSelector("#main > article > div.article-top.expand > div > header > h3")
-        _paywall_selector = CSSSelector("button[data-paywall-id]")
+
+        _author_selector = CSSSelector("section.meta div[itemtype='http://schema.org/Person'] address.name")
 
         @attribute
         def body(self) -> ArticleBody:
             return extract_article_body_with_selector(
                 self.precomputed.doc,
                 paragraph_selector=self._paragraph_selector,
-                subheadline_selector=self._sub_headline_selector,
+                summary_selector=self._summary_selector,
+                subheadline_selector=self._subheadline_selector,
             )
 
         @attribute
@@ -37,16 +39,8 @@ class DagbladetParser(ParserProxy):
 
         @attribute
         def authors(self) -> List[str]:
-            return generic_author_parsing(self.precomputed.meta.get("article:author"))
+            return generic_nodes_to_text(self._author_selector(self.precomputed.doc), normalize=True)
 
         @attribute
         def topics(self) -> List[str]:
-            filtered_topics = []
-            for topic, metatag in self.precomputed.meta.items():
-                if "article:tag" in topic:
-                    filtered_topics.append(metatag)
-            return generic_topic_parsing(filtered_topics)
-
-        @attribute
-        def free_access(self) -> bool:
-            return not self._paywall_selector(self.precomputed.doc)
+            return generic_topic_parsing(self.precomputed.meta.get("article:tag"))
