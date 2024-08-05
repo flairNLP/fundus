@@ -39,7 +39,7 @@ class TheMirrorParser(ParserProxy):
 
         @attribute
         def publishing_date(self) -> Optional[datetime.datetime]:
-            return generic_date_parsing(self.precomputed.meta.get("datePublished"))
+            return generic_date_parsing(self.precomputed.meta.get("parsely-pub-date"))
 
         @attribute
         def authors(self) -> List[str]:
