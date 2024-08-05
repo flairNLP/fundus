@@ -1,27 +1,29 @@
 # Table of Contents
 
-* [1. Creating a Parser Stub](#1-creating-a-parser-stub)
-* [2. Creating a Publisher Specification](#2-creating-a-publisher-specification)
-  * [Adding Sources](#adding-sources)
-    * [Different `URLSource` types](#different-urlsource-types)
-    * [How to specify a `URLSource`](#how-to-specify-a-urlsource)
-      * [RSS feeds](#rss-feeds)
-      * [Sitemaps](#sitemaps)
-    * [How to differentiate between `Sitemap` and `NewsMap`](#how-to-differentiate-between-sitemap-and-newsmap)
-  * [Finishing the Publisher Specification](#finishing-the-publisher-specification)
-* [4. Validating the Current Implementation Progress](#4-validating-the-current-implementation-progress)
-* [5. Implementing the Parser](#5-implementing-the-parser)
-  * [Extracting Attributes from Precomputed](#extracting-attributes-from-precomputed)
-  * [Extracting Attributes with XPath and CSS-Select](#extracting-attributes-with-xpath-and-css-select)
-    * [Working with `lxml`](#working-with-lxml)
-    * [CSS-Select](#css-select)
-    * [XPath](#xpath)
-  * [Checking the free_access attribute](#checking-the-free_access-attribute)
-  * [Finishing the Parser](#finishing-the-parser)
-* [6. Generate unit tests and update tables](#6-generate-unit-tests-and-update-tables)
-  * [Add unit test](#add-unit-tests)
-  * [Update tables](#update-tables)
-* [7. Opening a Pull Request](#7-opening-a-pull-request)
+* [How to add a Publisher](#how-to-add-a-publisher)
+  * [1. Creating a Parser Stub](#1-creating-a-parser-stub)
+  * [2. Creating a Publisher Specification](#2-creating-a-publisher-specification)
+    * [Adding Sources](#adding-sources)
+      * [Different `URLSource` types](#different-urlsource-types)
+      * [How to specify a `URLSource`](#how-to-specify-a-urlsource)
+        * [RSS feeds](#rss-feeds)
+        * [Sitemaps](#sitemaps)
+      * [How to differentiate between `Sitemap` and `NewsMap`](#how-to-differentiate-between-sitemap-and-newsmap)
+    * [Finishing the Publisher Specification](#finishing-the-publisher-specification)
+  * [4. Validating the Current Implementation Progress](#4-validating-the-current-implementation-progress)
+  * [5. Implementing the Parser](#5-implementing-the-parser)
+    * [Extracting Attributes from Precomputed](#extracting-attributes-from-precomputed)
+    * [Extracting Attributes with XPath and CSS-Select](#extracting-attributes-with-xpath-and-css-select)
+      * [Working with `lxml`](#working-with-lxml)
+      * [CSS-Select](#css-select)
+      * [XPath](#xpath)
+    * [Extract the ArticleBody](#extract-the-articlebody)
+    * [Checking the free_access attribute](#checking-the-free_access-attribute)
+    * [Finishing the Parser](#finishing-the-parser)
+  * [6. Generate unit tests and update tables](#6-generate-unit-tests-and-update-tables)
+    * [Add unit tests](#add-unit-tests)
+    * [Update tables](#update-tables)
+  * [7. Opening a Pull Request](#7-opening-a-pull-request)
 
 # How to add a Publisher
 
@@ -530,6 +532,20 @@ Instead, we recommend referring to [this](https://devhints.io/xpath) documentati
 **_NOTE:_** The `fundus/parser/utility.py` module includes several utility functions that can assist you in implementing parser attributes.
 Make sure to examine other parsers and consult the [attribute guidelines](attribute_guidelines.md) for specifics on attribute implementation. 
 We strongly encourage utilizing these utility functions, especially when parsing the `ArticleBody`.
+
+### Extract the ArticleBody
+
+In the context of Fundus, an article's body typically includes multiple paragraphs, and optionally, a summary and several subheadings.
+It's important to note that article layouts can vary significantly between publishers, with the most common layouts being:
+1. **Wall of text**: Commonly used by US-based publishers, this layout consists of a list of paragraphs without a summary or subheadings.
+2. **The Complete**: This layout includes a brief summary following the title and multiple paragraphs grouped into sections separated by subheadings (`ArticleSections`).
+
+![The complete: ArticleBody attribute structure of an example article](images/newspaper_labels_bold.pdf)
+
+To accurately extract the body of an article, use the `extract_article_body_with_selector` function from the parser utilities.
+This function accepts selectors for the different body parts as input and returns a parsed `ArticleBody`.
+For practical examples, refer to existing parser implementations to understand how everything integrates.
+
 
 ### Checking the free_access attribute
 
