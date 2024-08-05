@@ -160,6 +160,7 @@ class US(metaclass=PublisherGroup):
         ],
         # Adds a URL-filter to ignore incomplete URLs
         url_filter=regex_filter(r"washingtonpost.com(\/)?$"),
+        deprecated=True,
     )
 
     TheNewYorker = Publisher(
