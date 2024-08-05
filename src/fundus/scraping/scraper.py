@@ -1,3 +1,4 @@
+import warnings
 from typing import Dict, Iterator, List, Literal, Optional, Type
 
 import more_itertools
@@ -34,7 +35,7 @@ class BaseScraper:
                 parser = self.parser_mapping[html.source_info.publisher]
 
                 try:
-                    extraction = parser(html.crawl_date).parse(html.content, error_handling)
+                    extraction = parser.parse(html.content, html.crawl_date, error_handling)
 
                 except Exception as error:
                     if error_handling == "raise":
