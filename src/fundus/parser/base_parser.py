@@ -295,9 +295,9 @@ class ParserProxy(ABC):
         reason=f"Calling <class: ParserProxy> is legacy behaviour. Use <method: parse> of <class: ParserProxy> instead",
     )
     def __call__(self, crawl_date: Optional[Union[datetime, date]] = None) -> BaseParser:
-        return self._get_parser(crawl_date)
+        return self.get_parser(crawl_date)
 
-    def _get_parser(self, crawl_date: Optional[Union[datetime, date]] = None) -> BaseParser:
+    def get_parser(self, crawl_date: Optional[Union[datetime, date]] = None) -> BaseParser:
         if crawl_date is None:
             return self._get_latest_cache()()
 
@@ -358,4 +358,4 @@ class ParserProxy(ABC):
         crawl_date: Union[datetime, date],
         error_handling: Literal["suppress", "catch", "raise"] = "raise",
     ) -> Dict[str, Any]:
-        return self._get_parser(crawl_date).parse(html, error_handling)
+        return self.get_parser(crawl_date).parse(html, error_handling)
