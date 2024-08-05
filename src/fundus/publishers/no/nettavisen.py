@@ -1,5 +1,6 @@
 import datetime
-from typing import List, Optional
+import re
+from typing import List, Optional, Pattern
 
 from lxml.cssselect import CSSSelector
 from lxml.etree import XPath
@@ -15,16 +16,22 @@ from fundus.parser.utility import (
 
 class NettavisenParser(ParserProxy):
     class V1(BaseParser):
-        _paragraph_selector = CSSSelector(
-            "#main-content-begin > article > div.inner-article.article--c-PJLV.article--c-PJLV-bfVKEM-cv > div.body-text.article--c-cmpvrW.article--c-cmpvrW-hEmTrk-design-nettavisen > div > p"
+        _bloat_pattern: str = "Les også:"
+
+        _summary_selector = CSSSelector("p.lead-text")
+        _subheadline_selector = CSSSelector("div.article-body > h2")
+        _paragraph_selector = XPath(
+            f"//div[contains(@class,'article-body')] /p[not(re:test(string(), '{_bloat_pattern}'))]",
+            namespaces={"re": "http://exslt.org/regular-expressions"},
         )
-        _paywall_selector = CSSSelector("div.incentive-block")
 
         @attribute
         def body(self) -> ArticleBody:
             return extract_article_body_with_selector(
                 self.precomputed.doc,
                 paragraph_selector=self._paragraph_selector,
+                subheadline_selector=self._subheadline_selector,
+                summary_selector=self._summary_selector,
             )
 
         @attribute
@@ -41,12 +48,4 @@ class NettavisenParser(ParserProxy):
 
         @attribute
         def topics(self) -> List[str]:
-            filtered_topics = []
-            for topic, metatag in self.precomputed.meta.items():
-                if "article:tag" in topic:
-                    filtered_topics.append(metatag)
-            return generic_topic_parsing(filtered_topics)
-
-        @attribute
-        def free_access(self) -> bool:
-            return not self._paywall_selector(self.precomputed.doc)
+            return generic_topic_parsing(self.precomputed.meta.get("article:tag"))
