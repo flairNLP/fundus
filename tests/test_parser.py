@@ -108,13 +108,13 @@ class TestParserProxy:
         assert parser_proxy.latest_version == parser_proxy.Later
 
     def test_call(self, proxy_with_two_versions_and_different_attrs):
-        parser_proxy = proxy_with_two_versions_and_different_attrs()
-        assert type(parser_proxy()) == parser_proxy.latest_version
+        parser_proxy: ParserProxy = proxy_with_two_versions_and_different_attrs()
+        assert type(parser_proxy.get_parser()) == parser_proxy.latest_version
 
         for versioned_parser in parser_proxy:
-            from_proxy = parser_proxy(versioned_parser.VALID_UNTIL)
+            from_proxy = parser_proxy.get_parser(versioned_parser.VALID_UNTIL)
             assert isinstance(from_proxy, versioned_parser)
-            assert from_proxy == parser_proxy(versioned_parser.VALID_UNTIL)
+            assert from_proxy == parser_proxy.get_parser(versioned_parser.VALID_UNTIL)
 
     def test_mapping(self, proxy_with_two_versions_and_different_attrs):
         parser_proxy = proxy_with_two_versions_and_different_attrs()

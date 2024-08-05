@@ -263,7 +263,7 @@ def load_html_test_file_mapping(publisher: Publisher) -> Dict[Type[BaseParser], 
     html_files = [HTMLTestFile.load(path) for path in html_paths]
     html_mapping: Dict[Type[BaseParser], HTMLTestFile] = {}
     for html_file in html_files:
-        versioned_parser = publisher.parser(html_file.crawl_date)
+        versioned_parser = publisher.parser.get_parser(html_file.crawl_date)
         if html_mapping.get(type(versioned_parser)):
             raise KeyError(f"Duplicate html files for {publisher.name!r} and version {type(versioned_parser).__name__}")
         html_mapping[type(versioned_parser)] = html_file
