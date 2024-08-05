@@ -1063,23 +1063,6 @@
     </tr>
     <tr>
       <td>
-        <code>NRK</code>
-      </td>
-      <td>
-        <div>NRK</div>
-      </td>
-      <td>
-        <a href="https://www.nrk.no/">
-          <span>www.nrk.no</span>
-        </a>
-      </td>
-      <td>
-        <code>topics</code>
-      </td>
-      <td>&#160;</td>
-    </tr>
-    <tr>
-      <td>
         <code>Nettavisen</code>
       </td>
       <td>
@@ -1095,10 +1078,27 @@
     </tr>
     <tr>
       <td>
+        <code>NRK</code>
+      </td>
+      <td>
+        <div>Norsk rikskringkasting</div>
+      </td>
+      <td>
+        <a href="https://www.nrk.no/">
+          <span>www.nrk.no</span>
+        </a>
+      </td>
+      <td>
+        <code>topics</code>
+      </td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
         <code>VerdensGang</code>
       </td>
       <td>
-        <div>VG</div>
+        <div>Verdens Gang</div>
       </td>
       <td>
         <a href="https://www.vg.no/">
