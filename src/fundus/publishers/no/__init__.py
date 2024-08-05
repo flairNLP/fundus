@@ -10,7 +10,7 @@ from .verdensgang import VerdensGangParser
 
 class NO(metaclass=PublisherGroup):
     VerdensGang = Publisher(
-        name="VG",
+        name="Verdens Gang",
         domain="https://www.vg.no/",
         parser=VerdensGangParser,
         sources=[
@@ -43,7 +43,7 @@ class NO(metaclass=PublisherGroup):
     )
 
     NRK = Publisher(
-        name="NRK",
+        name="Norsk rikskringkasting",
         domain="https://www.nrk.no/",
         parser=NRKParser,
         sources=[

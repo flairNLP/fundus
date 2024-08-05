@@ -15,8 +15,15 @@ from fundus.parser.utility import (
 
 class VerdensGangParser(ParserProxy):
     class V1(BaseParser):
-        _paragraph_selector = CSSSelector("article > section.article-body > p")
-        _sub_headline_selector = CSSSelector("article > header > p")
+        _bloat_pattern: str = "Les også:|" "Vil du lese mer"
+
+        _summary_selector = CSSSelector("header.article-intro p")
+        _subheadline_selector = CSSSelector("section.article-body > h2")
+        _paragraph_selector = XPath(
+            f"//section[contains(@class,'article-body')] /p[not(re:test(string(), '{_bloat_pattern}'))]",
+            namespaces={"re": "http://exslt.org/regular-expressions"},
+        )
+
         _paywall_selector = CSSSelector("#paywall-login-link")
 
         @attribute
@@ -24,7 +31,8 @@ class VerdensGangParser(ParserProxy):
             return extract_article_body_with_selector(
                 self.precomputed.doc,
                 paragraph_selector=self._paragraph_selector,
-                subheadline_selector=self._sub_headline_selector,
+                summary_selector=self._summary_selector,
+                subheadline_selector=self._subheadline_selector,
             )
 
         @attribute
@@ -41,11 +49,7 @@ class VerdensGangParser(ParserProxy):
 
         @attribute
         def topics(self) -> List[str]:
-            filtered_topics = []
-            for topic, metatag in self.precomputed.meta.items():
-                if "article:tag" in topic:
-                    filtered_topics.append(metatag)
-            return generic_topic_parsing(filtered_topics)
+            return generic_topic_parsing(self.precomputed.meta.get("article:tag"))
 
         @attribute
         def free_access(self) -> bool:
