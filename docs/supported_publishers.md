@@ -1187,6 +1187,21 @@
     </tr>
     <tr>
       <td>
+        <code>BBC</code>
+      </td>
+      <td>
+        <div>The BBC</div>
+      </td>
+      <td>
+        <a href="https://www.bbc.co.uk/">
+          <span>www.bbc.co.uk</span>
+        </a>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
         <code>TheGuardian</code>
       </td>
       <td>

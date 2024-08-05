@@ -13,6 +13,7 @@ from .evening_standard import EveningStandardParser
 from .express import ExpressParser
 from .i_news import INewsParser
 from .metro import MetroParser
+from .the_bbc import TheBBCParser
 from .the_guardian import TheGuardianParser
 from .the_independent import TheIndependentParser
 from .the_mirror import TheMirrorParser
@@ -148,4 +149,15 @@ class UK(metaclass=PublisherGroup):
             NewsMap("https://www.express.co.uk/googlenews.xml"),
             Sitemap("https://www.express.co.uk/sitemap.xml"),
         ],
+    )
+
+    BBC = Publisher(
+        name="The BBC",
+        domain="https://www.bbc.co.uk/",
+        parser=TheBBCParser,
+        sources=[
+            NewsMap("https://www.bbc.co.uk/sitemaps/https-index-uk-news.xml"),
+            Sitemap("https://www.bbc.co.uk/sitemaps/https-index-com-archive.xml", reverse=True),
+        ],
+        url_filter=regex_filter("video|live"),
     )
