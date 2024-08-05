@@ -540,7 +540,7 @@ It's important to note that article layouts can vary significantly between publi
 1. **Wall of text**: Commonly used by US-based publishers, this layout consists of a list of paragraphs without a summary or subheadings.
 2. **The Complete**: This layout includes a brief summary following the title and multiple paragraphs grouped into sections separated by subheadings (`ArticleSections`).
 
-![The complete: ArticleBody attribute structure of an example article](images/newspaper_labels_bold.pdf)
+![The complete: ArticleBody attribute structure of an example article](images/newspaper_labels_bold.png)
 
 To accurately extract the body of an article, use the `extract_article_body_with_selector` function from the parser utilities.
 This function accepts selectors for the different body parts as input and returns a parsed `ArticleBody`.
