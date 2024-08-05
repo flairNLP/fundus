@@ -4,7 +4,7 @@ from fundus.scraping.url import NewsMap, RSSFeed, Sitemap
 
 from .dagbladet import DagbladetParser
 from .nettavisen import NettavisenParser
-from .norskrikskringkastning import NRKParser
+from .nrk import NRKParser
 from .verdensgang import VerdensGangParser
 
 
@@ -54,5 +54,6 @@ class NO(metaclass=PublisherGroup):
             RSSFeed("https://www.nrk.no/livsstil/toppsaker.rss"),
             RSSFeed("https://www.nrk.no/viten/toppsaker.rss"),
             RSSFeed("https://www.nrk.no/dokumentar/toppsaker.rss"),
+            Sitemap("https://www.nrk.no/sitemap.xml"),
         ],
     )
