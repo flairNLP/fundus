@@ -194,10 +194,13 @@ def strip_nodes_to_text(text_nodes: List[lxml.html.HtmlElement], join_on: str = 
     return join_on.join(([re.sub(r"\n+", " ", node.text_content()) for node in text_nodes])).strip()
 
 
-def generic_nodes_to_text(nodes: List[lxml.html.HtmlElement]) -> List[str]:
+def generic_nodes_to_text(nodes: List[lxml.html.HtmlElement], normalize: bool = False) -> List[str]:
     if not nodes:
         return []
-    return [str(node.text_content()) for node in nodes]
+    texts = [
+        normalize_whitespace(str(node.text_content())) if normalize else str(node.text_content()) for node in nodes
+    ]
+    return [text for text in texts if text]
 
 
 def apply_substitution_pattern_over_list(
