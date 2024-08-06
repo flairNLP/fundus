@@ -1573,7 +1573,9 @@
         <code>WashingtonPost</code>
       </td>
       <td>
-        <div>Washington Post</div>
+        <div>
+          <strike>Washington Post</strike>
+        </div>
       </td>
       <td>
         <a href="https://www.washingtonpost.com/">
