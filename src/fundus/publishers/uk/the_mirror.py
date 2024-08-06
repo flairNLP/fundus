@@ -8,7 +8,7 @@ from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute
 from fundus.parser.utility import (
     extract_article_body_with_selector,
     generic_author_parsing,
-    generic_date_parsing,
+    generic_date_parsing, generic_topic_parsing,
 )
 
 
@@ -47,8 +47,7 @@ class TheMirrorParser(ParserProxy):
 
         @attribute
         def topics(self) -> List[str]:
-            news_keywords = self.precomputed.meta.get("news_keywords", "").split(",")
-            return [news_keywords.strip() for news_keywords in news_keywords if news_keywords.strip()]
+            return generic_topic_parsing(self.precomputed.meta.get("keywords"))
 
     class V1_1(V1):
         VALID_UNTIL = datetime.date.today()
