@@ -1,7 +1,6 @@
 import datetime
 from typing import List, Optional
 
-import lxml
 from lxml.cssselect import CSSSelector
 
 from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute
