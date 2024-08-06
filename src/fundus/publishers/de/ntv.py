@@ -17,6 +17,7 @@ from fundus.parser.utility import (
 
 class NTVParser(ParserProxy):
     class V1(BaseParser):
+        VALID_UNTIL = datetime.date(2024, 8, 1)
         _author_substitution_pattern: Pattern[str] = re.compile(r"n-tv NACHRICHTEN")
         _summary_selector = XPath("//div[@class='article__text']/p[not(last()) and strong][1]")
         _paragraph_selector = XPath(
@@ -49,3 +50,12 @@ class NTVParser(ParserProxy):
         @attribute
         def topics(self) -> List[str]:
             return generic_topic_parsing(self.precomputed.meta.get("keywords"))
+
+    class V1_1(V1):
+        VALID_UNTIL = datetime.date.today()
+        _author_selector = XPath("string(//span[@class='article__author'])")
+
+        @attribute
+        def authors(self) -> List[str]:
+            author_text: str = self._author_selector(self.precomputed.doc)
+            return generic_author_parsing(author_text.replace("Von", ""))
