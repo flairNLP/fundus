@@ -1,5 +1,4 @@
 import datetime
-import re
 from typing import List, Optional
 
 from lxml.cssselect import CSSSelector
@@ -9,7 +8,6 @@ from fundus.parser.utility import (
     extract_article_body_with_selector,
     generic_author_parsing,
     generic_date_parsing,
-    generic_topic_parsing,
 )
 
 

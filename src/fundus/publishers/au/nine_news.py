@@ -1,9 +1,6 @@
 import datetime
-import re
-from re import Pattern
 from typing import List, Optional
 
-from lxml.cssselect import CSSSelector
 from lxml.etree import XPath
 
 from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute

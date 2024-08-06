@@ -1,6 +1,5 @@
 import datetime
-import re
-from typing import List, Optional, Pattern
+from typing import List, Optional
 
 from lxml.cssselect import CSSSelector
 from lxml.etree import XPath

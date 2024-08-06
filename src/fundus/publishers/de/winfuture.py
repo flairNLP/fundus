@@ -1,16 +1,9 @@
 import datetime
 import re
-from typing import List, Optional, Union
+from typing import List, Optional
 
 from lxml.etree import XPath
-from lxml.html import (
-    HtmlComment,
-    HtmlElement,
-    HtmlEntity,
-    HtmlProcessingInstruction,
-    fromstring,
-    tostring,
-)
+from lxml.html import HtmlElement, fromstring, tostring
 
 from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute
 from fundus.parser.utility import (

@@ -1,5 +1,5 @@
 import logging
-from typing import Dict, Set, Union, cast
+from typing import Dict, Set, cast
 
 from fundus.utils.serialization import JSONVal
 
