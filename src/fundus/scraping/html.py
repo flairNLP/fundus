@@ -120,10 +120,6 @@ class WebSource:
             return any(f(u) for f in combined_filters)
 
         for url in self.url_source:
-            if self.delay:
-                time.sleep(max(0.0, self.delay() - time.time() + timestamp))
-                timestamp = time.time()
-
             if not validators.url(url):
                 logger.debug(f"Skipped requested URL {url!r} because the URL is malformed")
                 continue
@@ -138,6 +134,11 @@ class WebSource:
                     url += "&" + key + "=" + value
                 else:
                     url += "?" + key + "=" + value
+
+            if self.delay:
+                time.sleep(max(0.0, self.delay() - time.time() + timestamp))
+                timestamp = time.time()
+
             try:
                 response = session.get(url, headers=self.request_header)
 
