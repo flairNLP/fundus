@@ -24,6 +24,7 @@ from typing import (
 
 import lxml.html
 import more_itertools
+from deprecated import deprecated
 from lxml.etree import XPath
 
 from fundus.logging import create_logger
@@ -289,7 +290,14 @@ class ParserProxy(ABC):
             mapping[validation_date] = _ParserCache(versioned_parser)
         self._parser_mapping = mapping
 
+    @deprecated(
+        version="0.4.1",
+        reason=f"Calling <class: ParserProxy> is legacy behaviour. Use <method: parse> of <class: ParserProxy> instead",
+    )
     def __call__(self, crawl_date: Optional[Union[datetime, date]] = None) -> BaseParser:
+        return self.get_parser(crawl_date)
+
+    def get_parser(self, crawl_date: Optional[Union[datetime, date]] = None) -> BaseParser:
         if crawl_date is None:
             return self._get_latest_cache()()
 
@@ -343,3 +351,11 @@ class ParserProxy(ABC):
     @property
     def latest_version(self) -> Type[BaseParser]:
         return self._get_latest_cache().factory
+
+    def parse(
+        self,
+        html: str,
+        crawl_date: Union[datetime, date],
+        error_handling: Literal["suppress", "catch", "raise"] = "raise",
+    ) -> Dict[str, Any]:
+        return self.get_parser(crawl_date).parse(html, error_handling)
