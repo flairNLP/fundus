@@ -8,7 +8,8 @@ from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute
 from fundus.parser.utility import (
     extract_article_body_with_selector,
     generic_author_parsing,
-    generic_date_parsing, generic_topic_parsing,
+    generic_date_parsing,
+    generic_topic_parsing,
 )
 
 
