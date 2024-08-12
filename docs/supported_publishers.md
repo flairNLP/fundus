@@ -114,6 +114,21 @@
       <td>&#160;</td>
       <td>&#160;</td>
     </tr>
+    <tr>
+      <td>
+        <code>NationalPost</code>
+      </td>
+      <td>
+        <div>National Post</div>
+      </td>
+      <td>
+        <a href="https://nationalpost.com">
+          <span>nationalpost.com</span>
+        </a>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
   </tbody>
 </table>
 

@@ -3,13 +3,11 @@ import json
 import re
 from typing import List, Optional
 
-import more_itertools
 from lxml.cssselect import CSSSelector
 from lxml.etree import XPath
 from lxml.html import document_fromstring
 
 from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute
-from fundus.parser.data import LinkedDataMapping
 from fundus.parser.utility import (
     extract_article_body_with_selector,
     generic_author_parsing,
