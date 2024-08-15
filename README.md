@@ -18,7 +18,7 @@ Developed at <a href="https://www.informatik.hu-berlin.de/en/forschung-en/gebiet
 <div align="center">
 <hr>
 
-[Quick Start](#quick-start) | [Tutorials](#tutorials) | [News Sources](/docs/supported_publishers.md) | [Paper](https://arxiv.org/abs/2403.15279)
+[Quick Start](#quick-start) | [Tutorials](#tutorials) | [News Sources](/docs/supported_publishers.md) | [Paper](https://aclanthology.org/2024.acl-demos.29/)
 
 </div>
 
@@ -183,16 +183,25 @@ Check out our evaluation [benchmark](https://github.com/dobbersc/fundus-evaluati
 
 ## Cite
 
-Please cite the following [paper](https://arxiv.org/abs/2403.15279) when using Fundus or building upon our work:
+Please cite the following [paper](https://aclanthology.org/2024.acl-demos.29/) when using Fundus or building upon our work:
 
 ```bibtex
-@misc{dallabetta2024fundus,
-      title={Fundus: A Simple-to-Use News Scraper Optimized for High Quality Extractions}, 
-      author={Max Dallabetta and Conrad Dobberstein and Adrian Breiding and Alan Akbik},
-      year={2024},
-      eprint={2403.15279},
-      archivePrefix={arXiv},
-      primaryClass={cs.CL}
+@inproceedings{dallabetta-etal-2024-fundus,
+    title = "Fundus: A Simple-to-Use News Scraper Optimized for High Quality Extractions",
+    author = "Dallabetta, Max  and
+      Dobberstein, Conrad  and
+      Breiding, Adrian  and
+      Akbik, Alan",
+    editor = "Cao, Yixin  and
+      Feng, Yang  and
+      Xiong, Deyi",
+    booktitle = "Proceedings of the 62nd Annual Meeting of the Association for Computational Linguistics (Volume 3: System Demonstrations)",
+    month = aug,
+    year = "2024",
+    address = "Bangkok, Thailand",
+    publisher = "Association for Computational Linguistics",
+    url = "https://aclanthology.org/2024.acl-demos.29",
+    pages = "305--314",
 }
 ```
 
