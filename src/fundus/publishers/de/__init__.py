@@ -27,6 +27,7 @@ from .heise import HeiseParser
 from .hessenschau import HessenschauParser
 from .junge_welt import JungeWeltParser
 from .kicker import KickerParser
+from .krautreporter import KrautreporterParser
 from .mdr import MDRParser
 from .merkur import MerkurParser
 from .morgenpost_berlin import BerlinerMorgenpostParser
@@ -461,6 +462,21 @@ class DE(metaclass=PublisherGroup):
             NewsMap("https://newsfeed.kicker.de/googlesitemapnews.xml"),
         ],
         url_filter=regex_filter("/slideshow|/video"),
+    )
+
+    Krautreporter = Publisher(
+        name="Krautreporter",
+        domain="https://krautreporter.de/",
+        parser=KrautreporterParser,
+        sources=[
+            # NOTE: robots.txt mentions that it reserves the right of use for text & data mining (§ 44 b UrhG), 
+            # but this is not done in machine readable format, so it is null & void
+            # TODO: Maybe we have to implement a sitemap_filter here (archiv and alle-artikel)
+            # NOTE: both sitemap and news are identical
+            Sitemap("https://krautreporter.de/sitemap.xml", reverse=True, sitemap_filter=regex_filter('archiv')),
+            # NewsMap("https://krautreporter.de/news.xml"),  
+            RSSFeed("https://krautreporter.de/feeds.rss")
+        ],
     )
 
     FrankfurterRundschau = Publisher(
