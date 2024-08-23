@@ -1,4 +1,5 @@
 import itertools
+import json
 import re
 from collections import defaultdict
 from copy import copy
@@ -24,7 +25,11 @@ from dateutil import parser
 from lxml.cssselect import CSSSelector
 from lxml.etree import XPath
 
-from fundus.parser.data import ArticleBody, ArticleSection, TextSequence
+from fundus.logging import create_logger
+from fundus.parser.data import ArticleBody, ArticleSection, LinkedDataMapping, TextSequence
+
+
+logger = create_logger(__name__)
 
 
 def normalize_whitespace(text: str) -> str:
@@ -140,6 +145,34 @@ def extract_article_body_with_selector(
         sections.append(ArticleSection(*map(TextSequence, texts)))
 
     return ArticleBody(summary=summary, sections=sections)
+
+
+_ld_node_selector = XPath("//script[@type='application/ld+json']")
+
+
+def get_ld_content(root: lxml.html.HtmlElement) -> LinkedDataMapping:
+    """Parse JSON-LD from HTML.
+
+    This function parses a script tags of type ld+json.
+    In case the JSON is wrapped in a CDATA tag it is first stripped.
+
+    Args:
+        root: The HTML document given as a lxml.html.HtmlElement.
+
+    Returns:
+        The JSON-LD data as a LinkedDataMapping
+    """
+    ld_nodes = _ld_node_selector(root)
+    lds = []
+    for node in ld_nodes:
+        text_content = re.sub(r"/*<!\[CDATA\[", "", node.text_content())
+        text_content = re.sub(r"/*]]>", "", text_content)
+        try:
+            lds.append(json.loads(text_content))
+        except json.JSONDecodeError as error:
+            logger.debug(f"Encountered {error!r} during LD parsing")
+    collapsed_lds = more_itertools.collapse(lds, base_type=dict)
+    return LinkedDataMapping(collapsed_lds)
 
 
 _meta_node_selector = CSSSelector("head > meta, body > meta")

@@ -1,7 +1,6 @@
 import functools
 import inspect
 import itertools
-import json
 import re
 from abc import ABC
 from copy import copy
@@ -23,12 +22,10 @@ from typing import (
 )
 
 import lxml.html
-import more_itertools
-from lxml.etree import XPath
 
 from fundus.logging import create_logger
 from fundus.parser.data import LinkedDataMapping
-from fundus.parser.utility import get_meta_content
+from fundus.parser.utility import get_ld_content, get_meta_content
 
 RegisteredFunctionT_co = TypeVar("RegisteredFunctionT_co", covariant=True, bound="RegisteredFunction")
 
@@ -159,7 +156,6 @@ class Precomputed:
 class BaseParser(ABC):
     VALID_UNTIL: date = date.today()
     precomputed: Precomputed
-    _ld_selector: XPath = XPath("//script[@type='application/ld+json']")
 
     def __init__(self):
         predicate: Callable[[object], bool] = lambda x: isinstance(x, RegisteredFunction)
@@ -192,15 +188,7 @@ class BaseParser(ABC):
 
     def _base_setup(self, html: str) -> None:
         doc = lxml.html.document_fromstring(html)
-        ld_nodes = self._ld_selector(doc)
-        lds = []
-        for node in ld_nodes:
-            try:
-                lds.append(json.loads(node.text_content()))
-            except json.JSONDecodeError as error:
-                logger.debug(f"Encountered {error!r} during LD parsing")
-        collapsed_lds = more_itertools.collapse(lds, base_type=dict)
-        self.precomputed = Precomputed(html, doc, get_meta_content(doc), LinkedDataMapping(collapsed_lds))
+        self.precomputed = Precomputed(html, doc, get_meta_content(doc), get_ld_content(doc))
 
     def parse(self, html: str, error_handling: Literal["suppress", "catch", "raise"] = "raise") -> Dict[str, Any]:
         # wipe existing precomputed

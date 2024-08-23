@@ -36,22 +36,11 @@ class KrautreporterParser(ParserProxy):
 
         @attribute
         def publishing_date(self) -> Optional[datetime]:
-            json_ld = self._get_json_ld_dict()
-            date_string = json_ld.get("@graph", [])[0]["datePublished"]
+            key_path = ["NewsArticle", "datePublished"]
+            date_string = self.precomputed.ld.get_value_by_key_path(key_path)
             return utility.generic_date_parsing(date_string)
 
         @attribute
         def topics(self) -> List[str]:
             topic_element = self._topic_selector(self.precomputed.doc)[0]
             return utility.generic_topic_parsing(topic_element.text_content())
-
-        def _get_json_ld_dict(self):
-            """
-            Since the JSON-LD is wrapped in a CDATA block we need to implement this workaround
-            """
-            # NOTE: Maybe cleaner to override BaseParser._base_setup (also because of free_access attribute)
-            json_ld_element = self._json_ld_selector(self.precomputed.doc.head)[0]
-            json_ld_string = json_ld_element.text_content()
-            json_ld_string = json_ld_string.replace("//<![CDATA[", "").replace("//]]>", "")
-            json_ld = json.loads(json_ld_string)            
-            return json_ld

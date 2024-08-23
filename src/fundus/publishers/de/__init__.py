@@ -469,12 +469,12 @@ class DE(metaclass=PublisherGroup):
         domain="https://krautreporter.de/",
         parser=KrautreporterParser,
         sources=[
-            # NOTE: robots.txt mentions that it reserves the right of use for text & data mining (§ 44 b UrhG), 
-            # but this is not done in machine readable format, so it is null & void
-            # NOTE: Unfortunately, both sitemap.xml and news.xml are identical
+            # NOTE: robots.txt mentions that it reserves the right of use for text & data mining (§ 44 b UrhG),
+            # but this is not in machine readable format, which is required by law for it to be effective.
+            # NOTE: Unfortunately, both sitemap.xml and news.xml are identical.
             Sitemap("https://krautreporter.de/sitemap.xml", reverse=True),
-            # NewsMap("https://krautreporter.de/news.xml"),  
-            RSSFeed("https://krautreporter.de/feeds.rss")
+            # NewsMap("https://krautreporter.de/news.xml"),
+            RSSFeed("https://krautreporter.de/feeds.rss"),
         ],
     )
 
