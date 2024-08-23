@@ -38,7 +38,6 @@ class KrautreporterParser(ParserProxy):
         def publishing_date(self) -> Optional[datetime]:
             json_ld = self._get_json_ld_dict()
             date_string = json_ld.get("@graph", [])[0]["datePublished"]
-            print(date_string)
             return utility.generic_date_parsing(date_string)
 
         @attribute

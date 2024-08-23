@@ -471,9 +471,8 @@ class DE(metaclass=PublisherGroup):
         sources=[
             # NOTE: robots.txt mentions that it reserves the right of use for text & data mining (§ 44 b UrhG), 
             # but this is not done in machine readable format, so it is null & void
-            # TODO: Maybe we have to implement a sitemap_filter here (archiv and alle-artikel)
-            # NOTE: both sitemap and news are identical
-            Sitemap("https://krautreporter.de/sitemap.xml", reverse=True, sitemap_filter=regex_filter('archiv')),
+            # NOTE: Unfortunately, both sitemap.xml and news.xml are identical
+            Sitemap("https://krautreporter.de/sitemap.xml", reverse=True),
             # NewsMap("https://krautreporter.de/news.xml"),  
             RSSFeed("https://krautreporter.de/feeds.rss")
         ],
