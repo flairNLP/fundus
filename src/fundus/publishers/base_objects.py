@@ -162,7 +162,7 @@ class PublisherGroup(type):
         unique_attributes = set(attributes)
         spec: Publisher
         for publisher in cls:
-            if unique_attributes.issubset(publisher.parser().attributes().names) and (
+            if unique_attributes.issubset(publisher.parser.latest_version.attributes().names) and (
                 publisher.supports(source_types) if source_types else True
             ):
                 matched.append(publisher)
