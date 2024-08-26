@@ -152,7 +152,7 @@ def extract_article_body_with_selector(
 
 
 _ld_node_selector = XPath("//script[@type='application/ld+json']")
-_json_pattern = re.compile(r"(?P<json>({[\s\S]*}|\[{[\s\S]*}]))")
+_json_pattern = re.compile(r"(?P<json>{[\s\S]*}|\[\s*{[\s\S]*}\s*](?!\s*}))")
 
 
 def get_ld_content(root: lxml.html.HtmlElement) -> LinkedDataMapping:
