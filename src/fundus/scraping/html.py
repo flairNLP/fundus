@@ -94,11 +94,12 @@ class WebSource:
     def __init__(
         self,
         url_source: Iterable[str],
-        publisher: str,
+        publisher: Publisher,
         url_filter: Optional[URLFilter] = None,
         request_header: Optional[Dict[str, str]] = None,
         query_parameters: Optional[Dict[str, str]] = None,
         delay: Optional[Delay] = None,
+        ignore_robots: Optional[bool] = False,
     ):
         self.url_source = url_source
         self.publisher = publisher
@@ -108,6 +109,7 @@ class WebSource:
         if isinstance(url_source, URLSource):
             url_source.set_header(self.request_header)
         self.delay = delay
+        self.ignore_robots = ignore_robots
 
     def fetch(self, url_filter: Optional[URLFilter] = None) -> Iterator[HTML]:
         combined_filters: List[URLFilter] = ([self.url_filter] if self.url_filter else []) + (
@@ -115,6 +117,9 @@ class WebSource:
         )
 
         timestamp = time.time() + self.delay() if self.delay is not None else time.time()
+
+        if not self.publisher.robots.timestamp:
+            self.publisher.robots.read()
 
         def filter_url(u: str) -> bool:
             return any(f(u) for f in combined_filters)
@@ -126,6 +131,12 @@ class WebSource:
 
             if filter_url(url):
                 logger.debug(f"Skipped requested URL {url!r} because of URL filter")
+                continue
+
+            if not (
+                self.ignore_robots or self.publisher.robots.can_fetch(self.request_header.get("user-agent") or "*", url)
+            ):
+                logger.debug(f"Skipped requested URL {url!r} because of robots.txt")
                 continue
 
             session = session_handler.get_session()
@@ -167,9 +178,9 @@ class WebSource:
                     logger.info(f"Got redirected {len(response.history)} time(s) from {url!r} -> {response.url!r}")
 
                 source_info = (
-                    WebSourceInfo(self.publisher, type(self.url_source).__name__, self.url_source.url)
+                    WebSourceInfo(self.publisher.name, type(self.url_source).__name__, self.url_source.url)
                     if isinstance(self.url_source, URLSource)
-                    else SourceInfo(self.publisher)
+                    else SourceInfo(self.publisher.name)
                 )
 
                 yield HTML(
