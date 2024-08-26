@@ -476,6 +476,7 @@ class DE(metaclass=PublisherGroup):
             # NewsMap("https://krautreporter.de/news.xml"),
             RSSFeed("https://krautreporter.de/feeds.rss"),
         ],
+        url_filter=regex_filter(r"/(pages|archiv|serien|thema|zusammenhaenge)/"),
     )
 
     FrankfurterRundschau = Publisher(
