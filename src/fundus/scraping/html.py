@@ -225,7 +225,6 @@ class CCNewsSource:
             response.raise_for_status()
 
             for warc_record in ArchiveIterator(response.raw, record_types=WarcRecordType.response, verify_digests=True):
-
                 if not warc_record.record_date:
                     continue
 
