@@ -2,6 +2,7 @@ import datetime
 from typing import List, Optional
 
 from lxml.cssselect import CSSSelector
+from lxml.etree import XPath
 
 from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute
 from fundus.parser.utility import (
@@ -12,19 +13,24 @@ from fundus.parser.utility import (
 )
 
 
-class LeFigaroParser(ParserProxy):
+class NettavisenParser(ParserProxy):
     class V1(BaseParser):
-        _summary_selector: CSSSelector = CSSSelector("article > p.fig-standfirst")
-        _paragraph_selector: CSSSelector = CSSSelector("div.fig-content-body > p.fig-paragraph")
-        _subheadline_selector: CSSSelector = CSSSelector("div.fig-content-body > h2")
+        _bloat_pattern: str = "Les også:"
+
+        _summary_selector = CSSSelector("p.lead-text")
+        _subheadline_selector = CSSSelector("div.article-body > h2")
+        _paragraph_selector = XPath(
+            f"//div[contains(@class,'article-body')] /p[not(re:test(string(), '{_bloat_pattern}'))]",
+            namespaces={"re": "http://exslt.org/regular-expressions"},
+        )
 
         @attribute
         def body(self) -> ArticleBody:
             return extract_article_body_with_selector(
                 self.precomputed.doc,
                 paragraph_selector=self._paragraph_selector,
-                summary_selector=self._summary_selector,
                 subheadline_selector=self._subheadline_selector,
+                summary_selector=self._summary_selector,
             )
 
         @attribute
@@ -32,13 +38,13 @@ class LeFigaroParser(ParserProxy):
             return self.precomputed.meta.get("og:title")
 
         @attribute
-        def authors(self) -> List[str]:
-            return generic_author_parsing(self.precomputed.ld.bf_search("author"))
-
-        @attribute
         def publishing_date(self) -> Optional[datetime.datetime]:
             return generic_date_parsing(self.precomputed.meta.get("article:published_time"))
 
         @attribute
+        def authors(self) -> List[str]:
+            return generic_author_parsing(self.precomputed.meta.get("article:author"))
+
+        @attribute
         def topics(self) -> List[str]:
-            return generic_topic_parsing(self.precomputed.meta.get("keywords"))
+            return generic_topic_parsing(self.precomputed.meta.get("article:tag"))

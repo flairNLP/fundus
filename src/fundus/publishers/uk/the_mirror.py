@@ -15,6 +15,7 @@ from fundus.parser.utility import (
 
 class TheMirrorParser(ParserProxy):
     class V1(BaseParser):
+        VALID_UNTIL = datetime.date(2024, 7, 26)
         _paragraph_selector = XPath(
             "/html/body/main/article/div[@class='article-body']/p[text()] | //div[@class='article-body']//div[@class='live-event-lead-entry']/p[text()] | //div[@class='article-body']//div[@class='entry-content']/p[text()]"
         )
@@ -22,7 +23,6 @@ class TheMirrorParser(ParserProxy):
         _subheadline_selector = XPath(
             "//div[@class='article-body']/h3 | //div[@class='article-body']//div[@class='entry-content']/h3"
         )
-        _datetime_selector = XPath("//li/span[contains(@class, 'time-container')]")
 
         @attribute
         def body(self) -> ArticleBody:
@@ -48,5 +48,15 @@ class TheMirrorParser(ParserProxy):
 
         @attribute
         def topics(self) -> List[str]:
-            news_keywords = self.precomputed.meta.get("news_keywords", "").split(",")
-            return [news_keywords.strip() for news_keywords in news_keywords if news_keywords.strip()]
+            return generic_topic_parsing(self.precomputed.meta.get("keywords"))
+
+    class V1_1(V1):
+        VALID_UNTIL = datetime.date.today()
+
+        _datetime_selector = CSSSelector("div.article-information[itemprop='datePublished']")
+
+        @attribute
+        def publishing_date(self) -> Optional[datetime.datetime]:
+            if date_nodes := self._datetime_selector(self.precomputed.doc):
+                return generic_date_parsing(date_nodes[0].attrib.get("content"))
+            return None

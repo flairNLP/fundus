@@ -1,5 +1,5 @@
 import re
-from typing import Any, Callable, Dict, Protocol, cast
+from typing import Any, Callable, Dict, Protocol
 
 from typing_extensions import ParamSpec
 

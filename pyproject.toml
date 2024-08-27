@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "fundus"
-version = "0.4.0"
+version = "0.4.1"
 authors = [
     { name = "Max Dallabetta", email = "max.dallabetta@googlemail.com" },
 ]
@@ -24,7 +24,7 @@ keywords = ["web scraping, web crawling"]
 license = { text = "MIT" }
 dependencies = [
     "python-dateutil>=2.8, <3",
-    "lxml>=4.9, <5",
+    "lxml>=4.9, <6",
     "more-itertools>=9.1, <10",
     "cssselect>=1.1, <2",
     "feedparser>=6.0, <7",

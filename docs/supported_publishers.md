@@ -1065,6 +1065,85 @@
 </table>
 
 
+## NO-Publishers
+
+<table class="publishers no">
+  <thead>
+    <tr>
+      <th>Class&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</th>
+      <th>Name&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</th>
+      <th>URL&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</th>
+      <th>Missing&#160;Attributes</th>
+      <th>Additional&#160;Attributes&#160;&#160;&#160;&#160;</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <code>Dagbladet</code>
+      </td>
+      <td>
+        <div>Dagbladet</div>
+      </td>
+      <td>
+        <a href="https://www.db.no/">
+          <span>www.db.no</span>
+        </a>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
+        <code>Nettavisen</code>
+      </td>
+      <td>
+        <div>Nettavisen</div>
+      </td>
+      <td>
+        <a href="https://www.nettavisen.no/">
+          <span>www.nettavisen.no</span>
+        </a>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
+        <code>NRK</code>
+      </td>
+      <td>
+        <div>Norsk rikskringkasting</div>
+      </td>
+      <td>
+        <a href="https://www.nrk.no/">
+          <span>www.nrk.no</span>
+        </a>
+      </td>
+      <td>
+        <code>topics</code>
+      </td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
+        <code>VerdensGang</code>
+      </td>
+      <td>
+        <div>Verdens Gang</div>
+      </td>
+      <td>
+        <a href="https://www.vg.no/">
+          <span>www.vg.no</span>
+        </a>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+  </tbody>
+</table>
+
+
 ## TR-Publishers
 
 <table class="publishers tr">
@@ -1212,6 +1291,21 @@
       <td>
         <a href="https://metro.co.uk/">
           <span>metro.co.uk</span>
+        </a>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
+        <code>BBC</code>
+      </td>
+      <td>
+        <div>The BBC</div>
+      </td>
+      <td>
+        <a href="https://www.bbc.co.uk/">
+          <span>www.bbc.co.uk</span>
         </a>
       </td>
       <td>&#160;</td>
@@ -1590,7 +1684,9 @@
         <code>WashingtonPost</code>
       </td>
       <td>
-        <div>Washington Post</div>
+        <div>
+          <strike>Washington Post</strike>
+        </div>
       </td>
       <td>
         <a href="https://www.washingtonpost.com/">

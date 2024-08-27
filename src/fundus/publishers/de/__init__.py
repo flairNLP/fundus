@@ -236,7 +236,10 @@ class DE(metaclass=PublisherGroup):
         name="N-Tv",
         domain="https://www.n-tv.de/",
         parser=NTVParser,
-        sources=[NewsMap("https://www.n-tv.de/news.xml"), Sitemap("https://www.n-tv.de/sitemap.xml")],
+        sources=[
+            NewsMap("https://www.n-tv.de/news.xml"),
+            Sitemap("https://www.n-tv.de/sitemap.xml", sitemap_filter=regex_filter("sitemap-sections")),
+        ],
     )
 
     NDR = Publisher(

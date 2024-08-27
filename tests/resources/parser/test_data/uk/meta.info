@@ -1,4 +1,8 @@
 {
+  "BBC_2024_08_01.html.gz": {
+    "url": "https://www.bbc.com/news/explainers-63159607",
+    "crawl_date": "2024-08-01 17:53:58.019048"
+  },
   "DailyMail_2024_04_27.html.gz": {
     "url": "https://www.dailymail.co.uk/yourmoney/article-13357113/dollar-bill-worth-THOUSANDS-check.html",
     "crawl_date": "2024-04-27 17:00:10.853579"
@@ -38,6 +42,10 @@
   "TheMirror_2024_04_28.html.gz": {
     "url": "https://www.mirror.co.uk/lifestyle/gardening/gorgeous-houseplants-can-rid-unwanted-32676317",
     "crawl_date": "2024-04-28 15:00:25.779100"
+  },
+  "TheMirror_2024_08_05.html.gz": {
+    "url": "https://www.mirror.co.uk/news/uk-news/uk-riots-live-hotel-rotherham-33386398",
+    "crawl_date": "2024-08-05 22:00:28.259674"
   },
   "TheSun_2024_04_22.html.gz": {
     "url": "https://www.thesun.co.uk/sport/12603994/phil-foden-girlfriend-rebecca-cooke/",

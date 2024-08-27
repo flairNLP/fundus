@@ -120,10 +120,6 @@ class WebSource:
             return any(f(u) for f in combined_filters)
 
         for url in self.url_source:
-            if self.delay:
-                time.sleep(max(0.0, self.delay() - time.time() + timestamp))
-                timestamp = time.time()
-
             if not validators.url(url):
                 logger.debug(f"Skipped requested URL {url!r} because the URL is malformed")
                 continue
@@ -138,6 +134,11 @@ class WebSource:
                     url += "&" + key + "=" + value
                 else:
                     url += "?" + key + "=" + value
+
+            if self.delay:
+                time.sleep(max(0.0, self.delay() - time.time() + timestamp))
+                timestamp = time.time()
+
             try:
                 response = session.get(url, headers=self.request_header)
 
@@ -194,7 +195,7 @@ class CCNewsSource:
             warc_body: bytes = record.reader.read()
 
             try:
-                return str(warc_body, encoding=record.http_charset)
+                return str(warc_body, encoding=record.http_charset)  # type: ignore[arg-type]
             except (UnicodeDecodeError, TypeError):
                 encoding: Optional[str] = chardet.detect(warc_body)["encoding"]
 
@@ -224,6 +225,9 @@ class CCNewsSource:
             response.raise_for_status()
 
             for warc_record in ArchiveIterator(response.raw, record_types=WarcRecordType.response, verify_digests=True):
+                if not warc_record.record_date:
+                    continue
+
                 target_url = str(warc_record.headers["WARC-Target-URI"])
 
                 if url_filter is not None and url_filter(target_url):
@@ -256,6 +260,6 @@ class CCNewsSource:
                         publisher=publisher.name,
                         warc_path=self.warc_path,
                         warc_headers=dict(warc_record.headers),
-                        http_headers=dict(warc_record.http_headers),
+                        http_headers=dict(warc_record.http_headers or {}),
                     ),
                 )

@@ -2,6 +2,7 @@ import datetime
 from typing import List, Optional
 
 from lxml.cssselect import CSSSelector
+from lxml.etree import XPath
 
 from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute
 from fundus.parser.utility import (
@@ -12,11 +13,18 @@ from fundus.parser.utility import (
 )
 
 
-class LeFigaroParser(ParserProxy):
+class VerdensGangParser(ParserProxy):
     class V1(BaseParser):
-        _summary_selector: CSSSelector = CSSSelector("article > p.fig-standfirst")
-        _paragraph_selector: CSSSelector = CSSSelector("div.fig-content-body > p.fig-paragraph")
-        _subheadline_selector: CSSSelector = CSSSelector("div.fig-content-body > h2")
+        _bloat_pattern: str = "Les også:|" "Vil du lese mer"
+
+        _summary_selector = CSSSelector("header.article-intro p")
+        _subheadline_selector = CSSSelector("section.article-body > h2")
+        _paragraph_selector = XPath(
+            f"//section[contains(@class,'article-body')] /p[not(re:test(string(), '{_bloat_pattern}'))]",
+            namespaces={"re": "http://exslt.org/regular-expressions"},
+        )
+
+        _paywall_selector = CSSSelector("#paywall-login-link")
 
         @attribute
         def body(self) -> ArticleBody:
@@ -32,13 +40,17 @@ class LeFigaroParser(ParserProxy):
             return self.precomputed.meta.get("og:title")
 
         @attribute
-        def authors(self) -> List[str]:
-            return generic_author_parsing(self.precomputed.ld.bf_search("author"))
-
-        @attribute
         def publishing_date(self) -> Optional[datetime.datetime]:
             return generic_date_parsing(self.precomputed.meta.get("article:published_time"))
 
         @attribute
+        def authors(self) -> List[str]:
+            return generic_author_parsing(self.precomputed.meta.get("article:author"))
+
+        @attribute
         def topics(self) -> List[str]:
-            return generic_topic_parsing(self.precomputed.meta.get("keywords"))
+            return generic_topic_parsing(self.precomputed.meta.get("article:tag"))
+
+        @attribute
+        def free_access(self) -> bool:
+            return not self._paywall_selector(self.precomputed.doc)
