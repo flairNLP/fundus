@@ -7,6 +7,7 @@ from lxml.html import fromstring, tostring
 
 from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute
 from fundus.parser.utility import (
+    apply_substitution_pattern_over_list,
     extract_article_body_with_selector,
     generic_author_parsing,
     generic_date_parsing,
@@ -35,8 +36,6 @@ class TimesOfIndiaParser(ParserProxy):
             html_as_string = re.sub(
                 r"<div class=\"_s30J clearfix  \">", "<div class=\"_s30J clearfix  \"><p class='intro'>", html_as_string
             )
-            with open("test.html", "w") as file:
-                file.write(html_as_string)
             return extract_article_body_with_selector(
                 fromstring(html_as_string),  # type: ignore
                 summary_selector=self._summary_selector,
@@ -50,9 +49,9 @@ class TimesOfIndiaParser(ParserProxy):
 
         @attribute
         def authors(self) -> List[str]:
-            return generic_author_parsing(
-                self.precomputed.ld.bf_search("author"),
-                default_authors=["TOI Sports Desk", "TOI News Desk", "TOI Tech Desk"],
+            return apply_substitution_pattern_over_list(
+                generic_author_parsing(self.precomputed.ld.bf_search("author")),
+                re.compile(r"(TOI .*|TIMESOFINDIA.COM)"),
             )
 
         @attribute

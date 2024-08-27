@@ -9,13 +9,13 @@ from typing import (
     Callable,
     ClassVar,
     Dict,
+    Iterable,
     List,
     Match,
     Optional,
     Pattern,
     Type,
     Union,
-    cast,
 )
 
 import lxml.html
@@ -194,10 +194,13 @@ def strip_nodes_to_text(text_nodes: List[lxml.html.HtmlElement], join_on: str = 
     return join_on.join(([re.sub(r"\n+", " ", node.text_content()) for node in text_nodes])).strip()
 
 
-def generic_nodes_to_text(nodes: List[lxml.html.HtmlElement]) -> List[str]:
+def generic_nodes_to_text(nodes: List[lxml.html.HtmlElement], normalize: bool = False) -> List[str]:
     if not nodes:
         return []
-    return [str(node.text_content()) for node in nodes]
+    texts = [
+        normalize_whitespace(str(node.text_content())) if normalize else str(node.text_content()) for node in nodes
+    ]
+    return [text for text in texts if text]
 
 
 def apply_substitution_pattern_over_list(
@@ -214,7 +217,7 @@ def generic_author_parsing(
         List[Dict[str, str]],
     ],
     split_on: Optional[List[str]] = None,
-    default_authors=None,
+    normalize: bool = True,
 ) -> List[str]:
     """This function tries to parse the given <value> to a list of authors (List[str]) based on the type of value.
 
@@ -225,7 +228,7 @@ def generic_author_parsing(
         value (list[str]):  value\n
         value (list[dict]): [dict["name"] for dict in list if dict["name"]] \n
 
-    with common delimiters := [",", ";", " und ", " and "]
+    with common delimiters := [",", ";", " und ", " and ", " & "]
 
     All values are stripped with default strip() method before returned.
 
@@ -233,15 +236,17 @@ def generic_author_parsing(
         value:      An input value representing author(s) which get parsed based on type
         split_on:   Only relevant for type(<value>) = str. If set, split <value> on <split_on>,
             else (default) split <value> on common delimiters
-        default_authors: Allows to filter out default authors like 'NewsDesk' or 'Redaktion'
 
     Returns:
         A parsed and striped list of authors
-        @param default_authors:
     """
 
-    if default_authors is None:
-        default_authors = list()
+    common_delimiters = [",", ";", " und ", " and ", " & "]
+
+    parameter_type_error: TypeError = TypeError(
+        f"<value> '{value}' has an unsupported type {type(value)}. "
+        f"Supported types are 'Optional[str], Dict[str, str], List[str], List[Dict[str, str]],'"
+    )
 
     def parse_author_dict(author_dict: Dict[str, str]) -> Optional[str]:
         if (author_name := author_dict.get("name")) is not None:
@@ -258,39 +263,30 @@ def generic_author_parsing(
     if not value:
         return []
 
-    parameter_type_error: TypeError = TypeError(
-        f"<value> '{value}' has an unsupported type {type(value)}. "
-        f"Supported types are 'Optional[str], Dict[str, str], List[str], List[Dict[str, str]],'"
-    )
+    # collapse
+    authors: List[str] = []
 
-    if isinstance(value, str):
-        common_delimiters = [",", ";", " und ", " and "]
-        authors = list(filter(bool, re.split(r"|".join(split_on or common_delimiters), value)))
+    for item in value if isinstance(value, list) else [value]:
+        if isinstance(item, str):
+            authors.append(item)
 
-    elif isinstance(value, dict):
-        if (author := parse_author_dict(value)) and author not in default_authors:
-            return [author]
-        else:
-            return []
-
-    elif isinstance(value, list):
-        if isinstance(value[0], str):
-            value = cast(List[str], value)
-            authors = value
-
-        elif isinstance(value[0], dict):
-            value = cast(List[Dict[str, str]], value)
-            authors = [name for author in value if (name := parse_author_dict(author)) and name not in default_authors]
+        elif isinstance(item, dict):
+            if (author := parse_author_dict(item)) is not None:
+                authors.append(author)
 
         else:
             raise parameter_type_error
 
-    else:
-        raise parameter_type_error
+    if normalize or split_on:
 
-    authors = list(more_itertools.collapse(authors, base_type=str))
+        def split(text: str) -> Iterable[str]:
+            return filter(bool, re.split(r"|".join(split_on or common_delimiters), text))
 
-    return [name.strip() for name in authors if name.strip() not in default_authors]
+        authors = list(more_itertools.flatten([split(author) for author in authors]))
+        normalized_authors = [normalize_whitespace(author) for author in authors]
+        return normalized_authors
+
+    return authors
 
 
 def generic_text_extraction_with_css(doc, selector: XPath) -> Optional[str]:
