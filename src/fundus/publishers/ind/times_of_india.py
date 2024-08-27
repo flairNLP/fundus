@@ -68,8 +68,8 @@ class TimesOfIndiaParser(ParserProxy):
                 "Google News",
                 "India Breaking News",
                 "India news",
-                "Live News India",
                 "Top news in India",
+                "Live News India",
             ]
             return [
                 topic
