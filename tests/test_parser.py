@@ -174,13 +174,15 @@ class TestParser:
             missing_attrs = attributes_required_to_cover & supported_attrs - set(version_data.keys())
             assert (
                 not missing_attrs
-            ), f"Test JSON for {version_name} does not cover the following attribute(s): {missing_attrs}"
+            ), f"Test JSON for {version_name} of publisher {publisher.name} does not cover the following attribute(s): {missing_attrs}"
 
             assert list(version_data.keys()) == sorted(
                 attributes_required_to_cover & supported_attrs
             ), f"Test JSON for {version_name} is not in alphabetical order"
 
-            assert (html := html_mapping.get(versioned_parser)), f"Missing test HTML for parser version {version_name}"
+            assert (
+                html := html_mapping.get(versioned_parser)
+            ), f"Missing test HTML for parser version {version_name} of publisher {publisher.name}"
             # compare data
             extraction = versioned_parser().parse(html.content, "raise")
             for key, value in version_data.items():
