@@ -1,7 +1,7 @@
 from fundus.publishers.base_objects import Publisher, PublisherGroup
 from fundus.publishers.ca.cbc_news import CBCNewsParser
 from fundus.publishers.ca.globe_and_mail import TheGlobeAndMailParser
-from fundus.scraping.url import NewsMap, RSSFeed, Sitemap
+from fundus.scraping.url import NewsMap, RSSFeed
 
 # noinspection PyPep8Naming
 
@@ -23,6 +23,6 @@ class CA(metaclass=PublisherGroup):
         parser=TheGlobeAndMailParser,
         sources=[
             NewsMap("https://www.theglobeandmail.com/arc/outboundfeeds/news-sitemap-index/?outputType=xml"),
-            Sitemap("https://www.theglobeandmail.com/arc/outboundfeeds/sitemap-index/?outputType=xml"),
+            NewsMap("https://www.theglobeandmail.com/arc/outboundfeeds/sitemap-index/?outputType=xml"),
         ],
     )
