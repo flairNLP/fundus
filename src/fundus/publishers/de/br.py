@@ -64,3 +64,15 @@ class BRParser(ParserProxy):
             "//section[@class='ShortnewsDetail_content__79bZq'] //p[1]",
             namespaces={"re": "http://exslt.org/regular-expressions"},
         )
+
+        _date_selector = CSSSelector("p.ShortnewsDetail_source__2ep85.heading4")
+
+        @attribute
+        def publishing_date(self) -> Optional[datetime.datetime]:
+            if date_nodes := self._date_selector(self.precomputed.doc):
+                if (content := date_nodes[0].text) is None:
+                    return None
+                date_string = content.split(",")[-1]
+                tz_aware_date = date_string.replace("Uhr", "+02:00")
+                return generic_date_parsing(tz_aware_date)
+            return generic_date_parsing(self.precomputed.ld.bf_search("datePublished"))
