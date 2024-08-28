@@ -1,11 +1,8 @@
 import datetime
-import json
-import re
 from typing import List, Optional
 
 from lxml.cssselect import CSSSelector
 from lxml.etree import XPath
-from lxml.html import document_fromstring
 
 from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute
 from fundus.parser.utility import (
@@ -14,13 +11,15 @@ from fundus.parser.utility import (
     generic_date_parsing,
     generic_topic_parsing,
 )
+from fundus.scraping.filter import regex_filter
 
 
 class NationalPostParser(ParserProxy):
     class V1(BaseParser):
         _summary_selector = CSSSelector("article p.article-subtitle")
         _subheadline_selector = XPath(
-            "//section[@class='article-content__content-group article-content__content-group--story']/p/strong"
+            "//section[@class='article-content__content-group article-content__content-group--story']/p/strong | "
+            "//section[@class='article-content__content-group article-content__content-group--story']/h3"
         )
         _paragraph_selector = XPath(
             "//section[@class='article-content__content-group article-content__content-group--story']/p[text()]"
@@ -51,12 +50,10 @@ class NationalPostParser(ParserProxy):
         def topics(self) -> List[str]:
             preliminary_topics = self.precomputed.ld.bf_search("keywords")
             filter_list = ["Curated", "News", "Newsroom daily", "story", "Canada", "World"]
+            topic_filter = regex_filter(
+                r"([0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}|NLP Entity Tokens|NLP Category|NP Comment)"
+            )
             filtered_topics = [
-                topic
-                for topic in preliminary_topics
-                if "NLP Entity Tokens" not in topic
-                and "NLP Category" not in topic
-                and topic not in filter_list
-                and not re.search(r"[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}", topic)
+                topic for topic in preliminary_topics if not topic_filter(topic) and topic not in filter_list
             ]
             return generic_topic_parsing(filtered_topics)
