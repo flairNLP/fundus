@@ -58,7 +58,7 @@ from fundus.logging import set_log_level
 set_log_level(logging.DEBUG)
 ````
 
-## Format and handlers
+## Format and Handlers
 
 By default, all Fundus log messages are written to `stderr` with the following format `%(asctime)s - %(name)s - %(levelname)s - %(message)s`
 To add another handler use the `add_handler` function.
@@ -68,6 +68,7 @@ import logging
 from fundus.logging import add_handler
 
 file_handler = logging.FileHandler(f"fundus.log", encoding="utf-8")
+file_handler.set_name("your_custom_file_handler")
 file_handler.setFormatter(logging.Formatter("%(asctime)s - %(levelname)s - %(message)s"))
 add_handler(file_handler)
 ````

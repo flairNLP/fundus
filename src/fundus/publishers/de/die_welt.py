@@ -3,6 +3,7 @@ import re
 from typing import List, Optional, Pattern
 
 from lxml.cssselect import CSSSelector
+from lxml.etree import XPath
 
 from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute
 from fundus.parser.utility import (
@@ -16,8 +17,10 @@ from fundus.parser.utility import (
 
 class DieWeltParser(ParserProxy):
     class V1(BaseParser):
+        VALID_UNTIL = datetime.date(2024, 8, 12)
+
         _author_substitution_pattern: Pattern[str] = re.compile(r"WELT")
-        _paragraph_selector = CSSSelector("body .c-article-text > p")
+        _paragraph_selector: XPath = CSSSelector("body .c-article-text > p")
         _summary_selector = CSSSelector("div.c-summary__intro")
         _subheadline_selector = CSSSelector(".c-article-text > h3")
 
@@ -47,3 +50,10 @@ class DieWeltParser(ParserProxy):
         @attribute
         def topics(self) -> List[str]:
             return generic_topic_parsing(self.precomputed.meta.get("keywords"))
+
+    class V1_1(V1):
+        VALID_UNTIL = datetime.date.today()
+
+        _summary_selector = CSSSelector("div.c-article-page__intro")
+        _subheadline_selector = CSSSelector(".c-rich-text-renderer--article > h3")
+        _paragraph_selector = XPath("//div[contains(@class, 'c-rich-text-renderer--article')] /p[text()]")

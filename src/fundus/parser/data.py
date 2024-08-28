@@ -15,6 +15,7 @@ from typing import (
     overload,
 )
 
+import more_itertools
 from typing_extensions import Self, TypeAlias
 
 LDMappingValue: TypeAlias = Union[List[Dict[str, Any]], Dict[str, Any]]
@@ -140,7 +141,11 @@ class LinkedDataMapping:
                         continue
                     elif (value := node.get(key, _sentinel)) is not _sentinel:
                         return value
-                    new.extend(v for v in node.values() if isinstance(v, dict))
+
+                    nested_dicts: Iterable[Dict[str, Any]] = filter(
+                        lambda obj: isinstance(obj, dict), more_itertools.collapse(node.values(), base_type=dict)
+                    )
+                    new.extend(nested_dicts)
 
                 if not new:
                     return _sentinel

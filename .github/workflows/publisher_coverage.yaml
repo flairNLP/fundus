@@ -2,7 +2,7 @@ name: Publisher Coverage
 
 on:
   schedule:
-    - cron: '0 1 * * *'  # Runs at 01:00
+    - cron: '0 14 * * *'  # Runs at 14:00
 
   workflow_dispatch:
 
