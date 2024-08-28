@@ -9,11 +9,14 @@ from fundus.parser.utility import (
     generic_author_parsing,
     generic_date_parsing,
     generic_topic_parsing,
+    parse_title_from_root,
 )
 
 
 class RollingStoneParser(ParserProxy):
     class V1(BaseParser):
+        VALID_UNTIL = datetime.date(2024, 8, 22)
+
         _paragraph_selector = CSSSelector("div.a-content p.paragraph")
         _summary_selector = CSSSelector("div.article-excerpt")
         _subheadline_selector = CSSSelector("div.a-content h2.heading," "div.a-content div#pmc-gallery-vertical h2")
@@ -42,3 +45,18 @@ class RollingStoneParser(ParserProxy):
         @attribute
         def topics(self) -> List[str]:
             return generic_topic_parsing(self.precomputed.meta.get("swiftype:topics"))
+
+    class V1_1(V1):
+        VALID_UNTIL = datetime.date.today()
+
+        @attribute
+        def publishing_date(self) -> Optional[datetime.datetime]:
+            return generic_date_parsing(self.precomputed.ld.bf_search("datePublished"))
+
+        @attribute
+        def topics(self) -> List[str]:
+            return generic_topic_parsing(self.precomputed.ld.bf_search("keywords"))
+
+        @attribute
+        def title(self) -> Optional[str]:
+            return parse_title_from_root(self.precomputed.doc)
