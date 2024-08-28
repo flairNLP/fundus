@@ -24,7 +24,7 @@ class CA(metaclass=PublisherGroup):
         parser=NationalPostParser,
         sources=[
             NewsMap("https://nationalpost.com/sitemap-news.xml"),
-            Sitemap("https://nationalpost.com/sitemap.xml"),
+            Sitemap("https://nationalpost.com/sitemap-old.xml"),
             RSSFeed("https://nationalpost.com/feed"),
         ],
     )
