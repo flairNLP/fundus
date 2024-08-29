@@ -90,8 +90,7 @@ class RSSFeed(URLSource):
             logger.warning(f"Warning! Couldn't parse rss feed {self.url!r} because of {exception}")
             return
         else:
-            for url in (entry["link"] for entry in rss_feed["entries"]):
-                yield url
+            yield from filter(bool, (entry.get("link") for entry in rss_feed["entries"]))
 
 
 @dataclass
