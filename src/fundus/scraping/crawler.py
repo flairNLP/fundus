@@ -396,6 +396,15 @@ class Crawler(CrawlerBase):
             else:
                 raise TypeError("param <delay> of <Crawler.__init__>")
 
+        if not self.ignore_robots:
+            if not publisher.robots.timestamp:
+                publisher.robots.read()
+            if request_header := publisher.request_header:
+                user_agent = request_header.get("user-agent") or "*"
+            else:
+                user_agent = "Fundus"
+            if (delay := publisher.robots.crawl_delay(user_agent)) > 0:
+                self.delay = float(delay)
         scraper = WebScraper(publisher, self.restrict_sources_to, build_delay(), ignore_robots=self.ignore_robots)
         yield from scraper.scrape(error_handling, extraction_filter, url_filter)
 
