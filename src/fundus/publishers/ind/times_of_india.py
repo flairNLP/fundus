@@ -21,15 +21,15 @@ class TimesOfIndiaParser(ParserProxy):
             "(//div[@class='_s30J clearfix  '])[1]/div/b |"
             "(//div[@class='_s30J clearfix  '])[1]/div/h2 | (//div[@class='_s30J clearfix  '])[1]/p[not(@class='intro')]/span[@class='strong']"
         )
-        _paragraph_selector = XPath("(//div[@class='_s30J clearfix  '])[1]/p[not(@class='intro') and text()]")
-        _summary_selector = XPath("(//div[@class='_s30J clearfix  '])[1]/p[@class='intro']")
+        _paragraph_selector = XPath("(//div[@class='_s30J clearfix  '])[1]/p[text()]")
+        _summary_selector = XPath("//div[@class='M1rHh undefined']")
 
         @attribute
         def body(self) -> ArticleBody:
             html_as_string = tostring(self.precomputed.doc).decode("utf-8")
             html_as_string = re.sub(r"(</div>)((\r\n|\r|\n)<br>)", "</div><p>", html_as_string)
-            html_as_string = re.sub(r"</div></div>(?!<)", "</div></div><p>", html_as_string)
-            html_as_string = re.sub(r"</div></div></div>(?!<)", "</div></div></div><p>", html_as_string)
+            html_as_string = re.sub(r"</div>\s*</div>(?!<)", "</div></div><p>", html_as_string)
+            html_as_string = re.sub(r"</div>\s*</div>\s*</div>(?!<)", "</div></div></div><p>", html_as_string)
             html_as_string = re.sub(r"<br>(\r\n|\r|\n)(:?<div)", "</p>", html_as_string)
             html_as_string = re.sub(r"(:?::before)(\r\n|\r|\n)", "<p>", html_as_string)
             html_as_string = re.sub(r"(\r\n|\r|\n)(:?::after)", "</p>", html_as_string)
@@ -63,17 +63,8 @@ class TimesOfIndiaParser(ParserProxy):
 
         @attribute
         def topics(self) -> List[str]:
-            bloat_topics = [
-                "India",
-                "News",
-                "Google News",
-                "India Breaking News",
-                "India news",
-                "Top news in India",
-                "Live News India",
-            ]
             return [
-                topic
+                topic.title()
                 for topic in generic_topic_parsing(self.precomputed.meta.get("news_keywords"))
-                if topic not in bloat_topics
+                if "News" not in topic.title()
             ]
