@@ -129,6 +129,21 @@
       <td>&#160;</td>
       <td>&#160;</td>
     </tr>
+    <tr>
+      <td>
+        <code>TheGlobeAndMail</code>
+      </td>
+      <td>
+        <div>The Globe and Mail</div>
+      </td>
+      <td>
+        <a href="https://www.theglobeandmail.com">
+          <span>www.theglobeandmail.com</span>
+        </a>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
   </tbody>
 </table>
 
