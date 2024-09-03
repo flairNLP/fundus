@@ -46,7 +46,7 @@ class Publisher:
         self.url_filter = url_filter
         self.request_header = request_header
         self.deprecated = deprecated
-        self.robots = RobotFileParser(self.domain + "robots.txt")
+        self.robots = RobotFileParser(self.domain + "robots.txt" if self.domain.endswith("/") else self.domain + "/robots.txt")
         # we define the dict here manually instead of using default dict so that we can control
         # the order in which sources are proceeded.
         source_mapping: Dict[Type[URLSource], List[URLSource]] = {
