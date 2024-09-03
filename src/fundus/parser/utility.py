@@ -1,4 +1,5 @@
 import itertools
+import json
 import re
 from collections import defaultdict
 from copy import copy
@@ -24,7 +25,15 @@ from dateutil import parser
 from lxml.cssselect import CSSSelector
 from lxml.etree import XPath
 
-from fundus.parser.data import ArticleBody, ArticleSection, TextSequence
+from fundus.logging import create_logger
+from fundus.parser.data import (
+    ArticleBody,
+    ArticleSection,
+    LinkedDataMapping,
+    TextSequence,
+)
+
+logger = create_logger(__name__)
 
 
 def normalize_whitespace(text: str) -> str:
@@ -140,6 +149,42 @@ def extract_article_body_with_selector(
         sections.append(ArticleSection(*map(TextSequence, texts)))
 
     return ArticleBody(summary=summary, sections=sections)
+
+
+_ld_node_selector = XPath("//script[@type='application/ld+json']")
+_json_pattern = re.compile(r"(?P<json>{[\s\S]*}|\[\s*{[\s\S]*}\s*](?!\s*}))")
+
+
+def get_ld_content(root: lxml.html.HtmlElement) -> LinkedDataMapping:
+    """Parse JSON-LD from HTML.
+
+    This function parses a script tags of type ld+json.
+    In case the JSON is wrapped in a CDATA tag it is first stripped.
+
+    Args:
+        root: The HTML document given as a lxml.html.HtmlElement.
+
+    Returns:
+        The JSON-LD data as a LinkedDataMapping
+    """
+
+    def sanitize(text: str) -> Optional[str]:
+        # capture only content enclosed as follows: {...} or [{...}]
+        match = re.search(_json_pattern, text)
+        if match is not None and (sanitized := match.group("json")):
+            return sanitized
+        return None
+
+    ld_nodes = _ld_node_selector(root)
+    lds = []
+    for node in ld_nodes:
+        json_content = sanitize(node.text_content()) or ""
+        try:
+            lds.append(json.loads(json_content))
+        except json.JSONDecodeError as error:
+            logger.debug(f"Encountered {error!r} during LD parsing")
+    collapsed_lds = more_itertools.collapse(lds, base_type=dict)
+    return LinkedDataMapping(collapsed_lds)
 
 
 _meta_node_selector = CSSSelector("head > meta, body > meta")

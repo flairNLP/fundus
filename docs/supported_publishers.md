@@ -535,6 +535,21 @@
     </tr>
     <tr>
       <td>
+        <code>Krautreporter</code>
+      </td>
+      <td>
+        <div>Krautreporter</div>
+      </td>
+      <td>
+        <a href="https://krautreporter.de/">
+          <span>krautreporter.de</span>
+        </a>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
         <code>MitteldeutscheZeitung</code>
       </td>
       <td>
