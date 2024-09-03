@@ -7,6 +7,7 @@ from robots import RobotFileParser
 from fundus.parser.base_parser import ParserProxy
 from fundus.scraping.filter import URLFilter
 from fundus.scraping.url import NewsMap, RSSFeed, Sitemap, URLSource
+from fundus.utils.custom_robot_file_parser import CustomRobotFileParser
 from fundus.utils.iteration import iterate_all_subclasses
 
 
@@ -46,7 +47,7 @@ class Publisher:
         self.url_filter = url_filter
         self.request_header = request_header
         self.deprecated = deprecated
-        self.robots = RobotFileParser(
+        self.robots = CustomRobotFileParser(
             self.domain + "robots.txt" if self.domain.endswith("/") else self.domain + "/robots.txt"
         )
         # we define the dict here manually instead of using default dict so that we can control
