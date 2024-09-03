@@ -281,6 +281,17 @@ class ArticleBody(TextSequenceTree):
         return any(bool(section) for section in self.sections)
 
 
+def get_fundus_image_from_dict(json_dict: Dict[str, Any]) -> Optional["Image"]:
+    if not (url := json_dict.get("url")):
+        return None
+    return Image(
+            url,
+            json_dict.get("description"),
+            json_dict.get("caption"),
+            json_dict.get("author"),
+        )
+
+
 class Image:
     url: str
     description: Optional[str]
@@ -301,10 +312,10 @@ class Image:
 
     def __repr__(self) -> str:
         representation = (
-            f"Fundus Image object with\n"
+            f"Fundus-Article Image:\n"
             f"-URL:\t\t\t {self.url},\n"
             f"-Description:\t {self.description},\n"
             f"-Caption:\t\t {self.caption},\n"
-            f"-Author:\t\t\t {self.copyright}\n"
+            f"-Author:\t\t {self.copyright}\n"
         )
         return representation

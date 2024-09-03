@@ -24,7 +24,7 @@ from typing import (
 import lxml.html
 
 from fundus.logging import create_logger
-from fundus.parser.data import LinkedDataMapping, Image
+from fundus.parser.data import LinkedDataMapping, Image, get_fundus_image_from_dict
 from fundus.parser.utility import get_ld_content, get_meta_content
 
 RegisteredFunctionT_co = TypeVar("RegisteredFunctionT_co", covariant=True, bound="RegisteredFunction")
@@ -248,30 +248,23 @@ class BaseParser(ABC):
         ]
         for ld_type in relevant_ld_types:
             images = self.precomputed.ld.__dict__.get(ld_type)
-            if isinstance(images, dict):
-                if image_attribute := images.get("image"):
-                    if isinstance(image_attribute, list):
-                        for image in image_attribute:
-                            image_list.append(
-                                Image(
-                                    image.get("url"),
-                                    image.get("description"),
-                                    None,
-                                    image.get("author"),
-                                )
-                            )
-                    elif isinstance(image_attribute, dict):
-                        image_list.append(
-                            Image(
-                                image_attribute.get("url"),
-                                image_attribute.get("description"),
-                                None,
-                                image_attribute.get("author"),
-                            )
-                        )
-            elif isinstance(images, list):
-                for image in images:
-                    image.images.append(Image(image))
+            if ld_type.lower() == "imageobject":
+                if fundus_image := get_fundus_image_from_dict(images):
+                    image_list.append(fundus_image)
+            else:
+                if isinstance(images, dict):
+                    if image_attribute := images.get("image"):
+                        if isinstance(image_attribute, list):
+                            for image in image_attribute:
+                                if fundus_image := get_fundus_image_from_dict(image):
+                                    image_list.append(fundus_image)
+                        elif isinstance(image_attribute, dict):
+                            if fundus_image := get_fundus_image_from_dict(image_attribute):
+                                image_list.append(fundus_image)
+                elif isinstance(images, list):
+                    # In this case the image attribute contains a list of URLs
+                    for image in images:
+                        image_list.append(Image(url=image))
         return image_list
 
 
