@@ -242,7 +242,37 @@ class BaseParser(ABC):
 
     @attribute
     def images(self) -> List[Image]:
-        pass
+        image_list = list()
+        relevant_ld_types = [
+            key for key in self.precomputed.ld.__dict__.keys() if "article" in key.lower() or "image" in key.lower()
+        ]
+        for ld_type in relevant_ld_types:
+            images = self.precomputed.ld.__dict__.get(ld_type)
+            if isinstance(images, dict):
+                if image_attribute := images.get("image"):
+                    if isinstance(image_attribute, list):
+                        for image in image_attribute:
+                            image_list.append(
+                                Image(
+                                    image.get("url"),
+                                    image.get("description"),
+                                    None,
+                                    image.get("author"),
+                                )
+                            )
+                    elif isinstance(image_attribute, dict):
+                        image_list.append(
+                            Image(
+                                image_attribute.get("url"),
+                                image_attribute.get("description"),
+                                None,
+                                image_attribute.get("author"),
+                            )
+                        )
+            elif isinstance(images, list):
+                for image in images:
+                    image.images.append(Image(image))
+        return image_list
 
 
 class _ParserCache:

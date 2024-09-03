@@ -287,8 +287,24 @@ class Image:
     caption: Optional[str]
     copyright: Optional[str]
 
-    def __init__(self, url: str, description: Optional[str], caption: Optional[str], copyright: Optional[str]):
+    def __init__(
+        self,
+        url: str,
+        description: Optional[str] = None,
+        caption: Optional[str] = None,
+        copyright: Optional[str] = None,
+    ):
         self.url = url
         self.description = description
         self.caption = caption
         self.copyright = copyright
+
+    def __repr__(self) -> str:
+        representation = (
+            f"Fundus Image object with\n"
+            f"-URL:\t\t\t {self.url},\n"
+            f"-Description:\t {self.description},\n"
+            f"-Caption:\t\t {self.caption},\n"
+            f"-Author:\t\t\t {self.copyright}\n"
+        )
+        return representation
