@@ -268,7 +268,8 @@ class BaseParser(ABC):
                     # WebPage should only be used if nothing has been previously found (and it exists)
                     break
                 elif ld_type == "WebPage" and not image_list and isinstance(images, dict):
-                    # After exhausting all possible "normal" locations, we now search the LD for images risking bloat images
+                    # After exhausting all possible "normal" locations
+                    # we now search the entire LD for images risking bloat images
                     images = self.precomputed.ld.bf_search("image")
                     if not images:
                         break
