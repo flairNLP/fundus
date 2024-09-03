@@ -19,7 +19,8 @@ class TimesOfIndiaParser(ParserProxy):
     class V1(BaseParser):
         _subheadline_selector = XPath(
             "(//div[@class='_s30J clearfix  '])[1]/div/b |"
-            "(//div[@class='_s30J clearfix  '])[1]/div/h2 | (//div[@class='_s30J clearfix  '])[1]/p[not(@class='intro')]/span[@class='strong']"
+            "(//div[@class='_s30J clearfix  '])[1]/div/h2 |"
+            "(//div[@class='_s30J clearfix  '])[1]//span[contains(class, strong)]"
         )
         _paragraph_selector = XPath("(//div[@class='_s30J clearfix  '])[1]/p[text()]")
         _summary_selector = XPath("//div[@class='M1rHh undefined']")
