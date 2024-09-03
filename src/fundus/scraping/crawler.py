@@ -324,6 +324,7 @@ class Crawler(CrawlerBase):
         ignore_deprecated: bool = False,
         delay: Optional[Union[float, Delay]] = 1.0,
         threading: bool = True,
+        ignore_robots: bool = False,
     ):
         """Fundus base class for crawling articles from the web.
 
@@ -348,6 +349,9 @@ class Crawler(CrawlerBase):
                 the crawler will use a single thread for all publishers and load articles successively. This will
                 greatly influence performance, and it is highly recommended to use a threaded crawler.
                 Defaults to True.
+            ignore_robots (bool): Determines whether to bypass the consideration of the robots.txt file when
+                filtering URLs from publishers. If set to True, the URLs will not be filtered based on the
+                robots.txt file. Defaults to False.
         """
 
         def filter_publishers(publisher: Publisher) -> bool:
@@ -368,6 +372,7 @@ class Crawler(CrawlerBase):
         self.restrict_sources_to = restrict_sources_to
         self.delay = delay
         self.threading = threading
+        self.ignore_robots = ignore_robots
 
     def _fetch_articles(
         self,
@@ -391,7 +396,7 @@ class Crawler(CrawlerBase):
             else:
                 raise TypeError("param <delay> of <Crawler.__init__>")
 
-        scraper = WebScraper(publisher, self.restrict_sources_to, build_delay())
+        scraper = WebScraper(publisher, self.restrict_sources_to, build_delay(), ignore_robots=self.ignore_robots)
         yield from scraper.scrape(error_handling, extraction_filter, url_filter)
 
     @staticmethod

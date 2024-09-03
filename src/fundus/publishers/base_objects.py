@@ -2,6 +2,8 @@ import inspect
 from textwrap import indent
 from typing import Dict, Iterator, List, Optional, Type, Union
 
+from robots import RobotFileParser
+
 from fundus.parser.base_parser import ParserProxy
 from fundus.scraping.filter import URLFilter
 from fundus.scraping.url import NewsMap, RSSFeed, Sitemap, URLSource
@@ -44,6 +46,9 @@ class Publisher:
         self.url_filter = url_filter
         self.request_header = request_header
         self.deprecated = deprecated
+        self.robots = RobotFileParser(
+            self.domain + "robots.txt" if self.domain.endswith("/") else self.domain + "/robots.txt"
+        )
         # we define the dict here manually instead of using default dict so that we can control
         # the order in which sources are proceeded.
         source_mapping: Dict[Type[URLSource], List[URLSource]] = {
