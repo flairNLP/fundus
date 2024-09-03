@@ -24,8 +24,8 @@ from typing import (
 import lxml.html
 
 from fundus.logging import create_logger
-from fundus.parser.data import LinkedDataMapping, Image, get_fundus_image_from_dict
-from fundus.parser.utility import get_ld_content, get_meta_content
+from fundus.parser.data import LinkedDataMapping, Image
+from fundus.parser.utility import get_ld_content, get_meta_content, get_fundus_image_from_dict
 
 RegisteredFunctionT_co = TypeVar("RegisteredFunctionT_co", covariant=True, bound="RegisteredFunction")
 

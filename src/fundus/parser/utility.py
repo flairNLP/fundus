@@ -22,6 +22,7 @@ from typing import (
 
 import lxml.html
 import more_itertools
+import validators
 from dateutil import parser
 from lxml.cssselect import CSSSelector
 from lxml.etree import XPath
@@ -32,6 +33,7 @@ from fundus.parser.data import (
     ArticleSection,
     LinkedDataMapping,
     TextSequence,
+    Image,
 )
 
 logger = create_logger(__name__)
@@ -371,3 +373,14 @@ def parse_title_from_root(root: lxml.html.HtmlElement) -> Optional[str]:
         return None
 
     return strip_nodes_to_text(title_node)
+
+
+def get_fundus_image_from_dict(json_dict: Dict[str, Any]) -> Optional["Image"]:
+    if (url := json_dict.get("url")) and validators.url(url):
+        return Image(
+            url,
+            json_dict.get("description"),
+            json_dict.get("caption"),
+            generic_author_parsing(json_dict.get("author")),
+        )
+    return None

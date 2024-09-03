@@ -16,6 +16,7 @@ from typing import (
 )
 
 import more_itertools
+import validators
 from typing_extensions import Self, TypeAlias
 
 LDMappingValue: TypeAlias = Union[List[Dict[str, Any]], Dict[str, Any]]
@@ -281,41 +282,48 @@ class ArticleBody(TextSequenceTree):
         return any(bool(section) for section in self.sections)
 
 
-def get_fundus_image_from_dict(json_dict: Dict[str, Any]) -> Optional["Image"]:
-    if not (url := json_dict.get("url")):
-        return None
-    return Image(
-            url,
-            json_dict.get("description"),
-            json_dict.get("caption"),
-            json_dict.get("author"),
-        )
-
-
 class Image:
-    url: str
-    description: Optional[str]
-    caption: Optional[str]
-    copyright: Optional[str]
+    _url: str
+    _description: Optional[str]
+    _caption: Optional[str]
+    _author: List[str]
 
     def __init__(
         self,
         url: str,
         description: Optional[str] = None,
         caption: Optional[str] = None,
-        copyright: Optional[str] = None,
+        author: List[str] = None,
     ):
-        self.url = url
-        self.description = description
-        self.caption = caption
-        self.copyright = copyright
+        if not validators.url(url):
+            raise ValueError(f"url {url} is not a valid URL")
+        self._url = url
+        self._description = description
+        self._caption = caption
+        self._author = author
+
+    @property
+    def url(self) -> str:
+        return self._url
+
+    @property
+    def description(self) -> Optional[str]:
+        return self._description
+
+    @property
+    def caption(self) -> Optional[str]:
+        return self._caption
+
+    @property
+    def author(self) -> List[str]:
+        return self._author
 
     def __repr__(self) -> str:
         representation = (
             f"Fundus-Article Image:\n"
             f"-URL:\t\t\t {self.url},\n"
-            f"-Description:\t {self.description},\n"
-            f"-Caption:\t\t {self.caption},\n"
-            f"-Author:\t\t {self.copyright}\n"
+            f'-Description:\t "{self.description}",\n'
+            f'-Caption:\t\t "{self.caption}",\n'
+            f"-Authors:\t\t {self.author}\n"
         )
         return representation
