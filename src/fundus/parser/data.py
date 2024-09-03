@@ -279,3 +279,16 @@ class ArticleBody(TextSequenceTree):
 
     def __bool__(self):
         return any(bool(section) for section in self.sections)
+
+
+class Image:
+    url: str
+    description: Optional[str]
+    caption: Optional[str]
+    copyright: Optional[str]
+
+    def __init__(self, url: str, description: Optional[str], caption: Optional[str], copyright: Optional[str]):
+        self.url = url
+        self.description = description
+        self.caption = caption
+        self.copyright = copyright
