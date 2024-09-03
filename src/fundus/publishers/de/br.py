@@ -1,6 +1,7 @@
 import datetime
 from typing import List, Optional
 
+from lxml.cssselect import CSSSelector
 from lxml.etree import XPath
 
 from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute
@@ -14,6 +15,8 @@ from fundus.parser.utility import (
 
 class BRParser(ParserProxy):
     class V1(BaseParser):
+        VALID_UNTIL = datetime.date(2024, 8, 26)
+
         _summary_selector = XPath(
             "//div[starts-with(@class, 'ArticleHeader_section')]//p[starts-with(@class, 'ArticleModuleTeaser_teaserText') or starts-with(@class, 'ArticleItemTeaserText_text')]"
         )
@@ -48,3 +51,28 @@ class BRParser(ParserProxy):
         @attribute
         def topics(self) -> List[str]:
             return generic_topic_parsing(self.precomputed.ld.bf_search("keywords"))
+
+    class V1_1(V1):
+        VALID_UNTIL = datetime.date.today()
+
+        _bloat_pattern = "Das ist die Europäische Perspektive bei BR24."
+        _summary_selector = XPath("//header //p[@class='body3 ArticleItemTeaserText_text__H_RS_']")
+        _subheadline_selector = XPath("//section[@id='articlebody'] //h2[text()]")
+        _paragraph_selector = XPath(
+            f"//section[@id='articlebody'] //section[@class='ArticleModuleText_wrapper__AyX6M'] //p[text() and not(re:test(string(), '{_bloat_pattern}'))] |"
+            "//section[@id='articlebody'] //section[@class='ArticleModuleText_wrapper__AyX6M'] //li |"
+            "//section[@class='ShortnewsDetail_content__79bZq'] //p[1]",
+            namespaces={"re": "http://exslt.org/regular-expressions"},
+        )
+
+        _date_selector = CSSSelector("p.ShortnewsDetail_source__2ep85.heading4")
+
+        @attribute
+        def publishing_date(self) -> Optional[datetime.datetime]:
+            if date_nodes := self._date_selector(self.precomputed.doc):
+                if (content := date_nodes[0].text) is None:
+                    return None
+                date_string = content.split(",")[-1]
+                tz_aware_date = date_string.replace("Uhr", "+02:00")
+                return generic_date_parsing(tz_aware_date)
+            return generic_date_parsing(self.precomputed.ld.bf_search("datePublished"))

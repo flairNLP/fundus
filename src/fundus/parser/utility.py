@@ -1,4 +1,5 @@
 import itertools
+import json
 import re
 from collections import defaultdict
 from copy import copy
@@ -6,6 +7,7 @@ from dataclasses import dataclass, field
 from datetime import datetime
 from functools import total_ordering
 from typing import (
+    Any,
     Callable,
     ClassVar,
     Dict,
@@ -24,7 +26,15 @@ from dateutil import parser
 from lxml.cssselect import CSSSelector
 from lxml.etree import XPath
 
-from fundus.parser.data import ArticleBody, ArticleSection, TextSequence
+from fundus.logging import create_logger
+from fundus.parser.data import (
+    ArticleBody,
+    ArticleSection,
+    LinkedDataMapping,
+    TextSequence,
+)
+
+logger = create_logger(__name__)
 
 
 def normalize_whitespace(text: str) -> str:
@@ -140,6 +150,45 @@ def extract_article_body_with_selector(
         sections.append(ArticleSection(*map(TextSequence, texts)))
 
     return ArticleBody(summary=summary, sections=sections)
+
+
+_ld_node_selector = XPath("//script[@type='application/ld+json']")
+_json_pattern = re.compile(r"(?P<json>{[\s\S]*}|\[\s*{[\s\S]*}\s*](?!\s*}))")
+
+
+def extract_json_from_dom(root: lxml.html.HtmlElement, selector: XPath) -> Iterable[Dict[str, Any]]:
+    def sanitize(text: str) -> Optional[str]:
+        # capture only content enclosed as follows: {...} or [{...}]
+        match = re.search(_json_pattern, text)
+        if match is not None and (sanitized := match.group("json")):
+            return sanitized
+        return None
+
+    json_nodes = selector(root)
+    jsons = []
+    for node in json_nodes:
+        json_content = sanitize(node.text_content()) or ""
+        try:
+            jsons.append(json.loads(json_content))
+        except json.JSONDecodeError as error:
+            logger.debug(f"Encountered {error!r} during JSON parsing")
+    return more_itertools.collapse(jsons, base_type=dict)
+
+
+def get_ld_content(root: lxml.html.HtmlElement) -> LinkedDataMapping:
+    """Parse JSON-LD from HTML.
+
+    This function parses a script tags of type ld+json.
+    In case the JSON is wrapped in a CDATA tag it is first stripped.
+
+    Args:
+        root: The HTML document given as a lxml.html.HtmlElement.
+
+    Returns:
+        The JSON-LD data as a LinkedDataMapping
+    """
+
+    return LinkedDataMapping(extract_json_from_dom(root, _ld_node_selector))
 
 
 _meta_node_selector = CSSSelector("head > meta, body > meta")

@@ -18,7 +18,7 @@ Developed at <a href="https://www.informatik.hu-berlin.de/en/forschung-en/gebiet
 <div align="center">
 <hr>
 
-[Quick Start](#quick-start) | [Tutorials](#tutorials) | [News Sources](/docs/supported_publishers.md) | [Paper](https://arxiv.org/abs/2403.15279)
+[Quick Start](#quick-start) | [Tutorials](#tutorials) | [News Sources](/docs/supported_publishers.md) | [Paper](https://aclanthology.org/2024.acl-demos.29/)
 
 </div>
 
@@ -167,32 +167,43 @@ You can find the publishers currently supported [**here**](/docs/supported_publi
 
 Also: **Adding a new publisher is easy - consider contributing to the project!**
 
-## Evaluation benchmark
+## Evaluation Benchmark
 
 Check out our evaluation [benchmark](https://github.com/dobbersc/fundus-evaluation).
 
-| **Scraper** | **Precision**             | **Recall**                | **F1-Score**              |
-|-------------|---------------------------|---------------------------|---------------------------|
-| [Fundus](https://github.com/flairNLP/fundus)      | **99.89**<sub>±0.57</sub> | 96.75<sub>±12.75</sub>    | **97.69**<sub>±9.75</sub> |
-| [Trafilatura](https://github.com/adbar/trafilatura) | 90.54<sub>±18.86</sub>    | 93.23<sub>±23.81</sub>    | 89.81<sub>±23.69</sub>    |
-| [BTE](https://github.com/dobbersc/fundus-evaluation/blob/master/src/fundus_evaluation/scrapers/bte.py)         | 81.09<sub>±19.41</sub>    | **98.23**<sub>±8.61</sub> | 87.14<sub>±15.48</sub>    |
-| [jusText](https://github.com/miso-belica/jusText)     | 86.51<sub>±18.92</sub>    | 90.23<sub>±20.61</sub>    | 86.96<sub>±19.76</sub>    |
-| [news-please](https://github.com/fhamborg/news-please) | 92.26<sub>±12.40</sub>    | 86.38<sub>±27.59</sub>    | 85.81<sub>±23.29</sub>    |
-| [BoilerNet](https://github.com/dobbersc/fundus-evaluation/tree/master/src/fundus_evaluation/scrapers/boilernet)   | 84.73<sub>±20.82</sub>    | 90.66<sub>±21.05</sub>    | 85.77<sub>±20.28</sub>    |
-| [Boilerpipe](https://github.com/kohlschutter/boilerpipe)  | 82.89<sub>±20.65</sub>    | 82.11<sub>±29.99</sub>    | 79.90<sub>±25.86</sub>    |
+The following table summarizes the overall performance of Fundus and evaluated scrapers in terms of averaged ROUGE-LSum precision, recall and F1-score and their standard deviation. The table is sorted in descending order over the F1-score:
+
+| **Scraper**                                                                                                     | **Precision**             | **Recall**                | **F1-Score**              | **Version** |
+|-----------------------------------------------------------------------------------------------------------------|:--------------------------|---------------------------|---------------------------|-------------|
+| [Fundus](https://github.com/flairNLP/fundus)                                                                    | **99.89**<sub>±0.57</sub> | 96.75<sub>±12.75</sub>    | **97.69**<sub>±9.75</sub> | 0.4.1       |
+| [Trafilatura](https://github.com/adbar/trafilatura)                                                             | 93.91<sub>±12.89</sub>    | 96.85<sub>±15.69</sub>    | 93.62<sub>±16.73</sub>    | 1.12.0      |
+| [news-please](https://github.com/fhamborg/news-please)                                                          | 97.95<sub>±10.08</sub>    | 91.89<sub>±16.15</sub>    | 93.39<sub>±14.52</sub>    | 1.6.13      |
+| [BTE](https://github.com/dobbersc/fundus-evaluation/blob/master/src/fundus_evaluation/scrapers/bte.py)          | 81.09<sub>±19.41</sub>    | **98.23**<sub>±8.61</sub> | 87.14<sub>±15.48</sub>    | /           |
+| [jusText](https://github.com/miso-belica/jusText)                                                               | 86.51<sub>±18.92</sub>    | 90.23<sub>±20.61</sub>    | 86.96<sub>±19.76</sub>    | 3.0.1       |
+| [BoilerNet](https://github.com/dobbersc/fundus-evaluation/tree/master/src/fundus_evaluation/scrapers/boilernet) | 85.96<sub>±18.55</sub>    | 91.21<sub>±19.15</sub>    | 86.52<sub>±18.03</sub>    | /           |
+| [Boilerpipe](https://github.com/kohlschutter/boilerpipe)                                                        | 82.89<sub>±20.65</sub>    | 82.11<sub>±29.99</sub>    | 79.90<sub>±25.86</sub>    | 1.3.0       |
 
 ## Cite
 
-Please cite the following [paper](https://arxiv.org/abs/2403.15279) when using Fundus or building upon our work:
+Please cite the following [paper](https://aclanthology.org/2024.acl-demos.29/) when using Fundus or building upon our work:
 
 ```bibtex
-@misc{dallabetta2024fundus,
-      title={Fundus: A Simple-to-Use News Scraper Optimized for High Quality Extractions}, 
-      author={Max Dallabetta and Conrad Dobberstein and Adrian Breiding and Alan Akbik},
-      year={2024},
-      eprint={2403.15279},
-      archivePrefix={arXiv},
-      primaryClass={cs.CL}
+@inproceedings{dallabetta-etal-2024-fundus,
+    title = "Fundus: A Simple-to-Use News Scraper Optimized for High Quality Extractions",
+    author = "Dallabetta, Max  and
+      Dobberstein, Conrad  and
+      Breiding, Adrian  and
+      Akbik, Alan",
+    editor = "Cao, Yixin  and
+      Feng, Yang  and
+      Xiong, Deyi",
+    booktitle = "Proceedings of the 62nd Annual Meeting of the Association for Computational Linguistics (Volume 3: System Demonstrations)",
+    month = aug,
+    year = "2024",
+    address = "Bangkok, Thailand",
+    publisher = "Association for Computational Linguistics",
+    url = "https://aclanthology.org/2024.acl-demos.29",
+    pages = "305--314",
 }
 ```
 

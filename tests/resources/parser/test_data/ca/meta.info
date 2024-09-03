@@ -6,5 +6,9 @@
   "TheGlobeAndMail_2024_08_28.html.gz": {
     "url": "https://www.theglobeandmail.com/business/article-business-brief-nvidias-into-nation-building-we-cool-with-that/",
     "crawl_date": "2024-08-28 13:26:27.319831"
+  },
+  "NationalPost_2024_08_28.html.gz": {
+    "url": "https://nationalpost.com/news/canada/kamala-harris-childhood-montreal-canada",
+    "crawl_date": "2024-08-28 13:13:43.905282"
   }
 }

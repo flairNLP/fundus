@@ -15,6 +15,7 @@ from typing import (
     overload,
 )
 
+import more_itertools
 from typing_extensions import Self, TypeAlias
 
 LDMappingValue: TypeAlias = Union[List[Dict[str, Any]], Dict[str, Any]]
@@ -52,8 +53,8 @@ class LinkedDataMapping:
     def serialize(self) -> Dict[str, Any]:
         return {attribute: value for attribute, value in self.__dict__.items() if "__" not in attribute}
 
-    def add_ld(self, ld: Dict[str, Any]) -> None:
-        if ld_type := ld.get("@type"):
+    def add_ld(self, ld: Dict[str, Any], name: Optional[str] = None) -> None:
+        if ld_type := ld.get("@type", name):
             if isinstance(ld_type, list):
                 if len(ld_type) == 1:
                     ld_type = ld_type[0]
@@ -140,7 +141,11 @@ class LinkedDataMapping:
                         continue
                     elif (value := node.get(key, _sentinel)) is not _sentinel:
                         return value
-                    new.extend(v for v in node.values() if isinstance(v, dict))
+
+                    nested_dicts: Iterable[Dict[str, Any]] = filter(
+                        lambda obj: isinstance(obj, dict), more_itertools.collapse(node.values(), base_type=dict)
+                    )
+                    new.extend(nested_dicts)
 
                 if not new:
                     return _sentinel

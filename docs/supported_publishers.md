@@ -129,6 +129,21 @@
       <td>&#160;</td>
       <td>&#160;</td>
     </tr>
+    <tr>
+      <td>
+        <code>NationalPost</code>
+      </td>
+      <td>
+        <div>National Post</div>
+      </td>
+      <td>
+        <a href="https://nationalpost.com">
+          <span>nationalpost.com</span>
+        </a>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
   </tbody>
 </table>
 
@@ -578,6 +593,21 @@
       <td>
         <code>topics</code>
       </td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
+        <code>Krautreporter</code>
+      </td>
+      <td>
+        <div>Krautreporter</div>
+      </td>
+      <td>
+        <a href="https://krautreporter.de/">
+          <span>krautreporter.de</span>
+        </a>
+      </td>
+      <td>&#160;</td>
       <td>&#160;</td>
     </tr>
     <tr>

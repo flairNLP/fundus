@@ -1,20 +1,17 @@
 import datetime
-import json
 import re
 from typing import List, Optional
 
-import more_itertools
 from lxml.cssselect import CSSSelector
 from lxml.etree import XPath
-from lxml.html import document_fromstring
 
 from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute
-from fundus.parser.data import LinkedDataMapping
+from fundus.parser.base_parser import function
 from fundus.parser.utility import (
     extract_article_body_with_selector,
+    extract_json_from_dom,
     generic_author_parsing,
     generic_date_parsing,
-    generic_topic_parsing,
 )
 
 
@@ -24,7 +21,13 @@ class CBCNewsParser(ParserProxy):
         _subheadline_selector = CSSSelector("div.story > h2")
         _paragraph_selector = CSSSelector("div.story > p")
 
-        _author_ld_selector = XPath("//script[@id='initialStateDom']")
+        _cbc_ld_selector: XPath = XPath("//script[@id='initialStateDom']")
+
+        @function(priority=1)
+        def _parse_initial_state_dom(self):
+            state_dom_json = extract_json_from_dom(self.precomputed.doc, self._cbc_ld_selector)
+            for ld in state_dom_json:
+                self.precomputed.ld.add_ld(ld, "initialStateDom")
 
         @attribute
         def body(self) -> ArticleBody:
@@ -37,28 +40,27 @@ class CBCNewsParser(ParserProxy):
 
         @attribute
         def authors(self) -> List[str]:
-            doc = document_fromstring(self.precomputed.html)
-            ld_nodes = self._author_ld_selector(doc)
-            try:
-                author_ld = json.loads(re.sub(r"(window\.__INITIAL_STATE__ = |;$)", "", ld_nodes[0].text_content()))
-            except json.JSONDecodeError:
-                return []
-            if not (details := author_ld.get("detail")):
-                return []
-            if not (content := details.get("content")):
-                return []
-            return generic_author_parsing(content.get("authorList"))
+            return generic_author_parsing(self.precomputed.ld.bf_search("author"))
 
         @attribute
         def publishing_date(self) -> Optional[datetime.datetime]:
-            return generic_date_parsing(self.precomputed.ld.bf_search("ReportageNewsArticle")[0].get("datePublished"))
+            return generic_date_parsing(self.precomputed.ld.bf_search("datePublished"))
 
         @attribute
         def title(self) -> Optional[str]:
-            if not (title := self.precomputed.meta.get("og:title")):
-                return title
-            return re.sub(r" \|.*", "", title)
+            return self.precomputed.ld.bf_search("headline")
 
         @attribute
         def topics(self) -> List[str]:
-            return generic_topic_parsing(self.precomputed.ld.bf_search("ReportageNewsArticle")[0].get("articleSection"))
+            if not (topic_dict := self.precomputed.ld.bf_search("keywords")):
+                return []
+
+            # add locations
+            topic_list = [topic for location in topic_dict.get("tags") if (topic := location.get("name")) is not None]
+
+            # add subjects
+            for subject in topic_dict.get("concepts"):
+                if (path := subject.get("path")) is not None:
+                    topic_list.append(re.sub(r".*/", "", path))
+
+            return topic_list
