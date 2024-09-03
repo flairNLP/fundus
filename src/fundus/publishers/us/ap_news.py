@@ -62,5 +62,7 @@ class APNewsParser(ParserProxy):
         _author_selector = CSSSelector("div.Page-authors")
         _subheadline_selector = XPath("//div[contains(@class, 'RichTextStoryBody')] /h2[not(text()='___')]")
         _paragraph_selector = XPath(
-            "//div[contains(@class, 'RichTextStoryBody')] /p"
+            "//div[contains(@class, 'RichTextStoryBody')] "
+            "/p[not(preceding-sibling::*[1][self::h2 and text()='___'])]"
+            # only p-elements not directly following h2 elements with text() = '___'
         )
