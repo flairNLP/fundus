@@ -53,8 +53,8 @@ class LinkedDataMapping:
     def serialize(self) -> Dict[str, Any]:
         return {attribute: value for attribute, value in self.__dict__.items() if "__" not in attribute}
 
-    def add_ld(self, ld: Dict[str, Any]) -> None:
-        if ld_type := ld.get("@type"):
+    def add_ld(self, ld: Dict[str, Any], name: Optional[str] = None) -> None:
+        if ld_type := ld.get("@type", name):
             if isinstance(ld_type, list):
                 if len(ld_type) == 1:
                     ld_type = ld_type[0]
