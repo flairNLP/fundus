@@ -11,6 +11,7 @@ from fundus.parser.utility import (
     generic_author_parsing,
     generic_date_parsing,
     generic_topic_parsing,
+    normalize_whitespace,
 )
 
 
@@ -18,6 +19,7 @@ class APNewsParser(ParserProxy):
     class V1(BaseParser):
         VALID_UNTIL = datetime.date(2023, 7, 10)
         _author_selector: XPath = XPath(f"{CSSSelector('div.CardHeadline').path}/span/span[1]")
+        _subheadline_selector = XPath("//div[@data-key = 'article']/h2[not(text()='___')]")
         _paragraph_selector = XPath("//div[@data-key = 'article']/p")
 
         @attribute
@@ -25,6 +27,7 @@ class APNewsParser(ParserProxy):
             return extract_article_body_with_selector(
                 self.precomputed.doc,
                 paragraph_selector=self._paragraph_selector,
+                subheadline_selector=self._subheadline_selector,
             )
 
         @attribute
@@ -33,13 +36,13 @@ class APNewsParser(ParserProxy):
             # Therefore, we try to parse the article's authors from the document.
             try:
                 # Example: "By AUTHOR1, AUTHOR2 and AUTHOR3"
-                author_string: str = self._author_selector(self.precomputed.doc)[0].text_content()
-                author_string = author_string[3:]  # Strip "By "
+                author_string: str = normalize_whitespace(self._author_selector(self.precomputed.doc)[0].text_content())
+                author_string = re.sub(r"^By ", "", author_string)
             except IndexError:
                 # Fallback to the generic author parsing from the linked data.
                 return generic_author_parsing(self.precomputed.ld.get_value_by_key_path(["NewsArticle", "author"]))
 
-            return re.split(r"\sand\s|,\s", author_string)
+            return generic_author_parsing(author_string)
 
         @attribute
         def publishing_date(self) -> Optional[datetime.datetime]:
@@ -53,7 +56,11 @@ class APNewsParser(ParserProxy):
         def topics(self) -> List[str]:
             return generic_topic_parsing(self.precomputed.meta.get("keywords"))
 
-    class V1S1(V1):
+    class V1_1(V1):
         VALID_UNTIL = datetime.date.today()
+
         _author_selector = CSSSelector("div.Page-authors")
-        _paragraph_selector = CSSSelector("div.RichTextStoryBody > p")
+        _subheadline_selector = XPath("//div[contains(@class, 'RichTextStoryBody')] /h2[not(text()='___')]")
+        _paragraph_selector = XPath(
+            "//div[contains(@class, 'RichTextStoryBody')] /p"
+        )
