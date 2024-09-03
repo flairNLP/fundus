@@ -116,6 +116,10 @@ def main() -> None:
                 if not (article := get_test_article(publisher, url)):
                     logger.error(f"Couldn't get article for {publisher.name}. Skipping")
                     continue
+
+                # remove previous file
+                if previous_file := html_mapping.get(publisher.parser.latest_version):
+                    previous_file.remove()
                 html = HTMLTestFile(
                     url=article.html.responded_url,
                     content=article.html.content,
@@ -124,10 +128,6 @@ def main() -> None:
                 )
                 html.write()
                 subprocess.call(["git", "add", html.path], stdout=subprocess.PIPE)
-
-                # remove previous file
-                if previous_file := html_mapping.get(publisher.parser.latest_version):
-                    previous_file.remove()
 
                 html_mapping[publisher.parser.latest_version] = html
                 test_data[publisher.parser.latest_version.__name__] = {}
