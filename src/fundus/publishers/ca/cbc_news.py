@@ -52,7 +52,7 @@ class CBCNewsParser(ParserProxy):
 
         @attribute
         def topics(self) -> List[str]:
-            if (topic_dict := self.precomputed.ld.bf_search("keywords")) is None:
+            if not (topic_dict := self.precomputed.ld.bf_search("keywords")):
                 return []
 
             # add locations
