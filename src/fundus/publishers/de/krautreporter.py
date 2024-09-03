@@ -1,19 +1,26 @@
-import json
 from datetime import datetime
 from typing import List, Optional
 
 from lxml.cssselect import CSSSelector
+from lxml.etree import XPath
 
 from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute, utility
 
 
 class KrautreporterParser(ParserProxy):
     class V1(BaseParser):
-        _summary_selector = CSSSelector("p.article-headers-standard__teaser")
+        _bloat_pattern: str = (
+            "^Redaktion:|^Dieser Artikel ist eine Übersetzung|^Übersetzung:|^Recherche:|^Schlussredaktion:"
+        )
+
+        _summary_selector = CSSSelector("p[data-test='article-teaser']")
         _subheadline_selector = CSSSelector("div.article-markdown > h2")
-        _paragraph_selector = CSSSelector("div.article-markdown > p")
-        _json_ld_selector = CSSSelector('script[type="application/ld+json"]')
-        _topic_selector = CSSSelector("div.article-headers-shared-topic")
+        _paragraph_selector = XPath(
+            f"//div[contains(@class, 'article-markdown')] /p[not(re:test(string(), '{_bloat_pattern}'))]",
+            namespaces={"re": "http://exslt.org/regular-expressions"},
+        )
+
+        _topic_selector = XPath("string(//div[contains(@class, 'article-headers') and contains(@class, 'topic')])")
 
         @attribute
         def title(self) -> Optional[str]:
@@ -42,5 +49,4 @@ class KrautreporterParser(ParserProxy):
 
         @attribute
         def topics(self) -> List[str]:
-            topic_element = self._topic_selector(self.precomputed.doc)[0]
-            return utility.generic_topic_parsing(topic_element.text_content())
+            return utility.generic_topic_parsing(self._topic_selector(self.precomputed.doc))
