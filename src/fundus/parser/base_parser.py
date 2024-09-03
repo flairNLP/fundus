@@ -20,12 +20,19 @@ from typing import (
     TypeVar,
     Union,
 )
+from urllib.parse import urlparse
 
 import lxml.html
+import validators
 
 from fundus.logging import create_logger
-from fundus.parser.data import LinkedDataMapping, Image
-from fundus.parser.utility import get_ld_content, get_meta_content, get_fundus_image_from_dict
+from fundus.parser.data import Image, LinkedDataMapping
+from fundus.parser.utility import (
+    get_fundus_image_from_dict,
+    get_ld_content,
+    get_meta_content,
+    preprocess_url,
+)
 
 RegisteredFunctionT_co = TypeVar("RegisteredFunctionT_co", covariant=True, bound="RegisteredFunction")
 
@@ -243,28 +250,55 @@ class BaseParser(ABC):
     @attribute
     def images(self) -> List[Image]:
         image_list = list()
+        publisher_domain = urlparse(self.precomputed.meta.get("og:url")).netloc
         relevant_ld_types = [
-            key for key in self.precomputed.ld.__dict__.keys() if "article" in key.lower() or "image" in key.lower()
+            key
+            for key in self.precomputed.ld.__dict__.keys()
+            if re.match(r".*((article)|(image)|(blog)).*", key, flags=re.IGNORECASE)
         ]
+        # Use WebPage as fallback, if no other images have been found. This is used as a fallback, because most
+        # news agencies indicate their pictures in some kind of Article of ImageObject Type
+        relevant_ld_types.append("WebPage")
         for ld_type in relevant_ld_types:
-            images = self.precomputed.ld.__dict__.get(ld_type)
-            if ld_type.lower() == "imageobject":
-                if fundus_image := get_fundus_image_from_dict(images):
-                    image_list.append(fundus_image)
-            else:
+            elements = self.precomputed.ld.__dict__.get(ld_type)
+            if not isinstance(elements, list):
+                elements = [elements]
+            for images in elements:
+                if ld_type == "WebPage" and (not images or image_list):
+                    # WebPage should only be used if nothing has been previously found (and it exists)
+                    break
+                elif ld_type == "WebPage" and not image_list and isinstance(images, dict):
+                    # After exhausting all possible "normal" locations, we now search the LD for images risking bloat images
+                    images = self.precomputed.ld.bf_search("image")
+                    if not images:
+                        break
+                if ld_type.lower() == "imageobject":
+                    if not isinstance(images, list):
+                        if fundus_image := get_fundus_image_from_dict(images, publisher_domain):
+                            image_list.append(fundus_image)
+                        continue
                 if isinstance(images, dict):
                     if image_attribute := images.get("image"):
                         if isinstance(image_attribute, list):
                             for image in image_attribute:
-                                if fundus_image := get_fundus_image_from_dict(image):
-                                    image_list.append(fundus_image)
+                                if isinstance(image, str) and validators.url(image):
+                                    # In this case only URLs are available for now
+                                    image_list.append(Image(urls=[preprocess_url(image, publisher_domain)]))
+                                else:
+                                    if fundus_image := get_fundus_image_from_dict(image, publisher_domain):
+                                        image_list.append(fundus_image)
                         elif isinstance(image_attribute, dict):
-                            if fundus_image := get_fundus_image_from_dict(image_attribute):
+                            if fundus_image := get_fundus_image_from_dict(image_attribute, publisher_domain):
                                 image_list.append(fundus_image)
                 elif isinstance(images, list):
-                    # In this case the image attribute contains a list of URLs
                     for image in images:
-                        image_list.append(Image(url=image))
+                        if isinstance(image, str) and validators.url(image):
+                            image_list.append(Image(urls=[preprocess_url(image, publisher_domain)]))
+                        if isinstance(image, dict):
+                            image_list.append(get_fundus_image_from_dict(image, publisher_domain))
+                elif isinstance(images, str):
+                    if validators.url(images):
+                        image_list.append(Image(urls=[preprocess_url(images, publisher_domain)]))
         return image_list
 
 

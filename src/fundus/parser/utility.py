@@ -19,6 +19,7 @@ from typing import (
     Type,
     Union,
 )
+from urllib.parse import urljoin
 
 import lxml.html
 import more_itertools
@@ -31,9 +32,9 @@ from fundus.logging import create_logger
 from fundus.parser.data import (
     ArticleBody,
     ArticleSection,
+    Image,
     LinkedDataMapping,
     TextSequence,
-    Image,
 )
 
 logger = create_logger(__name__)
@@ -375,12 +376,38 @@ def parse_title_from_root(root: lxml.html.HtmlElement) -> Optional[str]:
     return strip_nodes_to_text(title_node)
 
 
-def get_fundus_image_from_dict(json_dict: Dict[str, Any]) -> Optional["Image"]:
-    if (url := json_dict.get("url")) and validators.url(url):
-        return Image(
-            url,
-            json_dict.get("description"),
-            json_dict.get("caption"),
-            generic_author_parsing(json_dict.get("author")),
-        )
+def get_fundus_image_from_dict(json_dict: Dict[str, Any], domain: str) -> Optional[Image]:
+    if (url := (json_dict.get("url") or json_dict.get("contentUrl"))) and isinstance(url, list):
+        valid_urls = list()
+        for url_str in url:
+            url_str = preprocess_url(url_str, domain)
+            if validators.url(url_str):
+                valid_urls.append(url_str)
+        if valid_urls:
+            return Image(
+                valid_urls,
+                json_dict.get("description"),
+                json_dict.get("caption"),
+                generic_author_parsing(json_dict.get("author")),
+            )
+        return None
+
+    elif url:
+        url = preprocess_url(url, domain)
+        if validators.url(url):
+            return Image(
+                [url],
+                json_dict.get("description"),
+                json_dict.get("caption"),
+                generic_author_parsing(json_dict.get("author")),
+            )
     return None
+
+
+def preprocess_url(url: str, domain: str) -> str:
+    url = re.sub(r"\\/", "/", url)
+    # Some publishers use relative URLs
+    if not validators.url(url):
+        publisher_domain = "https://" + (domain if domain.endswith("/") else domain + "/")
+        url = urljoin(publisher_domain, url.removeprefix("/"))
+    return url

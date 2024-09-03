@@ -283,28 +283,29 @@ class ArticleBody(TextSequenceTree):
 
 
 class Image:
-    _url: str
+    _urls: List[str]
     _description: Optional[str]
     _caption: Optional[str]
-    _author: List[str]
+    _authors: List[str]
 
     def __init__(
         self,
-        url: str,
+        urls: List[str],
         description: Optional[str] = None,
         caption: Optional[str] = None,
         author: List[str] = None,
     ):
-        if not validators.url(url):
-            raise ValueError(f"url {url} is not a valid URL")
-        self._url = url
+        for url in urls:
+            if not validators.url(url):
+                raise ValueError(f"url {url} is not a valid URL")
+        self._urls = urls
         self._description = description
         self._caption = caption
-        self._author = author
+        self._authors = author
 
     @property
-    def url(self) -> str:
-        return self._url
+    def urls(self) -> List[str]:
+        return self._urls
 
     @property
     def description(self) -> Optional[str]:
@@ -315,15 +316,15 @@ class Image:
         return self._caption
 
     @property
-    def author(self) -> List[str]:
-        return self._author
+    def authors(self) -> List[str]:
+        return self._authors
 
     def __repr__(self) -> str:
         representation = (
             f"Fundus-Article Image:\n"
-            f"-URL:\t\t\t {self.url},\n"
+            f"-URL:\t\t\t {self.urls},\n"
             f'-Description:\t "{self.description}",\n'
             f'-Caption:\t\t "{self.caption}",\n'
-            f"-Authors:\t\t {self.author}\n"
+            f"-Authors:\t\t {self.authors}\n"
         )
         return representation
