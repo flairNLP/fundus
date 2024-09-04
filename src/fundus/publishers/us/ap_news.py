@@ -1,6 +1,6 @@
 import datetime
 import re
-from typing import List, Optional
+from typing import List, Optional, Pattern
 
 from lxml.cssselect import CSSSelector
 from lxml.etree import XPath
@@ -12,6 +12,7 @@ from fundus.parser.utility import (
     generic_date_parsing,
     generic_topic_parsing,
     normalize_whitespace,
+    apply_substitution_pattern_over_list,
 )
 
 
@@ -21,6 +22,8 @@ class APNewsParser(ParserProxy):
         _author_selector: XPath = XPath(f"{CSSSelector('div.CardHeadline').path}/span/span[1]")
         _subheadline_selector = XPath("//div[@data-key = 'article']/h2[not(text()='___')]")
         _paragraph_selector = XPath("//div[@data-key = 'article']/p")
+
+        _topic_bloat_pattern: Pattern[str] = re.compile(r"state wire| news|^.{1}$", flags=re.IGNORECASE)
 
         @attribute
         def body(self) -> ArticleBody:
@@ -54,7 +57,11 @@ class APNewsParser(ParserProxy):
 
         @attribute
         def topics(self) -> List[str]:
-            return generic_topic_parsing(self.precomputed.meta.get("keywords"))
+            return [
+                topic
+                for topic in generic_topic_parsing(self.precomputed.meta.get("keywords"))
+                if not re.search(self._topic_bloat_pattern, topic)
+            ]
 
     class V1_1(V1):
         VALID_UNTIL = datetime.date.today()
