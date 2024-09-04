@@ -195,6 +195,23 @@
       </td>
       <td>&#160;</td>
     </tr>
+    <tr>
+      <td>
+        <code>TagesAnzeiger</code>
+      </td>
+      <td>
+        <div>Tages-Anzeiger</div>
+      </td>
+      <td>
+        <a href="https://www.tagesanzeiger.ch/">
+          <span>www.tagesanzeiger.ch</span>
+        </a>
+      </td>
+      <td>
+        <code>topics</code>
+      </td>
+      <td>&#160;</td>
+    </tr>
   </tbody>
 </table>
 
