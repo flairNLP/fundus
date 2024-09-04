@@ -1,5 +1,6 @@
 import datetime
-from typing import List, Optional
+import re
+from typing import List, Optional, Pattern
 
 from lxml.etree import XPath
 
@@ -14,7 +15,9 @@ from fundus.parser.utility import (
 
 class BhaskarParser(ParserProxy):
     class V1(BaseParser):
-        _paragraph_selector = XPath("//article //p[text()]")
+        _paragraph_selector = XPath("//article //p | //article //*[@style='border-bottom:none'] //li")
+
+        _topic_bloat_pattern: Pattern[str] = re.compile(r"news", flags=re.IGNORECASE)
 
         @attribute
         def body(self) -> ArticleBody:
@@ -37,4 +40,8 @@ class BhaskarParser(ParserProxy):
 
         @attribute
         def topics(self) -> List[str]:
-            return generic_topic_parsing(self.precomputed.ld.bf_search("keywords"))
+            return [
+                topic
+                for topic in generic_topic_parsing(self.precomputed.ld.bf_search("keywords"))
+                if not re.search(self._topic_bloat_pattern, topic)
+            ]
