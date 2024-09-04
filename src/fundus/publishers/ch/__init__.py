@@ -4,6 +4,7 @@ from fundus.scraping.url import NewsMap, RSSFeed, Sitemap
 from ...scraping.filter import inverse, regex_filter
 from .nzz import NZZParser
 from .srf import SRFParser
+from .ta import TAParser
 
 # noinspection PyPep8Naming
 
@@ -27,5 +28,19 @@ class CH(metaclass=PublisherGroup):
         sources=[
             NewsMap("https://www.nzz.ch/sitemap/news0.xml"),
             Sitemap("https://www.nzz.ch/sitemap.xml", sitemap_filter=inverse(regex_filter(r"sitemap/[\d]{4}/[\d]{2}"))),
+        ],
+    )
+
+    TagesAnzeiger = Publisher(
+        name="Tages-Anzeiger",
+        domain="https://www.tagesanzeiger.ch/",
+        parser=TAParser,
+        sources=[
+            NewsMap("https://www.tagesanzeiger.ch/sitemaps/news.xml"),
+            Sitemap(
+                "https://www.tagesanzeiger.ch/sitemaps/sitemapindex.xml",
+                reverse=True,
+                sitemap_filter=regex_filter("news|category"),
+            ),
         ],
     )
