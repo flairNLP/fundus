@@ -35,7 +35,7 @@ def main() -> None:
             if publisher.deprecated:  # type: ignore[attr-defined]
                 print(f"⏩  SKIPPED: {publisher_name!r} - Deprecated")
                 continue
-            crawler: Crawler = Crawler(publisher, delay=0.4)
+            crawler: Crawler = Crawler(publisher, delay=0.4, ignore_robots=True)
 
             complete_article: Optional[Article] = next(
                 crawler.crawl(
