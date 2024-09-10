@@ -1,13 +1,55 @@
 import inspect
 from textwrap import indent
 from typing import Dict, Iterator, List, Optional, Type, Union
+from urllib.robotparser import RobotFileParser
 
-from robots import RobotFileParser
+import requests
 
 from fundus.parser.base_parser import ParserProxy
 from fundus.scraping.filter import URLFilter
 from fundus.scraping.url import NewsMap, RSSFeed, Sitemap, URLSource
 from fundus.utils.iteration import iterate_all_subclasses
+
+
+class CustomRobotFileParser(RobotFileParser):
+    """Monkey patch RobotFileParse
+
+    This class overwrites the read() methode of RobotFileParser to use the <requests> pkg instead of urllib.
+    This is in order to avoid 403 errors when fetching the robots.txt file.
+    """
+
+    # noinspection PyAttributeOutsideInit
+    def read(self):
+        """Reads the robots.txt URL and feeds it to the parser."""
+        try:
+            # noinspection PyUnresolvedReferences
+            f = requests.Session().get(self.url)  # type: ignore[attr-defined]
+            f.raise_for_status()
+        except requests.exceptions.HTTPError as err:
+            if err.response.status_code in (401, 403):
+                self.disallow_all = True
+            elif 400 <= err.response.status_code < 500:
+                self.allow_all = True
+        else:
+            self.parse(f.text.splitlines())
+
+
+class Robots:
+    def __init__(self, url: str):
+        self.url = url
+        self.robots_file_parser = CustomRobotFileParser(url)
+        self.ready: bool = False
+
+    def read(self):
+        self.robots_file_parser.read()
+        self.ready = True
+
+    def can_fetch(self, useragent: str, url: str) -> bool:
+        return self.robots_file_parser.can_fetch(useragent, url)
+
+    def crawl_delay(self, useragent: str) -> Optional[float]:
+        delay = self.robots_file_parser.crawl_delay(useragent)
+        return delay if delay is None else float(delay)
 
 
 class Publisher:
@@ -46,9 +88,7 @@ class Publisher:
         self.url_filter = url_filter
         self.request_header = request_header
         self.deprecated = deprecated
-        self.robots = RobotFileParser(
-            self.domain + "robots.txt" if self.domain.endswith("/") else self.domain + "/robots.txt"
-        )
+        self.robots = Robots(self.domain + "robots.txt" if self.domain.endswith("/") else self.domain + "/robots.txt")
         # we define the dict here manually instead of using default dict so that we can control
         # the order in which sources are proceeded.
         source_mapping: Dict[Type[URLSource], List[URLSource]] = {

@@ -36,8 +36,7 @@ dependencies = [
     "tqdm>=4.66, <5",
     "fastwarc>=0.14, <1",
     "chardet>=5.2, <6",
-    "dill>=0.3, <1",
-    "robotspy>=0.9, <1"
+    "dill>=0.3, <1"
 ]
 
 [project.urls]

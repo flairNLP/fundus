@@ -99,7 +99,8 @@ class WebSource:
         request_header: Optional[Dict[str, str]] = None,
         query_parameters: Optional[Dict[str, str]] = None,
         delay: Optional[Delay] = None,
-        ignore_robots: Optional[bool] = False,
+        ignore_robots: bool = False,
+        ignore_crawl_delay: bool = False,
     ):
         self.url_source = url_source
         self.publisher = publisher
@@ -110,6 +111,7 @@ class WebSource:
             url_source.set_header(self.request_header)
         self.delay = delay
         self.ignore_robots = ignore_robots
+        self.ignore_crawl_delay = ignore_crawl_delay
 
     def fetch(self, url_filter: Optional[URLFilter] = None) -> Iterator[HTML]:
         combined_filters: List[URLFilter] = ([self.url_filter] if self.url_filter else []) + (
@@ -118,8 +120,18 @@ class WebSource:
 
         timestamp = time.time() + self.delay() if self.delay is not None else time.time()
 
-        if not self.publisher.robots.timestamp:
-            self.publisher.robots.read()
+        robots = self.publisher.robots
+
+        if not robots.ready:
+            robots.read()
+
+        if not (self.ignore_robots or self.ignore_crawl_delay):
+            if delay := robots.crawl_delay(self.request_header.get("user-agent") or "*"):
+                logger.debug(
+                    f"Found crawl-delay of {delay} seconds in robots.txt for {self.publisher.name}. "
+                    f"Overwriting existing delay."
+                )
+                self.delay = lambda: delay
 
         def filter_url(u: str) -> bool:
             return any(f(u) for f in combined_filters)
@@ -133,9 +145,7 @@ class WebSource:
                 logger.debug(f"Skipped requested URL {url!r} because of URL filter")
                 continue
 
-            if not (
-                self.ignore_robots or self.publisher.robots.can_fetch(self.request_header.get("user-agent") or "*", url)
-            ):
+            if not (self.ignore_robots or robots.can_fetch(self.request_header.get("user-agent") or "*", url)):
                 logger.debug(f"Skipped requested URL {url!r} because of robots.txt")
                 continue
 
