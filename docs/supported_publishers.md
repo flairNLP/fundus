@@ -1027,6 +1027,21 @@
   <tbody>
     <tr>
       <td>
+        <code>Bhaskar</code>
+      </td>
+      <td>
+        <div>Dainik Bhaskar</div>
+      </td>
+      <td>
+        <a href="https://www.bhaskar.com/">
+          <span>www.bhaskar.com</span>
+        </a>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
         <code>TimesOfIndia</code>
       </td>
       <td>
