@@ -284,6 +284,7 @@ class ArticleBody(TextSequenceTree):
 
 class Image:
     _urls: List[str]
+    _is_cover: bool
     _description: Optional[str]
     _caption: Optional[str]
     _authors: List[str]
@@ -291,6 +292,7 @@ class Image:
     def __init__(
         self,
         urls: List[str],
+        is_cover: bool,
         description: Optional[str] = None,
         caption: Optional[str] = None,
         author: List[str] = None,
@@ -299,6 +301,7 @@ class Image:
             if not validators.url(url):
                 raise ValueError(f"url {url} is not a valid URL")
         self._urls = urls
+        self._is_cover = is_cover
         self._description = description
         self._caption = caption
         self._authors = author
@@ -306,6 +309,10 @@ class Image:
     @property
     def urls(self) -> List[str]:
         return self._urls
+
+    @property
+    def is_cover(self) -> bool:
+        return self._is_cover
 
     @property
     def description(self) -> Optional[str]:
