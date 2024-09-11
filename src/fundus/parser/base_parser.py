@@ -256,50 +256,21 @@ class BaseParser(ABC):
             for key in self.precomputed.ld.__dict__.keys()
             if re.match(r".*((article)|(image)|(blog)).*", key, flags=re.IGNORECASE)
         ]
-        # Use WebPage as fallback, if no other images have been found. This is used as a fallback, because most
-        # news agencies indicate their pictures in some kind of Article of ImageObject Type
-        relevant_ld_types.append("WebPage")
         for ld_type in relevant_ld_types:
-            elements = self.precomputed.ld.__dict__.get(ld_type)
-            if not isinstance(elements, list):
-                elements = [elements]
-            for images in elements:
-                if ld_type == "WebPage" and (not images or image_list):
-                    # WebPage should only be used if nothing has been previously found (and it exists)
-                    break
-                elif ld_type == "WebPage" and not image_list and isinstance(images, dict):
-                    # After exhausting all possible "normal" locations
-                    # we now search the entire LD for images risking bloat images
-                    images = self.precomputed.ld.bf_search("image")
-                    if not images:
-                        break
-                if ld_type.lower() == "imageobject":
-                    if not isinstance(images, list):
-                        if fundus_image := get_fundus_image_from_dict(images, publisher_domain):
+            element = self.precomputed.ld.__dict__.get(ld_type)
+            if isinstance(element, dict):
+                element = element.get("image")
+            if isinstance(element, list):
+                for image in element:
+                    if isinstance(image, str) and validators.url(image):
+                        # In this case only URLs are available for now
+                        image_list.append(Image(urls=[preprocess_url(image, publisher_domain)]))
+                    else:
+                        if fundus_image := get_fundus_image_from_dict(image, publisher_domain):
                             image_list.append(fundus_image)
-                        continue
-                if isinstance(images, dict):
-                    if image_attribute := images.get("image"):
-                        if isinstance(image_attribute, list):
-                            for image in image_attribute:
-                                if isinstance(image, str) and validators.url(image):
-                                    # In this case only URLs are available for now
-                                    image_list.append(Image(urls=[preprocess_url(image, publisher_domain)]))
-                                else:
-                                    if fundus_image := get_fundus_image_from_dict(image, publisher_domain):
-                                        image_list.append(fundus_image)
-                        elif isinstance(image_attribute, dict):
-                            if fundus_image := get_fundus_image_from_dict(image_attribute, publisher_domain):
-                                image_list.append(fundus_image)
-                elif isinstance(images, list):
-                    for image in images:
-                        if isinstance(image, str) and validators.url(image):
-                            image_list.append(Image(urls=[preprocess_url(image, publisher_domain)]))
-                        if isinstance(image, dict):
-                            image_list.append(get_fundus_image_from_dict(image, publisher_domain))
-                elif isinstance(images, str):
-                    if validators.url(images):
-                        image_list.append(Image(urls=[preprocess_url(images, publisher_domain)]))
+            elif isinstance(element, dict):
+                if fundus_image := get_fundus_image_from_dict(element, publisher_domain):
+                    image_list.append(fundus_image)
         return image_list
 
 
