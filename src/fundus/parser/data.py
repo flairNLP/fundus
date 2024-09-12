@@ -292,7 +292,7 @@ class Image:
     def __init__(
         self,
         urls: List[str],
-        is_cover: bool,
+        is_cover: bool = False,
         description: Optional[str] = None,
         caption: Optional[str] = None,
         author: List[str] = None,
@@ -335,3 +335,11 @@ class Image:
             f"-Authors:\t\t {self.authors}\n"
         )
         return representation
+
+    @caption.setter
+    def caption(self, value):
+        self._caption = value
+
+    @description.setter
+    def description(self, value):
+        self._description = value

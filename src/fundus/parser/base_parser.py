@@ -31,7 +31,7 @@ from fundus.parser.utility import (
     get_fundus_image_from_dict,
     get_ld_content,
     get_meta_content,
-    preprocess_url,
+    preprocess_url, get_image_data_from_html,
 )
 
 RegisteredFunctionT_co = TypeVar("RegisteredFunctionT_co", covariant=True, bound="RegisteredFunction")
@@ -271,6 +271,7 @@ class BaseParser(ABC):
             elif isinstance(element, dict):
                 if fundus_image := get_fundus_image_from_dict(element, publisher_domain):
                     image_list.append(fundus_image)
+        get_image_data_from_html(self.precomputed.doc, image_list)
         return image_list
 
 

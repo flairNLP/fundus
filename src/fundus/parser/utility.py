@@ -19,7 +19,7 @@ from typing import (
     Type,
     Union,
 )
-from urllib.parse import urljoin
+from urllib.parse import urljoin, urlparse
 
 import lxml.html
 import more_itertools
@@ -386,9 +386,9 @@ def get_fundus_image_from_dict(json_dict: Dict[str, Any], domain: str) -> Option
         if valid_urls:
             return Image(
                 valid_urls,
-                json_dict.get("description"),
-                json_dict.get("caption"),
-                generic_author_parsing(json_dict.get("author")),
+                description=json_dict.get("description"),
+                caption=json_dict.get("caption"),
+                author=generic_author_parsing(json_dict.get("author")),
             )
         return None
 
@@ -397,9 +397,9 @@ def get_fundus_image_from_dict(json_dict: Dict[str, Any], domain: str) -> Option
         if validators.url(url):
             return Image(
                 [url],
-                json_dict.get("description"),
-                json_dict.get("caption"),
-                generic_author_parsing(json_dict.get("author")),
+                description=json_dict.get("description"),
+                caption=json_dict.get("caption"),
+                author=generic_author_parsing(json_dict.get("author")),
             )
     return None
 
@@ -411,3 +411,25 @@ def preprocess_url(url: str, domain: str) -> str:
         publisher_domain = "https://" + (domain if domain.endswith("/") else domain + "/")
         url = urljoin(publisher_domain, url.removeprefix("/"))
     return url
+
+
+def get_image_data_from_html(doc: lxml.html.HtmlElement, input_images: list[Image]):
+    figure_selector_string = "//*[contains(@src,\"%s\")]"
+    image_list = list()
+    for image in input_images:
+        for url in image.urls:
+            url = re.sub(r"\?.*", "", url)
+            url = urlparse(url).path
+            figure_selector = XPath(figure_selector_string % url)
+            figures: List[lxml.html.HtmlElement] = figure_selector(doc)
+            for figure in figures:
+                figure_caption_text = generic_nodes_to_text(figure.xpath("./ancestor::figure//figcaption"))
+                figure_img_alt = figure.xpath("./@alt")
+                caption = ""
+                for text_element in figure_caption_text:
+                    caption += re.sub(r"\s+", " ", text_element)
+                if not image.caption:
+                    image.caption = caption.strip()
+                if figure_img_alt:
+                    image.description = figure_img_alt[0].strip()
+
