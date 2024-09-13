@@ -123,7 +123,7 @@ class WebSource:
         robots = self.publisher.robots
 
         if not robots.ready:
-            robots.read()
+            robots.read(headers=self.request_header)
 
         if not (self.ignore_robots or self.ignore_crawl_delay):
             if delay := robots.crawl_delay(self.request_header.get("user-agent") or "*"):

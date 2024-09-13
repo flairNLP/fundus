@@ -19,11 +19,11 @@ class CustomRobotFileParser(RobotFileParser):
     """
 
     # noinspection PyAttributeOutsideInit
-    def read(self):
+    def read(self, headers: Optional[Dict[str, str]] = None) -> None:
         """Reads the robots.txt URL and feeds it to the parser."""
         try:
             # noinspection PyUnresolvedReferences
-            f = requests.Session().get(self.url)  # type: ignore[attr-defined]
+            f = requests.Session().get(self.url, headers=headers)  # type: ignore[attr-defined]
             f.raise_for_status()
         except requests.exceptions.HTTPError as err:
             if err.response.status_code in (401, 403):
@@ -40,8 +40,8 @@ class Robots:
         self.robots_file_parser = CustomRobotFileParser(url)
         self.ready: bool = False
 
-    def read(self):
-        self.robots_file_parser.read()
+    def read(self, headers: Optional[Dict[str, str]] = None) -> None:
+        self.robots_file_parser.read(headers=headers)
         self.ready = True
 
     def can_fetch(self, useragent: str, url: str) -> bool:
@@ -74,7 +74,8 @@ class Publisher:
             domain (str): The domain of the publishers website
             parser (Type[ParserProxy]): Corresponding ParserProxy Object
             sources (List[URLSource]): List of sources for articles from the publishers
-            query_parameter (Optional[Dict[str, str]]): Dictionary of query parameter: content to be appended to crawled URLs
+            query_parameter (Optional[Dict[str, str]]): Dictionary of query parameter: content to be
+                appended to crawled URLs
             url_filter (Optional[URLFilter]): Regex filter to apply determining URLs to be skipped
             request_header (Optional[Dict[str, str]]): Request header to be used for the GET-request
 
