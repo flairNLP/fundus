@@ -15,7 +15,12 @@ class TAParser(ParserProxy):
     class V1(BaseParser):
         _summary_selector = CSSSelector("p.ContentHead_lead____SsS")
         _subheadline_selector = CSSSelector("article > h2")
-        _paragraph_selector = CSSSelector("article > p:not(.ContentHead_lead____SsS):not(.Feedback_root__fr_Mi)")
+        _paragraph_selector = CSSSelector(
+            "article > p"
+            ":not(.ContentHead_lead____SsS)"
+            ":not(.Feedback_root__fr_Mi)"
+            ":not(.ArticleContainer_agencies__g6Lpj)"
+        )
 
         @attribute
         def body(self) -> ArticleBody:
