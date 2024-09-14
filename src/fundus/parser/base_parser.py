@@ -20,12 +20,19 @@ from typing import (
     TypeVar,
     Union,
 )
+from urllib.parse import urlparse
 
 import lxml.html
+import validators
 
 from fundus.logging import create_logger
-from fundus.parser.data import LinkedDataMapping
-from fundus.parser.utility import get_ld_content, get_meta_content
+from fundus.parser.data import Image, LinkedDataMapping
+from fundus.parser.utility import (
+    get_fundus_image_from_dict,
+    get_ld_content,
+    get_meta_content,
+    preprocess_url, get_image_data_from_html,
+)
 
 RegisteredFunctionT_co = TypeVar("RegisteredFunctionT_co", covariant=True, bound="RegisteredFunction")
 
@@ -239,6 +246,33 @@ class BaseParser(ABC):
             return False
         else:
             return True
+
+    @attribute
+    def images(self) -> List[Image]:
+        image_list = list()
+        publisher_domain = urlparse(self.precomputed.meta.get("og:url")).netloc
+        relevant_ld_types = [
+            key
+            for key in self.precomputed.ld.__dict__.keys()
+            if re.match(r".*((article)|(image)|(blog)).*", key, flags=re.IGNORECASE)
+        ]
+        for ld_type in relevant_ld_types:
+            element = self.precomputed.ld.__dict__.get(ld_type)
+            if isinstance(element, dict):
+                element = element.get("image")
+            if isinstance(element, list):
+                for image in element:
+                    if isinstance(image, str) and validators.url(image):
+                        # In this case only URLs are available for now
+                        image_list.append(Image(urls=[preprocess_url(image, publisher_domain)]))
+                    else:
+                        if fundus_image := get_fundus_image_from_dict(image, publisher_domain):
+                            image_list.append(fundus_image)
+            elif isinstance(element, dict):
+                if fundus_image := get_fundus_image_from_dict(element, publisher_domain):
+                    image_list.append(fundus_image)
+        get_image_data_from_html(self.precomputed.doc, image_list)
+        return image_list
 
 
 class _ParserCache:

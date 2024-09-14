@@ -16,6 +16,7 @@ from typing import (
 )
 
 import more_itertools
+import validators
 from typing_extensions import Self, TypeAlias
 
 LDMappingValue: TypeAlias = Union[List[Dict[str, Any]], Dict[str, Any]]
@@ -279,3 +280,66 @@ class ArticleBody(TextSequenceTree):
 
     def __bool__(self):
         return any(bool(section) for section in self.sections)
+
+
+class Image:
+    _urls: List[str]
+    _is_cover: bool
+    _description: Optional[str]
+    _caption: Optional[str]
+    _authors: List[str]
+
+    def __init__(
+        self,
+        urls: List[str],
+        is_cover: bool = False,
+        description: Optional[str] = None,
+        caption: Optional[str] = None,
+        author: List[str] = None,
+    ):
+        for url in urls:
+            if not validators.url(url):
+                raise ValueError(f"url {url} is not a valid URL")
+        self._urls = urls
+        self._is_cover = is_cover
+        self._description = description
+        self._caption = caption
+        self._authors = author
+
+    @property
+    def urls(self) -> List[str]:
+        return self._urls
+
+    @property
+    def is_cover(self) -> bool:
+        return self._is_cover
+
+    @property
+    def description(self) -> Optional[str]:
+        return self._description
+
+    @property
+    def caption(self) -> Optional[str]:
+        return self._caption
+
+    @property
+    def authors(self) -> List[str]:
+        return self._authors
+
+    def __repr__(self) -> str:
+        representation = (
+            f"Fundus-Article Image:\n"
+            f"-URL:\t\t\t {self.urls},\n"
+            f'-Description:\t "{self.description}",\n'
+            f'-Caption:\t\t "{self.caption}",\n'
+            f"-Authors:\t\t {self.authors}\n"
+        )
+        return representation
+
+    @caption.setter
+    def caption(self, value):
+        self._caption = value
+
+    @description.setter
+    def description(self, value):
+        self._description = value

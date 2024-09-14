@@ -19,9 +19,11 @@ from typing import (
     Type,
     Union,
 )
+from urllib.parse import urljoin, urlparse
 
 import lxml.html
 import more_itertools
+import validators
 from dateutil import parser
 from lxml.cssselect import CSSSelector
 from lxml.etree import XPath
@@ -30,6 +32,7 @@ from fundus.logging import create_logger
 from fundus.parser.data import (
     ArticleBody,
     ArticleSection,
+    Image,
     LinkedDataMapping,
     TextSequence,
 )
@@ -371,3 +374,62 @@ def parse_title_from_root(root: lxml.html.HtmlElement) -> Optional[str]:
         return None
 
     return strip_nodes_to_text(title_node)
+
+
+def get_fundus_image_from_dict(json_dict: Dict[str, Any], domain: str) -> Optional[Image]:
+    if (url := (json_dict.get("url") or json_dict.get("contentUrl"))) and isinstance(url, list):
+        valid_urls = list()
+        for url_str in url:
+            url_str = preprocess_url(url_str, domain)
+            if validators.url(url_str):
+                valid_urls.append(url_str)
+        if valid_urls:
+            return Image(
+                valid_urls,
+                description=json_dict.get("description"),
+                caption=json_dict.get("caption"),
+                author=generic_author_parsing(json_dict.get("author")),
+            )
+        return None
+
+    elif url:
+        url = preprocess_url(url, domain)
+        if validators.url(url):
+            return Image(
+                [url],
+                description=json_dict.get("description"),
+                caption=json_dict.get("caption"),
+                author=generic_author_parsing(json_dict.get("author")),
+            )
+    return None
+
+
+def preprocess_url(url: str, domain: str) -> str:
+    url = re.sub(r"\\/", "/", url)
+    # Some publishers use relative URLs
+    if not validators.url(url):
+        publisher_domain = "https://" + (domain if domain.endswith("/") else domain + "/")
+        url = urljoin(publisher_domain, url.removeprefix("/"))
+    return url
+
+
+def get_image_data_from_html(doc: lxml.html.HtmlElement, input_images: list[Image]):
+    figure_selector_string = "//*[contains(@src,\"%s\")]"
+    image_list = list()
+    for image in input_images:
+        for url in image.urls:
+            url = re.sub(r"\?.*", "", url)
+            url = urlparse(url).path
+            figure_selector = XPath(figure_selector_string % url)
+            figures: List[lxml.html.HtmlElement] = figure_selector(doc)
+            for figure in figures:
+                figure_caption_text = generic_nodes_to_text(figure.xpath("./ancestor::figure//figcaption"))
+                figure_img_alt = figure.xpath("./@alt")
+                caption = ""
+                for text_element in figure_caption_text:
+                    caption += re.sub(r"\s+", " ", text_element)
+                if not image.caption:
+                    image.caption = caption.strip()
+                if figure_img_alt:
+                    image.description = figure_img_alt[0].strip()
+
