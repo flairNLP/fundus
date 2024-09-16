@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, fields
+from itertools import chain
 from typing import (
     Any,
     Collection,
@@ -15,8 +16,14 @@ from typing import (
     overload,
 )
 
+import lxml.etree
 import more_itertools
+import xmltodict
+from dict2xml import dict2xml
+from lxml.etree import XPath, tostring
 from typing_extensions import Self, TypeAlias
+
+from fundus.utils.serialization import replace_keys_in_nested_dict
 
 LDMappingValue: TypeAlias = Union[List[Dict[str, Any]], Dict[str, Any]]
 
@@ -49,6 +56,7 @@ class LinkedDataMapping:
                     self.add_ld(nested)
             else:
                 self.add_ld(ld)
+        self.__xml: Optional[lxml.etree._Element] = None
 
     def serialize(self) -> Dict[str, Any]:
         return {attribute: value for attribute, value in self.__dict__.items() if "__" not in attribute}
@@ -91,6 +99,71 @@ class LinkedDataMapping:
                 return default
             tmp = nxt
         return tmp
+
+    def __as_xml__(self) -> lxml.etree._Element:
+        def to_unicode_characters(text: str) -> str:
+            text = text.replace(":", "U003A")
+            return text
+
+        if self.__xml is None:
+            xml = dict2xml(replace_keys_in_nested_dict({"linkedData": self.serialize()}, to_unicode_characters))
+            self.__xml = lxml.etree.fromstring(xml)
+        return self.__xml
+
+    def xpath_search(self, query: XPath) -> List[Any]:
+        """Search through LD using XPath expressions
+
+        Internally, the content of the LinkedDataMapping is converted to XPath and then searched with <query>.
+        To search for keys including invalid XML characters, use unicode representation instead:
+        I.e. to search for the key "_16:9" write "//_16U003A9"
+
+        Examples:
+            LinkedDataMapping = {
+                "b": {
+                    "key": value1,
+                }
+                "c": {
+                    "key": value2,
+                }
+            }
+
+        LinkedDataMapping.xpath_search(XPath("//key"))
+        >> [value1, value2]
+
+        LinkedDataMapping.xpath_search(XPath("//b/key"))
+        >> [value1]
+
+        Args:
+            query: An XPath expression
+
+        Returns:
+            A ordered list of search results
+        """
+
+        def node2string(n: lxml.etree._Element) -> str:
+            return "".join(
+                chunk
+                for chunk in chain(
+                    (n.text,),
+                    chain(*((tostring(child, with_tail=False, encoding=str), child.tail) for child in n.getchildren())),
+                    (n.tail,),
+                )
+                if chunk
+            )
+
+        def to_original_characters(text: str) -> str:
+            text = text.replace("U003A", ":")
+            return text
+
+        nodes = query(self.__as_xml__())
+
+        results = {}
+
+        for i, node in enumerate(nodes):
+            xml = f"<result{i}>" + node2string(node) + f"</result{i}>"
+            results.update(replace_keys_in_nested_dict(xmltodict.parse(xml), to_original_characters))
+
+        return list(results.values())
 
     def bf_search(self, key: str, depth: Optional[int] = None, default: Optional[_T] = None) -> Union[Any, _T]:
         """
