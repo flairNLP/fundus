@@ -1,3 +1,4 @@
+import re
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, fields
 from itertools import chain
@@ -48,6 +49,7 @@ class LinkedDataMapping:
     """
 
     __UNKNOWN_TYPE__ = "UNKNOWN_TYPE"
+    __xml_transformation_table__ = {":": "U003A", "*": "U002A", "@": "U0040"}
 
     def __init__(self, lds: Iterable[Dict[str, Any]] = ()):
         for ld in lds:
@@ -101,9 +103,10 @@ class LinkedDataMapping:
         return tmp
 
     def __as_xml__(self) -> lxml.etree._Element:
+        pattern = re.compile("|".join(map(re.escape, self.__xml_transformation_table__.keys())))
+
         def to_unicode_characters(text: str) -> str:
-            text = text.replace(":", "U003A")
-            return text
+            return pattern.sub(lambda match: self.__xml_transformation_table__[match.group(0)], text)
 
         if self.__xml is None:
             xml = dict2xml(replace_keys_in_nested_dict({"linkedData": self.serialize()}, to_unicode_characters))
@@ -114,8 +117,12 @@ class LinkedDataMapping:
         """Search through LD using XPath expressions
 
         Internally, the content of the LinkedDataMapping is converted to XPath and then searched with <query>.
+
         To search for keys including invalid XML characters, use unicode representation instead:
         I.e. to search for the key "_16:9" write "//_16U003A9"
+        For all available transformation see LinkedDataMapping.__xml_transformation_table__
+
+        Note that values will be converted to strings, i.e. True -> 'True', 1 -> '1'
 
         Examples:
             LinkedDataMapping = {
@@ -140,6 +147,8 @@ class LinkedDataMapping:
             A ordered list of search results
         """
 
+        pattern = re.compile("|".join(map(re.escape, self.__xml_transformation_table__.values())))
+
         def node2string(n: lxml.etree._Element) -> str:
             return "".join(
                 chunk
@@ -151,9 +160,10 @@ class LinkedDataMapping:
                 if chunk
             )
 
+        revered_table = {v: k for k, v in self.__xml_transformation_table__.items()}
+
         def to_original_characters(text: str) -> str:
-            text = text.replace("U003A", ":")
-            return text
+            return pattern.sub(lambda match: revered_table[match.group(0)], text)
 
         nodes = query(self.__as_xml__())
 
