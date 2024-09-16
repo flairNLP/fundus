@@ -41,7 +41,7 @@ class WestAustralianParser(ParserProxy):
             self.precomputed.ld.add_ld(json_content, "windows.PAGE_DATA")
 
         @attribute
-        def body(self) -> Optional[ArticleBody]:
+        def body(self) -> ArticleBody:
             content_blocks = self.precomputed.ld.xpath_search(XPath("//publication/content/blocks"))
             paragraphs = []
             for block in content_blocks:
