@@ -116,11 +116,12 @@ class LinkedDataMapping:
     def xpath_search(self, query: XPath) -> List[Any]:
         """Search through LD using XPath expressions
 
-        Internally, the content of the LinkedDataMapping is converted to XPath and then searched with <query>.
+        Internally, the content of the LinkedDataMapping is converted to XML and then
+        evaluated with an XPath expression <query>.
 
-        To search for keys including invalid XML characters, use unicode representation instead:
+        To search for keys including invalid XML characters, use Unicode representations instead:
         I.e. to search for the key "_16:9" write "//_16U003A9"
-        For all available transformation see LinkedDataMapping.__xml_transformation_table__
+        For all available transformations see LinkedDataMapping.__xml_transformation_table__
 
         Note that values will be converted to strings, i.e. True -> 'True', 1 -> '1'
 
@@ -141,10 +142,10 @@ class LinkedDataMapping:
         >> [value1]
 
         Args:
-            query: An XPath expression
+            query: A XPath expression
 
         Returns:
-            A ordered list of search results
+            An ordered list of search results
         """
 
         pattern = re.compile("|".join(map(re.escape, self.__xml_transformation_table__.values())))
@@ -160,10 +161,10 @@ class LinkedDataMapping:
                 if chunk
             )
 
-        revered_table = {v: k for k, v in self.__xml_transformation_table__.items()}
+        reversed_table = {v: k for k, v in self.__xml_transformation_table__.items()}
 
         def to_original_characters(text: str) -> str:
-            return pattern.sub(lambda match: revered_table[match.group(0)], text)
+            return pattern.sub(lambda match: reversed_table[match.group(0)], text)
 
         nodes = query(self.__as_xml__())
 
