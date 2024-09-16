@@ -156,18 +156,19 @@ _ld_node_selector = XPath("//script[@type='application/ld+json']")
 _json_pattern = re.compile(r"(?P<json>{[\s\S]*}|\[\s*{[\s\S]*}\s*](?!\s*}))")
 
 
-def extract_json_from_dom(root: lxml.html.HtmlElement, selector: XPath) -> Iterable[Dict[str, Any]]:
-    def sanitize(text: str) -> Optional[str]:
-        # capture only content enclosed as follows: {...} or [{...}]
-        match = re.search(_json_pattern, text)
-        if match is not None and (sanitized := match.group("json")):
-            return sanitized
-        return None
+def sanitize_json(text: str) -> Optional[str]:
+    # capture only content enclosed as follows: {...} or [{...}]
+    match = re.search(_json_pattern, text)
+    if match is not None and (sanitized := match.group("json")):
+        return sanitized
+    return None
 
+
+def extract_json_from_dom(root: lxml.html.HtmlElement, selector: XPath) -> Iterable[Dict[str, Any]]:
     json_nodes = selector(root)
     jsons = []
     for node in json_nodes:
-        json_content = sanitize(node.text_content()) or ""
+        json_content = sanitize_json(node.text_content()) or ""
         try:
             jsons.append(json.loads(json_content))
         except json.JSONDecodeError as error:

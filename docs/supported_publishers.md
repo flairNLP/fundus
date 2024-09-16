@@ -82,6 +82,21 @@
       </td>
       <td>&#160;</td>
     </tr>
+    <tr>
+      <td>
+        <code>WestAustralian</code>
+      </td>
+      <td>
+        <div>The West Australian</div>
+      </td>
+      <td>
+        <a href="https://thewest.com.au/">
+          <span>thewest.com.au</span>
+        </a>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
   </tbody>
 </table>
 
