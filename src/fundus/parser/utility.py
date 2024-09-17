@@ -5,6 +5,7 @@ from collections import defaultdict
 from copy import copy
 from dataclasses import dataclass, field
 from datetime import datetime
+from difflib import SequenceMatcher
 from functools import total_ordering
 from typing import (
     Any,
@@ -414,22 +415,26 @@ def preprocess_url(url: str, domain: str) -> str:
 
 
 def get_image_data_from_html(doc: lxml.html.HtmlElement, input_images: list[Image]):
-    figure_selector_string = "//*[contains(@src,\"%s\")]"
-    image_list = list()
+    img_selector = XPath("//img")
+    img_elements = img_selector(doc)
+    img_elements_with_src = list()
+    for img_element in img_elements:
+        if img_src := img_element.get("src"):
+            img_elements_with_src.append((img_src, img_element))
+    if not img_elements_with_src:
+        return
     for image in input_images:
         for url in image.urls:
-            url = re.sub(r"\?.*", "", url)
-            url = urlparse(url).path
-            figure_selector = XPath(figure_selector_string % url)
-            figures: List[lxml.html.HtmlElement] = figure_selector(doc)
-            for figure in figures:
-                figure_caption_text = generic_nodes_to_text(figure.xpath("./ancestor::figure//figcaption"))
-                figure_img_alt = figure.xpath("./@alt")
-                caption = ""
-                for text_element in figure_caption_text:
-                    caption += re.sub(r"\s+", " ", text_element)
-                if not image.caption:
-                    image.caption = caption.strip()
-                if figure_img_alt:
-                    image.description = figure_img_alt[0].strip()
-
+            img_elements_with_src = sorted(
+                img_elements_with_src, key=lambda src: SequenceMatcher(None, src[0], url).ratio(), reverse=True
+            )
+            _, most_similar_image = img_elements_with_src[0]
+            figure_caption_text = generic_nodes_to_text(most_similar_image.xpath("./ancestor::figure//figcaption"))
+            figure_img_alt = most_similar_image.xpath("./@alt")
+            caption = ""
+            for text_element in figure_caption_text:
+                caption += re.sub(r"\s+", " ", text_element)
+            if not image.caption:
+                image.caption = caption.strip()
+            if figure_img_alt:
+                image.description = figure_img_alt[0].strip()

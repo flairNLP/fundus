@@ -29,9 +29,10 @@ from fundus.logging import create_logger
 from fundus.parser.data import Image, LinkedDataMapping
 from fundus.parser.utility import (
     get_fundus_image_from_dict,
+    get_image_data_from_html,
     get_ld_content,
     get_meta_content,
-    preprocess_url, get_image_data_from_html,
+    preprocess_url,
 )
 
 RegisteredFunctionT_co = TypeVar("RegisteredFunctionT_co", covariant=True, bound="RegisteredFunction")
