@@ -1,5 +1,7 @@
+import re
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, fields
+from itertools import chain
 from typing import (
     Any,
     Collection,
@@ -15,8 +17,14 @@ from typing import (
     overload,
 )
 
+import lxml.etree
 import more_itertools
+import xmltodict
+from dict2xml import dict2xml
+from lxml.etree import XPath, tostring
 from typing_extensions import Self, TypeAlias
+
+from fundus.utils.serialization import replace_keys_in_nested_dict
 
 LDMappingValue: TypeAlias = Union[List[Dict[str, Any]], Dict[str, Any]]
 
@@ -41,6 +49,7 @@ class LinkedDataMapping:
     """
 
     __UNKNOWN_TYPE__ = "UNKNOWN_TYPE"
+    __xml_transformation_table__ = {":": "U003A", "*": "U002A", "@": "U0040"}
 
     def __init__(self, lds: Iterable[Dict[str, Any]] = ()):
         for ld in lds:
@@ -49,6 +58,7 @@ class LinkedDataMapping:
                     self.add_ld(nested)
             else:
                 self.add_ld(ld)
+        self.__xml: Optional[lxml.etree._Element] = None
 
     def serialize(self) -> Dict[str, Any]:
         return {attribute: value for attribute, value in self.__dict__.items() if "__" not in attribute}
@@ -91,6 +101,80 @@ class LinkedDataMapping:
                 return default
             tmp = nxt
         return tmp
+
+    def __as_xml__(self) -> lxml.etree._Element:
+        pattern = re.compile("|".join(map(re.escape, self.__xml_transformation_table__.keys())))
+
+        def to_unicode_characters(text: str) -> str:
+            return pattern.sub(lambda match: self.__xml_transformation_table__[match.group(0)], text)
+
+        if self.__xml is None:
+            xml = dict2xml(replace_keys_in_nested_dict({"linkedData": self.serialize()}, to_unicode_characters))
+            self.__xml = lxml.etree.fromstring(xml)
+        return self.__xml
+
+    def xpath_search(self, query: XPath) -> List[Any]:
+        """Search through LD using XPath expressions
+
+        Internally, the content of the LinkedDataMapping is converted to XML and then
+        evaluated with an XPath expression <query>.
+
+        To search for keys including invalid XML characters, use Unicode representations instead:
+        I.e. to search for the key "_16:9" write "//_16U003A9"
+        For all available transformations see LinkedDataMapping.__xml_transformation_table__
+
+        Note that values will be converted to strings, i.e. True -> 'True', 1 -> '1'
+
+        Examples:
+            LinkedDataMapping = {
+                "b": {
+                    "key": value1,
+                }
+                "c": {
+                    "key": value2,
+                }
+            }
+
+        LinkedDataMapping.xpath_search(XPath("//key"))
+        >> [value1, value2]
+
+        LinkedDataMapping.xpath_search(XPath("//b/key"))
+        >> [value1]
+
+        Args:
+            query: A XPath expression
+
+        Returns:
+            An ordered list of search results
+        """
+
+        pattern = re.compile("|".join(map(re.escape, self.__xml_transformation_table__.values())))
+
+        def node2string(n: lxml.etree._Element) -> str:
+            return "".join(
+                chunk
+                for chunk in chain(
+                    (n.text,),
+                    chain(*((tostring(child, with_tail=False, encoding=str), child.tail) for child in n.getchildren())),
+                    (n.tail,),
+                )
+                if chunk
+            )
+
+        reversed_table = {v: k for k, v in self.__xml_transformation_table__.items()}
+
+        def to_original_characters(text: str) -> str:
+            return pattern.sub(lambda match: reversed_table[match.group(0)], text)
+
+        nodes = query(self.__as_xml__())
+
+        results = {}
+
+        for i, node in enumerate(nodes):
+            xml = f"<result{i}>" + node2string(node) + f"</result{i}>"
+            results.update(replace_keys_in_nested_dict(xmltodict.parse(xml), to_original_characters))
+
+        return list(results.values())
 
     def bf_search(self, key: str, depth: Optional[int] = None, default: Optional[_T] = None) -> Union[Any, _T]:
         """
