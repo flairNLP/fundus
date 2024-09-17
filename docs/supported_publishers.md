@@ -1015,7 +1015,9 @@
         <code>LesEchos</code>
       </td>
       <td>
-        <div>Les &#201;chos</div>
+        <div>
+          <strike>Les &#201;chos</strike>
+        </div>
       </td>
       <td>
         <a href="https://www.lesechos.fr/">
