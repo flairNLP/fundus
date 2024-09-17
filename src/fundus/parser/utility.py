@@ -419,7 +419,7 @@ def get_image_data_from_html(doc: lxml.html.HtmlElement, input_images: list[Imag
     img_elements = img_selector(doc)
     img_elements_with_src = list()
     for img_element in img_elements:
-        if img_src := img_element.get("src"):
+        if (img_src := img_element.get("src")) or (img_src := img_element.get("srcset")):
             img_elements_with_src.append((img_src, img_element))
     if not img_elements_with_src:
         return
@@ -430,6 +430,10 @@ def get_image_data_from_html(doc: lxml.html.HtmlElement, input_images: list[Imag
             )
             _, most_similar_image = img_elements_with_src[0]
             figure_caption_text = generic_nodes_to_text(most_similar_image.xpath("./ancestor::figure//figcaption"))
+            if not figure_caption_text:
+                figure_caption_text = generic_nodes_to_text(
+                    most_similar_image.xpath("./ancestor::*[1]/child::*[not(self::img or self::script)]")
+                )
             figure_img_alt = most_similar_image.xpath("./@alt")
             caption = ""
             for text_element in figure_caption_text:
