@@ -343,3 +343,7 @@ class Image:
     @description.setter
     def description(self, value):
         self._description = value
+
+    @authors.setter
+    def authors(self, value):
+        self._authors = value

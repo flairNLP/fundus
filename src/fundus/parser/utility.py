@@ -281,7 +281,7 @@ def generic_author_parsing(
         value (list[str]):  value\n
         value (list[dict]): [dict["name"] for dict in list if dict["name"]] \n
 
-    with common delimiters := [",", ";", " und ", " and ", " & "]
+    with common delimiters := [",", ";", " und ", " and ", " & ", " | "]
 
     All values are stripped with default strip() method before returned.
 
@@ -294,7 +294,7 @@ def generic_author_parsing(
         A parsed and striped list of authors
     """
 
-    common_delimiters = [",", ";", " und ", " and ", " & "]
+    common_delimiters = [",", ";", " und ", " and ", " & ", " \| "]
 
     parameter_type_error: TypeError = TypeError(
         f"<value> '{value}' has an unsupported type {type(value)}. "
@@ -442,3 +442,7 @@ def get_image_data_from_html(doc: lxml.html.HtmlElement, input_images: list[Imag
                 image.caption = caption.strip()
             if figure_img_alt:
                 image.description = figure_img_alt[0].strip()
+            if not image.authors:
+                authors = re.search(r"©(?P<credits>.*)", caption).group("credits")
+                if authors:
+                    image.authors = generic_author_parsing(authors)

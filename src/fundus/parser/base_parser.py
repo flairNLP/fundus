@@ -255,7 +255,7 @@ class BaseParser(ABC):
         relevant_ld_types = [
             key
             for key in self.precomputed.ld.__dict__.keys()
-            if re.match(r".*((article)|(image)|(blog)).*", key, flags=re.IGNORECASE)
+            if re.match(r".*(article|blog).*", key, flags=re.IGNORECASE)
         ]
         for ld_type in relevant_ld_types:
             element = self.precomputed.ld.__dict__.get(ld_type)
