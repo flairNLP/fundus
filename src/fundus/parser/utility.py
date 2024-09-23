@@ -531,3 +531,35 @@ def load_images_from_html(publisher_domain: str, doc) -> List[Image]:
             continue
         image_list.append(Image(urls=[preprocess_url(url, publisher_domain)]))
     return image_list
+
+
+def merge_duplicate_images(image_list: List[Image], similarity_threshold: float = 0.7) -> List[Image]:
+    merged_list = []
+    merged_images = set()
+    for i in range(0, len(image_list)):
+        image = image_list[i]
+        if image in merged_images:
+            continue
+        urls = set(image.urls)
+        is_cover = image.is_cover
+        caption = image.caption
+        description = image.description
+        authors = image.authors
+        for j in range(i + 1, len(image_list)):
+            current_image = image_list[j]
+            if current_image in merged_images:
+                continue
+            if SequenceMatcher(None, image.urls[0], current_image.urls[0]).ratio() >= similarity_threshold:
+                if caption and image.caption and caption != image.caption:
+                    # Images with different captions are likely different images
+                    continue
+                is_cover = is_cover or current_image.is_cover
+                caption = caption or current_image.caption
+                description = description or current_image.description
+                authors = authors or current_image.authors
+                urls.update(current_image.urls)
+                merged_images.add(current_image)
+        merged_list.append(
+            Image(urls=list(urls), caption=caption, description=description, author=authors, is_cover=is_cover)
+        )
+    return merged_list

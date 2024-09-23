@@ -34,6 +34,7 @@ from fundus.parser.utility import (
     get_meta_content,
     load_images_from_html,
     load_images_from_json,
+    merge_duplicate_images,
     preprocess_url,
 )
 
@@ -257,7 +258,7 @@ class BaseParser(ABC):
         # TODO: get paragraphs from article body?
         image_list.extend(load_images_from_html(publisher_domain, self.precomputed.doc))
         extract_image_data_from_html(self.precomputed.doc, image_list, self._paragraph_selector)
-        return image_list
+        return merge_duplicate_images(image_list)
 
 
 class _ParserCache:
