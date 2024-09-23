@@ -327,8 +327,11 @@ class Image:
         return self._authors
 
     def __repr__(self) -> str:
-        representation = (
-            f"Fundus-Article Image:\n"
+        if self._is_cover:
+            representation = "Fundus-Article Cover-Image:\n"
+        else:
+            representation = "Fundus-Article Image:\n"
+        representation += (
             f"-URL:\t\t\t {self.urls},\n"
             f'-Description:\t "{self.description}",\n'
             f'-Caption:\t\t "{self.caption}",\n'
@@ -347,3 +350,7 @@ class Image:
     @authors.setter
     def authors(self, value):
         self._authors = value
+
+    @is_cover.setter
+    def is_cover(self, value):
+        self._is_cover = value

@@ -26,6 +26,7 @@ import lxml.html
 import more_itertools
 import validators
 from dateutil import parser
+from lxml import etree
 from lxml.cssselect import CSSSelector
 from lxml.etree import XPath
 
@@ -414,12 +415,32 @@ def preprocess_url(url: str, domain: str) -> str:
     return url
 
 
-def get_image_data_from_html(doc: lxml.html.HtmlElement, input_images: list[Image]):
+def extract_image_data_from_html(
+    doc: lxml.html.HtmlElement,
+    input_images: list[Image],
+    paragraph_selector: Union[CSSSelector, XPath],
+    caption_selector: Union[CSSSelector, XPath] = XPath("./ancestor::figure//figcaption"),
+    alt_selector: Union[CSSSelector, XPath] = XPath("./@alt"),
+) -> None:
+    """
+    This function extracts the information related to a given List of Images from the HTML document. Note that this
+    function does not verify the existence of an Image in the HTML but rather considers the image object, that has
+    the most similar src link.
+    @param doc: The HTML document corresponding to the Fundus article containing the images
+    @param input_images: List of Fundus Images found in the article.
+    @param paragraph_selector: Selector used to select the paragraphs of the article.
+    @param caption_selector: Selector selecting the caption of an image. Defaults to selecting the figcaption element
+    @param alt_selector: Selector selecting the descriptive text of an image. Defaults to selecting alt value.
+    """
     img_selector = XPath("//img")
     img_elements = img_selector(doc)
     img_elements_with_src = list()
+    paragraphs = paragraph_selector(doc)
+    if not paragraphs or not img_elements:
+        return
+    first_paragraph = paragraphs[0]
     for img_element in img_elements:
-        if (img_src := img_element.get("src")) or (img_src := img_element.get("srcset")):
+        if img_src := img_element.get("src") or img_element.get("data-src") or img_element.get("srcset"):
             img_elements_with_src.append((img_src, img_element))
     if not img_elements_with_src:
         return
@@ -429,12 +450,8 @@ def get_image_data_from_html(doc: lxml.html.HtmlElement, input_images: list[Imag
                 img_elements_with_src, key=lambda src: SequenceMatcher(None, src[0], url).ratio(), reverse=True
             )
             _, most_similar_image = img_elements_with_src[0]
-            figure_caption_text = generic_nodes_to_text(most_similar_image.xpath("./ancestor::figure//figcaption"))
-            if not figure_caption_text:
-                figure_caption_text = generic_nodes_to_text(
-                    most_similar_image.xpath("./ancestor::*[1]/child::*[not(self::img or self::script)]")
-                )
-            figure_img_alt = most_similar_image.xpath("./@alt")
+            figure_caption_text = generic_nodes_to_text(caption_selector(most_similar_image))
+            figure_img_alt = alt_selector(most_similar_image)
             caption = ""
             for text_element in figure_caption_text:
                 caption += re.sub(r"\s+", " ", text_element)
@@ -442,7 +459,75 @@ def get_image_data_from_html(doc: lxml.html.HtmlElement, input_images: list[Imag
                 image.caption = caption.strip()
             if figure_img_alt:
                 image.description = figure_img_alt[0].strip()
-            if not image.authors:
-                authors = re.search(r"©(?P<credits>.*)", caption).group("credits")
-                if authors:
-                    image.authors = generic_author_parsing(authors)
+            if compare_html_element_positions(most_similar_image, first_paragraph):
+                image.is_cover = True
+
+
+def compare_html_element_positions(element: lxml.html.HtmlElement, other: lxml.html.HtmlElement) -> bool:
+    """
+    Compares the relative position of element and other within the document. Returns True if element comes first in the
+    document, otherwise returns False
+    @param element: HtmlElement, that is checked to be first
+    @param other: HtmlElement, that is checked to be second
+    @return: True, if element comes before other, otherwise False
+    """
+    # Build list of ancestors
+    ancestors = [element]
+    other_ancestors = [other]
+    while ancestors[-1].getparent() is not None:
+        ancestors.append(ancestors[-1].getparent())
+    while other_ancestors[-1].getparent() is not None:
+        other_ancestors.append(other_ancestors[-1].getparent())
+
+    # Compare ancestors from the root down to find the first point of divergence
+    for ancestor1, ancestor2 in zip(reversed(ancestors), reversed(other_ancestors)):
+        if ancestor1 != ancestor2:
+            # The elements have a different ancestor, compare their relative position
+            parent = ancestor1.getparent()
+            if parent is not None:
+                children = list(parent)
+                # If the ancestor of element lies before the ancestor of other, return True
+                return children.index(ancestor1) < children.index(ancestor2)
+            raise ValueError("The two elements do not have the same root element")
+    # One element must be the parent of the other
+    return len(ancestors) < len(other_ancestors)
+
+
+def load_images_from_json(
+    publisher_domain: str, ld_json: LinkedDataMapping, include_image_object: bool = False
+) -> List[Image]:
+    image_list = list()
+    if include_image_object:
+        ld_type_selector = r".*(article|image|blog).*"
+    else:
+        ld_type_selector = r".*(article|blog).*"
+    relevant_ld_types = [key for key in ld_json.__dict__.keys() if re.match(ld_type_selector, key, flags=re.IGNORECASE)]
+    for ld_type in relevant_ld_types:
+        element = ld_json.__dict__.get(ld_type)
+        if isinstance(element, dict):
+            element = element.get("image")
+        if isinstance(element, list):
+            for image in element:
+                if isinstance(image, str) and validators.url(image):
+                    # In this case only URLs are available for now
+                    image_list.append(Image(urls=[preprocess_url(image, publisher_domain)]))
+                else:
+                    if fundus_image := get_fundus_image_from_dict(image, publisher_domain):
+                        image_list.append(fundus_image)
+        elif isinstance(element, dict):
+            if fundus_image := get_fundus_image_from_dict(element, publisher_domain):
+                image_list.append(fundus_image)
+    return image_list
+
+
+def load_images_from_html(publisher_domain: str, doc) -> List[Image]:
+    image_list = []
+    img_elements = doc.xpath("//article//img")
+    if not img_elements:
+        return image_list
+    for img_element in img_elements:
+        url = img_element.get("src") or img_element.get("data-src") or img_element.get("srcset")
+        if not url or not validators.url(url):
+            continue
+        image_list.append(Image(urls=[preprocess_url(url, publisher_domain)]))
+    return image_list

@@ -28,10 +28,12 @@ import validators
 from fundus.logging import create_logger
 from fundus.parser.data import Image, LinkedDataMapping
 from fundus.parser.utility import (
+    extract_image_data_from_html,
     get_fundus_image_from_dict,
-    get_image_data_from_html,
     get_ld_content,
     get_meta_content,
+    load_images_from_html,
+    load_images_from_json,
     preprocess_url,
 )
 
@@ -250,29 +252,11 @@ class BaseParser(ABC):
 
     @attribute
     def images(self) -> List[Image]:
-        image_list = list()
         publisher_domain = urlparse(self.precomputed.meta.get("og:url")).netloc
-        relevant_ld_types = [
-            key
-            for key in self.precomputed.ld.__dict__.keys()
-            if re.match(r".*(article|blog).*", key, flags=re.IGNORECASE)
-        ]
-        for ld_type in relevant_ld_types:
-            element = self.precomputed.ld.__dict__.get(ld_type)
-            if isinstance(element, dict):
-                element = element.get("image")
-            if isinstance(element, list):
-                for image in element:
-                    if isinstance(image, str) and validators.url(image):
-                        # In this case only URLs are available for now
-                        image_list.append(Image(urls=[preprocess_url(image, publisher_domain)]))
-                    else:
-                        if fundus_image := get_fundus_image_from_dict(image, publisher_domain):
-                            image_list.append(fundus_image)
-            elif isinstance(element, dict):
-                if fundus_image := get_fundus_image_from_dict(element, publisher_domain):
-                    image_list.append(fundus_image)
-        get_image_data_from_html(self.precomputed.doc, image_list)
+        image_list = load_images_from_json(publisher_domain, self.precomputed.ld)
+        # TODO: get paragraphs from article body?
+        image_list.extend(load_images_from_html(publisher_domain, self.precomputed.doc))
+        extract_image_data_from_html(self.precomputed.doc, image_list, self._paragraph_selector)
         return image_list
 
 
