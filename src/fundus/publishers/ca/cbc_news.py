@@ -7,11 +7,13 @@ from lxml.etree import XPath
 
 from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute
 from fundus.parser.base_parser import function
+from fundus.parser.data import Image
 from fundus.parser.utility import (
     extract_article_body_with_selector,
     extract_json_from_dom,
     generic_author_parsing,
     generic_date_parsing,
+    image_extraction,
 )
 
 
@@ -64,3 +66,18 @@ class CBCNewsParser(ParserProxy):
                     topic_list.append(re.sub(r".*/", "", path))
 
             return topic_list
+
+        @attribute
+        def images(self) -> List[Image]:
+            return image_extraction(
+                url=self.precomputed.meta.get("og:url"),
+                ld_json=self.precomputed.ld,
+                doc=self.precomputed.doc,
+                paragraph_selector=self._paragraph_selector,
+                upper_boundary_selector=XPath("//div[@data-cy='storyWrapper']"),
+                caption_selector=XPath(
+                    "./ancestor::figure//figcaption | ./ancestor::span[contains(@class,'mediaEmbed')]/span"
+                ),
+                similarity_threshold=0.9,
+                author_pattern=re.compile(r"\((?P<credits>.*?)\)$"),
+            )

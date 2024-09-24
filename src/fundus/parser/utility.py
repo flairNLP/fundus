@@ -432,6 +432,7 @@ def extract_image_data_from_html(
     author_selector: Union[CSSSelector, XPath] = XPath(
         "(./ancestor::figure//*[(contains(@class, 'copyright') or contains(@class, 'credit')) and text()])[1]"
     ),
+    author_pattern: Optional[Pattern] = None,
 ) -> List[Image]:
     """
     This function extracts the information related to a given List of Images from the HTML document. Note that this
@@ -446,6 +447,8 @@ def extract_image_data_from_html(
     @param alt_selector: Selector selecting the descriptive text of an image. Defaults to selecting alt value.
     @param author_selector: Selector selecting the credits for an image. Defaults to selecting an arbitrary child of
     figure with copyright or credit in its class attribute.
+    @param author_pattern: If the authors are only mentioned in the caption, a regex expression can be used to match the
+    authors. A captioning group named 'credits' should be used.
     @return: List with images filtered to be between the specified upper boundary and last paragraph
     """
     filtered_list = list()
@@ -480,15 +483,17 @@ def extract_image_data_from_html(
             _, most_similar_image = img_elements_with_src[0]
             figure_caption_text = generic_nodes_to_text(caption_selector(most_similar_image))
             figure_img_alt = alt_selector(most_similar_image)
-            if figure_authors := author_selector(most_similar_image):
-                figure_authors_text = generic_author_parsing(generic_nodes_to_text(figure_authors))
-                if figure_authors_text:
-                    image.authors = figure_authors_text
             caption = ""
             for text_element in figure_caption_text:
                 caption += re.sub(r"\s+", " ", text_element)
             if not image.caption:
                 image.caption = caption.strip()
+            if figure_authors := author_selector(most_similar_image):
+                figure_authors_text = generic_author_parsing(generic_nodes_to_text(figure_authors))
+                if figure_authors_text:
+                    image.authors = figure_authors_text
+            if author_pattern and caption and not image.authors and (match := re.search(author_pattern, caption)):
+                image.authors = generic_author_parsing(match.group("credits"))
             if figure_img_alt:
                 image.description = figure_img_alt[0].strip()
             if compare_html_element_positions(most_similar_image, first_paragraph):
@@ -500,7 +505,7 @@ def extract_image_data_from_html(
                 break
         if not image_outside_article:
             filtered_list.append(image)
-    return merge_duplicate_images(filtered_list)
+    return filtered_list
 
 
 def compare_html_element_positions(element: lxml.html.HtmlElement, other: lxml.html.HtmlElement) -> bool:
@@ -566,7 +571,7 @@ def load_images_from_json(
         elif isinstance(element, dict):
             if fundus_image := get_fundus_image_from_dict(element, publisher_domain):
                 image_list.append(fundus_image)
-    return merge_duplicate_images(image_list)
+    return image_list
 
 
 def load_images_from_html(publisher_domain: str, doc: lxml.html.HtmlElement) -> List[Image]:
@@ -641,6 +646,8 @@ def image_extraction(
     author_selector: Union[CSSSelector, XPath] = XPath(
         "(./ancestor::figure//*[(contains(@class, 'copyright') or contains(@class, 'credit')) and text()])[1]"
     ),
+    author_pattern: Optional[Pattern] = None,
+    similarity_threshold: float = 0.8,
 ):
     publisher_domain = urlparse(url).netloc
     image_list = load_images_from_json(
@@ -655,5 +662,6 @@ def image_extraction(
         caption_selector=caption_selector,
         alt_selector=alt_selector,
         author_selector=author_selector,
+        author_pattern=author_pattern,
     )
-    return merge_duplicate_images(image_list)
+    return merge_duplicate_images(image_list, similarity_threshold=similarity_threshold)
