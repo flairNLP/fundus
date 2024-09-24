@@ -419,9 +419,10 @@ def extract_image_data_from_html(
     doc: lxml.html.HtmlElement,
     input_images: list[Image],
     paragraph_selector: Union[CSSSelector, XPath],
+    upper_boundary_selector: Union[CSSSelector, XPath] = XPath("//header"),
     caption_selector: Union[CSSSelector, XPath] = XPath("./ancestor::figure//figcaption"),
     alt_selector: Union[CSSSelector, XPath] = XPath("./@alt"),
-) -> None:
+) -> List[Image]:
     """
     This function extracts the information related to a given List of Images from the HTML document. Note that this
     function does not verify the existence of an Image in the HTML but rather considers the image object, that has
@@ -429,22 +430,30 @@ def extract_image_data_from_html(
     @param doc: The HTML document corresponding to the Fundus article containing the images
     @param input_images: List of Fundus Images found in the article.
     @param paragraph_selector: Selector used to select the paragraphs of the article.
+    @param upper_boundary_selector:
     @param caption_selector: Selector selecting the caption of an image. Defaults to selecting the figcaption element
     @param alt_selector: Selector selecting the descriptive text of an image. Defaults to selecting alt value.
     """
+    filtered_list = list()
     img_selector = XPath("//img")
     img_elements = img_selector(doc)
     img_elements_with_src = list()
     paragraphs = paragraph_selector(doc)
+    upper_boundary_elements = upper_boundary_selector(doc)
     if not paragraphs or not img_elements:
-        return
+        return []
     first_paragraph = paragraphs[0]
+    last_paragraph = paragraphs[-1]
+    upper_boundary = None
+    if upper_boundary_elements:
+        upper_boundary = upper_boundary_elements[0]
     for img_element in img_elements:
         if img_src := img_element.get("src") or img_element.get("data-src") or img_element.get("srcset"):
             img_elements_with_src.append((img_src, img_element))
     if not img_elements_with_src:
-        return
+        return []
     for image in input_images:
+        image_outside_article = False
         for url in image.urls:
             img_elements_with_src = sorted(
                 img_elements_with_src, key=lambda src: SequenceMatcher(None, src[0], url).ratio(), reverse=True
@@ -461,6 +470,14 @@ def extract_image_data_from_html(
                 image.description = figure_img_alt[0].strip()
             if compare_html_element_positions(most_similar_image, first_paragraph):
                 image.is_cover = True
+            if ((not compare_html_element_positions(most_similar_image, last_paragraph))
+                or (upper_boundary is not None and compare_html_element_positions(most_similar_image, upper_boundary))
+            ):
+                image_outside_article = True
+                break
+        if not image_outside_article:
+            filtered_list.append(image)
+    return merge_duplicate_images(filtered_list)
 
 
 def compare_html_element_positions(element: lxml.html.HtmlElement, other: lxml.html.HtmlElement) -> bool:
@@ -517,12 +534,12 @@ def load_images_from_json(
         elif isinstance(element, dict):
             if fundus_image := get_fundus_image_from_dict(element, publisher_domain):
                 image_list.append(fundus_image)
-    return image_list
+    return merge_duplicate_images(image_list)
 
 
-def load_images_from_html(publisher_domain: str, doc) -> List[Image]:
+def load_images_from_html(publisher_domain: str, doc: lxml.html.HtmlElement) -> List[Image]:
     image_list = []
-    img_elements = doc.xpath("//article//img")
+    img_elements = doc.xpath("//img")
     if not img_elements:
         return image_list
     for img_element in img_elements:
