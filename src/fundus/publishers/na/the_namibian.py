@@ -10,7 +10,9 @@ from fundus.parser.data import Image
 from fundus.parser.utility import (
     extract_article_body_with_selector,
     generic_author_parsing,
-    generic_date_parsing, load_images_from_html, extract_image_data_from_html,
+    generic_date_parsing,
+    load_images_from_html,
+    extract_image_data_from_html,
 )
 
 
@@ -48,7 +50,9 @@ class TheNamibianParser(ParserProxy):
         def images(self) -> List[Image]:
             publisher_domain = urlparse(self.precomputed.meta.get("og:url")).netloc
             image_list = load_images_from_html(publisher_domain, self.precomputed.doc)
-            return extract_image_data_from_html(self.precomputed.doc, image_list, self._paragraph_selector, upper_boundary_selector=XPath("//main"))
+            return extract_image_data_from_html(
+                self.precomputed.doc, image_list, self._paragraph_selector, upper_boundary_selector=XPath("//main")
+            )
 
     class V1_1(V1):
         VALID_UNTIL = datetime.today().date()

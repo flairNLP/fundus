@@ -379,6 +379,13 @@ def parse_title_from_root(root: lxml.html.HtmlElement) -> Optional[str]:
 
 
 def get_fundus_image_from_dict(json_dict: Dict[str, Any], domain: str) -> Optional[Image]:
+    """
+    Given a ld_json dictionary of type ImageObject, this helper function tries to parse the image and extract caption,
+    description and authors, if possible.
+    @param json_dict: Json Dictionary of type ImageObject
+    @param domain: Domain of the website hosting the image
+    @return: If the URL is valid, an Image object is returned
+    """
     if (url := (json_dict.get("url") or json_dict.get("contentUrl"))) and isinstance(url, list):
         valid_urls = list()
         for url_str in url:
@@ -419,7 +426,7 @@ def extract_image_data_from_html(
     doc: lxml.html.HtmlElement,
     input_images: list[Image],
     paragraph_selector: Union[CSSSelector, XPath],
-    upper_boundary_selector: Union[CSSSelector, XPath] = XPath("//header"),
+    upper_boundary_selector: Union[CSSSelector, XPath] = XPath("//body"),
     caption_selector: Union[CSSSelector, XPath] = XPath("./ancestor::figure//figcaption"),
     alt_selector: Union[CSSSelector, XPath] = XPath("./@alt"),
 ) -> List[Image]:
@@ -430,7 +437,8 @@ def extract_image_data_from_html(
     @param doc: The HTML document corresponding to the Fundus article containing the images
     @param input_images: List of Fundus Images found in the article.
     @param paragraph_selector: Selector used to select the paragraphs of the article.
-    @param upper_boundary_selector:
+    @param upper_boundary_selector: A selector referencing an element to be considered as the upper boundary. All img
+    elements before this element will be ignored.
     @param caption_selector: Selector selecting the caption of an image. Defaults to selecting the figcaption element
     @param alt_selector: Selector selecting the descriptive text of an image. Defaults to selecting alt value.
     """
@@ -470,8 +478,8 @@ def extract_image_data_from_html(
                 image.description = figure_img_alt[0].strip()
             if compare_html_element_positions(most_similar_image, first_paragraph):
                 image.is_cover = True
-            if ((not compare_html_element_positions(most_similar_image, last_paragraph))
-                or (upper_boundary is not None and compare_html_element_positions(most_similar_image, upper_boundary))
+            if (not compare_html_element_positions(most_similar_image, last_paragraph)) or (
+                upper_boundary is not None and compare_html_element_positions(most_similar_image, upper_boundary)
             ):
                 image_outside_article = True
                 break
@@ -513,6 +521,15 @@ def compare_html_element_positions(element: lxml.html.HtmlElement, other: lxml.h
 def load_images_from_json(
     publisher_domain: str, ld_json: LinkedDataMapping, include_image_object: bool = False
 ) -> List[Image]:
+    """
+    If a publisher includes LD JSON objects of type NewsArticle BlogPost or similar, this function extracts the images
+    and additional data, if possible.
+    @param publisher_domain: the domain of the publisher, needed to fix relative URLs
+    @param ld_json: ld_json of the article
+    @param include_image_object: set to True if ld_json of type ImageObject should be included in the extraction.
+    Defaults to False, due to root ld JSON dicts of type ImageObject are usually bloat
+    @return: list of Fundus Images
+    """
     image_list = list()
     if include_image_object:
         ld_type_selector = r".*(article|image|blog).*"
@@ -538,6 +555,12 @@ def load_images_from_json(
 
 
 def load_images_from_html(publisher_domain: str, doc: lxml.html.HtmlElement) -> List[Image]:
+    """
+    Loads all img elements in the document structure and returns them as a list
+    @param publisher_domain: the domain of the publisher, needed to fix relative URLs
+    @param doc: The html document of the article
+    @return: list of Fundus Images
+    """
     image_list = []
     img_elements = doc.xpath("//img")
     if not img_elements:
@@ -551,6 +574,13 @@ def load_images_from_html(publisher_domain: str, doc: lxml.html.HtmlElement) -> 
 
 
 def merge_duplicate_images(image_list: List[Image], similarity_threshold: float = 0.7) -> List[Image]:
+    """
+    Given a list of Fundus Images, the list is collapsed by aggregating images based on URL similarity. Also, unique
+    captions are considered to be separate images.
+    @param image_list: list of Fundus Images
+    @param similarity_threshold: ratio of minimum URL similarity for images to be considered the same
+    @return: list of aggregated images
+    """
     merged_list = []
     merged_images = set()
     for i in range(0, len(image_list)):
