@@ -40,7 +40,13 @@ class TheNamibianParser(ParserProxy):
 
         @attribute
         def authors(self) -> List[str]:
-            return generic_author_parsing(self.precomputed.ld.get_value_by_key_path(["Person", "name"]))
+            authors = self.precomputed.ld.get_value_by_key_path(["Person"])
+            if isinstance(authors, list):
+                return generic_author_parsing([name for author in authors if (name := author.get("name"))])
+            elif isinstance(authors, dict):
+                return generic_author_parsing(authors.get("name"))
+            else:
+                return []
 
     class V1_1(V1):
         VALID_UNTIL = datetime.today().date()
