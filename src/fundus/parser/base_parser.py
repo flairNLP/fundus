@@ -32,6 +32,7 @@ from fundus.parser.utility import (
     get_fundus_image_from_dict,
     get_ld_content,
     get_meta_content,
+    image_extraction,
     load_images_from_html,
     load_images_from_json,
     merge_duplicate_images,
@@ -253,10 +254,9 @@ class BaseParser(ABC):
 
     @attribute
     def images(self) -> List[Image]:
-        publisher_domain = urlparse(self.precomputed.meta.get("og:url")).netloc
-        image_list = load_images_from_json(publisher_domain, self.precomputed.ld)
-        extract_image_data_from_html(self.precomputed.doc, image_list, self._paragraph_selector)
-        return image_list
+        return image_extraction(
+            self.precomputed.meta.get("og:url"), self.precomputed.ld, self.precomputed.doc, self._paragraph_selector
+        )
 
 
 class _ParserCache:

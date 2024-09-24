@@ -1,7 +1,6 @@
 import re
 from datetime import datetime
 from typing import List, Optional, Pattern
-from urllib.parse import urlparse
 
 from lxml.etree import XPath
 
@@ -11,8 +10,7 @@ from fundus.parser.utility import (
     extract_article_body_with_selector,
     generic_author_parsing,
     generic_date_parsing,
-    load_images_from_html,
-    extract_image_data_from_html,
+    image_extraction,
 )
 
 
@@ -48,10 +46,12 @@ class TheNamibianParser(ParserProxy):
 
         @attribute
         def images(self) -> List[Image]:
-            publisher_domain = urlparse(self.precomputed.meta.get("og:url")).netloc
-            image_list = load_images_from_html(publisher_domain, self.precomputed.doc)
-            return extract_image_data_from_html(
-                self.precomputed.doc, image_list, self._paragraph_selector, upper_boundary_selector=XPath("//main")
+            return image_extraction(
+                url=self.precomputed.meta.get("og:url"),
+                ld_json=self.precomputed.ld,
+                doc=self.precomputed.doc,
+                paragraph_selector=self._paragraph_selector,
+                upper_boundary_selector=XPath("//main"),
             )
 
     class V1_1(V1):

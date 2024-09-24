@@ -426,9 +426,12 @@ def extract_image_data_from_html(
     doc: lxml.html.HtmlElement,
     input_images: list[Image],
     paragraph_selector: Union[CSSSelector, XPath],
-    upper_boundary_selector: Union[CSSSelector, XPath] = XPath("//body"),
+    upper_boundary_selector: Union[CSSSelector, XPath] = XPath("//main"),
     caption_selector: Union[CSSSelector, XPath] = XPath("./ancestor::figure//figcaption"),
     alt_selector: Union[CSSSelector, XPath] = XPath("./@alt"),
+    author_selector: Union[CSSSelector, XPath] = XPath(
+        "(./ancestor::figure//*[(contains(@class, 'copyright') or contains(@class, 'credit')) and text()])[1]"
+    ),
 ) -> List[Image]:
     """
     This function extracts the information related to a given List of Images from the HTML document. Note that this
@@ -441,6 +444,9 @@ def extract_image_data_from_html(
     elements before this element will be ignored.
     @param caption_selector: Selector selecting the caption of an image. Defaults to selecting the figcaption element
     @param alt_selector: Selector selecting the descriptive text of an image. Defaults to selecting alt value.
+    @param author_selector: Selector selecting the credits for an image. Defaults to selecting an arbitrary child of
+    figure with copyright or credit in its class attribute.
+    @return: List with images filtered to be between the specified upper boundary and last paragraph
     """
     filtered_list = list()
     img_selector = XPath("//img")
@@ -456,19 +462,28 @@ def extract_image_data_from_html(
     if upper_boundary_elements:
         upper_boundary = upper_boundary_elements[0]
     for img_element in img_elements:
-        if img_src := img_element.get("src") or img_element.get("data-src") or img_element.get("srcset"):
+        if (img_src := img_element.get("src")) and validators.url(img_src):
+            img_src = img_src.split("?")[0]
+            img_elements_with_src.append((img_src, img_element))
+        elif img_src := (img_element.get("data-src") or img_element.get("srcset")):
+            img_src = img_src.split("?")[0]
             img_elements_with_src.append((img_src, img_element))
     if not img_elements_with_src:
         return []
     for image in input_images:
         image_outside_article = False
         for url in image.urls:
+            url = url.split("?")[0]
             img_elements_with_src = sorted(
                 img_elements_with_src, key=lambda src: SequenceMatcher(None, src[0], url).ratio(), reverse=True
             )
             _, most_similar_image = img_elements_with_src[0]
             figure_caption_text = generic_nodes_to_text(caption_selector(most_similar_image))
             figure_img_alt = alt_selector(most_similar_image)
+            if figure_authors := author_selector(most_similar_image):
+                figure_authors_text = generic_author_parsing(generic_nodes_to_text(figure_authors))
+                if figure_authors_text:
+                    image.authors = figure_authors_text
             caption = ""
             for text_element in figure_caption_text:
                 caption += re.sub(r"\s+", " ", text_element)
@@ -566,14 +581,16 @@ def load_images_from_html(publisher_domain: str, doc: lxml.html.HtmlElement) -> 
     if not img_elements:
         return image_list
     for img_element in img_elements:
-        url = img_element.get("src") or img_element.get("data-src") or img_element.get("srcset")
-        if not url or not validators.url(url):
+        urls = [img_element.get("src"), img_element.get("data-src"), img_element.get("srcset")]
+        urls = [url for url in urls if url and validators.url(url)]
+        if not urls:
             continue
+        url = urls[0]
         image_list.append(Image(urls=[preprocess_url(url, publisher_domain)]))
     return image_list
 
 
-def merge_duplicate_images(image_list: List[Image], similarity_threshold: float = 0.7) -> List[Image]:
+def merge_duplicate_images(image_list: List[Image], similarity_threshold: float = 0.8) -> List[Image]:
     """
     Given a list of Fundus Images, the list is collapsed by aggregating images based on URL similarity. Also, unique
     captions are considered to be separate images.
@@ -610,3 +627,33 @@ def merge_duplicate_images(image_list: List[Image], similarity_threshold: float 
             Image(urls=list(urls), caption=caption, description=description, author=authors, is_cover=is_cover)
         )
     return merged_list
+
+
+def image_extraction(
+    url: str,
+    ld_json: LinkedDataMapping,
+    doc: lxml.html.HtmlElement,
+    paragraph_selector: Union[CSSSelector, XPath],
+    include_image_object: bool = False,
+    upper_boundary_selector: Union[CSSSelector, XPath] = XPath("//main"),
+    caption_selector: Union[CSSSelector, XPath] = XPath("./ancestor::figure//figcaption"),
+    alt_selector: Union[CSSSelector, XPath] = XPath("./@alt"),
+    author_selector: Union[CSSSelector, XPath] = XPath(
+        "(./ancestor::figure//*[(contains(@class, 'copyright') or contains(@class, 'credit')) and text()])[1]"
+    ),
+):
+    publisher_domain = urlparse(url).netloc
+    image_list = load_images_from_json(
+        publisher_domain=publisher_domain, ld_json=ld_json, include_image_object=include_image_object
+    )
+    image_list.extend(load_images_from_html(publisher_domain=publisher_domain, doc=doc))
+    image_list = extract_image_data_from_html(
+        doc=doc,
+        input_images=image_list,
+        paragraph_selector=paragraph_selector,
+        upper_boundary_selector=upper_boundary_selector,
+        caption_selector=caption_selector,
+        alt_selector=alt_selector,
+        author_selector=author_selector,
+    )
+    return merge_duplicate_images(image_list)
