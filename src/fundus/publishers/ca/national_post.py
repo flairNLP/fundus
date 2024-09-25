@@ -5,11 +5,13 @@ from lxml.cssselect import CSSSelector
 from lxml.etree import XPath
 
 from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute
+from fundus.parser.data import Image
 from fundus.parser.utility import (
     extract_article_body_with_selector,
     generic_author_parsing,
     generic_date_parsing,
     generic_topic_parsing,
+    image_extraction,
 )
 from fundus.scraping.filter import regex_filter
 
@@ -57,3 +59,19 @@ class NationalPostParser(ParserProxy):
                 topic for topic in preliminary_topics if not topic_filter(topic) and topic not in filter_list
             ]
             return generic_topic_parsing(filtered_topics)
+
+        @attribute
+        def images(self) -> List[Image]:
+            return image_extraction(
+                extract_from_json=False,
+                url=self.precomputed.meta.get("og:url"),
+                ld_json=self.precomputed.ld,
+                doc=self.precomputed.doc,
+                paragraph_selector=self._paragraph_selector,
+                upper_boundary_selector=XPath("//div[@class='article-header__detail']/figure"),
+                image_selector=XPath(
+                    "//*[not(contains(@class, 'more-topic') "
+                    "or contains(@class, 'newsletter') "
+                    "or contains(@class, 'col-xs-12'))]/img"
+                ),
+            )

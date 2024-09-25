@@ -574,15 +574,18 @@ def load_images_from_json(
     return image_list
 
 
-def load_images_from_html(publisher_domain: str, doc: lxml.html.HtmlElement) -> List[Image]:
+def load_images_from_html(
+    publisher_domain: str, doc: lxml.html.HtmlElement, image_selector: Union[CSSSelector, XPath] = XPath("//img")
+) -> List[Image]:
     """
     Loads all img elements in the document structure and returns them as a list
     @param publisher_domain: the domain of the publisher, needed to fix relative URLs
     @param doc: The html document of the article
+    @param image_selector: Selector selecting all relevant img elements. Defaults to selecting all
     @return: list of Fundus Images
     """
     image_list = []
-    img_elements = doc.xpath("//img")
+    img_elements = image_selector(doc)
     if not img_elements:
         return image_list
     for img_element in img_elements:
@@ -639,7 +642,10 @@ def image_extraction(
     ld_json: LinkedDataMapping,
     doc: lxml.html.HtmlElement,
     paragraph_selector: Union[CSSSelector, XPath],
+    extract_from_json: bool = True,
+    extract_from_html: bool = True,
     include_image_object: bool = False,
+    image_selector: Union[CSSSelector, XPath] = XPath("//img"),
     upper_boundary_selector: Union[CSSSelector, XPath] = XPath("//main"),
     caption_selector: Union[CSSSelector, XPath] = XPath("./ancestor::figure//figcaption"),
     alt_selector: Union[CSSSelector, XPath] = XPath("./@alt"),
@@ -650,10 +656,17 @@ def image_extraction(
     similarity_threshold: float = 0.8,
 ):
     publisher_domain = urlparse(url).netloc
-    image_list = load_images_from_json(
-        publisher_domain=publisher_domain, ld_json=ld_json, include_image_object=include_image_object
-    )
-    image_list.extend(load_images_from_html(publisher_domain=publisher_domain, doc=doc))
+    image_list = list()
+    if extract_from_json:
+        image_list.extend(
+            load_images_from_json(
+                publisher_domain=publisher_domain, ld_json=ld_json, include_image_object=include_image_object
+            )
+        )
+    if extract_from_html:
+        image_list.extend(
+            load_images_from_html(publisher_domain=publisher_domain, doc=doc, image_selector=image_selector)
+        )
     image_list = extract_image_data_from_html(
         doc=doc,
         input_images=image_list,
