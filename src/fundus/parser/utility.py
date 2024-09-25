@@ -655,6 +655,30 @@ def image_extraction(
     author_pattern: Optional[Pattern] = None,
     similarity_threshold: float = 0.8,
 ):
+    """
+    This function serves as an intermediary between the utility code and the parsers in an effort to make the utility
+    functions easily and flexibly usable.
+    @param url: URL of the article
+    @param ld_json: ld_json of the article
+    @param doc: The html document of the article
+    @param paragraph_selector: Selector used to select the paragraphs of the article.
+    @param extract_from_json: If True, extracts the images from the LD JSON of the article. Defaults to True
+    @param extract_from_html: If True, extracts the images from the HTML of the article. Defaults to True
+    @param include_image_object: set to True if ld_json of type ImageObject should be included in the extraction.#
+    Defaults to False, due to root ld JSON dicts of type ImageObject are usually bloat
+    @param image_selector: Selector selecting all relevant img elements. Defaults to selecting all
+    @param upper_boundary_selector: A selector referencing an element to be considered as the upper boundary. All img
+    elements before this element will be ignored.
+    @param caption_selector: Selector selecting the caption of an image. Defaults to selecting the figcaption element
+    @param alt_selector: Selector selecting the descriptive text of an image. Defaults to selecting alt value.
+    @param author_selector: Selector selecting the credits for an image. Defaults to selecting an arbitrary child of
+    figure with copyright or credit in its class attribute.
+    @param author_pattern: If the authors are only mentioned in the caption, a regex expression can be used to match the
+    authors. A captioning group named 'credits' should be used.
+    @param similarity_threshold: ratio of minimum URL similarity for images to be considered the same
+    @return: list of Images contained within the article
+    """
+
     publisher_domain = urlparse(url).netloc
     image_list = list()
     if extract_from_json:
