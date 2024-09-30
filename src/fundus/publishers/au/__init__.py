@@ -22,6 +22,7 @@ class AU(metaclass=PublisherGroup):
         domain="https://thewest.com.au/",
         parser=WestAustralianParser,
         sources=[
+            RSSFeed("https://thewest.com.au/rss"),
             NewsMap("https://thewest.com.au/news-sitemap.xml"),
             Sitemap("https://thewest.com.au/sitemap.xml", reverse=True),
         ],
