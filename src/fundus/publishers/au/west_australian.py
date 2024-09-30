@@ -21,7 +21,6 @@ class WestAustralianParser(ParserProxy):
             "string(//script[re:test(text(), 'window.PAGE_DATA')])",
             namespaces={"re": "http://exslt.org/regular-expressions"},
         )
-        _json_type_pattern = re.compile(r"^(?P<type>.*)=\s*{")
         _json_undefined_pattern = re.compile(r'":\s*undefined')
 
         @function(priority=1)
