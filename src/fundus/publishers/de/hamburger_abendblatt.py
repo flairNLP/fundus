@@ -6,11 +6,12 @@ from lxml.cssselect import CSSSelector
 from lxml.etree import XPath
 
 from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute
+from fundus.parser.data import Image
 from fundus.parser.utility import (
     extract_article_body_with_selector,
     generic_author_parsing,
     generic_date_parsing,
-    generic_topic_parsing,
+    generic_topic_parsing, image_extraction,
 )
 
 
@@ -51,3 +52,13 @@ class HamburgerAbendblattParser(ParserProxy):
                     re.sub(r"\s*–.+", "", node.text_content()).strip()
                     for node in self._topics_selector(self.precomputed.doc)
                 ]
+
+        @attribute
+        def images(self) -> List[Image]:
+            # TODO: Deal with premium articles
+            return image_extraction(
+                url=self.precomputed.meta.get("og:url"),
+                doc=self.precomputed.doc,
+                paragraph_selector=self._paragraph_selector,
+                author_pattern=re.compile(r"©(?P<credits>.*)")
+            )
