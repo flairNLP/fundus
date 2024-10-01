@@ -444,7 +444,7 @@ def extract_image_data_from_html(
     author_selector: Union[CSSSelector, XPath] = XPath(
         "(./ancestor::figure//*[(contains(@class, 'copyright') or contains(@class, 'credit')) and text()])[1]"
     ),
-    author_pattern: Optional[Pattern] = None,
+    author_pattern: Optional[Pattern] = re.compile(r"\((?P<credits>[^()]+)\)$"),
 ) -> List[Image]:
     """
     This function extracts the information related to a given List of Images from the HTML document. Note that this
@@ -499,7 +499,10 @@ def extract_image_data_from_html(
             for text_element in figure_caption_text:
                 caption += re.sub(r"\s+", " ", text_element)
             if not image.caption:
-                image.caption = caption.strip()
+                if author_pattern:
+                    image.caption = re.sub(author_pattern, "", caption).strip()
+                else:
+                    image.caption = caption.strip()
             if figure_authors := author_selector(most_similar_image):
                 figure_authors_text = image_author_parsing(generic_nodes_to_text(figure_authors))
                 if figure_authors_text:
@@ -624,7 +627,7 @@ def image_extraction(
     author_selector: Union[CSSSelector, XPath] = XPath(
         "(./ancestor::figure//*[(contains(@class, 'copyright') or contains(@class, 'credit')) and text()])[1]"
     ),
-    author_pattern: Optional[Pattern] = None,
+    author_pattern: Optional[Pattern] = re.compile(r"\((?P<credits>[^()]+)\)$"),
     similarity_threshold: float = 0.8,
 ):
     """
