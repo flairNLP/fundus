@@ -3,13 +3,16 @@ import re
 from typing import List, Optional, Pattern
 
 from lxml.cssselect import CSSSelector
+from lxml.etree import XPath
 
 from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute
+from fundus.parser.data import Image
 from fundus.parser.utility import (
     apply_substitution_pattern_over_list,
     extract_article_body_with_selector,
     generic_author_parsing,
     generic_date_parsing,
+    image_extraction,
 )
 
 
@@ -48,3 +51,14 @@ class NZZParser(ParserProxy):
         @attribute
         def title(self) -> Optional[str]:
             return self.precomputed.meta.get("title")
+
+        @attribute
+        def images(self) -> List[Image]:
+            return image_extraction(
+                url=self.precomputed.meta.get("og:url"),
+                doc=self.precomputed.doc,
+                paragraph_selector=self._paragraph_selector,
+                caption_selector=XPath("./ancestor::figure//h2"),
+                author_selector=XPath("./ancestor::figure//div[@class='image-description__author']"),
+                lower_boundary_selector=XPath("//div[@class='sharebox']"),
+            )

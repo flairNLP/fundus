@@ -441,6 +441,7 @@ def extract_image_data_from_html(
     input_images: list[Image],
     paragraph_selector: Union[CSSSelector, XPath],
     upper_boundary_selector: Union[CSSSelector, XPath] = XPath("//main"),
+    lower_boundary_selector: Optional[Union[CSSSelector, XPath]] = None,
     caption_selector: Union[CSSSelector, XPath] = XPath("./ancestor::figure//figcaption"),
     alt_selector: Union[CSSSelector, XPath] = XPath("./@alt"),
     author_selector: Union[CSSSelector, XPath] = XPath(
@@ -458,6 +459,8 @@ def extract_image_data_from_html(
     @param paragraph_selector: Selector used to select the paragraphs of the article.
     @param upper_boundary_selector: A selector referencing an element to be considered as the upper boundary. All img
     elements before this element will be ignored.
+    @param lower_boundary_selector: A selector referencing an element to be considered as the lower boundary. All img
+    elements after this element will be ignored. Defaults to be the last paragraph of an article
     @param caption_selector: Selector selecting the caption of an image. Defaults to selecting the figcaption element
     @param alt_selector: Selector selecting the descriptive text of an image. Defaults to selecting alt value.
     @param author_selector: Selector selecting the credits for an image. Defaults to selecting an arbitrary child of
@@ -477,7 +480,10 @@ def extract_image_data_from_html(
     if not paragraphs or not img_elements:
         return []
     first_paragraph = paragraphs[0]
-    last_paragraph = paragraphs[-1]
+    if lower_boundary_selector and (lower_boundary_elements := lower_boundary_selector(doc)):
+        lower_boundary = lower_boundary_elements[0]
+    else:
+        lower_boundary = paragraphs[-1]
     upper_boundary = None
     if upper_boundary_elements:
         upper_boundary = upper_boundary_elements[0]
@@ -521,7 +527,7 @@ def extract_image_data_from_html(
                 image.description = figure_img_alt[0].strip()
             if compare_html_element_positions(most_similar_image, first_paragraph):
                 image.is_cover = True
-            if (not compare_html_element_positions(most_similar_image, last_paragraph)) or (
+            if (not compare_html_element_positions(most_similar_image, lower_boundary)) or (
                 upper_boundary is not None and compare_html_element_positions(most_similar_image, upper_boundary)
             ):
                 image_outside_article = True
@@ -576,7 +582,9 @@ def load_images_from_html(
     if not img_elements:
         return image_list
     for img_element in img_elements:
-        urls = [img_element.get("src"), img_element.get("data-src"), img_element.get("srcset")]
+        urls = [img_element.get("src"), img_element.get("data-src")]
+        if srcset := img_element.get("srcset"):
+            urls.extend(srcset.split(","))
         urls = [url for url in urls if url and validators.url(url)]
         if not urls:
             continue
@@ -630,6 +638,7 @@ def image_extraction(
     paragraph_selector: Union[CSSSelector, XPath],
     image_selector: Union[CSSSelector, XPath] = XPath("//img"),
     upper_boundary_selector: Union[CSSSelector, XPath] = XPath("//main"),
+    lower_boundary_selector: Optional[Union[CSSSelector, XPath]] = None,
     caption_selector: Union[CSSSelector, XPath] = XPath("./ancestor::figure//figcaption"),
     alt_selector: Union[CSSSelector, XPath] = XPath("./@alt"),
     author_selector: Union[CSSSelector, XPath] = XPath(
@@ -648,6 +657,8 @@ def image_extraction(
     @param image_selector: Selector selecting all relevant img elements. Defaults to selecting all
     @param upper_boundary_selector: A selector referencing an element to be considered as the upper boundary. All img
     elements before this element will be ignored.
+    @param lower_boundary_selector: A selector referencing an element to be considered as the lower boundary. All img
+    elements after this element will be ignored. Defaults to the last paragraph of an article.
     @param caption_selector: Selector selecting the caption of an image. Defaults to selecting the figcaption element
     @param alt_selector: Selector selecting the descriptive text of an image. Defaults to selecting alt value.
     @param author_selector: Selector selecting the credits for an image. Defaults to selecting an arbitrary child of
@@ -667,6 +678,7 @@ def image_extraction(
         input_images=image_list,
         paragraph_selector=paragraph_selector,
         upper_boundary_selector=upper_boundary_selector,
+        lower_boundary_selector=lower_boundary_selector,
         caption_selector=caption_selector,
         alt_selector=alt_selector,
         author_selector=author_selector,
