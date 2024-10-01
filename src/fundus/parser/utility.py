@@ -422,9 +422,11 @@ def preprocess_url(url: str, domain: str) -> str:
     return url
 
 
-def image_author_parsing(authors: Union[str, List[str]]) -> List[str]:
+def image_author_parsing(authors: Union[str, List[str]], author_filter: Optional[Pattern] = None) -> List[str]:
     def clean(author: str):
         author = re.sub(r"©|((f|ph)oto|image)\s*(by|:)", "", author, flags=re.IGNORECASE)
+        if author_filter:
+            author = re.sub(author_filter, "", author)
         return author.strip()
 
     if isinstance(authors, list):
@@ -444,6 +446,7 @@ def extract_image_data_from_html(
     author_selector: Union[CSSSelector, XPath] = XPath(
         "(./ancestor::figure//*[(contains(@class, 'copyright') or contains(@class, 'credit')) and text()])[1]"
     ),
+    author_filter: Optional[Pattern] = None,
     author_pattern: Optional[Pattern] = re.compile(r"\((?P<credits>[^()]+)\)$"),
 ) -> List[Image]:
     """
@@ -459,6 +462,8 @@ def extract_image_data_from_html(
     @param alt_selector: Selector selecting the descriptive text of an image. Defaults to selecting alt value.
     @param author_selector: Selector selecting the credits for an image. Defaults to selecting an arbitrary child of
     figure with copyright or credit in its class attribute.
+    @param author_filter: In case the author_selector cannot adequately select the author, this filter can be used to
+    remove unwanted substrings
     @param author_pattern: If the authors are only mentioned in the caption, a regex expression can be used to match the
     authors. A captioning group named 'credits' should be used.
     @return: List with images filtered to be between the specified upper boundary and last paragraph
@@ -504,7 +509,10 @@ def extract_image_data_from_html(
                 else:
                     image.caption = caption.strip()
             if figure_authors := author_selector(most_similar_image):
-                figure_authors_text = image_author_parsing(generic_nodes_to_text(figure_authors))
+                if not isinstance(figure_authors[0], str):
+                    figure_authors_text = image_author_parsing(generic_nodes_to_text(figure_authors), author_filter)
+                else:
+                    figure_authors_text = image_author_parsing(figure_authors, author_filter)
                 if figure_authors_text:
                     image.authors = figure_authors_text
             if author_pattern and caption and not image.authors and (match := re.search(author_pattern, caption)):
@@ -627,6 +635,7 @@ def image_extraction(
     author_selector: Union[CSSSelector, XPath] = XPath(
         "(./ancestor::figure//*[(contains(@class, 'copyright') or contains(@class, 'credit')) and text()])[1]"
     ),
+    author_filter: Optional[Pattern] = None,
     author_pattern: Optional[Pattern] = re.compile(r"\((?P<credits>[^()]+)\)$"),
     similarity_threshold: float = 0.8,
 ):
@@ -643,6 +652,8 @@ def image_extraction(
     @param alt_selector: Selector selecting the descriptive text of an image. Defaults to selecting alt value.
     @param author_selector: Selector selecting the credits for an image. Defaults to selecting an arbitrary child of
     figure with copyright or credit in its class attribute.
+    @param author_filter: In case the author_selector cannot adequately select the author, this filter can be used to
+    remove unwanted substrings
     @param author_pattern: If the authors are only mentioned in the caption, a regex expression can be used to match the
     authors. A captioning group named 'credits' should be used.
     @param similarity_threshold: ratio of minimum URL similarity for images to be considered the same
@@ -659,6 +670,7 @@ def image_extraction(
         caption_selector=caption_selector,
         alt_selector=alt_selector,
         author_selector=author_selector,
+        author_filter=author_filter,
         author_pattern=author_pattern,
     )
     return merge_duplicate_images(image_list, similarity_threshold=similarity_threshold)
