@@ -11,7 +11,8 @@ from fundus.parser.utility import (
     extract_article_body_with_selector,
     generic_author_parsing,
     generic_date_parsing,
-    generic_topic_parsing, image_extraction,
+    generic_topic_parsing,
+    image_extraction,
 )
 
 
@@ -55,10 +56,13 @@ class HamburgerAbendblattParser(ParserProxy):
 
         @attribute
         def images(self) -> List[Image]:
-            # TODO: Deal with premium articles
             return image_extraction(
                 url=self.precomputed.meta.get("og:url"),
                 doc=self.precomputed.doc,
-                paragraph_selector=self._paragraph_selector,
-                author_pattern=re.compile(r"©(?P<credits>.*)")
+                paragraph_selector=XPath(
+                    "//div[@class='article-body']//p[not(not(text()) or @rel='author' or em[@class='print'])]"
+                ),
+                image_selector=XPath("//img[not(contains(@class, 'rounded-full'))]"),
+                author_pattern=re.compile(r"©(?P<credits>.*)"),
+                similarity_threshold=0.99,
             )
