@@ -51,7 +51,12 @@ class TheNamibianParser(ParserProxy):
         _paragraph_selector = XPath("//div[contains(@class, 'entry-content')]/p[(text() or strong) and position()>1]")
         _summary_selector = XPath("//div[contains(@class, 'entry-content')]/p[(text() or strong) and position()=1]")
 
-        def _base_setup(self, html: str) -> None:
-            html = re.sub(r"(<br>)+", "<p>", html)
+        @attribute
+        def body(self) -> ArticleBody:
+            html = re.sub(r"(<br>)+", "<p>", self.precomputed.html)
             doc = lxml.html.document_fromstring(html)
-            self.precomputed = Precomputed(html, doc, get_meta_content(doc), get_ld_content(doc))
+            return extract_article_body_with_selector(
+                doc,
+                paragraph_selector=self._paragraph_selector,
+                summary_selector=self._summary_selector,
+            )
