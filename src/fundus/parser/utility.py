@@ -422,6 +422,18 @@ def preprocess_url(url: str, domain: str) -> str:
     return url
 
 
+def image_author_parsing(authors: Union[str, List[str]]) -> List[str]:
+    def clean(author: str):
+        author = re.sub(r"©|((f|ph)oto|image)\s*(by|:)", "", author, flags=re.IGNORECASE)
+        return author.strip()
+
+    if isinstance(authors, list):
+        authors = [clean(author) for author in authors]
+    else:
+        authors = clean(authors)
+    return generic_author_parsing(authors)
+
+
 def extract_image_data_from_html(
     doc: lxml.html.HtmlElement,
     input_images: list[Image],
@@ -489,11 +501,11 @@ def extract_image_data_from_html(
             if not image.caption:
                 image.caption = caption.strip()
             if figure_authors := author_selector(most_similar_image):
-                figure_authors_text = generic_author_parsing(generic_nodes_to_text(figure_authors))
+                figure_authors_text = image_author_parsing(generic_nodes_to_text(figure_authors))
                 if figure_authors_text:
                     image.authors = figure_authors_text
             if author_pattern and caption and not image.authors and (match := re.search(author_pattern, caption)):
-                image.authors = generic_author_parsing(match.group("credits"))
+                image.authors = image_author_parsing(match.group("credits"))
             if figure_img_alt:
                 image.description = figure_img_alt[0].strip()
             if compare_html_element_positions(most_similar_image, first_paragraph):
