@@ -2,13 +2,17 @@ import re
 from datetime import datetime
 from typing import List, Optional, Pattern
 
+import lxml.html
 from lxml.etree import XPath
 
-from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute
+from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute, function
+from fundus.parser.base_parser import Precomputed
 from fundus.parser.utility import (
     extract_article_body_with_selector,
     generic_author_parsing,
     generic_date_parsing,
+    get_ld_content,
+    get_meta_content,
 )
 
 
@@ -44,5 +48,15 @@ class TheNamibianParser(ParserProxy):
 
     class V1_1(V1):
         VALID_UNTIL = datetime.today().date()
-        _paragraph_selector = XPath("//div[contains(@class, 'entry-content')]/p[position()>1]")
-        _summary_selector = XPath("//div[contains(@class, 'entry-content')]/p[position()=1]")
+        _paragraph_selector = XPath("//div[contains(@class, 'entry-content')]/p[(text() or strong) and position()>1]")
+        _summary_selector = XPath("//div[contains(@class, 'entry-content')]/p[(text() or strong) and position()=1]")
+
+        @attribute
+        def body(self) -> ArticleBody:
+            html = re.sub(r"(<br>)+", "<p>", self.precomputed.html)
+            doc = lxml.html.document_fromstring(html)
+            return extract_article_body_with_selector(
+                doc,
+                paragraph_selector=self._paragraph_selector,
+                summary_selector=self._summary_selector,
+            )
