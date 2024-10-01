@@ -3,13 +3,16 @@ import re
 from typing import List, Optional
 
 from lxml.cssselect import CSSSelector
+from lxml.etree import XPath
 
 from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute
+from fundus.parser.data import Image
 from fundus.parser.utility import (
     extract_article_body_with_selector,
     generic_author_parsing,
     generic_date_parsing,
     generic_topic_parsing,
+    image_extraction,
     parse_title_from_root,
 )
 
@@ -43,3 +46,12 @@ class PeopleParser(ParserProxy):
         @attribute
         def topics(self) -> List[str]:
             return generic_topic_parsing(self.precomputed.meta.get("keywords"), delimiter=" ")
+
+        @attribute
+        def images(self) -> List[Image]:
+            return image_extraction(
+                url=self.precomputed.meta.get("og:url"),
+                doc=self.precomputed.doc,
+                paragraph_selector=self._paragraph_selector,
+                upper_boundary_selector=XPath("//div[@class='layout route cf']"),
+            )
