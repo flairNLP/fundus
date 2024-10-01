@@ -48,10 +48,10 @@ class TheNamibianParser(ParserProxy):
         def images(self) -> List[Image]:
             return image_extraction(
                 url=self.precomputed.meta.get("og:url"),
-                ld_json=self.precomputed.ld,
                 doc=self.precomputed.doc,
                 paragraph_selector=self._paragraph_selector,
                 upper_boundary_selector=XPath("//main"),
+                similarity_threshold=0.99,
             )
 
     class V1_1(V1):

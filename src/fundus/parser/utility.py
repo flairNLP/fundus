@@ -538,42 +538,6 @@ def compare_html_element_positions(element: lxml.html.HtmlElement, other: lxml.h
     return len(ancestors) < len(other_ancestors)
 
 
-def load_images_from_json(
-    publisher_domain: str, ld_json: LinkedDataMapping, include_image_object: bool = False
-) -> List[Image]:
-    """
-    If a publisher includes LD JSON objects of type NewsArticle BlogPost or similar, this function extracts the images
-    and additional data, if possible.
-    @param publisher_domain: the domain of the publisher, needed to fix relative URLs
-    @param ld_json: ld_json of the article
-    @param include_image_object: set to True if ld_json of type ImageObject should be included in the extraction.
-    Defaults to False, due to root ld JSON dicts of type ImageObject are usually bloat
-    @return: list of Fundus Images
-    """
-    image_list = list()
-    if include_image_object:
-        ld_type_selector = r".*(article|image|blog).*"
-    else:
-        ld_type_selector = r".*(article|blog).*"
-    relevant_ld_types = [key for key in ld_json.__dict__.keys() if re.match(ld_type_selector, key, flags=re.IGNORECASE)]
-    for ld_type in relevant_ld_types:
-        element = ld_json.__dict__.get(ld_type)
-        if isinstance(element, dict):
-            element = element.get("image")
-        if isinstance(element, list):
-            for image in element:
-                if isinstance(image, str) and validators.url(image):
-                    # In this case only URLs are available for now
-                    image_list.append(Image(urls=[preprocess_url(image, publisher_domain)]))
-                else:
-                    if fundus_image := get_fundus_image_from_dict(image, publisher_domain):
-                        image_list.append(fundus_image)
-        elif isinstance(element, dict):
-            if fundus_image := get_fundus_image_from_dict(element, publisher_domain):
-                image_list.append(fundus_image)
-    return image_list
-
-
 def load_images_from_html(
     publisher_domain: str, doc: lxml.html.HtmlElement, image_selector: Union[CSSSelector, XPath] = XPath("//img")
 ) -> List[Image]:
@@ -639,12 +603,8 @@ def merge_duplicate_images(image_list: List[Image], similarity_threshold: float 
 
 def image_extraction(
     url: str,
-    ld_json: LinkedDataMapping,
     doc: lxml.html.HtmlElement,
     paragraph_selector: Union[CSSSelector, XPath],
-    extract_from_json: bool = True,
-    extract_from_html: bool = True,
-    include_image_object: bool = False,
     image_selector: Union[CSSSelector, XPath] = XPath("//img"),
     upper_boundary_selector: Union[CSSSelector, XPath] = XPath("//main"),
     caption_selector: Union[CSSSelector, XPath] = XPath("./ancestor::figure//figcaption"),
@@ -659,13 +619,8 @@ def image_extraction(
     This function serves as an intermediary between the utility code and the parsers in an effort to make the utility
     functions easily and flexibly usable.
     @param url: URL of the article
-    @param ld_json: ld_json of the article
     @param doc: The html document of the article
     @param paragraph_selector: Selector used to select the paragraphs of the article.
-    @param extract_from_json: If True, extracts the images from the LD JSON of the article. Defaults to True
-    @param extract_from_html: If True, extracts the images from the HTML of the article. Defaults to True
-    @param include_image_object: set to True if ld_json of type ImageObject should be included in the extraction.#
-    Defaults to False, due to root ld JSON dicts of type ImageObject are usually bloat
     @param image_selector: Selector selecting all relevant img elements. Defaults to selecting all
     @param upper_boundary_selector: A selector referencing an element to be considered as the upper boundary. All img
     elements before this element will be ignored.
@@ -680,17 +635,7 @@ def image_extraction(
     """
 
     publisher_domain = urlparse(url).netloc
-    image_list = list()
-    if extract_from_json:
-        image_list.extend(
-            load_images_from_json(
-                publisher_domain=publisher_domain, ld_json=ld_json, include_image_object=include_image_object
-            )
-        )
-    if extract_from_html:
-        image_list.extend(
-            load_images_from_html(publisher_domain=publisher_domain, doc=doc, image_selector=image_selector)
-        )
+    image_list = load_images_from_html(publisher_domain=publisher_domain, doc=doc, image_selector=image_selector)
     image_list = extract_image_data_from_html(
         doc=doc,
         input_images=image_list,

@@ -63,9 +63,7 @@ class NationalPostParser(ParserProxy):
         @attribute
         def images(self) -> List[Image]:
             return image_extraction(
-                extract_from_json=False,
                 url=self.precomputed.meta.get("og:url"),
-                ld_json=self.precomputed.ld,
                 doc=self.precomputed.doc,
                 paragraph_selector=self._paragraph_selector,
                 upper_boundary_selector=XPath("//div[@class='article-header__detail']/figure"),

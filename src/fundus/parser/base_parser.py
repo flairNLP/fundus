@@ -20,24 +20,12 @@ from typing import (
     TypeVar,
     Union,
 )
-from urllib.parse import urlparse
 
 import lxml.html
-import validators
 
 from fundus.logging import create_logger
 from fundus.parser.data import Image, LinkedDataMapping
-from fundus.parser.utility import (
-    extract_image_data_from_html,
-    get_fundus_image_from_dict,
-    get_ld_content,
-    get_meta_content,
-    image_extraction,
-    load_images_from_html,
-    load_images_from_json,
-    merge_duplicate_images,
-    preprocess_url,
-)
+from fundus.parser.utility import get_ld_content, get_meta_content, image_extraction
 
 RegisteredFunctionT_co = TypeVar("RegisteredFunctionT_co", covariant=True, bound="RegisteredFunction")
 
