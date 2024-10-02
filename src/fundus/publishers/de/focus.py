@@ -15,9 +15,9 @@ from fundus.parser.utility import (
 
 class FocusParser(ParserProxy):
     class V1(BaseParser):
-        _paragraph_selector = CSSSelector("div.textBlock > p")
-        _summary_selector = CSSSelector("div.leadIn > p")
-        _subheadline_selector = CSSSelector("div.textBlock > h2")
+        _paragraph_selector = CSSSelector("div.textBlock > p , div[data-qa-article-content-text] > p")
+        _summary_selector = CSSSelector("div.leadIn > p, div.Article-Description ")
+        _subheadline_selector = CSSSelector("div.textBlock > h2, div[data-qa-article-content-text] > h2")
         _snippet_selector = XPath(
             'string(//script[@type="text/javascript"][contains(text(), "window.bf__bfa_metadata")])'
         )
@@ -27,6 +27,7 @@ class FocusParser(ParserProxy):
             r"Von FOCUS-online-(Redakteur|Autorin|Reporter|Redakteurin|Gastautor)\s"
         )
         _topic_pattern: Pattern[str] = re.compile(r'"keywords":\[{(.*?)}\]')
+        _fallback_topic_pattern: Pattern[str] = re.compile(r"keyword: '(.*?)'")
         _topic_name_pattern: Pattern[str] = re.compile(r'"name":"(.*?)"', flags=re.MULTILINE)
 
         @attribute
@@ -61,7 +62,19 @@ class FocusParser(ParserProxy):
 
             match: Optional[Match[str]] = re.search(self._topic_pattern, snippet)
             if not match:
-                return []
+                fallback: Optional[Match[str]] = re.search(self._fallback_topic_pattern, snippet)
+                if not fallback:
+                    return []
+                else:
+                    categories: List[str] = fallback.group(1).split(",")
+                    topics: List[str] = list()
+                    for category in categories:
+                        category = category.removeprefix("fol")
+                        for topic in reversed(topics):
+                            category = re.sub(f"(?i)_{topic}(_|$)", "_", category)
+                        if topic := category.replace("_", " ").strip():
+                            topics.append(topic.title())
+                    return topics
             topic_names: List[str] = re.findall(self._topic_name_pattern, match.group(1))
 
             return topic_names
