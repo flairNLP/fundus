@@ -19,7 +19,7 @@ class FocusParser(ParserProxy):
         _summary_selector = CSSSelector("div.leadIn > p, div.Article-Description ")
         _subheadline_selector = CSSSelector("div.textBlock > h2, div[data-qa-article-content-text] > h2")
         _snippet_selector = XPath(
-            'string(//script[@type="text/javascript"][contains(text(), "window.bf__bfa_metadata")])'
+            'string(//script[@type="text/javascript"][contains(text(), "window.bf__bfa_metadata") or contains(text(), "pageAdKeyword")])'
         )
 
         # regex patterns
@@ -27,7 +27,7 @@ class FocusParser(ParserProxy):
             r"Von FOCUS-online-(Redakteur|Autorin|Reporter|Redakteurin|Gastautor)\s"
         )
         _topic_pattern: Pattern[str] = re.compile(r'"keywords":\[{(.*?)}\]')
-        _fallback_topic_pattern: Pattern[str] = re.compile(r"keyword: '(.*?)'")
+        _fallback_topic_pattern: Pattern[str] = re.compile(r"(keyword: '|\"pageAdKeyword\": ?\[)(.*?)(['\]])")
         _topic_name_pattern: Pattern[str] = re.compile(r'"name":"(.*?)"', flags=re.MULTILINE)
 
         @attribute
@@ -66,10 +66,11 @@ class FocusParser(ParserProxy):
                 if not fallback:
                     return []
                 else:
-                    categories: List[str] = fallback.group(1).split(",")
+                    categories: List[str] = fallback.group(2).split(",")
                     topics: List[str] = list()
                     for category in categories:
-                        category = category.removeprefix("fol")
+                        category = category.replace('"', "")
+                        category = re.sub("^fol", "", category)
                         for topic in reversed(topics):
                             category = re.sub(f"(?i)_{topic}(_|$)", "_", category)
                         if topic := category.replace("_", " ").strip():
