@@ -21,7 +21,9 @@ class TheNamibianParser(ParserProxy):
         VALID_UNTIL = datetime(year=2024, month=1, day=31).date()
         _summary_selector = XPath("//div[contains(@class, 'tdb-block-inner')]/p[position()=1]")
         _paragraph_selector = XPath("//div[contains(@class, 'tdb-block-inner')]/p[position()>1]")
+
         _title_substitution_pattern: Pattern[str] = re.compile(r" - The Namibian$")
+        _author_selector = XPath("//Person/name")
 
         @attribute
         def body(self) -> ArticleBody:
@@ -44,7 +46,7 @@ class TheNamibianParser(ParserProxy):
 
         @attribute
         def authors(self) -> List[str]:
-            return generic_author_parsing(self.precomputed.ld.get_value_by_key_path(["Person", "name"]))
+            return generic_author_parsing(self.precomputed.ld.xpath_search(self._author_selector))
 
     class V1_1(V1):
         VALID_UNTIL = datetime.today().date()
