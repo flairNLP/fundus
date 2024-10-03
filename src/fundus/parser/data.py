@@ -22,7 +22,7 @@ import more_itertools
 import xmltodict
 from dict2xml import dict2xml
 from lxml.etree import XPath, tostring
-from typing_extensions import Self, TypeAlias
+from typing_extensions import Self, TypeAlias, deprecated
 
 from fundus.utils.serialization import replace_keys_in_nested_dict
 
@@ -81,6 +81,7 @@ class LinkedDataMapping:
                 self.__dict__[self.__UNKNOWN_TYPE__] = []
             self.__dict__[self.__UNKNOWN_TYPE__].append(ld)
 
+    @deprecated("Use xpath_search() instead")
     def get_value_by_key_path(self, key_path: List[str], default: Any = None) -> Optional[Any]:
         """
         Works like get() except this one assumes a path is given as list of keys (str).
