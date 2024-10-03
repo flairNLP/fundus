@@ -54,9 +54,6 @@ class TheInterceptParser(ParserProxy):
             # inside the "keywords" linked data indicated by a "Subject: " prefix.
             # Example keywords: ["Day: Saturday", ..., "Subject: World", ...]
             keywords: List[str] = self.precomputed.ld.xpath_search("NewsArticle/keywords")
-            if keywords is None:
-                return []
-
             return [keyword[9:] for keyword in keywords if keyword.startswith("Subject: ")]
 
     class V1_1(V1):

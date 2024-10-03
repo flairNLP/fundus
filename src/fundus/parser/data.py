@@ -120,7 +120,7 @@ class LinkedDataMapping:
         ...
 
     @overload
-    def xpath_search(self, query: Union[XPath, str], scalar: Literal[True] = True) -> Any:
+    def xpath_search(self, query: Union[XPath, str], scalar: Literal[True] = True) -> Optional[Any]:
         ...
 
     def xpath_search(self, query: Union[XPath, str], scalar: bool = False) -> Union[Any, List[Any]]:
@@ -190,10 +190,12 @@ class LinkedDataMapping:
         values = list(results.values())
 
         if scalar:
-            if len(values) != 1:
-                raise ValueError(f"Got multiple values when expecting a single scalar value")
-            else:
+            if not values:
+                return None
+            elif len(values) == 1:
                 return values.pop()
+            else:
+                raise ValueError(f"Got multiple values when expecting a single scalar value")
         else:
             return values
 
