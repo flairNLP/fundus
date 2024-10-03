@@ -9,6 +9,7 @@ from typing import (
     Iterable,
     Iterator,
     List,
+    Literal,
     Optional,
     Sequence,
     Tuple,
@@ -114,7 +115,15 @@ class LinkedDataMapping:
             self.__xml = lxml.etree.fromstring(xml)
         return self.__xml
 
-    def xpath_search(self, query: XPath) -> List[Any]:
+    @overload
+    def xpath_search(self, query: Union[XPath, str], scalar: Literal[False] = False) -> List[Any]:
+        ...
+
+    @overload
+    def xpath_search(self, query: Union[XPath, str], scalar: Literal[True] = True) -> Any:
+        ...
+
+    def xpath_search(self, query: Union[XPath, str], scalar: bool = False) -> Union[Any, List[Any]]:
         """Search through LD using XPath expressions
 
         Internally, the content of the LinkedDataMapping is converted to XML and then
@@ -149,6 +158,9 @@ class LinkedDataMapping:
             An ordered list of search results
         """
 
+        if isinstance(query, str):
+            query = XPath(query)
+
         pattern = re.compile("|".join(map(re.escape, self.__xml_transformation_table__.values())))
 
         def node2string(n: lxml.etree._Element) -> str:
@@ -175,7 +187,15 @@ class LinkedDataMapping:
             xml = f"<result{i}>" + node2string(node) + f"</result{i}>"
             results.update(replace_keys_in_nested_dict(xmltodict.parse(xml), to_original_characters))
 
-        return list(results.values())
+        values = list(results.values())
+
+        if scalar:
+            if len(values) != 1:
+                raise ValueError(f"Got multiple values when expecting a single scalar value")
+            else:
+                return values.pop()
+        else:
+            return values
 
     def bf_search(self, key: str, depth: Optional[int] = None, default: Optional[_T] = None) -> Union[Any, _T]:
         """
