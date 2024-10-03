@@ -38,11 +38,11 @@ class ReutersParser(ParserProxy):
 
         @attribute
         def publishing_date(self) -> Optional[datetime]:
-            return generic_date_parsing(self.precomputed.ld.get_value_by_key_path(["NewsArticle", "datePublished"]))
+            return generic_date_parsing(self.precomputed.ld.xpath_search("NewsArticle/datePublished", scalar=True))
 
         @attribute
         def title(self) -> Optional[str]:
-            return self.precomputed.ld.get_value_by_key_path(["NewsArticle", "headline"])
+            return self.precomputed.ld.xpath_search("NewsArticle/headline", scalar=True)
 
         @attribute
         def topics(self) -> List[str]:

@@ -43,8 +43,7 @@ class KrautreporterParser(ParserProxy):
 
         @attribute
         def publishing_date(self) -> Optional[datetime]:
-            key_path = ["NewsArticle", "datePublished"]
-            date_string = self.precomputed.ld.get_value_by_key_path(key_path)
+            date_string = self.precomputed.ld.xpath_search("NewsArticle/datePublished", scalar=True)
             return utility.generic_date_parsing(date_string)
 
         @attribute

@@ -28,8 +28,7 @@ class EuronewsParser(ParserProxy):
 
         @attribute
         def authors(self) -> List[str]:
-            key_path = ["NewsArticle", "author", "name"]
-            author_string = self.precomputed.ld.get_value_by_key_path(key_path)
+            author_string = self.precomputed.ld.xpath_search("NewsArticle/author/name", scalar=True)
             return utility.generic_author_parsing(author_string)
 
         @attribute

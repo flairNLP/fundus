@@ -32,23 +32,23 @@ class TheNewYorkerParser(ParserProxy):
 
         @attribute(validate=False)
         def alternative_description(self) -> Optional[str]:
-            return self.precomputed.ld.get_value_by_key_path(["NewsArticle", "description"])
+            return self.precomputed.ld.xpath_search("NewsArticle/description", scalar=True)
 
         @attribute
         def authors(self) -> List[str]:
-            return generic_author_parsing(self.precomputed.ld.get_value_by_key_path(["NewsArticle", "author"]))
+            return generic_author_parsing(self.precomputed.ld.xpath_search("NewsArticle/author"))
 
         @attribute
         def publishing_date(self) -> Optional[datetime]:
-            return generic_date_parsing(self.precomputed.ld.get_value_by_key_path(["NewsArticle", "datePublished"]))
+            return generic_date_parsing(self.precomputed.ld.xpath_search("NewsArticle/datePublished", scalar=True))
 
         @attribute
         def title(self) -> Optional[str]:
-            return self.precomputed.ld.get_value_by_key_path(["NewsArticle", "headline"])
+            return self.precomputed.ld.xpath_search("NewsArticle/headline", scalar=True)
 
         @attribute(validate=False)
         def alternative_title(self) -> Optional[str]:
-            return self.precomputed.ld.get_value_by_key_path(["NewsArticle", "alternativeHeadline"])
+            return self.precomputed.ld.xpath_search("NewsArticle/alternativeHeadline", scalar=True)
 
         @attribute
         def topics(self) -> List[str]:
@@ -61,4 +61,4 @@ class TheNewYorkerParser(ParserProxy):
 
         @attribute(validate=False)
         def section(self) -> Optional[str]:
-            return self.precomputed.ld.get_value_by_key_path(["NewsArticle", "articleSection"])
+            return self.precomputed.ld.xpath_search("NewsArticle/articleSection", scalar=True)
