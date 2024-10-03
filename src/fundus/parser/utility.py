@@ -7,7 +7,6 @@ from dataclasses import dataclass, field
 from datetime import datetime
 from functools import total_ordering
 from typing import (
-    Any,
     Callable,
     ClassVar,
     Dict,
@@ -18,6 +17,7 @@ from typing import (
     Pattern,
     Type,
     Union,
+    cast,
 )
 
 import lxml.html
@@ -33,6 +33,7 @@ from fundus.parser.data import (
     LinkedDataMapping,
     TextSequence,
 )
+from fundus.utils.serialization import JSONVal
 
 logger = create_logger(__name__)
 
@@ -154,25 +155,34 @@ def extract_article_body_with_selector(
 
 _ld_node_selector = XPath("//script[@type='application/ld+json']")
 _json_pattern = re.compile(r"(?P<json>{[\s\S]*}|\[\s*{[\s\S]*}\s*](?!\s*}))")
+_json_undefined = re.compile(r'(?P<key>"[^"]*?"):\s*undefined')
 
 
 def sanitize_json(text: str) -> Optional[str]:
     # capture only content enclosed as follows: {...} or [{...}]
     match = re.search(_json_pattern, text)
-    if match is not None and (sanitized := match.group("json")):
-        return sanitized
-    return None
+    if match is None or not (sanitized := match.group("json")):
+        return None
+
+    # substitute "bad" values
+    sanitized = re.sub(_json_undefined, r"\g<key>:null", sanitized)
+
+    return sanitized
 
 
-def extract_json_from_dom(root: lxml.html.HtmlElement, selector: XPath) -> Iterable[Dict[str, Any]]:
-    json_nodes = selector(root)
-    jsons = []
-    for node in json_nodes:
-        json_content = sanitize_json(node.text_content()) or ""
-        try:
-            jsons.append(json.loads(json_content))
-        except json.JSONDecodeError as error:
-            logger.debug(f"Encountered {error!r} during JSON parsing")
+def parse_json(text: str) -> Optional[Dict[str, JSONVal]]:
+    if not (json_content := sanitize_json(text)):
+        return None
+
+    try:
+        return cast(Dict[str, JSONVal], json.loads(json_content))
+    except json.JSONDecodeError as error:
+        logger.debug(f"Encountered {error!r} during JSON parsing")
+        return None
+
+
+def extract_json_from_dom(root: lxml.html.HtmlElement, selector: XPath) -> Iterable[Dict[str, JSONVal]]:
+    jsons = [parsed_json for node in selector(root) if (parsed_json := parse_json(node.text_content())) is not None]
     return more_itertools.collapse(jsons, base_type=dict)
 
 

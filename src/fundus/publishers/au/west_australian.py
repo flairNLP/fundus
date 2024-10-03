@@ -1,5 +1,4 @@
 import datetime
-import json
 import re
 from typing import List, Optional
 
@@ -11,7 +10,7 @@ from fundus.parser.utility import (
     generic_author_parsing,
     generic_date_parsing,
     generic_topic_parsing,
-    sanitize_json,
+    parse_json,
 )
 
 
@@ -21,23 +20,12 @@ class WestAustralianParser(ParserProxy):
             "string(//script[re:test(text(), 'window.PAGE_DATA')])",
             namespaces={"re": "http://exslt.org/regular-expressions"},
         )
-        _json_undefined_pattern = re.compile(r'":\s*undefined')
 
         @function(priority=1)
         def _parse_page_content(self):
-            page_data_content = self._page_data_selector(self.precomputed.doc)
-
-            if not page_data_content or not (sanitized := sanitize_json(page_data_content)):
-                return
-
-            json_string = re.sub(self._json_undefined_pattern, r'": null', sanitized)
-
-            try:
-                json_content = json.loads(json_string)
-            except json.JSONDecodeError:
-                return
-
-            self.precomputed.ld.add_ld(json_content, "windows.PAGE_DATA")
+            if not (parsed_json := parse_json(self._page_data_selector(self.precomputed.doc))):
+                raise ValueError("Couldn't parse page data")
+            self.precomputed.ld.add_ld(parsed_json, "windows.PAGE_DATA")
 
         @attribute
         def body(self) -> ArticleBody:
