@@ -27,7 +27,6 @@ class FocusParser(ParserProxy):
             r"Von FOCUS-online-(Redakteur|Autorin|Reporter|Redakteurin|Gastautor)\s"
         )
         _topic_pattern: Pattern[str] = re.compile(r'"keywords":\[{(.*?)}\]')
-        _fallback_topic_pattern: Pattern[str] = re.compile(r"(keyword: '|\"pageAdKeyword\": ?\[)(.*?)(['\]])")
         _topic_name_pattern: Pattern[str] = re.compile(r'"name":"(.*?)"', flags=re.MULTILINE)
 
         @attribute
@@ -62,20 +61,7 @@ class FocusParser(ParserProxy):
 
             match: Optional[Match[str]] = re.search(self._topic_pattern, snippet)
             if not match:
-                fallback: Optional[Match[str]] = re.search(self._fallback_topic_pattern, snippet)
-                if not fallback:
-                    return []
-                else:
-                    categories: List[str] = fallback.group(2).split(",")
-                    topics: List[str] = list()
-                    for category in categories:
-                        category = category.replace('"', "")
-                        category = re.sub("^fol", "", category)
-                        for topic in reversed(topics):
-                            category = re.sub(f"(?i)_{topic}(_|$)", "_", category)
-                        if topic := category.replace("_", " ").strip():
-                            topics.append(topic.title())
-                    return topics
+                return []
             topic_names: List[str] = re.findall(self._topic_name_pattern, match.group(1))
 
             return topic_names
