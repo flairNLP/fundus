@@ -15,11 +15,17 @@ from fundus.parser.utility import (
 
 class HessenschauParser(ParserProxy):
     class V1(BaseParser):
-        _summary_selector = XPath("//p[@class='copytext__text text__copytext' and position()=1] /strong")
-        _paragraph_selector = XPath(
-            "//p[@class='copytext__text text__copytext' and not(child::strong and position()=1)]"
+        _summary_selector = XPath(
+            "//p[(@class='copytext__text text__copytext'"
+            " or contains(@class, 'copytext__paragraph'))"
+            " and position()=1] /strong"
         )
-        _subheadline_selector = CSSSelector("h2.text__headline.copytext__headline")
+        _paragraph_selector = XPath(
+            "//p[(@class='copytext__text text__copytext' or contains(@class, 'copytext__paragraph'))"
+            " and not(child::strong and position()=1)] | "
+            "//ul[contains(@class, 'copytext__paragraph')]/li"
+        )
+        _subheadline_selector = CSSSelector("h2[class*=head]")
 
         @attribute
         def body(self) -> ArticleBody:
