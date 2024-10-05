@@ -58,7 +58,6 @@ class BRParser(ParserProxy):
         @attribute
         def images(self) -> List[Image]:
             return image_extraction(
-                url=self.precomputed.meta.get("og:url"),
                 doc=self.precomputed.doc,
                 paragraph_selector=self._paragraph_selector,
                 image_selector=XPath("//img[not(contains(@class, 'authorImage'))]"),

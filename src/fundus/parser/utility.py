@@ -633,7 +633,6 @@ def merge_duplicate_images(image_list: List[Image], similarity_threshold: float 
 
 
 def image_extraction(
-    url: str,
     doc: lxml.html.HtmlElement,
     paragraph_selector: Union[CSSSelector, XPath],
     image_selector: Union[CSSSelector, XPath] = XPath("//img"),
@@ -647,11 +646,10 @@ def image_extraction(
     author_filter: Optional[Pattern] = None,
     author_pattern: Optional[Pattern] = re.compile(r"\((?P<credits>[^()]+)\)$"),
     similarity_threshold: float = 0.8,
-):
+) -> List[Image]:
     """
     This function serves as an intermediary between the utility code and the parsers in an effort to make the utility
     functions easily and flexibly usable.
-    @param url: URL of the article
     @param doc: The html document of the article
     @param paragraph_selector: Selector used to select the paragraphs of the article.
     @param image_selector: Selector selecting all relevant img elements. Defaults to selecting all
@@ -671,7 +669,10 @@ def image_extraction(
     @return: list of Images contained within the article
     """
 
-    publisher_domain = urlparse(url).netloc
+    url_selector = XPath("//meta[@property='og:url']/@content")
+    if not (selected_url := url_selector(doc)):
+        raise ValueError("URL could not be extracted from doc")
+    publisher_domain = urlparse(selected_url.pop()).netloc
     image_list = load_images_from_html(publisher_domain=publisher_domain, doc=doc, image_selector=image_selector)
     image_list = extract_image_data_from_html(
         doc=doc,

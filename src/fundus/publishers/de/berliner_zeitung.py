@@ -49,7 +49,6 @@ class BerlinerZeitungParser(ParserProxy):
         @attribute
         def images(self) -> List[Image]:
             return image_extraction(
-                url=self.precomputed.meta.get("og:url"),
                 doc=self.precomputed.doc,
                 paragraph_selector=self._paragraph_selector,
                 image_selector=XPath("//div[not(contains(@class, 'author') or contains(@class, 'preview'))]/img"),

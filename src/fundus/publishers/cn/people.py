@@ -50,7 +50,6 @@ class PeopleParser(ParserProxy):
         @attribute
         def images(self) -> List[Image]:
             return image_extraction(
-                url=self.precomputed.meta.get("og:url"),
                 doc=self.precomputed.doc,
                 paragraph_selector=self._paragraph_selector,
                 upper_boundary_selector=XPath("//div[@class='layout route cf']"),

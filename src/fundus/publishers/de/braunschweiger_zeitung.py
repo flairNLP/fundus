@@ -73,7 +73,6 @@ class BSZParser(ParserProxy):
         @attribute
         def images(self) -> List[Image]:
             return image_extraction(
-                url=self.precomputed.meta.get("og:url"),
                 doc=self.precomputed.doc,
                 paragraph_selector=XPath(
                     "//div[@class='article-body']//p[not(not(text()) or @rel='author' or em[@class='print'])]"

@@ -62,7 +62,6 @@ class BusinessInsiderDEParser(ParserProxy):
         @attribute
         def images(self) -> List[Image]:
             return image_extraction(
-                url=self.precomputed.meta.get("og:url"),
                 doc=self.precomputed.doc,
                 paragraph_selector=self._paragraph_selector,
                 similarity_threshold=0.95,

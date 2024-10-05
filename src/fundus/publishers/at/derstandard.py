@@ -44,7 +44,6 @@ class DerStandardParser(ParserProxy):
         @attribute
         def images(self) -> List[Image]:
             return image_extraction(
-                url=self.precomputed.meta.get("og:url"),
                 doc=self.precomputed.doc,
                 paragraph_selector=self._paragraph_selector,
                 author_selector=XPath("./ancestor::figure//footer"),

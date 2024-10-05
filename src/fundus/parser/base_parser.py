@@ -242,7 +242,7 @@ class BaseParser(ABC):
 
     @attribute
     def images(self) -> List[Image]:
-        return image_extraction(self.precomputed.meta.get("og:url"), self.precomputed.doc, self._paragraph_selector)
+        return image_extraction(self.precomputed.doc, self._paragraph_selector)
 
 
 class _ParserCache:
