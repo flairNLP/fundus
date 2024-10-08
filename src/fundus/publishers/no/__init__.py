@@ -16,7 +16,7 @@ class NO(metaclass=PublisherGroup):
         sources=[
             Sitemap(
                 "https://www.vg.no/sitemap.xml",
-                sitemap_filter=inverse(regex_filter("vg\.no\/sitemaps/\d{4}\-\d{2}-articles.xml")),
+                sitemap_filter=inverse(regex_filter(r"vg\.no\/sitemaps/\d{4}\-\d{2}-articles.xml")),
                 reverse=True,
             ),
             NewsMap("https://www.vg.no/sitemap/files/articles-48hrs.xml"),

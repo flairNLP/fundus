@@ -76,3 +76,9 @@ target-version = ['py38']
 
 [tool.isort]
 profile = "black"
+
+[tool.pytest.ini_options]
+filterwarnings = [
+    "error"
+]
+

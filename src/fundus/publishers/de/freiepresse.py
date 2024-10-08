@@ -33,7 +33,7 @@ class FreiePresseParser(ParserProxy):
 
         @attribute
         def authors(self) -> List[str]:
-            return generic_author_parsing(self.precomputed.ld.get_value_by_key_path(["NewsArticle", "author"]))
+            return generic_author_parsing(self.precomputed.ld.xpath_search("NewsArticle/author"))
 
         @attribute
         def title(self) -> Optional[str]:

@@ -41,7 +41,7 @@ class OccupyDemocratsParser(ParserProxy):
 
         @attribute
         def topics(self) -> List[str]:
-            return generic_topic_parsing(self.precomputed.ld.get_value_by_key_path(["Article", "keywords"]))
+            return generic_topic_parsing(self.precomputed.ld.xpath_search("Article/keywords", scalar=True))
 
         @attribute(validate=False)
         def description(self) -> Optional[str]:
