@@ -15,9 +15,9 @@ from fundus.parser.utility import (
 
 class FocusParser(ParserProxy):
     class V1(BaseParser):
-        _paragraph_selector = CSSSelector("div.textBlock > p")
-        _summary_selector = CSSSelector("div.leadIn > p")
-        _subheadline_selector = CSSSelector("div.textBlock > h2")
+        _paragraph_selector = CSSSelector("div.textBlock > p , div[data-qa-article-content-text] > p")
+        _summary_selector = CSSSelector("div.leadIn > p, div.Article-Description ")
+        _subheadline_selector = CSSSelector("div.textBlock > h2, div[data-qa-article-content-text] > h2")
         _snippet_selector = XPath(
             'string(//script[@type="text/javascript"][contains(text(), "window.bf__bfa_metadata")])'
         )
