@@ -123,7 +123,7 @@ class LinkedDataMapping:
     def xpath_search(self, query: Union[XPath, str], scalar: Literal[True] = True) -> Optional[Any]:
         ...
 
-    def xpath_search(self, query: Union[XPath, str], scalar: bool = False) -> Union[Any, List[Any]]:
+    def xpath_search(self, query: Union[XPath, str], scalar: bool = False):
         """Search through LD using XPath expressions
 
         Internally, the content of the LinkedDataMapping is converted to XML and then
@@ -152,10 +152,12 @@ class LinkedDataMapping:
         >> [value1]
 
         Args:
-            query: A XPath expression
+            query: A XPath expression either as string or XPath object.
+            scalar: If True, return an optional "scalar" value and raise a ValueError if there are more
+                than one result to return; if False, return a list of results. Defaults to False.
 
         Returns:
-            An ordered list of search results
+            An ordered list of search results or an optional "scalar" result
         """
 
         if isinstance(query, str):
