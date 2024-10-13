@@ -9,6 +9,7 @@ from typing import (
     Iterable,
     Iterator,
     List,
+    Literal,
     Optional,
     Sequence,
     Tuple,
@@ -22,7 +23,7 @@ import more_itertools
 import xmltodict
 from dict2xml import dict2xml
 from lxml.etree import XPath, tostring
-from typing_extensions import Self, TypeAlias
+from typing_extensions import Self, TypeAlias, deprecated
 
 from fundus.utils.serialization import replace_keys_in_nested_dict
 
@@ -81,6 +82,7 @@ class LinkedDataMapping:
                 self.__dict__[self.__UNKNOWN_TYPE__] = []
             self.__dict__[self.__UNKNOWN_TYPE__].append(ld)
 
+    @deprecated("Use xpath_search() instead")
     def get_value_by_key_path(self, key_path: List[str], default: Any = None) -> Optional[Any]:
         """
         Works like get() except this one assumes a path is given as list of keys (str).
@@ -113,7 +115,15 @@ class LinkedDataMapping:
             self.__xml = lxml.etree.fromstring(xml)
         return self.__xml
 
-    def xpath_search(self, query: XPath) -> List[Any]:
+    @overload
+    def xpath_search(self, query: Union[XPath, str], scalar: Literal[False] = False) -> List[Any]:
+        ...
+
+    @overload
+    def xpath_search(self, query: Union[XPath, str], scalar: Literal[True] = True) -> Optional[Any]:
+        ...
+
+    def xpath_search(self, query: Union[XPath, str], scalar: bool = False):
         """Search through LD using XPath expressions
 
         Internally, the content of the LinkedDataMapping is converted to XML and then
@@ -142,11 +152,16 @@ class LinkedDataMapping:
         >> [value1]
 
         Args:
-            query: A XPath expression
+            query: A XPath expression either as string or XPath object.
+            scalar: If True, return an optional "scalar" value and raise a ValueError if there are more
+                than one result to return; if False, return a list of results. Defaults to False.
 
         Returns:
-            An ordered list of search results
+            An ordered list of search results or an optional "scalar" result
         """
+
+        if isinstance(query, str):
+            query = XPath(query)
 
         pattern = re.compile("|".join(map(re.escape, self.__xml_transformation_table__.values())))
 
@@ -174,7 +189,17 @@ class LinkedDataMapping:
             xml = f"<result{i}>" + node2string(node) + f"</result{i}>"
             results.update(replace_keys_in_nested_dict(xmltodict.parse(xml), to_original_characters))
 
-        return list(results.values())
+        values = list(results.values())
+
+        if scalar:
+            if not values:
+                return None
+            elif len(values) == 1:
+                return values.pop()
+            else:
+                raise ValueError(f"Got multiple values when expecting a single scalar value")
+        else:
+            return values
 
     def bf_search(self, key: str, depth: Optional[int] = None, default: Optional[_T] = None) -> Union[Any, _T]:
         """
