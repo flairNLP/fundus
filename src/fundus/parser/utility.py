@@ -472,7 +472,7 @@ def extract_image_data_from_html(
     @return: List with images filtered to be between the specified upper boundary and last paragraph
     """
     filtered_list = list()
-    img_selector = XPath("//img")
+    img_selector = XPath("//*[(@src or @data-src or @srcset) and not(self::script)]")
     img_elements = img_selector(doc)
     img_elements_with_src = list()
     paragraphs = paragraph_selector(doc)
@@ -492,8 +492,12 @@ def extract_image_data_from_html(
             img_src = img_src.split("?")[0]
             img_elements_with_src.append((img_src, img_element))
         elif img_src := (img_element.get("data-src") or img_element.get("srcset")):
-            img_src = img_src.split("?")[0]
-            img_elements_with_src.append((img_src, img_element))
+            for url in img_src.split(" "):
+                if validators.url(url):
+                    src = url.split("?")[0]
+                    img_elements_with_src.append((src, img_element))
+                    break
+
     if not img_elements_with_src:
         return []
     for image in input_images:
@@ -584,7 +588,7 @@ def load_images_from_html(
     for img_element in img_elements:
         urls = [img_element.get("src"), img_element.get("data-src")]
         if srcset := img_element.get("srcset"):
-            urls.extend(srcset.split(","))
+            urls.extend(re.split(r"[, ]", srcset))
         urls = [url for url in urls if url and validators.url(url)]
         if not urls:
             continue
