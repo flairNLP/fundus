@@ -17,7 +17,7 @@ jobs:
           version: "23.1.0"
 
   isort:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
       - uses: isort/isort-action@master
