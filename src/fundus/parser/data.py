@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from dataclasses import dataclass, fields
+from dataclasses import dataclass, fields, asdict
 from typing import (
     Any,
     Collection,
@@ -19,6 +19,8 @@ import lxml.html
 import more_itertools
 import validators
 from typing_extensions import Self, TypeAlias
+
+from fundus.utils.serialization import JSONVal
 
 LDMappingValue: TypeAlias = Union[List[Dict[str, Any]], Dict[str, Any]]
 
@@ -311,6 +313,13 @@ class Image:
             f"-Versions:\t\t {list(self.urls.keys())}\n"
         )
         return representation
+
+    def serialize(self) -> Dict[str, JSONVal]:
+        return asdict(self)
+
+    @classmethod
+    def deserialize(cls, serialized: Dict[str, JSONVal]) -> "Image":
+        return cls(**serialized)
 
 
 class DOM:

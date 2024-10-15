@@ -50,7 +50,7 @@ class Article:
 
     @property
     def authors(self) -> List[str]:
-        return self.__extraction__.get("authors") or []
+        return self.__extraction__.get("authors", [])
 
     @property
     def publishing_date(self) -> Optional[datetime]:
@@ -58,15 +58,15 @@ class Article:
 
     @property
     def topics(self) -> List[str]:
-        return self.__extraction__.get("topics") or []
+        return self.__extraction__.get("topics", [])
 
     @property
     def free_access(self) -> bool:
-        return self.__extraction__.get("free_access") or False
+        return self.__extraction__.get("free_access", False)
 
     @property
     def images(self) -> List[Image]:
-        return self.__extraction__.get("images") or []
+        return self.__extraction__.get("images", [])
 
     @property
     def publisher(self) -> str:
