@@ -57,11 +57,15 @@ class BRParser(ParserProxy):
 
         @attribute
         def images(self) -> List[Image]:
+            author_pattern: str = r"(?<=\|\sBild:\s).*$"
             return image_extraction(
                 doc=self.precomputed.doc,
                 paragraph_selector=self._paragraph_selector,
-                image_selector=XPath("//img[not(contains(@class, 'authorImage'))]"),
-                author_selector=XPath("./@title"),
+                image_selector=XPath("//figure[not(parent::aside)]//img"),
+                author_selector=XPath(
+                    f"re:match(./@title, '{author_pattern}')",
+                    namespaces={"re": "http://exslt.org/regular-expressions"},
+                ),
                 author_filter=re.compile(r".*bild:", re.IGNORECASE),
             )
 

@@ -73,9 +73,10 @@ class CBCNewsParser(ParserProxy):
                 doc=self.precomputed.doc,
                 paragraph_selector=self._paragraph_selector,
                 upper_boundary_selector=XPath("//div[@data-cy='storyWrapper']"),
+                # caption_selector=XPath("./ancestor::figure//figcaption/text()[1]"),
+                # author_selector=XPath("./ancestor::figure//figcaption/text()[last()]"),
                 caption_selector=XPath(
                     "./ancestor::figure//figcaption | ./ancestor::span[contains(@class,'mediaEmbed')]/span"
                 ),
-                similarity_threshold=0.9,
-                author_pattern=re.compile(r"\((?P<credits>.*?)\)$"),
+                author_selector=re.compile(r"\((?P<credits>.*?)\)$"),
             )

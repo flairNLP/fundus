@@ -24,8 +24,8 @@ from typing import (
 import lxml.html
 
 from fundus.logging import create_logger
-from fundus.parser.data import Image, LinkedDataMapping
-from fundus.parser.utility import get_ld_content, get_meta_content, image_extraction
+from fundus.parser.data import LinkedDataMapping
+from fundus.parser.utility import get_ld_content, get_meta_content
 
 RegisteredFunctionT_co = TypeVar("RegisteredFunctionT_co", covariant=True, bound="RegisteredFunction")
 
@@ -239,10 +239,6 @@ class BaseParser(ABC):
             return False
         else:
             return True
-
-    @attribute
-    def images(self) -> List[Image]:
-        return image_extraction(self.precomputed.doc, self._paragraph_selector)
 
 
 class _ParserCache:

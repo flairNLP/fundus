@@ -4,7 +4,7 @@ from typing import List, Optional, Pattern
 
 from lxml.etree import XPath
 
-from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute, function
+from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute
 from fundus.parser.data import Image
 from fundus.parser.utility import (
     extract_article_body_with_selector,
@@ -50,7 +50,6 @@ class TheNamibianParser(ParserProxy):
                 doc=self.precomputed.doc,
                 paragraph_selector=self._paragraph_selector,
                 upper_boundary_selector=XPath("//main"),
-                similarity_threshold=0.99,
             )
 
     class V1_1(V1):

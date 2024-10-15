@@ -15,6 +15,7 @@ from typing import (
     overload,
 )
 
+import lxml.html
 import more_itertools
 import validators
 from typing_extensions import Self, TypeAlias
@@ -282,75 +283,40 @@ class ArticleBody(TextSequenceTree):
         return any(bool(section) for section in self.sections)
 
 
+@dataclass(frozen=False)
 class Image:
-    _urls: List[str]
-    _is_cover: bool
-    _description: Optional[str]
-    _caption: Optional[str]
-    _authors: List[str]
+    urls: Dict[str, str]
+    is_cover: bool
+    description: Optional[str]
+    caption: Optional[str]
+    authors: List[str]
+    position: int
 
-    def __init__(
-        self,
-        urls: List[str],
-        is_cover: bool = False,
-        description: Optional[str] = None,
-        caption: Optional[str] = None,
-        author: List[str] = None,
-    ):
-        for url in urls:
+    def __post_init__(self):
+        pass
+        for url in self.urls.values():
             if not validators.url(url):
                 raise ValueError(f"url {url} is not a valid URL")
-        self._urls = urls
-        self._is_cover = is_cover
-        self._description = description
-        self._caption = caption
-        self._authors = author
 
-    @property
-    def urls(self) -> List[str]:
-        return self._urls
-
-    @property
-    def is_cover(self) -> bool:
-        return self._is_cover
-
-    @property
-    def description(self) -> Optional[str]:
-        return self._description
-
-    @property
-    def caption(self) -> Optional[str]:
-        return self._caption
-
-    @property
-    def authors(self) -> List[str]:
-        return self._authors
-
-    def __repr__(self) -> str:
-        if self._is_cover:
+    def __str__(self) -> str:
+        if self.is_cover:
             representation = "Fundus-Article Cover-Image:\n"
         else:
             representation = "Fundus-Article Image:\n"
         representation += (
-            f"-URL:\t\t\t {self.urls},\n"
-            f'-Description:\t "{self.description}",\n'
-            f'-Caption:\t\t "{self.caption}",\n'
+            f"-URL:\t\t\t {list(self.urls.values())[-1]!r}\n"
+            f"-Description:\t {self.description!r}\n"
+            f"-Caption:\t\t {self.caption!r}\n"
             f"-Authors:\t\t {self.authors}\n"
+            f"-Versions:\t\t {list(self.urls.keys())}\n"
         )
         return representation
 
-    @caption.setter
-    def caption(self, value):
-        self._caption = value
 
-    @description.setter
-    def description(self, value):
-        self._description = value
+class DOM:
+    def __init__(self, root: lxml.html.HtmlElement):
+        self.root = root
+        self._depth_first_index = {element: i for i, element in enumerate(root.iter())}
 
-    @authors.setter
-    def authors(self, value):
-        self._authors = value
-
-    @is_cover.setter
-    def is_cover(self, value):
-        self._is_cover = value
+    def get_index(self, node: lxml.html.HtmlElement) -> int:
+        return self._depth_first_index[node]

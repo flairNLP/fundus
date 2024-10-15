@@ -78,5 +78,4 @@ class SRFParser(ParserProxy):
                 author_selector=XPath("./ancestor::figure//span[@class='media-caption__source']"),
                 image_selector=XPath("//picture[@class='image ']//img"),
                 lower_boundary_selector=XPath("(//div[@class='sharing-bar__container'])[2]"),
-                similarity_threshold=0.95,
             )
