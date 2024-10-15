@@ -1,10 +1,12 @@
 from fundus.publishers.base_objects import Publisher, PublisherGroup
 from fundus.scraping.url import NewsMap, RSSFeed, Sitemap
+from .zwanzig_minuten import ZwanzigMinutenParser
 
 from ...scraping.filter import inverse, regex_filter
 from .nzz import NZZParser
 from .srf import SRFParser
 from .ta import TAParser
+
 
 # noinspection PyPep8Naming
 
@@ -43,4 +45,15 @@ class CH(metaclass=PublisherGroup):
                 sitemap_filter=regex_filter("news|category"),
             ),
         ],
+    )
+    ZwanzigMinuten = Publisher(
+        name="Zwanzig Minuten",
+        domain="https://www.20min.ch/",
+        parser=ZwanzigMinutenParser,
+        sources=[
+            NewsMap("https://www.20min.ch/sitemaps/de/news.xml"),
+            Sitemap("https://www.20min.ch/sitemaps/de/articles.xml"),
+            NewsMap("https://www.20min.ch/sitemaps/fr/news.xml"),
+            Sitemap("https://www.20min.ch/sitemaps/fr/articles.xml"),
+            ]
     )
