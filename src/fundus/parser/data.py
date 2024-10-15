@@ -171,7 +171,6 @@ class LinkedDataMapping:
                 for chunk in chain(
                     (n.text,),
                     chain(*((tostring(child, with_tail=False, encoding=str), child.tail) for child in n.getchildren())),
-                    (n.tail,),
                 )
                 if chunk
             )
