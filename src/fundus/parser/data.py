@@ -70,7 +70,7 @@ class LinkedDataMapping:
                 if len(ld_type) == 1:
                     ld_type = ld_type[0]
                 else:
-                    raise TypeError(f"Unable tp parse ld_type '{ld_type}' of type {list} with length != 1")
+                    ld_type = ", ".join(ld_type)
             if value := self.__dict__.get(ld_type):
                 if not isinstance(value, list):
                     self.__dict__[ld_type] = [value]
