@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from dataclasses import dataclass, fields, asdict
+from dataclasses import asdict, dataclass, fields
 from typing import (
     Any,
     Collection,
@@ -319,7 +319,7 @@ class Image:
 
     @classmethod
     def deserialize(cls, serialized: Dict[str, JSONVal]) -> "Image":
-        return cls(**serialized)
+        return cls(**serialized)  # type: ignore[arg-type]
 
 
 class DOM:

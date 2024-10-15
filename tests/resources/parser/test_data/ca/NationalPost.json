@@ -72,6 +72,34 @@
         }
       ]
     },
+    "images": [
+      {
+        "urls": {
+          "1x": "https://smartcdn.gprod.postmedia.digital/nationalpost/wp-content/uploads/2024/08/Kamala-Harris-1.jpg?quality=90&strip=all&w=288&h=216&sig=Ljg4qX5ZA5CJ_zgkeUwCGg,",
+          "2x": "https://smartcdn.gprod.postmedia.digital/nationalpost/wp-content/uploads/2024/08/Kamala-Harris-1.jpg?quality=90&strip=all&w=576&h=432&sig=MJddUrXGOuvx0T5L0eSY1A"
+        },
+        "is_cover": true,
+        "description": "Kamala Harris with high school classmates.",
+        "caption": "Kamala Harris, centre, poses with classmates in a photo from the 1981 Westmount High School yearbook. Photo by Handout/English Montreal School Board/Westmount High School/AFP via Getty Images",
+        "authors": [
+          "Handout/English Montreal School Board/Westmount High School/AFP via Getty Images"
+        ],
+        "position": 836
+      },
+      {
+        "urls": {
+          "1x": "https://smartcdn.gprod.postmedia.digital/nationalpost/wp-content/uploads/2024/08/Kamala-Harris-2.jpg?quality=90&strip=all&w=288&sig=OCI8kk7ttdb6U7lfUnsBbg,",
+          "2x": "https://smartcdn.gprod.postmedia.digital/nationalpost/wp-content/uploads/2024/08/Kamala-Harris-2.jpg?quality=90&strip=all&w=576&sig=yl0MqIc0LAM4f1p7z317uQ"
+        },
+        "is_cover": false,
+        "description": "Kamala Harris.",
+        "caption": "Kamala Harris’s photo from the 1981 Westmount High School yearbook. Photo by Handout/English Montreal School Board/Westmount High School/AFP via Getty Images",
+        "authors": [
+          "Handout/English Montreal School Board/Westmount High School/AFP via Getty Images"
+        ],
+        "position": 997
+      }
+    ],
     "publishing_date": "2024-08-28 10:00:23+00:00",
     "title": "Kamala Harris' Canadian connections: What we know about her childhood in Montreal",
     "topics": [

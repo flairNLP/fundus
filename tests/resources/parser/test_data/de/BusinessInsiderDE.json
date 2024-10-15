@@ -34,6 +34,31 @@
         }
       ]
     },
+    "images": [
+      {
+        "urls": {
+          "75w": "https://cdn.businessinsider.de/wp-content/uploads/2021/09/614c8c34c2c9630018f5f431-75x56.jpg",
+          "100w": "https://cdn.businessinsider.de/wp-content/uploads/2021/09/614c8c34c2c9630018f5f431-100x75.jpg",
+          "175w": "https://cdn.businessinsider.de/wp-content/uploads/2021/09/614c8c34c2c9630018f5f431-175x131.jpg",
+          "200w": "https://cdn.businessinsider.de/wp-content/uploads/2021/09/614c8c34c2c9630018f5f431-200x150.jpg",
+          "400w": "https://cdn.businessinsider.de/wp-content/uploads/2021/09/614c8c34c2c9630018f5f431-400x300.jpg",
+          "600w": "https://cdn.businessinsider.de/wp-content/uploads/2021/09/614c8c34c2c9630018f5f431-600x450.jpg",
+          "768w": "https://cdn.businessinsider.de/wp-content/uploads/2021/09/614c8c34c2c9630018f5f431-768x576.jpg",
+          "800w": "https://cdn.businessinsider.de/wp-content/uploads/2021/09/614c8c34c2c9630018f5f431-800x600.jpg",
+          "1024w": "https://cdn.businessinsider.de/wp-content/uploads/2021/09/614c8c34c2c9630018f5f431-1024x768.jpg",
+          "1536w": "https://cdn.businessinsider.de/wp-content/uploads/2021/09/614c8c34c2c9630018f5f431-1536x1152.jpg",
+          "2048w": "https://cdn.businessinsider.de/wp-content/uploads/2021/09/614c8c34c2c9630018f5f431-2048x1536.jpg",
+          "2560w": "https://cdn.businessinsider.de/wp-content/uploads/2021/09/614c8c34c2c9630018f5f431-scaled.jpg"
+        },
+        "is_cover": true,
+        "description": "Kein anderes Unternehmen auf der Welt hat so hohe Schulden wie Evergrande.",
+        "caption": "Kein anderes Unternehmen auf der Welt hat so hohe Schulden wie Evergrande.",
+        "authors": [
+          "Noel Celis/Getty Images"
+        ],
+        "position": 505
+      }
+    ],
     "publishing_date": "2024-01-29 19:00:45+00:00",
     "title": "6 Statistiken, die die enorme Größe von Evergrande, Chinas hoch verschuldeten Immobilienriesen verdeutlichen",
     "topics": [

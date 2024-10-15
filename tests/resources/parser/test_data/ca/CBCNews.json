@@ -66,6 +66,84 @@
         }
       ]
     },
+    "images": [
+      {
+        "urls": {
+          "1x": "https://i.cbc.ca/1.3980205.1723061751!/cpImage/httpImage/image.jpg_gen/derivatives/16x9_780/palestinians-hamas.jpg"
+        },
+        "is_cover": true,
+        "description": "A man stands at a podium and gives a speech",
+        "caption": "Yahya Sinwar, at the time recently freed from jail in Israel, speaks during a rally in Khan Younis in Gaza in October 2011. Sinwar has been named the head of Hamas's political bureau, drawing concerns that his hard-line stance may harm ceasefire negotiations with Israel.",
+        "authors": [
+          "Adel Hana/Associated Press"
+        ],
+        "position": 283
+      },
+      {
+        "urls": {
+          "300w": "https://i.cbc.ca/1.7288086.1723068393!/fileImage/httpImage/image.jpg_gen/derivatives/original_300/jamil-al-saadouni-gaza.jpg",
+          "460w": "https://i.cbc.ca/1.7288086.1723068393!/fileImage/httpImage/image.jpg_gen/derivatives/original_460/jamil-al-saadouni-gaza.jpg",
+          "620w": "https://i.cbc.ca/1.7288086.1723068393!/fileImage/httpImage/image.jpg_gen/derivatives/original_620/jamil-al-saadouni-gaza.jpg",
+          "780w": "https://i.cbc.ca/1.7288086.1723068393!/fileImage/httpImage/image.jpg_gen/derivatives/original_780/jamil-al-saadouni-gaza.jpg",
+          "1180w": "https://i.cbc.ca/1.7288086.1723068393!/fileImage/httpImage/image.jpg_gen/derivatives/original_1180/jamil-al-saadouni-gaza.jpg"
+        },
+        "is_cover": false,
+        "description": "A man in a grey shirt is interviewed.",
+        "caption": "Jamil Al Saadouni laments that Palestinian civilians were not consulted on the best replacement for Ismail Haniyeh.",
+        "authors": [
+          "Mohamed El Saife/CBC"
+        ],
+        "position": 304
+      },
+      {
+        "urls": {
+          "300w": "https://i.cbc.ca/1.7288024.1723066217!/fileImage/httpImage/image.jpg_gen/derivatives/original_300/abu-hassan-amer-gaza.jpg",
+          "460w": "https://i.cbc.ca/1.7288024.1723066217!/fileImage/httpImage/image.jpg_gen/derivatives/original_460/abu-hassan-amer-gaza.jpg",
+          "620w": "https://i.cbc.ca/1.7288024.1723066217!/fileImage/httpImage/image.jpg_gen/derivatives/original_620/abu-hassan-amer-gaza.jpg",
+          "780w": "https://i.cbc.ca/1.7288024.1723066217!/fileImage/httpImage/image.jpg_gen/derivatives/original_780/abu-hassan-amer-gaza.jpg",
+          "1180w": "https://i.cbc.ca/1.7288024.1723066217!/fileImage/httpImage/image.jpg_gen/derivatives/original_1180/abu-hassan-amer-gaza.jpg"
+        },
+        "is_cover": false,
+        "description": "A man in a striped T-shirt and blue cap is interviewed.",
+        "caption": "Abu Hassan Amer says choosing military leadership during a tense period of ceasefire negotiations with Israel may harm talks.",
+        "authors": [
+          "Mohamed El Saife/CBC"
+        ],
+        "position": 315
+      },
+      {
+        "urls": {
+          "300w": "https://i.cbc.ca/1.7288079.1723068279!/fileImage/httpImage/image.jpg_gen/derivatives/original_300/abu-anas-al-saud-gaza.jpg",
+          "460w": "https://i.cbc.ca/1.7288079.1723068279!/fileImage/httpImage/image.jpg_gen/derivatives/original_460/abu-anas-al-saud-gaza.jpg",
+          "620w": "https://i.cbc.ca/1.7288079.1723068279!/fileImage/httpImage/image.jpg_gen/derivatives/original_620/abu-anas-al-saud-gaza.jpg",
+          "780w": "https://i.cbc.ca/1.7288079.1723068279!/fileImage/httpImage/image.jpg_gen/derivatives/original_780/abu-anas-al-saud-gaza.jpg",
+          "1180w": "https://i.cbc.ca/1.7288079.1723068279!/fileImage/httpImage/image.jpg_gen/derivatives/original_1180/abu-anas-al-saud-gaza.jpg"
+        },
+        "is_cover": false,
+        "description": "A man stands in front of a market wearing a grey collared shirt.",
+        "caption": "Abu Anas Al Saud says the appointment of Yahya Sinwar as leader of Hamas's political bureau was a 'good choice' for Palestinian defence, but will not advance ceasefire negotiations.",
+        "authors": [
+          "Mohamed El Saife/CBC"
+        ],
+        "position": 369
+      },
+      {
+        "urls": {
+          "300w": "https://i.cbc.ca/1.7286538.1722969983!/fileImage/httpImage/image.jpg_gen/derivatives/original_300/israel-palestinians-avoiding-war.jpg",
+          "460w": "https://i.cbc.ca/1.7286538.1722969983!/fileImage/httpImage/image.jpg_gen/derivatives/original_460/israel-palestinians-avoiding-war.jpg",
+          "620w": "https://i.cbc.ca/1.7286538.1722969983!/fileImage/httpImage/image.jpg_gen/derivatives/original_620/israel-palestinians-avoiding-war.jpg",
+          "780w": "https://i.cbc.ca/1.7286538.1722969983!/fileImage/httpImage/image.jpg_gen/derivatives/original_780/israel-palestinians-avoiding-war.jpg",
+          "1180w": "https://i.cbc.ca/1.7286538.1722969983!/fileImage/httpImage/image.jpg_gen/derivatives/original_1180/israel-palestinians-avoiding-war.jpg"
+        },
+        "is_cover": false,
+        "description": "A seated person gestures while speaking.",
+        "caption": "Sinwar greets his supporters during a meeting with leaders of Palestinian factions at his office in Gaza City, in April 2022.",
+        "authors": [
+          "Adel Hana/The Associated Press"
+        ],
+        "position": 427
+      }
+    ],
     "publishing_date": "2024-08-08 08:00:00+00:00",
     "title": "What's next for Gaza, after Yahya Sinwar's appointment as Hamas political head?",
     "topics": [
