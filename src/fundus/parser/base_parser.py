@@ -76,6 +76,12 @@ class RegisteredFunction(ABC):
         else:
             return f"registered {type(self).__name__} {self.__name__!r}"
 
+
+class Attribute(RegisteredFunction):
+    def __init__(self, func: Callable[[object], Any], priority: Optional[int], validate: bool):
+        self.validate = validate
+        super(Attribute, self).__init__(func=func, priority=priority)
+
     @functools.cached_property
     def __default__(self):
         annotation = self.__annotations__["return"]
@@ -97,12 +103,6 @@ class RegisteredFunction(ABC):
         else:
             raise NotImplementedError(f"Unsupported origin {origin}")
         return default
-
-
-class Attribute(RegisteredFunction):
-    def __init__(self, func: Callable[[object], Any], priority: Optional[int], validate: bool):
-        self.validate = validate
-        super(Attribute, self).__init__(func=func, priority=priority)
 
 
 class Function(RegisteredFunction):
