@@ -49,10 +49,18 @@ class TheNamibianParser(ParserProxy):
             return image_extraction(
                 doc=self.precomputed.doc,
                 paragraph_selector=self._paragraph_selector,
-                upper_boundary_selector=XPath("//main"),
+                upper_boundary_selector=XPath("//h1[@class='tdb-title-text']"),
             )
 
     class V1_1(V1):
         VALID_UNTIL = datetime.today().date()
         _paragraph_selector = XPath("//div[contains(@class, 'entry-content')]/p[position()>1]")
         _summary_selector = XPath("//div[contains(@class, 'entry-content')]/p[position()=1]")
+
+        @attribute
+        def images(self) -> List[Image]:
+            return image_extraction(
+                doc=self.precomputed.doc,
+                paragraph_selector=self._paragraph_selector,
+                upper_boundary_selector=XPath("//main"),
+            )
