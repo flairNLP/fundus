@@ -1,15 +1,18 @@
 import datetime
+import re
 from typing import List, Optional
 
 from lxml.cssselect import CSSSelector
 from lxml.etree import XPath
 
 from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute
+from fundus.parser.data import Image
 from fundus.parser.utility import (
     extract_article_body_with_selector,
     generic_author_parsing,
     generic_date_parsing,
     generic_topic_parsing,
+    image_extraction,
 )
 
 
@@ -48,3 +51,19 @@ class NettavisenParser(ParserProxy):
         @attribute
         def topics(self) -> List[str]:
             return generic_topic_parsing(self.precomputed.meta.get("article:tag"))
+
+        @attribute
+        def images(self) -> List[Image]:
+            return image_extraction(
+                doc=self.precomputed.doc,
+                paragraph_selector=self._paragraph_selector,
+                image_selector=XPath("//brick-image-v3 | //img"),
+                author_pattern=re.compile(r"Foto:(?P<credits>.*)"),
+                caption_selector=XPath(
+                    "./ancestor::div[contains(@class, 'image')]/div[contains(@class, 'caption')]/span[not(@class)]"
+                ),
+                author_selector=XPath(
+                    "./ancestor::div[contains(@class, 'image')]/div[contains(@class, 'caption')]/span[@class]"
+                ),
+                similarity_threshold=0.99,
+            )
