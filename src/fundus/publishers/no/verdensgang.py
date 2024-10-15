@@ -63,6 +63,5 @@ class VerdensGangParser(ParserProxy):
             return image_extraction(
                 doc=self.precomputed.doc,
                 paragraph_selector=self._paragraph_selector,
-                image_selector=XPath("//figure[contains(@class, '_figure_1u77i_1 layout-component')]/img"),
-                author_pattern=re.compile(r"Foto:(?P<credits>.*)"),
+                author_selector=re.compile(r"Foto:(?P<credits>.*)"),
             )

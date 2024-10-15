@@ -54,7 +54,6 @@ class DagbladetParser(ParserProxy):
             return image_extraction(
                 doc=self.precomputed.doc,
                 paragraph_selector=self._paragraph_selector,
-                author_pattern=re.compile(r"Foto:(?P<credits>.*)"),
-                similarity_threshold=0.99,
+                author_selector=re.compile(r"Foto:(?P<credits>.*)"),
                 image_selector=XPath("//figure[contains(@class, 'image')]//img"),
             )
