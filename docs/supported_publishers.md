@@ -44,6 +44,7 @@
         </a>
       </td>
       <td>
+        <code>images</code>
         <code>topics</code>
       </td>
       <td>&#160;</td>
@@ -78,6 +79,7 @@
         </a>
       </td>
       <td>
+        <code>images</code>
         <code>topics</code>
       </td>
       <td>&#160;</td>
@@ -141,7 +143,9 @@
           <span>www.theglobeandmail.com</span>
         </a>
       </td>
-      <td>&#160;</td>
+      <td>
+        <code>images</code>
+      </td>
       <td>&#160;</td>
     </tr>
   </tbody>
@@ -224,7 +228,9 @@
           <span>www.people.com.cn</span>
         </a>
       </td>
-      <td>&#160;</td>
+      <td>
+        <code>images</code>
+      </td>
       <td>&#160;</td>
     </tr>
   </tbody>
@@ -346,7 +352,9 @@
           <span>www.boersen-zeitung.de</span>
         </a>
       </td>
-      <td>&#160;</td>
+      <td>
+        <code>images</code>
+      </td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -361,7 +369,9 @@
           <span>www.dw.com</span>
         </a>
       </td>
-      <td>&#160;</td>
+      <td>
+        <code>images</code>
+      </td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -376,7 +386,9 @@
           <span>taz.de</span>
         </a>
       </td>
-      <td>&#160;</td>
+      <td>
+        <code>images</code>
+      </td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -391,7 +403,9 @@
           <span>www.welt.de</span>
         </a>
       </td>
-      <td>&#160;</td>
+      <td>
+        <code>images</code>
+      </td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -406,7 +420,9 @@
           <span>www.zeit.de</span>
         </a>
       </td>
-      <td>&#160;</td>
+      <td>
+        <code>images</code>
+      </td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -421,7 +437,9 @@
           <span>de.euronews.com</span>
         </a>
       </td>
-      <td>&#160;</td>
+      <td>
+        <code>images</code>
+      </td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -436,7 +454,9 @@
           <span>www.focus.de</span>
         </a>
       </td>
-      <td>&#160;</td>
+      <td>
+        <code>images</code>
+      </td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -451,7 +471,9 @@
           <span>www.faz.net</span>
         </a>
       </td>
-      <td>&#160;</td>
+      <td>
+        <code>images</code>
+      </td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -467,6 +489,7 @@
         </a>
       </td>
       <td>
+        <code>images</code>
         <code>topics</code>
       </td>
       <td>&#160;</td>
@@ -483,7 +506,9 @@
           <span>www.freiepresse.de</span>
         </a>
       </td>
-      <td>&#160;</td>
+      <td>
+        <code>images</code>
+      </td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -499,6 +524,7 @@
         </a>
       </td>
       <td>
+        <code>images</code>
         <code>topics</code>
       </td>
       <td>&#160;</td>
@@ -515,7 +541,9 @@
           <span>www.golem.de</span>
         </a>
       </td>
-      <td>&#160;</td>
+      <td>
+        <code>images</code>
+      </td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -545,7 +573,9 @@
           <span>www.heise.de</span>
         </a>
       </td>
-      <td>&#160;</td>
+      <td>
+        <code>images</code>
+      </td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -560,7 +590,9 @@
           <span>www.hessenschau.de</span>
         </a>
       </td>
-      <td>&#160;</td>
+      <td>
+        <code>images</code>
+      </td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -575,7 +607,9 @@
           <span>www.jungewelt.de</span>
         </a>
       </td>
-      <td>&#160;</td>
+      <td>
+        <code>images</code>
+      </td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -591,6 +625,7 @@
         </a>
       </td>
       <td>
+        <code>images</code>
         <code>topics</code>
       </td>
       <td>&#160;</td>
@@ -607,7 +642,9 @@
           <span>krautreporter.de</span>
         </a>
       </td>
-      <td>&#160;</td>
+      <td>
+        <code>images</code>
+      </td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -622,7 +659,9 @@
           <span>www.mz.de</span>
         </a>
       </td>
-      <td>&#160;</td>
+      <td>
+        <code>images</code>
+      </td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -637,7 +676,9 @@
           <span>www.mdr.de</span>
         </a>
       </td>
-      <td>&#160;</td>
+      <td>
+        <code>images</code>
+      </td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -652,7 +693,9 @@
           <span>www.motorsport-magazin.com</span>
         </a>
       </td>
-      <td>&#160;</td>
+      <td>
+        <code>images</code>
+      </td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -668,6 +711,7 @@
         </a>
       </td>
       <td>
+        <code>images</code>
         <code>topics</code>
       </td>
       <td>&#160;</td>
@@ -684,7 +728,9 @@
           <span>www.n-tv.de</span>
         </a>
       </td>
-      <td>&#160;</td>
+      <td>
+        <code>images</code>
+      </td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -699,7 +745,9 @@
           <span>www.ndr.de</span>
         </a>
       </td>
-      <td>&#160;</td>
+      <td>
+        <code>images</code>
+      </td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -715,6 +763,7 @@
         </a>
       </td>
       <td>
+        <code>images</code>
         <code>topics</code>
       </td>
       <td>&#160;</td>
@@ -731,7 +780,9 @@
           <span>rp-online.de</span>
         </a>
       </td>
-      <td>&#160;</td>
+      <td>
+        <code>images</code>
+      </td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -746,7 +797,9 @@
           <span>www.ruhrnachrichten.de</span>
         </a>
       </td>
-      <td>&#160;</td>
+      <td>
+        <code>images</code>
+      </td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -761,7 +814,9 @@
           <span>www.spiegel.de</span>
         </a>
       </td>
-      <td>&#160;</td>
+      <td>
+        <code>images</code>
+      </td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -776,7 +831,9 @@
           <span>www.sportschau.de</span>
         </a>
       </td>
-      <td>&#160;</td>
+      <td>
+        <code>images</code>
+      </td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -791,7 +848,9 @@
           <span>www.stern.de</span>
         </a>
       </td>
-      <td>&#160;</td>
+      <td>
+        <code>images</code>
+      </td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -806,7 +865,9 @@
           <span>www.sueddeutsche.de</span>
         </a>
       </td>
-      <td>&#160;</td>
+      <td>
+        <code>images</code>
+      </td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -821,7 +882,9 @@
           <span>www.tagesschau.de</span>
         </a>
       </td>
-      <td>&#160;</td>
+      <td>
+        <code>images</code>
+      </td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -836,7 +899,9 @@
           <span>www.tagesspiegel.de</span>
         </a>
       </td>
-      <td>&#160;</td>
+      <td>
+        <code>images</code>
+      </td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -851,7 +916,9 @@
           <span>www.vogue.de</span>
         </a>
       </td>
-      <td>&#160;</td>
+      <td>
+        <code>images</code>
+      </td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -866,7 +933,9 @@
           <span>www.waz.de</span>
         </a>
       </td>
-      <td>&#160;</td>
+      <td>
+        <code>images</code>
+      </td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -881,7 +950,9 @@
           <span>www1.wdr.de</span>
         </a>
       </td>
-      <td>&#160;</td>
+      <td>
+        <code>images</code>
+      </td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -896,7 +967,9 @@
           <span>winfuture.de</span>
         </a>
       </td>
-      <td>&#160;</td>
+      <td>
+        <code>images</code>
+      </td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -912,6 +985,7 @@
         </a>
       </td>
       <td>
+        <code>images</code>
         <code>topics</code>
       </td>
       <td>&#160;</td>
@@ -928,7 +1002,9 @@
           <span>netzpolitik.org</span>
         </a>
       </td>
-      <td>&#160;</td>
+      <td>
+        <code>images</code>
+      </td>
       <td>&#160;</td>
     </tr>
   </tbody>
@@ -960,7 +1036,9 @@
           <span>fr.euronews.com</span>
         </a>
       </td>
-      <td>&#160;</td>
+      <td>
+        <code>images</code>
+      </td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -975,7 +1053,9 @@
           <span>www.lefigaro.fr</span>
         </a>
       </td>
-      <td>&#160;</td>
+      <td>
+        <code>images</code>
+      </td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -990,7 +1070,9 @@
           <span>www.lemonde.fr</span>
         </a>
       </td>
-      <td>&#160;</td>
+      <td>
+        <code>images</code>
+      </td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -1005,7 +1087,9 @@
           <span>www.lesechos.fr</span>
         </a>
       </td>
-      <td>&#160;</td>
+      <td>
+        <code>images</code>
+      </td>
       <td>&#160;</td>
     </tr>
   </tbody>
@@ -1037,7 +1121,9 @@
           <span>www.timesofindia.indiatimes.com</span>
         </a>
       </td>
-      <td>&#160;</td>
+      <td>
+        <code>images</code>
+      </td>
       <td>&#160;</td>
     </tr>
   </tbody>
@@ -1069,7 +1155,9 @@
           <span>www.lrt.lt</span>
         </a>
       </td>
-      <td>&#160;</td>
+      <td>
+        <code>images</code>
+      </td>
       <td>&#160;</td>
     </tr>
   </tbody>
@@ -1101,7 +1189,9 @@
           <span>www.malaymail.com</span>
         </a>
       </td>
-      <td>&#160;</td>
+      <td>
+        <code>images</code>
+      </td>
       <td>&#160;</td>
     </tr>
   </tbody>
@@ -1167,7 +1257,9 @@
           <span>www.db.no</span>
         </a>
       </td>
-      <td>&#160;</td>
+      <td>
+        <code>images</code>
+      </td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -1182,7 +1274,9 @@
           <span>www.nettavisen.no</span>
         </a>
       </td>
-      <td>&#160;</td>
+      <td>
+        <code>images</code>
+      </td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -1198,6 +1292,7 @@
         </a>
       </td>
       <td>
+        <code>images</code>
         <code>topics</code>
       </td>
       <td>&#160;</td>
@@ -1214,7 +1309,9 @@
           <span>www.vg.no</span>
         </a>
       </td>
-      <td>&#160;</td>
+      <td>
+        <code>images</code>
+      </td>
       <td>&#160;</td>
     </tr>
   </tbody>
@@ -1246,7 +1343,9 @@
           <span>www.haberturk.com</span>
         </a>
       </td>
-      <td>&#160;</td>
+      <td>
+        <code>images</code>
+      </td>
       <td>
         <code>description</code>
       </td>
@@ -1263,7 +1362,9 @@
           <span>www.ntv.com.tr</span>
         </a>
       </td>
-      <td>&#160;</td>
+      <td>
+        <code>images</code>
+      </td>
       <td>&#160;</td>
     </tr>
   </tbody>
@@ -1295,7 +1396,9 @@
           <span>www.express.co.uk</span>
         </a>
       </td>
-      <td>&#160;</td>
+      <td>
+        <code>images</code>
+      </td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -1310,7 +1413,9 @@
           <span>www.dailymail.co.uk</span>
         </a>
       </td>
-      <td>&#160;</td>
+      <td>
+        <code>images</code>
+      </td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -1325,7 +1430,9 @@
           <span>www.dailystar.co.uk</span>
         </a>
       </td>
-      <td>&#160;</td>
+      <td>
+        <code>images</code>
+      </td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -1340,7 +1447,9 @@
           <span>www.euronews.com</span>
         </a>
       </td>
-      <td>&#160;</td>
+      <td>
+        <code>images</code>
+      </td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -1355,7 +1464,9 @@
           <span>www.standard.co.uk</span>
         </a>
       </td>
-      <td>&#160;</td>
+      <td>
+        <code>images</code>
+      </td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -1370,7 +1481,9 @@
           <span>metro.co.uk</span>
         </a>
       </td>
-      <td>&#160;</td>
+      <td>
+        <code>images</code>
+      </td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -1385,7 +1498,9 @@
           <span>www.bbc.co.uk</span>
         </a>
       </td>
-      <td>&#160;</td>
+      <td>
+        <code>images</code>
+      </td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -1400,7 +1515,9 @@
           <span>www.theguardian.com</span>
         </a>
       </td>
-      <td>&#160;</td>
+      <td>
+        <code>images</code>
+      </td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -1415,7 +1532,9 @@
           <span>www.independent.co.uk</span>
         </a>
       </td>
-      <td>&#160;</td>
+      <td>
+        <code>images</code>
+      </td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -1430,7 +1549,9 @@
           <span>www.mirror.co.uk</span>
         </a>
       </td>
-      <td>&#160;</td>
+      <td>
+        <code>images</code>
+      </td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -1445,7 +1566,9 @@
           <span>www.thesun.co.uk</span>
         </a>
       </td>
-      <td>&#160;</td>
+      <td>
+        <code>images</code>
+      </td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -1460,7 +1583,9 @@
           <span>www.telegraph.co.uk</span>
         </a>
       </td>
-      <td>&#160;</td>
+      <td>
+        <code>images</code>
+      </td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -1475,7 +1600,9 @@
           <span>inews.co.uk</span>
         </a>
       </td>
-      <td>&#160;</td>
+      <td>
+        <code>images</code>
+      </td>
       <td>&#160;</td>
     </tr>
   </tbody>
@@ -1507,7 +1634,9 @@
           <span>apnews.com</span>
         </a>
       </td>
-      <td>&#160;</td>
+      <td>
+        <code>images</code>
+      </td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -1522,7 +1651,9 @@
           <span>www.businessinsider.com</span>
         </a>
       </td>
-      <td>&#160;</td>
+      <td>
+        <code>images</code>
+      </td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -1537,7 +1668,9 @@
           <span>www.cnbc.com</span>
         </a>
       </td>
-      <td>&#160;</td>
+      <td>
+        <code>images</code>
+      </td>
       <td>
         <code>key_points</code>
       </td>
@@ -1554,7 +1687,9 @@
           <span>www.foxnews.com</span>
         </a>
       </td>
-      <td>&#160;</td>
+      <td>
+        <code>images</code>
+      </td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -1570,6 +1705,7 @@
         </a>
       </td>
       <td>
+        <code>images</code>
         <code>topics</code>
       </td>
       <td>&#160;</td>
@@ -1588,7 +1724,9 @@
           <span>occupydemocrats.com</span>
         </a>
       </td>
-      <td>&#160;</td>
+      <td>
+        <code>images</code>
+      </td>
       <td>
         <code>description</code>
       </td>
@@ -1607,7 +1745,9 @@
           <span>www.reuters.com</span>
         </a>
       </td>
-      <td>&#160;</td>
+      <td>
+        <code>images</code>
+      </td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -1622,7 +1762,9 @@
           <span>www.rollingstone.com</span>
         </a>
       </td>
-      <td>&#160;</td>
+      <td>
+        <code>images</code>
+      </td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -1637,7 +1779,9 @@
           <span>techcrunch.com</span>
         </a>
       </td>
-      <td>&#160;</td>
+      <td>
+        <code>images</code>
+      </td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -1653,6 +1797,7 @@
         </a>
       </td>
       <td>
+        <code>images</code>
         <code>topics</code>
       </td>
       <td>&#160;</td>
@@ -1669,7 +1814,9 @@
           <span>theintercept.com</span>
         </a>
       </td>
-      <td>&#160;</td>
+      <td>
+        <code>images</code>
+      </td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -1684,7 +1831,9 @@
           <span>www.thenation.com</span>
         </a>
       </td>
-      <td>&#160;</td>
+      <td>
+        <code>images</code>
+      </td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -1699,7 +1848,9 @@
           <span>www.newyorker.com</span>
         </a>
       </td>
-      <td>&#160;</td>
+      <td>
+        <code>images</code>
+      </td>
       <td>
         <code>alternative_description</code>
         <code>alternative_title</code>
@@ -1719,7 +1870,9 @@
           <span>freebeacon.com</span>
         </a>
       </td>
-      <td>&#160;</td>
+      <td>
+        <code>images</code>
+      </td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -1737,6 +1890,7 @@
         </a>
       </td>
       <td>
+        <code>images</code>
         <code>topics</code>
       </td>
       <td>&#160;</td>
@@ -1753,7 +1907,9 @@
           <span>www.voanews.com</span>
         </a>
       </td>
-      <td>&#160;</td>
+      <td>
+        <code>images</code>
+      </td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -1771,6 +1927,7 @@
         </a>
       </td>
       <td>
+        <code>images</code>
         <code>topics</code>
       </td>
       <td>&#160;</td>
@@ -1787,7 +1944,9 @@
           <span>www.wired.com</span>
         </a>
       </td>
-      <td>&#160;</td>
+      <td>
+        <code>images</code>
+      </td>
       <td>&#160;</td>
     </tr>
   </tbody>
