@@ -10,5 +10,9 @@
   "ElPais_2024_10_15.html.gz": {
     "url": "https://elpais.com/internacional/2024-10-15/bruselas-sondea-la-apertura-de-centros-de-deportacion-fuera-de-la-union-europea.html",
     "crawl_date": "2024-10-15 17:43:35.457824"
+  },
+  "LaVanguardia_2024_10_15.html.gz": {
+    "url": "https://www.lavanguardia.com/economia/20241015/10022782/catalunya-dara-ayudas-jovenes-entrada-piso-limitara-precio-venta.html",
+    "crawl_date": "2024-10-15 20:46:17.929513"
   }
 }
