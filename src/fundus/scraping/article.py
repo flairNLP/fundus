@@ -7,7 +7,7 @@ import lxml.html
 from colorama import Fore, Style
 
 from fundus.logging import create_logger
-from fundus.parser import ArticleBody
+from fundus.parser import ArticleBody, Image
 from fundus.scraping.html import HTML
 from fundus.utils.serialization import JSONVal, is_jsonable
 
@@ -63,6 +63,10 @@ class Article:
     @property
     def free_access(self) -> bool:
         return self.__extraction__.get("free_access") or False
+
+    @property
+    def images(self) -> List[Image]:
+        return self.__extraction__.get("images") or []
 
     @property
     def publisher(self) -> str:
