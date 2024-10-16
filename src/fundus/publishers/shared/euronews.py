@@ -17,7 +17,7 @@ class EuronewsParser(ParserProxy):
             return self.precomputed.meta.get("og:title")
 
         @attribute
-        def body(self) -> ArticleBody:
+        def body(self) -> Optional[ArticleBody]:
             article_body = utility.extract_article_body_with_selector(
                 self.precomputed.doc,
                 summary_selector=self._summary_selector,
@@ -28,8 +28,7 @@ class EuronewsParser(ParserProxy):
 
         @attribute
         def authors(self) -> List[str]:
-            key_path = ["NewsArticle", "author", "name"]
-            author_string = self.precomputed.ld.get_value_by_key_path(key_path)
+            author_string = self.precomputed.ld.xpath_search("NewsArticle/author/name")
             return utility.generic_author_parsing(author_string)
 
         @attribute

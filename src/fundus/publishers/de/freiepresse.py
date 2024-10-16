@@ -19,7 +19,7 @@ class FreiePresseParser(ParserProxy):
         _subheadline_selector = CSSSelector("#artikel-content h2")
 
         @attribute
-        def body(self) -> ArticleBody:
+        def body(self) -> Optional[ArticleBody]:
             return extract_article_body_with_selector(
                 self.precomputed.doc,
                 paragraph_selector=self._paragraph_selector,
@@ -33,7 +33,7 @@ class FreiePresseParser(ParserProxy):
 
         @attribute
         def authors(self) -> List[str]:
-            return generic_author_parsing(self.precomputed.ld.get_value_by_key_path(["NewsArticle", "author"]))
+            return generic_author_parsing(self.precomputed.ld.xpath_search("NewsArticle/author"))
 
         @attribute
         def title(self) -> Optional[str]:

@@ -21,7 +21,7 @@ class RBB24Parser(ParserProxy):
         _date_selector = CSSSelector("div.lineinfo")
 
         @attribute
-        def body(self) -> ArticleBody:
+        def body(self) -> Optional[ArticleBody]:
             article_body = extract_article_body_with_selector(
                 self.precomputed.doc,
                 summary_selector=self._summary_selector,

@@ -18,7 +18,7 @@ class FrankfurterRundschauParser(ParserProxy):
         _subheadline_selector = CSSSelector("h2.id-StoryElement-crosshead")
 
         @attribute
-        def body(self) -> ArticleBody:
+        def body(self) -> Optional[ArticleBody]:
             return extract_article_body_with_selector(
                 self.precomputed.doc,
                 paragraph_selector=self._paragraph_selector,

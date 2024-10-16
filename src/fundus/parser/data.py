@@ -9,6 +9,7 @@ from typing import (
     Iterable,
     Iterator,
     List,
+    Literal,
     Optional,
     Sequence,
     Tuple,
@@ -22,9 +23,9 @@ import more_itertools
 import xmltodict
 from dict2xml import dict2xml
 from lxml.etree import XPath, tostring
-from typing_extensions import Self, TypeAlias
+from typing_extensions import Self, TypeAlias, deprecated
 
-from fundus.utils.serialization import replace_keys_in_nested_dict
+from fundus.utils.serialization import JSONVal, replace_keys_in_nested_dict
 
 LDMappingValue: TypeAlias = Union[List[Dict[str, Any]], Dict[str, Any]]
 
@@ -63,24 +64,27 @@ class LinkedDataMapping:
     def serialize(self) -> Dict[str, Any]:
         return {attribute: value for attribute, value in self.__dict__.items() if "__" not in attribute}
 
-    def add_ld(self, ld: Dict[str, Any], name: Optional[str] = None) -> None:
-        if ld_type := ld.get("@type", name):
-            if isinstance(ld_type, list):
-                if len(ld_type) == 1:
-                    ld_type = ld_type[0]
-                else:
-                    raise TypeError(f"Unable tp parse ld_type '{ld_type}' of type {list} with length != 1")
-            if value := self.__dict__.get(ld_type):
-                if not isinstance(value, list):
-                    self.__dict__[ld_type] = [value]
-                self.__dict__[ld_type].append(ld)
-            else:
-                self.__dict__[ld_type] = ld
+    def _add(self, ld: Dict[str, JSONVal], ld_type: str) -> None:
+        if value := self.__dict__.get(ld_type):
+            if not isinstance(value, list):
+                self.__dict__[ld_type] = [value]
+            self.__dict__[ld_type].append(ld)
         else:
-            if not self.__dict__.get(self.__UNKNOWN_TYPE__):
-                self.__dict__[self.__UNKNOWN_TYPE__] = []
-            self.__dict__[self.__UNKNOWN_TYPE__].append(ld)
+            self.__dict__[ld_type] = ld
 
+    def add_ld(self, ld: Dict[str, Any], name: Optional[str] = None) -> None:
+        if ld_type := (name or ld.get("@type")):
+            if isinstance(ld_type, str):
+                self._add(ld, ld_type)
+            elif isinstance(ld_type, list):
+                for t in ld_type:
+                    self._add(ld, t)
+            else:
+                raise NotImplementedError(f"Unexpected LD type {type(ld_type)}")
+        else:
+            self._add(ld, self.__UNKNOWN_TYPE__)
+
+    @deprecated("Use xpath_search() instead")
     def get_value_by_key_path(self, key_path: List[str], default: Any = None) -> Optional[Any]:
         """
         Works like get() except this one assumes a path is given as list of keys (str).
@@ -113,7 +117,15 @@ class LinkedDataMapping:
             self.__xml = lxml.etree.fromstring(xml)
         return self.__xml
 
-    def xpath_search(self, query: XPath) -> List[Any]:
+    @overload
+    def xpath_search(self, query: Union[XPath, str], scalar: Literal[False] = False) -> List[Any]:
+        ...
+
+    @overload
+    def xpath_search(self, query: Union[XPath, str], scalar: Literal[True] = True) -> Optional[Any]:
+        ...
+
+    def xpath_search(self, query: Union[XPath, str], scalar: bool = False):
         """Search through LD using XPath expressions
 
         Internally, the content of the LinkedDataMapping is converted to XML and then
@@ -142,11 +154,16 @@ class LinkedDataMapping:
         >> [value1]
 
         Args:
-            query: A XPath expression
+            query: A XPath expression either as string or XPath object.
+            scalar: If True, return an optional "scalar" value and raise a ValueError if there are more
+                than one result to return; if False, return a list of results. Defaults to False.
 
         Returns:
-            An ordered list of search results
+            An ordered list of search results or an optional "scalar" result
         """
+
+        if isinstance(query, str):
+            query = XPath(query)
 
         pattern = re.compile("|".join(map(re.escape, self.__xml_transformation_table__.values())))
 
@@ -156,7 +173,6 @@ class LinkedDataMapping:
                 for chunk in chain(
                     (n.text,),
                     chain(*((tostring(child, with_tail=False, encoding=str), child.tail) for child in n.getchildren())),
-                    (n.tail,),
                 )
                 if chunk
             )
@@ -174,7 +190,17 @@ class LinkedDataMapping:
             xml = f"<result{i}>" + node2string(node) + f"</result{i}>"
             results.update(replace_keys_in_nested_dict(xmltodict.parse(xml), to_original_characters))
 
-        return list(results.values())
+        values = list(results.values())
+
+        if scalar:
+            if not values:
+                return None
+            elif len(values) == 1:
+                return values.pop()
+            else:
+                raise ValueError(f"Got multiple values when expecting a single scalar value")
+        else:
+            return values
 
     def bf_search(self, key: str, depth: Optional[int] = None, default: Optional[_T] = None) -> Union[Any, _T]:
         """
