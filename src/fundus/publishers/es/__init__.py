@@ -6,7 +6,7 @@ from fundus.publishers.base_objects import Publisher, PublisherGroup
 from fundus.publishers.es.abc import ABCParser
 from fundus.publishers.es.el_mundo import ElMundoParser
 from fundus.publishers.es.el_pais import ElPaisParser
-from fundus.scraping.url import RSSFeed, Sitemap, NewsMap
+from fundus.scraping.url import NewsMap, RSSFeed, Sitemap
 
 
 class ES(metaclass=PublisherGroup):
