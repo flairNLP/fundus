@@ -20,7 +20,7 @@ class TheSunParser(ParserProxy):
         _sub_headline_selector = CSSSelector("div.article__content > h2.wp-block-heading")
 
         @attribute
-        def body(self) -> ArticleBody:
+        def body(self) -> Optional[ArticleBody]:
             return extract_article_body_with_selector(
                 self.precomputed.doc,
                 summary_selector=self._summary_selector,

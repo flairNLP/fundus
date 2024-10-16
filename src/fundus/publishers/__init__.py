@@ -8,8 +8,10 @@ from fundus.publishers.ca import CA
 from fundus.publishers.ch import CH
 from fundus.publishers.cn import CN
 from fundus.publishers.de import DE
+from fundus.publishers.es import ES
 from fundus.publishers.fr import FR
 from fundus.publishers.ind import IND
+from fundus.publishers.jp import JP
 from fundus.publishers.lt import LT
 from fundus.publishers.my import MY
 from fundus.publishers.na import NA
@@ -66,4 +68,6 @@ class PublisherCollection(metaclass=PublisherCollectionMeta):
     ind = IND
     no = NO
     ca = CA
+    es = ES
+    jp = JP
     tw = TW

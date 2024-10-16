@@ -23,7 +23,7 @@ class NDRParser(ParserProxy):
         _subheadline_selector = CSSSelector("article .modulepadding > h2")
 
         @attribute
-        def body(self) -> ArticleBody:
+        def body(self) -> Optional[ArticleBody]:
             return extract_article_body_with_selector(
                 self.precomputed.doc,
                 summary_selector=self._summary_selector,
