@@ -17,7 +17,7 @@ class EuronewsParser(ParserProxy):
             return self.precomputed.meta.get("og:title")
 
         @attribute
-        def body(self) -> ArticleBody:
+        def body(self) -> Optional[ArticleBody]:
             article_body = utility.extract_article_body_with_selector(
                 self.precomputed.doc,
                 summary_selector=self._summary_selector,

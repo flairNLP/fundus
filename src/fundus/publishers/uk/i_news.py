@@ -18,7 +18,7 @@ class INewsParser(ParserProxy):
         _paragraph_selector = CSSSelector("article div.article-content p")
 
         @attribute
-        def body(self) -> ArticleBody:
+        def body(self) -> Optional[ArticleBody]:
             body = extract_article_body_with_selector(
                 self.precomputed.doc,
                 summary_selector=self._summary_selector,

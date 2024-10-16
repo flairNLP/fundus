@@ -19,7 +19,7 @@ class ABCParser(ParserProxy):
         _summary_selector = XPath("//div[@class='voc-info-container']/h2[text()]")
 
         @attribute
-        def body(self) -> ArticleBody:
+        def body(self) -> Optional[ArticleBody]:
             return extract_article_body_with_selector(
                 self.precomputed.doc,
                 paragraph_selector=self._paragraph_selector,
