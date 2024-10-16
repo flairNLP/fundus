@@ -11,7 +11,10 @@ class JP(metaclass=PublisherGroup):
         domain="https://japannews.yomiuri.co.jp/",
         parser=TheJapanNewsParser,
         sources=[
-            Sitemap("https://japannews.yomiuri.co.jp/sitemap.xml"),
+            Sitemap(
+                "https://japannews.yomiuri.co.jp/sitemap.xml",
+                sitemap_filter=regex_filter(r"(sitemap-news|sitemap-root|category)"),
+            ),
             NewsMap("https://japannews.yomiuri.co.jp/sitemap-news.xml"),
         ],
     )
