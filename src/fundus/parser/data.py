@@ -25,7 +25,7 @@ from dict2xml import dict2xml
 from lxml.etree import XPath, tostring
 from typing_extensions import Self, TypeAlias, deprecated
 
-from fundus.utils.serialization import replace_keys_in_nested_dict
+from fundus.utils.serialization import JSONVal, replace_keys_in_nested_dict
 
 LDMappingValue: TypeAlias = Union[List[Dict[str, Any]], Dict[str, Any]]
 
@@ -64,23 +64,25 @@ class LinkedDataMapping:
     def serialize(self) -> Dict[str, Any]:
         return {attribute: value for attribute, value in self.__dict__.items() if "__" not in attribute}
 
-    def add_ld(self, ld: Dict[str, Any], name: Optional[str] = None) -> None:
-        if ld_type := ld.get("@type", name):
-            if isinstance(ld_type, list):
-                if len(ld_type) == 1:
-                    ld_type = ld_type[0]
-                else:
-                    raise TypeError(f"Unable tp parse ld_type '{ld_type}' of type {list} with length != 1")
-            if value := self.__dict__.get(ld_type):
-                if not isinstance(value, list):
-                    self.__dict__[ld_type] = [value]
-                self.__dict__[ld_type].append(ld)
-            else:
-                self.__dict__[ld_type] = ld
+    def _add(self, ld: Dict[str, JSONVal], ld_type: str) -> None:
+        if value := self.__dict__.get(ld_type):
+            if not isinstance(value, list):
+                self.__dict__[ld_type] = [value]
+            self.__dict__[ld_type].append(ld)
         else:
-            if not self.__dict__.get(self.__UNKNOWN_TYPE__):
-                self.__dict__[self.__UNKNOWN_TYPE__] = []
-            self.__dict__[self.__UNKNOWN_TYPE__].append(ld)
+            self.__dict__[ld_type] = ld
+
+    def add_ld(self, ld: Dict[str, Any], name: Optional[str] = None) -> None:
+        if ld_type := (name or ld.get("@type")):
+            if isinstance(ld_type, str):
+                self._add(ld, ld_type)
+            elif isinstance(ld_type, list):
+                for t in ld_type:
+                    self._add(ld, t)
+            else:
+                raise NotImplementedError(f"Unexpected LD type {type(ld_type)}")
+        else:
+            self._add(ld, self.__UNKNOWN_TYPE__)
 
     @deprecated("Use xpath_search() instead")
     def get_value_by_key_path(self, key_path: List[str], default: Any = None) -> Optional[Any]:
