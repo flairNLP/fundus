@@ -3,6 +3,7 @@ import datetime
 from dateutil.rrule import MONTHLY, rrule
 
 from fundus.publishers.base_objects import Publisher, PublisherGroup
+from fundus.publishers.es.el_mundo import ElMundoParser
 from fundus.publishers.es.el_pais import ElPaisParser
 from fundus.scraping.url import RSSFeed, Sitemap
 
@@ -18,5 +19,14 @@ class ES(metaclass=PublisherGroup):
             for d in reversed(
                 list(rrule(MONTHLY, dtstart=datetime.datetime(1976, 5, 1), until=datetime.datetime.now()))
             )
+        ],
+    )
+    ElMundo = Publisher(
+        name="El Mundo",
+        domain="https://www.elmundo.es/",
+        parser=ElMundoParser,
+        sources=[
+            RSSFeed("https://e00-elmundo.uecdn.es/elmundo/rss/portada.xml"),
+            RSSFeed("https://e00-elmundo.uecdn.es/elmundo/rss/espana.xml"),
         ],
     )
