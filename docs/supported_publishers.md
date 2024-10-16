@@ -1121,6 +1121,21 @@
       <td>&#160;</td>
       <td>&#160;</td>
     </tr>
+    <tr>
+      <td>
+        <code>YomiuriShimbun</code>
+      </td>
+      <td>
+        <div>Yomiuri Shimbun</div>
+      </td>
+      <td>
+        <a href="https://www.yomiuri.co.jp/">
+          <span>www.yomiuri.co.jp</span>
+        </a>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
   </tbody>
 </table>
 
