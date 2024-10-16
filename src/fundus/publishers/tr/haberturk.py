@@ -20,7 +20,7 @@ class HaberturkParser(ParserProxy):
         _subheadline_Selector = XPath("//article//h2[not(preceding-sibling::h1)]")
 
         @attribute
-        def body(self) -> ArticleBody:
+        def body(self) -> Optional[ArticleBody]:
             return extract_article_body_with_selector(
                 self.precomputed.doc,
                 paragraph_selector=self._paragraph_selector,

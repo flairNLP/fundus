@@ -23,7 +23,7 @@ class TheNamibianParser(ParserProxy):
         _author_selector = XPath("//Person/name")
 
         @attribute
-        def body(self) -> ArticleBody:
+        def body(self) -> Optional[ArticleBody]:
             return extract_article_body_with_selector(
                 self.precomputed.doc,
                 paragraph_selector=self._paragraph_selector,
@@ -51,7 +51,7 @@ class TheNamibianParser(ParserProxy):
         _summary_selector = XPath("//div[contains(@class, 'entry-content')]/p[(text() or strong) and position()=1]")
 
         @attribute
-        def body(self) -> ArticleBody:
+        def body(self) -> Optional[ArticleBody]:
             html = re.sub(r"(<br>)+", "<p>", self.precomputed.html)
             doc = lxml.html.document_fromstring(html)
             return extract_article_body_with_selector(

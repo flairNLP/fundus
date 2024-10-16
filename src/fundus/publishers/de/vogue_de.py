@@ -20,7 +20,7 @@ class VogueDEParser(ParserProxy):
         _summary_selector = XPath("//div[contains(@class, 'ContentHeaderDek')]")
 
         @attribute
-        def body(self) -> ArticleBody:
+        def body(self) -> Optional[ArticleBody]:
             return extract_article_body_with_selector(
                 self.precomputed.doc,
                 paragraph_selector=self._paragraph_selector,

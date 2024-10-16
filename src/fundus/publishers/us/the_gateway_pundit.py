@@ -21,7 +21,7 @@ class TheGatewayPunditParser(ParserProxy):
         )
 
         @attribute
-        def body(self) -> ArticleBody:
+        def body(self) -> Optional[ArticleBody]:
             return extract_article_body_with_selector(
                 self.precomputed.doc,
                 paragraph_selector=self._paragraph_selector,
@@ -29,7 +29,7 @@ class TheGatewayPunditParser(ParserProxy):
 
         @attribute
         def authors(self) -> List[str]:
-            return generic_author_parsing(self.precomputed.ld.get_value_by_key_path(["Article", "author"]))
+            return generic_author_parsing(self.precomputed.ld.xpath_search("Article/author"))
 
         @attribute
         def publishing_date(self) -> Optional[datetime]:

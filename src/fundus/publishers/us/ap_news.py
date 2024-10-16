@@ -25,7 +25,7 @@ class APNewsParser(ParserProxy):
         _topic_bloat_pattern: Pattern[str] = re.compile(r"state wire| news|^.{1}$", flags=re.IGNORECASE)
 
         @attribute
-        def body(self) -> ArticleBody:
+        def body(self) -> Optional[ArticleBody]:
             return extract_article_body_with_selector(
                 self.precomputed.doc,
                 paragraph_selector=self._paragraph_selector,
@@ -42,17 +42,17 @@ class APNewsParser(ParserProxy):
                 author_string = re.sub(r"^By ", "", author_string)
             except IndexError:
                 # Fallback to the generic author parsing from the linked data.
-                return generic_author_parsing(self.precomputed.ld.get_value_by_key_path(["NewsArticle", "author"]))
+                return generic_author_parsing(self.precomputed.ld.xpath_search("NewsArticle/author"))
 
             return generic_author_parsing(author_string)
 
         @attribute
         def publishing_date(self) -> Optional[datetime.datetime]:
-            return generic_date_parsing(self.precomputed.ld.get_value_by_key_path(["NewsArticle", "datePublished"]))
+            return generic_date_parsing(self.precomputed.ld.xpath_search("NewsArticle/datePublished", scalar=True))
 
         @attribute
         def title(self) -> Optional[str]:
-            return self.precomputed.ld.get_value_by_key_path(["NewsArticle", "headline"])
+            return self.precomputed.ld.xpath_search("NewsArticle/headline", scalar=True)
 
         @attribute
         def topics(self) -> List[str]:
