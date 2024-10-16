@@ -25,7 +25,7 @@ class TheMirrorParser(ParserProxy):
         )
 
         @attribute
-        def body(self) -> ArticleBody:
+        def body(self) -> Optional[ArticleBody]:
             body = extract_article_body_with_selector(
                 self.precomputed.doc,
                 summary_selector=self._summary_selector,

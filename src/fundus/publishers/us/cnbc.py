@@ -20,7 +20,7 @@ class CNBCParser(ParserProxy):
         _key_points_selector: CSSSelector = CSSSelector("div.RenderKeyPoints-list li")
 
         @attribute
-        def body(self) -> ArticleBody:
+        def body(self) -> Optional[ArticleBody]:
             body: ArticleBody = extract_article_body_with_selector(
                 self.precomputed.doc,
                 subheadline_selector=self._subheadline_selector,

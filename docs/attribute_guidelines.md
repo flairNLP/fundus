@@ -32,7 +32,7 @@ Those attributes will be validated with unit tests when used.
     <tr>
         <td>body</td>
         <td>An object of type `ArticleBody` representing the structural hierarchy of the article content.</td>
-        <td><code>ArticleBody</code></td>
+        <td><code>Optional[ArticleBody]</code></td>
         <td><code>extract_article_body_with_selector</code></td>
     </tr>
     <tr>
