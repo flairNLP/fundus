@@ -20,7 +20,7 @@ class BhaskarParser(ParserProxy):
         _topic_bloat_pattern: Pattern[str] = re.compile(r"news", flags=re.IGNORECASE)
 
         @attribute
-        def body(self) -> ArticleBody:
+        def body(self) -> Optional[ArticleBody]:
             return extract_article_body_with_selector(
                 doc=self.precomputed.doc,
                 paragraph_selector=self._paragraph_selector,

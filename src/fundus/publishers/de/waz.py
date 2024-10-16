@@ -23,7 +23,7 @@ class WAZParser(ParserProxy):
         _topics_selector = XPath("//div[@class='not-prose  mb-4 mx-5 font-sans']/ul/li")
 
         @attribute
-        def body(self) -> ArticleBody:
+        def body(self) -> Optional[ArticleBody]:
             return extract_article_body_with_selector(
                 self.precomputed.doc,
                 summary_selector=self._summary_selector,
