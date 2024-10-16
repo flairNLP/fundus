@@ -25,7 +25,7 @@ class APNewsParser(ParserProxy):
         _topic_bloat_pattern: Pattern[str] = re.compile(r"state wire| news|^.{1}$", flags=re.IGNORECASE)
 
         @attribute
-        def body(self) -> ArticleBody:
+        def body(self) -> Optional[ArticleBody]:
             return extract_article_body_with_selector(
                 self.precomputed.doc,
                 paragraph_selector=self._paragraph_selector,

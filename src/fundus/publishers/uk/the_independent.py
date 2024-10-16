@@ -17,7 +17,7 @@ class TheIndependentParser(ParserProxy):
         _paragraph_selector = CSSSelector("article div[id='main'] > p")
 
         @attribute
-        def body(self) -> ArticleBody:
+        def body(self) -> Optional[ArticleBody]:
             body = extract_article_body_with_selector(self.precomputed.doc, paragraph_selector=self._paragraph_selector)
             return body
 

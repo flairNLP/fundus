@@ -19,7 +19,7 @@ class OccupyDemocratsParser(ParserProxy):
         )
 
         @attribute
-        def body(self) -> ArticleBody:
+        def body(self) -> Optional[ArticleBody]:
             body: ArticleBody = extract_article_body_with_selector(
                 self.precomputed.doc,
                 paragraph_selector=self._paragraph_selector,
