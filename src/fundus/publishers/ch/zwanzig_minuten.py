@@ -18,7 +18,7 @@ class ZwanzigMinutenParser(ParserProxy):
         _paragraph_selector = XPath("//div[@class='Article_elementTextblockarray__WNyan']/p")
 
         @attribute
-        def body(self) -> ArticleBody:
+        def body(self) -> Optional[ArticleBody]:
             return extract_article_body_with_selector(
                 self.precomputed.doc,
                 summary_selector=self._summary_selector,
