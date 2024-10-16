@@ -16,7 +16,7 @@ class PostillonParser(ParserProxy):
         _postscript_selector = CSSSelector("div[id=post-body] > span")
 
         @attribute
-        def body(self) -> ArticleBody:
+        def body(self) -> Optional[ArticleBody]:
             return extract_article_body_with_selector(
                 self.precomputed.doc,
                 paragraph_selector=self._paragraph_selector,

@@ -18,7 +18,7 @@ class ZDFParser(ParserProxy):
         _subheadlines_selector = CSSSelector("h2.t1rbo974.hhhtovw")
 
         @attribute
-        def body(self) -> ArticleBody:
+        def body(self) -> Optional[ArticleBody]:
             return extract_article_body_with_selector(
                 self.precomputed.doc,
                 paragraph_selector=self._div_selector,
