@@ -52,6 +52,22 @@
         }
       ]
     },
+    "images": [
+      {
+        "urls": {
+          "600w": "https://img.sparknews.funkemedien.de/242348270/242348270_1715851663_v16_9_600.jpeg",
+          "1200w": "https://img.sparknews.funkemedien.de/242348270/242348270_1715851663_v16_9_1200.jpeg",
+          "1600w": "https://img.sparknews.funkemedien.de/242348270/242348270_1715851663_v16_9_1600.jpeg"
+        },
+        "is_cover": true,
+        "description": "Bereit für das «Jahrhundertkampf»: Tyson Fury (l) und Oleksandr Usyk.",
+        "caption": "Bereit für das «Jahrhundertkampf»: Tyson Fury (l) und Oleksandr Usyk.",
+        "authors": [
+          "Zac Goodwin/Press Association/dpa/Archiv"
+        ],
+        "position": 776
+      }
+    ],
     "publishing_date": "2024-05-16 09:26:10+00:00",
     "title": "Fury und Usyk kämpfen um Schwergewichts-Krone",
     "topics": [

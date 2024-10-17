@@ -76,6 +76,5 @@ class CBCNewsParser(ParserProxy):
                 caption_selector=XPath(
                     "./ancestor::figure//figcaption | ./ancestor::span[contains(@class,'mediaEmbed')]/span"
                 ),
-                similarity_threshold=0.9,
-                author_pattern=re.compile(r"\((?P<credits>.*?)\)$"),
+                author_selector=re.compile(r"\((?P<credits>.*?)\)$"),
             )

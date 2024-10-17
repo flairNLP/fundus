@@ -78,6 +78,5 @@ class BSZParser(ParserProxy):
                     "//div[@class='article-body']//p[not(not(text()) or @rel='author' or em[@class='print'])]"
                 ),
                 image_selector=XPath("//img[not(contains(@class, 'rounded-full'))]"),
-                author_pattern=re.compile(r"©(?P<credits>.*)"),
-                similarity_threshold=0.99,
+                author_selector=re.compile(r"©(?P<credits>.*)"),
             )

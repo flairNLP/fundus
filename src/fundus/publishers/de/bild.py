@@ -58,7 +58,7 @@ class BildParser(ParserProxy):
             return image_extraction(
                 doc=self.precomputed.doc,
                 paragraph_selector=self._paragraph_selector,
-                image_selector=XPath("//img[not(contains(@class, 'teaser') or contains(@class, 'author'))]"),
+                image_selector=XPath("//figure//img[not(contains(@class, 'teaser') or contains(@class, 'author'))]"),
                 caption_selector=XPath("./ancestor::figure//p[@class='fig__caption__text']"),
                 author_selector=XPath("./ancestor::figure//div[@class='fig__caption__meta']"),
             )

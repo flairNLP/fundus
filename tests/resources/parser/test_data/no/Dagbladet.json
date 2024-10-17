@@ -89,6 +89,44 @@
         }
       ]
     },
+    "images": [
+      {
+        "urls": {
+          "1x": "https://www.dagbladet.no/images/81343798.jpg?imageId=81343798&x=0&y=0&cropw=100&croph=100&width=993&height=552&compression=80"
+        },
+        "is_cover": true,
+        "description": "KNIV: Denne kniven ble ifølge Metropolitan Police brukt til de ulovlige kastreringene. Foto: Metropolitan Police",
+        "caption": "KNIV: Denne kniven ble ifølge Metropolitan Police brukt til de ulovlige kastreringene.",
+        "authors": [
+          "Metropolitan Police Vis mer"
+        ],
+        "position": 344
+      },
+      {
+        "urls": {
+          "1x": "https://www.dagbladet.no/images/78341581.jpg?imageId=78341581&x=0&y=7.3417721518987&cropw=97.643097643098&croph=89.367088607595&width=581&height=354&compression=80"
+        },
+        "is_cover": false,
+        "description": "DØMT: Nordmannen i 40-åra ble dømt i den sentrale straffesaksdomstolen i London, Old Bailey. Foto: AP",
+        "caption": "DØMT: Nordmannen i 40-åra ble dømt i den sentrale straffesaksdomstolen i London, Old Bailey.",
+        "authors": [
+          "AP Vis mer"
+        ],
+        "position": 417
+      },
+      {
+        "urls": {
+          "1x": "https://www.dagbladet.no/images/81345120.jpg?imageId=81345120&x=0&y=0&cropw=47.269763651182&croph=88.311688311688&width=581&height=545&compression=80"
+        },
+        "is_cover": false,
+        "description": "VIA NETT: Mannen livestreamet ifølge påtalemyndighetene de ulovlige operasjonene via dette nettstedet. Foto: Skjermdump / Way Back Machine",
+        "caption": "VIA NETT: Mannen livestreamet ifølge påtalemyndighetene de ulovlige operasjonene via dette nettstedet.",
+        "authors": [
+          "Skjermdump / Way Back Machine Vis mer"
+        ],
+        "position": 475
+      }
+    ],
     "publishing_date": "2024-05-09 11:26:41+00:00",
     "title": "Nordmann dømt til livstid",
     "topics": [

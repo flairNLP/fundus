@@ -48,5 +48,5 @@ class NRKParser(ParserProxy):
                 paragraph_selector=self._paragraph_selector,
                 author_selector=XPath("./ancestor::figure/figcaption/small"),
                 caption_selector=XPath("./ancestor::figure/figcaption/p"),
-                image_selector=XPath("//figure[@class='image widget rich']//img"),
+                upper_boundary_selector=CSSSelector("header.article-header"),
             )

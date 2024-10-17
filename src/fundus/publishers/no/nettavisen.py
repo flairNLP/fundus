@@ -54,16 +54,14 @@ class NettavisenParser(ParserProxy):
 
         @attribute
         def images(self) -> List[Image]:
+            author_pattern = r"(Foto:\s*).*$"
             return image_extraction(
                 doc=self.precomputed.doc,
                 paragraph_selector=self._paragraph_selector,
                 image_selector=XPath("//brick-image-v3 | //img"),
-                author_pattern=re.compile(r"Foto:(?P<credits>.*)"),
-                caption_selector=XPath(
-                    "./ancestor::div[contains(@class, 'image')]/div[contains(@class, 'caption')]/span[not(@class)]"
-                ),
+                caption_selector=XPath("./ancestor::div[contains(@class, 'image')]//span[1]"),
                 author_selector=XPath(
-                    "./ancestor::div[contains(@class, 'image')]/div[contains(@class, 'caption')]/span[@class]"
+                    f"re:match(./ancestor::div[contains(@class, 'image')]//span[2], '{author_pattern}')",
+                    namespaces={"re": "http://exslt.org/regular-expressions"},
                 ),
-                similarity_threshold=0.99,
             )

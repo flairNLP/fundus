@@ -27,6 +27,33 @@
         }
       ]
     },
+    "images": [
+      {
+        "urls": {
+          "64w": "https://berliner-zeitung.imgix.net/2023/04/28/e02aeb7d-6047-473e-b7ea-d3bd7779454f.jpeg?auto=format&fit=max&w=64&auto=compress",
+          "96w": "https://berliner-zeitung.imgix.net/2023/04/28/e02aeb7d-6047-473e-b7ea-d3bd7779454f.jpeg?auto=format&fit=max&w=96&auto=compress",
+          "128w": "https://berliner-zeitung.imgix.net/2023/04/28/e02aeb7d-6047-473e-b7ea-d3bd7779454f.jpeg?auto=format&fit=max&w=128&auto=compress",
+          "192w": "https://berliner-zeitung.imgix.net/2023/04/28/e02aeb7d-6047-473e-b7ea-d3bd7779454f.jpeg?auto=format&fit=max&w=192&auto=compress",
+          "256w": "https://berliner-zeitung.imgix.net/2023/04/28/e02aeb7d-6047-473e-b7ea-d3bd7779454f.jpeg?auto=format&fit=max&w=256&auto=compress",
+          "353w": "https://berliner-zeitung.imgix.net/2023/04/28/e02aeb7d-6047-473e-b7ea-d3bd7779454f.jpeg?auto=format&fit=max&w=353&auto=compress",
+          "470w": "https://berliner-zeitung.imgix.net/2023/04/28/e02aeb7d-6047-473e-b7ea-d3bd7779454f.jpeg?auto=format&fit=max&w=470&auto=compress",
+          "640w": "https://berliner-zeitung.imgix.net/2023/04/28/e02aeb7d-6047-473e-b7ea-d3bd7779454f.jpeg?auto=format&fit=max&w=640&auto=compress",
+          "705w": "https://berliner-zeitung.imgix.net/2023/04/28/e02aeb7d-6047-473e-b7ea-d3bd7779454f.jpeg?auto=format&fit=max&w=705&auto=compress",
+          "940w": "https://berliner-zeitung.imgix.net/2023/04/28/e02aeb7d-6047-473e-b7ea-d3bd7779454f.jpeg?auto=format&fit=max&w=940&auto=compress",
+          "1080w": "https://berliner-zeitung.imgix.net/2023/04/28/e02aeb7d-6047-473e-b7ea-d3bd7779454f.jpeg?auto=format&fit=max&w=1080&auto=compress",
+          "1240w": "https://berliner-zeitung.imgix.net/2023/04/28/e02aeb7d-6047-473e-b7ea-d3bd7779454f.jpeg?auto=format&fit=max&w=1240&auto=compress",
+          "1410w": "https://berliner-zeitung.imgix.net/2023/04/28/e02aeb7d-6047-473e-b7ea-d3bd7779454f.jpeg?auto=format&fit=max&w=1410&auto=compress",
+          "1880w": "https://berliner-zeitung.imgix.net/2023/04/28/e02aeb7d-6047-473e-b7ea-d3bd7779454f.jpeg?auto=format&fit=max&w=1880&auto=compress"
+        },
+        "is_cover": true,
+        "description": "Eingefrorenes Sperma in einer Klinik.",
+        "caption": "Eingefrorenes Sperma in einer Klinik.",
+        "authors": [
+          "Friso Gentsch/dpa"
+        ],
+        "position": 230
+      }
+    ],
     "publishing_date": "2023-04-28 17:52:31.847000+00:00",
     "title": "550 Kinder gezeugt: Gericht stoppt übereifrigen Samenspender",
     "topics": [

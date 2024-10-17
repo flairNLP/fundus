@@ -64,6 +64,5 @@ class BusinessInsiderDEParser(ParserProxy):
             return image_extraction(
                 doc=self.precomputed.doc,
                 paragraph_selector=self._paragraph_selector,
-                similarity_threshold=0.95,
                 image_selector=XPath("//img[not(contains(@class, 'size-thumbnail-square'))]"),
             )

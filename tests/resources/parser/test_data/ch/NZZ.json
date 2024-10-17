@@ -142,6 +142,53 @@
         }
       ]
     },
+    "images": [
+      {
+        "urls": {
+          "327w": "https://img.nzz.ch/2024/07/18/1f69e1dc-d5e8-47fc-ae5f-d9c0d12a528d.jpeg?width=327&height=204&fit=bounds&quality=75&auto=webp&crop=2859,1787,x0,y0",
+          "654w": "https://img.nzz.ch/2024/07/18/1f69e1dc-d5e8-47fc-ae5f-d9c0d12a528d.jpeg?width=654&height=409&fit=bounds&quality=75&auto=webp&crop=2859,1787,x0,y0",
+          "680w": "https://img.nzz.ch/2024/07/18/1f69e1dc-d5e8-47fc-ae5f-d9c0d12a528d.jpeg?width=680&height=425&fit=bounds&quality=75&auto=webp&crop=2859,1787,x0,y0",
+          "1360w": "https://img.nzz.ch/2024/07/18/1f69e1dc-d5e8-47fc-ae5f-d9c0d12a528d.jpeg?width=1360&height=850&fit=bounds&quality=75&auto=webp&crop=2859,1787,x0,y0"
+        },
+        "is_cover": false,
+        "description": "Der Hafen vor der Küste des Gazastreifens war seit Mai im Betrieb und musste mehrmals repariert werden.",
+        "caption": "Der Hafen vor der Küste des Gazastreifens war seit Mai im Betrieb und musste mehrmals repariert werden.",
+        "authors": [
+          "AP"
+        ],
+        "position": 279
+      },
+      {
+        "urls": {
+          "327w": "https://img.nzz.ch/2024/07/17/fb23cc62-7286-4a26-860b-b43ee85f587d.jpeg?width=327&height=218&fit=bounds&quality=75&auto=webp&crop=6604,4403,x0,y0",
+          "654w": "https://img.nzz.ch/2024/07/17/fb23cc62-7286-4a26-860b-b43ee85f587d.jpeg?width=654&height=436&fit=bounds&quality=75&auto=webp&crop=6604,4403,x0,y0",
+          "680w": "https://img.nzz.ch/2024/07/17/fb23cc62-7286-4a26-860b-b43ee85f587d.jpeg?width=680&height=453&fit=bounds&quality=75&auto=webp&crop=6604,4403,x0,y0",
+          "1360w": "https://img.nzz.ch/2024/07/17/fb23cc62-7286-4a26-860b-b43ee85f587d.jpeg?width=1360&height=907&fit=bounds&quality=75&auto=webp&crop=6604,4403,x0,y0"
+        },
+        "is_cover": false,
+        "description": "Fahrzeuge der israelischen Armee im Gazastreifen bei Rafah. Aufnahme vom 3. Juli.",
+        "caption": "Fahrzeuge der israelischen Armee im Gazastreifen bei Rafah. Aufnahme vom 3. Juli.",
+        "authors": [
+          "Ohad Zwigenberg / Pool via Reuters"
+        ],
+        "position": 294
+      },
+      {
+        "urls": {
+          "327w": "https://img.nzz.ch/2024/07/16/b95b1cd8-b891-45cf-9e2e-a676ca2e43b2.jpeg?width=327&height=218&fit=bounds&quality=75&auto=webp&crop=4551,3034,x0,y0",
+          "654w": "https://img.nzz.ch/2024/07/16/b95b1cd8-b891-45cf-9e2e-a676ca2e43b2.jpeg?width=654&height=436&fit=bounds&quality=75&auto=webp&crop=4551,3034,x0,y0",
+          "680w": "https://img.nzz.ch/2024/07/16/b95b1cd8-b891-45cf-9e2e-a676ca2e43b2.jpeg?width=680&height=453&fit=bounds&quality=75&auto=webp&crop=4551,3034,x0,y0",
+          "1360w": "https://img.nzz.ch/2024/07/16/b95b1cd8-b891-45cf-9e2e-a676ca2e43b2.jpeg?width=1360&height=907&fit=bounds&quality=75&auto=webp&crop=4551,3034,x0,y0"
+        },
+        "is_cover": false,
+        "description": "Ultraorthodoxe protestierten in Israel nach dem Urteil des höchsten Gerichts, wonach die Wehrpflicht auch für sie gelten muss.",
+        "caption": "Ultraorthodoxe protestierten in Israel nach dem Urteil des höchsten Gerichts, wonach die Wehrpflicht auch für sie gelten muss.",
+        "authors": [
+          "Ammar Awad / Reuters"
+        ],
+        "position": 331
+      }
+    ],
     "publishing_date": "2023-10-07 09:53:36+02:00",
     "title": "Israel und Gaza: News und Entwicklungen im Nahostkonflikt"
   }

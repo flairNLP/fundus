@@ -66,9 +66,5 @@ class NationalPostParser(ParserProxy):
                 doc=self.precomputed.doc,
                 paragraph_selector=self._paragraph_selector,
                 upper_boundary_selector=XPath("//div[@class='article-header__detail']/figure"),
-                image_selector=XPath(
-                    "//*[not(contains(@class, 'more-topic') "
-                    "or contains(@class, 'newsletter') "
-                    "or contains(@class, 'col-xs-12'))]/img"
-                ),
+                lower_boundary_selector=CSSSelector("section.article-delimiter"),
             )

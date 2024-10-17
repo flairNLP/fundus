@@ -52,6 +52,233 @@
         }
       ]
     },
+    "images": [
+      {
+        "urls": {
+          "600w": "https://img.sparknews.funkemedien.de/242244962/242244962_1714738228_v16_9_600.jpeg",
+          "1200w": "https://img.sparknews.funkemedien.de/242244962/242244962_1714738228_v16_9_1200.jpeg",
+          "1600w": "https://img.sparknews.funkemedien.de/242244962/242244962_1714738228_v16_9_1600.jpeg"
+        },
+        "is_cover": true,
+        "description": "Kräfte der Berliner Feuerwehr sind in Berlin-Lichterfelde bei einem Brand im Einsatz.",
+        "caption": "Kräfte der Berliner Feuerwehr sind in Berlin-Lichterfelde bei einem Brand im Einsatz.",
+        "authors": [
+          "DPA Images",
+          "Christoph Soeder"
+        ],
+        "position": 907
+      },
+      {
+        "urls": {
+          "600w": "https://img.sparknews.funkemedien.de/242244836/242244836_1714737685_v16_9_600.jpeg",
+          "1200w": "https://img.sparknews.funkemedien.de/242244836/242244836_1714737685_v16_9_1200.jpeg",
+          "1600w": "https://img.sparknews.funkemedien.de/242244836/242244836_1714737685_v16_9_1600.jpeg"
+        },
+        "is_cover": false,
+        "description": "Eine dunkle Rauchwolke zieht über Wohnhäuser.",
+        "caption": "Eine dunkle Rauchwolke zieht über Wohnhäuser.",
+        "authors": [
+          "Anett Seidler",
+          "Anett Seidler"
+        ],
+        "position": 926
+      },
+      {
+        "urls": {
+          "600w": "https://img.sparknews.funkemedien.de/242246062/242246062_1714742579_v16_9_600.jpeg",
+          "1200w": "https://img.sparknews.funkemedien.de/242246062/242246062_1714742579_v16_9_1200.jpeg",
+          "1600w": "https://img.sparknews.funkemedien.de/242246062/242246062_1714742579_v16_9_1600.jpeg"
+        },
+        "is_cover": false,
+        "description": "Feuerwehrleute auf einer Drehleiter versuchen, das Feuer zu bekämpfen.",
+        "caption": "Feuerwehrleute auf einer Drehleiter versuchen, das Feuer zu bekämpfen.",
+        "authors": [
+          "imago/Marius Schwarz",
+          "IMAGO/Marius Schwarz"
+        ],
+        "position": 958
+      },
+      {
+        "urls": {
+          "600w": "https://img.sparknews.funkemedien.de/242246058/242246058_1714742579_v16_9_600.jpeg",
+          "1200w": "https://img.sparknews.funkemedien.de/242246058/242246058_1714742579_v16_9_1200.jpeg",
+          "1600w": "https://img.sparknews.funkemedien.de/242246058/242246058_1714742579_v16_9_1600.jpeg"
+        },
+        "is_cover": false,
+        "description": "Dunkler Rauch kommt aus dem Gebäude. Teile der Halle stürzten ein.",
+        "caption": "Dunkler Rauch kommt aus dem Gebäude. Teile der Halle stürzten ein.",
+        "authors": [
+          "imago/Marius Schwarz",
+          "IMAGO/Marius Schwarz"
+        ],
+        "position": 968
+      },
+      {
+        "urls": {
+          "600w": "https://img.sparknews.funkemedien.de/242246060/242246060_1714742579_v16_9_600.jpeg",
+          "1200w": "https://img.sparknews.funkemedien.de/242246060/242246060_1714742579_v16_9_1200.jpeg",
+          "1600w": "https://img.sparknews.funkemedien.de/242246060/242246060_1714742579_v16_9_1600.jpeg"
+        },
+        "is_cover": false,
+        "description": "Es brennt in einem Gebäude der Firma „Diehl Metal Applications“.",
+        "caption": "Es brennt in einem Gebäude der Firma „Diehl Metal Applications“.",
+        "authors": [
+          "imago/Marius Schwarz",
+          "IMAGO/Marius Schwarz"
+        ],
+        "position": 978
+      },
+      {
+        "urls": {
+          "600w": "https://img.sparknews.funkemedien.de/242246064/242246064_1714742579_v16_9_600.jpeg",
+          "1200w": "https://img.sparknews.funkemedien.de/242246064/242246064_1714742579_v16_9_1200.jpeg",
+          "1600w": "https://img.sparknews.funkemedien.de/242246064/242246064_1714742579_v16_9_1600.jpeg"
+        },
+        "is_cover": false,
+        "description": "Die Berliner Feuerwehr bekommt auch Unterstützung von der Feuerwehr aus Schönefeld.",
+        "caption": "Die Berliner Feuerwehr bekommt auch Unterstützung von der Feuerwehr aus Schönefeld.",
+        "authors": [
+          "imago/Marius Schwarz",
+          "IMAGO/Marius Schwarz"
+        ],
+        "position": 988
+      },
+      {
+        "urls": {
+          "600w": "https://img.sparknews.funkemedien.de/242245014/242245014_1714738430_v16_9_600.jpeg",
+          "1200w": "https://img.sparknews.funkemedien.de/242245014/242245014_1714738430_v16_9_1200.jpeg",
+          "1600w": "https://img.sparknews.funkemedien.de/242245014/242245014_1714738430_v16_9_1600.jpeg"
+        },
+        "is_cover": false,
+        "description": "Rund um den Brandort gibt es Sperrungen.",
+        "caption": "Rund um den Brandort gibt es Sperrungen.",
+        "authors": [
+          "DPA Images",
+          "Christoph Soeder"
+        ],
+        "position": 998
+      },
+      {
+        "urls": {
+          "600w": "https://img.sparknews.funkemedien.de/242245012/242245012_1714738430_v16_9_600.jpeg",
+          "1200w": "https://img.sparknews.funkemedien.de/242245012/242245012_1714738430_v16_9_1200.jpeg",
+          "1600w": "https://img.sparknews.funkemedien.de/242245012/242245012_1714738430_v16_9_1600.jpeg"
+        },
+        "is_cover": false,
+        "description": "Der Feuerwehreinsatz soll noch den ganzen Tag andauern.",
+        "caption": "Der Feuerwehreinsatz soll noch den ganzen Tag andauern.",
+        "authors": [
+          "DPA Images",
+          "Christoph Soeder"
+        ],
+        "position": 1008
+      },
+      {
+        "urls": {
+          "600w": "https://img.sparknews.funkemedien.de/242244954/242244954_1714738228_v16_9_600.jpeg",
+          "1200w": "https://img.sparknews.funkemedien.de/242244954/242244954_1714738228_v16_9_1200.jpeg",
+          "1600w": "https://img.sparknews.funkemedien.de/242244954/242244954_1714738228_v16_9_1600.jpeg"
+        },
+        "is_cover": false,
+        "description": "Flammen und dichter Qualm schlagen bei einem Brand in Berlin-Lichterfelde aus einem Gebäude.",
+        "caption": "Flammen und dichter Qualm schlagen bei einem Brand in Berlin-Lichterfelde aus einem Gebäude.",
+        "authors": [
+          "DPA Images",
+          "Christoph Soeder"
+        ],
+        "position": 1018
+      },
+      {
+        "urls": {
+          "600w": "https://img.sparknews.funkemedien.de/242244952/242244952_1714738228_v16_9_600.jpeg",
+          "1200w": "https://img.sparknews.funkemedien.de/242244952/242244952_1714738228_v16_9_1200.jpeg",
+          "1600w": "https://img.sparknews.funkemedien.de/242244952/242244952_1714738228_v16_9_1600.jpeg"
+        },
+        "is_cover": false,
+        "description": "Eine Drohne der Berliner Feuerwehr ist im Einsatz.",
+        "caption": "Eine Drohne der Berliner Feuerwehr ist im Einsatz.",
+        "authors": [
+          "DPA Images",
+          "Christoph Soeder"
+        ],
+        "position": 1028
+      },
+      {
+        "urls": {
+          "600w": "https://img.sparknews.funkemedien.de/242244962/242244962_1714738228_v16_9_600.jpeg",
+          "1200w": "https://img.sparknews.funkemedien.de/242244962/242244962_1714738228_v16_9_1200.jpeg",
+          "1600w": "https://img.sparknews.funkemedien.de/242244962/242244962_1714738228_v16_9_1600.jpeg"
+        },
+        "is_cover": false,
+        "description": "Eine dunkle Rauchwolke steigt in den Himmel.",
+        "caption": "Eine dunkle Rauchwolke steigt in den Himmel.",
+        "authors": [
+          "DPA Images",
+          "Christoph Soeder"
+        ],
+        "position": 1038
+      },
+      {
+        "urls": {
+          "600w": "https://img.sparknews.funkemedien.de/242244956/242244956_1714738228_v16_9_600.jpeg",
+          "1200w": "https://img.sparknews.funkemedien.de/242244956/242244956_1714738228_v16_9_1200.jpeg",
+          "1600w": "https://img.sparknews.funkemedien.de/242244956/242244956_1714738228_v16_9_1600.jpeg"
+        },
+        "is_cover": false,
+        "description": "Über Warnapps wird vor der giftigen Rauchwolke gewarnt.",
+        "caption": "Über Warnapps wird vor der giftigen Rauchwolke gewarnt.",
+        "authors": [
+          "DPA Images",
+          "Christoph Soeder"
+        ],
+        "position": 1048
+      },
+      {
+        "urls": {
+          "600w": "https://img.sparknews.funkemedien.de/242244964/242244964_1714738228_v16_9_600.jpeg",
+          "1200w": "https://img.sparknews.funkemedien.de/242244964/242244964_1714738228_v16_9_1200.jpeg",
+          "1600w": "https://img.sparknews.funkemedien.de/242244964/242244964_1714738228_v16_9_1600.jpeg"
+        },
+        "is_cover": false,
+        "description": "Laut Feuerwehrangaben zieht die Rauchwolke nach Norden ab.",
+        "caption": "Laut Feuerwehrangaben zieht die Rauchwolke nach Norden ab.",
+        "authors": [
+          "DPA Images",
+          "Christoph Soeder"
+        ],
+        "position": 1058
+      },
+      {
+        "urls": {
+          "600w": "https://img.sparknews.funkemedien.de/242244958/242244958_1714738228_v16_9_600.jpeg",
+          "1200w": "https://img.sparknews.funkemedien.de/242244958/242244958_1714738228_v16_9_1200.jpeg",
+          "1600w": "https://img.sparknews.funkemedien.de/242244958/242244958_1714738228_v16_9_1600.jpeg"
+        },
+        "is_cover": false,
+        "description": "Rund 170 Feuerwehrleute sind vor Ort.",
+        "caption": "Rund 170 Feuerwehrleute sind vor Ort.",
+        "authors": [
+          "DPA Images",
+          "Christoph Soeder"
+        ],
+        "position": 1068
+      },
+      {
+        "urls": {
+          "600w": "https://img.sparknews.funkemedien.de/242245186/242245186_1714739019_v16_9_600.jpeg",
+          "1200w": "https://img.sparknews.funkemedien.de/242245186/242245186_1714739019_v16_9_1200.jpeg",
+          "1600w": "https://img.sparknews.funkemedien.de/242245186/242245186_1714739019_v16_9_1600.jpeg"
+        },
+        "is_cover": false,
+        "description": "Die Karte zeigt die Ausbreitung der giftigen Rauchwolke.",
+        "caption": "Die Karte zeigt die Ausbreitung der giftigen Rauchwolke.",
+        "authors": [
+          "Berliner Morgenpost Infografik/OSM",
+          "C. Schlippes /Berliner Morgenpost Infografik OSM Datawrapper"
+        ],
+        "position": 1106
+      }
+    ],
     "publishing_date": "2024-05-03 14:24:00+00:00",
     "title": "Feuer in Berlin-Lichterfelde: Warnung vor giftigen Brandgasen – „Extreme Gefahr“",
     "topics": [
