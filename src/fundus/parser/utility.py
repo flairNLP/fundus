@@ -305,7 +305,7 @@ def generic_author_parsing(
         value: An input value representing author(s) which get parsed based on type.
         split_on: Only relevant for type(<value>) = str. If set, split <value> on <split_on>,
             else (default) split <value> on common delimiters.
-        normalize: If True, normalize every autor with normalize_whitespace(). Defaults to True
+        normalize: If True, normalize every author with normalize_whitespace(). Defaults to True
 
     Returns:
         A parsed and striped list of authors
