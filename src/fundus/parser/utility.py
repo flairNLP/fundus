@@ -453,7 +453,7 @@ def parse_urls_from_image(node: lxml.html.HtmlElement) -> Optional[Dict[str, str
         return None
 
 
-def parse_image_node(
+def parse_image_nodes(
     image_nodes: List[IndexedImageNode],
     caption_selector: XPath,
     alt_selector: XPath,
@@ -463,7 +463,7 @@ def parse_image_node(
     """Extract urls, caption, description and authors from a list of <img> nodes
 
     Args:
-        image_nodes: Indexed <img> nodes to parse
+        image_nodes: Indexed <img> nodes to parse.
         caption_selector: Selector selecting the caption of an image. Defaults to selecting the figcaption element.
         alt_selector: Selector selecting the descriptive text of an image. Defaults to selecting alt value.
         author_selector: Selector selecting the credits for an image. Defaults to selecting an arbitrary child of
@@ -479,6 +479,7 @@ def parse_image_node(
         return " ".join(generic_nodes_to_text(nodes, normalize=True)) or None
 
     for position, node, is_cover in image_nodes:
+        # parse URLs
         urls = {}
         if (parent := node.getparent()) is not None and parent.tag == "picture":
             for source in parent.xpath("./source"):
@@ -499,6 +500,7 @@ def parse_image_node(
                 authors = [match.group("credits")]
                 caption = re.sub(author_selector, "", caption).strip() or None
         else:
+            # author is selectable as node
             if author_nodes := author_selector(node):
                 authors = generic_nodes_to_text(author_nodes, normalize=True)
         authors = image_author_parsing(authors, author_filter)
@@ -595,7 +597,7 @@ def image_extraction(
     ]
 
     images = list(
-        parse_image_node(
+        parse_image_nodes(
             image_nodes=image_nodes,
             caption_selector=caption_selector,
             alt_selector=alt_selector,

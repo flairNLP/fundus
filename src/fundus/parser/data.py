@@ -295,7 +295,6 @@ class Image:
     position: int
 
     def __post_init__(self):
-        pass
         for url in self.urls.values():
             if not validators.url(url):
                 raise ValueError(f"url {url} is not a valid URL")
