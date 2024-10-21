@@ -1,6 +1,6 @@
 import datetime
 import re
-from typing import List, Optional, Pattern
+from typing import List, Optional, Pattern, Union, Dict, Any
 
 from lxml.etree import XPath
 
@@ -57,8 +57,11 @@ class BSZParser(ParserProxy):
         @attribute
         def authors(self) -> List[str]:
             authors = []
-            for author in self.precomputed.ld.bf_search("author", default=[]):
-                name_string = author.get("name")
+            author_selection: Union[List[Dict[str, Any]], Dict[str, Any]]
+            if isinstance(author_selection := self.precomputed.ld.bf_search("author", default=[]), dict):
+                author_selection = [author_selection]
+            for author in author_selection:
+                name_string: str = author.get("name", "")
                 authors.extend(re.split(r"und|,", name_string))
             return apply_substitution_pattern_over_list(
                 [author.strip() for author in authors], self._author_substitution_pattern
