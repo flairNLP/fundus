@@ -1,6 +1,6 @@
 import datetime
 import re
-from typing import List, Optional, Pattern, Union, Dict, Any
+from typing import Any, Dict, List, Optional, Pattern, Union
 
 from lxml.etree import XPath
 
@@ -15,7 +15,7 @@ from fundus.parser.utility import (
 
 class BSZParser(ParserProxy):
     class V1(BaseParser):
-        _author_substitution_pattern: Pattern[str] = re.compile(r"FUNKE Mediengruppe")
+        _author_substitution_pattern: Pattern[str] = re.compile(r"FUNKE Mediengruppe|.*dpa(:|-infocom).*|^red$")
         _paragraph_selector = XPath(
             "//div[@class='article-body']//p[not(not(text()) or @rel='author' or em[@class='print'] or contains(@class, 'font-sans'))]"
         )
