@@ -14,7 +14,10 @@ from fundus.parser.utility import (
 
 class TaipeiTimesParser(ParserProxy):
     class V1(BaseParser):
-        _paragraph_selector = XPath("//div[@class='archives']/p")
+        _paragraph_selector = XPath(
+            r"//div[@class='archives']/p[not(re:test(text(), '(?i)^（by.*）\s*$'))]",
+            namespaces={"re": "http://exslt.org/regular-expressions"},
+        )
         _summary_selector = XPath("//div[@class='archives']/h2")
         _author_selector = XPath("//div[@class='archives']//div[@class='name']/text()")
 
@@ -32,8 +35,10 @@ class TaipeiTimesParser(ParserProxy):
             if not author_selection:
                 return []
             else:
-                selection = re.sub(r"(?i)(^by\s*|/.*)", "", author_selection[0])
-            return [author.strip() for author in selection.split(" and ")]
+                selection = re.sub(
+                    r"(?is)(^by|/.*|staff reporter|(,?\s*with\s*)?staff writer.*)", "", author_selection[0]
+                )
+            return generic_author_parsing(selection, split_on=[r"\s+and\s+"])
 
         @attribute
         def publishing_date(self) -> Optional[datetime.datetime]:
