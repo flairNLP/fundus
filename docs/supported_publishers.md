@@ -227,6 +227,23 @@
       </td>
       <td>&#160;</td>
     </tr>
+    <tr>
+      <td>
+        <code>ZwanzigMinuten</code>
+      </td>
+      <td>
+        <div>Zwanzig Minuten</div>
+      </td>
+      <td>
+        <a href="https://www.20min.ch/">
+          <span>www.20min.ch</span>
+        </a>
+      </td>
+      <td>
+        <code>topics</code>
+      </td>
+      <td>&#160;</td>
+    </tr>
   </tbody>
 </table>
 
