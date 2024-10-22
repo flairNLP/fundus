@@ -7,10 +7,27 @@ on:
   release:
     types:
       - released
-
   workflow_dispatch:
 
 jobs:
+
+  permission-check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Guard `workflow_dispatch`
+        if: github.event_name == 'workflow_dispatch'
+        id: check-admin
+        run: |
+          RESPONSE=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            https://api.github.com/repos/${{ github.repository }}/collaborators/${{ github.actor }}/permission)
+          
+          PERMISSION=$(echo "$RESPONSE" | jq -r '.permission')
+          
+          if [[ "$PERMISSION" != "admin" ]]; then
+            echo "User ${{ github.actor }} does not have admin rights."
+            exit 1
+          fi
 
   test:
     name: Test the latest release commit
@@ -25,6 +42,7 @@ jobs:
     needs:
       - test
       - lint
+      - permission-check
     runs-on: ubuntu-latest
 
     steps:
