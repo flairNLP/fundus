@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime
 
 from dateutil.rrule import MONTHLY, rrule
 
@@ -18,9 +18,7 @@ class ES(metaclass=PublisherGroup):
         sources=[RSSFeed("https://feeds.elpais.com/mrss-s/pages/ep/site/elpais.com/portada")]
         + [
             Sitemap(f"https://elpais.com/sitemaps/{d.year}/{str(d.month).zfill(2)}/sitemap_0.xml")
-            for d in reversed(
-                list(rrule(MONTHLY, dtstart=datetime.datetime(1976, 5, 1), until=datetime.datetime.now()))
-            )
+            for d in reversed(list(rrule(MONTHLY, dtstart=datetime(1976, 5, 1), until=datetime.now())))
         ],
     )
     ElMundo = Publisher(
@@ -47,8 +45,13 @@ class ES(metaclass=PublisherGroup):
         domain="https://www.lavanguardia.com/",
         parser=LaVanguardiaParser,
         sources=[
-            NewsMap("https://www.lavanguardia.com/newsml/home.xml"),
+            NewsMap("https://www.lavanguardia.com/sitemap-google-news.xml"),
+            NewsMap("https://www.lavanguardia.com/sitemap-news-agencias.xml"),
             RSSFeed("https://www.lavanguardia.com/rss/home.xml"),
             RSSFeed("https://www.lavanguardia.com/rss/internacional.xml"),
+        ]
+        + [
+            Sitemap(f"https://www.lavanguardia.com/sitemap-noticias-{d.year}{str(d.month).zfill(2)}.xml.gz")
+            for d in reversed(list(rrule(MONTHLY, dtstart=datetime(2019, 1, 1), until=datetime.now())))
         ],
     )
