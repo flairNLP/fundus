@@ -360,7 +360,7 @@ def generic_topic_parsing(keywords: Optional[Union[str, List[str]]], delimiter: 
     elif isinstance(keywords, str):
         topics = [cleaned for keyword in keywords.split(delimiter) if (cleaned := keyword.strip())]
     elif isinstance(keywords, list) and all(isinstance(s, str) for s in keywords):
-        topics = keywords
+        topics = [cleaned for keyword in keywords if (cleaned := keyword.strip())]
     else:
         raise TypeError(f"Encountered unexpected type {type(keywords)} as keyword parameter")
 
