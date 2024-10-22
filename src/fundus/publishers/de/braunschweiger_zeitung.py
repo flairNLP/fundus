@@ -8,6 +8,7 @@ from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute
 from fundus.parser.utility import (
     apply_substitution_pattern_over_list,
     extract_article_body_with_selector,
+    generic_author_parsing,
     generic_date_parsing,
     generic_topic_parsing,
 )
@@ -56,16 +57,7 @@ class BSZParser(ParserProxy):
 
         @attribute
         def authors(self) -> List[str]:
-            authors = []
-            author_selection: Union[List[Dict[str, Any]], Dict[str, Any]]
-            if isinstance(author_selection := self.precomputed.ld.bf_search("author", default=[]), dict):
-                author_selection = [author_selection]
-            for author in author_selection:
-                name_string: str = author.get("name", "")
-                authors.extend(re.split(r"und|,", name_string))
-            return apply_substitution_pattern_over_list(
-                [author.strip() for author in authors], self._author_substitution_pattern
-            )
+            return generic_author_parsing(self.precomputed.ld.bf_search("author", default=[]))
 
         @attribute
         def publishing_date(self) -> Optional[datetime.datetime]:
