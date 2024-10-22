@@ -13,7 +13,9 @@ from fundus.parser.utility import (
 
 class ZwanzigMinutenParser(ParserProxy):
     class V1(BaseParser):
-        _summary_selector = XPath("//div[@class='Article_elementLead__N3pGr']/p")
+        _summary_selector = XPath(
+            "//div[@class='Article_elementLead__N3pGr']/p| " "//div[@type='typeInfoboxSummary']//li"
+        )
         _subheadline_selector = XPath("//section[@class='Article_body__60Liu']//h2[contains(@class, 'crosshead')]")
         _paragraph_selector = XPath("//div[@class='Article_elementTextblockarray__WNyan']/p")
 
