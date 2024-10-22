@@ -8,6 +8,8 @@ on:
     types:
       - released
 
+  workflow_dispatch:
+
 jobs:
 
   test:
@@ -72,6 +74,8 @@ jobs:
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           repository-url: https://test.pypi.org/legacy/
+          verbose: true
+
 
       - name: Sleep for 2 minutes
         run: sleep 2m
@@ -120,4 +124,6 @@ jobs:
           
       - name: Publish distribution 📦 to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          verbose: true
 
