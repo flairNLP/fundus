@@ -1,6 +1,6 @@
 import datetime
 import re
-from typing import Any, Dict, List, Optional, Pattern, Union
+from typing import List, Optional, Pattern
 
 from lxml.etree import XPath
 
@@ -57,7 +57,9 @@ class BSZParser(ParserProxy):
 
         @attribute
         def authors(self) -> List[str]:
-            return generic_author_parsing(self.precomputed.ld.bf_search("author", default=[]))
+            return apply_substitution_pattern_over_list(
+                generic_author_parsing(self.precomputed.ld.bf_search("author")), self._author_substitution_pattern
+            )
 
         @attribute
         def publishing_date(self) -> Optional[datetime.datetime]:
