@@ -103,6 +103,18 @@
         }
       ]
     },
+    "images": [
+      {
+        "urls": {
+          "1240w": "https://media0.faz.net/ppmedia/w1240/aktuell/4099641140/1.9655246/16x9/streng-abgeschirmter-komplex.jpg.webp"
+        },
+        "is_cover": true,
+        "description": "Streng abgeschirmter Komplex: Russlands Vertretung bei den Vereinten Nationen in Genf",
+        "caption": null,
+        "authors": [],
+        "position": 1839
+      }
+    ],
     "publishing_date": "2024-04-17 10:24:31+00:00",
     "title": "Die Schweiz ist ein großer Tummelplatz für russische Spione",
     "topics": [
