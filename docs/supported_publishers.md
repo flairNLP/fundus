@@ -352,9 +352,7 @@
           <span>www.boersen-zeitung.de</span>
         </a>
       </td>
-      <td>
-        <code>images</code>
-      </td>
+      <td>&#160;</td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -386,9 +384,7 @@
           <span>taz.de</span>
         </a>
       </td>
-      <td>
-        <code>images</code>
-      </td>
+      <td>&#160;</td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -403,9 +399,7 @@
           <span>www.welt.de</span>
         </a>
       </td>
-      <td>
-        <code>images</code>
-      </td>
+      <td>&#160;</td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -420,9 +414,7 @@
           <span>www.zeit.de</span>
         </a>
       </td>
-      <td>
-        <code>images</code>
-      </td>
+      <td>&#160;</td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -437,9 +429,7 @@
           <span>de.euronews.com</span>
         </a>
       </td>
-      <td>
-        <code>images</code>
-      </td>
+      <td>&#160;</td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -454,9 +444,7 @@
           <span>www.focus.de</span>
         </a>
       </td>
-      <td>
-        <code>images</code>
-      </td>
+      <td>&#160;</td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -1036,9 +1024,7 @@
           <span>fr.euronews.com</span>
         </a>
       </td>
-      <td>
-        <code>images</code>
-      </td>
+      <td>&#160;</td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -1440,9 +1426,7 @@
           <span>www.euronews.com</span>
         </a>
       </td>
-      <td>
-        <code>images</code>
-      </td>
+      <td>&#160;</td>
       <td>&#160;</td>
     </tr>
     <tr>
