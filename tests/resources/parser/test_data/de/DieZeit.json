@@ -26,6 +26,21 @@
         }
       ]
     },
+    "images": [
+      {
+        "urls": {
+          "1x": "https://img.zeit.de/news/2023-04/28/nach-massenschlaegerei-real-star-llull-entschuldigt-sich-image-group/wide__1000x562__desktop,",
+          "2x": "https://img.zeit.de/news/2023-04/28/nach-massenschlaegerei-real-star-llull-entschuldigt-sich-image-group/wide__1000x562__desktop__scale_2"
+        },
+        "is_cover": true,
+        "description": "Basketball-Euroleague: Das Euroleague-Spiel Real Madrid gegen Partizan Belgrad wurde nach einer Massenschlägerei abgebrochen.",
+        "caption": "Das Euroleague-Spiel Real Madrid gegen Partizan Belgrad wurde nach einer Massenschlägerei abgebrochen.",
+        "authors": [
+          "Alba Pacheco/​Agencia LOF/​dpa"
+        ],
+        "position": 411
+      }
+    ],
     "publishing_date": "2023-04-28 20:22:00+02:00",
     "title": "Basketball-Euroleague: Nach Massenschlägerei in Madrid: Sanktionen und Reue",
     "topics": [

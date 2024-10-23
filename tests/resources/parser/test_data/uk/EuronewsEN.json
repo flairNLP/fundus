@@ -27,6 +27,26 @@
         }
       ]
     },
+    "images": [
+      {
+        "urls": {
+          "384w": "https://static.euronews.com/articles/stories/08/36/82/74/384x216_cmsv2_c8dc7a25-1707-552e-8522-51adf6daaa39-8368274.jpg",
+          "640w": "https://static.euronews.com/articles/stories/08/36/82/74/640x360_cmsv2_c8dc7a25-1707-552e-8522-51adf6daaa39-8368274.jpg",
+          "750w": "https://static.euronews.com/articles/stories/08/36/82/74/750x422_cmsv2_c8dc7a25-1707-552e-8522-51adf6daaa39-8368274.jpg",
+          "828w": "https://static.euronews.com/articles/stories/08/36/82/74/828x466_cmsv2_c8dc7a25-1707-552e-8522-51adf6daaa39-8368274.jpg",
+          "1080w": "https://static.euronews.com/articles/stories/08/36/82/74/1080x608_cmsv2_c8dc7a25-1707-552e-8522-51adf6daaa39-8368274.jpg",
+          "1200w": "https://static.euronews.com/articles/stories/08/36/82/74/1200x675_cmsv2_c8dc7a25-1707-552e-8522-51adf6daaa39-8368274.jpg",
+          "1920w": "https://static.euronews.com/articles/stories/08/36/82/74/1920x1080_cmsv2_c8dc7a25-1707-552e-8522-51adf6daaa39-8368274.jpg"
+        },
+        "is_cover": true,
+        "description": "Swedish police officer",
+        "caption": null,
+        "authors": [
+          "Fredrik Persson/AP"
+        ],
+        "position": 492
+      }
+    ],
     "publishing_date": "2024-04-30 16:38:37+02:00",
     "title": "Swedish police to investigate reports of leaks to violent gangs",
     "topics": [

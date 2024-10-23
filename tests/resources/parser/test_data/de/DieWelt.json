@@ -34,6 +34,48 @@
         }
       ]
     },
+    "images": [
+      {
+        "urls": {
+          "1x": "https://img.welt.de/img/wirtschaft/mobile245057420/9712506227-ci102l-w1024/DWO-Teaser-BIP-mki.jpg"
+        },
+        "is_cover": true,
+        "description": null,
+        "caption": null,
+        "authors": [],
+        "position": 938
+      },
+      {
+        "urls": {
+          "1x": "https://img.welt.de/img/wirtschaft/mobile245057420/9712506227-ci102l-w1024/DWO-Teaser-BIP-mki.jpg"
+        },
+        "is_cover": true,
+        "description": null,
+        "caption": null,
+        "authors": [],
+        "position": 948
+      },
+      {
+        "urls": {
+          "1x": "https://img.welt.de/img/wirtschaft/mobile245056202/1892507437-ci102l-w1024/DW-WI-Wirtschaftsraum-Deutschland-jb-Wirtschaftswachstum-jpg.jpg"
+        },
+        "is_cover": false,
+        "description": null,
+        "caption": null,
+        "authors": [],
+        "position": 1138
+      },
+      {
+        "urls": {
+          "1x": "https://img.welt.de/img/wirtschaft/mobile245056200/6922501617-ci102l-w1024/DW-WI-Wirtschaftsraum-Deutschland-jb-Wirtschaftsentwicklung-jpg.jpg"
+        },
+        "is_cover": false,
+        "description": null,
+        "caption": null,
+        "authors": [],
+        "position": 1164
+      }
+    ],
     "publishing_date": "2023-04-28 18:03:06+00:00",
     "title": "BIP: Diese Grafiken zeigen, wie schlecht es um Deutschlands Wirtschaft steht",
     "topics": [
@@ -81,6 +123,50 @@
         }
       ]
     },
+    "images": [
+      {
+        "urls": {
+          "200w": "https://img.welt.de/img/politik/deutschland/mobile253202066/7197934087-ci23x11-w200/Wahl-Arena-des-Freien-Worts-mit-Spitzenkandidaten.jpg",
+          "400w": "https://img.welt.de/img/politik/deutschland/mobile253202066/7197934087-ci23x11-w400/Wahl-Arena-des-Freien-Worts-mit-Spitzenkandidaten.jpg",
+          "600w": "https://img.welt.de/img/politik/deutschland/mobile253202066/7197934087-ci23x11-w600/Wahl-Arena-des-Freien-Worts-mit-Spitzenkandidaten.jpg",
+          "800w": "https://img.welt.de/img/politik/deutschland/mobile253202066/7197934087-ci23x11-w800/Wahl-Arena-des-Freien-Worts-mit-Spitzenkandidaten.jpg",
+          "1000w": "https://img.welt.de/img/politik/deutschland/mobile253202066/7197934087-ci23x11-w1000/Wahl-Arena-des-Freien-Worts-mit-Spitzenkandidaten.jpg",
+          "1200w": "https://img.welt.de/img/politik/deutschland/mobile253202066/7197934087-ci23x11-w1200/Wahl-Arena-des-Freien-Worts-mit-Spitzenkandidaten.jpg",
+          "1400w": "https://img.welt.de/img/politik/deutschland/mobile253202066/7197934087-ci23x11-w1400/Wahl-Arena-des-Freien-Worts-mit-Spitzenkandidaten.jpg",
+          "1600w": "https://img.welt.de/img/politik/deutschland/mobile253202066/7197934087-ci23x11-w1600/Wahl-Arena-des-Freien-Worts-mit-Spitzenkandidaten.jpg",
+          "1800w": "https://img.welt.de/img/politik/deutschland/mobile253202066/7197934087-ci23x11-w1800/Wahl-Arena-des-Freien-Worts-mit-Spitzenkandidaten.jpg",
+          "2000w": "https://img.welt.de/img/politik/deutschland/mobile253202066/7197934087-ci23x11-w2000/Wahl-Arena-des-Freien-Worts-mit-Spitzenkandidaten.jpg"
+        },
+        "is_cover": true,
+        "description": "Mario Voigt (CDU) und Björn Höcke (AfD)",
+        "caption": "Mario Voigt (CDU) und Björn Höcke (AfD)",
+        "authors": [
+          "Hannes P. Albert/dpa/Hannes P Albert"
+        ],
+        "position": 982
+      },
+      {
+        "urls": {
+          "200w": "https://img.welt.de/img/politik/deutschland/mobile253202074/7707934497-ci3x2l-w200/MDR-Sendung-Fakt-ist.jpg",
+          "400w": "https://img.welt.de/img/politik/deutschland/mobile253202074/7707934497-ci3x2l-w400/MDR-Sendung-Fakt-ist.jpg",
+          "600w": "https://img.welt.de/img/politik/deutschland/mobile253202074/7707934497-ci3x2l-w600/MDR-Sendung-Fakt-ist.jpg",
+          "800w": "https://img.welt.de/img/politik/deutschland/mobile253202074/7707934497-ci3x2l-w800/MDR-Sendung-Fakt-ist.jpg",
+          "1000w": "https://img.welt.de/img/politik/deutschland/mobile253202074/7707934497-ci3x2l-w1000/MDR-Sendung-Fakt-ist.jpg",
+          "1200w": "https://img.welt.de/img/politik/deutschland/mobile253202074/7707934497-ci3x2l-w1200/MDR-Sendung-Fakt-ist.jpg",
+          "1400w": "https://img.welt.de/img/politik/deutschland/mobile253202074/7707934497-ci3x2l-w1400/MDR-Sendung-Fakt-ist.jpg",
+          "1600w": "https://img.welt.de/img/politik/deutschland/mobile253202074/7707934497-ci3x2l-w1600/MDR-Sendung-Fakt-ist.jpg",
+          "1800w": "https://img.welt.de/img/politik/deutschland/mobile253202074/7707934497-ci3x2l-w1800/MDR-Sendung-Fakt-ist.jpg",
+          "2000w": "https://img.welt.de/img/politik/deutschland/mobile253202074/7707934497-ci3x2l-w2000/MDR-Sendung-Fakt-ist.jpg"
+        },
+        "is_cover": false,
+        "description": "V. l.: Katja Wolf (BSW), Thomas L. Kemmerich (FDP), Madeleine Henfling (Grüne), Georg Maier (SPD), Björn Höcke (AfD), Mario Voigt (CDU) und Bodo Ramelow (Linke) im MDR-Studio",
+        "caption": "V. l.: Katja Wolf (BSW), Thomas L. Kemmerich (FDP), Madeleine Henfling (Grüne), Georg Maier (SPD), Björn Höcke (AfD), Mario Voigt (CDU) und Bodo Ramelow (Linke) im MDR-Studio",
+        "authors": [
+          "Martin Schutt/dpa"
+        ],
+        "position": 1103
+      }
+    ],
     "publishing_date": "2024-08-26 23:27:57+00:00",
     "title": "Landtagswahl in Thüringen: Voigt, Höcke und der Vorwurf einer Lüge vor laufender Kamera",
     "topics": [

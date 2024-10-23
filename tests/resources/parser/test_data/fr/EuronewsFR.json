@@ -57,6 +57,26 @@
         }
       ]
     },
+    "images": [
+      {
+        "urls": {
+          "384w": "https://static.euronews.com/articles/stories/08/35/46/58/384x216_cmsv2_1ff2c7da-673e-5013-9bf4-aee1f8f170b2-8354658.jpg",
+          "640w": "https://static.euronews.com/articles/stories/08/35/46/58/640x360_cmsv2_1ff2c7da-673e-5013-9bf4-aee1f8f170b2-8354658.jpg",
+          "750w": "https://static.euronews.com/articles/stories/08/35/46/58/750x422_cmsv2_1ff2c7da-673e-5013-9bf4-aee1f8f170b2-8354658.jpg",
+          "828w": "https://static.euronews.com/articles/stories/08/35/46/58/828x466_cmsv2_1ff2c7da-673e-5013-9bf4-aee1f8f170b2-8354658.jpg",
+          "1080w": "https://static.euronews.com/articles/stories/08/35/46/58/1080x608_cmsv2_1ff2c7da-673e-5013-9bf4-aee1f8f170b2-8354658.jpg",
+          "1200w": "https://static.euronews.com/articles/stories/08/35/46/58/1200x675_cmsv2_1ff2c7da-673e-5013-9bf4-aee1f8f170b2-8354658.jpg",
+          "1920w": "https://static.euronews.com/articles/stories/08/35/46/58/1920x1080_cmsv2_1ff2c7da-673e-5013-9bf4-aee1f8f170b2-8354658.jpg"
+        },
+        "is_cover": true,
+        "description": "Comment les efforts européens ont permis de sauver le merlu de l'extinction",
+        "caption": null,
+        "authors": [
+          "Tous droits réservés Euronews"
+        ],
+        "position": 468
+      }
+    ],
     "publishing_date": "2024-04-30 16:00:34+02:00",
     "title": "Le merlu de l'Atlantique Nord sauvé de l'extinction ?",
     "topics": [

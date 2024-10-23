@@ -113,7 +113,7 @@ class DE(metaclass=PublisherGroup):
             Sitemap("https://www.welt.de/sitemaps/sitemap/sitemap.xml"),
             NewsMap("https://www.welt.de/sitemaps/newssitemap/newssitemap.xml"),
         ],
-        url_filter=regex_filter("/Anlegertipps-|/videos[0-9]{2}"),
+        url_filter=regex_filter("/Anlegertipps-|/videos?[0-9]{2}|/mediathek/"),
     )
 
     MDR = Publisher(
@@ -389,6 +389,7 @@ class DE(metaclass=PublisherGroup):
             Sitemap("https://de.euronews.com/sitemaps/de/articles.xml"),
             NewsMap("https://de.euronews.com/sitemaps/de/latest-news.xml"),
         ],
+        url_filter=regex_filter("/video/"),
     )
 
     Hessenschau = Publisher(

@@ -37,6 +37,26 @@
         }
       ]
     },
+    "images": [
+      {
+        "urls": {
+          "384w": "https://static.euronews.com/articles/stories/08/40/63/40/384x216_cmsv2_13a842da-f8da-5ed8-87ef-65a56dd57f18-8406340.jpg",
+          "640w": "https://static.euronews.com/articles/stories/08/40/63/40/640x360_cmsv2_13a842da-f8da-5ed8-87ef-65a56dd57f18-8406340.jpg",
+          "750w": "https://static.euronews.com/articles/stories/08/40/63/40/750x422_cmsv2_13a842da-f8da-5ed8-87ef-65a56dd57f18-8406340.jpg",
+          "828w": "https://static.euronews.com/articles/stories/08/40/63/40/828x466_cmsv2_13a842da-f8da-5ed8-87ef-65a56dd57f18-8406340.jpg",
+          "1080w": "https://static.euronews.com/articles/stories/08/40/63/40/1080x608_cmsv2_13a842da-f8da-5ed8-87ef-65a56dd57f18-8406340.jpg",
+          "1200w": "https://static.euronews.com/articles/stories/08/40/63/40/1200x675_cmsv2_13a842da-f8da-5ed8-87ef-65a56dd57f18-8406340.jpg",
+          "1920w": "https://static.euronews.com/articles/stories/08/40/63/40/1920x1080_cmsv2_13a842da-f8da-5ed8-87ef-65a56dd57f18-8406340.jpg"
+        },
+        "is_cover": true,
+        "description": "Tausende haben am Montag in Tiflis an einer regierungsfreundlichen Kundgebung teilgenommen.",
+        "caption": null,
+        "authors": [
+          "Shakh Aivazov/2024"
+        ],
+        "position": 472
+      }
+    ],
     "publishing_date": "2024-04-30 16:17:29+02:00",
     "title": "Georgien: Tausende unterstützen das \"russische Agentengesetz\"",
     "topics": [

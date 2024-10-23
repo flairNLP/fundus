@@ -5,11 +5,12 @@ from typing import List, Optional
 from lxml.cssselect import CSSSelector
 from lxml.etree import XPath
 
-from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute, Image
+from fundus.parser import ArticleBody, BaseParser, Image, ParserProxy, attribute
 from fundus.parser.utility import (
     extract_article_body_with_selector,
     generic_author_parsing,
-    generic_date_parsing, image_extraction,
+    generic_date_parsing,
+    image_extraction,
 )
 
 
@@ -63,5 +64,5 @@ class BoersenZeitungParser(ParserProxy):
                 upper_boundary_selector=XPath("//h1|//script"),
                 image_selector=XPath("//storefront-image|//figure//img"),
                 author_selector=XPath("./ancestor::storefront-section//storefront-html[@class='image-copyright']"),
-                author_filter=re.compile(r"(?i)^(quelle|source):\s*")
+                author_filter=re.compile(r"(?i)^(quelle|source):\s*"),
             )
