@@ -10,6 +10,7 @@ import requests
 import validators
 from fastwarc import ArchiveIterator, WarcRecord, WarcRecordType
 from lxml.cssselect import CSSSelector
+from lxml.etree import XPath
 from requests import ConnectionError, HTTPError
 
 from fundus.logging import create_logger
@@ -33,6 +34,7 @@ logger = create_logger(__name__)
 
 # unfortunately lxml does not support case-insensitive CSSSelectors
 _content_type_selector = CSSSelector("meta[http-equiv='Content-Type'], meta[http-equiv='content-type']")
+_charset_selector = XPath("//meta[@charset]/@charset | //meta[@charSet]/@charSet")
 
 
 def _detect_charset_from_response(response: requests.Response) -> str:
@@ -47,15 +49,16 @@ def _detect_charset_from_response(response: requests.Response) -> str:
     # see https://github.com/flairNLP/fundus/issues/446
     # use response fallback to decode HTML in a first guess
     guessed_text = response.content.decode(response.encoding or "utf-8")
-    charset = None
-    if (content_type_nodes := _content_type_selector(lxml.html.document_fromstring(guessed_text))) and len(
-        content_type_nodes
-    ) == 1:
+    document = lxml.html.document_fromstring(guessed_text)
+    if (content_type_nodes := _content_type_selector(document)) and len(content_type_nodes) == 1:
         content_type_node = content_type_nodes.pop()
         for field in content_type_node.attrib.get("content", "").split(";"):
             if "charset" in field:
                 charset = field.replace("charset=", "").strip()
-    return charset or response.apparent_encoding
+                return charset
+    elif charset := _charset_selector(document):
+        return str(charset.pop())
+    return response.apparent_encoding
 
 
 @dataclass(frozen=True)
@@ -177,6 +180,7 @@ class WebSource:
                 if "charset" not in response.headers["content-type"]:
                     # That's actually the only place requests checks to detect encoding, so if charset
                     # is not set, requests falls back to default encodings (latin-1/utf-8)
+                    logger.debug(f"Detect encoding from response for URL {str(response.url)!r}")
                     response.encoding = _detect_charset_from_response(response)
 
                 if filter_url(str(response.url)):
