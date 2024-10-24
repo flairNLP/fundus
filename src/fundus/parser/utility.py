@@ -37,9 +37,19 @@ from fundus.utils.serialization import JSONVal
 
 logger = create_logger(__name__)
 
+_space_characters = {
+    "whitespace": r"\s",
+    "non-breaking-space": r"\u00A0",
+    "zero-width-space": r"\u200B",
+    "zero-width-non-joiner": r"\u200C",
+    "zero-width-joiner": r"\u200D",
+    "zero-width-no-break_space": r"\uFEFF",
+}
+_ws_pattern: Pattern[str] = re.compile(rf'[{"".join(_space_characters.values())}]+')
+
 
 def normalize_whitespace(text: str) -> str:
-    return " ".join(text.split())
+    return re.sub(_ws_pattern, " ", text).strip()
 
 
 @total_ordering
