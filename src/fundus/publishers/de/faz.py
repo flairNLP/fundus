@@ -58,6 +58,8 @@ class FAZParser(ParserProxy):
         def title(self) -> Optional[str]:
             return self.precomputed.meta.get("og:title")
 
+        # As of now, images can't be implemented for FAZ, since they are not crawled by CC-Bot
+
     class V2(BaseParser):
         _summary_selector = CSSSelector("div.header-teaser")
         _paragraph_selector = CSSSelector(".body-elements__paragraph")
