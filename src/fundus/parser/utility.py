@@ -405,9 +405,9 @@ def preprocess_url(url: str, domain: str) -> str:
 
 def image_author_parsing(authors: Union[str, List[str]], author_filter: Optional[Pattern[str]] = None) -> List[str]:
     def clean(author: str):
-        author = re.sub(r"©|((f|ph)oto|image)\s*(by|:)", "", author, flags=re.IGNORECASE)
         if author_filter:
             author = re.sub(author_filter, "", author)
+        author = re.sub(r"©|((f|ph)oto|image)\s*(by|:)", "", author, flags=re.IGNORECASE)
         return author.strip()
 
     if isinstance(authors, list):

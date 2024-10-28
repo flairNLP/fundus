@@ -45,6 +45,38 @@
         }
       ]
     },
+    "images": [
+      {
+        "urls": {
+          "448w": "https://www.fr.de/assets/images/34/432/34432223-mann-mit-schlimmem-heuschnupfen-2n4Qnu88oYb9.jpg",
+          "768w": "https://www.fr.de/assets/images/34/432/34432223-mann-mit-schlimmem-heuschnupfen-2n4Qnu88oY73.jpg",
+          "1100w": "https://www.fr.de/assets/images/34/432/34432223-mann-mit-schlimmem-heuschnupfen-2n4Qnu88oYBG.jpg",
+          "1408w": "https://www.fr.de/assets/images/34/432/34432223-mann-mit-schlimmem-heuschnupfen-2n4Qnu88oY7d.jpg",
+          "1600w": "https://www.fr.de/assets/images/34/432/34432223-mann-mit-schlimmem-heuschnupfen-2n4Qnu88oYPH.jpg"
+        },
+        "is_cover": false,
+        "description": "Mann mit schlimmem Heuschnupfen.",
+        "caption": "Ambrosia kommt eigentlich aus Nordamerika und ist für Europäer gefährlich - besonders bei Allergikern. © Montage",
+        "authors": [
+          "Montage"
+        ],
+        "position": 260
+      },
+      {
+        "urls": {
+          "448w": "https://www.fr.de/assets/images/34/34/34034708-eine-schwarze-tollkirsche-3lkrgihhpWb6.jpg",
+          "768w": "https://www.fr.de/assets/images/34/34/34034708-eine-schwarze-tollkirsche-3lkrgihhpW70.jpg",
+          "1100w": "https://www.fr.de/assets/images/34/34/34034708-eine-schwarze-tollkirsche-3lkrgihhpWfe.jpg",
+          "1408w": "https://www.fr.de/assets/images/34/34/34034708-eine-schwarze-tollkirsche-3lkrgihhpW7a.jpg",
+          "1600w": "https://www.fr.de/assets/images/34/34/34034708-eine-schwarze-tollkirsche-3lkrgihhpWMH.jpg"
+        },
+        "is_cover": false,
+        "description": "Eine schwarze Tollkirsche",
+        "caption": null,
+        "authors": [],
+        "position": 483
+      }
+    ],
     "publishing_date": "2024-04-26 20:44:00+02:00",
     "title": "Warum Ambrosia in deutschen Gärten zur Bedrohung wird"
   }
