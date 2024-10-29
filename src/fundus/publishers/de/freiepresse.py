@@ -1,14 +1,17 @@
 import datetime
+import re
 from typing import List, Optional
 
 from lxml.cssselect import CSSSelector
+from lxml.etree import XPath
 
-from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute
+from fundus.parser import ArticleBody, BaseParser, Image, ParserProxy, attribute
 from fundus.parser.utility import (
     extract_article_body_with_selector,
     generic_author_parsing,
     generic_date_parsing,
     generic_topic_parsing,
+    image_extraction,
 )
 
 
@@ -42,3 +45,17 @@ class FreiePresseParser(ParserProxy):
         @attribute
         def topics(self) -> List[str]:
             return generic_topic_parsing(self.precomputed.ld.bf_search("keywords"), delimiter="/")
+
+        """
+        This publisher uses relative URLs, which is not supported at of now
+        @attribute
+        def images(self) -> List[Image]:
+            return image_extraction(
+                doc=self.precomputed.doc,
+                paragraph_selector=self._paragraph_selector,
+                image_selector=XPath("//div[@class='detail-img__image-wrapper detail-img__image-wrapper--gradient']//img"),
+                lower_boundary_selector=CSSSelector("a.article__copyright"),
+                caption_selector=XPath("./ancestor::div[@class='detail-img']//div[@class='detail-img__description no-transition']/div/text()"),
+                author_selector=re.compile(r"(?i)bild:(?P<credits>.*)")
+            )
+        """

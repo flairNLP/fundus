@@ -28,6 +28,23 @@
         }
       ]
     },
+    "images": [
+      {
+        "urls": {
+          "336w": "https://heise.cloudimg.io/width/336/q70.png-lossy-70.webp-lossy-70.foil1/_www-heise-de_/imgs/18/4/5/7/5/8/7/7/2024-03-12-Bing_Designer-Phishing-2-3840px-82adf0aebe8ed409.png",
+          "610w": "https://heise.cloudimg.io/width/610/q70.png-lossy-70.webp-lossy-70.foil1/_www-heise-de_/imgs/18/4/5/7/5/8/7/7/2024-03-12-Bing_Designer-Phishing-2-3840px-82adf0aebe8ed409.png",
+          "1008w": "https://heise.cloudimg.io/width/1008/q70.png-lossy-70.webp-lossy-70.foil1/_www-heise-de_/imgs/18/4/5/7/5/8/7/7/2024-03-12-Bing_Designer-Phishing-2-3840px-82adf0aebe8ed409.png",
+          "1220w": "https://heise.cloudimg.io/width/1220/q70.png-lossy-70.webp-lossy-70.foil1/_www-heise-de_/imgs/18/4/5/7/5/8/7/7/2024-03-12-Bing_Designer-Phishing-2-3840px-82adf0aebe8ed409.png"
+        },
+        "is_cover": true,
+        "description": "Krimineller angelt Kreditkartendaten",
+        "caption": "Online-Kriminelle phishen nach monetarisierbaren Informationen.",
+        "authors": [
+          "Bild erstellt mit KI in Bing Designer durch heise online / dmk"
+        ],
+        "position": 640
+      }
+    ],
     "publishing_date": "2024-04-19 13:37:00+02:00",
     "title": "Ionos-Phishing: Masche mit neuen EU-Richtlinien soll Opfer überzeugen",
     "topics": [

@@ -462,7 +462,7 @@ class DE(metaclass=PublisherGroup):
             ),
             NewsMap("https://newsfeed.kicker.de/googlesitemapnews.xml"),
         ],
-        url_filter=regex_filter("/slideshow|/video"),
+        url_filter=regex_filter("/slideshow|/video|heute-live|live-konferenz|/bilder|/ticker"),
     )
 
     Krautreporter = Publisher(

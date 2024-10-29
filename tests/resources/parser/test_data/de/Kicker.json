@@ -20,6 +20,20 @@
         }
       ]
     },
+    "images": [
+      {
+        "urls": {
+          "1x": "https://derivates.kicker.de/image/upload/f_webp/c_crop%2Cx_0%2Cy_91%2Cw_2651%2Ch_1491/w_1000%2Cq_auto%2Ch_563/v1/2024/04/26/83e0240d-b792-412d-bb42-3ce71a5b6ca0.jpeg"
+        },
+        "is_cover": true,
+        "description": "Uwe Schubert möchte mit dem MSV Duisburg noch so viele Punkte wie möglich sammeln.",
+        "caption": "Uwe Schubert möchte mit dem MSV Duisburg noch so viele Punkte wie möglich sammeln.",
+        "authors": [
+          "IMAGO/Nico Herbertz"
+        ],
+        "position": 684
+      }
+    ],
     "publishing_date": "2024-04-26 15:24:10+02:00",
     "title": "Interimstrainer Schubert: \"Nicht mehr viel zu verlieren\""
   }
