@@ -526,9 +526,7 @@
           <span>www.golem.de</span>
         </a>
       </td>
-      <td>
-        <code>images</code>
-      </td>
+      <td>&#160;</td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -558,9 +556,7 @@
           <span>www.heise.de</span>
         </a>
       </td>
-      <td>
-        <code>images</code>
-      </td>
+      <td>&#160;</td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -575,9 +571,7 @@
           <span>www.hessenschau.de</span>
         </a>
       </td>
-      <td>
-        <code>images</code>
-      </td>
+      <td>&#160;</td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -610,7 +604,6 @@
         </a>
       </td>
       <td>
-        <code>images</code>
         <code>topics</code>
       </td>
       <td>&#160;</td>
@@ -644,9 +637,7 @@
           <span>www.mz.de</span>
         </a>
       </td>
-      <td>
-        <code>images</code>
-      </td>
+      <td>&#160;</td>
       <td>&#160;</td>
     </tr>
     <tr>
