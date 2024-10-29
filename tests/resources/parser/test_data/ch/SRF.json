@@ -28,12 +28,12 @@
     "images": [
       {
         "urls": {
-          "160w": "https://www.srf.ch/static/cms/images/160w/d09eab.jpg",
-          "320w": "https://www.srf.ch/static/cms/images/320w/d09eab.jpg",
-          "480w": "https://www.srf.ch/static/cms/images/480w/d09eab.jpg",
-          "640w": "https://www.srf.ch/static/cms/images/640w/d09eab.jpg",
-          "960w": "https://www.srf.ch/static/cms/images/960w/d09eab.jpg",
-          "1280w": "https://www.srf.ch/static/cms/images/1280w/d09eab.jpg"
+          "160w": "https://www.srf.ch/static/cms/images/160w/d09eab.webp",
+          "320w": "https://www.srf.ch/static/cms/images/320w/d09eab.webp",
+          "480w": "https://www.srf.ch/static/cms/images/480w/d09eab.webp",
+          "640w": "https://www.srf.ch/static/cms/images/640w/d09eab.webp",
+          "960w": "https://www.srf.ch/static/cms/images/960w/d09eab.webp",
+          "1280w": "https://www.srf.ch/static/cms/images/1280w/d09eab.webp"
         },
         "is_cover": false,
         "description": "Menschen in Raum.",

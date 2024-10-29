@@ -37,7 +37,7 @@
     "images": [
       {
         "urls": {
-          "1x": "https://img.welt.de/img/wirtschaft/mobile245057420/9712506227-ci102l-w1024/DWO-Teaser-BIP-mki.jpg"
+          "1.0x": "https://img.welt.de/img/wirtschaft/mobile245057420/9711626227-ci23x11-w1136/DWO-Teaser-BIP-mki.jpg"
         },
         "is_cover": true,
         "description": null,
@@ -47,7 +47,7 @@
       },
       {
         "urls": {
-          "1x": "https://img.welt.de/img/wirtschaft/mobile245057420/9712506227-ci102l-w1024/DWO-Teaser-BIP-mki.jpg"
+          "1.0x": "https://img.welt.de/img/wirtschaft/mobile245057420/9711626227-ci23x11-w100/DWO-Teaser-BIP-mki.jpg"
         },
         "is_cover": true,
         "description": null,
@@ -57,7 +57,7 @@
       },
       {
         "urls": {
-          "1x": "https://img.welt.de/img/wirtschaft/mobile245056202/1892507437-ci102l-w1024/DW-WI-Wirtschaftsraum-Deutschland-jb-Wirtschaftswachstum-jpg.jpg"
+          "1.0x": "https://img.welt.de/img/wirtschaft/mobile245056202/1890247437-ci3x2l-w780/DW-WI-Wirtschaftsraum-Deutschland-jb-Wirtschaftswachstum-jpg.jpg"
         },
         "is_cover": false,
         "description": null,
@@ -67,7 +67,7 @@
       },
       {
         "urls": {
-          "1x": "https://img.welt.de/img/wirtschaft/mobile245056200/6922501617-ci102l-w1024/DW-WI-Wirtschaftsraum-Deutschland-jb-Wirtschaftsentwicklung-jpg.jpg"
+          "1.0x": "https://img.welt.de/img/wirtschaft/mobile245056200/6920241617-ci3x2l-w780/DW-WI-Wirtschaftsraum-Deutschland-jb-Wirtschaftsentwicklung-jpg.jpg"
         },
         "is_cover": false,
         "description": null,

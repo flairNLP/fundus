@@ -106,7 +106,8 @@
     "images": [
       {
         "urls": {
-          "1240w": "https://media0.faz.net/ppmedia/w1240/aktuell/4099641140/1.9655246/16x9/streng-abgeschirmter-komplex.jpg.webp"
+          "1000w": "https://media0.faz.net/ppmedia/w1000/aktuell/4099641140/1.9655246/1900x850/streng-abgeschirmter-komplex.jpg.webp",
+          "1240w": "https://media0.faz.net/ppmedia/w1240/aktuell/4099641140/1.9655246/1900x850/streng-abgeschirmter-komplex.jpg.webp"
         },
         "is_cover": true,
         "description": "Streng abgeschirmter Komplex: Russlands Vertretung bei den Vereinten Nationen in Genf",

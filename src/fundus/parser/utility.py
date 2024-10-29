@@ -441,7 +441,7 @@ def parse_srcset(srcset: str) -> Dict[str, str]:
         descriptor = match.group("descriptor")  # Width (w) or pixel density (x)
         urls[descriptor or "1x"] = url
     # return sorted dict based on int value of descriptor
-    return dict(sorted(urls.items(), key=lambda item: int(item[0][:-1])))
+    return dict(sorted(urls.items(), key=lambda item: float(item[0][:-1])))
 
 
 def parse_urls_from_image(node: lxml.html.HtmlElement) -> Optional[Dict[str, str]]:
@@ -481,8 +481,8 @@ def parse_image_nodes(
     for position, node, is_cover in image_nodes:
         # parse URLs
         urls = {}
-        if (parent := node.getparent()) is not None and parent.tag == "picture":
-            for source in parent.xpath("./source"):
+        if (parents := node.xpath("./ancestor::picture")) and (sources := parents.pop().xpath("./source")):
+            for source in sources:
                 urls.update(parse_urls_from_image(source) or {})
         else:
             urls.update(parse_urls_from_image(node) or {})
