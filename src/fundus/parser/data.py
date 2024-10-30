@@ -22,7 +22,7 @@ import lxml.etree
 import more_itertools
 import xmltodict
 from dict2xml import dict2xml
-from lxml.etree import XPath, fromstring, tostring
+from lxml.etree import XPath, tostring
 from typing_extensions import Self, TypeAlias, deprecated
 
 from fundus.utils.serialization import JSONVal, replace_keys_in_nested_dict
@@ -60,17 +60,6 @@ class LinkedDataMapping:
             else:
                 self.add_ld(ld)
         self.__xml: Optional[lxml.etree._Element] = None
-
-    def __getstate__(self):
-        picklable_dict = self.__dict__.copy()
-        if (xml_element := picklable_dict.get("_LinkedDataMapping__xml")) is not None:
-            picklable_dict["_LinkedDataMapping__xml"] = tostring(xml_element)
-        return picklable_dict
-
-    def __setstate__(self, state):
-        if (xml_element := state.get("_LinkedDataMapping__xml")) is not None:
-            state["_LinkedDataMapping__xml"] = fromstring(xml_element)
-        self.__dict__ = state
 
     def serialize(self) -> Dict[str, Any]:
         return {attribute: value for attribute, value in self.__dict__.items() if "__" not in attribute}
