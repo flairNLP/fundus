@@ -449,6 +449,7 @@ class DE(metaclass=PublisherGroup):
             RSSFeed("https://follow.it/der-postillon-abo"),
             Sitemap("https://www.der-postillon.com/sitemap.xml"),
         ],
+        url_filter=regex_filter("https://follow.it/"),
     )
 
     Kicker = Publisher(

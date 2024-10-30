@@ -2,13 +2,15 @@ import datetime
 from typing import List, Optional
 
 from lxml.cssselect import CSSSelector
+from lxml.etree import XPath
 
-from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute
+from fundus.parser import ArticleBody, BaseParser, Image, ParserProxy, attribute
 from fundus.parser.utility import (
     extract_article_body_with_selector,
     generic_author_parsing,
     generic_date_parsing,
     generic_topic_parsing,
+    image_extraction,
 )
 
 
@@ -42,3 +44,13 @@ class RuhrNachrichtenParser(ParserProxy):
         @attribute
         def topics(self) -> List[str]:
             return generic_topic_parsing(self.precomputed.ld.bf_search("keywords"))
+
+        @attribute
+        def images(self) -> List[Image]:
+            return image_extraction(
+                doc=self.precomputed.doc,
+                image_selector=XPath("//figure[not(@class='teaser__thumbnail')]//img"),
+                paragraph_selector=self._paragraph_selector,
+                caption_selector=XPath("./ancestor::figure//figcaption/text()"),
+                author_selector=XPath("./ancestor::figure//figcaption/span"),
+            )

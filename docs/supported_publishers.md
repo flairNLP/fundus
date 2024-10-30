@@ -661,9 +661,7 @@
           <span>www.mdr.de</span>
         </a>
       </td>
-      <td>
-        <code>images</code>
-      </td>
+      <td>&#160;</td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -748,7 +746,6 @@
         </a>
       </td>
       <td>
-        <code>images</code>
         <code>topics</code>
       </td>
       <td>&#160;</td>
@@ -782,9 +779,7 @@
           <span>www.ruhrnachrichten.de</span>
         </a>
       </td>
-      <td>
-        <code>images</code>
-      </td>
+      <td>&#160;</td>
       <td>&#160;</td>
     </tr>
     <tr>

@@ -85,6 +85,58 @@
         }
       ]
     },
+    "images": [
+      {
+        "urls": {
+          "1x": "https://cdn.mdr.de/nachrichten/thueringen/sued-thueringen/schmalkalden-meiningen/schlachtung-fleisch-schmalkalden-landstolz-110_v-variantBig16x9_w-576_zc-915c23fa.jpg?version=7112"
+        },
+        "is_cover": true,
+        "description": "Zwei Menschen zerlegen ein Schwein.",
+        "caption": "Pro Stunde werden bei \"Thüringer Landstolz\" in Schmalkalden etwa 45 Schweine geschlachtet.",
+        "authors": [],
+        "position": 246
+      },
+      {
+        "urls": {
+          "1x": "https://cdn.mdr.de/nachrichten/thueringen/sued-thueringen/schmalkalden-meiningen/schlachtung-fleisch-schmalkalden-landstolz-118_v-variantBig16x9_w-576_zc-915c23fa.jpg?version=45413"
+        },
+        "is_cover": false,
+        "description": "Ein Mann vor einer an der Decke hängenden Schweinehälfte.",
+        "caption": "Landstolz-Geschäftsführer Kevin Holland-Moritz in der Schlachthalle in Schmalkalden.",
+        "authors": [],
+        "position": 299
+      },
+      {
+        "urls": {
+          "1x": "https://cdn.mdr.de/nachrichten/thueringen/sued-thueringen/schmalkalden-meiningen/schlachtung-fleisch-schmalkalden-landstolz-114_v-variantBig16x9_w-576_zc-915c23fa.jpg?version=37197"
+        },
+        "is_cover": false,
+        "description": "Ein Mann zerlegt Schweinehälften in einer Schlachthalle.",
+        "caption": "Viele Hände arbeiten in einer Schlachthalle daran, die Tiere direkt zu verarbeiten.",
+        "authors": [],
+        "position": 417
+      },
+      {
+        "urls": {
+          "1x": "https://cdn.mdr.de/nachrichten/thueringen/sued-thueringen/schmalkalden-meiningen/schlachtung-fleisch-schmalkalden-landstolz-112_v-variantBig16x9_w-576_zc-915c23fa.jpg?version=26245"
+        },
+        "is_cover": false,
+        "description": "Zwei Männer unterhalten sich neben einem Schwein.",
+        "caption": "Chef Holland-Moritz (r.) berät sich mit einem Kontrolleur in der Schlachthalle.",
+        "authors": [],
+        "position": 464
+      },
+      {
+        "urls": {
+          "1x": "https://cdn.mdr.de/nachrichten/thueringen/sued-thueringen/schmalkalden-meiningen/schlachtung-fleisch-schmalkalden-landstolz-116_v-variantBig16x9_w-576_zc-915c23fa.jpg?version=20948"
+        },
+        "is_cover": false,
+        "description": "Ein Mann zerlegt Schweinehälften in einer Schlachthalle.",
+        "caption": "Ausschlaggebend für den Schlachtbetrieb in Schmalkalden wird sein, ob sich genügend Personal finden wird.",
+        "authors": [],
+        "position": 530
+      }
+    ],
     "publishing_date": "2023-04-28 05:00:00+02:00",
     "title": "Ist die Thüringer Bratwurst eine Illusion? Das harte Geschäft mit dem Tod",
     "topics": [

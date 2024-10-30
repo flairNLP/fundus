@@ -21,6 +21,18 @@
         }
       ]
     },
+    "images": [
+      {
+        "urls": {
+          "1x": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhUNR9obXMoc4GrPz5ZByMKzlh_xHrL33fZsYxGrmZux52aU_8FVvQZxBUCTpf4YOqO7W2h-L-5tZPqNPDxrv5bYa9G7eAOjWSj_PiRi2M26Emv1RjUddrrnblV438hg3WV0fNBNkfTFzNNfusXpNHijR8whxBVcpUjaoIzaTDwUzgEQnCcqLLoasu0Gw/s1600-rw/Krokodil2.jpg"
+        },
+        "is_cover": true,
+        "description": null,
+        "caption": null,
+        "authors": [],
+        "position": 220
+      }
+    ],
     "publishing_date": "2024-04-25 08:18:00+02:00",
     "title": "Bekiffte Geografen warnen: Ostsee in Wahrheit riesiges Krokodil, das Finnland fressen will!"
   }

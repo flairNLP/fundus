@@ -58,6 +58,48 @@
         }
       ]
     },
+    "images": [
+      {
+        "urls": {
+          "1x": "https://www.ruhrnachrichten.de/wp-content/uploads/2024/05/03/13/630_0900_3734765_Eisheilige_2024-320x214.jpg"
+        },
+        "is_cover": true,
+        "description": "Eine Blume ist mit Raureif bedeckt.",
+        "caption": "Die Eisheiligen können bereits blühende Pflanzen noch einmal mit Frost überraschen.",
+        "authors": [
+          "Lukas Coch/dpa/AAP"
+        ],
+        "position": 354
+      },
+      {
+        "urls": {
+          "80w": "https://www.ruhrnachrichten.de/wp-content/uploads/2024/05/03/13/630_0900_3734768_Eisheilige_Schutzfolie-80x53.jpg",
+          "160w": "https://www.ruhrnachrichten.de/wp-content/uploads/2024/05/03/13/630_0900_3734768_Eisheilige_Schutzfolie-160x107.jpg",
+          "240w": "https://www.ruhrnachrichten.de/wp-content/uploads/2024/05/03/13/630_0900_3734768_Eisheilige_Schutzfolie-240x160.jpg",
+          "264w": "https://www.ruhrnachrichten.de/wp-content/uploads/2024/05/03/13/630_0900_3734768_Eisheilige_Schutzfolie-264x176.jpg",
+          "300w": "https://www.ruhrnachrichten.de/wp-content/uploads/2024/05/03/13/630_0900_3734768_Eisheilige_Schutzfolie-300x200.jpg",
+          "320w": "https://www.ruhrnachrichten.de/wp-content/uploads/2024/05/03/13/630_0900_3734768_Eisheilige_Schutzfolie-320x214.jpg",
+          "480w": "https://www.ruhrnachrichten.de/wp-content/uploads/2024/05/03/13/630_0900_3734768_Eisheilige_Schutzfolie-480x320.jpg",
+          "492w": "https://www.ruhrnachrichten.de/wp-content/uploads/2024/05/03/13/630_0900_3734768_Eisheilige_Schutzfolie-492x328.jpg",
+          "528w": "https://www.ruhrnachrichten.de/wp-content/uploads/2024/05/03/13/630_0900_3734768_Eisheilige_Schutzfolie-528x352.jpg",
+          "618w": "https://www.ruhrnachrichten.de/wp-content/uploads/2024/05/03/13/630_0900_3734768_Eisheilige_Schutzfolie-618x412.jpg",
+          "640w": "https://www.ruhrnachrichten.de/wp-content/uploads/2024/05/03/13/630_0900_3734768_Eisheilige_Schutzfolie-640x428.jpg",
+          "768w": "https://www.ruhrnachrichten.de/wp-content/uploads/2024/05/03/13/630_0900_3734768_Eisheilige_Schutzfolie-768x512.jpg",
+          "984w": "https://www.ruhrnachrichten.de/wp-content/uploads/2024/05/03/13/630_0900_3734768_Eisheilige_Schutzfolie-984x656.jpg",
+          "1024w": "https://www.ruhrnachrichten.de/wp-content/uploads/2024/05/03/13/630_0900_3734768_Eisheilige_Schutzfolie-1024x683.jpg",
+          "1236w": "https://www.ruhrnachrichten.de/wp-content/uploads/2024/05/03/13/630_0900_3734768_Eisheilige_Schutzfolie-1236x824.jpg",
+          "1536w": "https://www.ruhrnachrichten.de/wp-content/uploads/2024/05/03/13/630_0900_3734768_Eisheilige_Schutzfolie-1536x1024.jpg",
+          "1920w": "https://www.ruhrnachrichten.de/wp-content/uploads/2024/05/03/13/630_0900_3734768_Eisheilige_Schutzfolie.jpg"
+        },
+        "is_cover": false,
+        "description": "Eingetopfte Blumen sind in einem Garten mit einer Plastikfolie bedeckt, um sie dadurch vor Nachtfrost zu schützen.",
+        "caption": "Um ihre Pflanzen vor dem Frost der Eisheiligen zu schützen, greifen manche Hobby-Gärtnerinnen und Hobby-Gärtner auf Schutzfolien zurück.",
+        "authors": [
+          "Karl-Josef Hildenbrand/dpa"
+        ],
+        "position": 397
+      }
+    ],
     "publishing_date": "2024-05-03 15:42:11+02:00",
     "title": "Die Eisheiligen 2024: Wann sie sind - und wie das Wetter wird",
     "topics": [
