@@ -459,6 +459,7 @@ def parse_image_nodes(
     alt_selector: XPath,
     author_selector: Union[XPath, Pattern[str]],
     author_filter: Optional[Pattern[str]] = None,
+    domain: Optional[str] = None,
 ) -> Iterator[Image]:
     """Extract urls, caption, description and authors from a list of <img> nodes
 
@@ -470,6 +471,7 @@ def parse_image_nodes(
             figure with copyright or credit in its class attribute.
         author_filter: In case the author_selector cannot adequately select the author, this filter can be used to
             remove unwanted substrings
+        domain: If set, the domain will be prepended to URLs in case they are relative
 
     Returns:
         List of Images
@@ -488,6 +490,11 @@ def parse_image_nodes(
             urls.update(parse_urls_from_image(node) or {})
         if not urls:
             continue
+
+        # resolve relative URLs if domain is given
+        if domain is not None:
+            for descriptor, url in urls.items():
+                urls[descriptor] = urljoin(domain, url)
 
         # parse caption
         caption = nodes_to_text(caption_selector(node))
@@ -542,6 +549,9 @@ def determine_bounds(
     )
 
 
+_og_url_selector = XPath("string(//meta[@property='og:url']/@content)")
+
+
 def image_extraction(
     doc: lxml.html.HtmlElement,
     paragraph_selector: XPath,
@@ -554,6 +564,7 @@ def image_extraction(
         "(./ancestor::figure//*[(contains(@class, 'copyright') or contains(@class, 'credit')) and text()])[1]"
     ),
     author_filter: Optional[Pattern[str]] = None,
+    relative_urls: bool = False,
 ) -> List[Image]:
     """Extracts images enriched with metadata from <dom> based on given selectors.
 
@@ -577,6 +588,8 @@ def image_extraction(
             figure with copyright or credit in its class attribute.
         author_filter: In case the author_selector cannot adequately select the author, this filter can be used to
             remove unwanted substrings.
+        relative_urls: If True, the extractor assumes that image src URLs are relative and prepends the publisher
+            domain
 
     Returns:
         A list of Images contained within the article
@@ -589,6 +602,12 @@ def image_extraction(
     # determine bounds based on df index
     if not (bounds := determine_bounds(dom, paragraph_selector, upper_boundary_selector, lower_boundary_selector)):
         raise ValueError("Bounds could not be determined")
+
+    if relative_urls:
+        if not (domain := _og_url_selector(dom.root)):
+            raise ValueError("Could not determine domain")
+    else:
+        domain = None
 
     image_nodes = [
         IndexedImageNode(position=position, content=node, is_cover=position < (bounds.first_paragraph or 0))
@@ -603,6 +622,7 @@ def image_extraction(
             alt_selector=alt_selector,
             author_selector=author_selector,
             author_filter=author_filter,
+            domain=domain,
         )
     )
 

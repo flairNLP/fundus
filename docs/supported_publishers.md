@@ -1367,9 +1367,7 @@
           <span>www.express.co.uk</span>
         </a>
       </td>
-      <td>
-        <code>images</code>
-      </td>
+      <td>&#160;</td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -1384,9 +1382,7 @@
           <span>www.dailymail.co.uk</span>
         </a>
       </td>
-      <td>
-        <code>images</code>
-      </td>
+      <td>&#160;</td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -1401,9 +1397,7 @@
           <span>www.dailystar.co.uk</span>
         </a>
       </td>
-      <td>
-        <code>images</code>
-      </td>
+      <td>&#160;</td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -1433,9 +1427,7 @@
           <span>www.standard.co.uk</span>
         </a>
       </td>
-      <td>
-        <code>images</code>
-      </td>
+      <td>&#160;</td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -1450,9 +1442,7 @@
           <span>metro.co.uk</span>
         </a>
       </td>
-      <td>
-        <code>images</code>
-      </td>
+      <td>&#160;</td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -1467,9 +1457,7 @@
           <span>www.bbc.co.uk</span>
         </a>
       </td>
-      <td>
-        <code>images</code>
-      </td>
+      <td>&#160;</td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -1484,9 +1472,7 @@
           <span>www.theguardian.com</span>
         </a>
       </td>
-      <td>
-        <code>images</code>
-      </td>
+      <td>&#160;</td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -1501,9 +1487,7 @@
           <span>www.independent.co.uk</span>
         </a>
       </td>
-      <td>
-        <code>images</code>
-      </td>
+      <td>&#160;</td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -1518,9 +1502,7 @@
           <span>www.mirror.co.uk</span>
         </a>
       </td>
-      <td>
-        <code>images</code>
-      </td>
+      <td>&#160;</td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -1535,9 +1517,7 @@
           <span>www.thesun.co.uk</span>
         </a>
       </td>
-      <td>
-        <code>images</code>
-      </td>
+      <td>&#160;</td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -1552,9 +1532,7 @@
           <span>www.telegraph.co.uk</span>
         </a>
       </td>
-      <td>
-        <code>images</code>
-      </td>
+      <td>&#160;</td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -1569,9 +1547,7 @@
           <span>inews.co.uk</span>
         </a>
       </td>
-      <td>
-        <code>images</code>
-      </td>
+      <td>&#160;</td>
       <td>&#160;</td>
     </tr>
   </tbody>
