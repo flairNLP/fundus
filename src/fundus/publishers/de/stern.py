@@ -58,7 +58,7 @@ class SternParser(ParserProxy):
         _summary_selector = CSSSelector(".article__body > .intro")
         _subheadline_selector = CSSSelector(".article__body > .subheadline-element")
 
-        _topic_selector = XPath("//ul[@class='tags typo-topic-tag u-blanklist']/li")
+        _topic_selector = CSSSelector("ul.tags > li")
         _author_selector = CSSSelector("li.authors__list-item > a, li.authors__list-item > .typo-article-info-bold")
 
         @attribute
