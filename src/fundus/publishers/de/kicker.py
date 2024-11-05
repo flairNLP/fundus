@@ -47,15 +47,8 @@ class KickerParser(ParserProxy):
                 paragraph_selector=self._paragraph_selector,
                 upper_boundary_selector=XPath("//article"),
                 image_selector=XPath(
-                    "//div[@class='kick__article__content']//div[contains(@class,'kick__article__picture ')]/picture[not(@class)]//img|"
-                    "//a[contains(@class,'kick__article__picture')]//img"
+                    "//*[contains(@class,'kick__article__picture') and not(contains(@class, 'medias'))]//img"
                 ),
-                caption_selector=XPath(
-                    "./ancestor::div[contains(@class, 'kick__article__picture')]//p/text()|"
-                    "./ancestor::a[contains(@class, 'kick__article__picture')]//p/text()"
-                ),
-                author_selector=XPath(
-                    "./ancestor::div[contains(@class, 'kick__article__picture')]//p/span|"
-                    "./ancestor::a[contains(@class, 'kick__article__picture')]//p/span"
-                ),
+                caption_selector=XPath("./ancestor::*[contains(@class, 'kick__article__picture ')]//p/text()"),
+                author_selector=XPath("./ancestor::*[contains(@class, 'kick__article__picture ')]//p/span"),
             )
