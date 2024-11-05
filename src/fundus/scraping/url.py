@@ -2,6 +2,7 @@ import gzip
 import itertools
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
+from enum import Enum
 from functools import cached_property
 from typing import Callable, ClassVar, Dict, Iterable, Iterator, List, Optional
 
@@ -13,19 +14,50 @@ from lxml.etree import XPath
 from requests import ConnectionError, HTTPError
 
 from fundus.logging import create_logger
+from fundus.parser.utility import generic_nodes_to_text
 from fundus.scraping.filter import URLFilter, inverse
 from fundus.scraping.session import _default_header, session_handler
 
 logger = create_logger(__name__)
 
 
+class CompressionFormats(Enum):
+    GZIP = 1
+    BZ2 = 2
+    ZIP = 3
+    LZMA = 4
+
+
 class _ArchiveDecompressor:
     def __init__(self):
         self.archive_mapping: Dict[str, Callable[[bytes], bytes]] = {
-            "application/octet-stream": self._decompress_gzip,
+            "application/octet-stream": self._decompress_octet_stream,
             "application/x-gzip": self._decompress_gzip,
             "gzip": self._decompress_gzip,
         }
+
+    @staticmethod
+    def identify_compression_format(compressed_content: bytes) -> Optional[CompressionFormats]:
+        if compressed_content.startswith(b"\x1f\x8b"):
+            return CompressionFormats.GZIP
+        elif compressed_content.startswith(b"\x42\x5a"):
+            return CompressionFormats.BZ2
+        elif compressed_content.startswith(b"PK\x03\x04"):
+            return CompressionFormats.ZIP
+        elif compressed_content.startswith(b"\x28\xb5\x2f\xfd"):
+            return CompressionFormats.LZMA
+        return None
+
+    def _decompress_octet_stream(self, compressed_content: bytes) -> bytes:
+        if (compression_format := self.identify_compression_format(compressed_content)) is None:
+            logger.debug(f"Could not identify compression format")
+            raise NotImplementedError
+
+        if compression_format == CompressionFormats.GZIP:
+            return self._decompress_gzip(compressed_content)
+        else:
+            logger.debug(f"Decompression not implemented for {compression_format.name!r} format")
+            raise NotImplementedError
 
     @staticmethod
     def _decompress_gzip(compressed_content: bytes) -> bytes:
@@ -116,12 +148,16 @@ class Sitemap(URLSource):
                 return
             content = response.content
             if (content_type := response.headers.get("content-type")) in self._decompressor.supported_file_formats:
-                content = self._decompressor.decompress(content, content_type)
+                try:
+                    content = self._decompressor.decompress(content, content_type)
+                except NotImplementedError:
+                    logger.warning(f"No matching decompression found for {sitemap_url!r}")
+                    return
             if not content:
                 logger.warning(f"Warning! Empty sitemap at {sitemap_url!r}")
                 return
             tree = lxml.html.fromstring(content)
-            urls = [node.text_content() for node in self._url_selector(tree)]
+            urls = generic_nodes_to_text(self._url_selector(tree), normalize=True)
             if urls:
                 for new_url in reversed(urls) if self.reverse else urls:
                     yield new_url
