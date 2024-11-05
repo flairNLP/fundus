@@ -2,6 +2,7 @@ import datetime
 from typing import List, Optional
 
 from lxml.cssselect import CSSSelector
+from lxml.etree import XPath
 
 from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute
 from fundus.parser.utility import (
@@ -13,9 +14,15 @@ from fundus.parser.utility import (
 
 class FrankfurterRundschauParser(ParserProxy):
     class V1(BaseParser):
-        _paragraph_selector = CSSSelector("p.id-StoryElement-paragraph, article > ul > li")
-        _summary_selector = CSSSelector("p.id-StoryElement-leadText")
-        _subheadline_selector = CSSSelector("h2.id-StoryElement-crosshead")
+        _paragraph_selector = XPath(
+            "//p[@class='id-StoryElement-paragraph'] | "
+            "//p[contains(@class,'id-Article-content-item-paragraph') and text()] |"
+            "//div[@class='id-Article-body']//ul/li[not(@class='id-AuthorList-item ')]"
+        )
+        _summary_selector = CSSSelector(
+            "p.id-StoryElement-leadText, p[class='id-Article-content-item id-Article-content-item-summary']"
+        )
+        _subheadline_selector = CSSSelector("h2.id-StoryElement-crosshead, span.id-Article-content-item-headline-text")
 
         @attribute
         def body(self) -> Optional[ArticleBody]:
