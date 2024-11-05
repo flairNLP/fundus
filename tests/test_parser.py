@@ -1,4 +1,5 @@
 import datetime
+import pickle
 from typing import Any, Dict, List, Optional, Tuple, Union
 
 import lxml.html
@@ -235,6 +236,9 @@ class TestParser:
             extraction = versioned_parser().parse(html.content, "raise")
             for key, value in version_data.items():
                 assert value == extraction[key]
+
+            # check if extraction is pickable
+            pickle.dumps(extraction)
 
     def test_reserved_attribute_names(self, publisher: Publisher):
         parser = publisher.parser
