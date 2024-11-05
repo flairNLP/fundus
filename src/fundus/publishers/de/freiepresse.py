@@ -46,16 +46,18 @@ class FreiePresseParser(ParserProxy):
         def topics(self) -> List[str]:
             return generic_topic_parsing(self.precomputed.ld.bf_search("keywords"), delimiter="/")
 
-        """
-        This publisher uses relative URLs, which is not supported at of now
         @attribute
         def images(self) -> List[Image]:
             return image_extraction(
                 doc=self.precomputed.doc,
                 paragraph_selector=self._paragraph_selector,
-                image_selector=XPath("//div[@class='detail-img__image-wrapper detail-img__image-wrapper--gradient']//img"),
+                image_selector=XPath(
+                    "//div[@class='detail-img__image-wrapper detail-img__image-wrapper--gradient']//img"
+                ),
                 lower_boundary_selector=CSSSelector("a.article__copyright"),
-                caption_selector=XPath("./ancestor::div[@class='detail-img']//div[@class='detail-img__description no-transition']/div/text()"),
-                author_selector=re.compile(r"(?i)bild:(?P<credits>.*)")
+                caption_selector=XPath(
+                    "./ancestor::div[@class='detail-img']//div[@class='detail-img__description no-transition']/div/text()"
+                ),
+                author_selector=re.compile(r"(?i)bild:(?P<credits>.*)"),
+                relative_urls=True,
             )
-        """

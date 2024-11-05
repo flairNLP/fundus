@@ -59,15 +59,18 @@ class KrautreporterParser(ParserProxy):
         def topics(self) -> List[str]:
             return utility.generic_topic_parsing(self._topic_selector(self.precomputed.doc))
 
-        """
-        This publisher uses data:image/gif;base64 values in their non-cover images
         @attribute
         def images(self) -> List[Image]:
             return image_extraction(
                 doc=self.precomputed.doc,
                 paragraph_selector=self._paragraph_selector,
-                image_selector=XPath("//section[@class='article-headers-shared-teaser-image']//img|"
-                                     "//figure[contains(@class, 'image--default')]//img"),
-                author_selector=XPath("./ancestor::section[@class='article-headers-shared-teaser-image']//p[@class='article-headers-shared-teaser-image__credits']")
+                image_selector=XPath(
+                    "//section[@class='article-headers-shared-teaser-image']//img|"
+                    "//figure[contains(@class, 'image--default')]//img"
+                ),
+                author_selector=XPath(
+                    "./ancestor::section[@class='article-headers-shared-teaser-image']"
+                    "//p[@class='article-headers-shared-teaser-image__credits']"
+                ),
+                relative_urls=True,
             )
-        """

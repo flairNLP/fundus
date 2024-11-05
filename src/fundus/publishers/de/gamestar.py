@@ -41,8 +41,6 @@ class GamestarParser(ParserProxy):
         def publishing_date(self) -> Optional[datetime]:
             return generic_date_parsing(self.precomputed.ld.bf_search("datePublished"))
 
-        """
-        This publisher uses incomplete URLs, which cannot be fixed as of now
         @attribute
         def images(self) -> List[Image]:
             return image_extraction(
@@ -52,6 +50,6 @@ class GamestarParser(ParserProxy):
                 image_selector=XPath("//picture/img"),
                 caption_selector=XPath("./ancestor::p[@class='caption ']/span[@class='bu m-t-1']"),
                 lower_boundary_selector=XPath("//div[@id='comments']"),
-                author_selector=re.compile("(?i)Bildquelle:(?P<credits>.*)")
+                author_selector=re.compile("(?i)Bildquelle:(?P<credits>.*)"),
+                relative_urls=True,
             )
-        """
