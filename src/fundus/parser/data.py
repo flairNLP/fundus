@@ -62,10 +62,10 @@ class LinkedDataMapping:
         self.__xml: Optional[lxml.etree._Element] = None
 
     def __getstate__(self):
-        picklable_dict = self.__dict__.copy()
-        if (xml_element := picklable_dict.get("_LinkedDataMapping__xml")) is not None:
-            picklable_dict["_LinkedDataMapping__xml"] = tostring(xml_element)
-        return picklable_dict
+        state = self.__dict__.copy()
+        if self.__xml is not None:
+            state["_LinkedDataMapping__xml"] = tostring(self.__xml)
+        return state
 
     def __setstate__(self, state):
         if (xml_element := state.get("_LinkedDataMapping__xml")) is not None:
