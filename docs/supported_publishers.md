@@ -1107,9 +1107,7 @@
           <span>www.lrt.lt</span>
         </a>
       </td>
-      <td>
-        <code>images</code>
-      </td>
+      <td>&#160;</td>
       <td>&#160;</td>
     </tr>
   </tbody>
@@ -1141,9 +1139,7 @@
           <span>www.malaymail.com</span>
         </a>
       </td>
-      <td>
-        <code>images</code>
-      </td>
+      <td>&#160;</td>
       <td>&#160;</td>
     </tr>
   </tbody>
@@ -1288,9 +1284,7 @@
           <span>www.haberturk.com</span>
         </a>
       </td>
-      <td>
-        <code>images</code>
-      </td>
+      <td>&#160;</td>
       <td>
         <code>description</code>
       </td>
@@ -1307,9 +1301,7 @@
           <span>www.ntv.com.tr</span>
         </a>
       </td>
-      <td>
-        <code>images</code>
-      </td>
+      <td>&#160;</td>
       <td>&#160;</td>
     </tr>
   </tbody>
