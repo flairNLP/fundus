@@ -1,7 +1,8 @@
 import datetime
-from typing import List, Optional
+from typing import List, Optional, Union
 
 from lxml.cssselect import CSSSelector
+from lxml.etree import XPath
 
 from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute
 from fundus.parser.utility import (
@@ -13,9 +14,12 @@ from fundus.parser.utility import (
 
 class SternParser(ParserProxy):
     class V1(BaseParser):
-        _paragraph_selector = CSSSelector(".article__body >p")
-        _summary_selector = CSSSelector(".intro__text")
-        _subheadline_selector = CSSSelector(".subheadline-element")
+        VALID_UNTIL = datetime.date(2024, 10, 26)
+        _paragraph_selector: Union[XPath, CSSSelector] = CSSSelector(".article__body >p")
+        _summary_selector: Union[XPath, CSSSelector] = CSSSelector(".intro__text")
+        _subheadline_selector: Union[XPath, CSSSelector] = CSSSelector(".subheadline-element")
+
+        _topic_selector: Union[XPath, CSSSelector] = CSSSelector(".article__tags li.links__item")
 
         @attribute
         def body(self) -> Optional[ArticleBody]:
@@ -45,5 +49,13 @@ class SternParser(ParserProxy):
 
         @attribute
         def topics(self) -> List[str]:
-            topic_nodes = self.precomputed.doc.cssselect(".article__tags li.links__item")
+            topic_nodes = self._topic_selector(self.precomputed.doc)
             return [node.text_content().strip("\n ") for node in topic_nodes]
+
+    class V1_1(V1):
+        VALID_UNTIL = datetime.date.today()
+        _summary_selector = XPath("//div[@class='intro typo-intro u-richtext']")
+        _paragraph_selector = XPath("//div[@class='article__body']//p[contains(@class,'typo-body-default')]")
+        _subheadline_selector = XPath("//div[@class='article__body']//h2[@class='subheadline-element typo-headline2']")
+
+        _topic_selector = XPath("//ul[@class='tags typo-topic-tag u-blanklist']/li")

@@ -62,5 +62,52 @@
       "Unternehmensberatung",
       "Universität Frankfurt"
     ]
+  },
+  "V1_1": {
+    "authors": [
+      "Phil Göbel"
+    ],
+    "body": {
+      "summary": [
+        "Der Wohnungskonzern Vonovia will neue Rauchmelder installieren. Die bieten nicht nur Vorteile. Doch Mieter haben keine andere Wahl: Wer sich weigert, wird verklagt."
+      ],
+      "sections": [
+        {
+          "headline": [],
+          "paragraphs": [
+            "Vonovia steht erneut in der Kritik. Der Immobilienkonzern will sogenannte \"smarte Rauchmelder\" in seinen Wohnungen installieren lassen. Die Krux dabei: Die neuen Geräte können nicht nur Rauchentwicklungen erkennen und Alarm schlagen, sie messen auch, ob in den Wohnungen genug gelüftet und geheizt wird, das berichtet unter anderem der SWR. Die Mieter fühlen sich kontrolliert und überwacht. Zu allem Überfluss sollen sie wegen der Rauchmelder auch noch eine Mieterhöhung hinnehmen."
+          ]
+        },
+        {
+          "headline": [
+            "Mieter sollen für neue Rauchmelder zahlen"
+          ],
+          "paragraphs": [
+            "Die Pläne von Vonovia klingen fast wie ein schlechter Scherz: In vielen Wohnungen müssen in den kommenden Monaten nach zehn Jahren die Rauchmelder getauscht werden, so weit so normal. Auch die Idee, mit smarten Rauchmeldern den neuesten Stand der Technik zu installieren, klingt im ersten Moment nachvollziehbar. Doch die Kosten von 135 Euro für den neuen Melder des Typs \"Multisensor Plus\" will der Konzern auf die Mieter umlegen. Die Grundmiete soll um fünf Euro erhöht werden.",
+            "\"Es sind fünf Euro im Monat, das hält sich in Grenzen, also für meine Verhältnisse. Es gibt aber Mieter im Haus, die zählen jeden Euro, und für die ist jeder Euro Grundmiete zu viel\", erklärt ein betroffener Mieter dem SWR. Vonovia begründet die geplante Mieterhöhung damit, dass die neuen Rauchmelder eine \"technische Verbesserung der Sicherheitstechnik\" seien und beruft sich auf ein Urteil des Bundesgerichtshofs aus dem letzten Jahr. Der Gebrauchswert der Wohnung werde durch die Rauchmelder erhöht, daher würden die Kosten als umlagefähig gelten.",
+            "Das sieht etwa Matthias Bauer von der Verbraucherzentrale Baden-Württemberg anders: \"So einfach geht das nicht\", so Bauer gegenüber dem SWR. Wie Vonovia darauf komme, dass der Fall eine Mieterhöhung rechtfertigt, verstehe er nicht. Der Austausch von Rauchwarnmeldern stelle, anders als der erstmalige Einbau, grundsätzlich keine Modernisierung dar."
+          ]
+        },
+        {
+          "headline": [
+            "Vonovias Rauchmelder: Daten könnten in China und den USA landen"
+          ],
+          "paragraphs": [
+            "Aber auch abgesehen von der Diskussion, wer die Kosten für die smarten Rauchmelder tragen soll, ist der Widerstand gegen die Geräte groß. Und das wohl nicht zu Unrecht. Vonovia betont, die Mieter bräuchten sich keine Sorgen um ihre Datensicherheit machen. Und genau das weckt Misstrauen. Denn der Konzern wirbt dafür, die Rauchmelder über eine hauseigene App zu steuern. Daten wie die Luftfeuchtigkeit oder der Kohlenmonoxidgehalt können in Echtzeit kontrolliert werden. \"Raumklima-Monitoring\" nennt Vonovia das.",
+            "Für Vermieter wirkt das wie ein feuchter Traum: Endlosen Diskussionen über Schimmel in der Wohnung, weil \"schlecht geheizt\" werde, könnten umgangen werden. Die Mieter würden in diesem Punkt ausspioniert werden, auch wenn die Daten angeblich nur 48 Stunden und lokal gespeichert werden sollen. Doch, ob diese Daten überhaupt erhoben werden dürfen, sei laut Bauer fraglich, da durch die Installation \"sehr stark in die Persönlichkeitsrechte jedes Mieters eingegriffen werde\", so der Verbraucherschützer gegenüber dem SWR.",
+            "Wie die \"Zeit\" berichtet, könnten die Daten aber noch deutlich weiter gestreut werden. So werde die britische Firma hinter der Vonovia-App derzeit an ein Unternehmen aus China verkauft. Die Daten der App selbst würden zudem in einer US-amerikanischen Cloud gespeichert. Das bedeute nicht, dass Geheimdienste automatisch auf die Daten deutscher Mieter zugreifen könnten, es sei aber möglich.",
+            "Für Vonovia-Mieter könnte der Streit um die neuen Rauchmelder ein längeres Nachspiel haben. Der Konzern erklärte, er werde \"unsere Mieter freundlich und mehrfach an die gesetzliche Duldungs- und Mitwirkungspflicht erinnern.\" Heißt im Klartext: Wer sich weigert, die neuen Rauchmeldern in seiner Wohnung anbringen zu lassen, könnte mit einer Klage von Vonovia rechnen."
+          ]
+        }
+      ]
+    },
+    "publishing_date": "2024-11-05 17:22:00+01:00",
+    "title": "Neue Rauchmelder spionieren Mieter aus – und die sollen dafür zahlen",
+    "topics": [
+      "Vonovia",
+      "Rauchmelder",
+      "Mieterhöhung",
+      "Immobilie"
+    ]
   }
 }
