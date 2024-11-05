@@ -44,7 +44,6 @@
         </a>
       </td>
       <td>
-        <code>images</code>
         <code>topics</code>
       </td>
       <td>&#160;</td>
@@ -79,7 +78,6 @@
         </a>
       </td>
       <td>
-        <code>images</code>
         <code>topics</code>
       </td>
       <td>&#160;</td>
@@ -143,9 +141,7 @@
           <span>www.theglobeandmail.com</span>
         </a>
       </td>
-      <td>
-        <code>images</code>
-      </td>
+      <td>&#160;</td>
       <td>&#160;</td>
     </tr>
   </tbody>
@@ -1017,9 +1013,7 @@
           <span>www.lefigaro.fr</span>
         </a>
       </td>
-      <td>
-        <code>images</code>
-      </td>
+      <td>&#160;</td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -1034,9 +1028,7 @@
           <span>www.lemonde.fr</span>
         </a>
       </td>
-      <td>
-        <code>images</code>
-      </td>
+      <td>&#160;</td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -1051,9 +1043,7 @@
           <span>www.lesechos.fr</span>
         </a>
       </td>
-      <td>
-        <code>images</code>
-      </td>
+      <td>&#160;</td>
       <td>&#160;</td>
     </tr>
   </tbody>
@@ -1085,9 +1075,7 @@
           <span>www.timesofindia.indiatimes.com</span>
         </a>
       </td>
-      <td>
-        <code>images</code>
-      </td>
+      <td>&#160;</td>
       <td>&#160;</td>
     </tr>
   </tbody>
