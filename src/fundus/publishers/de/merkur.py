@@ -2,6 +2,7 @@ import datetime
 from typing import List, Optional
 
 from lxml.cssselect import CSSSelector
+from lxml.etree import XPath
 
 from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute
 from fundus.parser.utility import (
@@ -14,7 +15,7 @@ from fundus.parser.utility import (
 class MerkurParser(ParserProxy):
     class V1(BaseParser):
         _paragraph_selector = CSSSelector("p.id-StoryElement-paragraph, article > ul > li")
-        _summary_selector = CSSSelector("p.id-StoryElement-leadText")
+        _summary_selector = XPath("//p[@class='id-StoryElement-leadText'][1]")
         _subheadline_selector = CSSSelector("h2.id-StoryElement-crosshead")
 
         @attribute
