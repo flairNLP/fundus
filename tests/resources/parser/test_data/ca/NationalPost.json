@@ -75,8 +75,8 @@
     "images": [
       {
         "urls": {
-          "1x": "https://smartcdn.gprod.postmedia.digital/nationalpost/wp-content/uploads/2024/08/Kamala-Harris-1.jpg?quality=90&strip=all&w=288&h=216&sig=Ljg4qX5ZA5CJ_zgkeUwCGg,",
-          "2x": "https://smartcdn.gprod.postmedia.digital/nationalpost/wp-content/uploads/2024/08/Kamala-Harris-1.jpg?quality=90&strip=all&w=576&h=432&sig=MJddUrXGOuvx0T5L0eSY1A"
+          "1x": "https://smartcdn.gprod.postmedia.digital/nationalpost/wp-content/uploads/2024/08/Kamala-Harris-1.jpg?quality=90&strip=all&w=564&h=423&type=webp&sig=tjU1vhPSQI8zy3tLPltvAQ,",
+          "2x": "https://smartcdn.gprod.postmedia.digital/nationalpost/wp-content/uploads/2024/08/Kamala-Harris-1.jpg?quality=90&strip=all&w=1128&h=846&type=webp&sig=0p80GzjMQzu56FKKjtUrng"
         },
         "is_cover": true,
         "description": "Kamala Harris with high school classmates.",
@@ -88,8 +88,8 @@
       },
       {
         "urls": {
-          "1x": "https://smartcdn.gprod.postmedia.digital/nationalpost/wp-content/uploads/2024/08/Kamala-Harris-2.jpg?quality=90&strip=all&w=288&sig=OCI8kk7ttdb6U7lfUnsBbg,",
-          "2x": "https://smartcdn.gprod.postmedia.digital/nationalpost/wp-content/uploads/2024/08/Kamala-Harris-2.jpg?quality=90&strip=all&w=576&sig=yl0MqIc0LAM4f1p7z317uQ"
+          "1x": "https://smartcdn.gprod.postmedia.digital/nationalpost/wp-content/uploads/2024/08/Kamala-Harris-2.jpg?quality=90&strip=all&w=564&type=webp&sig=5NYrqJxhwP2DuUNLEqM0qQ,",
+          "2x": "https://smartcdn.gprod.postmedia.digital/nationalpost/wp-content/uploads/2024/08/Kamala-Harris-2.jpg?quality=90&strip=all&w=1128&type=webp&sig=xhgJqUJ6A5dHmzNM4tTYmQ"
         },
         "is_cover": false,
         "description": "Kamala Harris.",
