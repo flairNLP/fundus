@@ -20,7 +20,7 @@ class FrankfurterRundschauParser(ParserProxy):
             "//div[@class='id-Article-body']//ul/li[not(@class='id-AuthorList-item ')]"
         )
         _summary_selector = CSSSelector(
-            "p.id-StoryElement-leadText, " "p[class='id-Article-content-item id-Article-content-item-summary']"
+            "p.id-StoryElement-leadText, p[class='id-Article-content-item id-Article-content-item-summary']"
         )
         _subheadline_selector = CSSSelector("h2.id-StoryElement-crosshead, span.id-Article-content-item-headline-text")
 
