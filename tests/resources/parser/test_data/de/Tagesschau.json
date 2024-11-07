@@ -54,6 +54,32 @@
         }
       ]
     },
+    "images": [
+      {
+        "urls": {
+          "1x": "https://images.tagesschau.de/image/ca17764d-c950-4abf-9a41-2bc344a5cd43/AAABhnSXFss/AAABg8tMRzY/20x9-1280/schuld-bruecke-101.jpg"
+        },
+        "is_cover": true,
+        "description": "Die zerstörte Brücke in Schuld, aufgenommen zwei Tage nach dem verheerenden Hochwasser vom Juli 2021",
+        "caption": null,
+        "authors": [
+          "AP"
+        ],
+        "position": 991
+      },
+      {
+        "urls": {
+          "1x": "https://images.tagesschau.de/image/ca17764d-c950-4abf-9a41-2bc344a5cd43/AAABhnSXFss/AAABg8tMRzY/20x9-1280/schuld-bruecke-101.jpg"
+        },
+        "is_cover": true,
+        "description": "Die zerstörte Brücke in Schuld, aufgenommen zwei Tage nach dem verheerenden Hochwasser vom Juli 2021",
+        "caption": null,
+        "authors": [
+          "AP"
+        ],
+        "position": 993
+      }
+    ],
     "publishing_date": "2023-04-28 17:23:42.981000+02:00",
     "title": "Ausschuss zur Ahrtal-Flut: Zwei Rücktritte - und viele offene Fragen",
     "topics": [

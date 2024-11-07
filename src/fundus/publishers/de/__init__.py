@@ -408,6 +408,7 @@ class DE(metaclass=PublisherGroup):
         domain="https://www1.wdr.de/",
         parser=WDRParser,
         sources=[RSSFeed("https://www1.wdr.de/uebersicht-100.feed")],
+        url_filter=inverse(regex_filter("wdr.de/(?!mediathek/)")),
     )
 
     BR = Publisher(

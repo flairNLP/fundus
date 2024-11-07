@@ -567,7 +567,7 @@ def image_extraction(
         "(./ancestor::figure//*[(contains(@class, 'copyright') or contains(@class, 'credit')) and text()])[1]"
     ),
     author_filter: Optional[Pattern[str]] = None,
-    relative_urls: bool = False,
+    relative_urls: Union[bool, XPath] = False,
 ) -> List[Image]:
     """Extracts images enriched with metadata from <dom> based on given selectors.
 
@@ -607,7 +607,11 @@ def image_extraction(
         raise ValueError("Bounds could not be determined")
 
     if relative_urls:
-        if not (domain := _og_url_selector(dom.root)):
+        if isinstance(relative_urls, bool):
+            selector = _og_url_selector
+        else:
+            selector = relative_urls
+        if not (domain := selector(dom.root)):
             raise ValueError("Could not determine domain")
     else:
         domain = None

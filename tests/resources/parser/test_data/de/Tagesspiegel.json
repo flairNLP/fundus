@@ -103,6 +103,116 @@
         }
       ]
     },
+    "images": [
+      {
+        "urls": {
+          "768w": "https://www.tagesspiegel.de/wissen/images/rekordhitze-in-den-weltmeeren/alternates/BASE_21_9_W768/rekordhitze-in-den-weltmeeren.jpeg",
+          "886w": "https://www.tagesspiegel.de/wissen/images/rekordhitze-in-den-weltmeeren/alternates/BASE_21_9_W886/rekordhitze-in-den-weltmeeren.jpeg",
+          "1000w": "https://www.tagesspiegel.de/wissen/images/rekordhitze-in-den-weltmeeren/alternates/BASE_21_9_W1000/rekordhitze-in-den-weltmeeren.jpeg"
+        },
+        "is_cover": true,
+        "description": "Eine Welle bricht, während die Sonne am Windansea Beach in der Gemeinde La Jolla in San Diego untergeht (Archivbild von 2021).",
+        "caption": null,
+        "authors": [],
+        "position": 872
+      },
+      {
+        "urls": {
+          "620w": "https://www.tagesspiegel.de/images/nordatlantikwassertemperaturrb1png/alternates/FREE_620/nordatlantikwassertemperaturrb1png.png",
+          "1240w": "https://www.tagesspiegel.de/images/nordatlantikwassertemperaturrb1png/alternates/FREE_1240/nordatlantikwassertemperaturrb1png.png"
+        },
+        "is_cover": false,
+        "description": "Die Temperatur des Oberflächenwassers im Nordatlantik befindet sich seit mehr als einem Jahr auf Rekordkurs.",
+        "caption": "Die Temperatur des Oberflächenwassers im Nordatlantik befindet sich seit mehr als einem Jahr auf Rekordkurs.",
+        "authors": [],
+        "position": 915
+      },
+      {
+        "urls": {
+          "440w": "https://www.tagesspiegel.de/images/slowenien-uberschwemmungen-nach-starken-regenfallen1/alternates/BASE_4_3_W440/slowenien-ueberschwemmungen-nach-starken-regenfaellen.jpeg",
+          "600w": "https://www.tagesspiegel.de/images/slowenien-uberschwemmungen-nach-starken-regenfallen1/alternates/BASE_4_3_W600/slowenien-ueberschwemmungen-nach-starken-regenfaellen.jpeg",
+          "1000w": "https://www.tagesspiegel.de/images/slowenien-uberschwemmungen-nach-starken-regenfallen1/alternates/BASE_4_3_W1000/slowenien-ueberschwemmungen-nach-starken-regenfaellen.jpeg"
+        },
+        "is_cover": false,
+        "description": "Intensive Regenfälle brachten Slowenien und Südostösterreich Überschwemmungen: Überflutete Gebiete nördlich von Ljubljana.",
+        "caption": "Intensive Regenfälle brachten Slowenien und Südostösterreich Überschwemmungen: Überflutete Gebiete nördlich von Ljubljana.",
+        "authors": [],
+        "position": 935
+      },
+      {
+        "urls": {
+          "80w": "https://www.tagesspiegel.de/images/burgess188jpg/alternates/BASE_1_1_W80/burgess188jpg.jpeg",
+          "160w": "https://www.tagesspiegel.de/images/burgess188jpg/alternates/BASE_1_1_W160/burgess188jpg.jpeg",
+          "200w": "https://www.tagesspiegel.de/images/burgess188jpg/alternates/BASE_1_1_W200/burgess188jpg.jpeg",
+          "320w": "https://www.tagesspiegel.de/images/burgess188jpg/alternates/BASE_1_1_W320/burgess188jpg.jpeg"
+        },
+        "is_cover": false,
+        "description": null,
+        "caption": null,
+        "authors": [],
+        "position": 961
+      },
+      {
+        "urls": {
+          "620w": "https://www.tagesspiegel.de/images/nordatlantiktemperaturanomalierb1png/alternates/FREE_620/nordatlantiktemperaturanomalierb1png.png",
+          "1240w": "https://www.tagesspiegel.de/images/nordatlantiktemperaturanomalierb1png/alternates/FREE_1240/nordatlantiktemperaturanomalierb1png.png"
+        },
+        "is_cover": false,
+        "description": "Derzeit ist das Oberflächenwasser im Ostatlantik westlich der Kanaren viel zu warm, ähnlich wie bei dem Orkan Xynthia im Jahre 2010.",
+        "caption": "Derzeit ist das Oberflächenwasser im Ostatlantik westlich der Kanaren viel zu warm, ähnlich wie bei dem Orkan Xynthia im Jahre 2010.",
+        "authors": [],
+        "position": 973
+      },
+      {
+        "urls": {
+          "440w": "https://www.tagesspiegel.de/images/map-of-the-atlantic-ocean-showing-the-course-of-the-gulf-stream-from-elisee-reclus-the-ocean-atmosp/alternates/BASE_4_3_W440/map-of-the-atlantic-ocean-showing-the-course-of-the-gulf-stream-from-elisee-reclus-the-ocean-atmosp.jpeg",
+          "600w": "https://www.tagesspiegel.de/images/map-of-the-atlantic-ocean-showing-the-course-of-the-gulf-stream-from-elisee-reclus-the-ocean-atmosp/alternates/BASE_4_3_W600/map-of-the-atlantic-ocean-showing-the-course-of-the-gulf-stream-from-elisee-reclus-the-ocean-atmosp.jpeg",
+          "1000w": "https://www.tagesspiegel.de/images/map-of-the-atlantic-ocean-showing-the-course-of-the-gulf-stream-from-elisee-reclus-the-ocean-atmosp/alternates/BASE_4_3_W1000/map-of-the-atlantic-ocean-showing-the-course-of-the-gulf-stream-from-elisee-reclus-the-ocean-atmosp.jpeg"
+        },
+        "is_cover": false,
+        "description": "Karte des Atlantischen Ozeans mit dem Verlauf des Golfstroms aus dem Jahr 1873.",
+        "caption": "Karte des Atlantischen Ozeans mit dem Verlauf des Golfstroms aus dem Jahr 1873.",
+        "authors": [],
+        "position": 987
+      },
+      {
+        "urls": {
+          "440w": "https://www.tagesspiegel.de/wissen/images/heprodimagesfotos87120170412sahara1034120170411145410682jpg/alternates/BASE_4_3_W440/heprodimagesfotos87120170412sahara1034120170411145410682jpg.jpeg",
+          "600w": "https://www.tagesspiegel.de/wissen/images/heprodimagesfotos87120170412sahara1034120170411145410682jpg/alternates/BASE_4_3_W600/heprodimagesfotos87120170412sahara1034120170411145410682jpg.jpeg",
+          "1000w": "https://www.tagesspiegel.de/wissen/images/heprodimagesfotos87120170412sahara1034120170411145410682jpg/alternates/BASE_4_3_W1000/heprodimagesfotos87120170412sahara1034120170411145410682jpg.jpeg"
+        },
+        "is_cover": false,
+        "description": "Hitzewellen treten vor allem durch Südwindlagen auf, die häufig auch Saharastaub nach Europa bringen.",
+        "caption": "Hitzewellen treten vor allem durch Südwindlagen auf, die häufig auch Saharastaub nach Europa bringen.",
+        "authors": [],
+        "position": 1026
+      },
+      {
+        "urls": {
+          "80w": "https://www.tagesspiegel.de/wissen/images/2022karsten-hausteinoo3a9871jpg/alternates/BASE_1_1_W80/2022karsten-hausteinoo3a9871jpg.jpeg",
+          "160w": "https://www.tagesspiegel.de/wissen/images/2022karsten-hausteinoo3a9871jpg/alternates/BASE_1_1_W160/2022karsten-hausteinoo3a9871jpg.jpeg",
+          "200w": "https://www.tagesspiegel.de/wissen/images/2022karsten-hausteinoo3a9871jpg/alternates/BASE_1_1_W200/2022karsten-hausteinoo3a9871jpg.jpeg",
+          "320w": "https://www.tagesspiegel.de/wissen/images/2022karsten-hausteinoo3a9871jpg/alternates/BASE_1_1_W320/2022karsten-hausteinoo3a9871jpg.jpeg"
+        },
+        "is_cover": false,
+        "description": null,
+        "caption": null,
+        "authors": [],
+        "position": 1036
+      },
+      {
+        "urls": {
+          "440w": "https://www.tagesspiegel.de/images/sunset-at-callao-salvajebrsanta-cruz-de-tenerife-spain-sunset-at-callao-salvaje-santa-cruz-de-tenerife-spain-copyright/alternates/BASE_4_3_W440/sunset-at-callao-salvajebrsanta-cruz-de-tenerife-spain-sunset-at-callao-salvaje-santa-cruz-de-tenerife-spain-copyright.jpeg",
+          "600w": "https://www.tagesspiegel.de/images/sunset-at-callao-salvajebrsanta-cruz-de-tenerife-spain-sunset-at-callao-salvaje-santa-cruz-de-tenerife-spain-copyright/alternates/BASE_4_3_W600/sunset-at-callao-salvajebrsanta-cruz-de-tenerife-spain-sunset-at-callao-salvaje-santa-cruz-de-tenerife-spain-copyright.jpeg",
+          "1000w": "https://www.tagesspiegel.de/images/sunset-at-callao-salvajebrsanta-cruz-de-tenerife-spain-sunset-at-callao-salvaje-santa-cruz-de-tenerife-spain-copyright/alternates/BASE_4_3_W1000/sunset-at-callao-salvajebrsanta-cruz-de-tenerife-spain-sunset-at-callao-salvaje-santa-cruz-de-tenerife-spain-copyright.jpeg"
+        },
+        "is_cover": false,
+        "description": "Ein Blick über Santa Cruz de Tenerife auf den Kanaren.",
+        "caption": "Ein Blick über Santa Cruz de Tenerife auf den Kanaren.",
+        "authors": [],
+        "position": 1071
+      }
+    ],
     "publishing_date": "2024-04-29 10:37:00+00:00",
     "title": "Eskalation im Nordatlantik: „Wenn die Ozeane überhitzen, führt das potenziell zu mehr Wetterextremen“",
     "topics": [

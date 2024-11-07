@@ -19,6 +19,20 @@
         }
       ]
     },
+    "images": [
+      {
+        "urls": {
+          "100w": "https://media-cdn.sueddeutsche.de/image/sz.1.5360197/100x75?v=1626956922000&format=webp",
+          "200w": "https://media-cdn.sueddeutsche.de/image/sz.1.5360197/200x150?v=1626956922000&format=webp",
+          "400w": "https://media-cdn.sueddeutsche.de/image/sz.1.5360197/400x300?v=1626956922000&format=webp"
+        },
+        "is_cover": false,
+        "description": "SZ Gerne draußen!",
+        "caption": null,
+        "authors": [],
+        "position": 362
+      }
+    ],
     "publishing_date": "2023-04-28 19:50:30+02:00",
     "title": "Die Fleißigsten und Fahrradfreundlichsten im Landkreis München",
     "topics": [
@@ -44,6 +58,7 @@
         }
       ]
     },
+    "images": [],
     "publishing_date": "2024-02-06 21:19:20+01:00",
     "title": "Ex-Präsident stirbt bei Hubschrauberabsturz",
     "topics": [
