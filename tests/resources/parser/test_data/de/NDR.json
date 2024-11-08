@@ -41,6 +41,50 @@
         }
       ]
     },
+    "images": [
+      {
+        "urls": {
+          "8w": "https://www.ndr.de/resources/images/placeholder.png",
+          "128w": "https://www.ndr.de/nachrichten/schleswig-holstein/meteorit142_v-thumbnailgross.jpg",
+          "184w": "https://www.ndr.de/nachrichten/schleswig-holstein/meteorit142_v-einspaltig.jpg",
+          "256w": "https://www.ndr.de/nachrichten/schleswig-holstein/meteorit142_v-contentklein.jpg",
+          "280w": "https://www.ndr.de/nachrichten/schleswig-holstein/meteorit142_v-anderthalbspaltig.jpg",
+          "376w": "https://www.ndr.de/nachrichten/schleswig-holstein/meteorit142_v-zweispaltig.jpg",
+          "568w": "https://www.ndr.de/nachrichten/schleswig-holstein/meteorit142_v-contentgross.jpg",
+          "760w": "https://www.ndr.de/nachrichten/schleswig-holstein/meteorit142_v-vierspaltig.jpg",
+          "1067w": "https://www.ndr.de/nachrichten/schleswig-holstein/meteorit142_v-contentxl.jpg",
+          "1920w": "https://www.ndr.de/nachrichten/schleswig-holstein/meteorit142_v-fullhd.jpg"
+        },
+        "is_cover": true,
+        "description": "Ein Meteorit liegt in Elmshorn © NDR Foto: Phillip Eggers",
+        "caption": null,
+        "authors": [
+          "NDR Phillip Eggers"
+        ],
+        "position": 232
+      },
+      {
+        "urls": {
+          "8w": "https://www.ndr.de/resources/images/placeholder.png",
+          "128w": "https://www.ndr.de/nachrichten/schleswig-holstein/meteorit142_v-thumbnailgross.jpg",
+          "184w": "https://www.ndr.de/nachrichten/schleswig-holstein/meteorit142_v-einspaltig.jpg",
+          "256w": "https://www.ndr.de/nachrichten/schleswig-holstein/meteorit142_v-contentklein.jpg",
+          "280w": "https://www.ndr.de/nachrichten/schleswig-holstein/meteorit142_v-anderthalbspaltig.jpg",
+          "376w": "https://www.ndr.de/nachrichten/schleswig-holstein/meteorit142_v-zweispaltig.jpg",
+          "568w": "https://www.ndr.de/nachrichten/schleswig-holstein/meteorit142_v-contentgross.jpg",
+          "760w": "https://www.ndr.de/nachrichten/schleswig-holstein/meteorit142_v-vierspaltig.jpg",
+          "1067w": "https://www.ndr.de/nachrichten/schleswig-holstein/meteorit142_v-contentxl.jpg",
+          "1920w": "https://www.ndr.de/nachrichten/schleswig-holstein/meteorit142_v-fullhd.jpg"
+        },
+        "is_cover": true,
+        "description": "Ein Meteorit liegt in Elmshorn © NDR Foto: Phillip Eggers",
+        "caption": null,
+        "authors": [
+          "NDR Phillip Eggers"
+        ],
+        "position": 239
+      }
+    ],
     "publishing_date": "2023-04-28 16:15:45.403000+02:00",
     "title": "Einschlag in Elmshorn: Es war ein Meteorit ",
     "topics": [

@@ -701,9 +701,7 @@
           <span>www.ndr.de</span>
         </a>
       </td>
-      <td>
-        <code>images</code>
-      </td>
+      <td>&#160;</td>
       <td>&#160;</td>
     </tr>
     <tr>
