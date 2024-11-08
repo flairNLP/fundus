@@ -2,6 +2,7 @@ import datetime
 from typing import List, Optional
 
 from lxml.cssselect import CSSSelector
+from lxml.etree import XPath
 
 from fundus.parser import ArticleBody, BaseParser, Image, ParserProxy, attribute
 from fundus.parser.utility import (
@@ -44,4 +45,12 @@ class RheinischePostParser(ParserProxy):
         def topics(self) -> List[str]:
             return generic_topic_parsing(self.precomputed.meta.get("keywords"))
 
-        # This publisher uses relative URLs for images, which aren't supported as of now
+        @attribute
+        def images(self) -> List[Image]:
+            return image_extraction(
+                doc=self.precomputed.doc,
+                paragraph_selector=self._paragraph_selector,
+                image_selector=XPath("//figure[@id]//img[not(@alt='Platzhalter Drittanbieter-Inhalt')]"),
+                caption_selector=XPath("./ancestor::figure//figcaption/p"),
+                relative_urls=True,
+            )

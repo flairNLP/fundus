@@ -19,6 +19,20 @@
         }
       ]
     },
+    "images": [
+      {
+        "urls": {
+          "1x": "https://www.jungewelt.de/img/950/194191.jpg"
+        },
+        "is_cover": true,
+        "description": "1.JPG",
+        "caption": "Werden bald alljährlich gefeiert: Deutsche Soldaten in Ländern, wo sie nichts verloren haben (Kundus, 6.12.2010)",
+        "authors": [
+          "Fabrizio Bensch/REUTERS"
+        ],
+        "position": 251
+      }
+    ],
     "publishing_date": "2024-04-25 19:30:04+02:00",
     "title": "Nationaler Veteranentag: Orden fürs Morden",
     "topics": [

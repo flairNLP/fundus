@@ -39,6 +39,50 @@
         }
       ]
     },
+    "images": [
+      {
+        "urls": {
+          "1x": "https://apps-cloud.n-tv.de/img/24077005-1682410865000/16-9/750/judyly.jpg"
+        },
+        "is_cover": true,
+        "description": "judyly.jpg",
+        "caption": "Gerd Harry Lybke, bekannt als Judy, in den 80er Jahren in seinen ersten Galerieräumen in Leipzig.",
+        "authors": [
+          "Galerie EIGEN + ART"
+        ],
+        "position": 1414
+      },
+      {
+        "urls": {
+          "1x": "https://apps-cloud.n-tv.de/img/24077028-1682411297000/16-9/320/dyyly.jpg"
+        },
+        "is_cover": false,
+        "description": "dyyly.jpg",
+        "caption": null,
+        "authors": [],
+        "position": 1450
+      },
+      {
+        "urls": {
+          "1x": "https://apps-cloud.n-tv.de/img/24077009-1682410770000/16-9/320/judy.jpg"
+        },
+        "is_cover": false,
+        "description": "judy.jpg",
+        "caption": null,
+        "authors": [],
+        "position": 1471
+      },
+      {
+        "urls": {
+          "1x": "https://apps-cloud.n-tv.de/img/24077020-1682411136000/3-4/320/judylyb.jpg"
+        },
+        "is_cover": false,
+        "description": "judylyb.jpg",
+        "caption": null,
+        "authors": [],
+        "position": 1488
+      }
+    ],
     "publishing_date": "2023-04-28 18:11:01+02:00",
     "title": "Judy Lybke, ganz und gar nicht eigenartig",
     "topics": [
@@ -113,6 +157,50 @@
         }
       ]
     },
+    "images": [
+      {
+        "urls": {
+          "1x": "https://apps-cloud.n-tv.de/img/25136611-1722838146000/16-9/750/47887b6d5caf8b0cd0d966244e84878c.jpg"
+        },
+        "is_cover": true,
+        "description": "Einer der emotionalen Leader im deutschen Team: Moritz Wagner.",
+        "caption": "Einer der emotionalen Leader im deutschen Team: Moritz Wagner.",
+        "authors": [
+          "Pool via REUTERS"
+        ],
+        "position": 1463
+      },
+      {
+        "urls": {
+          "1x": "https://apps-cloud.n-tv.de/img/25136619-1722838211000/16-9/320/fd0756ae1d5fcccecc6291d72cfb7875.jpg"
+        },
+        "is_cover": false,
+        "description": "\"Wenn wir so auftreten, können wir jeden schlagen\", sagt Daniel Theis.",
+        "caption": null,
+        "authors": [],
+        "position": 1520
+      },
+      {
+        "urls": {
+          "1x": "https://apps-cloud.n-tv.de/img/25136620-1722838260000/16-9/320/637c53dc56b40ed18f2398aa1fb04240.jpg"
+        },
+        "is_cover": false,
+        "description": "Evan Fournier findet den französischen Spielstil nicht mehr zeitgemäß.",
+        "caption": null,
+        "authors": [],
+        "position": 1564
+      },
+      {
+        "urls": {
+          "1x": "https://apps-cloud.n-tv.de/img/25136621-1722838324000/16-9/320/499bb17c92dfbd2a0827cecfde4b64c7.jpg"
+        },
+        "is_cover": false,
+        "description": "Ein olympisches Phänomen: Kevin Durant.",
+        "caption": null,
+        "authors": [],
+        "position": 1583
+      }
+    ],
     "publishing_date": "2024-08-05 20:59:59+02:00",
     "title": "Deutscher Aggressor beeindruckt, Frankreich hadert",
     "topics": [

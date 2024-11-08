@@ -28,6 +28,46 @@
         }
       ]
     },
+    "images": [
+      {
+        "urls": {
+          "144w": "https://rp-online.de/imgs/32/1/9/4/7/0/7/3/9/1/tok_1457d3a9e26fafc79d853241e8a18143/w144_h90_x1796_y1197_isr_1-17c9a9c45e7fd5ae.jpg",
+          "288w": "https://rp-online.de/imgs/32/1/9/4/7/0/7/3/9/1/tok_7293c7cca8ae023a95ebf28b764715bc/w288_h180_x1796_y1197_isr_1-17c9a9c45e7fd5ae.jpg",
+          "375w": "https://rp-online.de/imgs/32/1/9/4/7/0/7/3/9/1/tok_c129371b0a58a020f4de04259f821177/w375_h234_x1796_y1197_isr_1-17c9a9c45e7fd5ae.jpg",
+          "486w": "https://rp-online.de/imgs/32/1/9/4/7/0/7/3/9/1/tok_57f9dab3f5520d1d67aa2b6ecf99edec/w486_h304_x1796_y1197_isr_1-17c9a9c45e7fd5ae.jpg",
+          "760w": "https://rp-online.de/imgs/32/1/9/4/7/0/7/3/9/1/tok_1b1365eb9d51ef318f1c1b177c41c606/w760_h475_x1796_y1197_isr_1-17c9a9c45e7fd5ae.jpg",
+          "1100w": "https://rp-online.de/imgs/32/1/9/4/7/0/7/3/9/1/tok_2fbbbcac16f54fd8ba2a3efffdeb747c/w1100_h688_x1796_y1197_isr_1-17c9a9c45e7fd5ae.jpg",
+          "1536w": "https://rp-online.de/imgs/32/1/9/4/7/0/7/3/9/1/tok_39560c5eba09b7088f4bf4937698bf8d/w1536_h960_x1796_y1197_isr_1-17c9a9c45e7fd5ae.jpg",
+          "2100w": "https://rp-online.de/imgs/32/1/9/4/7/0/7/3/9/1/tok_49dacaebe50277bd281f65bc7cf9e459/w2100_h1313_x1796_y1197_isr_1-17c9a9c45e7fd5ae.jpg"
+        },
+        "is_cover": true,
+        "description": "Jugendliche tauchen mit der VR-Brille in virtuelle Welten. Wenn das neue KI-Labor der Schule eingerichtet ist, sollen sie selbst welche entwerfen.",
+        "caption": "Jugendliche tauchen mit der VR-Brille in virtuelle Welten. Wenn das neue KI-Labor der Schule eingerichtet ist, sollen sie selbst welche entwerfen.",
+        "authors": [
+          "Andreas Woitschützke"
+        ],
+        "position": 315
+      },
+      {
+        "urls": {
+          "144w": "https://rp-online.de/imgs/32/1/9/4/7/0/7/3/9/1/tok_87ce8894e095cb5de811a065b39cb3eb/w144_h90_x1796_y1197_isr_7-140fa1063ef6ce71.jpg",
+          "288w": "https://rp-online.de/imgs/32/1/9/4/7/0/7/3/9/1/tok_07942782d41a230349e78946f0e05e1b/w288_h180_x1796_y1197_isr_7-140fa1063ef6ce71.jpg",
+          "375w": "https://rp-online.de/imgs/32/1/9/4/7/0/7/3/9/1/tok_ff5fbc1b52cbe3441dda6908e3a379bd/w375_h234_x1796_y1197_isr_7-140fa1063ef6ce71.jpg",
+          "486w": "https://rp-online.de/imgs/32/1/9/4/7/0/7/3/9/1/tok_f20f77f52e607d24020dec8e1af6b8d0/w486_h304_x1796_y1197_isr_7-140fa1063ef6ce71.jpg",
+          "760w": "https://rp-online.de/imgs/32/1/9/4/7/0/7/3/9/1/tok_87fcbad615d0d648cfa8e879abe6a1e4/w760_h475_x1796_y1197_isr_7-140fa1063ef6ce71.jpg",
+          "1100w": "https://rp-online.de/imgs/32/1/9/4/7/0/7/3/9/1/tok_a14b724bcf3aaaf1a5ec60ed94e8755f/w1100_h688_x1796_y1197_isr_7-140fa1063ef6ce71.jpg",
+          "1536w": "https://rp-online.de/imgs/32/1/9/4/7/0/7/3/9/1/tok_19e3aea0b8fc5a318af436b7f9f17024/w1536_h960_x1796_y1197_isr_7-140fa1063ef6ce71.jpg",
+          "2100w": "https://rp-online.de/imgs/32/1/9/4/7/0/7/3/9/1/tok_31b764d08fd857007efd322ccfe9b3ae/w2100_h1313_x1796_y1197_isr_7-140fa1063ef6ce71.jpg"
+        },
+        "is_cover": false,
+        "description": "Mathelehrer Rejhan Nisic erklärt die Aufgaben, die Tablets liegen auf dem Tisch.",
+        "caption": "Mathelehrer Rejhan Nisic erklärt die Aufgaben, die Tablets liegen auf dem Tisch.",
+        "authors": [
+          "Andreas Woitschützke"
+        ],
+        "position": 373
+      }
+    ],
     "publishing_date": "2024-04-21 20:24:00+02:00",
     "title": "Technologie im Klassenzimmer: Künstliche Intelligenz in der Schule – „Sie werden schneller und erfolgreicher“",
     "topics": [

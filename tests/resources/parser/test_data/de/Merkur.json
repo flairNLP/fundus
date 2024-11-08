@@ -34,6 +34,40 @@
         }
       ]
     },
+    "images": [
+      {
+        "urls": {
+          "448w": "https://www.merkur.de/bilder/2023/04/28/92243692/31555000-collage-michel-de-nostredame-li-und-koenig-charles-iii-re-2hVmMhKuGyb9.jpg",
+          "768w": "https://www.merkur.de/bilder/2023/04/28/92243692/31555000-collage-michel-de-nostredame-li-und-koenig-charles-iii-re-2hVmMhKuGy73.jpg",
+          "1100w": "https://www.merkur.de/bilder/2023/04/28/92243692/31555000-collage-michel-de-nostredame-li-und-koenig-charles-iii-re-2hVmMhKuGyBG.jpg",
+          "1408w": "https://www.merkur.de/bilder/2023/04/28/92243692/31555000-collage-michel-de-nostredame-li-und-koenig-charles-iii-re-2hVmMhKuGy7d.jpg",
+          "1600w": "https://www.merkur.de/bilder/2023/04/28/92243692/31555000-collage-michel-de-nostredame-li-und-koenig-charles-iii-re-2hVmMhKuGyPH.jpg"
+        },
+        "is_cover": false,
+        "description": "Collage: Michel de Nostredame (li.) und König Charles III (re.)",
+        "caption": "Die Interpretation einer Vorhersage von Michel de Nostredame (li.) könnte König Charles III. gar nicht gefallen. © IMAGO / Cinema Publishers Collection /Pool / i-Images",
+        "authors": [
+          "IMAGO / Cinema Publishers Collection /Pool / i-Images"
+        ],
+        "position": 371
+      },
+      {
+        "urls": {
+          "448w": "https://www.merkur.de/bilder/2023/04/28/92243692/31438214-prinz-harry-NAb9.jpg",
+          "768w": "https://www.merkur.de/bilder/2023/04/28/92243692/31438214-prinz-harry-NA73.jpg",
+          "1100w": "https://www.merkur.de/bilder/2023/04/28/92243692/31438214-prinz-harry-NABG.jpg",
+          "1408w": "https://www.merkur.de/bilder/2023/04/28/92243692/31438214-prinz-harry-NA7d.jpg",
+          "1600w": "https://www.merkur.de/bilder/2023/04/28/92243692/31438214-prinz-harry-NAPH.jpg"
+        },
+        "is_cover": false,
+        "description": "Prinz Harry",
+        "caption": "Prinz Harry, Herzog von Sussex. © Victoria Jones/PA Wire/dpa",
+        "authors": [
+          "Victoria Jones/PA Wire/dpa"
+        ],
+        "position": 385
+      }
+    ],
     "publishing_date": "2023-04-28 18:16:04+02:00",
     "title": "Nostradamus-Vorhersage lässt Zweifel aufkommen: Ist König Charles III. gar nicht der richtige Thronfolger?"
   }
