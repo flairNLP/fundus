@@ -17,6 +17,7 @@
         }
       ]
     },
+    "images": [],
     "publishing_date": "2023-04-28 17:40:08+00:00",
     "title": "Mexico's economy grew 1.1% in 1st quarter, 3.8% year on year",
     "topics": [
@@ -62,6 +63,21 @@
         }
       ]
     },
+    "images": [
+      {
+        "urls": {
+          "1x": "https://dims.apnews.com/dims4/default/6ceeed0/2147483647/strip/true/crop/4364x2905+2+0/resize/320x213!/quality/90/?url=https%3A%2F%2Fassets.apnews.com%2Fc3%2F79%2F5d37c54cf86bbe563fcc7462e5db%2Fca778557972e4caf95bc6f031bfd0b6f",
+          "2x": "https://dims.apnews.com/dims4/default/cc4f79c/2147483647/strip/true/crop/4364x2905+2+0/resize/640x426!/quality/90/?url=https%3A%2F%2Fassets.apnews.com%2Fc3%2F79%2F5d37c54cf86bbe563fcc7462e5db%2Fca778557972e4caf95bc6f031bfd0b6f"
+        },
+        "is_cover": true,
+        "description": "Microsoft CEO Satya Nadella arrives at the Phillip Burton Federal Building and U.S. Courthouse in San Francisco, on Wednesday, June 28, 2023. Microsoft is defending the company's proposed $69 billion takeover of video game maker Activision Blizzard as federal regulators seek to block the deal. (AP Photo/Noah Berger)",
+        "caption": "Microsoft CEO Satya Nadella arrives at the Phillip Burton Federal Building and U.S. Courthouse in San Francisco, on Wednesday, June 28, 2023. Microsoft is defending the company’s proposed $69 billion takeover of video game maker Activision Blizzard as federal regulators seek to block the deal. (AP Photo/Noah Berger) –",
+        "authors": [
+          "AP Photo/Noah Berger –"
+        ],
+        "position": 1144
+      }
+    ],
     "publishing_date": "2023-07-11 15:19:21+00:00",
     "title": "Microsoft can move ahead with record $69 billion acquisition of Activision Blizzard, judge rules",
     "topics": [

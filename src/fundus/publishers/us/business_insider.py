@@ -4,12 +4,13 @@ from typing import List, Optional
 from lxml.cssselect import CSSSelector
 from lxml.etree import XPath
 
-from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute
+from fundus.parser import ArticleBody, BaseParser, Image, ParserProxy, attribute
 from fundus.parser.utility import (
     extract_article_body_with_selector,
     generic_author_parsing,
     generic_date_parsing,
     generic_topic_parsing,
+    image_extraction,
 )
 
 
@@ -58,4 +59,15 @@ class BusinessInsiderParser(ParserProxy):
                 self.precomputed.meta.get("keywords")
                 or self.precomputed.ld.bf_search("keywords")
                 or self.precomputed.meta.get("news_keywords")
+            )
+
+        @attribute
+        def images(self) -> List[Image]:
+            return image_extraction(
+                doc=self.precomputed.doc,
+                paragraph_selector=self._paragraph_selector,
+                upper_boundary_selector=XPath("//article"),
+                image_selector=XPath("//figure//img[not(@data-content-type)]"),
+                caption_selector=XPath("./ancestor::figure//figcaption/span[@class='image-caption-text']"),
+                author_selector=XPath("./ancestor::figure//figcaption/span[@class='image-source-text']"),
             )
