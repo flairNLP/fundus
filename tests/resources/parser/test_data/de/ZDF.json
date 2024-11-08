@@ -72,6 +72,82 @@
         }
       ]
     },
+    "images": [
+      {
+        "urls": {
+          "276w": "https://www.zdf.de/assets/iran-flagge-rakete-teheran-100~276x155?cb=1713544722695",
+          "384w": "https://www.zdf.de/assets/iran-flagge-rakete-teheran-100~384x216?cb=1713544722695",
+          "768w": "https://www.zdf.de/assets/iran-flagge-rakete-teheran-100~768x432?cb=1713544722695",
+          "936w": "https://www.zdf.de/assets/iran-flagge-rakete-teheran-100~936x520?cb=1713544722695",
+          "1280w": "https://www.zdf.de/assets/iran-flagge-rakete-teheran-100~1280x720?cb=1713544722695",
+          "1300w": "https://www.zdf.de/assets/iran-flagge-rakete-teheran-100~1300x650?cb=1713544722695",
+          "1500w": "https://www.zdf.de/assets/iran-flagge-rakete-teheran-100~1500x800?cb=1713544722695",
+          "1920w": "https://www.zdf.de/assets/iran-flagge-rakete-teheran-100~1920x1080?cb=1713544722695",
+          "2400w": "https://www.zdf.de/assets/iran-flagge-rakete-teheran-100~2400x1350?cb=1713544722695",
+          "2600w": "https://www.zdf.de/assets/iran-flagge-rakete-teheran-100~2600x1300?cb=1713544722695"
+        },
+        "is_cover": true,
+        "description": "Iraner heben eine Flagge und die Attrappe einer Rakete während einer Feier nach dem iranischen Raketen- und Drohnenangriff auf Israel am 15. April 2024 auf dem Palästina-Platz im Zentrum von Teheran.",
+        "caption": null,
+        "authors": [],
+        "position": 297
+      },
+      {
+        "urls": {
+          "384w": "https://www.zdf.de/assets/24-apvahu21-04-iran-mideast-tensions-100~384x216?cb=1713719406976",
+          "768w": "https://www.zdf.de/assets/24-apvahu21-04-iran-mideast-tensions-100~768x432?cb=1713719406976",
+          "1280w": "https://www.zdf.de/assets/24-apvahu21-04-iran-mideast-tensions-100~1280x720?cb=1713719406976",
+          "1920w": "https://www.zdf.de/assets/24-apvahu21-04-iran-mideast-tensions-100~1920x1080?cb=1713719406976",
+          "2400w": "https://www.zdf.de/assets/24-apvahu21-04-iran-mideast-tensions-100~2400x1350?cb=1713719406976"
+        },
+        "is_cover": false,
+        "description": "Eine Rakete steht mit einem Schild in Farsi: \"Tod für Israel\" vor einer Moschee in Form des Felsendoms von Jerusalem am Eingang der Quds-Stadt westlich der Hauptstadt Teheran, Iran, Sonntag, 21. April 2024.",
+        "caption": null,
+        "authors": [],
+        "position": 311
+      },
+      {
+        "urls": {
+          "384w": "https://www.zdf.de/assets/gipfel-bruessel-iran-sanktionen-100~384x216?cb=1713420951110",
+          "768w": "https://www.zdf.de/assets/gipfel-bruessel-iran-sanktionen-100~768x432?cb=1713420951110",
+          "1280w": "https://www.zdf.de/assets/gipfel-bruessel-iran-sanktionen-100~1280x720?cb=1713420951110",
+          "1920w": "https://www.zdf.de/assets/gipfel-bruessel-iran-sanktionen-100~1920x1080?cb=1713420951110",
+          "2400w": "https://www.zdf.de/assets/gipfel-bruessel-iran-sanktionen-100~2400x1350?cb=1713420951110",
+          "3840w": "https://www.zdf.de/assets/gipfel-bruessel-iran-sanktionen-100~3840x2160?cb=1713420951110"
+        },
+        "is_cover": false,
+        "description": "Olaf Scholz spricht mit Mark Rutte während eines Empfangs vor einem EU-Gipfel.",
+        "caption": null,
+        "authors": [],
+        "position": 379
+      },
+      {
+        "urls": {
+          "384w": "https://www.zdf.de/assets/sgs-sievers-vonsoest-100~384x216?cb=1713385510602",
+          "768w": "https://www.zdf.de/assets/sgs-sievers-vonsoest-100~768x432?cb=1713385510602",
+          "1280w": "https://www.zdf.de/assets/sgs-sievers-vonsoest-100~1280x720?cb=1713385510602",
+          "1920w": "https://www.zdf.de/assets/sgs-sievers-vonsoest-100~1920x1080?cb=1713385510602"
+        },
+        "is_cover": false,
+        "description": "Schaltgespräch Sievers von Soest",
+        "caption": null,
+        "authors": [],
+        "position": 422
+      },
+      {
+        "urls": {
+          "384w": "https://www.zdf.de/assets/topthema-bettel-nahost-sanktionen-iran-102~384x216?cb=1713250164876",
+          "768w": "https://www.zdf.de/assets/topthema-bettel-nahost-sanktionen-iran-102~768x432?cb=1713250164876",
+          "1280w": "https://www.zdf.de/assets/topthema-bettel-nahost-sanktionen-iran-102~1280x720?cb=1713250164876",
+          "1920w": "https://www.zdf.de/assets/topthema-bettel-nahost-sanktionen-iran-102~1920x1080?cb=1713250164876"
+        },
+        "is_cover": false,
+        "description": "Bettel: \"Kämpfe sind keine Endlösung\"",
+        "caption": null,
+        "authors": [],
+        "position": 447
+      }
+    ],
     "publishing_date": "2024-04-22 15:55:00.842000+02:00",
     "title": "Deutscher Handel mit Iran: Druck mit Wirtschaftssanktionen?"
   }

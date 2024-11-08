@@ -30,6 +30,28 @@
         }
       ]
     },
+    "images": [
+      {
+        "urls": {
+          "1x": "https://i.wfcdn.de/teaser/660/60175.jpg"
+        },
+        "is_cover": false,
+        "description": "Schnäppchen, Mobilfunk, Rabattaktion, sale, Sonderangebote, Angebote, Angebot, Tarif, Tarife, Rabatt, Deal, Sparen, Mobilfunkvertrag, Angebots-Tarif",
+        "caption": null,
+        "authors": [],
+        "position": 205
+      },
+      {
+        "urls": {
+          "1x": "https://scr.wfcdn.de/cdn-cgi/image/fit=cover,width=660,height=330/23054/Advertorials-1714112214-0-0.jpg"
+        },
+        "is_cover": false,
+        "description": "Advertorials",
+        "caption": "Die Crash-Aktion von Klarmobil ist nur für kurze Zeit gültig",
+        "authors": [],
+        "position": 221
+      }
+    ],
     "publishing_date": "2024-04-26 10:00:00+02:00",
     "title": "Toller Crash-Tarif: 10 GB im Vodafone-Netz jetzt für nur 5,99 Euro",
     "topics": [

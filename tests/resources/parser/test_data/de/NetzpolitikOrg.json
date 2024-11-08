@@ -59,6 +59,27 @@
         }
       ]
     },
+    "images": [
+      {
+        "urls": {
+          "160w": "https://cdn.netzpolitik.org/wp-upload/2024/04/housewife_baking_bread_advertisement_1950_1600px-160x90.jpg",
+          "380w": "https://cdn.netzpolitik.org/wp-upload/2024/04/housewife_baking_bread_advertisement_1950_1600px-380x214.jpg",
+          "660w": "https://cdn.netzpolitik.org/wp-upload/2024/04/housewife_baking_bread_advertisement_1950_1600px-660x372.jpg",
+          "860w": "https://cdn.netzpolitik.org/wp-upload/2024/04/housewife_baking_bread_advertisement_1950_1600px-860x484.jpg",
+          "1200w": "https://cdn.netzpolitik.org/wp-upload/2024/04/housewife_baking_bread_advertisement_1950_1600px-1200x675.jpg",
+          "1536w": "https://cdn.netzpolitik.org/wp-upload/2024/04/housewife_baking_bread_advertisement_1950_1600px-1536x863.jpg",
+          "1600w": "https://cdn.netzpolitik.org/wp-upload/2024/04/housewife_baking_bread_advertisement_1950_1600px.jpg"
+        },
+        "is_cover": true,
+        "description": "housewife baking bread, advertisement 1950's",
+        "caption": "So beschaulich geht es nur in der Werbung der 1950er Jahre zu – und auf Instagram",
+        "authors": [
+          "– Midjourney („housewife baking bread",
+          "advertisement 1950’s“)"
+        ],
+        "position": 170
+      }
+    ],
     "publishing_date": "2024-04-28 08:52:55+02:00",
     "title": "Breakpoint: Hilfe, die Fundis kommen!",
     "topics": [
