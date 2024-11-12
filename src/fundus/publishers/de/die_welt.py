@@ -57,6 +57,7 @@ class DieWeltParser(ParserProxy):
             return image_extraction(
                 doc=self.precomputed.doc,
                 paragraph_selector=self._paragraph_selector,
+                image_selector=CSSSelector("figure:not(.c-inline-video) img"),
                 caption_selector=XPath("./ancestor::figure//span[@class='c-content-image__caption-alt']"),
                 author_selector=XPath("./ancestor::figure//span[@class='c-content-image__caption-source']"),
                 author_filter=re.compile(r"(?i)quelle:\s*"),
