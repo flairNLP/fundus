@@ -1719,9 +1719,7 @@
           <span>www.newyorker.com</span>
         </a>
       </td>
-      <td>
-        <code>images</code>
-      </td>
+      <td>&#160;</td>
       <td>
         <code>alternative_description</code>
         <code>alternative_title</code>
@@ -1741,9 +1739,7 @@
           <span>freebeacon.com</span>
         </a>
       </td>
-      <td>
-        <code>images</code>
-      </td>
+      <td>&#160;</td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -1778,9 +1774,7 @@
           <span>www.voanews.com</span>
         </a>
       </td>
-      <td>
-        <code>images</code>
-      </td>
+      <td>&#160;</td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -1815,9 +1809,7 @@
           <span>www.wired.com</span>
         </a>
       </td>
-      <td>
-        <code>images</code>
-      </td>
+      <td>&#160;</td>
       <td>&#160;</td>
     </tr>
   </tbody>

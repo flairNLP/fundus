@@ -24,6 +24,24 @@
         }
       ]
     },
+    "images": [
+      {
+        "urls": {
+          "300w": "https://freebeacon.com/wp-content/uploads/2023/04/Collage-Maker-28-Apr-2023-02-00-PM-5541-300x210.jpg",
+          "703w": "https://freebeacon.com/wp-content/uploads/2023/04/Collage-Maker-28-Apr-2023-02-00-PM-5541-703x491.jpg",
+          "736w": "https://freebeacon.com/wp-content/uploads/2023/04/Collage-Maker-28-Apr-2023-02-00-PM-5541.jpg"
+        },
+        "is_cover": true,
+        "description": null,
+        "caption": "Democratic megadonor George Soros, Sen. Jon Tester (D., Mont.), and Democratic donor Alexander Soros",
+        "authors": [
+          "D.",
+          "Mont.",
+          "Democratic donor Alexander Soros"
+        ],
+        "position": 339
+      }
+    ],
     "publishing_date": "2023-04-28 18:01:37+00:00",
     "title": "Soros Family Gives Early Financial Support to Montana 'Moderate' Jon Tester",
     "topics": [

@@ -39,6 +39,38 @@
         }
       ]
     },
+    "images": [
+      {
+        "urls": {
+          "1x": "https://gdb.voanews.com/01000000-0aff-0242-d5d7-08dc658aabd0_w250_r1_s.jpg"
+        },
+        "is_cover": true,
+        "description": "Adriane Burnett reads to her son Karter Robinson in Birmingham, Alabama, April 14, 2024.",
+        "caption": "Adriane Burnett reads to her son Karter Robinson in Birmingham, Alabama, April 14, 2024.",
+        "authors": [],
+        "position": 265
+      },
+      {
+        "urls": {
+          "1x": "https://gdb.voanews.com/01000000-0aff-0242-50f7-08dc658aabde_w250_r0_s.jpg"
+        },
+        "is_cover": false,
+        "description": "FILE - Mike and Jane Roberts tend to their son, Dennis, at their Pocatello, Idaho, home on March 1, 2024.",
+        "caption": "FILE - Mike and Jane Roberts tend to their son, Dennis, at their Pocatello, Idaho, home on March 1, 2024.",
+        "authors": [],
+        "position": 338
+      },
+      {
+        "urls": {
+          "1x": "https://gdb.voanews.com/01000000-0aff-0242-6257-08dc658aabd6_w250_r1_s.jpg"
+        },
+        "is_cover": false,
+        "description": "Adriane Burnett helps her son Josiah with his studies April 14, 2024, in Birmingham, Ala.",
+        "caption": "Adriane Burnett helps her son Josiah with his studies April 14, 2024, in Birmingham, Ala.",
+        "authors": [],
+        "position": 360
+      }
+    ],
     "publishing_date": "2024-04-28 07:00:00+00:00",
     "title": "America's child care crisis is holding back moms without college degrees ",
     "topics": [
