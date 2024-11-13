@@ -1,4 +1,5 @@
 import datetime
+import re
 from typing import List, Optional
 
 from lxml.cssselect import CSSSelector
@@ -59,4 +60,5 @@ class ExpressParser(ParserProxy):
                 author_selector=XPath(
                     "./ancestor::div[contains(@class, 'photo')]/span[@class='newsCaption']/span[@class='caption']"
                 ),
+                size_pattern=re.compile(r"/(?P<width>[0-9]+)x(?P<height>[0-9]+)?/"),
             )

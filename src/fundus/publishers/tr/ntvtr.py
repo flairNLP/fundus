@@ -48,6 +48,7 @@ class NTVTRParser(ParserProxy):
             return image_extraction(
                 doc=self.precomputed.doc,
                 paragraph_selector=self._paragraph_selector,
-                upper_boundary_selector=CSSSelector("article"),
-                image_selector=XPath("//div[contains(@class, 'img-wrapper')]//img"),
+                upper_boundary_selector=CSSSelector("article, div.category-detail-inner"),
+                lower_boundary_selector=CSSSelector("div.social:last-of-type"),
+                image_selector=XPath("//div[contains(@class, 'img-wrapper')]//img | //picture /img"),
             )

@@ -1,4 +1,5 @@
 import datetime
+import re
 from typing import List, Optional
 
 from lxml.cssselect import CSSSelector
@@ -47,4 +48,5 @@ class DerStandardParser(ParserProxy):
                 doc=self.precomputed.doc,
                 paragraph_selector=self._paragraph_selector,
                 author_selector=XPath("./ancestor::figure//footer"),
+                size_pattern=re.compile(r"/rs:fill:(?P<width>[0-9]+):"),
             )

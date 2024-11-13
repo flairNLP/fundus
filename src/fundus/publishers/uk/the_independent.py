@@ -44,7 +44,7 @@ class TheIndependentParser(ParserProxy):
             return image_extraction(
                 doc=self.precomputed.doc,
                 paragraph_selector=self._paragraph_selector,
-                image_selector=CSSSelector('figure > div > img, div[data-gallery-length] > img'),
+                image_selector=CSSSelector("figure > div > img, div[data-gallery-length] > img"),
                 upper_boundary_selector=CSSSelector("article"),
-                author_selector=re.compile(r"(?P<credits>(\([^)]*\)\s?)+$)")
+                author_selector=re.compile(r"(?P<credits>(\([^)]*\)\s?)+$)"),
             )
