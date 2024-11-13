@@ -57,6 +57,7 @@
         }
       ]
     },
+    "images": [],
     "publishing_date": "2023-05-15 09:00:37+00:00",
     "title": "Inside a Teamster Rebellion: This Is What Union Democracy Looks Like",
     "topics": [
@@ -94,6 +95,27 @@
         }
       ]
     },
+    "images": [
+      {
+        "urls": {
+          "168w": "https://www.thenation.com/wp-content/uploads/2024/01/AP24010820434600-168x106.jpg",
+          "275w": "https://www.thenation.com/wp-content/uploads/2024/01/AP24010820434600-275x173.jpg",
+          "340w": "https://www.thenation.com/wp-content/uploads/2024/01/AP24010820434600-340x215.jpg",
+          "382w": "https://www.thenation.com/wp-content/uploads/2024/01/AP24010820434600-382x240.jpg",
+          "768w": "https://www.thenation.com/wp-content/uploads/2024/01/AP24010820434600-768x484.jpg",
+          "793w": "https://www.thenation.com/wp-content/uploads/2024/01/AP24010820434600-793x500.jpg",
+          "810w": "https://www.thenation.com/wp-content/uploads/2024/01/AP24010820434600-810x510.jpg",
+          "1440w": "https://www.thenation.com/wp-content/uploads/2024/01/AP24010820434600.jpg"
+        },
+        "is_cover": true,
+        "description": "Republican presidential candidate former New Jersey Gov. Chris Christie announces he is dropping out of the race during a town hall campaign event Wednesday, Jan. 10, 2024, in Windham, N.H. (AP Photo/Robert F. Bukaty)",
+        "caption": "Chris Christie announces he is dropping out of the race during a town hall campaign event Wednesday, January 10, 2024, in Windham, N.H.",
+        "authors": [
+          "Robert F. Bukaty / AP"
+        ],
+        "position": 413
+      }
+    ],
     "publishing_date": "2024-01-11 16:10:50+00:00",
     "title": "Chris Christie’s Exit Marks the End of the Fight for the Soul of the GOP",
     "topics": [
