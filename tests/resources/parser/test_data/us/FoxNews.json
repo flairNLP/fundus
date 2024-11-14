@@ -30,6 +30,48 @@
         }
       ]
     },
+    "images": [
+      {
+        "urls": {
+          "1x": "https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2023/04/343/192/CCPv2.jpg?ve=1&tl=1,",
+          "2x": "https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2023/04/686/384/CCPv2.jpg?ve=1&tl=1"
+        },
+        "is_cover": false,
+        "description": "two new york residents arrested operating undisclosed chinese police station",
+        "caption": "Two New York residents were arrested by the FBI for allegedly running an undisclosed Chinese government police station in Manhattan's Chinatown neighborhood.",
+        "authors": [
+          "U.S. District Court",
+          "Eastern District of New York"
+        ],
+        "position": 553
+      },
+      {
+        "urls": {
+          "1x": "https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2023/01/343/192/FBI-Director-Christopher-Wray-Tyre-Nichols-Case.jpg?ve=1&tl=1,",
+          "2x": "https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2023/01/686/384/FBI-Director-Christopher-Wray-Tyre-Nichols-Case.jpg?ve=1&tl=1"
+        },
+        "is_cover": false,
+        "description": "FBI Director Christopher Wray was \"appalled\" by Tyre Nichols video",
+        "caption": "FBI Director Christopher Wray listens during a news conference at the Department of Justice in Washington Jan. 27, 2023.",
+        "authors": [
+          "AP Photo/Carolyn Kaster"
+        ],
+        "position": 586
+      },
+      {
+        "urls": {
+          "1x": "https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2023/03/343/192/Chinese-President-Xi-Jinping-1.jpg?ve=1&tl=1,",
+          "2x": "https://a57.foxnews.com/static.foxnews.com/foxnews.com/content/uploads/2023/03/686/384/Chinese-President-Xi-Jinping-1.jpg?ve=1&tl=1"
+        },
+        "is_cover": false,
+        "description": "Chinese President Xi Jinping sitting at a session.",
+        "caption": "Chinese President Xi Jinping discussing the country's economic and social development at a political gathering in Beijing.",
+        "authors": [
+          "Lintao Zhang/Getty Images"
+        ],
+        "position": 622
+      }
+    ],
     "publishing_date": "2023-04-26 14:20:55-04:00",
     "title": "House China Committee demands answers from FBI on Chinese police stations in US",
     "topics": [

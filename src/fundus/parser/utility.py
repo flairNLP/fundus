@@ -445,9 +445,9 @@ def parse_srcset(srcset: str) -> Dict[str, str]:
 
 
 def parse_urls_from_image(node: lxml.html.HtmlElement) -> Optional[Dict[str, str]]:
-    if srcset := (node.get("data-srcset") or node.get("srcset")):
+    if srcset := (node.get("data-srcset") or node.get("srcset") or node.get("data-lazy-srcset")):
         return parse_srcset(srcset)
-    elif src := (node.get("data-src") or node.get("src")):
+    elif src := (node.get("data-src") or node.get("src") or node.get("data-lazy-src")):
         return {"1x": src.strip()}
     else:
         return None
