@@ -1558,9 +1558,7 @@
           <span>www.foxnews.com</span>
         </a>
       </td>
-      <td>
-        <code>images</code>
-      </td>
+      <td>&#160;</td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -1576,7 +1574,6 @@
         </a>
       </td>
       <td>
-        <code>images</code>
         <code>topics</code>
       </td>
       <td>&#160;</td>
@@ -1633,9 +1630,7 @@
           <span>www.rollingstone.com</span>
         </a>
       </td>
-      <td>
-        <code>images</code>
-      </td>
+      <td>&#160;</td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -1650,9 +1645,7 @@
           <span>techcrunch.com</span>
         </a>
       </td>
-      <td>
-        <code>images</code>
-      </td>
+      <td>&#160;</td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -1668,7 +1661,6 @@
         </a>
       </td>
       <td>
-        <code>images</code>
         <code>topics</code>
       </td>
       <td>&#160;</td>
@@ -1685,9 +1677,7 @@
           <span>theintercept.com</span>
         </a>
       </td>
-      <td>
-        <code>images</code>
-      </td>
+      <td>&#160;</td>
       <td>&#160;</td>
     </tr>
     <tr>
