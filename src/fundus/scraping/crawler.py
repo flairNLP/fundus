@@ -127,7 +127,7 @@ def queue_wrapper(
     Args:
         queue: The buffer queue.
         target: A target callable.
-        exception_queue: A queue to push exceptions that happened iterating target
+        exception_queue: A queue to push exceptions that happened when iterating target.
 
     Returns:
         (Callable[_P, None]) The wrapped target.
@@ -140,7 +140,9 @@ def queue_wrapper(
                 queue.put(obj)
         except Exception as err:
             tb_str = "".join(traceback.TracebackException.from_exception(err).format())
-            exception_queue.put(RemoteException(f"An exception occurred in process {os.getpid()!r}\n{tb_str}"))
+            exception_queue.put(
+                RemoteException(f"There was a(n) {type(err).__name__!r} in process '{os.getpid()}'\n{tb_str}")
+            )
 
     return wrapper
 
@@ -166,7 +168,7 @@ def pool_queue_iter(handle: MapResult[Any], queue: Queue[_T], exception_queue: Q
         except Empty:
             try:
                 err = exception_queue.get_nowait()
-                raise Exception("An exception occurred in a remote process") from err
+                raise Exception("There was an exception occurring in a remote process") from err
             except Empty:
                 pass
 
