@@ -8,8 +8,10 @@ import multiprocessing
 import os
 import random
 import re
+import sys
 import threading
 import time
+import traceback
 from abc import ABC, abstractmethod
 from datetime import datetime
 from functools import lru_cache, partial, wraps
@@ -68,6 +70,10 @@ PublisherType: TypeAlias = Union[Publisher, PublisherGroup]
 _stop_event = threading.Event()
 
 
+class RemoteException(Exception):
+    pass
+
+
 class TQDMManager(BaseManager):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -113,12 +119,15 @@ class dill_wrapper(Generic[_P, _T]):
         return self._deserialize()(*args, **kwargs)
 
 
-def queue_wrapper(queue: Queue[_T], target: Callable[_P, Iterator[_T]]) -> Callable[_P, None]:
+def queue_wrapper(
+    queue: Queue[_T], target: Callable[_P, Iterator[_T]], exception_queue: Queue[Exception]
+) -> Callable[_P, None]:
     """Wraps the target callable to add its results to the queue instead of returning them directly.
 
     Args:
         queue: The buffer queue.
         target: A target callable.
+        exception_queue: A queue to push exceptions that happened iterating target
 
     Returns:
         (Callable[_P, None]) The wrapped target.
@@ -126,13 +135,17 @@ def queue_wrapper(queue: Queue[_T], target: Callable[_P, Iterator[_T]]) -> Calla
 
     @wraps(target)
     def wrapper(*args: _P.args, **kwargs: _P.kwargs) -> None:
-        for obj in target(*args, **kwargs):
-            queue.put(obj)
+        try:
+            for obj in target(*args, **kwargs):
+                queue.put(obj)
+        except Exception as err:
+            tb_str = "".join(traceback.TracebackException.from_exception(err).format())
+            exception_queue.put(RemoteException(f"An exception occurred in process {os.getpid()!r}\n{tb_str}"))
 
     return wrapper
 
 
-def pool_queue_iter(handle: MapResult[Any], queue: Queue[_T]) -> Iterator[_T]:
+def pool_queue_iter(handle: MapResult[Any], queue: Queue[_T], exception_queue: Queue[Exception]) -> Iterator[_T]:
     """Utility function to iterate exhaustively over a pool queue.
 
     The underlying iterator of this function repeatedly exhausts the given queue.
@@ -140,8 +153,9 @@ def pool_queue_iter(handle: MapResult[Any], queue: Queue[_T]) -> Iterator[_T]:
     Otherwise, it waits for the queue to be populated with the next result from the pool.
 
     Args:
-        handle (MapResult[Any]):  A handle o the MappedResult of the underling multiprocessing pool.
-        queue (Queue[_T]): The pool queue.
+        handle:  A handle of the MappedResult of the underling multiprocessing pool.
+        queue: The pool queue.
+        exception_queue: A queue to listen for exceptions that occurred within a task in the pool.
 
     Returns:
         Iterator[_T]: The iterator over the queue as it is populated.
@@ -150,6 +164,12 @@ def pool_queue_iter(handle: MapResult[Any], queue: Queue[_T]) -> Iterator[_T]:
         try:
             yield queue.get(timeout=0.1)
         except Empty:
+            try:
+                err = exception_queue.get_nowait()
+                raise Exception("An exception occurred in a remote process") from err
+            except Empty:
+                pass
+
             try:
                 handle.get(timeout=0.1)
             except TimeoutError:
@@ -422,10 +442,11 @@ class Crawler(CrawlerBase):
         publishers: Tuple[Publisher, ...], article_task: Callable[[Publisher], Iterator[Article]]
     ) -> Iterator[Article]:
         article_queue: Queue[Article] = Queue(len(publishers))
-        wrapped_article_task = queue_wrapper(article_queue, article_task)
+        exception_queue: Queue[Exception] = Queue(maxsize=1)
+        wrapped_article_task = queue_wrapper(article_queue, article_task, exception_queue)
 
         with ThreadPool(processes=len(publishers) or None) as pool, session_handler.context(len(publishers), 1):
-            yield from pool_queue_iter(pool.map_async(wrapped_article_task, publishers), article_queue)
+            yield from pool_queue_iter(pool.map_async(wrapped_article_task, publishers), article_queue, exception_queue)
 
     def _build_article_iterator(
         self,
@@ -556,10 +577,11 @@ class CCNewsCrawler(CrawlerBase):
             initializer=initializer,
         ) as pool:
             article_queue: Queue[Article] = manager.Queue(maxsize=1000)
+            exception_queue: Queue[Exception] = manager.Queue(maxsize=1)
 
             # Because multiprocessing.Pool does not support iterators as targets,
             # we wrap the article_task to write the articles to a queue instead of returning them directly.
-            wrapped_article_task: Callable[[str], None] = queue_wrapper(article_queue, article_task)
+            wrapped_article_task: Callable[[str], None] = queue_wrapper(article_queue, article_task, exception_queue)
 
             # To avoid 503 errors we spread tasks to not start all at once
             spread_article_task = random_sleep(wrapped_article_task, (0, 3))
@@ -568,7 +590,9 @@ class CCNewsCrawler(CrawlerBase):
             serialized_article_task = dill_wrapper(spread_article_task)
 
             # Finally, we build an iterator around the queue, exhausting the queue until the pool is finished.
-            yield from pool_queue_iter(pool.map_async(serialized_article_task, warc_paths), article_queue)
+            yield from pool_queue_iter(
+                pool.map_async(serialized_article_task, warc_paths), article_queue, exception_queue
+            )
 
     def _get_warc_paths(self) -> List[str]:
         # Date regex examples: https://regex101.com/r/yDX3G6/1
