@@ -36,5 +36,5 @@ def _get_match_dict(  # type: ignore[misc]
             if value is not None:
                 matches[key] = conversion(value) if conversion is not None else value
             elif keep_none:
-                matches[key] = match_dict[key] or value
+                matches[key] = match[key] or value
     return matches
