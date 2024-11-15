@@ -299,20 +299,26 @@ class Dimension(DataclassSerializationMixin):
     def __mul__(self, other: Union[float, int]) -> "Dimension":
         if isinstance(other, int):
             return Dimension(self.width * other, self.height * other)
-        else:
+        elif isinstance(other, float):
             return Dimension(round(self.width * other), round(self.height * other))
+        else:
+            raise NotImplementedError(
+                f"'*' is not defined between {type(self).__name__!r} and {type(other).__name__!r}"
+            )
 
-    def __rmul__(self, other: int) -> "Dimension":
+    def __rmul__(self, other: Union[float, int]) -> "Dimension":
         return self.__mul__(other)
 
     def __repr__(self) -> str:
         return f"{self.width}x{self.height or '...'}"
 
     def __lt__(self, other: "Dimension") -> bool:
-        if self.width != other.width:
-            return self.width < other.width
-        else:
-            return self.height < other.height
+        if isinstance(other, Dimension):
+            if self.width != other.width:
+                return self.width < other.width
+            else:
+                return self.height < other.height
+        raise NotImplementedError(f"'<' is not defined between {type(self).__name__!r} and {type(other).__name__!r}")
 
     def __hash__(self) -> int:
         return hash((self.width, self.height))
@@ -343,11 +349,12 @@ def remove_query_parameters_from_url(url: str) -> str:
 @total_ordering
 @dataclass
 class ImageVersion(DataclassSerializationMixin):
+    __FILE_FORMATS__: ClassVar[List[str]] = ["png", "jpg", "jpeg", "webp"]
+
     url: str
-    min_width: Optional[int] = None
+    query_width: Optional[str] = None
     size: Optional[Dimension] = None
     type: Optional[str] = None
-    file_formats: ClassVar[List[str]] = ["png", "jpg", "jpeg", "webp"]
 
     def __post_init__(self):
         if not self.type:
@@ -355,7 +362,7 @@ class ImageVersion(DataclassSerializationMixin):
             self.type = self._parse_type(url_without_query)
 
     def _parse_type(self, url: str) -> Optional[str]:
-        if (file_format := url.split(".")[-1]) in self.file_formats:
+        if (file_format := url.split(".")[-1]) in self.__FILE_FORMATS__:
             if file_format == "jpg":
                 file_format = "jpeg"
             return "image/" + file_format
@@ -364,8 +371,8 @@ class ImageVersion(DataclassSerializationMixin):
     def __repr__(self) -> str:
         if self.size is not None:
             meta = f"{self.size!r}"
-        elif self.min_width is not None:
-            meta = f"min-width: {self.min_width}px"
+        elif self.query_width is not None:
+            meta = f"min-width: {self.query_width}px"
         else:
             meta = f"{type(self).__name__}"
 
@@ -379,20 +386,19 @@ class ImageVersion(DataclassSerializationMixin):
             return NotImplemented
         return self.url == other.url
 
-    def __lt__(self, other: object) -> bool:
-        if not isinstance(other, ImageVersion):
-            return NotImplemented
-
-        if self.size and other.size:
-            if self.size == other.size:
-                return self.type < other.type if self.type and other.type else self.url < other.url
-            return self.size < other.size
-        elif self.min_width and other.min_width:
-            if self.min_width == other.min_width:
-                return self.type < other.type if self.type and other.type else self.url < other.url
-            return self.min_width < other.min_width
-        else:
-            return True
+    def __lt__(self, other: "Dimension") -> bool:
+        if isinstance(other, ImageVersion):
+            if self.size and other.size:
+                if self.size == other.size:
+                    return self.type < other.type if self.type and other.type else self.url < other.url
+                return self.size < other.size
+            elif self.query_width and other.query_width:
+                if self.query_width == other.query_width:
+                    return self.type < other.type if self.type and other.type else self.url < other.url
+                return self.query_width < other.query_width
+            else:
+                return True
+        raise NotImplementedError(f"'<' is not defined between {type(self).__name__!r} and {type(other).__name__!r}")
 
 
 @dataclass(frozen=False)

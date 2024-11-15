@@ -466,24 +466,26 @@ class _DimensionCalculator:
         return None
 
 
-_min_width_pattern = re.compile(r"min-width:\s*(?P<minwidth>[0-9]*)(?P<descriptor>[pxem]+)")
+_media_param_pattern = re.compile(r"\(\s*(?P<param>[\w-]+)\s*:\s*(?P<value>[\d./]+)(?P<unit>[a-z]*)\)")
 _width_x_height_pattern = re.compile(r"(?P<width>[0-9]+)x(?P<height>[0-9]+)")
 
 
 def get_versions_from_node(
-    source: lxml.html.HtmlElement, ratio: Optional[float], size_patter: Optional[Pattern[str]]
+    source: lxml.html.HtmlElement, ratio: Optional[float], size_pattern: Optional[Pattern[str]]
 ) -> Set[ImageVersion]:
     if not (urls := parse_urls(source)):
         return set()
 
-    # get min width
-    min_width = None
-    if media := source.get("media"):
-        for value, descriptor in re.findall(_min_width_pattern, media):
+    # get min/max width
+    query_width = None
+    for param, value, descriptor in re.findall(_media_param_pattern, source.get("media", "").split(",")[0]):
+        if param in ["min-width", "max-width"]:
             if descriptor != "px":
                 logger.debug(f"Pixel calculation not implemented for {descriptor}")
             else:
-                min_width = int(value)
+                # with the assumption that there is only one max/min width per ',' seperated query and only
+                # either min- or max-width
+                query_width = f"{param}:{value}"
 
     # get width, height and init calculator
     width = float(source.get("width", 0)) or None
@@ -501,13 +503,15 @@ def get_versions_from_node(
             elif match := re.search(r"(?P<width>[0-9]+)(px|w)", descriptor):
                 kwargs["width"] = float(match.group("width"))
 
-        if size_patter is not None and (match_dict := _get_match_dict(size_patter, url, conversion=lambda x: float(x))):
+        if size_pattern is not None and (
+            match_dict := _get_match_dict(size_pattern, url, conversion=lambda x: float(x))
+        ):
             kwargs.update(match_dict)
         elif not (calculator.width or kwargs.get("width")) and (match := re.search(_width_x_height_pattern, url)):
             kwargs.update({k: float(v) for k, v in match.groupdict().items() if v is not None})
 
         version = ImageVersion(
-            url=url, min_width=min_width, size=calculator.calculate(**kwargs), type=source.get("type")
+            url=url, query_width=query_width, size=calculator.calculate(**kwargs), type=source.get("type")
         )
         versions.add(version)
 
