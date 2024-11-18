@@ -49,6 +49,46 @@
         }
       ]
     },
+    "images": [
+      {
+        "urls": {
+          "120w": "https://media.newyorker.com/photos/643d8573650fe81912f90fc2/master/w_120,c_limit/Riederer_Bright_Ice.gif",
+          "240w": "https://media.newyorker.com/photos/643d8573650fe81912f90fc2/master/w_240,c_limit/Riederer_Bright_Ice.gif",
+          "320w": "https://media.newyorker.com/photos/643d8573650fe81912f90fc2/master/w_320,c_limit/Riederer_Bright_Ice.gif",
+          "640w": "https://media.newyorker.com/photos/643d8573650fe81912f90fc2/master/w_640,c_limit/Riederer_Bright_Ice.gif",
+          "960w": "https://media.newyorker.com/photos/643d8573650fe81912f90fc2/master/w_960,c_limit/Riederer_Bright_Ice.gif",
+          "1280w": "https://media.newyorker.com/photos/643d8573650fe81912f90fc2/master/w_1280,c_limit/Riederer_Bright_Ice.gif",
+          "1600w": "https://media.newyorker.com/photos/643d8573650fe81912f90fc2/master/w_1600,c_limit/Riederer_Bright_Ice.gif",
+          "1920w": "https://media.newyorker.com/photos/643d8573650fe81912f90fc2/master/w_1920,c_limit/Riederer_Bright_Ice.gif",
+          "2240w": "https://media.newyorker.com/photos/643d8573650fe81912f90fc2/master/w_2240,c_limit/Riederer_Bright_Ice.gif"
+        },
+        "is_cover": true,
+        "description": "An abstract illustration showing reflectivity and light",
+        "caption": null,
+        "authors": [
+          "Arina Kokoreva"
+        ],
+        "position": 279
+      },
+      {
+        "urls": {
+          "120w": "https://media.newyorker.com/photos/6442ac41a765749b63ab2787/master/w_120,c_limit/RR-Ice-Shields-Secondary.jpg",
+          "240w": "https://media.newyorker.com/photos/6442ac41a765749b63ab2787/master/w_240,c_limit/RR-Ice-Shields-Secondary.jpg",
+          "320w": "https://media.newyorker.com/photos/6442ac41a765749b63ab2787/master/w_320,c_limit/RR-Ice-Shields-Secondary.jpg",
+          "640w": "https://media.newyorker.com/photos/6442ac41a765749b63ab2787/master/w_640,c_limit/RR-Ice-Shields-Secondary.jpg",
+          "960w": "https://media.newyorker.com/photos/6442ac41a765749b63ab2787/master/w_960,c_limit/RR-Ice-Shields-Secondary.jpg",
+          "1280w": "https://media.newyorker.com/photos/6442ac41a765749b63ab2787/master/w_1280,c_limit/RR-Ice-Shields-Secondary.jpg",
+          "1600w": "https://media.newyorker.com/photos/6442ac41a765749b63ab2787/master/w_1600,c_limit/RR-Ice-Shields-Secondary.jpg"
+        },
+        "is_cover": false,
+        "description": "Aerial image of an experiment testing glass beads' ability to keep ice frozen longer",
+        "caption": "An aerial view of the glass-bubble-covered ice, at left, and the bare ice.Photograph by Doug Johnson An aerial view of the glass-bubble-covered ice, at left, and the bare ice.",
+        "authors": [
+          "Doug Johnson"
+        ],
+        "position": 345
+      }
+    ],
     "publishing_date": "2023-04-25 06:00:00-04:00",
     "title": "A Heat Shield for the Most Important Ice on Earth",
     "topics": [

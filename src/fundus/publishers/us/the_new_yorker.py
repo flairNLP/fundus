@@ -1,15 +1,17 @@
+import re
 from datetime import datetime
 from typing import List, Optional
 
 from lxml.cssselect import CSSSelector
 from lxml.etree import XPath
 
-from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute
+from fundus.parser import ArticleBody, BaseParser, Image, ParserProxy, attribute
 from fundus.parser.utility import (
     extract_article_body_with_selector,
     generic_author_parsing,
     generic_date_parsing,
     generic_topic_parsing,
+    image_extraction,
 )
 
 
@@ -62,3 +64,18 @@ class TheNewYorkerParser(ParserProxy):
         @attribute(validate=False)
         def section(self) -> Optional[str]:
             return self.precomputed.ld.get_value_by_key_path(["NewsArticle", "articleSection"])
+
+        @attribute
+        def images(self) -> List[Image]:
+            return image_extraction(
+                doc=self.precomputed.doc,
+                paragraph_selector=self._paragraph_selector,
+                image_selector=XPath("//picture//img"),
+                caption_selector=XPath(
+                    "./ancestor::*[self::figure or self::header]//*[(self::span and contains(@class, 'caption__text')) or (self::div and contains(@class, '__caption'))]"
+                ),
+                author_selector=XPath(
+                    "(./ancestor::*[self::figure or self::header]//*[(self::span and contains(@class, 'caption__credit')) or (self::div and contains(@class, '__credit'))])[last()]"
+                ),
+                author_filter=re.compile(r"(?i)(photographs?|cartoons?|illustrations?) (by|courtesy)"),
+            )

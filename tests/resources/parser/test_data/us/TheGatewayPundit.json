@@ -26,6 +26,45 @@
         }
       ]
     },
+    "images": [
+      {
+        "urls": {
+          "600w": "https://www.thegatewaypundit.com/wp-content/uploads/IMG_1326-1-600x292.jpg",
+          "768w": "https://www.thegatewaypundit.com/wp-content/uploads/IMG_1326-1-768x373.jpg",
+          "1024w": "https://www.thegatewaypundit.com/wp-content/uploads/IMG_1326-1-1024x498.jpg",
+          "1169w": "https://www.thegatewaypundit.com/wp-content/uploads/IMG_1326-1.jpg"
+        },
+        "is_cover": true,
+        "description": null,
+        "caption": null,
+        "authors": [],
+        "position": 422
+      },
+      {
+        "urls": {
+          "600w": "https://www.thegatewaypundit.com/wp-content/uploads/0-517-600x332.jpg",
+          "768w": "https://www.thegatewaypundit.com/wp-content/uploads/0-517-768x424.jpg",
+          "1024w": "https://www.thegatewaypundit.com/wp-content/uploads/0-517-1024x566.jpg",
+          "1169w": "https://www.thegatewaypundit.com/wp-content/uploads/0-517.jpg"
+        },
+        "is_cover": false,
+        "description": null,
+        "caption": null,
+        "authors": [],
+        "position": 430
+      },
+      {
+        "urls": {
+          "600w": "https://www.thegatewaypundit.com/wp-content/uploads/kalyee-goncalves-ethan-chapin-xana-kernodle-madison-mogen-photo-combo-2-600x338.webp",
+          "720w": "https://www.thegatewaypundit.com/wp-content/uploads/kalyee-goncalves-ethan-chapin-xana-kernodle-madison-mogen-photo-combo-2.webp"
+        },
+        "is_cover": false,
+        "description": null,
+        "caption": null,
+        "authors": [],
+        "position": 438
+      }
+    ],
     "publishing_date": "2023-04-28 18:15:11+00:00",
     "title": "New Plot Twist in Idaho Quadruple Murders Case: Surviving Roommate Agrees to Interview with Kohberger's Defense Lawyers"
   }
