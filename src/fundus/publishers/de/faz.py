@@ -26,7 +26,7 @@ class FAZParser(ParserProxy):
         _author_selector = CSSSelector(".atc-MetaAuthor")
 
         @attribute
-        def body(self) -> ArticleBody:
+        def body(self) -> Optional[ArticleBody]:
             return extract_article_body_with_selector(
                 self.precomputed.doc,
                 summary_selector=self._summary_selector,
@@ -69,7 +69,7 @@ class FAZParser(ParserProxy):
         _topic_selector = XPath("//div[text()=' Schlagworte: '] /a")
 
         @attribute
-        def body(self) -> ArticleBody:
+        def body(self) -> Optional[ArticleBody]:
             return extract_article_body_with_selector(
                 self.precomputed.doc,
                 summary_selector=self._summary_selector,

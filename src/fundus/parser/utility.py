@@ -9,7 +9,6 @@ from dataclasses import dataclass, field
 from datetime import datetime
 from functools import total_ordering
 from typing import (
-    Any,
     Callable,
     ClassVar,
     Dict,
@@ -24,6 +23,7 @@ from typing import (
     Set,
     Type,
     Union,
+    cast,
 )
 from urllib.parse import urljoin
 
@@ -46,12 +46,23 @@ from fundus.parser.data import (
     TextSequence,
 )
 from fundus.utils.regex import _get_match_dict
+from fundus.utils.serialization import JSONVal
 
 logger = create_logger(__name__)
 
+_space_characters = {
+    "whitespace": r"\s",
+    "non-breaking-space": r"\u00A0",
+    "zero-width-space": r"\u200B",
+    "zero-width-non-joiner": r"\u200C",
+    "zero-width-joiner": r"\u200D",
+    "zero-width-no-break_space": r"\uFEFF",
+}
+_ws_pattern: Pattern[str] = re.compile(rf'[{"".join(_space_characters.values())}]+')
+
 
 def normalize_whitespace(text: str) -> str:
-    return " ".join(text.split())
+    return re.sub(_ws_pattern, " ", text).strip()
 
 
 @total_ordering
@@ -167,24 +178,34 @@ def extract_article_body_with_selector(
 
 _ld_node_selector = XPath("//script[@type='application/ld+json']")
 _json_pattern = re.compile(r"(?P<json>{[\s\S]*}|\[\s*{[\s\S]*}\s*](?!\s*}))")
+_json_undefined = re.compile(r'(?P<key>"[^"]*?"):\s*undefined')
 
 
-def extract_json_from_dom(root: lxml.html.HtmlElement, selector: XPath) -> Iterable[Dict[str, Any]]:
-    def sanitize(text: str) -> Optional[str]:
-        # capture only content enclosed as follows: {...} or [{...}]
-        match = re.search(_json_pattern, text)
-        if match is not None and (sanitized := match.group("json")):
-            return sanitized
+def sanitize_json(text: str) -> Optional[str]:
+    # capture only content enclosed as follows: {...} or [{...}]
+    match = re.search(_json_pattern, text)
+    if match is None or not (sanitized := match.group("json")):
         return None
 
-    json_nodes = selector(root)
-    jsons = []
-    for node in json_nodes:
-        json_content = sanitize(node.text_content()) or ""
-        try:
-            jsons.append(json.loads(json_content))
-        except json.JSONDecodeError as error:
-            logger.debug(f"Encountered {error!r} during JSON parsing")
+    # substitute "bad" values
+    sanitized = re.sub(_json_undefined, r"\g<key>:null", sanitized)
+
+    return sanitized
+
+
+def parse_json(text: str) -> Optional[Dict[str, JSONVal]]:
+    if not (json_content := sanitize_json(text)):
+        return None
+
+    try:
+        return cast(Dict[str, JSONVal], json.loads(json_content))
+    except json.JSONDecodeError as error:
+        logger.debug(f"Encountered {error!r} during JSON parsing")
+        return None
+
+
+def extract_json_from_dom(root: lxml.html.HtmlElement, selector: XPath) -> Iterable[Dict[str, JSONVal]]:
+    jsons = [parsed_json for node in selector(root) if (parsed_json := parse_json(node.text_content())) is not None]
     return more_itertools.collapse(jsons, base_type=dict)
 
 
@@ -372,13 +393,15 @@ def generic_text_extraction_with_css(doc, selector: XPath) -> Optional[str]:
 
 def generic_topic_parsing(keywords: Optional[Union[str, List[str]]], delimiter: str = ",") -> List[str]:
     if not keywords:
-        return []
+        topics = []
     elif isinstance(keywords, str):
-        return [cleaned for keyword in keywords.split(delimiter) if (cleaned := keyword.strip())]
+        topics = [cleaned for keyword in keywords.split(delimiter) if (cleaned := keyword.strip())]
     elif isinstance(keywords, list) and all(isinstance(s, str) for s in keywords):
-        return keywords
+        topics = keywords
     else:
         raise TypeError(f"Encountered unexpected type {type(keywords)} as keyword parameter")
+
+    return list(dict.fromkeys(topics))
 
 
 _tz_infos = {"CET": 3600, "CEST": 7200}

@@ -21,7 +21,7 @@ class EveningStandardParser(ParserProxy):
         _summary_selector = CSSSelector("div.sc-wkolL.dWZJhQ")
 
         @attribute
-        def body(self) -> ArticleBody:
+        def body(self) -> Optional[ArticleBody]:
             return extract_article_body_with_selector(
                 self.precomputed.doc,
                 paragraph_selector=self._paragraph_selector,
@@ -69,7 +69,7 @@ class EveningStandardParser(ParserProxy):
         _paragraph_selector = CSSSelector("div#main > div.sc-gEvEer p")
 
         @attribute
-        def body(self) -> ArticleBody:
+        def body(self) -> Optional[ArticleBody]:
             return extract_article_body_with_selector(
                 self.precomputed.doc,
                 summary_selector=self._summary_selector,

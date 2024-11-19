@@ -24,7 +24,7 @@ class SternParser(ParserProxy):
         _subheadline_selector = CSSSelector(".subheadline-element")
 
         @attribute
-        def body(self) -> ArticleBody:
+        def body(self) -> Optional[ArticleBody]:
             return extract_article_body_with_selector(
                 self.precomputed.doc,
                 summary_selector=self._summary_selector,
@@ -74,7 +74,7 @@ class SternParser(ParserProxy):
         _author_selector = CSSSelector("li.authors__list-item > a, li.authors__list-item > .typo-article-info-bold")
 
         @attribute
-        def body(self) -> ArticleBody:
+        def body(self) -> Optional[ArticleBody]:
             return extract_article_body_with_selector(
                 self.precomputed.doc,
                 summary_selector=self._summary_selector,

@@ -19,6 +19,8 @@ from typing import (
     Type,
     TypeVar,
     Union,
+    get_args,
+    get_origin,
 )
 
 import lxml.html
@@ -70,15 +72,44 @@ class RegisteredFunction(ABC):
 
     def __repr__(self):
         if instance := self.__self__:
-            return f"bound {type(self).__name__} of {instance}: {self.__wrapped__} --> {self.__name__!r}"
+            return f"bound {type(self).__name__} {self.__name__!r} of {instance}"
         else:
-            return f"registered {type(self).__name__}: {self.__wrapped__} --> {self.__name__!r}"
+            return f"registered {type(self).__name__} {self.__name__!r}"
 
 
 class Attribute(RegisteredFunction):
-    def __init__(self, func: Callable[[object], Any], priority: Optional[int], validate: bool):
+    def __init__(
+        self,
+        func: Callable[[object], Any],
+        priority: Optional[int],
+        validate: bool,
+        default_factory: Optional[Callable[[], Any]],
+    ):
         self.validate = validate
+        self.default_factory = default_factory
         super(Attribute, self).__init__(func=func, priority=priority)
+
+    @functools.cached_property
+    def __default__(self):
+        if self.default_factory is not None:
+            return self.default_factory()
+
+        annotation = self.__annotations__["return"]
+        origin = get_origin(annotation)
+        args = get_args(annotation)
+
+        if not (origin or args):
+            default = annotation()
+        elif origin == Union:
+            if type(None) in args:
+                default = None
+            else:
+                raise NotImplementedError(f"Cannot determine default for {origin!r} with args {args!r}")
+        elif isinstance(origin, type):
+            default = origin()
+        else:
+            raise NotImplementedError(f"Unsupported origin {origin}")
+        return default
 
 
 class Function(RegisteredFunction):
@@ -98,8 +129,15 @@ def _register(cls, factory: Type[RegisteredFunction], **kwargs):
     return wrapper(cls)
 
 
-def attribute(cls=None, /, *, priority: Optional[int] = None, validate: bool = True):
-    return _register(cls, factory=Attribute, priority=priority, validate=validate)
+def attribute(
+    cls=None,
+    /,
+    *,
+    priority: Optional[int] = None,
+    validate: bool = True,
+    default_factory: Optional[Callable[[], Any]] = None,
+):
+    return _register(cls, factory=Attribute, priority=priority, validate=validate, default_factory=default_factory)
 
 
 def function(cls=None, /, *, priority: Optional[int] = None):
@@ -206,9 +244,15 @@ class BaseParser(ABC):
                 try:
                     parsed_data[attribute_name] = func()
                 except Exception as err:
-                    if error_handling == "catch":
+                    if error_handling == "suppress":
+                        parsed_data[attribute_name] = func.__default__
+                        logger.info(
+                            f"Couldn't parse attribute {attribute_name!r} for "
+                            f"{self.precomputed.meta.get('og:url')!r}: {err}"
+                        )
+                    elif error_handling == "catch":
                         parsed_data[attribute_name] = err
-                    elif error_handling == "suppress" or error_handling == "raise":
+                    elif error_handling == "raise":
                         raise err
                     else:
                         raise ValueError(f"Invalid value {error_handling!r} for parameter <error_handling>")

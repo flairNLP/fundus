@@ -21,7 +21,7 @@ class CNBCParser(ParserProxy):
         _key_points_selector: CSSSelector = CSSSelector("div.RenderKeyPoints-list li")
 
         @attribute
-        def body(self) -> ArticleBody:
+        def body(self) -> Optional[ArticleBody]:
             body: ArticleBody = extract_article_body_with_selector(
                 self.precomputed.doc,
                 subheadline_selector=self._subheadline_selector,
@@ -31,16 +31,15 @@ class CNBCParser(ParserProxy):
 
         @attribute
         def authors(self) -> List[str]:
-            return generic_author_parsing(self.precomputed.ld.get_value_by_key_path(["NewsArticle", "author"]))
+            return generic_author_parsing(self.precomputed.ld.xpath_search("NewsArticle/author"))
 
         @attribute
         def publishing_date(self) -> Optional[datetime.datetime]:
-            return generic_date_parsing(self.precomputed.ld.get_value_by_key_path(["NewsArticle", "datePublished"]))
+            return generic_date_parsing(self.precomputed.ld.xpath_search("NewsArticle/datePublished", scalar=True))
 
         @attribute
         def title(self) -> Optional[str]:
-            title: Optional[str] = self.precomputed.ld.get_value_by_key_path(["NewsArticle", "headline"])
-            return title
+            return self.precomputed.ld.xpath_search("NewsArticle/headline", scalar=True)
 
         @attribute
         def topics(self) -> List[str]:

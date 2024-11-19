@@ -9,6 +9,7 @@ from fundus.parser.data import Image
 from fundus.parser.utility import (
     apply_substitution_pattern_over_list,
     extract_article_body_with_selector,
+    generic_author_parsing,
     generic_date_parsing,
     generic_topic_parsing,
     image_extraction,
@@ -17,7 +18,7 @@ from fundus.parser.utility import (
 
 class BSZParser(ParserProxy):
     class V1(BaseParser):
-        _author_substitution_pattern: Pattern[str] = re.compile(r"FUNKE Mediengruppe")
+        _author_substitution_pattern: Pattern[str] = re.compile(r"FUNKE Mediengruppe|.*dpa(:|-infocom).*|^red$")
         _paragraph_selector = XPath(
             "//div[@class='article-body']//p[not(not(text()) or @rel='author' or em[@class='print'] or contains(@class, 'font-sans'))]"
         )
@@ -33,7 +34,7 @@ class BSZParser(ParserProxy):
         _topics_selector = XPath("//div[@class='not-prose  mb-4 mx-5 font-sans']/ul/li")
 
         @attribute
-        def body(self) -> ArticleBody:
+        def body(self) -> Optional[ArticleBody]:
             return extract_article_body_with_selector(
                 self.precomputed.doc,
                 summary_selector=self._summary_selector,
@@ -58,12 +59,8 @@ class BSZParser(ParserProxy):
 
         @attribute
         def authors(self) -> List[str]:
-            authors = []
-            for author in self.precomputed.ld.bf_search("author", default=[]):
-                name_string = author.get("name")
-                authors.extend(re.split(r"und|,", name_string))
             return apply_substitution_pattern_over_list(
-                [author.strip() for author in authors], self._author_substitution_pattern
+                generic_author_parsing(self.precomputed.ld.bf_search("author")), self._author_substitution_pattern
             )
 
         @attribute

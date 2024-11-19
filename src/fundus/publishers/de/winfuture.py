@@ -26,7 +26,7 @@ class WinfutureParser(ParserProxy):
             return self.precomputed.meta.get("og:title")
 
         @attribute
-        def body(self) -> ArticleBody:
+        def body(self) -> Optional[ArticleBody]:
             html_as_string = tostring(self.precomputed.doc).decode("utf-8")
             # Most paragraphs are separated by two <br>> tags, depending on if there is text
             # around those tags you need either opending or closing tags or both.

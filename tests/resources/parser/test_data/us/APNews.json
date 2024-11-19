@@ -1,7 +1,7 @@
 {
   "V1": {
     "authors": [
-      "ociated Press"
+      "Associated Press"
     ],
     "body": {
       "summary": [],
@@ -26,10 +26,11 @@
       "Latin America"
     ]
   },
-  "V1S1": {
+  "V1_1": {
     "authors": [
-      "MATT O’BRIEN",
-      "AP Technology Writer"
+      "STEVE PEOPLES",
+      "THOMAS BEAUMONT",
+      "AMELIA THOMSON-DEVEAUX"
     ],
     "body": {
       "summary": [],
@@ -37,28 +38,74 @@
         {
           "headline": [],
           "paragraphs": [
-            "A federal judge has handed Microsoft a major victory by declining to block its looming $69 billion takeover of video game company Activision Blizzard. Regulators sought to ax the deal saying it will hurt competition.",
-            "U.S. District Judge Jacqueline Scott Corley said in a ruling that the Federal Trade Commission, which enforces antitrust laws, has not shown a likelihood it would prevail if it took the case to trial.",
-            "“The FTC has not raised serious questions regarding whether the proposed merger is likely to substantially lessen competition in the console, library subscription services, or cloud gaming markets,” Corley wrote.",
-            "Microsoft appeared to have the upper hand in a 5-day San Francisco court hearing that ended late last month. The proceeding showcased testimony by Microsoft Chief Executive Officer Satya Nadella and longtime Activision Blizzard CEO Bobby Kotick, who both pledged to keep Activision’s blockbuster game Call of Duty available to people who play it on consoles — particularly Sony’s PlayStation — that compete with Microsoft’s Xbox.",
-            "“Our merger will benefit consumers and workers. It will enable competition rather than allow entrenched market leaders to continue to dominate our rapidly growing industry,” Kotick said in a written statement after Tuesday’s ruling.",
-            "The FTC had asked Corley to issue an injunction temporarily blocking Microsoft and Activision from closing the deal before the FTC’s in-house judge can review it in an August trial.",
-            "Both companies suggested that such a delay would effectively force them to abandon the takeover agreement they signed nearly 18 months ago. Microsoft has promised to pay Activision a $3 billion breakup fee if the deal doesn’t close by July 18.",
-            "The case was an important test for the FTC’s heightened scrutiny of the technology industry under Chairperson Lina Khan, who was installed by President Joe Biden in 2021 because of her tough stance on what she sees as monopolistic behavior by tech giants such as Amazon, Google and Facebook parent Meta.",
-            "Another judge rebuffed the FTC’s attempt earlier this year to stop Meta from taking over the virtual reality fitness company Within Unlimited.",
-            "Corley, herself a Biden nominee, expressed skepticism about the FTC’s case during the proceedings, particularly about the hypothetical harms caused if Microsoft were to remove Call of Duty from rival platforms or offer a subpar experience on competing consoles.",
-            "“It all comes down again to Call of Duty,” she said. “We’re here because of Call of Duty.”",
-            "Near the close of the hearing, Corley said the FTC had already achieved a victory for consumers because of promises Microsoft made to some rivals as it sought to clear a path for the Activision Blizzard deal to go through.",
-            "As antitrust investigations and legal challenges mounted in the U.S. and around the world, Microsoft pledged that Call of Duty would appear on Nintendo’s Switch console, Nvidia’s cloud gaming service and other platforms for at least a decade.",
-            "“In many ways you won,” Corley told the FTC’s lead trial attorney on the case, James Weingarten.",
-            "“I don’t think we won,” Weingarten responded, saying there was no evidence that the “hastily agreed to” contracts would sufficiently protect the market.",
-            "Shares of Activision Blizzard Inc. jumped more than 11% Tuesday on the ruling, a high for the year.",
-            "A number of other countries and the European Union have approved the Activision Blizzard takeover, but it still faces opposition from the U.K.’s Competition and Markets Authority. The company was set to challenge that decision at tribunal hearing scheduled for later this month but the FTC’s ruling appeared to have forced a rethink.",
-            "The Competition and Markets Authority and Microsoft said they jointly applied to put the hearing on hold, saying a “stay of litigation” would be in the public interest while they work out a way to resolve their differences so that the deal can go ahead.",
-            "“We stand ready to consider any proposals from Microsoft to restructure the transaction in a way that would address the concerns set out in our Final Report,” the CMA said in a statement.",
-            "Microsoft said that its focus now turns back to the U.K. “While we ultimately disagree with the CMA’s concerns, we are considering how the transaction might be modified in order to address those concerns in a way that is acceptable to the CMA,” President Brad Smith said in a statement.",
-            "Canadian regulators are also investigating the transaction and have concluded it is “likely to result” in preventing or lessening competition on gaming consoles, subscription services and cloud-based gaming, according to a letter to Microsoft filed in the U.S. case late last month.",
-            "AP Business Writer Kelvin Chan contributed to this report from London."
+            "LA CROSSE, Wis. (AP) — After a summer of historic tumult, the path to the presidency for both Kamala Harris and Donald Trump this fall is becoming much clearer.",
+            "The Democratic vice president and the Republican former president will devote almost all of their remaining time and resources to just seven states. They will spend hundreds of millions of dollars targeting voters who, in many cases, have just begun to pay attention to the election. And their campaigns will try to focus their messages on three familiar issues — the economy, immigration and abortion — even in the midst of heated debates over character, culture and democracy.",
+            "The candidates will debate in one week in what will be their first meeting ever. The nation’s premier swing state, Pennsylvania, begins in-person absentee voting the week after. By the end of the month, early voting will be underway in at least four states with a dozen more to follow by mid-October.",
+            "In just 63 days, the final votes will be cast to decide which one of them will lead the world’s most powerful nation.",
+            "Privately, at least, both camps acknowledge that victory is no sure thing as they begin the eight-week sprint to Election Day. Harris and Trump are neck-and-neck in most national polls conducted since President Joe Biden ended his reelection campaign.",
+            "The Harris campaign still put out a memo over the weekend casting itself as “the clear underdogs” in the contest.",
+            "“There’s not a scenario here that’s easy,” Harris senior adviser David Plouffe said in an interview. “The pathway to beating Donald Trump, the pathway to 270 electoral votes for Kamala Harris, is exceedingly hard, but doable. And that’s just a reality.”",
+            "Trump, meanwhile, rejects any indicators that suggest Harris is ahead even as he lashes out at her in deeply personal and sometimes apocalyptic terms, declaring that “our country is finished” if she wins.",
+            "“As we move past Labor Day, we will really get into the time where voters start to harden their opinions,” said James Blair, the Trump campaign’s political director. “We feel pretty good about things. We feel energized. Our people are energized. But there’s certainly plenty of work to be done.”"
+          ]
+        },
+        {
+          "headline": [
+            "The electoral map settles on seven states"
+          ],
+          "paragraphs": [
+            "Just over a month ago, Trump allies suggested Democratic-leaning states like Minnesota, Virginia or even New Jersey might be in play. Neither side believes that is still the case on Labor Day weekend.",
+            "In replacing Biden as the party’s nominee, Harris breathed new life into the Democrats’ political prospects, especially across the Sun Belt states of Arizona, Georgia, Nevada and North Carolina. All four states have significant numbers of African Americans and Latinos, traditionally Democratic constituencies who were down nationally on Biden but appear to have come home to rally behind Harris.",
+            "South Carolina Sen. Lindsey Graham was among the senior GOP officials who brokered a peace between Trump and Georgia Gov. Brian Kemp, whose feud threatened to undermine the Republican effort in the state. Graham told The Associated Press he was worried about Georgia’s shift leftward.",
+            "“Trump was up 5 or 6 points, and all over the course of a month it’s become much more competitive,” he said.",
+            "Republican pollster Paul Schumaker, an adviser to North Carolina Sen. Thom Tillis, said even a slight uptick in the Black vote has the potential to give Harris the edge in North Carolina, pointing to Mecklenberg County, the home of the Charlotte metro area, but also fast-growing counties such as Durham and Wake.",
+            "“If Kamala Harris could get them to turn out at the rate of Republicans in rural North Carolina, game over for Republicans,” Schumaker said of Black voters.",
+            "At the same time, Trump remains decidedly on offense in the Midwestern battlegrounds of Michigan, Pennsylvania and Wisconsin, which form the so-called Democratic “blue wall” that he narrowly carried in 2016 and barely lost in 2020.",
+            "Those seven states — in addition to swing districts in Nebraska and Maine that each award single Electoral College votes — will draw virtually all of the candidates’ attention and resources over the next eight weeks.",
+            "Trump is investing more advertising dollars in Pennsylvania than any other state through Election Day.",
+            "A Trump victory in Pennsylvania alone would make it much more difficult for Harris to earn the 270 electoral votes needed to win the presidency. Harris’ team insists she has multiple pathways to victory."
+          ]
+        },
+        {
+          "headline": [
+            "The Democrats’ organizing advantage"
+          ],
+          "paragraphs": [
+            "In the fight to frame the election on the air and reach voters in person, Democrats currently have a decided advantage.",
+            "Harris’ team is on pace to outspend Trump’s camp 2-to-1 in television advertising over the next two months. And even before Biden made way for Harris, the Democrats wielded superior campaign infrastructure in the states that matter most.",
+            "Harris’ team, which includes her campaign and an allied super PAC, have more than $280 million in television and radio reservations for the period between Tuesday and Election Day, according to the media tracking firm AdImpact. Trump’s team, by contrast, has $133 million reserved for the final stretch, although that number is expected to grow.",
+            "Trump’s side is actually narrowly outspending Harris’ on the airwaves in Pennsylvania, where both sides will spend more than $146 million between Tuesday and Election Day, according to AdImpact, a figure that dwarfs that of any other state. Georgia is drawing nearly $80 million in ad spending over the campaign’s final eight weeks.",
+            "But in the other five battleground states, Harris largely has the airwaves largely to herself — at least for now.",
+            "Trump and his allied super PACs have made only marginal ad reservations in Michigan, Arizona, Wisconsin, North Carolina and Nevada to date. Harris’ team, by comparison, is investing no less than $21 million in each of the five states, according to an AdImpact analysis.",
+            "Harris’ team also boasts more than 300 coordinated offices and 2,000 staff on the ground in swing states, according to her campaign’s weekend memo.",
+            "Blair, the Trump campaign’s political director, disputes that Democrats have as big an organizing advantage as those numbers make it seem. He pointed to outside allies that will organize for Trump are well-funded, including a new effort backed by billionaire Elon Musk.",
+            "Trump’s campaign on Tuesday said it also has more than 100 dedicated campaign offices in key states, which are backed by another 200 existing GOP offices dedicated to Republican victories this fall."
+          ]
+        },
+        {
+          "headline": [
+            "Here’s what the polls say"
+          ],
+          "paragraphs": [
+            "Both candidates are locked in close races across the seven top swing states. Democratic pollster John Anzalone said Harris “put the Democrats back in the game to where it’s kind of a toss-up.”",
+            "But now comes the hard part, Anzalone said.",
+            "“Post Labor Day, when the bell rings, there is a battle for a slim universe of — you can call them anything you want: persuasion voters, swing voters, independent voters — and it’s pretty small, and that’s where each side gets a billion dollars,” Anzalone said.",
+            "Many independents appear to find both candidates unsatisfying, according to an AP-NORC poll conducted in August.",
+            "For now, Harris also has a slight advantage on some key traits among independents, while she and Trump are about even on others.",
+            "For example, about 3 in 10 independents say that “honest” describes Harris better, while about 2 in 10 say it describes Trump better. About 3 in 10 also say that “committed to democracy” describes Harris better, while less than 2 in 10 say it describes Trump better.",
+            "The candidates were about equally likely to be perceived by independents as capable of winning the election, capable of handling a crisis, and “caring about people like you.”"
+          ]
+        },
+        {
+          "headline": [
+            "Who is the ‘change candidate’?"
+          ],
+          "paragraphs": [
+            "The race may ultimately be decided by whichever candidate can most successfully cast themselves as the “change candidate” given that about 7 in 10 voters say the country is heading in the wrong direction, based on an AP-NORC poll conducted in late July after Biden withdrew from the race.",
+            "Trump was the face of change when he won the 2016 election. And even after serving in the White House for four years, he continues to energize millions of frustrated voters who embrace his brash leadership style and unwillingness to follow the traditional rules of politics.",
+            "Harris has been Biden’s vice president for nearly four years, yet the historic nature of her candidacy — she would be the first woman president — allows her to make a convincing case that she represents a new direction for the country, said veteran Democratic strategist James Carville.",
+            "Still, he’s worried about his party’s “severe underperformance” in the so-called “blue wall” states in recent elections.",
+            "“I’ll feel good after the election,” Carville said. “Let’s get the hay in the barn. There’s still a lot of hay out there in the field.”"
           ]
         }
       ]
@@ -78,27 +125,23 @@
         "position": 1144
       }
     ],
-    "publishing_date": "2023-07-11 15:19:21+00:00",
-    "title": "Microsoft can move ahead with record $69 billion acquisition of Activision Blizzard, judge rules",
+    "publishing_date": "2024-09-03 04:03:19+00:00",
+    "title": "The presidential campaigns brace for a sprint to Election Day",
     "topics": [
-      "Microsoft Corp",
-      "Gaming",
-      "Activision Blizzard Inc",
-      "General news",
-      "n",
-      "United Kingdom",
-      "Satya Nadella",
-      "a",
-      "Business",
-      "U.S. news",
-      "San Francisco",
-      "f",
-      "Technology",
-      "Game consoles",
-      "Meta Platforms Inc",
-      "Sony Corp",
-      "Amazon.com Inc",
-      "U.S. News"
+      "Kamala Harris",
+      "Donald Trump",
+      "Pennsylvania",
+      "Georgia",
+      "Election 2024",
+      "David Plouffe",
+      "Minnesota",
+      "U.S. Democratic Party",
+      "Politics",
+      "Lindsey Graham",
+      "Brian P. Kemp",
+      "2024 United States presidential election",
+      "Elections",
+      "Joe Biden"
     ]
   }
 }

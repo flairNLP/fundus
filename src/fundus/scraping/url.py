@@ -1,5 +1,7 @@
+import bz2
 import gzip
 import itertools
+import lzma
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from functools import cached_property
@@ -13,23 +15,71 @@ from lxml.etree import XPath
 from requests import ConnectionError, HTTPError
 
 from fundus.logging import create_logger
+from fundus.parser.utility import generic_nodes_to_text
 from fundus.scraping.filter import URLFilter, inverse
 from fundus.scraping.session import _default_header, session_handler
 
 logger = create_logger(__name__)
 
 
+class CompressionFormat:
+    def __init__(
+        self, name: str, decompression: Optional[Callable[[bytes], bytes]] = None, *, byte_mask: Optional[bytes] = None
+    ) -> None:
+        self.name = name
+        self.decompression = decompression
+        self.byte_mask = byte_mask
+
+    def match(self, compressed_content: bytes) -> bool:
+        if self.byte_mask:
+            return compressed_content.startswith(self.byte_mask)
+        return False
+
+    def __call__(self, compressed_content: bytes) -> bytes:
+        if self.decompression is None:
+            raise NotImplementedError(f"Decompression not implemented for {self.name!r}")
+        return self.decompression(compressed_content)
+
+    def __repr__(self):
+        if self.decompression is None:
+            return f"{self.name} -- Not implemented"
+        return self.name
+
+
+class CompressionFormats:
+    GZIP = CompressionFormat("gzip", gzip.decompress, byte_mask=b"\x1f\x8b")
+    BZ2 = CompressionFormat("bz2", bz2.decompress, byte_mask=b"\x42\x5a")
+    ZIP = CompressionFormat("zip", byte_mask=b"PK\x03\x04")
+    LZMA = CompressionFormat("lzma", lzma.decompress, byte_mask=b"\x28\xb5\x2f\xfd")
+
+    @classmethod
+    def iter_formats(cls) -> Iterator[CompressionFormat]:
+        for obj in cls.__dict__.values():
+            if isinstance(obj, CompressionFormat):
+                yield obj
+
+    @classmethod
+    def identify(cls, compressed_content: bytes) -> Optional[CompressionFormat]:
+        for compression_format in cls.iter_formats():
+            if compression_format.match(compressed_content):
+                return compression_format
+        return None
+
+
 class _ArchiveDecompressor:
     def __init__(self):
         self.archive_mapping: Dict[str, Callable[[bytes], bytes]] = {
-            "application/x-gzip": self._decompress_gzip,
-            "gzip": self._decompress_gzip,
+            "application/octet-stream": self._decompress_octet_stream,
+            "application/x-gzip": CompressionFormats.GZIP,
+            "gzip": CompressionFormats.GZIP,
         }
 
-    @staticmethod
-    def _decompress_gzip(compressed_content: bytes) -> bytes:
-        decompressed_content = gzip.decompress(compressed_content)
-        return decompressed_content
+    def _decompress_octet_stream(self, compressed_content: bytes) -> bytes:
+        if (compression_format := CompressionFormats.identify(compressed_content)) is None:
+            logger.debug(f"Could not identify compression format")
+            raise NotImplementedError
+
+        return compression_format(compressed_content)
 
     def decompress(self, content: bytes, file_format: "str") -> bytes:
         decompress_function = self.archive_mapping[file_format]
@@ -115,12 +165,16 @@ class Sitemap(URLSource):
                 return
             content = response.content
             if (content_type := response.headers.get("content-type")) in self._decompressor.supported_file_formats:
-                content = self._decompressor.decompress(content, content_type)
+                try:
+                    content = self._decompressor.decompress(content, content_type)
+                except NotImplementedError:
+                    logger.warning(f"No matching decompression found for {sitemap_url!r}")
+                    return
             if not content:
                 logger.warning(f"Warning! Empty sitemap at {sitemap_url!r}")
                 return
             tree = lxml.html.fromstring(content)
-            urls = [node.text_content() for node in self._url_selector(tree)]
+            urls = generic_nodes_to_text(self._url_selector(tree), normalize=True)
             if urls:
                 for new_url in reversed(urls) if self.reverse else urls:
                     yield new_url

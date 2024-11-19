@@ -2,6 +2,7 @@ import re
 from datetime import datetime
 from typing import List, Optional, Pattern
 
+import lxml.html
 from lxml.etree import XPath
 
 from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute
@@ -19,10 +20,12 @@ class TheNamibianParser(ParserProxy):
         VALID_UNTIL = datetime(year=2024, month=1, day=31).date()
         _summary_selector = XPath("//div[contains(@class, 'tdb-block-inner')]/p[position()=1]")
         _paragraph_selector = XPath("//div[contains(@class, 'tdb-block-inner')]/p[position()>1]")
+
         _title_substitution_pattern: Pattern[str] = re.compile(r" - The Namibian$")
+        _author_selector = XPath("//Person/name")
 
         @attribute
-        def body(self) -> ArticleBody:
+        def body(self) -> Optional[ArticleBody]:
             return extract_article_body_with_selector(
                 self.precomputed.doc,
                 paragraph_selector=self._paragraph_selector,
@@ -42,7 +45,7 @@ class TheNamibianParser(ParserProxy):
 
         @attribute
         def authors(self) -> List[str]:
-            return generic_author_parsing(self.precomputed.ld.get_value_by_key_path(["Person", "name"]))
+            return generic_author_parsing(self.precomputed.ld.xpath_search(self._author_selector))
 
         @attribute
         def images(self) -> List[Image]:
@@ -54,8 +57,18 @@ class TheNamibianParser(ParserProxy):
 
     class V1_1(V1):
         VALID_UNTIL = datetime.today().date()
-        _paragraph_selector = XPath("//div[contains(@class, 'entry-content')]/p[position()>1]")
-        _summary_selector = XPath("//div[contains(@class, 'entry-content')]/p[position()=1]")
+        _paragraph_selector = XPath("//div[contains(@class, 'entry-content')]/p[(text() or strong) and position()>1]")
+        _summary_selector = XPath("//div[contains(@class, 'entry-content')]/p[(text() or strong) and position()=1]")
+
+        @attribute
+        def body(self) -> Optional[ArticleBody]:
+            html = re.sub(r"(<br>)+", "<p>", self.precomputed.html)
+            doc = lxml.html.document_fromstring(html)
+            return extract_article_body_with_selector(
+                doc,
+                paragraph_selector=self._paragraph_selector,
+                summary_selector=self._summary_selector,
+            )
 
         @attribute
         def images(self) -> List[Image]:

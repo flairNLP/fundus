@@ -25,7 +25,7 @@ class TechCrunchParser(ParserProxy):
         _subheadline_selector: CSSSelector = CSSSelector("div.article-content > h2")
 
         @attribute
-        def body(self) -> ArticleBody:
+        def body(self) -> Optional[ArticleBody]:
             body: ArticleBody = extract_article_body_with_selector(
                 self.precomputed.doc,
                 subheadline_selector=self._subheadline_selector,
@@ -64,7 +64,7 @@ class TechCrunchParser(ParserProxy):
         _subheadline_selector: CSSSelector = CSSSelector("div.entry-content > h2")
 
         @attribute
-        def body(self) -> ArticleBody:
+        def body(self) -> Optional[ArticleBody]:
             body: ArticleBody = extract_article_body_with_selector(
                 self.precomputed.doc,
                 subheadline_selector=self._subheadline_selector,

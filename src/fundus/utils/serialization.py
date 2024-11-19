@@ -3,6 +3,7 @@ import json
 from dataclasses import asdict, fields, is_dataclass
 from typing import (
     Any,
+    Callable,
     Dict,
     Sequence,
     Type,
@@ -15,7 +16,8 @@ from typing import (
 
 from typing_extensions import TypeAlias
 
-_T = TypeVar("_T", bound="DataclassSerializationMixin")
+_T = TypeVar("_T")
+_M = TypeVar("_M", bound="DataclassSerializationMixin")
 JSONVal: TypeAlias = Union[None, bool, str, float, int, Sequence["JSONVal"], Dict[str, "JSONVal"]]
 
 
@@ -27,8 +29,29 @@ def is_jsonable(x):
         return False
 
 
-def is_generic_type(cls: Type[Any], generic_type: Any) -> bool:
-    return get_origin(cls) is generic_type
+def replace_keys_in_nested_dict(data: Dict[str, _T], transformation: Callable[[str], str]) -> Dict[str, _T]:
+    """Recursively replace all keys in a nested dictionary with <transformation>.
+
+    Args:
+        data: The dictionary to transform
+        transformation: The transformation to use
+
+    Returns:
+        The transformed dictionary
+    """
+
+    def process(element) -> Any:
+        if isinstance(element, dict):
+            # Apply transformation to keys and recurse into values
+            return {transformation(k): process(v) for k, v in element.items()}
+        elif isinstance(element, list):
+            # Recursively apply to elements in a list
+            return [process(i) for i in element]
+        else:
+            # Base case: return the value as is if it's not a dict or list
+            return element
+
+    return {transformation(k): process(v) for k, v in data.items()}
 
 
 class DataclassSerializationMixin:
@@ -38,7 +61,7 @@ class DataclassSerializationMixin:
         return asdict(self)  # type: ignore[arg-type]
 
     @classmethod
-    def deserialize(cls: Type[_T], serialized: Dict[str, JSONVal]) -> _T:
+    def deserialize(cls: Type[_M], serialized: Dict[str, JSONVal]) -> _M:
         if not is_dataclass(cls):
             raise TypeError(f"{type(cls).__name__!r} is not a dataclass")
 

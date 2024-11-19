@@ -69,6 +69,8 @@ class WebScraper(BaseScraper):
         publisher: Publisher,
         restrict_sources_to: Optional[List[Type[URLSource]]] = None,
         delay: Optional[Delay] = None,
+        ignore_robots: bool = False,
+        ignore_crawl_delay: bool = False,
     ):
         if restrict_sources_to:
             url_sources = tuple(
@@ -80,11 +82,13 @@ class WebScraper(BaseScraper):
         html_sources = [
             WebSource(
                 url_source=url_source,
-                publisher=publisher.name,
+                publisher=publisher,
                 request_header=publisher.request_header,
                 delay=delay,
                 url_filter=publisher.url_filter,
                 query_parameters=publisher.query_parameter,
+                ignore_robots=ignore_robots,
+                ignore_crawl_delay=ignore_crawl_delay,
             )
             for url_source in url_sources
         ]

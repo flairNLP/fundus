@@ -91,7 +91,7 @@ class Article:
 
     @property
     def plaintext(self) -> Optional[str]:
-        return str(self.body) if self.body else None
+        return str(self.body) or None if not isinstance(self.body, Exception) else None
 
     @property
     def lang(self) -> Optional[str]:

@@ -21,7 +21,7 @@ class LeFigaroParser(ParserProxy):
         _subheadline_selector: CSSSelector = CSSSelector("div.fig-content-body > h2")
 
         @attribute
-        def body(self) -> ArticleBody:
+        def body(self) -> Optional[ArticleBody]:
             return extract_article_body_with_selector(
                 self.precomputed.doc,
                 paragraph_selector=self._paragraph_selector,

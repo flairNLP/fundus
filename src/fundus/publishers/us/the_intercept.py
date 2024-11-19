@@ -25,7 +25,7 @@ class TheInterceptParser(ParserProxy):
         _subheadline_selector: XPath = CSSSelector("div.PostContent > div > h2")
 
         @attribute
-        def body(self) -> ArticleBody:
+        def body(self) -> Optional[ArticleBody]:
             return extract_article_body_with_selector(
                 self.precomputed.doc,
                 summary_selector=self._summary_selector,
@@ -39,25 +39,22 @@ class TheInterceptParser(ParserProxy):
 
         @attribute
         def authors(self) -> List[str]:
-            return generic_author_parsing(self.precomputed.ld.get_value_by_key_path(["NewsArticle", "author"]))
+            return generic_author_parsing(self.precomputed.ld.xpath_search("NewsArticle/author"))
 
         @attribute
         def publishing_date(self) -> Optional[datetime]:
-            return generic_date_parsing(self.precomputed.ld.get_value_by_key_path(["NewsArticle", "datePublished"]))
+            return generic_date_parsing(self.precomputed.ld.xpath_search("NewsArticle/datePublished", scalar=True))
 
         @attribute
         def title(self) -> Optional[str]:
-            return self.precomputed.ld.get_value_by_key_path(["NewsArticle", "headline"])
+            return self.precomputed.ld.xpath_search("NewsArticle/headline", scalar=True)
 
         @attribute
         def topics(self) -> List[str]:
             # The Intercept specifies the article's topics, including other metadata,
             # inside the "keywords" linked data indicated by a "Subject: " prefix.
             # Example keywords: ["Day: Saturday", ..., "Subject: World", ...]
-            keywords: Optional[List[str]] = self.precomputed.ld.get_value_by_key_path(["NewsArticle", "keywords"])
-            if keywords is None:
-                return []
-
+            keywords: List[str] = self.precomputed.ld.xpath_search("NewsArticle/keywords")
             return [keyword[9:] for keyword in keywords if keyword.startswith("Subject: ")]
 
     class V1_1(V1):

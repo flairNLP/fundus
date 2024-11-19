@@ -22,16 +22,16 @@ class MDRParser(ParserProxy):
         # regex examples: https://regex101.com/r/2DSjAz/1
         _source_detection: str = r"^((MDR (AKTUELL ){0,1}\(([A-z]{2,3}(\/[A-z]{2,3})*|[A-z, ]{2,50}))\)|(Quell(e|en): (u.a. ){0,1}[A-z,]{3,4})|[A-z]{2,4}(, [A-z]{2,4}){0,3}( \([A-z]{2,4}\)){0,1}$|[A-z]{2,4}\/[A-z(), \/]{3,10}$)"
         _paragraph_selector = XPath(
-            f"//div[@class='paragraph '] "
+            f"//div[contains(@class, 'paragraph')]"
             f"/p[not(re:test(em, '{_source_detection}') or re:test(text(), '{_source_detection}'))]",
             namespaces={"re": "http://exslt.org/regular-expressions"},
         )
         _summary_selector = CSSSelector("p.einleitung")
-        _subheadline_selector = CSSSelector("div > .subtitle")
+        _subheadline_selector = CSSSelector("div > h3.subtitle")
         _author_selector = CSSSelector(".articleMeta > .author")
 
         @attribute
-        def body(self) -> ArticleBody:
+        def body(self) -> Optional[ArticleBody]:
             return extract_article_body_with_selector(
                 self.precomputed.doc,
                 summary_selector=self._summary_selector,

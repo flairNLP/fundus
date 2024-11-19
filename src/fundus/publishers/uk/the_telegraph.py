@@ -16,13 +16,14 @@ from fundus.parser.utility import (
 
 class TheTelegraphParser(ParserProxy):
     class V1(BaseParser):
+        VALID_UNTIL = datetime.date(2024, 9, 9)
         _paragraph_selector = CSSSelector("div.articleBodyText p")
         _subheadline_selector = CSSSelector("div.articleBodyText h2")
         _summary_selector = CSSSelector("p[itemprop='description']")
         _datetime_selector = CSSSelector("time[itemprop='datePublished']")
 
         @attribute
-        def body(self) -> ArticleBody:
+        def body(self) -> Optional[ArticleBody]:
             body = extract_article_body_with_selector(
                 self.precomputed.doc,
                 summary_selector=self._summary_selector,
@@ -58,3 +59,10 @@ class TheTelegraphParser(ParserProxy):
                 caption_selector=XPath("./ancestor::figure//figcaption/span[1]"),
                 relative_urls=True,
             )
+
+    class V1_1(V1):
+        VALID_UNTIL = datetime.date.today()
+
+        @attribute
+        def publishing_date(self) -> Optional[datetime.datetime]:
+            return generic_date_parsing(self.precomputed.ld.bf_search("datePublished"))

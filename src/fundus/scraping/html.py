@@ -10,6 +10,7 @@ import requests
 import validators
 from fastwarc import ArchiveIterator, WarcRecord, WarcRecordType
 from lxml.cssselect import CSSSelector
+from lxml.etree import XPath
 from requests import ConnectionError, HTTPError
 
 from fundus.logging import create_logger
@@ -33,6 +34,7 @@ logger = create_logger(__name__)
 
 # unfortunately lxml does not support case-insensitive CSSSelectors
 _content_type_selector = CSSSelector("meta[http-equiv='Content-Type'], meta[http-equiv='content-type']")
+_charset_selector = XPath("//meta[@charset]/@charset | //meta[@charSet]/@charSet")
 
 
 def _detect_charset_from_response(response: requests.Response) -> str:
@@ -47,15 +49,16 @@ def _detect_charset_from_response(response: requests.Response) -> str:
     # see https://github.com/flairNLP/fundus/issues/446
     # use response fallback to decode HTML in a first guess
     guessed_text = response.content.decode(response.encoding or "utf-8")
-    charset = None
-    if (content_type_nodes := _content_type_selector(lxml.html.document_fromstring(guessed_text))) and len(
-        content_type_nodes
-    ) == 1:
+    document = lxml.html.document_fromstring(guessed_text)
+    if (content_type_nodes := _content_type_selector(document)) and len(content_type_nodes) == 1:
         content_type_node = content_type_nodes.pop()
         for field in content_type_node.attrib.get("content", "").split(";"):
             if "charset" in field:
                 charset = field.replace("charset=", "").strip()
-    return charset or response.apparent_encoding
+                return charset
+    elif charset := _charset_selector(document):
+        return str(charset.pop())
+    return response.apparent_encoding
 
 
 @dataclass(frozen=True)
@@ -94,11 +97,13 @@ class WebSource:
     def __init__(
         self,
         url_source: Iterable[str],
-        publisher: str,
+        publisher: Publisher,
         url_filter: Optional[URLFilter] = None,
         request_header: Optional[Dict[str, str]] = None,
         query_parameters: Optional[Dict[str, str]] = None,
         delay: Optional[Delay] = None,
+        ignore_robots: bool = False,
+        ignore_crawl_delay: bool = False,
     ):
         self.url_source = url_source
         self.publisher = publisher
@@ -108,6 +113,8 @@ class WebSource:
         if isinstance(url_source, URLSource):
             url_source.set_header(self.request_header)
         self.delay = delay
+        self.ignore_robots = ignore_robots
+        self.ignore_crawl_delay = ignore_crawl_delay
 
     def fetch(self, url_filter: Optional[URLFilter] = None) -> Iterator[HTML]:
         combined_filters: List[URLFilter] = ([self.url_filter] if self.url_filter else []) + (
@@ -115,6 +122,19 @@ class WebSource:
         )
 
         timestamp = time.time() + self.delay() if self.delay is not None else time.time()
+
+        robots = self.publisher.robots
+
+        if not robots.ready:
+            robots.read(headers=self.request_header)
+
+        if not (self.ignore_robots or self.ignore_crawl_delay):
+            if delay := robots.crawl_delay(self.request_header.get("user-agent") or "*"):
+                logger.debug(
+                    f"Found crawl-delay of {delay} seconds in robots.txt for {self.publisher.name}. "
+                    f"Overwriting existing delay."
+                )
+                self.delay = lambda: delay
 
         def filter_url(u: str) -> bool:
             return any(f(u) for f in combined_filters)
@@ -126,6 +146,10 @@ class WebSource:
 
             if filter_url(url):
                 logger.debug(f"Skipped requested URL {url!r} because of URL filter")
+                continue
+
+            if not (self.ignore_robots or robots.can_fetch(self.request_header.get("user-agent") or "*", url)):
+                logger.debug(f"Skipped requested URL {url!r} because of robots.txt")
                 continue
 
             session = session_handler.get_session()
@@ -156,6 +180,7 @@ class WebSource:
                 if "charset" not in response.headers["content-type"]:
                     # That's actually the only place requests checks to detect encoding, so if charset
                     # is not set, requests falls back to default encodings (latin-1/utf-8)
+                    logger.debug(f"Detect encoding from response for URL {str(response.url)!r}")
                     response.encoding = _detect_charset_from_response(response)
 
                 if filter_url(str(response.url)):
@@ -167,9 +192,9 @@ class WebSource:
                     logger.info(f"Got redirected {len(response.history)} time(s) from {url!r} -> {response.url!r}")
 
                 source_info = (
-                    WebSourceInfo(self.publisher, type(self.url_source).__name__, self.url_source.url)
+                    WebSourceInfo(self.publisher.name, type(self.url_source).__name__, self.url_source.url)
                     if isinstance(self.url_source, URLSource)
-                    else SourceInfo(self.publisher)
+                    else SourceInfo(self.publisher.name)
                 )
 
                 yield HTML(

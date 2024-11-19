@@ -63,9 +63,10 @@ jobs:
           echo "TOTAL_PUBLISHERS=$(echo ${{ env.SUCCESS_RATE }} | grep -P -o '\d+' | tail -1)" >> $GITHUB_ENV
           echo "PASSED_PUBLISHERS=$(echo ${{ env.SUCCESS_RATE }} | grep -P -o '\d+' | head -1)" >> $GITHUB_ENV
 
-      - name: Get Red Threshold
-        # We set the badge colour to red when at least one publisher failed the tests.
-        run: echo "RED_THRESHOLD=$(( ${{ env.TOTAL_PUBLISHERS }} - 1 ))" >> $GITHUB_ENV
+      - name: Get Thresholds
+        # We set the badge colour to red when at least half of the publishers failed the tests.
+        run: |
+          echo "RED_THRESHOLD=$(( ${{ env.TOTAL_PUBLISHERS }} / 2 ))" >> $GITHUB_ENV
 
       - name: Create Badge
         uses: schneegans/dynamic-badges-action@v1.7.0

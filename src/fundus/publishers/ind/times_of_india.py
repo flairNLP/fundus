@@ -28,7 +28,7 @@ class TimesOfIndiaParser(ParserProxy):
         _summary_selector = XPath("//div[@class='M1rHh undefined']")
 
         @attribute
-        def body(self) -> ArticleBody:
+        def body(self) -> Optional[ArticleBody]:
             html_as_string = tostring(self.precomputed.doc).decode("utf-8")
             html_as_string = re.sub(r"(</div>)((\r\n|\r|\n)<br>)", "</div><p>", html_as_string)
             html_as_string = re.sub(r"</div>\s*</div>(?!<)", "</div></div><p>", html_as_string)

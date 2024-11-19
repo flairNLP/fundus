@@ -17,7 +17,7 @@ from fundus.parser.utility import (
 class BoersenZeitungParser(ParserProxy):
     class V1(BaseParser):
         _paragraph_selector = CSSSelector("storefront-content-body .no-tts p")
-        _subheadline_selector = CSSSelector("p.wp-block-ppi-interline")
+        _subheadline_selector = XPath("//p[contains(@class, 'interline')]")
         _summary_selector = CSSSelector("storefront-html.excerpt > div")
 
         _topic_selector = CSSSelector("a[href^='/thema'] > span")
@@ -26,9 +26,10 @@ class BoersenZeitungParser(ParserProxy):
         _title_bloat_pattern = re.compile(r"\|.*")
 
         @attribute
-        def body(self) -> ArticleBody:
+        def body(self) -> Optional[ArticleBody]:
             return extract_article_body_with_selector(
                 self.precomputed.doc,
+                summary_selector=self._summary_selector,
                 subheadline_selector=self._subheadline_selector,
                 paragraph_selector=self._paragraph_selector,
             )

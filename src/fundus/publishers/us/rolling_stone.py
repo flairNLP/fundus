@@ -24,7 +24,7 @@ class RollingStoneParser(ParserProxy):
         _subheadline_selector = CSSSelector("div.a-content h2.heading," "div.a-content div#pmc-gallery-vertical h2")
 
         @attribute
-        def body(self) -> ArticleBody:
+        def body(self) -> Optional[ArticleBody]:
             return extract_article_body_with_selector(
                 self.precomputed.doc,
                 paragraph_selector=self._paragraph_selector,

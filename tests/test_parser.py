@@ -1,5 +1,6 @@
 import datetime
-from typing import List
+import pickle
+from typing import Any, Dict, List, Optional, Tuple, Union
 
 import lxml.html
 import pytest
@@ -74,6 +75,54 @@ class TestBaseParser:
         assert isinstance(validated, AttributeCollection)
         assert (funcs := list(unvalidated)) != [parser.unvalidated]
         assert funcs[0].__func__ == parser.unvalidated.__func__
+
+    def test_default_values_for_attributes(self):
+        class Parser(BaseParser):
+            @attribute
+            def test_optional(self) -> Optional[str]:
+                raise Exception
+
+            @attribute
+            def test_collection(self) -> Tuple[str, ...]:
+                raise Exception
+
+            @attribute
+            def test_nested_collection(self) -> List[Tuple[str, str]]:
+                raise Exception
+
+            @attribute(default_factory=lambda: "This is a default")
+            def test_default_factory(self) -> Union[str, bool]:
+                raise Exception
+
+            @attribute
+            def test_boolean(self) -> bool:
+                raise Exception
+
+        parser = Parser()
+
+        default_values = {attr.__name__: attr.__default__ for attr in parser.attributes()}
+
+        expected_values: Dict[str, Any] = {
+            "test_optional": None,
+            "test_collection": tuple(),
+            "test_nested_collection": list(),
+            "test_default_factory": "This is a default",
+            "test_boolean": False,
+            "free_access": False,
+        }
+
+        for name, value in default_values.items():
+            assert value == expected_values[name]
+
+        class ParserWithUnion(BaseParser):
+            @attribute
+            def this_should_fail(self) -> Union[str, bool]:
+                raise Exception
+
+        parser_with_union = ParserWithUnion()
+
+        with pytest.raises(NotImplementedError):
+            default_values = {attr.__name__: attr.__default__ for attr in parser_with_union.attributes()}
 
 
 class TestParserProxy:
@@ -188,6 +237,9 @@ class TestParser:
             extraction = versioned_parser().parse(html.content, "raise")
             for key, value in version_data.items():
                 assert value == extraction[key]
+
+            # check if extraction is pickable
+            pickle.dumps(extraction)
 
     def test_reserved_attribute_names(self, publisher: Publisher):
         parser = publisher.parser
