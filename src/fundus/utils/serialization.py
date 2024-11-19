@@ -1,7 +1,17 @@
 import inspect
 import json
 from dataclasses import asdict, fields, is_dataclass
-from typing import Any, Dict, Sequence, Type, TypeVar, Union, get_args, get_origin
+from typing import (
+    Any,
+    Dict,
+    Sequence,
+    Type,
+    TypeVar,
+    Union,
+    get_args,
+    get_origin,
+    get_type_hints,
+)
 
 from typing_extensions import TypeAlias
 
@@ -32,8 +42,12 @@ class DataclassSerializationMixin:
         if not is_dataclass(cls):
             raise TypeError(f"{type(cls).__name__!r} is not a dataclass")
 
+        # we use get_type_hints here to resolve forward references since we need the actual types
+        # not the forwarded string reference
+        annotations = get_type_hints(cls)
+
         for field in fields(cls):
-            serialized[field.name] = _inner_deserialize(serialized[field.name], field.type)
+            serialized[field.name] = _inner_deserialize(serialized[field.name], annotations[field.name])
 
         return cls(**serialized)  # type: ignore[return-value]
 
