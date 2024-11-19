@@ -62,6 +62,7 @@ class DieWeltParser(ParserProxy):
                 author_selector=XPath("./ancestor::figure//span[@class='c-content-image__caption-source']"),
                 author_filter=re.compile(r"(?i)quelle:\s*"),
                 lower_boundary_selector=XPath("//section[@class='c-attached-content']"),
+                size_pattern=re.compile(r"-w(?P<width>[0-9]+)/"),
             )
 
     class V1_1(V1):

@@ -59,6 +59,7 @@ class TheBBCParser(ParserProxy):
             return image_extraction(
                 doc=self.precomputed.doc,
                 paragraph_selector=self._paragraph_selector,
+                image_selector=XPath("//figure //img[not(@src='/bbcx/grey-placeholder.png')]"),
                 caption_selector=XPath("./ancestor::figure//figcaption//p"),
                 author_selector=XPath("./ancestor::figure//span[@role='text']/text()"),
             )

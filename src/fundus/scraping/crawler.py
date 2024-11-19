@@ -35,7 +35,6 @@ from typing import (
     Union,
     cast,
 )
-from urllib.parse import urljoin, urlparse
 
 import dill
 import fastwarc.stream_io
@@ -48,6 +47,7 @@ from tqdm import tqdm
 from typing_extensions import ParamSpec, TypeAlias
 
 from fundus.logging import create_logger, get_current_config
+from fundus.parser.data import remove_query_parameters_from_url
 from fundus.publishers.base_objects import Publisher, PublisherGroup
 from fundus.scraping.article import Article
 from fundus.scraping.delay import Delay
@@ -167,12 +167,6 @@ def random_sleep(func: Callable[_P, _T], between: Tuple[float, float]) -> Callab
         return func(*args, **kwargs)
 
     return wrapper
-
-
-def remove_query_parameters_from_url(url: str) -> str:
-    if any(parameter_indicator in url for parameter_indicator in ("?", "#")):
-        return urljoin(url, urlparse(url).path)
-    return url
 
 
 class CrawlerBase(ABC):

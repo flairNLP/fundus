@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import itertools
 import json
 import re
@@ -19,6 +21,7 @@ from typing import (
     Optional,
     Pattern,
     Sequence,
+    Set,
     Type,
     Union,
 )
@@ -36,10 +39,13 @@ from fundus.parser.data import (
     DOM,
     ArticleBody,
     ArticleSection,
+    Dimension,
     Image,
+    ImageVersion,
     LinkedDataMapping,
     TextSequence,
 )
+from fundus.utils.regex import _get_match_dict
 
 logger = create_logger(__name__)
 
@@ -417,20 +423,8 @@ def image_author_parsing(authors: Union[str, List[str]], author_filter: Optional
     return generic_author_parsing(authors)
 
 
-class Bounds(NamedTuple):
-    upper: int
-    first_paragraph: Optional[int]
-    lower: int
-
-
-class IndexedImageNode(NamedTuple):
-    position: int
-    content: lxml.html.HtmlElement
-    is_cover: bool
-
-
 # https://regex101.com/r/MplUXL/2
-_srcset_pattern = re.compile(r"(?P<url>[^\s]+)\s*(?P<descriptor>[0-9.]+[wx])?(,?\s*)")
+_srcset_pattern = re.compile(r"(?P<url>\S+)\s*(?P<descriptor>[0-9.]+[wx])?(,?\s*)")
 
 
 def parse_srcset(srcset: str) -> Dict[str, str]:
@@ -444,7 +438,7 @@ def parse_srcset(srcset: str) -> Dict[str, str]:
     return dict(sorted(urls.items(), key=lambda item: float(item[0][:-1])))
 
 
-def parse_urls_from_image(node: lxml.html.HtmlElement) -> Optional[Dict[str, str]]:
+def parse_urls(node: lxml.html.HtmlElement) -> Optional[Dict[str, str]]:
     if srcset := (node.get("data-srcset") or node.get("srcset") or node.get("data-lazy-srcset")):
         return parse_srcset(srcset)
     elif src := (node.get("data-src") or node.get("src") or node.get("data-lazy-src")):
@@ -453,7 +447,99 @@ def parse_urls_from_image(node: lxml.html.HtmlElement) -> Optional[Dict[str, str
         return None
 
 
-_relative_source_selector = XPath("./ancestor::picture/source")
+class _DimensionCalculator:
+    def __init__(
+        self, width: Optional[float] = None, height: Optional[float] = None, ratio: Optional[float] = None
+    ) -> None:
+        self.width = width
+        self.height = height
+        self.ratio = ratio
+
+    def calculate(
+        self, width: Optional[float] = None, height: Optional[float] = None, dpr: Optional[float] = None
+    ) -> Optional[Dimension]:
+        if not (width or height):
+            width = self.width
+            height = self.height
+        if dimension := Dimension.from_ratio(width, height, self.ratio):
+            return dimension * (dpr or 1)
+        return None
+
+
+_media_param_pattern = re.compile(r"\(\s*(?P<param>[\w-]+)\s*:\s*(?P<value>[\d./]+)(?P<unit>[a-z]*)\)")
+_width_x_height_pattern = re.compile(r"(?P<width>[0-9]+)x(?P<height>[0-9]+)")
+
+
+def get_versions_from_node(
+    source: lxml.html.HtmlElement, ratio: Optional[float], size_pattern: Optional[Pattern[str]]
+) -> Set[ImageVersion]:
+    if not (urls := parse_urls(source)):
+        return set()
+
+    # get min/max width
+    query_width = None
+    for param, value, descriptor in re.findall(_media_param_pattern, source.get("media", "").split(",")[0]):
+        if param in ["min-width", "max-width"]:
+            if descriptor != "px":
+                logger.debug(f"Pixel calculation not implemented for {descriptor}")
+            else:
+                # with the assumption that there is only one max/min width per ',' seperated query and only
+                # either min- or max-width
+                query_width = f"{param}:{value}"
+
+    # get width, height and init calculator
+    width = float(source.get("width", 0)) or None
+    height = float(source.get("height", 0)) or None
+    if width and height:
+        ratio = width / height
+    calculator = _DimensionCalculator(width, height, ratio)
+
+    versions = set()
+    for descriptor, url in urls.items():
+        kwargs: Dict[str, float] = {}
+        if descriptor is not None:
+            if match := re.search(r"(?P<multiplier>[0-9.]+)x", descriptor):
+                kwargs["dpr"] = float(match.group("multiplier"))
+            elif match := re.search(r"(?P<width>[0-9]+)(px|w)", descriptor):
+                kwargs["width"] = float(match.group("width"))
+
+        if size_pattern is not None and (
+            match_dict := _get_match_dict(size_pattern, url, conversion=lambda x: float(x))
+        ):
+            kwargs.update(match_dict)
+        elif not (calculator.width or kwargs.get("width")) and (match := re.search(_width_x_height_pattern, url)):
+            kwargs.update({k: float(v) for k, v in match.groupdict().items() if v is not None})
+
+        version = ImageVersion(
+            url=url, query_width=query_width, size=calculator.calculate(**kwargs), type=source.get("type")
+        )
+        versions.add(version)
+
+    return versions
+
+
+_relative_source_selector = XPath("./ancestor::picture//source")
+
+
+def parse_versions(img_node: lxml.html.HtmlElement, size_pattern: Optional[Pattern[str]] = None) -> List[ImageVersion]:
+    # parse img
+    if (default_width := img_node.get("width")) and (default_height := img_node.get("height")):
+        ratio = float(default_width) / float(default_height)
+    else:
+        ratio = None
+
+    versions = set()
+    for source in _relative_source_selector(img_node) + [img_node]:
+        for version in get_versions_from_node(source, ratio, size_pattern):
+            versions.add(version)
+
+    return sorted(versions)
+
+
+class IndexedImageNode(NamedTuple):
+    position: int
+    content: lxml.html.HtmlElement
+    is_cover: bool
 
 
 def parse_image_nodes(
@@ -463,6 +549,7 @@ def parse_image_nodes(
     author_selector: Union[XPath, Pattern[str]],
     author_filter: Optional[Pattern[str]] = None,
     domain: Optional[str] = None,
+    size_pattern: Optional[Pattern[str]] = None,
 ) -> Iterator[Image]:
     """Extract urls, caption, description and authors from a list of <img> nodes
 
@@ -475,6 +562,8 @@ def parse_image_nodes(
         author_filter: In case the author_selector cannot adequately select the author, this filter can be used to
             remove unwanted substrings
         domain: If set, the domain will be prepended to URLs in case they are relative
+        size_pattern: Regular expression to select <width>, <height> and <dpr> from the image URL. The given regExp
+            will be matched with re.findall and overwrites existing values. Defaults to None.
 
     Returns:
         List of Images
@@ -485,19 +574,13 @@ def parse_image_nodes(
 
     for position, node, is_cover in image_nodes:
         # parse URLs
-        urls = {}
-        if img_sources := _relative_source_selector(node):
-            for source in img_sources:
-                urls.update(parse_urls_from_image(source) or {})
-        else:
-            urls.update(parse_urls_from_image(node) or {})
-        if not urls:
+        if not (versions := parse_versions(node, size_pattern)):
             continue
 
         # resolve relative URLs if domain is given
         if domain is not None:
-            for descriptor, url in urls.items():
-                urls[descriptor] = urljoin(domain, url)
+            for version in versions:
+                version.url = urljoin(domain, version.url)
 
         # parse caption
         caption = nodes_to_text(caption_selector(node))
@@ -519,13 +602,19 @@ def parse_image_nodes(
         description = nodes_to_text(alt_selector(node))
 
         yield Image(
-            urls=urls,
+            versions=versions,
             caption=caption,
             authors=authors,
             description=description,
             is_cover=is_cover,
             position=position,
         )
+
+
+class Bounds(NamedTuple):
+    upper: int
+    first_paragraph: Optional[int]
+    lower: int
 
 
 def determine_bounds(
@@ -568,6 +657,9 @@ def image_extraction(
     ),
     author_filter: Optional[Pattern[str]] = None,
     relative_urls: Union[bool, XPath] = False,
+    size_pattern: Pattern[str] = re.compile(
+        r"width([=-])(?P<width>[0-9.]+)|height([=-])(?P<height>[0-9.]+)|dpr=(?P<dpr>[0-9.]+|)"
+    ),
 ) -> List[Image]:
     """Extracts images enriched with metadata from <dom> based on given selectors.
 
@@ -593,6 +685,8 @@ def image_extraction(
             remove unwanted substrings.
         relative_urls: If True, the extractor assumes that image src URLs are relative and prepends the publisher
             domain
+        size_pattern: Regular expression to select <width>, <height> and <dpr> from the image URL. The given regExp
+            will be matched with re.findall and overwrites existing values. Defaults to None.
 
     Returns:
         A list of Images contained within the article
@@ -630,6 +724,7 @@ def image_extraction(
             author_selector=author_selector,
             author_filter=author_filter,
             domain=domain,
+            size_pattern=size_pattern,
         )
     )
 
