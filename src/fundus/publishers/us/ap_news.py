@@ -69,9 +69,13 @@ class APNewsParser(ParserProxy):
                 doc=self.precomputed.doc,
                 paragraph_selector=self._paragraph_selector,
                 image_selector=XPath("//*[self::figure or @class='CarouselSlide']//img"),
+                caption_selector=XPath(
+                    "./ancestor::figure//figcaption | "
+                    "./ancestor::div[@class='CarouselSlide']//span[@class='CarouselSlide-infoDescription']"
+                ),
                 upper_boundary_selector=XPath("//div[@class='Page-content' or @class='Body']"),
-                author_selector=XPath("./ancestor::figure//figcaption"),
-                author_filter=re.compile(r".*\(|\)"),
+                lower_boundary_selector=CSSSelector("footer.Page-footer"),
+                author_selector=re.compile(r"\s*\((?P<credits>.*)\)$"),
             )
 
     class V1_1(V1):

@@ -461,11 +461,24 @@ def parse_srcset(srcset: str) -> Dict[str, str]:
     return dict(sorted(urls.items(), key=lambda item: float(item[0][:-1])))
 
 
+# that's the same as string(./attribute::*[ends-with(name(), '*')]) but LXML doesn't support the ends-with function
+# these two selectors select the value of the first attribute found ending with src/srcset relative to the node
+# as truing value
+_srcset_selector = XPath(
+    "./@*[substring(name(), string-length(name()) - string-length('srcset') + 1)  = 'srcset'][starts-with(., 'http')]"
+)
+_src_selector = XPath(
+    "./@*[substring(name(), string-length(name()) - string-length('src') + 1)  = 'src'][starts-with(., 'http')]"
+)
+
+
 def parse_urls(node: lxml.html.HtmlElement) -> Optional[Dict[str, str]]:
-    if srcset := (node.get("data-srcset") or node.get("srcset") or node.get("data-lazy-srcset")):
-        return parse_srcset(srcset)
-    elif src := (node.get("data-src") or node.get("src") or node.get("data-lazy-src")):
-        return {"1x": src.strip()}
+    def get_longest_string(strings: List[str]) -> str:
+        return sorted(strings, key=len)[0]
+    if srcset := cast(List[str], _srcset_selector(node)):
+        return parse_srcset(normalize_whitespace(get_longest_string(srcset)))
+    elif src := cast(List[str], _src_selector(node)):
+        return {"1x": normalize_whitespace(get_longest_string(src))}
     else:
         return None
 
@@ -511,8 +524,8 @@ def get_versions_from_node(
                 query_width = f"{param}:{value}"
 
     # get width, height and init calculator
-    width = float(source.get("width", 0)) or None
-    height = float(source.get("height", 0)) or None
+    width = float(source.get("width") or 0) or None
+    height = float(source.get("height") or 0) or None
     if width and height:
         ratio = width / height
     calculator = _DimensionCalculator(width, height, ratio)
