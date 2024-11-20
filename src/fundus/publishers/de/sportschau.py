@@ -64,4 +64,5 @@ class SportSchauParser(ParserProxy):
                 caption_selector=XPath(
                     "./ancestor::div[contains(@class, 'absatzbild ')]/div[@class='absatzbild__info']"
                 ),
+                size_pattern=re.compile(r"/[\dx]+-(?P<width>[0-9]+)/"),
             )

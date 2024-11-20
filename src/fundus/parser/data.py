@@ -448,10 +448,10 @@ class Dimension(DataclassSerializationMixin):
 
     @classmethod
     def from_ratio(
-        cls,
-        width: Optional[float] = None,
-        height: Optional[float] = None,
-        ratio: Optional[float] = None,
+            cls,
+            width: Optional[float] = None,
+            height: Optional[float] = None,
+            ratio: Optional[float] = None,
     ) -> Optional["Dimension"]:
         if width and height:
             return cls(round(width), round(height))
@@ -509,18 +509,25 @@ class ImageVersion(DataclassSerializationMixin):
             return NotImplemented
         return self.url == other.url
 
-    def __lt__(self, other: "Dimension") -> bool:
+    def __lt__(self, other: "ImageVersion") -> bool:
+
         if isinstance(other, ImageVersion):
-            if self.size and other.size:
-                if self.size == other.size:
-                    return self.type < other.type if self.type and other.type else self.url < other.url
+            if self.size and other.size and self.size != other.size:
                 return self.size < other.size
-            elif self.query_width and other.query_width:
-                if self.query_width == other.query_width:
-                    return self.type < other.type if self.type and other.type else self.url < other.url
+            if (self.size is None) != (other.size is None):
+                return self.size is None
+
+            if self.query_width and other.query_width and self.query_width != other.query_width:
                 return self.query_width < other.query_width
-            else:
-                return True
+            if (self.query_width is None) != (other.query_width is None):
+                return self.query_width is None
+
+            if self.type and other.type and self.type != other.type:
+                return self.type < other.type
+            if (self.type is None) != (other.type is None):
+                return self.type is None
+
+            return self.url < other.url
         raise NotImplementedError(f"'<' is not defined between {type(self).__name__!r} and {type(other).__name__!r}")
 
 
