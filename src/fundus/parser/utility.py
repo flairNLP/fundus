@@ -465,16 +465,17 @@ def parse_srcset(srcset: str) -> Dict[str, str]:
 # these two selectors select the value of the first attribute found ending with src/srcset relative to the node
 # as truing value
 _srcset_selector = XPath(
-    "./@*[substring(name(), string-length(name()) - string-length('srcset') + 1)  = 'srcset'][starts-with(., 'http')]"
+    "./@*[substring(name(), string-length(name()) - string-length('srcset') + 1)  = 'srcset'][starts-with(., 'http') or starts-with(., '/')]"
 )
 _src_selector = XPath(
-    "./@*[substring(name(), string-length(name()) - string-length('src') + 1)  = 'src'][starts-with(., 'http')]"
+    "./@*[substring(name(), string-length(name()) - string-length('src') + 1)  = 'src'][starts-with(., 'http') or starts-with(., '/')]"
 )
 
 
 def parse_urls(node: lxml.html.HtmlElement) -> Optional[Dict[str, str]]:
     def get_longest_string(strings: List[str]) -> str:
-        return sorted(strings, key=len)[0]
+        return sorted(strings, key=len)[-1]
+
     if srcset := cast(List[str], _srcset_selector(node)):
         return parse_srcset(normalize_whitespace(get_longest_string(srcset)))
     elif src := cast(List[str], _src_selector(node)):

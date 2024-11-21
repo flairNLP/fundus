@@ -448,10 +448,10 @@ class Dimension(DataclassSerializationMixin):
 
     @classmethod
     def from_ratio(
-            cls,
-            width: Optional[float] = None,
-            height: Optional[float] = None,
-            ratio: Optional[float] = None,
+        cls,
+        width: Optional[float] = None,
+        height: Optional[float] = None,
+        ratio: Optional[float] = None,
     ) -> Optional["Dimension"]:
         if width and height:
             return cls(round(width), round(height))
@@ -510,7 +510,6 @@ class ImageVersion(DataclassSerializationMixin):
         return self.url == other.url
 
     def __lt__(self, other: "ImageVersion") -> bool:
-
         if isinstance(other, ImageVersion):
             if self.size and other.size and self.size != other.size:
                 return self.size < other.size
