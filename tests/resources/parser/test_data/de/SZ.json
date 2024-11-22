@@ -1,47 +1,4 @@
 {
-  "V1": {
-    "authors": [
-      "Lars Brunckhorst"
-    ],
-    "body": {
-      "summary": [
-        "Ob Radler oder Politiker - zwei Rankings lassen wieder tief blicken."
-      ],
-      "sections": [
-        {
-          "headline": [],
-          "paragraphs": [
-            "Andere oder sich selbst mit anderen zu vergleichen, ist ein zutiefst menschliches Bedürfnis. Ob am Arbeitsplatz, in der Schule, im Sport oder bei Model-Casting-Shows - immer geht es darum: Wer ist schneller, größer, schöner, reicher oder geistreicher? Die Zahl der Rankings kennt keine Grenzen. Für alle, die von der Bundesligatabelle über die Forbes-Liste bis zu den Schlagern der Woche ein Faible für Hitlisten haben, waren die vergangenen Tage eine gute Zeit. Da verteilte zunächst der Allgemeine Deutsche Fahrradclub ADFC Noten an Deutschlands Städte und Gemeinden. Um es kurz machen: Das Münchner Umland - bei anderen Rankings wie Lebensqualität, Wirtschaftskraft und Immobilienpreisen sonst immer ganz vorne dabei - schneidet in puncto Fahrradfreundlichkeit eher nicht so gut ab. Allein Oberhaching schafft es mit einer 2,96 gerade noch aufs Treppchen. Grünwald dagegen: Mit einer 4,4 nahezu durchgefallen. Aber klar: Nirgendwo sonst ist die Sportwagen- und SUV-Dichte so groß.",
-            "An dieser Stelle soll aber die Rede sein von einer anderen Rangliste, wonach Marco Buschmann, der Bundesjustizminister von der FDP, der \"fleißigste deutsche Politiker\" ist, gefolgt von seiner weithin unbekannten Parteifreundin Bettina Stark-Watzinger (das ist die Bundesbildungsministerin) und - allerdings schon mit weitem Abstand - Außenministerin Annalena Baerbock von den Grünen. Bundeskanzler Olaf Scholz kommt dagegen, als erster SPDler, nur auf Platz 13 und Finanzminister Christian Lindner gar nur auf den 15. Platz. Ausgewertet wurden für die Erhebung sämtliche Aktivitäten aller Bundestagsabgeordneten, also Redezeiten, Anfragen, Anträge und dergleichen - Zwischenrufe und Handyzocken ausgenommen.",
-            "Das Ranking bricht nach Lindner ab, was rücksichtsvoll gegenüber den übrigen 721 Abgeordneten ist. Wer sich die Mühe machen will, kann aber selbst ausrechnen, auf welchen Plätzen etwa die Abgeordneten Florian Hahn, Anton Hofreiter und Gerold Otten gelandet sind, also jene drei, die in Berlin den Landkreis München vertreten. Investigativ, wie man uns kennt, haben wir nachgeschaut und siehe da: Grünen-Apologet Hofreiter ist, trotz oder gerade wegen seines Rauswurfs aus der ersten Reihe, mit gezählten 1922 Aktivitäten der unangefochtene Streber.",
-            "CSU-Mann Hahn kommt dagegen nur auf 257, aber der ist ja auch frisch verliebt. Damit ist Hahn aber immer noch weit fleißiger als drei andere Florians: etwa sein Parteifreund Florian Müller (52 Aktivitäten) und der Münchner Ex-Sozi Florian Post (74), vom rheinland-pfälzischen Florian Gerster (7!), dieser faulen Socke, ganz zu schweigen. Auf die 355 Aktivitäten von AfD-Mann Otten hätte man dagegen gerne verzichtet."
-          ]
-        }
-      ]
-    },
-    "images": [
-      {
-        "urls": {
-          "100w": "https://media-cdn.sueddeutsche.de/image/sz.1.5360197/100x75?v=1626956922000&format=webp",
-          "200w": "https://media-cdn.sueddeutsche.de/image/sz.1.5360197/200x150?v=1626956922000&format=webp",
-          "400w": "https://media-cdn.sueddeutsche.de/image/sz.1.5360197/400x300?v=1626956922000&format=webp"
-        },
-        "is_cover": false,
-        "description": "SZ Gerne draußen!",
-        "caption": null,
-        "authors": [],
-        "position": 362
-      }
-    ],
-    "publishing_date": "2023-04-28 19:50:30+02:00",
-    "title": "Die Fleißigsten und Fahrradfreundlichsten im Landkreis München",
-    "topics": [
-      "Landkreis München",
-      "Grünwald",
-      "Oberhaching",
-      "Süddeutsche Zeitung"
-    ]
-  },
   "V1_1": {
     "authors": [
       "Johannes Knuth"
@@ -66,7 +23,354 @@
         }
       ]
     },
-    "images": [],
+    "images": [
+      {
+        "versions": [
+          {
+            "url": "https://www.sueddeutsche.de/2024/09/29/2cc5e7ad-5475-4dc0-9f89-120788e06f9b.jpeg?q=60&fm=avif&width=210&rect=153%2C470%2C3847%2C2164",
+            "query_width": null,
+            "size": {
+              "width": 210,
+              "height": 0
+            },
+            "type": "image/avif"
+          },
+          {
+            "url": "https://www.sueddeutsche.de/2024/09/29/2cc5e7ad-5475-4dc0-9f89-120788e06f9b.jpeg?q=60&fm=jpeg&width=210&rect=153%2C470%2C3847%2C2164",
+            "query_width": null,
+            "size": {
+              "width": 210,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.sueddeutsche.de/2024/09/29/2cc5e7ad-5475-4dc0-9f89-120788e06f9b.jpeg?q=60&fm=webp&width=210&rect=153%2C470%2C3847%2C2164",
+            "query_width": null,
+            "size": {
+              "width": 210,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://www.sueddeutsche.de/2024/09/29/2cc5e7ad-5475-4dc0-9f89-120788e06f9b.jpeg?q=60&fm=avif&width=420&rect=153%2C470%2C3847%2C2164",
+            "query_width": null,
+            "size": {
+              "width": 420,
+              "height": 0
+            },
+            "type": "image/avif"
+          },
+          {
+            "url": "https://www.sueddeutsche.de/2024/09/29/2cc5e7ad-5475-4dc0-9f89-120788e06f9b.jpeg?q=60&fm=jpeg&width=420&rect=153%2C470%2C3847%2C2164",
+            "query_width": null,
+            "size": {
+              "width": 420,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.sueddeutsche.de/2024/09/29/2cc5e7ad-5475-4dc0-9f89-120788e06f9b.jpeg?q=60&fm=webp&width=420&rect=153%2C470%2C3847%2C2164",
+            "query_width": null,
+            "size": {
+              "width": 420,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://www.sueddeutsche.de/2024/09/29/2cc5e7ad-5475-4dc0-9f89-120788e06f9b.jpeg?q=60&fm=avif&width=840&rect=153%2C470%2C3847%2C2164",
+            "query_width": null,
+            "size": {
+              "width": 840,
+              "height": 0
+            },
+            "type": "image/avif"
+          },
+          {
+            "url": "https://www.sueddeutsche.de/2024/09/29/2cc5e7ad-5475-4dc0-9f89-120788e06f9b.jpeg?q=60&fm=jpeg&width=840&rect=153%2C470%2C3847%2C2164",
+            "query_width": null,
+            "size": {
+              "width": 840,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.sueddeutsche.de/2024/09/29/2cc5e7ad-5475-4dc0-9f89-120788e06f9b.jpeg?q=60&fm=webp&width=840&rect=153%2C470%2C3847%2C2164",
+            "query_width": null,
+            "size": {
+              "width": 840,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://www.sueddeutsche.de/2024/09/29/2cc5e7ad-5475-4dc0-9f89-120788e06f9b.jpeg?q=60&fm=avif&width=1000&rect=153%2C470%2C3847%2C2164",
+            "query_width": null,
+            "size": {
+              "width": 1000,
+              "height": 0
+            },
+            "type": "image/avif"
+          },
+          {
+            "url": "https://www.sueddeutsche.de/2024/09/29/2cc5e7ad-5475-4dc0-9f89-120788e06f9b.jpeg?q=60&fm=jpeg&width=1000&rect=153%2C470%2C3847%2C2164",
+            "query_width": null,
+            "size": {
+              "width": 1000,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.sueddeutsche.de/2024/09/29/2cc5e7ad-5475-4dc0-9f89-120788e06f9b.jpeg?q=60&fm=webp&width=1000&rect=153%2C470%2C3847%2C2164",
+            "query_width": null,
+            "size": {
+              "width": 1000,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://www.sueddeutsche.de/2024/09/29/2cc5e7ad-5475-4dc0-9f89-120788e06f9b.jpeg?q=60&fm=avif&width=1536&rect=153%2C470%2C3847%2C2164",
+            "query_width": null,
+            "size": {
+              "width": 1536,
+              "height": 0
+            },
+            "type": "image/avif"
+          },
+          {
+            "url": "https://www.sueddeutsche.de/2024/09/29/2cc5e7ad-5475-4dc0-9f89-120788e06f9b.jpeg?q=60&fm=jpeg&width=1536&rect=153%2C470%2C3847%2C2164",
+            "query_width": null,
+            "size": {
+              "width": 1536,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.sueddeutsche.de/2024/09/29/2cc5e7ad-5475-4dc0-9f89-120788e06f9b.jpeg?q=60&fm=webp&width=1536&rect=153%2C470%2C3847%2C2164",
+            "query_width": null,
+            "size": {
+              "width": 1536,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://www.sueddeutsche.de/2024/09/29/2cc5e7ad-5475-4dc0-9f89-120788e06f9b.jpeg?q=60&fm=avif&width=2000&rect=153%2C470%2C3847%2C2164",
+            "query_width": null,
+            "size": {
+              "width": 2000,
+              "height": 0
+            },
+            "type": "image/avif"
+          },
+          {
+            "url": "https://www.sueddeutsche.de/2024/09/29/2cc5e7ad-5475-4dc0-9f89-120788e06f9b.jpeg?q=60&fm=jpeg&width=2000&rect=153%2C470%2C3847%2C2164",
+            "query_width": null,
+            "size": {
+              "width": 2000,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.sueddeutsche.de/2024/09/29/2cc5e7ad-5475-4dc0-9f89-120788e06f9b.jpeg?q=60&fm=webp&width=2000&rect=153%2C470%2C3847%2C2164",
+            "query_width": null,
+            "size": {
+              "width": 2000,
+              "height": 0
+            },
+            "type": "image/webp"
+          }
+        ],
+        "is_cover": true,
+        "description": null,
+        "caption": "Nicht zufassen: Sebastian Hendel ist in 2:07:33 Stunden der schnellste deutsche Mann beim 50. Berlin-Marathon.",
+        "authors": [
+          "John MacDougall/AFP"
+        ],
+        "position": 276
+      },
+      {
+        "versions": [
+          {
+            "url": "https://www.sueddeutsche.de/2024/09/29/454ba20f-81da-444c-b99d-6f45f16eb24f.jpeg?q=60&fm=avif&width=210&rect=0%2C379%2C3544%2C1994",
+            "query_width": null,
+            "size": {
+              "width": 210,
+              "height": 0
+            },
+            "type": "image/avif"
+          },
+          {
+            "url": "https://www.sueddeutsche.de/2024/09/29/454ba20f-81da-444c-b99d-6f45f16eb24f.jpeg?q=60&fm=jpeg&width=210&rect=0%2C379%2C3544%2C1994",
+            "query_width": null,
+            "size": {
+              "width": 210,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.sueddeutsche.de/2024/09/29/454ba20f-81da-444c-b99d-6f45f16eb24f.jpeg?q=60&fm=webp&width=210&rect=0%2C379%2C3544%2C1994",
+            "query_width": null,
+            "size": {
+              "width": 210,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://www.sueddeutsche.de/2024/09/29/454ba20f-81da-444c-b99d-6f45f16eb24f.jpeg?q=60&fm=avif&width=420&rect=0%2C379%2C3544%2C1994",
+            "query_width": null,
+            "size": {
+              "width": 420,
+              "height": 0
+            },
+            "type": "image/avif"
+          },
+          {
+            "url": "https://www.sueddeutsche.de/2024/09/29/454ba20f-81da-444c-b99d-6f45f16eb24f.jpeg?q=60&fm=jpeg&width=420&rect=0%2C379%2C3544%2C1994",
+            "query_width": null,
+            "size": {
+              "width": 420,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.sueddeutsche.de/2024/09/29/454ba20f-81da-444c-b99d-6f45f16eb24f.jpeg?q=60&fm=webp&width=420&rect=0%2C379%2C3544%2C1994",
+            "query_width": null,
+            "size": {
+              "width": 420,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://www.sueddeutsche.de/2024/09/29/454ba20f-81da-444c-b99d-6f45f16eb24f.jpeg?q=60&fm=avif&width=840&rect=0%2C379%2C3544%2C1994",
+            "query_width": null,
+            "size": {
+              "width": 840,
+              "height": 0
+            },
+            "type": "image/avif"
+          },
+          {
+            "url": "https://www.sueddeutsche.de/2024/09/29/454ba20f-81da-444c-b99d-6f45f16eb24f.jpeg?q=60&fm=jpeg&width=840&rect=0%2C379%2C3544%2C1994",
+            "query_width": null,
+            "size": {
+              "width": 840,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.sueddeutsche.de/2024/09/29/454ba20f-81da-444c-b99d-6f45f16eb24f.jpeg?q=60&fm=webp&width=840&rect=0%2C379%2C3544%2C1994",
+            "query_width": null,
+            "size": {
+              "width": 840,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://www.sueddeutsche.de/2024/09/29/454ba20f-81da-444c-b99d-6f45f16eb24f.jpeg?q=60&fm=avif&width=1000&rect=0%2C379%2C3544%2C1994",
+            "query_width": null,
+            "size": {
+              "width": 1000,
+              "height": 0
+            },
+            "type": "image/avif"
+          },
+          {
+            "url": "https://www.sueddeutsche.de/2024/09/29/454ba20f-81da-444c-b99d-6f45f16eb24f.jpeg?q=60&fm=jpeg&width=1000&rect=0%2C379%2C3544%2C1994",
+            "query_width": null,
+            "size": {
+              "width": 1000,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.sueddeutsche.de/2024/09/29/454ba20f-81da-444c-b99d-6f45f16eb24f.jpeg?q=60&fm=webp&width=1000&rect=0%2C379%2C3544%2C1994",
+            "query_width": null,
+            "size": {
+              "width": 1000,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://www.sueddeutsche.de/2024/09/29/454ba20f-81da-444c-b99d-6f45f16eb24f.jpeg?q=60&fm=avif&width=1536&rect=0%2C379%2C3544%2C1994",
+            "query_width": null,
+            "size": {
+              "width": 1536,
+              "height": 0
+            },
+            "type": "image/avif"
+          },
+          {
+            "url": "https://www.sueddeutsche.de/2024/09/29/454ba20f-81da-444c-b99d-6f45f16eb24f.jpeg?q=60&fm=jpeg&width=1536&rect=0%2C379%2C3544%2C1994",
+            "query_width": null,
+            "size": {
+              "width": 1536,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.sueddeutsche.de/2024/09/29/454ba20f-81da-444c-b99d-6f45f16eb24f.jpeg?q=60&fm=webp&width=1536&rect=0%2C379%2C3544%2C1994",
+            "query_width": null,
+            "size": {
+              "width": 1536,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://www.sueddeutsche.de/2024/09/29/454ba20f-81da-444c-b99d-6f45f16eb24f.jpeg?q=60&fm=avif&width=2000&rect=0%2C379%2C3544%2C1994",
+            "query_width": null,
+            "size": {
+              "width": 2000,
+              "height": 0
+            },
+            "type": "image/avif"
+          },
+          {
+            "url": "https://www.sueddeutsche.de/2024/09/29/454ba20f-81da-444c-b99d-6f45f16eb24f.jpeg?q=60&fm=jpeg&width=2000&rect=0%2C379%2C3544%2C1994",
+            "query_width": null,
+            "size": {
+              "width": 2000,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.sueddeutsche.de/2024/09/29/454ba20f-81da-444c-b99d-6f45f16eb24f.jpeg?q=60&fm=webp&width=2000&rect=0%2C379%2C3544%2C1994",
+            "query_width": null,
+            "size": {
+              "width": 2000,
+              "height": 0
+            },
+            "type": "image/webp"
+          }
+        ],
+        "is_cover": false,
+        "description": null,
+        "caption": "Ein entspannter Sieger? Der Äthiopier Milkesa Mengesha gönnt sich nach seinem Sieg beim Berlin-Marathon im Ziel zumindest eine kurze Pause.",
+        "authors": [
+          "John MacDougall/AFP"
+        ],
+        "position": 383
+      }
+    ],
     "publishing_date": "2024-09-29 15:27:29.697000+00:00",
     "title": "Berlin-Marathon: Sebastian Hendel im Porträt",
     "topics": [
@@ -74,6 +378,100 @@
       "Marathon",
       "Sport",
       "Leserdiskussion",
+      "Süddeutsche Zeitung"
+    ]
+  },
+  "V1": {
+    "authors": [
+      "Lars Brunckhorst"
+    ],
+    "body": {
+      "summary": [
+        "Ob Radler oder Politiker - zwei Rankings lassen wieder tief blicken."
+      ],
+      "sections": [
+        {
+          "headline": [],
+          "paragraphs": [
+            "Andere oder sich selbst mit anderen zu vergleichen, ist ein zutiefst menschliches Bedürfnis. Ob am Arbeitsplatz, in der Schule, im Sport oder bei Model-Casting-Shows - immer geht es darum: Wer ist schneller, größer, schöner, reicher oder geistreicher? Die Zahl der Rankings kennt keine Grenzen. Für alle, die von der Bundesligatabelle über die Forbes-Liste bis zu den Schlagern der Woche ein Faible für Hitlisten haben, waren die vergangenen Tage eine gute Zeit. Da verteilte zunächst der Allgemeine Deutsche Fahrradclub ADFC Noten an Deutschlands Städte und Gemeinden. Um es kurz machen: Das Münchner Umland - bei anderen Rankings wie Lebensqualität, Wirtschaftskraft und Immobilienpreisen sonst immer ganz vorne dabei - schneidet in puncto Fahrradfreundlichkeit eher nicht so gut ab. Allein Oberhaching schafft es mit einer 2,96 gerade noch aufs Treppchen. Grünwald dagegen: Mit einer 4,4 nahezu durchgefallen. Aber klar: Nirgendwo sonst ist die Sportwagen- und SUV-Dichte so groß.",
+            "An dieser Stelle soll aber die Rede sein von einer anderen Rangliste, wonach Marco Buschmann, der Bundesjustizminister von der FDP, der \"fleißigste deutsche Politiker\" ist, gefolgt von seiner weithin unbekannten Parteifreundin Bettina Stark-Watzinger (das ist die Bundesbildungsministerin) und - allerdings schon mit weitem Abstand - Außenministerin Annalena Baerbock von den Grünen. Bundeskanzler Olaf Scholz kommt dagegen, als erster SPDler, nur auf Platz 13 und Finanzminister Christian Lindner gar nur auf den 15. Platz. Ausgewertet wurden für die Erhebung sämtliche Aktivitäten aller Bundestagsabgeordneten, also Redezeiten, Anfragen, Anträge und dergleichen - Zwischenrufe und Handyzocken ausgenommen.",
+            "Das Ranking bricht nach Lindner ab, was rücksichtsvoll gegenüber den übrigen 721 Abgeordneten ist. Wer sich die Mühe machen will, kann aber selbst ausrechnen, auf welchen Plätzen etwa die Abgeordneten Florian Hahn, Anton Hofreiter und Gerold Otten gelandet sind, also jene drei, die in Berlin den Landkreis München vertreten. Investigativ, wie man uns kennt, haben wir nachgeschaut und siehe da: Grünen-Apologet Hofreiter ist, trotz oder gerade wegen seines Rauswurfs aus der ersten Reihe, mit gezählten 1922 Aktivitäten der unangefochtene Streber.",
+            "CSU-Mann Hahn kommt dagegen nur auf 257, aber der ist ja auch frisch verliebt. Damit ist Hahn aber immer noch weit fleißiger als drei andere Florians: etwa sein Parteifreund Florian Müller (52 Aktivitäten) und der Münchner Ex-Sozi Florian Post (74), vom rheinland-pfälzischen Florian Gerster (7!), dieser faulen Socke, ganz zu schweigen. Auf die 355 Aktivitäten von AfD-Mann Otten hätte man dagegen gerne verzichtet."
+          ]
+        }
+      ]
+    },
+    "images": [
+      {
+        "versions": [
+          {
+            "url": "https://media-cdn.sueddeutsche.de/image/sz.1.5360197/100x75?v=1626956922000",
+            "query_width": null,
+            "size": {
+              "width": 100,
+              "height": 0
+            },
+            "type": null
+          },
+          {
+            "url": "https://media-cdn.sueddeutsche.de/image/sz.1.5360197/100x75?v=1626956922000&format=webp",
+            "query_width": null,
+            "size": {
+              "width": 100,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://media-cdn.sueddeutsche.de/image/sz.1.5360197/200x150?v=1626956922000",
+            "query_width": null,
+            "size": {
+              "width": 200,
+              "height": 0
+            },
+            "type": null
+          },
+          {
+            "url": "https://media-cdn.sueddeutsche.de/image/sz.1.5360197/200x150?v=1626956922000&format=webp",
+            "query_width": null,
+            "size": {
+              "width": 200,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://media-cdn.sueddeutsche.de/image/sz.1.5360197/400x300?v=1626956922000",
+            "query_width": null,
+            "size": {
+              "width": 400,
+              "height": 0
+            },
+            "type": null
+          },
+          {
+            "url": "https://media-cdn.sueddeutsche.de/image/sz.1.5360197/400x300?v=1626956922000&format=webp",
+            "query_width": null,
+            "size": {
+              "width": 400,
+              "height": 0
+            },
+            "type": "image/webp"
+          }
+        ],
+        "is_cover": false,
+        "description": "SZ Gerne draußen!",
+        "caption": null,
+        "authors": [],
+        "position": 362
+      }
+    ],
+    "publishing_date": "2023-04-28 19:50:30+02:00",
+    "title": "Die Fleißigsten und Fahrradfreundlichsten im Landkreis München",
+    "topics": [
+      "Landkreis München",
+      "Grünwald",
+      "Oberhaching",
       "Süddeutsche Zeitung"
     ]
   }

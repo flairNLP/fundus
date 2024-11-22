@@ -29,10 +29,35 @@
     },
     "images": [
       {
-        "urls": {
-          "520w": "https://cdn.prod.www.spiegel.de/images/4c113d3e-b078-4dd9-8c4b-24b103c17e6a_w520_r1.778_fpx45_fpy48.webp",
-          "948w": "https://cdn.prod.www.spiegel.de/images/4c113d3e-b078-4dd9-8c4b-24b103c17e6a_w948_r1.778_fpx45_fpy48.webp"
-        },
+        "versions": [
+          {
+            "url": "https://cdn.prod.www.spiegel.de/images/4c113d3e-b078-4dd9-8c4b-24b103c17e6a_w520_r1.778_fpx45_fpy48.webp",
+            "query_width": null,
+            "size": {
+              "width": 520,
+              "height": 292
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://cdn.prod.www.spiegel.de/images/4c113d3e-b078-4dd9-8c4b-24b103c17e6a_w948_r1.778_fpx45_fpy48.jpg",
+            "query_width": null,
+            "size": {
+              "width": 948,
+              "height": 533
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://cdn.prod.www.spiegel.de/images/4c113d3e-b078-4dd9-8c4b-24b103c17e6a_w948_r1.778_fpx45_fpy48.webp",
+            "query_width": null,
+            "size": {
+              "width": 948,
+              "height": 533
+            },
+            "type": "image/webp"
+          }
+        ],
         "is_cover": true,
         "description": "Fed-Vizechef Michael Barr: »Der Zusammenbruch der SVB zeigt, dass es Mängel in der Regulierung und in der Aufsicht gibt«",
         "caption": "Fed-Vizechef Michael Barr: »Der Zusammenbruch der SVB zeigt, dass es Mängel in der Regulierung und in der Aufsicht gibt« Andrew Harnik / AP",

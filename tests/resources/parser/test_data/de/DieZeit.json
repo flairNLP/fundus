@@ -28,15 +28,130 @@
     },
     "images": [
       {
-        "urls": {
-          "1x": "https://img.zeit.de/news/2023-04/28/nach-massenschlaegerei-real-star-llull-entschuldigt-sich-image-group/wide__1000x562__desktop,",
-          "2x": "https://img.zeit.de/news/2023-04/28/nach-massenschlaegerei-real-star-llull-entschuldigt-sich-image-group/wide__1000x562__desktop__scale_2"
-        },
+        "versions": [
+          {
+            "url": "https://img.zeit.de/news/2023-04/28/nach-massenschlaegerei-real-star-llull-entschuldigt-sich-image-group/wide__360x202__mobile,",
+            "query_width": "max-width:360",
+            "size": {
+              "width": 360,
+              "height": 202
+            },
+            "type": null
+          },
+          {
+            "url": "https://img.zeit.de/news/2023-04/28/nach-massenschlaegerei-real-star-llull-entschuldigt-sich-image-group/wide__480x270__mobile,",
+            "query_width": "max-width:480",
+            "size": {
+              "width": 480,
+              "height": 270
+            },
+            "type": null
+          },
+          {
+            "url": "https://img.zeit.de/news/2023-04/28/nach-massenschlaegerei-real-star-llull-entschuldigt-sich-image-group/wide__660x371__mobile,",
+            "query_width": "max-width:660",
+            "size": {
+              "width": 660,
+              "height": 371
+            },
+            "type": null
+          },
+          {
+            "url": "https://img.zeit.de/news/2023-04/28/nach-massenschlaegerei-real-star-llull-entschuldigt-sich-image-group/wide__360x202__mobile__scale_2",
+            "query_width": "max-width:360",
+            "size": {
+              "width": 720,
+              "height": 404
+            },
+            "type": null
+          },
+          {
+            "url": "https://img.zeit.de/news/2023-04/28/nach-massenschlaegerei-real-star-llull-entschuldigt-sich-image-group/wide__767x431__mobile,",
+            "query_width": "max-width:767",
+            "size": {
+              "width": 767,
+              "height": 431
+            },
+            "type": null
+          },
+          {
+            "url": "https://img.zeit.de/news/2023-04/28/nach-massenschlaegerei-real-star-llull-entschuldigt-sich-image-group/wide__900x506__desktop,",
+            "query_width": "max-width:900",
+            "size": {
+              "width": 900,
+              "height": 506
+            },
+            "type": null
+          },
+          {
+            "url": "https://img.zeit.de/news/2023-04/28/nach-massenschlaegerei-real-star-llull-entschuldigt-sich-image-group/wide__480x270__mobile__scale_2",
+            "query_width": "max-width:480",
+            "size": {
+              "width": 960,
+              "height": 540
+            },
+            "type": null
+          },
+          {
+            "url": "https://img.zeit.de/news/2023-04/28/nach-massenschlaegerei-real-star-llull-entschuldigt-sich-image-group/wide__980x551",
+            "query_width": null,
+            "size": {
+              "width": 980,
+              "height": 551
+            },
+            "type": null
+          },
+          {
+            "url": "https://img.zeit.de/news/2023-04/28/nach-massenschlaegerei-real-star-llull-entschuldigt-sich-image-group/wide__1000x562__desktop,",
+            "query_width": "min-width:900",
+            "size": {
+              "width": 1000,
+              "height": 562
+            },
+            "type": null
+          },
+          {
+            "url": "https://img.zeit.de/news/2023-04/28/nach-massenschlaegerei-real-star-llull-entschuldigt-sich-image-group/wide__660x371__mobile__scale_2",
+            "query_width": "max-width:660",
+            "size": {
+              "width": 1320,
+              "height": 742
+            },
+            "type": null
+          },
+          {
+            "url": "https://img.zeit.de/news/2023-04/28/nach-massenschlaegerei-real-star-llull-entschuldigt-sich-image-group/wide__767x431__mobile__scale_2",
+            "query_width": "max-width:767",
+            "size": {
+              "width": 1534,
+              "height": 862
+            },
+            "type": null
+          },
+          {
+            "url": "https://img.zeit.de/news/2023-04/28/nach-massenschlaegerei-real-star-llull-entschuldigt-sich-image-group/wide__900x506__desktop__scale_2",
+            "query_width": "max-width:900",
+            "size": {
+              "width": 1800,
+              "height": 1012
+            },
+            "type": null
+          },
+          {
+            "url": "https://img.zeit.de/news/2023-04/28/nach-massenschlaegerei-real-star-llull-entschuldigt-sich-image-group/wide__1000x562__desktop__scale_2",
+            "query_width": "min-width:900",
+            "size": {
+              "width": 2000,
+              "height": 1124
+            },
+            "type": null
+          }
+        ],
         "is_cover": true,
         "description": "Basketball-Euroleague: Das Euroleague-Spiel Real Madrid gegen Partizan Belgrad wurde nach einer Massenschlägerei abgebrochen.",
         "caption": "Das Euroleague-Spiel Real Madrid gegen Partizan Belgrad wurde nach einer Massenschlägerei abgebrochen.",
         "authors": [
-          "Alba Pacheco/​Agencia LOF/​dpa"
+          "Alba Pacheco/ Agencia LOF/ dpa"
         ],
         "position": 411
       }

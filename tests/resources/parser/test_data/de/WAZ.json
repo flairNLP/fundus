@@ -64,9 +64,41 @@
     },
     "images": [
       {
-        "urls": {
-          "1x": "https://img.waz.de/img/leben/crop238819311/8657657784-w1200-cv16_9-q85/3c69eecc-1661-11ee-96bd-037ab6908f79.jpg"
-        },
+        "versions": [
+          {
+            "url": "https://img.waz.de/img/leben/crop238819311/8657657784-w1200-cv16_9-q85/3c69eecc-1661-11ee-96bd-037ab6908f79.jpg",
+            "query_width": null,
+            "size": null,
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://img.waz.de/img/leben/crop238819311/1527602843-w420-cv16_9-q85/3c69eecc-1661-11ee-96bd-037ab6908f79.jpg",
+            "query_width": "max-width:420",
+            "size": null,
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://img.waz.de/img/leben/crop238819311/1240244805-w640-cv16_9-q85/3c69eecc-1661-11ee-96bd-037ab6908f79.jpg",
+            "query_width": "max-width:640",
+            "size": null,
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://img.waz.de/img/leben/crop238819311/995397440-w940-cv16_9-q85/3c69eecc-1661-11ee-96bd-037ab6908f79.jpg",
+            "query_width": "max-width:960",
+            "size": null,
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.waz.de/resources/1688010770001/img/placeholder.png",
+            "query_width": null,
+            "size": {
+              "width": 1200,
+              "height": 675
+            },
+            "type": "image/png"
+          }
+        ],
         "is_cover": true,
         "description": "Das Medikament mit dem Wirkstoff Semaglutid wird einmal pro Woche mit einem Pen unter die Haut gespritzt.",
         "caption": null,
@@ -74,9 +106,14 @@
         "position": 774
       },
       {
-        "urls": {
-          "1x": "https://img.waz.de/img/derwesten/crop230901270/8527651223-w1200-cv16_9-q85/U-bergewicht-und-die-Folgen-fu-r-unsere-Gesundheit.jpg"
-        },
+        "versions": [
+          {
+            "url": "https://img.waz.de/img/derwesten/crop230901270/8527651223-w1200-cv16_9-q85/U-bergewicht-und-die-Folgen-fu-r-unsere-Gesundheit.jpg",
+            "query_width": null,
+            "size": null,
+            "type": "image/jpeg"
+          }
+        ],
         "is_cover": false,
         "description": null,
         "caption": null,
@@ -84,9 +121,14 @@
         "position": 855
       },
       {
-        "urls": {
-          "1x": "https://img.waz.de/img/panorama/crop234431169/7007658082-w1200-cv16_9-q85/Gesund-abnehmen-ab-40-So-geht-s-.png"
-        },
+        "versions": [
+          {
+            "url": "https://img.waz.de/img/panorama/crop234431169/7007658082-w1200-cv16_9-q85/Gesund-abnehmen-ab-40-So-geht-s-.png",
+            "query_width": null,
+            "size": null,
+            "type": "image/png"
+          }
+        ],
         "is_cover": false,
         "description": null,
         "caption": null,
@@ -138,10 +180,44 @@
     },
     "images": [
       {
-        "urls": {
-          "200w": "https://img.sparknews.funkemedien.de/236903559/236903559_1671726057_v1_1_200.jpeg",
-          "400w": "https://img.sparknews.funkemedien.de/236903559/236903559_1671726057_v1_1_400.jpeg"
-        },
+        "versions": [
+          {
+            "url": "https://img.sparknews.funkemedien.de/236903559/236903559_1671726057_v1_1_200.jpeg",
+            "query_width": null,
+            "size": {
+              "width": 200,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://img.sparknews.funkemedien.de/236903559/236903559_1671726057_v1_1_200.webp",
+            "query_width": null,
+            "size": {
+              "width": 200,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://img.sparknews.funkemedien.de/236903559/236903559_1671726057_v1_1_400.jpeg",
+            "query_width": null,
+            "size": {
+              "width": 400,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://img.sparknews.funkemedien.de/236903559/236903559_1671726057_v1_1_400.webp",
+            "query_width": null,
+            "size": {
+              "width": 400,
+              "height": 0
+            },
+            "type": "image/webp"
+          }
+        ],
         "is_cover": true,
         "description": "Philipp Wahl",
         "caption": null,
@@ -149,11 +225,62 @@
         "position": 915
       },
       {
-        "urls": {
-          "600w": "https://img.sparknews.funkemedien.de/241847488/241847488_1709921110_v16_9_600.jpeg",
-          "1200w": "https://img.sparknews.funkemedien.de/241847488/241847488_1709921110_v16_9_1200.jpeg",
-          "1600w": "https://img.sparknews.funkemedien.de/241847488/241847488_1709921110_v16_9_1600.jpeg"
-        },
+        "versions": [
+          {
+            "url": "https://img.sparknews.funkemedien.de/241847488/241847488_1709921110_v16_9_600.jpeg",
+            "query_width": null,
+            "size": {
+              "width": 600,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://img.sparknews.funkemedien.de/241847488/241847488_1709921110_v16_9_600.webp",
+            "query_width": null,
+            "size": {
+              "width": 600,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://img.sparknews.funkemedien.de/241847488/241847488_1709921110_v16_9_1200.jpeg",
+            "query_width": null,
+            "size": {
+              "width": 1200,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://img.sparknews.funkemedien.de/241847488/241847488_1709921110_v16_9_1200.webp",
+            "query_width": null,
+            "size": {
+              "width": 1200,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://img.sparknews.funkemedien.de/241847488/241847488_1709921110_v16_9_1600.jpeg",
+            "query_width": null,
+            "size": {
+              "width": 1600,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://img.sparknews.funkemedien.de/241847488/241847488_1709921110_v16_9_1600.webp",
+            "query_width": null,
+            "size": {
+              "width": 1600,
+              "height": 0
+            },
+            "type": "image/webp"
+          }
+        ],
         "is_cover": true,
         "description": "Eine Seilbahn für Duisburg: Die Pläne begeistern und polarisieren. In vielen Städten scheiterten Seilbahn-Projeke.",
         "caption": "Eine Seilbahn für Duisburg: Die Pläne begeistern und polarisieren. In vielen Städten scheiterten Seilbahn-Projeke.",
@@ -164,11 +291,62 @@
         "position": 925
       },
       {
-        "urls": {
-          "600w": "https://img.sparknews.funkemedien.de/241847486/241847486_1709920440_v16_9_600.jpeg",
-          "1200w": "https://img.sparknews.funkemedien.de/241847486/241847486_1709920440_v16_9_1200.jpeg",
-          "1600w": "https://img.sparknews.funkemedien.de/241847486/241847486_1709920440_v16_9_1600.jpeg"
-        },
+        "versions": [
+          {
+            "url": "https://img.sparknews.funkemedien.de/241847486/241847486_1709920440_v16_9_600.jpeg",
+            "query_width": null,
+            "size": {
+              "width": 600,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://img.sparknews.funkemedien.de/241847486/241847486_1709920440_v16_9_600.webp",
+            "query_width": null,
+            "size": {
+              "width": 600,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://img.sparknews.funkemedien.de/241847486/241847486_1709920440_v16_9_1200.jpeg",
+            "query_width": null,
+            "size": {
+              "width": 1200,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://img.sparknews.funkemedien.de/241847486/241847486_1709920440_v16_9_1200.webp",
+            "query_width": null,
+            "size": {
+              "width": 1200,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://img.sparknews.funkemedien.de/241847486/241847486_1709920440_v16_9_1600.jpeg",
+            "query_width": null,
+            "size": {
+              "width": 1600,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://img.sparknews.funkemedien.de/241847486/241847486_1709920440_v16_9_1600.webp",
+            "query_width": null,
+            "size": {
+              "width": 1600,
+              "height": 0
+            },
+            "type": "image/webp"
+          }
+        ],
         "is_cover": false,
         "description": "So könnten die Haltestelle der „Urbanen Seilbahn“ und das Technologiequartier Wedau einmal aussehen.",
         "caption": "So könnten die Haltestelle der „Urbanen Seilbahn“ und das Technologiequartier Wedau einmal aussehen.",

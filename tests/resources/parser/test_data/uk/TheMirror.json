@@ -25,6 +25,198 @@
         }
       ]
     },
+    "images": [
+      {
+        "versions": [
+          {
+            "url": "https://i2-prod.mirror.co.uk/incoming/article32676361.ece/ALTERNATES/r250/0_GettyImages-482172405JPG.jpg",
+            "query_width": null,
+            "size": {
+              "width": 250,
+              "height": 141
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://i2-prod.mirror.co.uk/incoming/article32676361.ece/ALTERNATES/r500/0_GettyImages-482172405JPG.jpg",
+            "query_width": null,
+            "size": {
+              "width": 500,
+              "height": 281
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://i2-prod.mirror.co.uk/incoming/article32676361.ece/ALTERNATES/s1200d/0_GettyImages-482172405JPG.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1000,
+              "height": 562
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": true,
+        "description": "Young man in apron watering houseplants",
+        "caption": "Here are some of the best houseplants to eliminate odours in your home (stock image)",
+        "authors": [
+          "( Getty Images/Cultura RF)"
+        ],
+        "position": 459
+      },
+      {
+        "versions": [
+          {
+            "url": "https://i2-prod.mirror.co.uk/incoming/article32677040.ece/ALTERNATES/s458b/0_English-ivy-or-Hedera-helix-in-flower-pot-at-balcony-home-and-garden.jpg",
+            "query_width": null,
+            "size": {
+              "width": 458,
+              "height": 329
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://i2-prod.mirror.co.uk/incoming/article32677040.ece/ALTERNATES/s615b/0_English-ivy-or-Hedera-helix-in-flower-pot-at-balcony-home-and-garden.jpg",
+            "query_width": null,
+            "size": {
+              "width": 615,
+              "height": 442
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://i2-prod.mirror.co.uk/incoming/article32677040.ece/ALTERNATES/s1200e/0_English-ivy-or-Hedera-helix-in-flower-pot-at-balcony-home-and-garden.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1200,
+              "height": 862
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": false,
+        "description": "english ivy",
+        "caption": "English Ivy is easy to grow",
+        "authors": [
+          "( Getty Images/iStockphoto)"
+        ],
+        "position": 540
+      },
+      {
+        "versions": [
+          {
+            "url": "https://i2-prod.mirror.co.uk/incoming/article32677052.ece/ALTERNATES/s458b/0_Pilea-cadierei-is-a-species-that-belongs-to-the-Urticaceae-family.jpg",
+            "query_width": null,
+            "size": {
+              "width": 458,
+              "height": 258
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://i2-prod.mirror.co.uk/incoming/article32677052.ece/ALTERNATES/s615b/0_Pilea-cadierei-is-a-species-that-belongs-to-the-Urticaceae-family.jpg",
+            "query_width": null,
+            "size": {
+              "width": 615,
+              "height": 346
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://i2-prod.mirror.co.uk/incoming/article32677052.ece/ALTERNATES/s1200e/0_Pilea-cadierei-is-a-species-that-belongs-to-the-Urticaceae-family.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1200,
+              "height": 675
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": false,
+        "description": "Pilea cadierei",
+        "caption": "The stunning silvery leaves of the aluminum plant are a great addition to any kitchen",
+        "authors": [
+          "( Getty Images/iStockphoto)"
+        ],
+        "position": 557
+      },
+      {
+        "versions": [
+          {
+            "url": "https://i2-prod.mirror.co.uk/incoming/article32677069.ece/ALTERNATES/s458b/0_House-plant-display-beside-window-Indoor-plants-display.jpg",
+            "query_width": null,
+            "size": {
+              "width": 458,
+              "height": 305
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://i2-prod.mirror.co.uk/incoming/article32677069.ece/ALTERNATES/s615b/0_House-plant-display-beside-window-Indoor-plants-display.jpg",
+            "query_width": null,
+            "size": {
+              "width": 615,
+              "height": 410
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://i2-prod.mirror.co.uk/incoming/article32677069.ece/ALTERNATES/s1200e/0_House-plant-display-beside-window-Indoor-plants-display.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1200,
+              "height": 800
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": false,
+        "description": "Aloe Vera and other house plants",
+        "caption": "Aloe Vera is a natural remedy for burns as well as an air-purifying plant",
+        "authors": [
+          "( Getty Images/iStockphoto)"
+        ],
+        "position": 573
+      },
+      {
+        "versions": [
+          {
+            "url": "https://i2-prod.mirror.co.uk/incoming/article32677082.ece/ALTERNATES/s458b/0_fresh-green-leaves-of-Aspidistra-elatior-Variegata-plant-In-the-garden.jpg",
+            "query_width": null,
+            "size": {
+              "width": 458,
+              "height": 305
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://i2-prod.mirror.co.uk/incoming/article32677082.ece/ALTERNATES/s615b/0_fresh-green-leaves-of-Aspidistra-elatior-Variegata-plant-In-the-garden.jpg",
+            "query_width": null,
+            "size": {
+              "width": 615,
+              "height": 410
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://i2-prod.mirror.co.uk/incoming/article32677082.ece/ALTERNATES/s1200e/0_fresh-green-leaves-of-Aspidistra-elatior-Variegata-plant-In-the-garden.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1200,
+              "height": 800
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": false,
+        "description": "fresh green leaves of Aspidistra elatior Variegata plant In the garden",
+        "caption": "The Cast Iron plant makes a statement and brings a sense of peace to your home",
+        "authors": [
+          "( Getty Images)"
+        ],
+        "position": 589
+      }
+    ],
     "publishing_date": "2024-04-28 13:00:00+00:00",
     "title": "Gorgeous houseplants that can get rid of unwanted kitchen odours and purify air",
     "topics": [
@@ -358,6 +550,202 @@
         }
       ]
     },
+    "images": [
+      {
+        "versions": [
+          {
+            "url": "https://i2-prod.mirror.co.uk/incoming/article33400927.ece/ALTERNATES/s510b/0_Anti-racism-activists-face-off-far-right-protest-in-Plymouth.jpg",
+            "query_width": null,
+            "size": null,
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": false,
+        "description": null,
+        "caption": "(Image:Anadolu via Getty Images)",
+        "authors": [],
+        "position": 597
+      },
+      {
+        "versions": [
+          {
+            "url": "https://i2-prod.mirror.co.uk/incoming/article33400767.ece/ALTERNATES/s510b/1_Anti-racism-activists-face-off-far-right-protest-in-Plymouth.jpg",
+            "query_width": null,
+            "size": null,
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": false,
+        "description": null,
+        "caption": "Anti-racism activists in Plymouth tonight",
+        "authors": [
+          "(Anadolu via Getty Images)"
+        ],
+        "position": 653
+      },
+      {
+        "versions": [
+          {
+            "url": "https://i2-prod.mirror.co.uk/incoming/article33400760.ece/ALTERNATES/s510b/1_DEVON.jpg",
+            "query_width": null,
+            "size": null,
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": false,
+        "description": null,
+        "caption": "Silver Command unit monitoring the situation on the ground in Plymouth",
+        "authors": [],
+        "position": 670
+      },
+      {
+        "versions": [
+          {
+            "url": "https://i2-prod.mirror.co.uk/incoming/article33400688.ece/ALTERNATES/s510b/1_MUGSHOTS.jpg",
+            "query_width": null,
+            "size": null,
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": false,
+        "description": null,
+        "caption": "Gareth Rigby and Daniel Robinson",
+        "authors": [],
+        "position": 691
+      },
+      {
+        "versions": [
+          {
+            "url": "https://i2-prod.dailystar.co.uk/incoming/article33400677.ece/ALTERNATES/s510b/0_Anti-racism-activists-face-off-far-right-protest-in-Plymouth.jpg",
+            "query_width": null,
+            "size": null,
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": false,
+        "description": null,
+        "caption": "Clashes between anti-migrant activists and counter-protesters in Guildhall Square, Plymouth",
+        "authors": [
+          "(Anadolu via Getty Images)"
+        ],
+        "position": 706
+      },
+      {
+        "versions": [
+          {
+            "url": "https://i2-prod.dailystar.co.uk/incoming/article33400592.ece/ALTERNATES/s510b/0_Southport-Vigil-Marks-One-Week-Since-Deadly-Stabbing.jpg",
+            "query_width": null,
+            "size": null,
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": false,
+        "description": null,
+        "caption": "Southport locals mourn the victims at a pink-themed vigil",
+        "authors": [
+          "(Getty Images)"
+        ],
+        "position": 730
+      },
+      {
+        "versions": [
+          {
+            "url": "https://i2-prod.mirror.co.uk/incoming/article33400567.ece/ALTERNATES/s510b/1_076A7183JPG.jpg",
+            "query_width": null,
+            "size": null,
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": false,
+        "description": null,
+        "caption": "A crowd gathers outside McDonald's in Bordesley Green near Heartlands Hospital",
+        "authors": [
+          "(Nick Wilkinson/Birmingham Live)"
+        ],
+        "position": 758
+      },
+      {
+        "versions": [
+          {
+            "url": "https://i2-prod.mirror.co.uk/incoming/article33400234.ece/ALTERNATES/s510b/0_edl.jpg",
+            "query_width": null,
+            "size": null,
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": false,
+        "description": null,
+        "caption": null,
+        "authors": [],
+        "position": 815
+      },
+      {
+        "versions": [
+          {
+            "url": "https://i2-prod.mirror.co.uk/incoming/article33328018.ece/ALTERNATES/s510b/0_Infected-Blood-inquiry.jpg",
+            "query_width": null,
+            "size": null,
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": false,
+        "description": null,
+        "caption": "Andy Burnham, who is Mayor of Greater Manchester, has shared his thoughts",
+        "authors": [
+          "(PA)"
+        ],
+        "position": 829
+      },
+      {
+        "versions": [
+          {
+            "url": "https://i2-prod.mirror.co.uk/incoming/article33393999.ece/ALTERNATES/s510b/0_Northern-Towns-See-Further-Unrest-From-Far-Right.jpg",
+            "query_width": null,
+            "size": null,
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": false,
+        "description": null,
+        "caption": "Riot police clash with anti-migration protesters outside of the Holiday Inn Express",
+        "authors": [
+          "(Getty Images)"
+        ],
+        "position": 870
+      },
+      {
+        "versions": [
+          {
+            "url": "https://i2-prod.mirror.co.uk/incoming/article33396802.ece/ALTERNATES/s510b/1_Cops-smash-front-door-to-arrest-scantily-clad-riot-suspect.jpg",
+            "query_width": null,
+            "size": null,
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": false,
+        "description": null,
+        "caption": "Doors have been put in and arrests made following the violent disorder in Sunderland",
+        "authors": [
+          "(Northumbria Police / SWNS)"
+        ],
+        "position": 919
+      },
+      {
+        "versions": [
+          {
+            "url": "https://i2-prod.mirror.co.uk/incoming/article33397761.ece/ALTERNATES/s510b/1_Spellow.jpg",
+            "query_width": null,
+            "size": null,
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": false,
+        "description": null,
+        "caption": "(Image:Liverpool Echo)",
+        "authors": [],
+        "position": 970
+      }
+    ],
     "publishing_date": "2024-08-04 13:23:00+00:00",
     "title": "Far-right protesters 'throw stones' in Plymouth as 3 cops injured - updates",
     "topics": [

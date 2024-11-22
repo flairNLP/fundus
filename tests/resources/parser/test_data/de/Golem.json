@@ -29,10 +29,20 @@
     },
     "images": [
       {
-        "urls": {
-          "1x": "https://www.golem.de/2404/184627-442864-442863_rc.jpg",
-          "1.5x": "https://www.golem.de/2404/184627-442866-442863.jpg"
-        },
+        "versions": [
+          {
+            "url": "https://www.golem.de/2404/184627-442864-442863_rc.jpg",
+            "query_width": null,
+            "size": null,
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.golem.de/2404/184627-442866-442863.jpg",
+            "query_width": null,
+            "size": null,
+            "type": "image/jpeg"
+          }
+        ],
         "is_cover": true,
         "description": "Samsung hat Probleme vor Gericht.",
         "caption": "Samsung hat Probleme vor Gericht.",

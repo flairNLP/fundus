@@ -32,9 +32,17 @@
     },
     "images": [
       {
-        "urls": {
-          "1x": "https://i.wfcdn.de/teaser/660/60175.jpg"
-        },
+        "versions": [
+          {
+            "url": "https://i.wfcdn.de/teaser/660/60175.jpg",
+            "query_width": null,
+            "size": {
+              "width": 660,
+              "height": 371
+            },
+            "type": "image/jpeg"
+          }
+        ],
         "is_cover": false,
         "description": "Schnäppchen, Mobilfunk, Rabattaktion, sale, Sonderangebote, Angebote, Angebot, Tarif, Tarife, Rabatt, Deal, Sparen, Mobilfunkvertrag, Angebots-Tarif",
         "caption": null,
@@ -42,9 +50,17 @@
         "position": 205
       },
       {
-        "urls": {
-          "1x": "https://scr.wfcdn.de/cdn-cgi/image/fit=cover,width=660,height=330/23054/Advertorials-1714112214-0-0.jpg"
-        },
+        "versions": [
+          {
+            "url": "https://scr.wfcdn.de/cdn-cgi/image/fit=cover,width=660,height=330/23054/Advertorials-1714112214-0-0.jpg",
+            "query_width": null,
+            "size": {
+              "width": 660,
+              "height": 330
+            },
+            "type": "image/jpeg"
+          }
+        ],
         "is_cover": false,
         "description": "Advertorials",
         "caption": "Die Crash-Aktion von Klarmobil ist nur für kurze Zeit gültig",

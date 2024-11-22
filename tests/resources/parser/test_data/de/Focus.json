@@ -51,9 +51,17 @@
     },
     "images": [
       {
-        "urls": {
-          "1x": "https://p6.focus.de/img/fotos/id_92947152/lego-star-wars-day-may-the-fourth-landspeeder-figuren-titelbild.jpg?im=Resize%3D%28630%2C270%29&hash=8e2e9f903ec8478a0336995bb271a6a285d5ebb6fc96fb550e48c48ad3dce7b8"
-        },
+        "versions": [
+          {
+            "url": "https://p6.focus.de/img/fotos/id_92947152/lego-star-wars-day-may-the-fourth-landspeeder-figuren-titelbild.jpg?im=Resize%3D%28630%2C270%29&hash=8e2e9f903ec8478a0336995bb271a6a285d5ebb6fc96fb550e48c48ad3dce7b8",
+            "query_width": null,
+            "size": {
+              "width": 630,
+              "height": 270
+            },
+            "type": "image/jpeg"
+          }
+        ],
         "is_cover": true,
         "description": "Lego feiert von 1. bis 7. Mai 2023 den Star-Wars-Tag mit zahlreichen Angeboten für Groß und Klein.",
         "caption": "Lego feiert von 1. bis 8. Mai 2022 den Star-Wars-Tag mit zahlreichen Angeboten für Groß und Klein.",
@@ -63,9 +71,17 @@
         "position": 963
       },
       {
-        "urls": {
-          "1x": "https://p6.focus.de/img/fotos/id_24464142/lego-vip-programm-exklusive-rabatte-angebote-aktionen-figur-blau.jpg?im=Resize%3D%28630%2C354%29&hash=12ca3f0e5f9e65af2a78431b7922becedb89e898118f95f61fab91367bf2e4d6"
-        },
+        "versions": [
+          {
+            "url": "https://p6.focus.de/img/fotos/id_24464142/lego-vip-programm-exklusive-rabatte-angebote-aktionen-figur-blau.jpg?im=Resize%3D%28630%2C354%29&hash=12ca3f0e5f9e65af2a78431b7922becedb89e898118f95f61fab91367bf2e4d6",
+            "query_width": null,
+            "size": {
+              "width": 630,
+              "height": 354
+            },
+            "type": "image/jpeg"
+          }
+        ],
         "is_cover": false,
         "description": "Lego VIP ist ein Treueprogramm mit exklusiven Vorteilen und Bonuspunkten für jeden Einkauf bei Lego.",
         "caption": null,

@@ -74,10 +74,86 @@
     },
     "images": [
       {
-        "urls": {
-          "1x": "https://smartcdn.gprod.postmedia.digital/nationalpost/wp-content/uploads/2024/08/Kamala-Harris-1.jpg?quality=90&strip=all&w=564&h=423&type=webp&sig=tjU1vhPSQI8zy3tLPltvAQ,",
-          "2x": "https://smartcdn.gprod.postmedia.digital/nationalpost/wp-content/uploads/2024/08/Kamala-Harris-1.jpg?quality=90&strip=all&w=1128&h=846&type=webp&sig=0p80GzjMQzu56FKKjtUrng"
-        },
+        "versions": [
+          {
+            "url": "https://smartcdn.gprod.postmedia.digital/nationalpost/wp-content/uploads/2024/08/Kamala-Harris-1.jpg?quality=90&strip=all&w=288&h=216&type=webp&sig=Zq8w7OQBop96U-IkO4Wr4g,",
+            "query_width": "max-width:767",
+            "size": null,
+            "type": "image/webp"
+          },
+          {
+            "url": "https://smartcdn.gprod.postmedia.digital/nationalpost/wp-content/uploads/2024/08/Kamala-Harris-1.jpg?quality=90&strip=all&w=576&h=432&type=webp&sig=q-hayL-O2laZz-ufhOOLZg",
+            "query_width": "max-width:767",
+            "size": null,
+            "type": "image/webp"
+          },
+          {
+            "url": "https://smartcdn.gprod.postmedia.digital/nationalpost/wp-content/uploads/2024/08/Kamala-Harris-1.jpg?quality=90&strip=all&w=1128&h=846&type=jpg&sig=x42wzIccdkRYKhu6VyVF6g",
+            "query_width": "min-width:1200",
+            "size": null,
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://smartcdn.gprod.postmedia.digital/nationalpost/wp-content/uploads/2024/08/Kamala-Harris-1.jpg?quality=90&strip=all&w=564&h=423&type=jpg&sig=alHwy-JaVMJpAkzZfmF-1w,",
+            "query_width": "min-width:1200",
+            "size": null,
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://smartcdn.gprod.postmedia.digital/nationalpost/wp-content/uploads/2024/08/Kamala-Harris-1.jpg?quality=90&strip=all&w=1128&h=846&type=webp&sig=0p80GzjMQzu56FKKjtUrng",
+            "query_width": "min-width:1200",
+            "size": null,
+            "type": "image/webp"
+          },
+          {
+            "url": "https://smartcdn.gprod.postmedia.digital/nationalpost/wp-content/uploads/2024/08/Kamala-Harris-1.jpg?quality=90&strip=all&w=564&h=423&type=webp&sig=tjU1vhPSQI8zy3tLPltvAQ,",
+            "query_width": "min-width:1200",
+            "size": null,
+            "type": "image/webp"
+          },
+          {
+            "url": "https://smartcdn.gprod.postmedia.digital/nationalpost/wp-content/uploads/2024/08/Kamala-Harris-1.jpg?quality=90&strip=all&w=472&h=354&type=jpg&sig=xAkT0AqbUK8rRbVXS6kKFw,",
+            "query_width": "min-width:768",
+            "size": null,
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://smartcdn.gprod.postmedia.digital/nationalpost/wp-content/uploads/2024/08/Kamala-Harris-1.jpg?quality=90&strip=all&w=944&h=708&type=jpg&sig=zaSUqsZk8fwuzXCfBsEZQQ",
+            "query_width": "min-width:768",
+            "size": null,
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://smartcdn.gprod.postmedia.digital/nationalpost/wp-content/uploads/2024/08/Kamala-Harris-1.jpg?quality=90&strip=all&w=472&h=354&type=webp&sig=4WF1KUMMZAmGP3FtaHxxMg,",
+            "query_width": "min-width:768",
+            "size": null,
+            "type": "image/webp"
+          },
+          {
+            "url": "https://smartcdn.gprod.postmedia.digital/nationalpost/wp-content/uploads/2024/08/Kamala-Harris-1.jpg?quality=90&strip=all&w=944&h=708&type=webp&sig=PV9e1yiJw8Z46X0sXkLjqg",
+            "query_width": "min-width:768",
+            "size": null,
+            "type": "image/webp"
+          },
+          {
+            "url": "https://smartcdn.gprod.postmedia.digital/nationalpost/wp-content/uploads/2024/08/Kamala-Harris-1.jpg?quality=90&strip=all&w=288&h=216&sig=Ljg4qX5ZA5CJ_zgkeUwCGg,",
+            "query_width": null,
+            "size": {
+              "width": 1000,
+              "height": 750
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://smartcdn.gprod.postmedia.digital/nationalpost/wp-content/uploads/2024/08/Kamala-Harris-1.jpg?quality=90&strip=all&w=576&h=432&sig=MJddUrXGOuvx0T5L0eSY1A",
+            "query_width": null,
+            "size": {
+              "width": 2000,
+              "height": 1500
+            },
+            "type": "image/jpeg"
+          }
+        ],
         "is_cover": true,
         "description": "Kamala Harris with high school classmates.",
         "caption": "Kamala Harris, centre, poses with classmates in a photo from the 1981 Westmount High School yearbook. Photo by Handout/English Montreal School Board/Westmount High School/AFP via Getty Images",
@@ -87,10 +163,86 @@
         "position": 836
       },
       {
-        "urls": {
-          "1x": "https://smartcdn.gprod.postmedia.digital/nationalpost/wp-content/uploads/2024/08/Kamala-Harris-2.jpg?quality=90&strip=all&w=564&type=webp&sig=5NYrqJxhwP2DuUNLEqM0qQ,",
-          "2x": "https://smartcdn.gprod.postmedia.digital/nationalpost/wp-content/uploads/2024/08/Kamala-Harris-2.jpg?quality=90&strip=all&w=1128&type=webp&sig=xhgJqUJ6A5dHmzNM4tTYmQ"
-        },
+        "versions": [
+          {
+            "url": "https://smartcdn.gprod.postmedia.digital/nationalpost/wp-content/uploads/2024/08/Kamala-Harris-2.jpg?quality=90&strip=all&w=288&type=webp&sig=NnBkH3fs58Dm6P8xBrKJ5g,",
+            "query_width": "max-width:767",
+            "size": null,
+            "type": "image/webp"
+          },
+          {
+            "url": "https://smartcdn.gprod.postmedia.digital/nationalpost/wp-content/uploads/2024/08/Kamala-Harris-2.jpg?quality=90&strip=all&w=576&type=webp&sig=_KSvFPnenNukgOqxdhQ9fw",
+            "query_width": "max-width:767",
+            "size": null,
+            "type": "image/webp"
+          },
+          {
+            "url": "https://smartcdn.gprod.postmedia.digital/nationalpost/wp-content/uploads/2024/08/Kamala-Harris-2.jpg?quality=90&strip=all&w=1128&type=jpg&sig=42uUlAvaIvCAVnIeI4vMzg",
+            "query_width": "min-width:1200",
+            "size": null,
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://smartcdn.gprod.postmedia.digital/nationalpost/wp-content/uploads/2024/08/Kamala-Harris-2.jpg?quality=90&strip=all&w=564&type=jpg&sig=kWtRmpC43RiTDa1IHPK6BA,",
+            "query_width": "min-width:1200",
+            "size": null,
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://smartcdn.gprod.postmedia.digital/nationalpost/wp-content/uploads/2024/08/Kamala-Harris-2.jpg?quality=90&strip=all&w=1128&type=webp&sig=xhgJqUJ6A5dHmzNM4tTYmQ",
+            "query_width": "min-width:1200",
+            "size": null,
+            "type": "image/webp"
+          },
+          {
+            "url": "https://smartcdn.gprod.postmedia.digital/nationalpost/wp-content/uploads/2024/08/Kamala-Harris-2.jpg?quality=90&strip=all&w=564&type=webp&sig=5NYrqJxhwP2DuUNLEqM0qQ,",
+            "query_width": "min-width:1200",
+            "size": null,
+            "type": "image/webp"
+          },
+          {
+            "url": "https://smartcdn.gprod.postmedia.digital/nationalpost/wp-content/uploads/2024/08/Kamala-Harris-2.jpg?quality=90&strip=all&w=472&type=jpg&sig=r61-h97I64LEsQQiWLi9Fw,",
+            "query_width": "min-width:768",
+            "size": null,
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://smartcdn.gprod.postmedia.digital/nationalpost/wp-content/uploads/2024/08/Kamala-Harris-2.jpg?quality=90&strip=all&w=944&type=jpg&sig=HoQ5APqCATU-VhmKlVDm0w",
+            "query_width": "min-width:768",
+            "size": null,
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://smartcdn.gprod.postmedia.digital/nationalpost/wp-content/uploads/2024/08/Kamala-Harris-2.jpg?quality=90&strip=all&w=472&type=webp&sig=yVgL6kzTXG6kHHf7o5azZw,",
+            "query_width": "min-width:768",
+            "size": null,
+            "type": "image/webp"
+          },
+          {
+            "url": "https://smartcdn.gprod.postmedia.digital/nationalpost/wp-content/uploads/2024/08/Kamala-Harris-2.jpg?quality=90&strip=all&w=944&type=webp&sig=oWPIRngfdqkjdjKa0rrdNA",
+            "query_width": "min-width:768",
+            "size": null,
+            "type": "image/webp"
+          },
+          {
+            "url": "https://smartcdn.gprod.postmedia.digital/nationalpost/wp-content/uploads/2024/08/Kamala-Harris-2.jpg?quality=90&strip=all&w=288&sig=OCI8kk7ttdb6U7lfUnsBbg,",
+            "query_width": null,
+            "size": {
+              "width": 1000,
+              "height": 685
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://smartcdn.gprod.postmedia.digital/nationalpost/wp-content/uploads/2024/08/Kamala-Harris-2.jpg?quality=90&strip=all&w=576&sig=yl0MqIc0LAM4f1p7z317uQ",
+            "query_width": null,
+            "size": {
+              "width": 2000,
+              "height": 1370
+            },
+            "type": "image/jpeg"
+          }
+        ],
         "is_cover": false,
         "description": "Kamala Harris.",
         "caption": "Kamala Harris’s photo from the 1981 Westmount High School yearbook. Photo by Handout/English Montreal School Board/Westmount High School/AFP via Getty Images",

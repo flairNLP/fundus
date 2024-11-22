@@ -76,9 +76,35 @@
     },
     "images": [
       {
-        "urls": {
-          "1x": "https://i.ds.at/IQHhNw/c:1200:675:fp:0.500:0.500/rs:fill:750:0/plain/lido-images/2024/05/03/74c9cd9c-f3cf-4ea7-8cee-47415c5c6ebc.jpeg"
-        },
+        "versions": [
+          {
+            "url": "https://i.ds.at/hB3tRg/c:1200:675:fp:0.500:0.500/rs:fill:615:0/plain/lido-images/2024/05/03/74c9cd9c-f3cf-4ea7-8cee-47415c5c6ebc.jpeg",
+            "query_width": "min-width:960",
+            "size": {
+              "width": 615,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://i.ds.at/IQHhNw/c:1200:675:fp:0.500:0.500/rs:fill:750:0/plain/lido-images/2024/05/03/74c9cd9c-f3cf-4ea7-8cee-47415c5c6ebc.jpeg",
+            "query_width": "max-width:959",
+            "size": {
+              "width": 750,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://i.ds.at/Lj5KJw/c:1200:675:fp:0.500:0.500/rs:fill:1600:0/plain/lido-images/2024/05/03/74c9cd9c-f3cf-4ea7-8cee-47415c5c6ebc.jpeg",
+            "query_width": null,
+            "size": {
+              "width": 1600,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          }
+        ],
         "is_cover": true,
         "description": "Teilnehmer an der Demo in Hamburg gegen die angeblich islamfeindliche Politik in Deutschland.",
         "caption": "Nach der islamistischen Demo in Hamburg wollen Politikerinnen und Politiker den Ruf nach einem Kalifat unter Strafe stellen.",
@@ -88,9 +114,35 @@
         "position": 111
       },
       {
-        "urls": {
-          "1x": "https://i.ds.at/zzQ8Aw/c:1200:780:fp:0.500:0.500/rs:fill:750:0/plain/lido-images/2024/05/03/758b0ad3-3859-47df-b2f9-9163027ef798.jpeg"
-        },
+        "versions": [
+          {
+            "url": "https://i.ds.at/U9fMoQ/c:1200:780:fp:0.500:0.500/rs:fill:615:0/plain/lido-images/2024/05/03/758b0ad3-3859-47df-b2f9-9163027ef798.jpeg",
+            "query_width": "min-width:960",
+            "size": {
+              "width": 615,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://i.ds.at/zzQ8Aw/c:1200:780:fp:0.500:0.500/rs:fill:750:0/plain/lido-images/2024/05/03/758b0ad3-3859-47df-b2f9-9163027ef798.jpeg",
+            "query_width": "max-width:959",
+            "size": {
+              "width": 750,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://i.ds.at/VedLew/c:1200:780:fp:0.500:0.500/rs:fill:1600:0/plain/lido-images/2024/05/03/758b0ad3-3859-47df-b2f9-9163027ef798.jpeg",
+            "query_width": null,
+            "size": {
+              "width": 1600,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          }
+        ],
         "is_cover": false,
         "description": null,
         "caption": "Der Ex-Rapper Brado (links) hörte aus religiösen Gründen mit der Musik auf. Jetzt wirbt er für radikale Islamisten. Kopf von \"Muslim Interaktiv\" ist Raheem Boateng (rechts). In der Mitte: ein Beitrag der \"Generation Islam\".",

@@ -43,18 +43,98 @@
     },
     "images": [
       {
-        "urls": {
-          "8w": "https://www.ndr.de/resources/images/placeholder.png",
-          "128w": "https://www.ndr.de/nachrichten/schleswig-holstein/meteorit142_v-thumbnailgross.jpg",
-          "184w": "https://www.ndr.de/nachrichten/schleswig-holstein/meteorit142_v-einspaltig.jpg",
-          "256w": "https://www.ndr.de/nachrichten/schleswig-holstein/meteorit142_v-contentklein.jpg",
-          "280w": "https://www.ndr.de/nachrichten/schleswig-holstein/meteorit142_v-anderthalbspaltig.jpg",
-          "376w": "https://www.ndr.de/nachrichten/schleswig-holstein/meteorit142_v-zweispaltig.jpg",
-          "568w": "https://www.ndr.de/nachrichten/schleswig-holstein/meteorit142_v-contentgross.jpg",
-          "760w": "https://www.ndr.de/nachrichten/schleswig-holstein/meteorit142_v-vierspaltig.jpg",
-          "1067w": "https://www.ndr.de/nachrichten/schleswig-holstein/meteorit142_v-contentxl.jpg",
-          "1920w": "https://www.ndr.de/nachrichten/schleswig-holstein/meteorit142_v-fullhd.jpg"
-        },
+        "versions": [
+          {
+            "url": "https://www.ndr.de/resources/images/placeholder.png",
+            "query_width": null,
+            "size": {
+              "width": 8,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.ndr.de/nachrichten/schleswig-holstein/meteorit142_v-thumbnailgross.jpg",
+            "query_width": null,
+            "size": {
+              "width": 128,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.ndr.de/nachrichten/schleswig-holstein/meteorit142_v-einspaltig.jpg",
+            "query_width": null,
+            "size": {
+              "width": 184,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.ndr.de/nachrichten/schleswig-holstein/meteorit142_v-contentklein.jpg",
+            "query_width": null,
+            "size": {
+              "width": 256,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.ndr.de/nachrichten/schleswig-holstein/meteorit142_v-anderthalbspaltig.jpg",
+            "query_width": null,
+            "size": {
+              "width": 280,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.ndr.de/nachrichten/schleswig-holstein/meteorit142_v-zweispaltig.jpg",
+            "query_width": null,
+            "size": {
+              "width": 376,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.ndr.de/nachrichten/schleswig-holstein/meteorit142_v-contentgross.jpg",
+            "query_width": null,
+            "size": {
+              "width": 568,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.ndr.de/nachrichten/schleswig-holstein/meteorit142_v-vierspaltig.jpg",
+            "query_width": null,
+            "size": {
+              "width": 760,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.ndr.de/nachrichten/schleswig-holstein/meteorit142_v-contentxl.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1067,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.ndr.de/nachrichten/schleswig-holstein/meteorit142_v-fullhd.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1920,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          }
+        ],
         "is_cover": true,
         "description": "Ein Meteorit liegt in Elmshorn © NDR Foto: Phillip Eggers",
         "caption": null,
@@ -64,18 +144,98 @@
         "position": 232
       },
       {
-        "urls": {
-          "8w": "https://www.ndr.de/resources/images/placeholder.png",
-          "128w": "https://www.ndr.de/nachrichten/schleswig-holstein/meteorit142_v-thumbnailgross.jpg",
-          "184w": "https://www.ndr.de/nachrichten/schleswig-holstein/meteorit142_v-einspaltig.jpg",
-          "256w": "https://www.ndr.de/nachrichten/schleswig-holstein/meteorit142_v-contentklein.jpg",
-          "280w": "https://www.ndr.de/nachrichten/schleswig-holstein/meteorit142_v-anderthalbspaltig.jpg",
-          "376w": "https://www.ndr.de/nachrichten/schleswig-holstein/meteorit142_v-zweispaltig.jpg",
-          "568w": "https://www.ndr.de/nachrichten/schleswig-holstein/meteorit142_v-contentgross.jpg",
-          "760w": "https://www.ndr.de/nachrichten/schleswig-holstein/meteorit142_v-vierspaltig.jpg",
-          "1067w": "https://www.ndr.de/nachrichten/schleswig-holstein/meteorit142_v-contentxl.jpg",
-          "1920w": "https://www.ndr.de/nachrichten/schleswig-holstein/meteorit142_v-fullhd.jpg"
-        },
+        "versions": [
+          {
+            "url": "https://www.ndr.de/resources/images/placeholder.png",
+            "query_width": null,
+            "size": {
+              "width": 8,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.ndr.de/nachrichten/schleswig-holstein/meteorit142_v-thumbnailgross.jpg",
+            "query_width": null,
+            "size": {
+              "width": 128,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.ndr.de/nachrichten/schleswig-holstein/meteorit142_v-einspaltig.jpg",
+            "query_width": null,
+            "size": {
+              "width": 184,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.ndr.de/nachrichten/schleswig-holstein/meteorit142_v-contentklein.jpg",
+            "query_width": null,
+            "size": {
+              "width": 256,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.ndr.de/nachrichten/schleswig-holstein/meteorit142_v-anderthalbspaltig.jpg",
+            "query_width": null,
+            "size": {
+              "width": 280,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.ndr.de/nachrichten/schleswig-holstein/meteorit142_v-zweispaltig.jpg",
+            "query_width": null,
+            "size": {
+              "width": 376,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.ndr.de/nachrichten/schleswig-holstein/meteorit142_v-contentgross.jpg",
+            "query_width": null,
+            "size": {
+              "width": 568,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.ndr.de/nachrichten/schleswig-holstein/meteorit142_v-vierspaltig.jpg",
+            "query_width": null,
+            "size": {
+              "width": 760,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.ndr.de/nachrichten/schleswig-holstein/meteorit142_v-contentxl.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1067,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.ndr.de/nachrichten/schleswig-holstein/meteorit142_v-fullhd.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1920,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          }
+        ],
         "is_cover": true,
         "description": "Ein Meteorit liegt in Elmshorn © NDR Foto: Phillip Eggers",
         "caption": null,

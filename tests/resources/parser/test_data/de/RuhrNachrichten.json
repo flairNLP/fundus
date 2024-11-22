@@ -60,9 +60,26 @@
     },
     "images": [
       {
-        "urls": {
-          "1x": "https://www.ruhrnachrichten.de/wp-content/uploads/2024/05/03/13/630_0900_3734766_Eisheilige_2024-824x412.jpg"
-        },
+        "versions": [
+          {
+            "url": "https://www.ruhrnachrichten.de/wp-content/uploads/2024/05/03/13/630_0900_3734765_Eisheilige_2024-320x214.jpg",
+            "query_width": null,
+            "size": {
+              "width": 640,
+              "height": 428
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.ruhrnachrichten.de/wp-content/uploads/2024/05/03/13/630_0900_3734766_Eisheilige_2024-824x412.jpg",
+            "query_width": "min-width:641",
+            "size": {
+              "width": 824,
+              "height": 412
+            },
+            "type": "image/jpeg"
+          }
+        ],
         "is_cover": true,
         "description": "Eine Blume ist mit Raureif bedeckt.",
         "caption": "Die Eisheiligen können bereits blühende Pflanzen noch einmal mit Frost überraschen.",
@@ -72,25 +89,161 @@
         "position": 354
       },
       {
-        "urls": {
-          "80w": "https://www.ruhrnachrichten.de/wp-content/uploads/2024/05/03/13/630_0900_3734768_Eisheilige_Schutzfolie-80x53.jpg",
-          "160w": "https://www.ruhrnachrichten.de/wp-content/uploads/2024/05/03/13/630_0900_3734768_Eisheilige_Schutzfolie-160x107.jpg",
-          "240w": "https://www.ruhrnachrichten.de/wp-content/uploads/2024/05/03/13/630_0900_3734768_Eisheilige_Schutzfolie-240x160.jpg",
-          "264w": "https://www.ruhrnachrichten.de/wp-content/uploads/2024/05/03/13/630_0900_3734768_Eisheilige_Schutzfolie-264x176.jpg",
-          "300w": "https://www.ruhrnachrichten.de/wp-content/uploads/2024/05/03/13/630_0900_3734768_Eisheilige_Schutzfolie-300x200.jpg",
-          "320w": "https://www.ruhrnachrichten.de/wp-content/uploads/2024/05/03/13/630_0900_3734768_Eisheilige_Schutzfolie-320x214.jpg",
-          "480w": "https://www.ruhrnachrichten.de/wp-content/uploads/2024/05/03/13/630_0900_3734768_Eisheilige_Schutzfolie-480x320.jpg",
-          "492w": "https://www.ruhrnachrichten.de/wp-content/uploads/2024/05/03/13/630_0900_3734768_Eisheilige_Schutzfolie-492x328.jpg",
-          "528w": "https://www.ruhrnachrichten.de/wp-content/uploads/2024/05/03/13/630_0900_3734768_Eisheilige_Schutzfolie-528x352.jpg",
-          "618w": "https://www.ruhrnachrichten.de/wp-content/uploads/2024/05/03/13/630_0900_3734768_Eisheilige_Schutzfolie-618x412.jpg",
-          "640w": "https://www.ruhrnachrichten.de/wp-content/uploads/2024/05/03/13/630_0900_3734768_Eisheilige_Schutzfolie-640x428.jpg",
-          "768w": "https://www.ruhrnachrichten.de/wp-content/uploads/2024/05/03/13/630_0900_3734768_Eisheilige_Schutzfolie-768x512.jpg",
-          "984w": "https://www.ruhrnachrichten.de/wp-content/uploads/2024/05/03/13/630_0900_3734768_Eisheilige_Schutzfolie-984x656.jpg",
-          "1024w": "https://www.ruhrnachrichten.de/wp-content/uploads/2024/05/03/13/630_0900_3734768_Eisheilige_Schutzfolie-1024x683.jpg",
-          "1236w": "https://www.ruhrnachrichten.de/wp-content/uploads/2024/05/03/13/630_0900_3734768_Eisheilige_Schutzfolie-1236x824.jpg",
-          "1536w": "https://www.ruhrnachrichten.de/wp-content/uploads/2024/05/03/13/630_0900_3734768_Eisheilige_Schutzfolie-1536x1024.jpg",
-          "1920w": "https://www.ruhrnachrichten.de/wp-content/uploads/2024/05/03/13/630_0900_3734768_Eisheilige_Schutzfolie.jpg"
-        },
+        "versions": [
+          {
+            "url": "https://www.ruhrnachrichten.de/wp-content/uploads/2024/05/03/13/630_0900_3734768_Eisheilige_Schutzfolie-80x53.jpg",
+            "query_width": null,
+            "size": {
+              "width": 80,
+              "height": 53
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.ruhrnachrichten.de/wp-content/uploads/2024/05/03/13/630_0900_3734768_Eisheilige_Schutzfolie-160x107.jpg",
+            "query_width": null,
+            "size": {
+              "width": 160,
+              "height": 107
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.ruhrnachrichten.de/wp-content/uploads/2024/05/03/13/630_0900_3734768_Eisheilige_Schutzfolie-240x160.jpg",
+            "query_width": null,
+            "size": {
+              "width": 240,
+              "height": 160
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.ruhrnachrichten.de/wp-content/uploads/2024/05/03/13/630_0900_3734768_Eisheilige_Schutzfolie-264x176.jpg",
+            "query_width": null,
+            "size": {
+              "width": 264,
+              "height": 176
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.ruhrnachrichten.de/wp-content/uploads/2024/05/03/13/630_0900_3734768_Eisheilige_Schutzfolie-300x200.jpg",
+            "query_width": null,
+            "size": {
+              "width": 300,
+              "height": 200
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.ruhrnachrichten.de/wp-content/uploads/2024/05/03/13/630_0900_3734768_Eisheilige_Schutzfolie-320x214.jpg",
+            "query_width": null,
+            "size": {
+              "width": 320,
+              "height": 213
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.ruhrnachrichten.de/wp-content/uploads/2024/05/03/13/630_0900_3734768_Eisheilige_Schutzfolie-480x320.jpg",
+            "query_width": null,
+            "size": {
+              "width": 480,
+              "height": 320
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.ruhrnachrichten.de/wp-content/uploads/2024/05/03/13/630_0900_3734768_Eisheilige_Schutzfolie-492x328.jpg",
+            "query_width": null,
+            "size": {
+              "width": 492,
+              "height": 328
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.ruhrnachrichten.de/wp-content/uploads/2024/05/03/13/630_0900_3734768_Eisheilige_Schutzfolie-528x352.jpg",
+            "query_width": null,
+            "size": {
+              "width": 528,
+              "height": 352
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.ruhrnachrichten.de/wp-content/uploads/2024/05/03/13/630_0900_3734768_Eisheilige_Schutzfolie-618x412.jpg",
+            "query_width": null,
+            "size": {
+              "width": 618,
+              "height": 412
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.ruhrnachrichten.de/wp-content/uploads/2024/05/03/13/630_0900_3734768_Eisheilige_Schutzfolie-640x428.jpg",
+            "query_width": null,
+            "size": {
+              "width": 640,
+              "height": 427
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.ruhrnachrichten.de/wp-content/uploads/2024/05/03/13/630_0900_3734768_Eisheilige_Schutzfolie-768x512.jpg",
+            "query_width": null,
+            "size": {
+              "width": 768,
+              "height": 512
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.ruhrnachrichten.de/wp-content/uploads/2024/05/03/13/630_0900_3734768_Eisheilige_Schutzfolie-984x656.jpg",
+            "query_width": null,
+            "size": {
+              "width": 984,
+              "height": 656
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.ruhrnachrichten.de/wp-content/uploads/2024/05/03/13/630_0900_3734768_Eisheilige_Schutzfolie-1024x683.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1024,
+              "height": 683
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.ruhrnachrichten.de/wp-content/uploads/2024/05/03/13/630_0900_3734768_Eisheilige_Schutzfolie-1236x824.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1236,
+              "height": 824
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.ruhrnachrichten.de/wp-content/uploads/2024/05/03/13/630_0900_3734768_Eisheilige_Schutzfolie-1536x1024.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1536,
+              "height": 1024
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.ruhrnachrichten.de/wp-content/uploads/2024/05/03/13/630_0900_3734768_Eisheilige_Schutzfolie.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1920,
+              "height": 1281
+            },
+            "type": "image/jpeg"
+          }
+        ],
         "is_cover": false,
         "description": "Eingetopfte Blumen sind in einem Garten mit einer Plastikfolie bedeckt, um sie dadurch vor Nachtfrost zu schützen.",
         "caption": "Um ihre Pflanzen vor dem Frost der Eisheiligen zu schützen, greifen manche Hobby-Gärtnerinnen und Hobby-Gärtner auf Schutzfolien zurück.",

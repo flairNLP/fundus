@@ -39,15 +39,71 @@
     },
     "images": [
       {
-        "urls": {
-          "384w": "https://static.euronews.com/articles/stories/08/40/63/40/384x216_cmsv2_13a842da-f8da-5ed8-87ef-65a56dd57f18-8406340.jpg",
-          "640w": "https://static.euronews.com/articles/stories/08/40/63/40/640x360_cmsv2_13a842da-f8da-5ed8-87ef-65a56dd57f18-8406340.jpg",
-          "750w": "https://static.euronews.com/articles/stories/08/40/63/40/750x422_cmsv2_13a842da-f8da-5ed8-87ef-65a56dd57f18-8406340.jpg",
-          "828w": "https://static.euronews.com/articles/stories/08/40/63/40/828x466_cmsv2_13a842da-f8da-5ed8-87ef-65a56dd57f18-8406340.jpg",
-          "1080w": "https://static.euronews.com/articles/stories/08/40/63/40/1080x608_cmsv2_13a842da-f8da-5ed8-87ef-65a56dd57f18-8406340.jpg",
-          "1200w": "https://static.euronews.com/articles/stories/08/40/63/40/1200x675_cmsv2_13a842da-f8da-5ed8-87ef-65a56dd57f18-8406340.jpg",
-          "1920w": "https://static.euronews.com/articles/stories/08/40/63/40/1920x1080_cmsv2_13a842da-f8da-5ed8-87ef-65a56dd57f18-8406340.jpg"
-        },
+        "versions": [
+          {
+            "url": "https://static.euronews.com/articles/stories/08/40/63/40/384x216_cmsv2_13a842da-f8da-5ed8-87ef-65a56dd57f18-8406340.jpg",
+            "query_width": null,
+            "size": {
+              "width": 384,
+              "height": 216
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://static.euronews.com/articles/stories/08/40/63/40/640x360_cmsv2_13a842da-f8da-5ed8-87ef-65a56dd57f18-8406340.jpg",
+            "query_width": null,
+            "size": {
+              "width": 640,
+              "height": 360
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://static.euronews.com/articles/stories/08/40/63/40/750x422_cmsv2_13a842da-f8da-5ed8-87ef-65a56dd57f18-8406340.jpg",
+            "query_width": null,
+            "size": {
+              "width": 750,
+              "height": 422
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://static.euronews.com/articles/stories/08/40/63/40/828x466_cmsv2_13a842da-f8da-5ed8-87ef-65a56dd57f18-8406340.jpg",
+            "query_width": null,
+            "size": {
+              "width": 828,
+              "height": 466
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://static.euronews.com/articles/stories/08/40/63/40/1080x608_cmsv2_13a842da-f8da-5ed8-87ef-65a56dd57f18-8406340.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1080,
+              "height": 608
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://static.euronews.com/articles/stories/08/40/63/40/1200x675_cmsv2_13a842da-f8da-5ed8-87ef-65a56dd57f18-8406340.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1200,
+              "height": 675
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://static.euronews.com/articles/stories/08/40/63/40/1920x1080_cmsv2_13a842da-f8da-5ed8-87ef-65a56dd57f18-8406340.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1920,
+              "height": 1080
+            },
+            "type": "image/jpeg"
+          }
+        ],
         "is_cover": true,
         "description": "Tausende haben am Montag in Tiflis an einer regierungsfreundlichen Kundgebung teilgenommen.",
         "caption": null,

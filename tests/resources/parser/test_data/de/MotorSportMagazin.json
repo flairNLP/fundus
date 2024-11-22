@@ -37,11 +37,62 @@
     },
     "images": [
       {
-        "urls": {
-          "320w": "https://images.motorsport-magazin.com/images/320/180/q_80/1072476.webp",
-          "640w": "https://images.motorsport-magazin.com/images/640/360/q_80/1072476.webp",
-          "960w": "https://images.motorsport-magazin.com/images/960/540/q_80/1072476.webp"
-        },
+        "versions": [
+          {
+            "url": "https://images.motorsport-magazin.com/images/320/180/q_80/1072476.jpg",
+            "query_width": null,
+            "size": {
+              "width": 320,
+              "height": 180
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://images.motorsport-magazin.com/images/320/180/q_80/1072476.webp",
+            "query_width": null,
+            "size": {
+              "width": 320,
+              "height": 180
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://images.motorsport-magazin.com/images/640/360/q_80/1072476.jpg",
+            "query_width": null,
+            "size": {
+              "width": 640,
+              "height": 360
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://images.motorsport-magazin.com/images/640/360/q_80/1072476.webp",
+            "query_width": null,
+            "size": {
+              "width": 640,
+              "height": 360
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://images.motorsport-magazin.com/images/960/540/q_80/1072476.jpg",
+            "query_width": null,
+            "size": {
+              "width": 960,
+              "height": 540
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://images.motorsport-magazin.com/images/960/540/q_80/1072476.webp",
+            "query_width": null,
+            "size": {
+              "width": 960,
+              "height": 540
+            },
+            "type": "image/webp"
+          }
+        ],
         "is_cover": true,
         "description": "Die Kawasaki-Superbike-Piloten Axel Bassani und Alex Lowes",
         "caption": "Kawasaki wie 2024 wird es 2025 nicht mehr geben, Foto: LAT Images",
@@ -51,11 +102,62 @@
         "position": 194
       },
       {
-        "urls": {
-          "320w": "https://www.motorsport-magazin.com/320/180/q_80/1072475.webp",
-          "640w": "https://www.motorsport-magazin.com/640/360/q_80/1072475.webp",
-          "960w": "https://www.motorsport-magazin.com/960/540/q_80/1072475.webp"
-        },
+        "versions": [
+          {
+            "url": "https://www.motorsport-magazin.com/320/180/q_80/1072475.jpg",
+            "query_width": null,
+            "size": {
+              "width": 320,
+              "height": 180
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.motorsport-magazin.com/320/180/q_80/1072475.webp",
+            "query_width": null,
+            "size": {
+              "width": 320,
+              "height": 180
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://www.motorsport-magazin.com/640/360/q_80/1072475.jpg",
+            "query_width": null,
+            "size": {
+              "width": 640,
+              "height": 360
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.motorsport-magazin.com/640/360/q_80/1072475.webp",
+            "query_width": null,
+            "size": {
+              "width": 640,
+              "height": 360
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://www.motorsport-magazin.com/960/540/q_80/1072475.jpg",
+            "query_width": null,
+            "size": {
+              "width": 960,
+              "height": 540
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.motorsport-magazin.com/960/540/q_80/1072475.webp",
+            "query_width": null,
+            "size": {
+              "width": 960,
+              "height": 540
+            },
+            "type": "image/webp"
+          }
+        ],
         "is_cover": false,
         "description": "Alex Lowes in Barcelona",
         "caption": "Alex Lowes fährt bisher eine starke Superbike-Saison 2024, Foto: LAT Images",

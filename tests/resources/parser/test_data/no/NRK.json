@@ -48,17 +48,89 @@
     },
     "images": [
       {
-        "urls": {
-          "80w": "https://gfx.nrk.no/wPEc8IBtElrsq4afJb4i7AAYE5jSQ69E9QERfZpNQasA.jpg",
-          "160w": "https://gfx.nrk.no/wPEc8IBtElrsq4afJb4i7AOJOoQqSP85ZQERfZpNQasA.jpg",
-          "350w": "https://gfx.nrk.no/wPEc8IBtElrsq4afJb4i7AS7ADZN8ZRGVQERfZpNQasA.jpg",
-          "450w": "https://gfx.nrk.no/wPEc8IBtElrsq4afJb4i7AajFjMZoYIdhQERfZpNQasA.jpg",
-          "650w": "https://gfx.nrk.no/wPEc8IBtElrsq4afJb4i7AdUgVFHv9UfNQERfZpNQasA.jpg",
-          "1000w": "https://gfx.nrk.no/wPEc8IBtElrsq4afJb4i7A6DRaxOSQvxZQERfZpNQasA.jpg",
-          "1200w": "https://gfx.nrk.no/wPEc8IBtElrsq4afJb4i7AoKmFd90Q1KZQERfZpNQasA.jpg",
-          "1600w": "https://gfx.nrk.no/wPEc8IBtElrsq4afJb4i7AWknxvDyx4tpQERfZpNQasA.jpg",
-          "2000w": "https://gfx.nrk.no/wPEc8IBtElrsq4afJb4i7AKKjVgjl5qv9QERfZpNQasA.jpg"
-        },
+        "versions": [
+          {
+            "url": "https://gfx.nrk.no/wPEc8IBtElrsq4afJb4i7AAYE5jSQ69E9QERfZpNQasA.jpg",
+            "query_width": null,
+            "size": {
+              "width": 80,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://gfx.nrk.no/wPEc8IBtElrsq4afJb4i7AOJOoQqSP85ZQERfZpNQasA.jpg",
+            "query_width": null,
+            "size": {
+              "width": 160,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://gfx.nrk.no/wPEc8IBtElrsq4afJb4i7AS7ADZN8ZRGVQERfZpNQasA.jpg",
+            "query_width": null,
+            "size": {
+              "width": 350,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://gfx.nrk.no/wPEc8IBtElrsq4afJb4i7AajFjMZoYIdhQERfZpNQasA.jpg",
+            "query_width": null,
+            "size": {
+              "width": 450,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://gfx.nrk.no/wPEc8IBtElrsq4afJb4i7AdUgVFHv9UfNQERfZpNQasA.jpg",
+            "query_width": null,
+            "size": {
+              "width": 650,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://gfx.nrk.no/wPEc8IBtElrsq4afJb4i7A6DRaxOSQvxZQERfZpNQasA.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1000,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://gfx.nrk.no/wPEc8IBtElrsq4afJb4i7AoKmFd90Q1KZQERfZpNQasA.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1200,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://gfx.nrk.no/wPEc8IBtElrsq4afJb4i7AWknxvDyx4tpQERfZpNQasA.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1600,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://gfx.nrk.no/wPEc8IBtElrsq4afJb4i7AKKjVgjl5qv9QERfZpNQasA.jpg",
+            "query_width": null,
+            "size": {
+              "width": 2000,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          }
+        ],
         "is_cover": true,
         "description": "Lene Retzius",
         "caption": "FORTVILET: Her tror Lene Retzius at finaleplassen glipper.",
@@ -66,17 +138,89 @@
         "position": 3689
       },
       {
-        "urls": {
-          "80w": "https://gfx.nrk.no/65bNFo6ume3TOSwrv8t6pQwwotd8fnRCnBiLYCiCDt-g.jpg",
-          "160w": "https://gfx.nrk.no/65bNFo6ume3TOSwrv8t6pQoAGnfIfOVK3BiLYCiCDt-g.jpg",
-          "350w": "https://gfx.nrk.no/65bNFo6ume3TOSwrv8t6pQvaq4J6o9rufBiLYCiCDt-g.jpg",
-          "450w": "https://gfx.nrk.no/65bNFo6ume3TOSwrv8t6pQbp2K6VQWm1PBiLYCiCDt-g.jpg",
-          "650w": "https://gfx.nrk.no/65bNFo6ume3TOSwrv8t6pQXC9cX6LfUwTBiLYCiCDt-g.jpg",
-          "1000w": "https://gfx.nrk.no/65bNFo6ume3TOSwrv8t6pQrUo0CUazfQ7BiLYCiCDt-g.jpg",
-          "1200w": "https://gfx.nrk.no/65bNFo6ume3TOSwrv8t6pQ44518g8iVNbBiLYCiCDt-g.jpg",
-          "1600w": "https://gfx.nrk.no/65bNFo6ume3TOSwrv8t6pQSYvDC1fIKfPBiLYCiCDt-g.jpg",
-          "2000w": "https://gfx.nrk.no/65bNFo6ume3TOSwrv8t6pQ1AGy5Zb0Ga3BiLYCiCDt-g.jpg"
-        },
+        "versions": [
+          {
+            "url": "https://gfx.nrk.no/65bNFo6ume3TOSwrv8t6pQwwotd8fnRCnBiLYCiCDt-g.jpg",
+            "query_width": null,
+            "size": {
+              "width": 80,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://gfx.nrk.no/65bNFo6ume3TOSwrv8t6pQoAGnfIfOVK3BiLYCiCDt-g.jpg",
+            "query_width": null,
+            "size": {
+              "width": 160,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://gfx.nrk.no/65bNFo6ume3TOSwrv8t6pQvaq4J6o9rufBiLYCiCDt-g.jpg",
+            "query_width": null,
+            "size": {
+              "width": 350,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://gfx.nrk.no/65bNFo6ume3TOSwrv8t6pQbp2K6VQWm1PBiLYCiCDt-g.jpg",
+            "query_width": null,
+            "size": {
+              "width": 450,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://gfx.nrk.no/65bNFo6ume3TOSwrv8t6pQXC9cX6LfUwTBiLYCiCDt-g.jpg",
+            "query_width": null,
+            "size": {
+              "width": 650,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://gfx.nrk.no/65bNFo6ume3TOSwrv8t6pQrUo0CUazfQ7BiLYCiCDt-g.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1000,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://gfx.nrk.no/65bNFo6ume3TOSwrv8t6pQ44518g8iVNbBiLYCiCDt-g.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1200,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://gfx.nrk.no/65bNFo6ume3TOSwrv8t6pQSYvDC1fIKfPBiLYCiCDt-g.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1600,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://gfx.nrk.no/65bNFo6ume3TOSwrv8t6pQ1AGy5Zb0Ga3BiLYCiCDt-g.jpg",
+            "query_width": null,
+            "size": {
+              "width": 2000,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          }
+        ],
         "is_cover": true,
         "description": null,
         "caption": null,
@@ -84,17 +228,89 @@
         "position": 3709
       },
       {
-        "urls": {
-          "80w": "https://gfx.nrk.no/oTjkCh84O6Uke3dh6O4dKw4SuXuOG1SklwolqefyXPKA.jpg",
-          "160w": "https://gfx.nrk.no/oTjkCh84O6Uke3dh6O4dKwH2p3CSL_EU1wolqefyXPKA.jpg",
-          "350w": "https://gfx.nrk.no/oTjkCh84O6Uke3dh6O4dKw1SC-n4iJtO5wolqefyXPKA.jpg",
-          "450w": "https://gfx.nrk.no/oTjkCh84O6Uke3dh6O4dKwMxN1rpxUdvVwolqefyXPKA.jpg",
-          "650w": "https://gfx.nrk.no/oTjkCh84O6Uke3dh6O4dKwCgTJQNAxbZhwolqefyXPKA.jpg",
-          "1000w": "https://gfx.nrk.no/oTjkCh84O6Uke3dh6O4dKw4PUbxDVZGlBwolqefyXPKA.jpg",
-          "1200w": "https://gfx.nrk.no/oTjkCh84O6Uke3dh6O4dKwEXptv956jvlwolqefyXPKA.jpg",
-          "1600w": "https://gfx.nrk.no/oTjkCh84O6Uke3dh6O4dKwy4w_OV3_Vf1wolqefyXPKA.jpg",
-          "2000w": "https://gfx.nrk.no/oTjkCh84O6Uke3dh6O4dKwf6lq98RClZ9wolqefyXPKA.jpg"
-        },
+        "versions": [
+          {
+            "url": "https://gfx.nrk.no/oTjkCh84O6Uke3dh6O4dKw4SuXuOG1SklwolqefyXPKA.jpg",
+            "query_width": null,
+            "size": {
+              "width": 80,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://gfx.nrk.no/oTjkCh84O6Uke3dh6O4dKwH2p3CSL_EU1wolqefyXPKA.jpg",
+            "query_width": null,
+            "size": {
+              "width": 160,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://gfx.nrk.no/oTjkCh84O6Uke3dh6O4dKw1SC-n4iJtO5wolqefyXPKA.jpg",
+            "query_width": null,
+            "size": {
+              "width": 350,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://gfx.nrk.no/oTjkCh84O6Uke3dh6O4dKwMxN1rpxUdvVwolqefyXPKA.jpg",
+            "query_width": null,
+            "size": {
+              "width": 450,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://gfx.nrk.no/oTjkCh84O6Uke3dh6O4dKwCgTJQNAxbZhwolqefyXPKA.jpg",
+            "query_width": null,
+            "size": {
+              "width": 650,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://gfx.nrk.no/oTjkCh84O6Uke3dh6O4dKw4PUbxDVZGlBwolqefyXPKA.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1000,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://gfx.nrk.no/oTjkCh84O6Uke3dh6O4dKwEXptv956jvlwolqefyXPKA.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1200,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://gfx.nrk.no/oTjkCh84O6Uke3dh6O4dKwy4w_OV3_Vf1wolqefyXPKA.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1600,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://gfx.nrk.no/oTjkCh84O6Uke3dh6O4dKwf6lq98RClZ9wolqefyXPKA.jpg",
+            "query_width": null,
+            "size": {
+              "width": 2000,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          }
+        ],
         "is_cover": true,
         "description": null,
         "caption": null,
@@ -102,17 +318,89 @@
         "position": 3727
       },
       {
-        "urls": {
-          "80w": "https://gfx.nrk.no/pwBPC-OCrgQDARmE8oKvZgwnv6Hage0WzIWXPQQB9zOA.jpg",
-          "160w": "https://gfx.nrk.no/pwBPC-OCrgQDARmE8oKvZgKqzXuD6e9MzIWXPQQB9zOA.jpg",
-          "350w": "https://gfx.nrk.no/pwBPC-OCrgQDARmE8oKvZgGio1O2TQSJrIWXPQQB9zOA.jpg",
-          "450w": "https://gfx.nrk.no/pwBPC-OCrgQDARmE8oKvZgdm7n5P0XUJHIWXPQQB9zOA.jpg",
-          "650w": "https://gfx.nrk.no/pwBPC-OCrgQDARmE8oKvZg0UK8abDDeSHIWXPQQB9zOA.jpg",
-          "1000w": "https://gfx.nrk.no/pwBPC-OCrgQDARmE8oKvZgyRuCF0cRP0zIWXPQQB9zOA.jpg",
-          "1200w": "https://gfx.nrk.no/pwBPC-OCrgQDARmE8oKvZgEopL4dpWCQHIWXPQQB9zOA.jpg",
-          "1600w": "https://gfx.nrk.no/pwBPC-OCrgQDARmE8oKvZgFULifSyyXKPIWXPQQB9zOA.jpg",
-          "2000w": "https://gfx.nrk.no/pwBPC-OCrgQDARmE8oKvZgscwoVPiAeYjIWXPQQB9zOA.jpg"
-        },
+        "versions": [
+          {
+            "url": "https://gfx.nrk.no/pwBPC-OCrgQDARmE8oKvZgwnv6Hage0WzIWXPQQB9zOA.jpg",
+            "query_width": null,
+            "size": {
+              "width": 80,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://gfx.nrk.no/pwBPC-OCrgQDARmE8oKvZgKqzXuD6e9MzIWXPQQB9zOA.jpg",
+            "query_width": null,
+            "size": {
+              "width": 160,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://gfx.nrk.no/pwBPC-OCrgQDARmE8oKvZgGio1O2TQSJrIWXPQQB9zOA.jpg",
+            "query_width": null,
+            "size": {
+              "width": 350,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://gfx.nrk.no/pwBPC-OCrgQDARmE8oKvZgdm7n5P0XUJHIWXPQQB9zOA.jpg",
+            "query_width": null,
+            "size": {
+              "width": 450,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://gfx.nrk.no/pwBPC-OCrgQDARmE8oKvZg0UK8abDDeSHIWXPQQB9zOA.jpg",
+            "query_width": null,
+            "size": {
+              "width": 650,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://gfx.nrk.no/pwBPC-OCrgQDARmE8oKvZgyRuCF0cRP0zIWXPQQB9zOA.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1000,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://gfx.nrk.no/pwBPC-OCrgQDARmE8oKvZgEopL4dpWCQHIWXPQQB9zOA.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1200,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://gfx.nrk.no/pwBPC-OCrgQDARmE8oKvZgFULifSyyXKPIWXPQQB9zOA.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1600,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://gfx.nrk.no/pwBPC-OCrgQDARmE8oKvZgscwoVPiAeYjIWXPQQB9zOA.jpg",
+            "query_width": null,
+            "size": {
+              "width": 2000,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          }
+        ],
         "is_cover": false,
         "description": "Sommer OL i Paris 2024",
         "caption": null,
@@ -120,17 +408,89 @@
         "position": 3783
       },
       {
-        "urls": {
-          "80w": "https://gfx.nrk.no/BalcUHjnWsABtnZe8d0tFg9r-punAvpZBJYjV4WuYL4Q.jpg",
-          "160w": "https://gfx.nrk.no/BalcUHjnWsABtnZe8d0tFgdy5odIUerN9JYjV4WuYL4Q.jpg",
-          "350w": "https://gfx.nrk.no/BalcUHjnWsABtnZe8d0tFgkuJXGWaltllJYjV4WuYL4Q.jpg",
-          "450w": "https://gfx.nrk.no/BalcUHjnWsABtnZe8d0tFgfv_D9V84CulJYjV4WuYL4Q.jpg",
-          "650w": "https://gfx.nrk.no/BalcUHjnWsABtnZe8d0tFgBQkDL82MCqhJYjV4WuYL4Q.jpg",
-          "1000w": "https://gfx.nrk.no/BalcUHjnWsABtnZe8d0tFgzW-JOjt5bdxJYjV4WuYL4Q.jpg",
-          "1200w": "https://gfx.nrk.no/BalcUHjnWsABtnZe8d0tFguN5Iau_0Wm1JYjV4WuYL4Q.jpg",
-          "1600w": "https://gfx.nrk.no/BalcUHjnWsABtnZe8d0tFgTH-DKXqbmPBJYjV4WuYL4Q.jpg",
-          "2000w": "https://gfx.nrk.no/BalcUHjnWsABtnZe8d0tFg6RdLho78gHFJYjV4WuYL4Q.jpg"
-        },
+        "versions": [
+          {
+            "url": "https://gfx.nrk.no/BalcUHjnWsABtnZe8d0tFg9r-punAvpZBJYjV4WuYL4Q.jpg",
+            "query_width": null,
+            "size": {
+              "width": 80,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://gfx.nrk.no/BalcUHjnWsABtnZe8d0tFgdy5odIUerN9JYjV4WuYL4Q.jpg",
+            "query_width": null,
+            "size": {
+              "width": 160,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://gfx.nrk.no/BalcUHjnWsABtnZe8d0tFgkuJXGWaltllJYjV4WuYL4Q.jpg",
+            "query_width": null,
+            "size": {
+              "width": 350,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://gfx.nrk.no/BalcUHjnWsABtnZe8d0tFgfv_D9V84CulJYjV4WuYL4Q.jpg",
+            "query_width": null,
+            "size": {
+              "width": 450,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://gfx.nrk.no/BalcUHjnWsABtnZe8d0tFgBQkDL82MCqhJYjV4WuYL4Q.jpg",
+            "query_width": null,
+            "size": {
+              "width": 650,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://gfx.nrk.no/BalcUHjnWsABtnZe8d0tFgzW-JOjt5bdxJYjV4WuYL4Q.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1000,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://gfx.nrk.no/BalcUHjnWsABtnZe8d0tFguN5Iau_0Wm1JYjV4WuYL4Q.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1200,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://gfx.nrk.no/BalcUHjnWsABtnZe8d0tFgTH-DKXqbmPBJYjV4WuYL4Q.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1600,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://gfx.nrk.no/BalcUHjnWsABtnZe8d0tFg6RdLho78gHFJYjV4WuYL4Q.jpg",
+            "query_width": null,
+            "size": {
+              "width": 2000,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          }
+        ],
         "is_cover": false,
         "description": "Sommer OL i Paris 2024",
         "caption": "FINALEKLAR: Lene Retzius skal hoppe i onsdagens finale likevel.",
@@ -140,17 +500,89 @@
         "position": 3797
       },
       {
-        "urls": {
-          "80w": "https://gfx.nrk.no/eql-Y60IpbVS4Ze7iltZkgpr1n_f6Q9PGniEbsQo2WWA.jpg",
-          "160w": "https://gfx.nrk.no/eql-Y60IpbVS4Ze7iltZkg7ZztQZyWriyniEbsQo2WWA.jpg",
-          "350w": "https://gfx.nrk.no/eql-Y60IpbVS4Ze7iltZkgIwaGvrjZtVaniEbsQo2WWA.jpg",
-          "450w": "https://gfx.nrk.no/eql-Y60IpbVS4Ze7iltZkgTNfPmHRYIZSniEbsQo2WWA.jpg",
-          "650w": "https://gfx.nrk.no/eql-Y60IpbVS4Ze7iltZkg0WMwQIkVFjGniEbsQo2WWA.jpg",
-          "1000w": "https://gfx.nrk.no/eql-Y60IpbVS4Ze7iltZkgceiIIpPsE3mniEbsQo2WWA.jpg",
-          "1200w": "https://gfx.nrk.no/eql-Y60IpbVS4Ze7iltZkg0I2c1M1sm4OniEbsQo2WWA.jpg",
-          "1600w": "https://gfx.nrk.no/eql-Y60IpbVS4Ze7iltZkgLcN9KcK_rEmniEbsQo2WWA.jpg",
-          "2000w": "https://gfx.nrk.no/eql-Y60IpbVS4Ze7iltZkgVmNPoRHGa56niEbsQo2WWA.jpg"
-        },
+        "versions": [
+          {
+            "url": "https://gfx.nrk.no/eql-Y60IpbVS4Ze7iltZkgpr1n_f6Q9PGniEbsQo2WWA.jpg",
+            "query_width": null,
+            "size": {
+              "width": 80,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://gfx.nrk.no/eql-Y60IpbVS4Ze7iltZkg7ZztQZyWriyniEbsQo2WWA.jpg",
+            "query_width": null,
+            "size": {
+              "width": 160,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://gfx.nrk.no/eql-Y60IpbVS4Ze7iltZkgIwaGvrjZtVaniEbsQo2WWA.jpg",
+            "query_width": null,
+            "size": {
+              "width": 350,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://gfx.nrk.no/eql-Y60IpbVS4Ze7iltZkgTNfPmHRYIZSniEbsQo2WWA.jpg",
+            "query_width": null,
+            "size": {
+              "width": 450,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://gfx.nrk.no/eql-Y60IpbVS4Ze7iltZkg0WMwQIkVFjGniEbsQo2WWA.jpg",
+            "query_width": null,
+            "size": {
+              "width": 650,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://gfx.nrk.no/eql-Y60IpbVS4Ze7iltZkgceiIIpPsE3mniEbsQo2WWA.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1000,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://gfx.nrk.no/eql-Y60IpbVS4Ze7iltZkg0I2c1M1sm4OniEbsQo2WWA.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1200,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://gfx.nrk.no/eql-Y60IpbVS4Ze7iltZkgLcN9KcK_rEmniEbsQo2WWA.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1600,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://gfx.nrk.no/eql-Y60IpbVS4Ze7iltZkgVmNPoRHGa56niEbsQo2WWA.jpg",
+            "query_width": null,
+            "size": {
+              "width": 2000,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          }
+        ],
         "is_cover": false,
         "description": "Narve Gilje Nordås fikk panikk under semifinalen",
         "caption": null,

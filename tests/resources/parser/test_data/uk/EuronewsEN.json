@@ -29,15 +29,71 @@
     },
     "images": [
       {
-        "urls": {
-          "384w": "https://static.euronews.com/articles/stories/08/36/82/74/384x216_cmsv2_c8dc7a25-1707-552e-8522-51adf6daaa39-8368274.jpg",
-          "640w": "https://static.euronews.com/articles/stories/08/36/82/74/640x360_cmsv2_c8dc7a25-1707-552e-8522-51adf6daaa39-8368274.jpg",
-          "750w": "https://static.euronews.com/articles/stories/08/36/82/74/750x422_cmsv2_c8dc7a25-1707-552e-8522-51adf6daaa39-8368274.jpg",
-          "828w": "https://static.euronews.com/articles/stories/08/36/82/74/828x466_cmsv2_c8dc7a25-1707-552e-8522-51adf6daaa39-8368274.jpg",
-          "1080w": "https://static.euronews.com/articles/stories/08/36/82/74/1080x608_cmsv2_c8dc7a25-1707-552e-8522-51adf6daaa39-8368274.jpg",
-          "1200w": "https://static.euronews.com/articles/stories/08/36/82/74/1200x675_cmsv2_c8dc7a25-1707-552e-8522-51adf6daaa39-8368274.jpg",
-          "1920w": "https://static.euronews.com/articles/stories/08/36/82/74/1920x1080_cmsv2_c8dc7a25-1707-552e-8522-51adf6daaa39-8368274.jpg"
-        },
+        "versions": [
+          {
+            "url": "https://static.euronews.com/articles/stories/08/36/82/74/384x216_cmsv2_c8dc7a25-1707-552e-8522-51adf6daaa39-8368274.jpg",
+            "query_width": null,
+            "size": {
+              "width": 384,
+              "height": 216
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://static.euronews.com/articles/stories/08/36/82/74/640x360_cmsv2_c8dc7a25-1707-552e-8522-51adf6daaa39-8368274.jpg",
+            "query_width": null,
+            "size": {
+              "width": 640,
+              "height": 360
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://static.euronews.com/articles/stories/08/36/82/74/750x422_cmsv2_c8dc7a25-1707-552e-8522-51adf6daaa39-8368274.jpg",
+            "query_width": null,
+            "size": {
+              "width": 750,
+              "height": 422
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://static.euronews.com/articles/stories/08/36/82/74/828x466_cmsv2_c8dc7a25-1707-552e-8522-51adf6daaa39-8368274.jpg",
+            "query_width": null,
+            "size": {
+              "width": 828,
+              "height": 466
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://static.euronews.com/articles/stories/08/36/82/74/1080x608_cmsv2_c8dc7a25-1707-552e-8522-51adf6daaa39-8368274.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1080,
+              "height": 608
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://static.euronews.com/articles/stories/08/36/82/74/1200x675_cmsv2_c8dc7a25-1707-552e-8522-51adf6daaa39-8368274.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1200,
+              "height": 675
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://static.euronews.com/articles/stories/08/36/82/74/1920x1080_cmsv2_c8dc7a25-1707-552e-8522-51adf6daaa39-8368274.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1920,
+              "height": 1080
+            },
+            "type": "image/jpeg"
+          }
+        ],
         "is_cover": true,
         "description": "Swedish police officer",
         "caption": null,

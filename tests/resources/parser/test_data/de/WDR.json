@@ -63,9 +63,26 @@
     },
     "images": [
       {
-        "urls": {
-          "1x": "https://www1.wdr.de/nachrichten/ruhrgebiet/feuerwehrdemo-essen-104~_v-ARDAustauschformat.jpg"
-        },
+        "versions": [
+          {
+            "url": "https://www1.wdr.de/nachrichten/ruhrgebiet/feuerwehrdemo-essen-104~_v-ARDAustauschformat.jpg",
+            "query_width": "max-width:1900",
+            "size": null,
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www1.wdr.de/nachrichten/ruhrgebiet/feuerwehrdemo-essen-104~_v-TeaserNormal.jpg",
+            "query_width": "max-width:479",
+            "size": null,
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www1.wdr.de/nachrichten/ruhrgebiet/feuerwehrdemo-essen-104~_v-gseaclassicxl.jpg",
+            "query_width": "min-width:1901",
+            "size": null,
+            "type": "image/jpeg"
+          }
+        ],
         "is_cover": false,
         "description": "Feuerwehrleute protestieren gegen höheres Rentenalter",
         "caption": "\"60 bleibt 60\": Feuerwehrleute protestieren in Essen",
@@ -75,9 +92,26 @@
         "position": 340
       },
       {
-        "urls": {
-          "1x": "https://www1.wdr.de/nachrichten/rheinland/feuerwehreinsatz-koeln-unbekannte-substanz-briefumschlag-104~_v-ARDAustauschformat.jpg"
-        },
+        "versions": [
+          {
+            "url": "https://www1.wdr.de/nachrichten/rheinland/feuerwehreinsatz-koeln-unbekannte-substanz-briefumschlag-104~_v-ARDAustauschformat.jpg",
+            "query_width": "max-width:1900",
+            "size": null,
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www1.wdr.de/nachrichten/rheinland/feuerwehreinsatz-koeln-unbekannte-substanz-briefumschlag-104~_v-TeaserNormal.jpg",
+            "query_width": "max-width:479",
+            "size": null,
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www1.wdr.de/nachrichten/rheinland/feuerwehreinsatz-koeln-unbekannte-substanz-briefumschlag-104~_v-gseaclassicxl.jpg",
+            "query_width": "min-width:1901",
+            "size": null,
+            "type": "image/jpeg"
+          }
+        ],
         "is_cover": false,
         "description": "Feuerwehrleute in Schutzkleidung und mit Sauerstoffgeräten.",
         "caption": "Dicke Ausrüstung und schweres Gerät",
@@ -87,9 +121,26 @@
         "position": 397
       },
       {
-        "urls": {
-          "1x": "https://www1.wdr.de/nachrichten/feuerwehreinsatz-atemschutz-102~_v-ARDAustauschformat.jpg"
-        },
+        "versions": [
+          {
+            "url": "https://www1.wdr.de/nachrichten/feuerwehreinsatz-atemschutz-102~_v-ARDAustauschformat.jpg",
+            "query_width": "max-width:1900",
+            "size": null,
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www1.wdr.de/nachrichten/feuerwehreinsatz-atemschutz-102~_v-TeaserNormal.jpg",
+            "query_width": "max-width:479",
+            "size": null,
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www1.wdr.de/nachrichten/feuerwehreinsatz-atemschutz-102~_v-gseaclassicxl.jpg",
+            "query_width": "min-width:1901",
+            "size": null,
+            "type": "image/jpeg"
+          }
+        ],
         "is_cover": false,
         "description": "Feuerwehrmänner mit Atemschutzmasken",
         "caption": "Einsatz mit Atemschutzmasken",
@@ -99,9 +150,26 @@
         "position": 496
       },
       {
-        "urls": {
-          "1x": "https://www1.wdr.de/nachrichten/ruhrgebiet/mehrere-tote-seniorenheim-in-bedburg-hau-brennt-110~_v-ARDAustauschformat.jpg"
-        },
+        "versions": [
+          {
+            "url": "https://www1.wdr.de/nachrichten/ruhrgebiet/mehrere-tote-seniorenheim-in-bedburg-hau-brennt-110~_v-ARDAustauschformat.jpg",
+            "query_width": "max-width:1900",
+            "size": null,
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www1.wdr.de/nachrichten/ruhrgebiet/mehrere-tote-seniorenheim-in-bedburg-hau-brennt-110~_v-TeaserNormal.jpg",
+            "query_width": "max-width:479",
+            "size": null,
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www1.wdr.de/nachrichten/ruhrgebiet/mehrere-tote-seniorenheim-in-bedburg-hau-brennt-110~_v-gseaclassicxl.jpg",
+            "query_width": "min-width:1901",
+            "size": null,
+            "type": "image/jpeg"
+          }
+        ],
         "is_cover": false,
         "description": "Auf dem Foto sind Feuerwehrleute, die jemanden auf einer Trage abtransportieren.",
         "caption": "Belastende Erlebnisse gehören zum Arbeitsalltag",

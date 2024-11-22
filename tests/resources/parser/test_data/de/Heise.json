@@ -30,12 +30,17 @@
     },
     "images": [
       {
-        "urls": {
-          "336w": "https://heise.cloudimg.io/width/336/q70.png-lossy-70.webp-lossy-70.foil1/_www-heise-de_/imgs/18/4/5/7/5/8/7/7/2024-03-12-Bing_Designer-Phishing-2-3840px-82adf0aebe8ed409.png",
-          "610w": "https://heise.cloudimg.io/width/610/q70.png-lossy-70.webp-lossy-70.foil1/_www-heise-de_/imgs/18/4/5/7/5/8/7/7/2024-03-12-Bing_Designer-Phishing-2-3840px-82adf0aebe8ed409.png",
-          "1008w": "https://heise.cloudimg.io/width/1008/q70.png-lossy-70.webp-lossy-70.foil1/_www-heise-de_/imgs/18/4/5/7/5/8/7/7/2024-03-12-Bing_Designer-Phishing-2-3840px-82adf0aebe8ed409.png",
-          "1220w": "https://heise.cloudimg.io/width/1220/q70.png-lossy-70.webp-lossy-70.foil1/_www-heise-de_/imgs/18/4/5/7/5/8/7/7/2024-03-12-Bing_Designer-Phishing-2-3840px-82adf0aebe8ed409.png"
-        },
+        "versions": [
+          {
+            "url": "https://heise.cloudimg.io/width/610/q85.png-lossy-85.webp-lossy-85.foil1/_www-heise-de_/imgs/18/4/5/7/5/8/7/7/2024-03-12-Bing_Designer-Phishing-2-3840px-82adf0aebe8ed409.png",
+            "query_width": null,
+            "size": {
+              "width": 610,
+              "height": 342
+            },
+            "type": "image/png"
+          }
+        ],
         "is_cover": true,
         "description": "Krimineller angelt Kreditkartendaten",
         "caption": "Online-Kriminelle phishen nach monetarisierbaren Informationen.",

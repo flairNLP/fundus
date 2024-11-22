@@ -146,13 +146,53 @@
     },
     "images": [
       {
-        "urls": {
-          "400w": "https://i.insider.com/65c677fb917a1dae0245235f?width=400&format=jpeg&auto=webp",
-          "500w": "https://i.insider.com/65c677fb917a1dae0245235f?width=500&format=jpeg&auto=webp",
-          "700w": "https://i.insider.com/65c677fb917a1dae0245235f?width=700&format=jpeg&auto=webp",
-          "1000w": "https://i.insider.com/65c677fb917a1dae0245235f?width=1000&format=jpeg&auto=webp",
-          "1300w": "https://i.insider.com/65c677fb917a1dae0245235f?width=1300&format=jpeg&auto=webp"
-        },
+        "versions": [
+          {
+            "url": "https://i.insider.com/65c677fb917a1dae0245235f?width=400&format=jpeg&auto=webp",
+            "query_width": null,
+            "size": {
+              "width": 400,
+              "height": 0
+            },
+            "type": null
+          },
+          {
+            "url": "https://i.insider.com/65c677fb917a1dae0245235f?width=500&format=jpeg&auto=webp",
+            "query_width": null,
+            "size": {
+              "width": 500,
+              "height": 0
+            },
+            "type": null
+          },
+          {
+            "url": "https://i.insider.com/65c677fb917a1dae0245235f?width=700&format=jpeg&auto=webp",
+            "query_width": null,
+            "size": {
+              "width": 700,
+              "height": 0
+            },
+            "type": null
+          },
+          {
+            "url": "https://i.insider.com/65c677fb917a1dae0245235f?width=1000&format=jpeg&auto=webp",
+            "query_width": null,
+            "size": {
+              "width": 1000,
+              "height": 0
+            },
+            "type": null
+          },
+          {
+            "url": "https://i.insider.com/65c677fb917a1dae0245235f?width=1300&format=jpeg&auto=webp",
+            "query_width": null,
+            "size": {
+              "width": 1300,
+              "height": 0
+            },
+            "type": null
+          }
+        ],
         "is_cover": true,
         "description": "Zendaya attends a 2024 \"Dune: Part Two\" photocall in Mexico City.",
         "caption": null,
@@ -160,9 +200,17 @@
         "position": 498
       },
       {
-        "urls": {
-          "1x": "https://i.insider.com/65ccde9af533b039a88380ae?width=600&format=jpeg&auto=webp"
-        },
+        "versions": [
+          {
+            "url": "https://i.insider.com/65ccde9af533b039a88380ae?width=600&format=jpeg&auto=webp",
+            "query_width": null,
+            "size": {
+              "width": 600,
+              "height": 0
+            },
+            "type": null
+          }
+        ],
         "is_cover": false,
         "description": null,
         "caption": null,
@@ -170,9 +218,17 @@
         "position": 599
       },
       {
-        "urls": {
-          "1x": "https://i.insider.com/65c53a7043bb77284ba512fc?width=600&format=jpeg&auto=webp"
-        },
+        "versions": [
+          {
+            "url": "https://i.insider.com/65c53a7043bb77284ba512fc?width=600&format=jpeg&auto=webp",
+            "query_width": null,
+            "size": {
+              "width": 600,
+              "height": 0
+            },
+            "type": null
+          }
+        ],
         "is_cover": false,
         "description": null,
         "caption": null,
@@ -180,9 +236,17 @@
         "position": 621
       },
       {
-        "urls": {
-          "1x": "https://i.insider.com/65c5311343bb77284ba50c4f?width=600&format=jpeg&auto=webp"
-        },
+        "versions": [
+          {
+            "url": "https://i.insider.com/65c5311343bb77284ba50c4f?width=600&format=jpeg&auto=webp",
+            "query_width": null,
+            "size": {
+              "width": 600,
+              "height": 0
+            },
+            "type": null
+          }
+        ],
         "is_cover": false,
         "description": null,
         "caption": null,
@@ -190,9 +254,17 @@
         "position": 641
       },
       {
-        "urls": {
-          "1x": "https://i.insider.com/65c53af96fcb546d2d4da713?width=600&format=jpeg&auto=webp"
-        },
+        "versions": [
+          {
+            "url": "https://i.insider.com/65c53af96fcb546d2d4da713?width=600&format=jpeg&auto=webp",
+            "query_width": null,
+            "size": {
+              "width": 600,
+              "height": 0
+            },
+            "type": null
+          }
+        ],
         "is_cover": false,
         "description": null,
         "caption": null,
@@ -200,9 +272,17 @@
         "position": 662
       },
       {
-        "urls": {
-          "1x": "https://i.insider.com/65ccde50f533b039a8838049?width=600&format=jpeg&auto=webp"
-        },
+        "versions": [
+          {
+            "url": "https://i.insider.com/65ccde50f533b039a8838049?width=600&format=jpeg&auto=webp",
+            "query_width": null,
+            "size": {
+              "width": 600,
+              "height": 0
+            },
+            "type": null
+          }
+        ],
         "is_cover": false,
         "description": null,
         "caption": null,
@@ -210,9 +290,17 @@
         "position": 682
       },
       {
-        "urls": {
-          "1x": "https://i.insider.com/65c5322a917a1dae02449ecd?width=600&format=jpeg&auto=webp"
-        },
+        "versions": [
+          {
+            "url": "https://i.insider.com/65c5322a917a1dae02449ecd?width=600&format=jpeg&auto=webp",
+            "query_width": null,
+            "size": {
+              "width": 600,
+              "height": 0
+            },
+            "type": null
+          }
+        ],
         "is_cover": false,
         "description": null,
         "caption": null,
@@ -220,9 +308,17 @@
         "position": 703
       },
       {
-        "urls": {
-          "1x": "https://i.insider.com/6537e5e9356802a56be23286?width=600&format=jpeg&auto=webp"
-        },
+        "versions": [
+          {
+            "url": "https://i.insider.com/6537e5e9356802a56be23286?width=600&format=jpeg&auto=webp",
+            "query_width": null,
+            "size": {
+              "width": 600,
+              "height": 0
+            },
+            "type": null
+          }
+        ],
         "is_cover": false,
         "description": null,
         "caption": null,
@@ -230,9 +326,17 @@
         "position": 723
       },
       {
-        "urls": {
-          "1x": "https://i.insider.com/65c531a76fcb546d2d4da08a?width=600&format=jpeg&auto=webp"
-        },
+        "versions": [
+          {
+            "url": "https://i.insider.com/65c531a76fcb546d2d4da08a?width=600&format=jpeg&auto=webp",
+            "query_width": null,
+            "size": {
+              "width": 600,
+              "height": 0
+            },
+            "type": null
+          }
+        ],
         "is_cover": false,
         "description": null,
         "caption": null,
@@ -240,9 +344,17 @@
         "position": 743
       },
       {
-        "urls": {
-          "1x": "https://i.insider.com/65ccdde894aa8ee8e84b36e0?width=600&format=jpeg&auto=webp"
-        },
+        "versions": [
+          {
+            "url": "https://i.insider.com/65ccdde894aa8ee8e84b36e0?width=600&format=jpeg&auto=webp",
+            "query_width": null,
+            "size": {
+              "width": 600,
+              "height": 0
+            },
+            "type": null
+          }
+        ],
         "is_cover": false,
         "description": null,
         "caption": null,
@@ -250,9 +362,17 @@
         "position": 764
       },
       {
-        "urls": {
-          "1x": "https://i.insider.com/65c53e49917a1dae0244a77c?width=600&format=jpeg&auto=webp"
-        },
+        "versions": [
+          {
+            "url": "https://i.insider.com/65c53e49917a1dae0244a77c?width=600&format=jpeg&auto=webp",
+            "query_width": null,
+            "size": {
+              "width": 600,
+              "height": 0
+            },
+            "type": null
+          }
+        ],
         "is_cover": false,
         "description": null,
         "caption": null,
@@ -260,9 +380,17 @@
         "position": 784
       },
       {
-        "urls": {
-          "1x": "https://i.insider.com/65c5426f6fcb546d2d4dac53?width=600&format=jpeg&auto=webp"
-        },
+        "versions": [
+          {
+            "url": "https://i.insider.com/65c5426f6fcb546d2d4dac53?width=600&format=jpeg&auto=webp",
+            "query_width": null,
+            "size": {
+              "width": 600,
+              "height": 0
+            },
+            "type": null
+          }
+        ],
         "is_cover": false,
         "description": null,
         "caption": null,
@@ -270,9 +398,17 @@
         "position": 804
       },
       {
-        "urls": {
-          "1x": "https://i.insider.com/65c545676fcb546d2d4daf26?width=600&format=jpeg&auto=webp"
-        },
+        "versions": [
+          {
+            "url": "https://i.insider.com/65c545676fcb546d2d4daf26?width=600&format=jpeg&auto=webp",
+            "query_width": null,
+            "size": {
+              "width": 600,
+              "height": 0
+            },
+            "type": null
+          }
+        ],
         "is_cover": false,
         "description": null,
         "caption": null,
@@ -280,9 +416,17 @@
         "position": 825
       },
       {
-        "urls": {
-          "1x": "https://i.insider.com/65c541116fcb546d2d4daafd?width=600&format=jpeg&auto=webp"
-        },
+        "versions": [
+          {
+            "url": "https://i.insider.com/65c541116fcb546d2d4daafd?width=600&format=jpeg&auto=webp",
+            "query_width": null,
+            "size": {
+              "width": 600,
+              "height": 0
+            },
+            "type": null
+          }
+        ],
         "is_cover": false,
         "description": null,
         "caption": null,

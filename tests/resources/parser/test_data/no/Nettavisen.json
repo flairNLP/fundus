@@ -51,15 +51,71 @@
     },
     "images": [
       {
-        "urls": {
-          "280w": "https://g.acdn.no/api/reflex/v1/image/resize/280/https%3A%2F%2Fg.acdn.no%2Fobscura%2FAPI%2Fimage%2Fr1%2Fece5%2Fa%2F1728985679000%2Fnett%2F2024%2F10%2F15%2F11%2FMy%2Bproject%2B%25281%2529.jpeg",
-          "480w": "https://g.acdn.no/api/reflex/v1/image/resize/480/https%3A%2F%2Fg.acdn.no%2Fobscura%2FAPI%2Fimage%2Fr1%2Fece5%2Fa%2F1728985679000%2Fnett%2F2024%2F10%2F15%2F11%2FMy%2Bproject%2B%25281%2529.jpeg",
-          "680w": "https://g.acdn.no/api/reflex/v1/image/resize/680/https%3A%2F%2Fg.acdn.no%2Fobscura%2FAPI%2Fimage%2Fr1%2Fece5%2Fa%2F1728985679000%2Fnett%2F2024%2F10%2F15%2F11%2FMy%2Bproject%2B%25281%2529.jpeg",
-          "880w": "https://g.acdn.no/api/reflex/v1/image/resize/880/https%3A%2F%2Fg.acdn.no%2Fobscura%2FAPI%2Fimage%2Fr1%2Fece5%2Fa%2F1728985679000%2Fnett%2F2024%2F10%2F15%2F11%2FMy%2Bproject%2B%25281%2529.jpeg",
-          "1080w": "https://g.acdn.no/api/reflex/v1/image/resize/1080/https%3A%2F%2Fg.acdn.no%2Fobscura%2FAPI%2Fimage%2Fr1%2Fece5%2Fa%2F1728985679000%2Fnett%2F2024%2F10%2F15%2F11%2FMy%2Bproject%2B%25281%2529.jpeg",
-          "1280w": "https://g.acdn.no/api/reflex/v1/image/resize/1280/https%3A%2F%2Fg.acdn.no%2Fobscura%2FAPI%2Fimage%2Fr1%2Fece5%2Fa%2F1728985679000%2Fnett%2F2024%2F10%2F15%2F11%2FMy%2Bproject%2B%25281%2529.jpeg",
-          "1680w": "https://g.acdn.no/api/reflex/v1/image/resize/1680/https%3A%2F%2Fg.acdn.no%2Fobscura%2FAPI%2Fimage%2Fr1%2Fece5%2Fa%2F1728985679000%2Fnett%2F2024%2F10%2F15%2F11%2FMy%2Bproject%2B%25281%2529.jpeg"
-        },
+        "versions": [
+          {
+            "url": "https://g.acdn.no/api/reflex/v1/image/resize/280/https%3A%2F%2Fg.acdn.no%2Fobscura%2FAPI%2Fimage%2Fr1%2Fece5%2Fa%2F1728985679000%2Fnett%2F2024%2F10%2F15%2F11%2FMy%2Bproject%2B%25281%2529.jpeg",
+            "query_width": null,
+            "size": {
+              "width": 280,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://g.acdn.no/api/reflex/v1/image/resize/480/https%3A%2F%2Fg.acdn.no%2Fobscura%2FAPI%2Fimage%2Fr1%2Fece5%2Fa%2F1728985679000%2Fnett%2F2024%2F10%2F15%2F11%2FMy%2Bproject%2B%25281%2529.jpeg",
+            "query_width": null,
+            "size": {
+              "width": 480,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://g.acdn.no/api/reflex/v1/image/resize/680/https%3A%2F%2Fg.acdn.no%2Fobscura%2FAPI%2Fimage%2Fr1%2Fece5%2Fa%2F1728985679000%2Fnett%2F2024%2F10%2F15%2F11%2FMy%2Bproject%2B%25281%2529.jpeg",
+            "query_width": null,
+            "size": {
+              "width": 680,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://g.acdn.no/api/reflex/v1/image/resize/880/https%3A%2F%2Fg.acdn.no%2Fobscura%2FAPI%2Fimage%2Fr1%2Fece5%2Fa%2F1728985679000%2Fnett%2F2024%2F10%2F15%2F11%2FMy%2Bproject%2B%25281%2529.jpeg",
+            "query_width": null,
+            "size": {
+              "width": 880,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://g.acdn.no/api/reflex/v1/image/resize/1080/https%3A%2F%2Fg.acdn.no%2Fobscura%2FAPI%2Fimage%2Fr1%2Fece5%2Fa%2F1728985679000%2Fnett%2F2024%2F10%2F15%2F11%2FMy%2Bproject%2B%25281%2529.jpeg",
+            "query_width": null,
+            "size": {
+              "width": 1080,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://g.acdn.no/api/reflex/v1/image/resize/1280/https%3A%2F%2Fg.acdn.no%2Fobscura%2FAPI%2Fimage%2Fr1%2Fece5%2Fa%2F1728985679000%2Fnett%2F2024%2F10%2F15%2F11%2FMy%2Bproject%2B%25281%2529.jpeg",
+            "query_width": null,
+            "size": {
+              "width": 1280,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://g.acdn.no/api/reflex/v1/image/resize/1680/https%3A%2F%2Fg.acdn.no%2Fobscura%2FAPI%2Fimage%2Fr1%2Fece5%2Fa%2F1728985679000%2Fnett%2F2024%2F10%2F15%2F11%2FMy%2Bproject%2B%25281%2529.jpeg",
+            "query_width": null,
+            "size": {
+              "width": 1680,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          }
+        ],
         "is_cover": true,
         "description": null,
         "caption": "BESØK: Tone Damli fikk besøk av manageren sin David Eriksen da hun fødte datteren.",

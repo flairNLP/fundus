@@ -47,13 +47,53 @@
     },
     "images": [
       {
-        "urls": {
-          "448w": "https://www.fr.de/assets/images/34/432/34432223-mann-mit-schlimmem-heuschnupfen-2n4Qnu88oYb9.jpg",
-          "768w": "https://www.fr.de/assets/images/34/432/34432223-mann-mit-schlimmem-heuschnupfen-2n4Qnu88oY73.jpg",
-          "1100w": "https://www.fr.de/assets/images/34/432/34432223-mann-mit-schlimmem-heuschnupfen-2n4Qnu88oYBG.jpg",
-          "1408w": "https://www.fr.de/assets/images/34/432/34432223-mann-mit-schlimmem-heuschnupfen-2n4Qnu88oY7d.jpg",
-          "1600w": "https://www.fr.de/assets/images/34/432/34432223-mann-mit-schlimmem-heuschnupfen-2n4Qnu88oYPH.jpg"
-        },
+        "versions": [
+          {
+            "url": "https://www.fr.de/assets/images/34/432/34432223-mann-mit-schlimmem-heuschnupfen-2n4Qnu88oYb9.jpg",
+            "query_width": null,
+            "size": {
+              "width": 448,
+              "height": 256
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.fr.de/assets/images/34/432/34432223-mann-mit-schlimmem-heuschnupfen-2n4Qnu88oY73.jpg",
+            "query_width": null,
+            "size": {
+              "width": 768,
+              "height": 438
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.fr.de/assets/images/34/432/34432223-mann-mit-schlimmem-heuschnupfen-2n4Qnu88oYBG.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1100,
+              "height": 628
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.fr.de/assets/images/34/432/34432223-mann-mit-schlimmem-heuschnupfen-2n4Qnu88oY7d.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1408,
+              "height": 804
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.fr.de/assets/images/34/432/34432223-mann-mit-schlimmem-heuschnupfen-2n4Qnu88oYPH.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1600,
+              "height": 913
+            },
+            "type": "image/jpeg"
+          }
+        ],
         "is_cover": false,
         "description": "Mann mit schlimmem Heuschnupfen.",
         "caption": "Ambrosia kommt eigentlich aus Nordamerika und ist für Europäer gefährlich - besonders bei Allergikern. © Montage",
@@ -63,13 +103,53 @@
         "position": 260
       },
       {
-        "urls": {
-          "448w": "https://www.fr.de/assets/images/34/34/34034708-eine-schwarze-tollkirsche-3lkrgihhpWb6.jpg",
-          "768w": "https://www.fr.de/assets/images/34/34/34034708-eine-schwarze-tollkirsche-3lkrgihhpW70.jpg",
-          "1100w": "https://www.fr.de/assets/images/34/34/34034708-eine-schwarze-tollkirsche-3lkrgihhpWfe.jpg",
-          "1408w": "https://www.fr.de/assets/images/34/34/34034708-eine-schwarze-tollkirsche-3lkrgihhpW7a.jpg",
-          "1600w": "https://www.fr.de/assets/images/34/34/34034708-eine-schwarze-tollkirsche-3lkrgihhpWMH.jpg"
-        },
+        "versions": [
+          {
+            "url": "https://www.fr.de/assets/images/34/34/34034708-eine-schwarze-tollkirsche-3lkrgihhpWb6.jpg",
+            "query_width": null,
+            "size": {
+              "width": 448,
+              "height": 299
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.fr.de/assets/images/34/34/34034708-eine-schwarze-tollkirsche-3lkrgihhpW70.jpg",
+            "query_width": null,
+            "size": {
+              "width": 768,
+              "height": 513
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.fr.de/assets/images/34/34/34034708-eine-schwarze-tollkirsche-3lkrgihhpWfe.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1100,
+              "height": 734
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.fr.de/assets/images/34/34/34034708-eine-schwarze-tollkirsche-3lkrgihhpW7a.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1408,
+              "height": 940
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.fr.de/assets/images/34/34/34034708-eine-schwarze-tollkirsche-3lkrgihhpWMH.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1600,
+              "height": 1068
+            },
+            "type": "image/jpeg"
+          }
+        ],
         "is_cover": false,
         "description": "Eine schwarze Tollkirsche",
         "caption": null,

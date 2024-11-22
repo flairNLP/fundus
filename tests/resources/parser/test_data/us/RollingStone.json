@@ -25,10 +25,26 @@
     },
     "images": [
       {
-        "urls": {
-          "300w": "https://www.rollingstone.com/wp-content/uploads/2024/04/GettyImages-2007041033.jpg?w=1581&h=1054&crop=1&resize=300%2C200",
-          "6000w": "https://www.rollingstone.com/wp-content/uploads/2024/04/GettyImages-2007041033.jpg?w=1581&h=1054&crop=1"
-        },
+        "versions": [
+          {
+            "url": "https://www.rollingstone.com/wp-content/uploads/2024/04/GettyImages-2007041033.jpg?w=1581&h=1054&crop=1&resize=300%2C200",
+            "query_width": null,
+            "size": {
+              "width": 300,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.rollingstone.com/wp-content/uploads/2024/04/GettyImages-2007041033.jpg?w=1581&h=1054&crop=1",
+            "query_width": null,
+            "size": {
+              "width": 6000,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          }
+        ],
         "is_cover": true,
         "description": "LAS VEGAS, NV - FEBRUARY 11: Donna Kelce and Taylor Swift celebrate after Super Bowl LVIII against the San Francisco 49ers at Allegiant Stadium on February 11, 2024 in Las Vegas, NV. (Photo by Perry Knotts/Getty Images)",
         "caption": "Donna Kelce and Taylor Swift celebrate after Super Bowl LVIII.",
@@ -80,10 +96,26 @@
     },
     "images": [
       {
-        "urls": {
-          "300w": "https://www.rollingstone.com/wp-content/uploads/2024/08/what_an_american_crime_film_can_teach_about_doing_whats_right_not_whats_easy-.jpg?w=1581&h=1054&crop=1&resize=300%2C200",
-          "3600w": "https://www.rollingstone.com/wp-content/uploads/2024/08/what_an_american_crime_film_can_teach_about_doing_whats_right_not_whats_easy-.jpg?w=1581&h=1054&crop=1"
-        },
+        "versions": [
+          {
+            "url": "https://www.rollingstone.com/wp-content/uploads/2024/08/what_an_american_crime_film_can_teach_about_doing_whats_right_not_whats_easy-.jpg?w=1581&h=1054&crop=1&resize=300%2C200",
+            "query_width": null,
+            "size": {
+              "width": 300,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.rollingstone.com/wp-content/uploads/2024/08/what_an_american_crime_film_can_teach_about_doing_whats_right_not_whats_easy-.jpg?w=1581&h=1054&crop=1",
+            "query_width": null,
+            "size": {
+              "width": 3600,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          }
+        ],
         "is_cover": true,
         "description": "Stock Adobe",
         "caption": null,

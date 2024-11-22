@@ -54,11 +54,62 @@
     },
     "images": [
       {
-        "urls": {
-          "600w": "https://img.sparknews.funkemedien.de/242348270/242348270_1715851663_v16_9_600.jpeg",
-          "1200w": "https://img.sparknews.funkemedien.de/242348270/242348270_1715851663_v16_9_1200.jpeg",
-          "1600w": "https://img.sparknews.funkemedien.de/242348270/242348270_1715851663_v16_9_1600.jpeg"
-        },
+        "versions": [
+          {
+            "url": "https://img.sparknews.funkemedien.de/242348270/242348270_1715851663_v16_9_600.jpeg",
+            "query_width": null,
+            "size": {
+              "width": 600,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://img.sparknews.funkemedien.de/242348270/242348270_1715851663_v16_9_600.webp",
+            "query_width": null,
+            "size": {
+              "width": 600,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://img.sparknews.funkemedien.de/242348270/242348270_1715851663_v16_9_1200.jpeg",
+            "query_width": null,
+            "size": {
+              "width": 1200,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://img.sparknews.funkemedien.de/242348270/242348270_1715851663_v16_9_1200.webp",
+            "query_width": null,
+            "size": {
+              "width": 1200,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://img.sparknews.funkemedien.de/242348270/242348270_1715851663_v16_9_1600.jpeg",
+            "query_width": null,
+            "size": {
+              "width": 1600,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://img.sparknews.funkemedien.de/242348270/242348270_1715851663_v16_9_1600.webp",
+            "query_width": null,
+            "size": {
+              "width": 1600,
+              "height": 0
+            },
+            "type": "image/webp"
+          }
+        ],
         "is_cover": true,
         "description": "Bereit für das «Jahrhundertkampf»: Tyson Fury (l) und Oleksandr Usyk.",
         "caption": "Bereit für das «Jahrhundertkampf»: Tyson Fury (l) und Oleksandr Usyk.",

@@ -29,9 +29,14 @@
     },
     "images": [
       {
-        "urls": {
-          "1x": "http://www.people.com.cn/img/2020wbc/imgs/icon_type.png"
-        },
+        "versions": [
+          {
+            "url": "http://www.people.com.cn/img/2020wbc/imgs/icon_type.png",
+            "query_width": null,
+            "size": null,
+            "type": "image/png"
+          }
+        ],
         "is_cover": true,
         "description": null,
         "caption": null,

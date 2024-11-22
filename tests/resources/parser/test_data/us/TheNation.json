@@ -97,16 +97,80 @@
     },
     "images": [
       {
-        "urls": {
-          "168w": "https://www.thenation.com/wp-content/uploads/2024/01/AP24010820434600-168x106.jpg",
-          "275w": "https://www.thenation.com/wp-content/uploads/2024/01/AP24010820434600-275x173.jpg",
-          "340w": "https://www.thenation.com/wp-content/uploads/2024/01/AP24010820434600-340x215.jpg",
-          "382w": "https://www.thenation.com/wp-content/uploads/2024/01/AP24010820434600-382x240.jpg",
-          "768w": "https://www.thenation.com/wp-content/uploads/2024/01/AP24010820434600-768x484.jpg",
-          "793w": "https://www.thenation.com/wp-content/uploads/2024/01/AP24010820434600-793x500.jpg",
-          "810w": "https://www.thenation.com/wp-content/uploads/2024/01/AP24010820434600-810x510.jpg",
-          "1440w": "https://www.thenation.com/wp-content/uploads/2024/01/AP24010820434600.jpg"
-        },
+        "versions": [
+          {
+            "url": "https://www.thenation.com/wp-content/uploads/2024/01/AP24010820434600-168x106.jpg",
+            "query_width": null,
+            "size": {
+              "width": 168,
+              "height": 106
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.thenation.com/wp-content/uploads/2024/01/AP24010820434600-275x173.jpg",
+            "query_width": null,
+            "size": {
+              "width": 275,
+              "height": 173
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.thenation.com/wp-content/uploads/2024/01/AP24010820434600-340x215.jpg",
+            "query_width": null,
+            "size": {
+              "width": 340,
+              "height": 214
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.thenation.com/wp-content/uploads/2024/01/AP24010820434600-382x240.jpg",
+            "query_width": null,
+            "size": {
+              "width": 382,
+              "height": 241
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.thenation.com/wp-content/uploads/2024/01/AP24010820434600-768x484.jpg",
+            "query_width": null,
+            "size": {
+              "width": 768,
+              "height": 484
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.thenation.com/wp-content/uploads/2024/01/AP24010820434600-793x500.jpg",
+            "query_width": null,
+            "size": {
+              "width": 793,
+              "height": 499
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.thenation.com/wp-content/uploads/2024/01/AP24010820434600-810x510.jpg",
+            "query_width": null,
+            "size": {
+              "width": 810,
+              "height": 510
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.thenation.com/wp-content/uploads/2024/01/AP24010820434600.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1440,
+              "height": 907
+            },
+            "type": "image/jpeg"
+          }
+        ],
         "is_cover": true,
         "description": "Republican presidential candidate former New Jersey Gov. Chris Christie announces he is dropping out of the race during a town hall campaign event Wednesday, Jan. 10, 2024, in Windham, N.H. (AP Photo/Robert F. Bukaty)",
         "caption": "Chris Christie announces he is dropping out of the race during a town hall campaign event Wednesday, January 10, 2024, in Windham, N.H.",

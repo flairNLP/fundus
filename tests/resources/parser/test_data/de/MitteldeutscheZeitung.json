@@ -30,13 +30,53 @@
     },
     "images": [
       {
-        "urls": {
-          "160w": "https://bmg-images.forward-publishing.io/2024/04/30/b3c40bdd-3f8c-4a16-ba06-f95c78d9b083.jpeg?w=160&auto=format",
-          "320w": "https://bmg-images.forward-publishing.io/2024/04/30/b3c40bdd-3f8c-4a16-ba06-f95c78d9b083.jpeg?w=320&auto=format",
-          "640w": "https://bmg-images.forward-publishing.io/2024/04/30/b3c40bdd-3f8c-4a16-ba06-f95c78d9b083.jpeg?w=640&auto=format",
-          "1024w": "https://bmg-images.forward-publishing.io/2024/04/30/b3c40bdd-3f8c-4a16-ba06-f95c78d9b083.jpeg?w=1024&auto=format",
-          "2048w": "https://bmg-images.forward-publishing.io/2024/04/30/b3c40bdd-3f8c-4a16-ba06-f95c78d9b083.jpeg?w=2048&auto=format"
-        },
+        "versions": [
+          {
+            "url": "https://bmg-images.forward-publishing.io/2024/04/30/b3c40bdd-3f8c-4a16-ba06-f95c78d9b083.jpeg?w=160&auto=format",
+            "query_width": null,
+            "size": {
+              "width": 160,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://bmg-images.forward-publishing.io/2024/04/30/b3c40bdd-3f8c-4a16-ba06-f95c78d9b083.jpeg?w=320&auto=format",
+            "query_width": null,
+            "size": {
+              "width": 320,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://bmg-images.forward-publishing.io/2024/04/30/b3c40bdd-3f8c-4a16-ba06-f95c78d9b083.jpeg?w=640&auto=format",
+            "query_width": null,
+            "size": {
+              "width": 640,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://bmg-images.forward-publishing.io/2024/04/30/b3c40bdd-3f8c-4a16-ba06-f95c78d9b083.jpeg?w=1024&auto=format",
+            "query_width": null,
+            "size": {
+              "width": 1024,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://bmg-images.forward-publishing.io/2024/04/30/b3c40bdd-3f8c-4a16-ba06-f95c78d9b083.jpeg?w=2048&auto=format",
+            "query_width": null,
+            "size": {
+              "width": 2048,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          }
+        ],
         "is_cover": true,
         "description": "Demonstration im September 2022 nach dem Tod der 22-jährigen Mahsa Amini.",
         "caption": "Demonstration im September 2022 nach dem Tod der 22-jährigen Mahsa Amini.",

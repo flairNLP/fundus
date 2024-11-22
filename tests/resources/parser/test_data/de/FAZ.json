@@ -105,10 +105,62 @@
     },
     "images": [
       {
-        "urls": {
-          "1000w": "https://media0.faz.net/ppmedia/w1000/aktuell/4099641140/1.9655246/1900x850/streng-abgeschirmter-komplex.jpg.webp",
-          "1240w": "https://media0.faz.net/ppmedia/w1240/aktuell/4099641140/1.9655246/1900x850/streng-abgeschirmter-komplex.jpg.webp"
-        },
+        "versions": [
+          {
+            "url": "https://media0.faz.net/ppmedia/w450/aktuell/4099641140/1.9655246/16x9/streng-abgeschirmter-komplex.jpg.webp",
+            "query_width": "max-width:999",
+            "size": {
+              "width": 450,
+              "height": 253
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://media0.faz.net/ppmedia/w750/aktuell/4099641140/1.9655246/16x9/streng-abgeschirmter-komplex.jpg.webp",
+            "query_width": "max-width:999",
+            "size": {
+              "width": 750,
+              "height": 422
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://media0.faz.net/ppmedia/w1000/aktuell/4099641140/1.9655246/1900x850/streng-abgeschirmter-komplex.jpg.webp",
+            "query_width": "min-width:1000",
+            "size": {
+              "width": 1000,
+              "height": 447
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://media0.faz.net/ppmedia/w1000/aktuell/4099641140/1.9655246/16x9/streng-abgeschirmter-komplex.jpg.webp",
+            "query_width": "max-width:999",
+            "size": {
+              "width": 1000,
+              "height": 562
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://media0.faz.net/ppmedia/w1240/aktuell/4099641140/1.9655246/1900x850/streng-abgeschirmter-komplex.jpg.webp",
+            "query_width": "min-width:1000",
+            "size": {
+              "width": 1240,
+              "height": 555
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://media0.faz.net/ppmedia/w1240/aktuell/4099641140/1.9655246/16x9/streng-abgeschirmter-komplex.jpg.webp",
+            "query_width": null,
+            "size": {
+              "width": 1240,
+              "height": 804
+            },
+            "type": "image/webp"
+          }
+        ],
         "is_cover": true,
         "description": "Streng abgeschirmter Komplex: Russlands Vertretung bei den Vereinten Nationen in Genf",
         "caption": null,

@@ -139,11 +139,62 @@
     },
     "images": [
       {
-        "urls": {
-          "600w": "https://img.sparknews.funkemedien.de/242202440/242202440_1714317576_v16_9_600.jpeg",
-          "1200w": "https://img.sparknews.funkemedien.de/242202440/242202440_1714317576_v16_9_1200.jpeg",
-          "1600w": "https://img.sparknews.funkemedien.de/242202440/242202440_1714317576_v16_9_1600.jpeg"
-        },
+        "versions": [
+          {
+            "url": "https://img.sparknews.funkemedien.de/242202440/242202440_1714317576_v16_9_600.jpeg",
+            "query_width": null,
+            "size": {
+              "width": 600,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://img.sparknews.funkemedien.de/242202440/242202440_1714317576_v16_9_600.webp",
+            "query_width": null,
+            "size": {
+              "width": 600,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://img.sparknews.funkemedien.de/242202440/242202440_1714317576_v16_9_1200.jpeg",
+            "query_width": null,
+            "size": {
+              "width": 1200,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://img.sparknews.funkemedien.de/242202440/242202440_1714317576_v16_9_1200.webp",
+            "query_width": null,
+            "size": {
+              "width": 1200,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://img.sparknews.funkemedien.de/242202440/242202440_1714317576_v16_9_1600.jpeg",
+            "query_width": null,
+            "size": {
+              "width": 1600,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://img.sparknews.funkemedien.de/242202440/242202440_1714317576_v16_9_1600.webp",
+            "query_width": null,
+            "size": {
+              "width": 1600,
+              "height": 0
+            },
+            "type": "image/webp"
+          }
+        ],
         "is_cover": true,
         "description": "Bernard Koech hat den Hamburg Marathon 2024 als schnellester Mann gewonnen. Schon im Vorjahr schaffte es der Kenianer auf den ersten Platz.",
         "caption": "Bernard Koech hat den Hamburg Marathon 2024 als schnellester Mann gewonnen. Schon im Vorjahr schaffte es der Kenianer auf den ersten Platz.",
@@ -151,11 +202,62 @@
         "position": 944
       },
       {
-        "urls": {
-          "600w": "https://img.sparknews.funkemedien.de/242201494/242201494_1714317667_v16_9_600.jpeg",
-          "1200w": "https://img.sparknews.funkemedien.de/242201494/242201494_1714317667_v16_9_1200.jpeg",
-          "1600w": "https://img.sparknews.funkemedien.de/242201494/242201494_1714317667_v16_9_1600.jpeg"
-        },
+        "versions": [
+          {
+            "url": "https://img.sparknews.funkemedien.de/242201494/242201494_1714317667_v16_9_600.jpeg",
+            "query_width": null,
+            "size": {
+              "width": 600,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://img.sparknews.funkemedien.de/242201494/242201494_1714317667_v16_9_600.webp",
+            "query_width": null,
+            "size": {
+              "width": 600,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://img.sparknews.funkemedien.de/242201494/242201494_1714317667_v16_9_1200.jpeg",
+            "query_width": null,
+            "size": {
+              "width": 1200,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://img.sparknews.funkemedien.de/242201494/242201494_1714317667_v16_9_1200.webp",
+            "query_width": null,
+            "size": {
+              "width": 1200,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://img.sparknews.funkemedien.de/242201494/242201494_1714317667_v16_9_1600.jpeg",
+            "query_width": null,
+            "size": {
+              "width": 1600,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://img.sparknews.funkemedien.de/242201494/242201494_1714317667_v16_9_1600.webp",
+            "query_width": null,
+            "size": {
+              "width": 1600,
+              "height": 0
+            },
+            "type": "image/webp"
+          }
+        ],
         "is_cover": false,
         "description": "Der Hamburg-Marathon führte die Läuferinnen und Läufer quer durch die Stadt und auch an den Landungsbrücken vorbei.",
         "caption": "Der Hamburg-Marathon führte die Läuferinnen und Läufer quer durch die Stadt und auch an den Landungsbrücken vorbei.",
@@ -165,11 +267,62 @@
         "position": 966
       },
       {
-        "urls": {
-          "600w": "https://img.sparknews.funkemedien.de/242202440/242202440_1714317576_v16_9_600.jpeg",
-          "1200w": "https://img.sparknews.funkemedien.de/242202440/242202440_1714317576_v16_9_1200.jpeg",
-          "1600w": "https://img.sparknews.funkemedien.de/242202440/242202440_1714317576_v16_9_1600.jpeg"
-        },
+        "versions": [
+          {
+            "url": "https://img.sparknews.funkemedien.de/242202440/242202440_1714317576_v16_9_600.jpeg",
+            "query_width": null,
+            "size": {
+              "width": 600,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://img.sparknews.funkemedien.de/242202440/242202440_1714317576_v16_9_600.webp",
+            "query_width": null,
+            "size": {
+              "width": 600,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://img.sparknews.funkemedien.de/242202440/242202440_1714317576_v16_9_1200.jpeg",
+            "query_width": null,
+            "size": {
+              "width": 1200,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://img.sparknews.funkemedien.de/242202440/242202440_1714317576_v16_9_1200.webp",
+            "query_width": null,
+            "size": {
+              "width": 1200,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://img.sparknews.funkemedien.de/242202440/242202440_1714317576_v16_9_1600.jpeg",
+            "query_width": null,
+            "size": {
+              "width": 1600,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://img.sparknews.funkemedien.de/242202440/242202440_1714317576_v16_9_1600.webp",
+            "query_width": null,
+            "size": {
+              "width": 1600,
+              "height": 0
+            },
+            "type": "image/webp"
+          }
+        ],
         "is_cover": false,
         "description": "Bernard Koech hat den Hamburg Marathon 2024 als schnellester Mann gewonnen. Schon im Vorjahr schaffte es der Kenianer auf den ersten Platz.",
         "caption": "Bernard Koech hat den Hamburg Marathon 2024 als schnellester Mann gewonnen. Schon im Vorjahr schaffte es der Kenianer auf den ersten Platz.",
@@ -177,11 +330,62 @@
         "position": 989
       },
       {
-        "urls": {
-          "600w": "https://img.sparknews.funkemedien.de/242199822/242199822_1714301457_v16_9_600.jpeg",
-          "1200w": "https://img.sparknews.funkemedien.de/242199822/242199822_1714301457_v16_9_1200.jpeg",
-          "1600w": "https://img.sparknews.funkemedien.de/242199822/242199822_1714301457_v16_9_1600.jpeg"
-        },
+        "versions": [
+          {
+            "url": "https://img.sparknews.funkemedien.de/242199822/242199822_1714301457_v16_9_600.jpeg",
+            "query_width": null,
+            "size": {
+              "width": 600,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://img.sparknews.funkemedien.de/242199822/242199822_1714301457_v16_9_600.webp",
+            "query_width": null,
+            "size": {
+              "width": 600,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://img.sparknews.funkemedien.de/242199822/242199822_1714301457_v16_9_1200.jpeg",
+            "query_width": null,
+            "size": {
+              "width": 1200,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://img.sparknews.funkemedien.de/242199822/242199822_1714301457_v16_9_1200.webp",
+            "query_width": null,
+            "size": {
+              "width": 1200,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://img.sparknews.funkemedien.de/242199822/242199822_1714301457_v16_9_1600.jpeg",
+            "query_width": null,
+            "size": {
+              "width": 1600,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://img.sparknews.funkemedien.de/242199822/242199822_1714301457_v16_9_1600.webp",
+            "query_width": null,
+            "size": {
+              "width": 1600,
+              "height": 0
+            },
+            "type": "image/webp"
+          }
+        ],
         "is_cover": false,
         "description": "Benjamin Franke ist der beste Hamburger beim Haspa-Marathon 2024.",
         "caption": "Benjamin Franke ist der beste Hamburger beim Haspa-Marathon 2024.",
@@ -191,11 +395,62 @@
         "position": 999
       },
       {
-        "urls": {
-          "600w": "https://img.sparknews.funkemedien.de/242198962/242198962_1714297372_v16_9_600.jpeg",
-          "1200w": "https://img.sparknews.funkemedien.de/242198962/242198962_1714297372_v16_9_1200.jpeg",
-          "1600w": "https://img.sparknews.funkemedien.de/242198962/242198962_1714297372_v16_9_1600.jpeg"
-        },
+        "versions": [
+          {
+            "url": "https://img.sparknews.funkemedien.de/242198962/242198962_1714297372_v16_9_600.jpeg",
+            "query_width": null,
+            "size": {
+              "width": 600,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://img.sparknews.funkemedien.de/242198962/242198962_1714297372_v16_9_600.webp",
+            "query_width": null,
+            "size": {
+              "width": 600,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://img.sparknews.funkemedien.de/242198962/242198962_1714297372_v16_9_1200.jpeg",
+            "query_width": null,
+            "size": {
+              "width": 1200,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://img.sparknews.funkemedien.de/242198962/242198962_1714297372_v16_9_1200.webp",
+            "query_width": null,
+            "size": {
+              "width": 1200,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://img.sparknews.funkemedien.de/242198962/242198962_1714297372_v16_9_1600.jpeg",
+            "query_width": null,
+            "size": {
+              "width": 1600,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://img.sparknews.funkemedien.de/242198962/242198962_1714297372_v16_9_1600.webp",
+            "query_width": null,
+            "size": {
+              "width": 1600,
+              "height": 0
+            },
+            "type": "image/webp"
+          }
+        ],
         "is_cover": false,
         "description": "Batman auf der Strecke zwischen Hohenzollernring und Eggersallee.",
         "caption": "Batman auf der Strecke zwischen Hohenzollernring und Eggersallee.",
@@ -205,11 +460,62 @@
         "position": 1014
       },
       {
-        "urls": {
-          "600w": "https://img.sparknews.funkemedien.de/242198960/242198960_1714306194_v16_9_600.jpeg",
-          "1200w": "https://img.sparknews.funkemedien.de/242198960/242198960_1714306194_v16_9_1200.jpeg",
-          "1600w": "https://img.sparknews.funkemedien.de/242198960/242198960_1714306194_v16_9_1600.jpeg"
-        },
+        "versions": [
+          {
+            "url": "https://img.sparknews.funkemedien.de/242198960/242198960_1714306194_v16_9_600.jpeg",
+            "query_width": null,
+            "size": {
+              "width": 600,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://img.sparknews.funkemedien.de/242198960/242198960_1714306194_v16_9_600.webp",
+            "query_width": null,
+            "size": {
+              "width": 600,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://img.sparknews.funkemedien.de/242198960/242198960_1714306194_v16_9_1200.jpeg",
+            "query_width": null,
+            "size": {
+              "width": 1200,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://img.sparknews.funkemedien.de/242198960/242198960_1714306194_v16_9_1200.webp",
+            "query_width": null,
+            "size": {
+              "width": 1200,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://img.sparknews.funkemedien.de/242198960/242198960_1714306194_v16_9_1600.jpeg",
+            "query_width": null,
+            "size": {
+              "width": 1600,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://img.sparknews.funkemedien.de/242198960/242198960_1714306194_v16_9_1600.webp",
+            "query_width": null,
+            "size": {
+              "width": 1600,
+              "height": 0
+            },
+            "type": "image/webp"
+          }
+        ],
         "is_cover": false,
         "description": "Der",
         "caption": "Der \"König\" kommt: Royaler Besuch beim Hamburg-Marathon.",
@@ -217,11 +523,62 @@
         "position": 1026
       },
       {
-        "urls": {
-          "600w": "https://img.sparknews.funkemedien.de/242199322/242199322_1714298600_v16_9_600.jpeg",
-          "1200w": "https://img.sparknews.funkemedien.de/242199322/242199322_1714298600_v16_9_1200.jpeg",
-          "1600w": "https://img.sparknews.funkemedien.de/242199322/242199322_1714298600_v16_9_1600.jpeg"
-        },
+        "versions": [
+          {
+            "url": "https://img.sparknews.funkemedien.de/242199322/242199322_1714298600_v16_9_600.jpeg",
+            "query_width": null,
+            "size": {
+              "width": 600,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://img.sparknews.funkemedien.de/242199322/242199322_1714298600_v16_9_600.webp",
+            "query_width": null,
+            "size": {
+              "width": 600,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://img.sparknews.funkemedien.de/242199322/242199322_1714298600_v16_9_1200.jpeg",
+            "query_width": null,
+            "size": {
+              "width": 1200,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://img.sparknews.funkemedien.de/242199322/242199322_1714298600_v16_9_1200.webp",
+            "query_width": null,
+            "size": {
+              "width": 1200,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://img.sparknews.funkemedien.de/242199322/242199322_1714298600_v16_9_1600.jpeg",
+            "query_width": null,
+            "size": {
+              "width": 1600,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://img.sparknews.funkemedien.de/242199322/242199322_1714298600_v16_9_1600.webp",
+            "query_width": null,
+            "size": {
+              "width": 1600,
+              "height": 0
+            },
+            "type": "image/webp"
+          }
+        ],
         "is_cover": false,
         "description": "Business-Outfit mit Krawatte und Anzug mal anders: Eine Lauf-Gruppe im Partnerlook beim Hambug-Marathon.",
         "caption": "Business-Outfit mit Krawatte und Anzug mal anders: Eine Lauf-Gruppe im Partnerlook beim Hambug-Marathon.",
@@ -229,11 +586,62 @@
         "position": 1036
       },
       {
-        "urls": {
-          "600w": "https://img.sparknews.funkemedien.de/242198640/242198640_1714295027_v16_9_600.jpeg",
-          "1200w": "https://img.sparknews.funkemedien.de/242198640/242198640_1714295027_v16_9_1200.jpeg",
-          "1600w": "https://img.sparknews.funkemedien.de/242198640/242198640_1714295027_v16_9_1600.jpeg"
-        },
+        "versions": [
+          {
+            "url": "https://img.sparknews.funkemedien.de/242198640/242198640_1714295027_v16_9_600.jpeg",
+            "query_width": null,
+            "size": {
+              "width": 600,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://img.sparknews.funkemedien.de/242198640/242198640_1714295027_v16_9_600.webp",
+            "query_width": null,
+            "size": {
+              "width": 600,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://img.sparknews.funkemedien.de/242198640/242198640_1714295027_v16_9_1200.jpeg",
+            "query_width": null,
+            "size": {
+              "width": 1200,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://img.sparknews.funkemedien.de/242198640/242198640_1714295027_v16_9_1200.webp",
+            "query_width": null,
+            "size": {
+              "width": 1200,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://img.sparknews.funkemedien.de/242198640/242198640_1714295027_v16_9_1600.jpeg",
+            "query_width": null,
+            "size": {
+              "width": 1600,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://img.sparknews.funkemedien.de/242198640/242198640_1714295027_v16_9_1600.webp",
+            "query_width": null,
+            "size": {
+              "width": 1600,
+              "height": 0
+            },
+            "type": "image/webp"
+          }
+        ],
         "is_cover": false,
         "description": "Katharina Steinruck musste nach 20 Kilometern beim Hamburg-Marathon aufgeben.",
         "caption": "Katharina Steinruck musste nach 20 Kilometern beim Hamburg-Marathon aufgeben.",
@@ -243,11 +651,62 @@
         "position": 1050
       },
       {
-        "urls": {
-          "600w": "https://img.sparknews.funkemedien.de/242198078/242198078_1714293178_v16_9_600.jpeg",
-          "1200w": "https://img.sparknews.funkemedien.de/242198078/242198078_1714293178_v16_9_1200.jpeg",
-          "1600w": "https://img.sparknews.funkemedien.de/242198078/242198078_1714293178_v16_9_1600.jpeg"
-        },
+        "versions": [
+          {
+            "url": "https://img.sparknews.funkemedien.de/242198078/242198078_1714293178_v16_9_600.jpeg",
+            "query_width": null,
+            "size": {
+              "width": 600,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://img.sparknews.funkemedien.de/242198078/242198078_1714293178_v16_9_600.webp",
+            "query_width": null,
+            "size": {
+              "width": 600,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://img.sparknews.funkemedien.de/242198078/242198078_1714293178_v16_9_1200.jpeg",
+            "query_width": null,
+            "size": {
+              "width": 1200,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://img.sparknews.funkemedien.de/242198078/242198078_1714293178_v16_9_1200.webp",
+            "query_width": null,
+            "size": {
+              "width": 1200,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://img.sparknews.funkemedien.de/242198078/242198078_1714293178_v16_9_1600.jpeg",
+            "query_width": null,
+            "size": {
+              "width": 1600,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://img.sparknews.funkemedien.de/242198078/242198078_1714293178_v16_9_1600.webp",
+            "query_width": null,
+            "size": {
+              "width": 1600,
+              "height": 0
+            },
+            "type": "image/webp"
+          }
+        ],
         "is_cover": false,
         "description": "Der Hamburg-Marathon findet 2024 zum 38. Mal statt und erlebt eine echte Premiere. Mit 15.000 Teilnehmern ist das Großevent zum ersten Mal ausverkauft.",
         "caption": "Der Hamburg-Marathon findet 2024 zum 38. Mal statt und erlebt eine echte Premiere. Mit 15.000 Teilnehmern ist das Großevent zum ersten Mal ausverkauft.",
@@ -257,11 +716,62 @@
         "position": 1064
       },
       {
-        "urls": {
-          "600w": "https://img.sparknews.funkemedien.de/242194318/242194318_1714218450_v16_9_600.jpeg",
-          "1200w": "https://img.sparknews.funkemedien.de/242194318/242194318_1714218450_v16_9_1200.jpeg",
-          "1600w": "https://img.sparknews.funkemedien.de/242194318/242194318_1714218450_v16_9_1600.jpeg"
-        },
+        "versions": [
+          {
+            "url": "https://img.sparknews.funkemedien.de/242194318/242194318_1714218450_v16_9_600.jpeg",
+            "query_width": null,
+            "size": {
+              "width": 600,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://img.sparknews.funkemedien.de/242194318/242194318_1714218450_v16_9_600.webp",
+            "query_width": null,
+            "size": {
+              "width": 600,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://img.sparknews.funkemedien.de/242194318/242194318_1714218450_v16_9_1200.jpeg",
+            "query_width": null,
+            "size": {
+              "width": 1200,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://img.sparknews.funkemedien.de/242194318/242194318_1714218450_v16_9_1200.webp",
+            "query_width": null,
+            "size": {
+              "width": 1200,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://img.sparknews.funkemedien.de/242194318/242194318_1714218450_v16_9_1600.jpeg",
+            "query_width": null,
+            "size": {
+              "width": 1600,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://img.sparknews.funkemedien.de/242194318/242194318_1714218450_v16_9_1600.webp",
+            "query_width": null,
+            "size": {
+              "width": 1600,
+              "height": 0
+            },
+            "type": "image/webp"
+          }
+        ],
         "is_cover": false,
         "description": "Vor dem Start sammeln sich die Kinder in der Messehalle – hier werden später auch die Medaillen verteilt.",
         "caption": "Vor dem Start sammeln sich die Kinder in der Messehalle – hier werden später auch die Medaillen verteilt.",
