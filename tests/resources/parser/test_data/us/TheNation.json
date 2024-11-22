@@ -57,7 +57,45 @@
         }
       ]
     },
-    "images": [],
+    "images": [
+      {
+        "versions": [
+          {
+            "url": "https://www.thenation.com/cdn-cgi/image/width=896,quality=80,format=auto/wp-content/uploads/2023/05/Local-90-Tanner-Fischer-148KB.jpg",
+            "query_width": null,
+            "size": {
+              "width": 896,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": true,
+        "description": "Tanner Fischer speaks in front of UPS workers in Iowa.",
+        "caption": "Tanner Fischer leads a rally of UPS workers in Des Moines, Iowa.",
+        "authors": [
+          "(Courtesy of Tanner Fischer)"
+        ],
+        "position": 366
+      },
+      {
+        "versions": [
+          {
+            "url": "https://www.thenation.com/wp-content/uploads/2023/05/tanner-fischer.jpg",
+            "query_width": null,
+            "size": null,
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": false,
+        "description": null,
+        "caption": "Tanner Fischer.",
+        "authors": [
+          "( Sarah Lazare)"
+        ],
+        "position": 452
+      }
+    ],
     "publishing_date": "2023-05-15 09:00:37+00:00",
     "title": "Inside a Teamster Rebellion: This Is What Union Democracy Looks Like",
     "topics": [

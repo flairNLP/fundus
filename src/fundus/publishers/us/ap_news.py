@@ -63,6 +63,19 @@ class APNewsParser(ParserProxy):
                 if not re.search(self._topic_bloat_pattern, topic)
             ]
 
+        # unfortunately we would need to render the site first before parsing images for this version
+
+    class V1_1(V1):
+        VALID_UNTIL = datetime.date.today()
+
+        _author_selector = CSSSelector("div.Page-authors")
+        _subheadline_selector = XPath("//div[contains(@class, 'RichTextStoryBody')] /h2[not(text()='___')]")
+        _paragraph_selector = XPath(
+            "//div[contains(@class, 'RichTextStoryBody')] "
+            "/p[not(preceding-sibling::*[1][self::h2 and text()='___'])]"
+            # only p-elements not directly following h2 elements with text() = '___'
+        )
+
         @attribute
         def images(self) -> List[Image]:
             return image_extraction(
@@ -77,14 +90,3 @@ class APNewsParser(ParserProxy):
                 lower_boundary_selector=CSSSelector("footer.Page-footer"),
                 author_selector=re.compile(r"\s*\((?P<credits>.*)\)$"),
             )
-
-    class V1_1(V1):
-        VALID_UNTIL = datetime.date.today()
-
-        _author_selector = CSSSelector("div.Page-authors")
-        _subheadline_selector = XPath("//div[contains(@class, 'RichTextStoryBody')] /h2[not(text()='___')]")
-        _paragraph_selector = XPath(
-            "//div[contains(@class, 'RichTextStoryBody')] "
-            "/p[not(preceding-sibling::*[1][self::h2 and text()='___'])]"
-            # only p-elements not directly following h2 elements with text() = '___'
-        )
