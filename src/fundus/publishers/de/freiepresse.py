@@ -70,9 +70,7 @@ class FreiePresseParser(ParserProxy):
 
     class V1_1(V1):
         VALID_UNTIL = datetime.date.today()
-        _summary_selector = CSSSelector("#artikel-content > p.bold")
         _paragraph_selector = CSSSelector("#artikel-content p:not(.bold)")
-        _subheadline_selector = CSSSelector("#artikel-content h2")
 
         @attribute
         def images(self) -> List[Image]:
