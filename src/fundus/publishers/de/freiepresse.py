@@ -17,8 +17,11 @@ from fundus.parser.utility import (
 
 class FreiePresseParser(ParserProxy):
     class V1(BaseParser):
+        VALID_UNTIL = datetime.date(2024, 8, 4)
         _summary_selector = CSSSelector("#artikel-content > p.bold")
-        _paragraph_selector = CSSSelector("#artikel-content p:not(.bold)")
+        _paragraph_selector = XPath(
+            "//*[@id='artikel-content']//p[not(ancestor::div[@class='pw-layer'] or @class='bold')]"
+        )
         _subheadline_selector = CSSSelector("#artikel-content h2")
 
         @attribute
@@ -36,15 +39,40 @@ class FreiePresseParser(ParserProxy):
 
         @attribute
         def authors(self) -> List[str]:
-            return generic_author_parsing(self.precomputed.ld.xpath_search("NewsArticle/author"))
+            authors = self.precomputed.ld.xpath_search("NewsArticle/author")
+            return generic_author_parsing(
+                [
+                    author
+                    for author in authors
+                    if (authors and not author == "Chemnitzer Verlag und Druck GmbH & Co. KG")
+                ]
+            )
 
         @attribute
         def title(self) -> Optional[str]:
-            return self.precomputed.meta.get("og:title")
+            return re.sub(r"\s*\|.*", "", self.precomputed.meta.get("og:title"))
 
         @attribute
         def topics(self) -> List[str]:
             return generic_topic_parsing(self.precomputed.ld.bf_search("keywords"), delimiter="/")
+
+        @attribute
+        def images(self) -> List[Image]:
+            return image_extraction(
+                doc=self.precomputed.doc,
+                paragraph_selector=self._paragraph_selector,
+                image_selector=XPath("//div[@class='wrapImg']//img"),
+                lower_boundary_selector=XPath("//div[@class='section-topic']"),
+                caption_selector=XPath("./ancestor::li[@class='img gallery-item']//span[@class='img-info']"),
+                author_selector=re.compile(r"(?i)bild:(?P<credits>.*)"),
+                relative_urls=True,
+            )
+
+    class V1_1(V1):
+        VALID_UNTIL = datetime.date.today()
+        _summary_selector = CSSSelector("#artikel-content > p.bold")
+        _paragraph_selector = CSSSelector("#artikel-content p:not(.bold)")
+        _subheadline_selector = CSSSelector("#artikel-content h2")
 
         @attribute
         def images(self) -> List[Image]:
