@@ -39,14 +39,16 @@ class FreiePresseParser(ParserProxy):
 
         @attribute
         def authors(self) -> List[str]:
-            authors = self.precomputed.ld.xpath_search("NewsArticle/author")
-            return generic_author_parsing(
-                [
-                    author
-                    for author in authors
-                    if (authors and not author == "Chemnitzer Verlag und Druck GmbH & Co. KG")
-                ]
-            )
+            if not (authors := self.precomputed.ld.xpath_search("NewsArticle/author")):
+                return []
+            else:
+                return generic_author_parsing(
+                    [
+                        author
+                        for author in authors
+                        if not author == "Chemnitzer Verlag und Druck GmbH & Co. KG"
+                    ]
+                )
 
         @attribute
         def title(self) -> Optional[str]:
