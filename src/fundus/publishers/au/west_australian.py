@@ -64,5 +64,5 @@ class WestAustralianParser(ParserProxy):
                 lower_boundary_selector=CSSSelector("div#footer"),
                 caption_selector=XPath("./ancestor::figure //span[contains(@class, 'CaptionText')] /span[1]"),
                 author_selector=XPath("./ancestor::figure //span[contains(@class, 'CaptionText')] /span[last()]"),
-                author_filter=re.compile(r"Credit:\s*")
+                author_filter=re.compile(r"Credit:\s*"),
             )
