@@ -43,11 +43,7 @@ class FreiePresseParser(ParserProxy):
                 return []
             else:
                 return generic_author_parsing(
-                    [
-                        author
-                        for author in authors
-                        if not author == "Chemnitzer Verlag und Druck GmbH & Co. KG"
-                    ]
+                    [author for author in authors if not author == "Chemnitzer Verlag und Druck GmbH & Co. KG"]
                 )
 
         @attribute
@@ -63,7 +59,9 @@ class FreiePresseParser(ParserProxy):
             return image_extraction(
                 doc=self.precomputed.doc,
                 paragraph_selector=self._paragraph_selector,
-                image_selector=XPath("//div[@class='wrapImg']//img"),
+                image_selector=XPath(
+                    "((//div[contains(@class,'wrapImg')]//picture)[1])//img | //img[@class='media-image']"
+                ),
                 lower_boundary_selector=XPath("//div[@class='section-topic']"),
                 caption_selector=XPath("./ancestor::li[@class='img gallery-item']//span[@class='img-info']"),
                 author_selector=re.compile(r"(?i)bild:(?P<credits>.*)"),
