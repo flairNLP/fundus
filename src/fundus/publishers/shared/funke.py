@@ -14,20 +14,21 @@ from fundus.parser.utility import (
 )
 
 
-class BSZParser(ParserProxy):
+class FunkeParser(ParserProxy):
     class V1(BaseParser):
         _author_substitution_pattern: Pattern[str] = re.compile(r"FUNKE Mediengruppe|.*dpa(:|-infocom).*|^red$")
         _paragraph_selector = XPath(
-            "//div[@class='article-body']//p[not(not(text()) or @rel='author' or em[@class='print'] or contains(@class, 'font-sans'))]"
+            "//div[@class='article-body']//p[not(not(text()) or @rel='author' or em[@class='print'] or @class)]"
         )
-        _summary_selector = XPath("//div[@class='article-body']//p[contains(@class, 'font-sans')]")
+        _summary_selector = XPath("//div[@class='article-body']/p[contains(@class, 'font-sans')]")
         _subheadline_selector = XPath(
             "//div[@class='article-body']//h3[not("
             "contains(text(), 'Alle Artikel der Serie')"
             " or contains(text(), 'Mehr zum Thema')"
             " or contains(text(), 'weitere Videos')"
             " or contains(text(), 'Auch interessant')"
-            " or contains(text(), 'Weitere News'))]"
+            " or contains(text(), 'Weitere News')"
+            " or @class)]"
         )
         _topics_selector = XPath("//div[@class='not-prose  mb-4 mx-5 font-sans']/ul/li")
 

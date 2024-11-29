@@ -1,3 +1,4 @@
-__all__ = ["EuronewsParser"]
+__all__ = ["EuronewsParser", "FunkeParser"]
 
 from .euronews import EuronewsParser
+from .funke import FunkeParser
