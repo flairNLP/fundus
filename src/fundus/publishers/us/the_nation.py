@@ -6,12 +6,20 @@ import lxml.html
 from lxml.cssselect import CSSSelector
 from lxml.etree import XPath
 
-from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute, function
+from fundus.parser import (
+    ArticleBody,
+    BaseParser,
+    Image,
+    ParserProxy,
+    attribute,
+    function,
+)
 from fundus.parser.utility import (
     extract_article_body_with_selector,
     generic_author_parsing,
     generic_date_parsing,
     generic_topic_parsing,
+    image_extraction,
 )
 
 
@@ -48,7 +56,7 @@ class TheNationParser(ParserProxy):
         # within .article-header-content. As a result, <aside> tags following <p> tags get attached
         # to the paragraph. This is valid HTML5 behaviour.
         # see https://stackoverflow.com/questions/8460993/p-end-tag-p-is-not-needed-in-html
-        @function(priority=2)
+        @function(priority=3)
         def _remove_aside(self) -> None:
             for aside in self._aside_selector(self.precomputed.doc):
                 if (parent := aside.getparent()) is not None:
@@ -78,6 +86,19 @@ class TheNationParser(ParserProxy):
         def topics(self) -> List[str]:
             return generic_topic_parsing(self.precomputed.meta.get("keywords"))
 
+        @attribute(priority=2)
+        def images(self) -> List[Image]:
+            return image_extraction(
+                doc=self.precomputed.doc,
+                paragraph_selector=self._paragraph_selector,
+                upper_boundary_selector=XPath("//h1[contains(@class,'title')]"),
+                image_selector=CSSSelector(".image img"),
+                caption_selector=XPath("(./ancestor::aside[contains(@class, 'image')])[1]//p[@class='caption']/text()"),
+                author_selector=XPath(
+                    "(./ancestor::aside[contains(@class, 'image')])[1]//p[@class='caption']/span[@class='credits']"
+                ),
+            )
+
     class V2(V1):
         VALID_UNTIL = date.today()
 
@@ -99,3 +120,13 @@ class TheNationParser(ParserProxy):
                 return topics
             else:
                 return generic_topic_parsing(self.precomputed.meta.get("sailthru.tags"))
+
+        @attribute
+        def images(self) -> List[Image]:
+            return image_extraction(
+                doc=self.precomputed.doc,
+                paragraph_selector=self._paragraph_selector,
+                upper_boundary_selector=XPath("//h1[contains(@class,'title')]"),
+                author_filter=re.compile(r"[()]"),
+                caption_selector=XPath("./ancestor::figure//figcaption/text()|./ancestor::figure//figcaption/p"),
+            )

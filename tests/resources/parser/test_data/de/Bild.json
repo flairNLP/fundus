@@ -19,6 +19,102 @@
         }
       ]
     },
+    "images": [
+      {
+        "versions": [
+          {
+            "url": "https://images.bild.de/646217ca5ccf3e4662e90162/8a93523445b17a266137c8f8da62bba5,56796a32?w=656",
+            "query_width": null,
+            "size": {
+              "width": 656,
+              "height": 369
+            },
+            "type": null
+          },
+          {
+            "url": "https://images.bild.de/646217ca5ccf3e4662e90162/8a93523445b17a266137c8f8da62bba5,56796a32?w=992",
+            "query_width": null,
+            "size": {
+              "width": 992,
+              "height": 558
+            },
+            "type": null
+          }
+        ],
+        "is_cover": true,
+        "description": "Jona Niemiec (r.) will abziehen, Paulis Karol Mets bedrängt ihn",
+        "caption": "Jona Niemiec (r.) will abziehen, Paulis Karol Mets bedrängt ihn",
+        "authors": [
+          "Getty Images"
+        ],
+        "position": 873
+      },
+      {
+        "versions": [
+          {
+            "url": "https://images.bild.de/6460c146b2c0f23e55c0a791/049d6921d7de37bdc793ef8e6bc72473,14e1496b?w=236",
+            "query_width": null,
+            "size": {
+              "width": 236,
+              "height": 133
+            },
+            "type": null
+          }
+        ],
+        "is_cover": false,
+        "description": "Teaser-Bild",
+        "caption": null,
+        "authors": [],
+        "position": 922
+      },
+      {
+        "versions": [
+          {
+            "url": "https://images.bild.de/6460b9a97f298869d7ae8bb8/b0b0a16ca045256952026c60a89ab3fd,7aa8b53f?w=236",
+            "query_width": null,
+            "size": {
+              "width": 236,
+              "height": 133
+            },
+            "type": null
+          }
+        ],
+        "is_cover": false,
+        "description": "Teaser-Bild",
+        "caption": null,
+        "authors": [],
+        "position": 935
+      },
+      {
+        "versions": [
+          {
+            "url": "https://images.bild.de/64620624c850c762dbdefd91/7bd80bf3b0382e89323ecfac2dff681c-landscape,31ef3d5c?w=656",
+            "query_width": null,
+            "size": {
+              "width": 656,
+              "height": 369
+            },
+            "type": null
+          },
+          {
+            "url": "https://images.bild.de/64620624c850c762dbdefd91/7bd80bf3b0382e89323ecfac2dff681c-landscape,31ef3d5c?w=992",
+            "query_width": null,
+            "size": {
+              "width": 992,
+              "height": 558
+            },
+            "type": null
+          }
+        ],
+        "is_cover": false,
+        "description": "Reif ist Live: Müller-Rückkehr, Haller-Doppelpack und Hertha-Frust",
+        "caption": null,
+        "authors": [
+          "Quelle: BILD 15.05.2023"
+        ],
+        "position": 956
+      }
+    ],
     "publishing_date": "2023-05-15 11:52:09.860000+00:00",
     "title": "Bubi-Bomber wieder da: Thioune fordert Geduld mit Niemiec",
     "topics": [

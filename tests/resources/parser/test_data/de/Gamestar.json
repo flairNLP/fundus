@@ -31,6 +31,26 @@
         }
       ]
     },
+    "images": [
+      {
+        "versions": [
+          {
+            "url": "https://images.cgames.de/images/gamestar/290/samsung-galaxy-z-fold5-triple_6246962.jpg",
+            "query_width": null,
+            "size": {
+              "width": 960,
+              "height": 540
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": true,
+        "description": "Wir erwarten neue Foldables, Smartwatches und mehr.",
+        "caption": "Wir erwarten neue Foldables, Smartwatches und mehr.",
+        "authors": [],
+        "position": 459
+      }
+    ],
     "publishing_date": "2024-04-28 09:36:00+02:00",
     "title": "Samsung Galaxy Unpacked: Launchtermin für neue Foldables, Galaxy Ring und mehr soll feststehen – das erwarten wir"
   }

@@ -43,6 +43,46 @@
         }
       ]
     },
+    "images": [
+      {
+        "versions": [
+          {
+            "url": "https://image.stern.de/33420090/t/NN/v4/w480/r1.7778/-/bezahlsystem.jpg",
+            "query_width": null,
+            "size": {
+              "width": 480,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://image.stern.de/33420090/t/EH/v4/w960/r1.7778/-/bezahlsystem.jpg",
+            "query_width": null,
+            "size": {
+              "width": 960,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://image.stern.de/33420090/t/jW/v4/w1440/r1.7778/-/bezahlsystem.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1440,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": true,
+        "description": "Logos diverser Bezahlmethoden wie Mastercard und Apple Pay",
+        "caption": "Zu Bezahlmethoden wie Apple Pay, Mastercard, Paypal oder Sepa soll bald auch EPI hinzukommen",
+        "authors": [
+          "Picture Alliance"
+        ],
+        "position": 674
+      }
+    ],
     "publishing_date": "2023-04-28 19:09:00+02:00",
     "title": "Statt Paypal & Co.: So könnte Europas neues Bezahlsystem die US-Konkurrenz schlagen",
     "topics": [
@@ -61,6 +101,207 @@
       "Handelsblatt",
       "Unternehmensberatung",
       "Universität Frankfurt"
+    ]
+  },
+  "V2": {
+    "authors": [
+      "Jemima Kelly"
+    ],
+    "body": {
+      "summary": [
+        "Die Demokraten versuchen, Trump als unmoralisch zu entlarven, doch die Angriffe auf seinen Charakter laufen oft ins Leere. Warum moralische Selbstdarstellung nicht der beste Weg ist."
+      ],
+      "sections": [
+        {
+          "headline": [],
+          "paragraphs": [
+            "Donald Trump hat unglaublich viel Glück in seinem Leben gehabt, und das war auch in diesem Wahlzyklus wieder so. Dagegen war sein ursprünglicher Gegner Joe Biden derart geschwächt, sodass dieser ein paar Monate vor dem Wahltag ersetzt werden musste. Trump war nur Zentimeter davon entfernt, von einer Kugel getötet zu werden, höchstwahrscheinlich, weil er seinen Kopf \"zur genau richtigen Zeit und im richtigen Umfang\" gedreht hat (seine eigenen Worte). Bei diesem Attentat wurde zwar nur leicht sein Ohr gestreift, doch sein Image erheblich aufpoliert.",
+            "Und dann, gerade als es so aussah, als würde sich das Blatt wenden, nachdem ein Komiker bei seiner Kundgebung im Madison Square Garden mehrere rassistische und beleidigende Bemerkungen gemacht hatte, darunter einen Witz über Puerto Rico als \"Insel des Mülls\", kam die Glücksgöttin und segnete den ehemaligen Präsidenten erneut.",
+            "In einem Videotelefonat hat Joe Biden es geschafft, die negative Aufmerksamkeit zurückzugewinnen. \"Der einzige Müll, den ich treiben sehe, sind seine Anhänger\", sagte der Präsident wahrscheinlich. (Das Weiße Haus hat später eine Abschrift zur Verfügung gestellt, welche ein Apostroph in \"supporter’s\" einfügte, das nur dazu diente, die Angelegenheit zu verschlimmern, nachdem bekannt wurde, dass die Pressestelle die Niederschrift des Stenografen-Büros verändert hatte).",
+            "Sowohl rechte Kommentatoren als auch Trump selbst zogen schnell Vergleiche zwischen Bidens Worten und Hillary Clintons Verweis auf die Trump-Anhänger aus dem Jahr 2016, die sie als \"Korb der Bedauernswerten\" bezeichnete, was laut Clinton ein Faktor für ihre Wahlniederlage war. Trump fuhr daraufhin sogar in einem Fahrzeug der Müllabfuhr in Wisconsin herum und trug dabei eine Warnweste als Werbegag. \"Das ist wie ,bedauerlich' für Hillary\", sagte er zu Reportern. \"Und ich denke, das ist eigentlich noch schlimmer. Dass Joe Biden so etwas sagt, ist wirklich eine Schande.\""
+          ]
+        },
+        {
+          "headline": [
+            "Verquere amerikanische Politik"
+          ],
+          "paragraphs": [
+            "Dass ein verurteilter Verbrecher, der bisher in 34 Fällen für schuldig befunden wurde und gegen den noch drei Strafverfahren anhängig sind, der wegen sexuellen Missbrauchs verurteilt wurde und der sich immer noch weigert, das Ergebnis einer demokratischen Wahl zu akzeptieren, die andere Seite ungeschminkt als \"Schande\" bezeichnen kann, zeigt, wie verquer die amerikanische Politik ist.",
+            "Der Wahlkampf der Demokraten versucht, diese Wahl als eine Wahl darzustellen, die auf eine Entscheidung über moralische Prinzipien hinausläuft. Wie Biden vor seinem \"Müll\"-Fauxpas sagte: \"Präsidentschaftshistoriker sagen uns, dass das Wichtigste an einem Präsidenten der Charakter ist – hat er oder sie Charakter?\". Es sollte leicht zu beweisen sein, warum die Nominierte Kamala Harris in diesem Punkt mühelos gewinnen sollte.",
+            "Die Demokraten wurden jedoch von Future Forward, dem führenden Super Political Action Committee (PAC), das Harris unterstützt, gewarnt, dass ihr Fokus auf Trumps Charakter und die Verknüpfung mit gefährlichen politischen Ideologien in der Schlussphase des Wahlkampfs nicht besonders effektiv sei.",
+            "Sie haben Recht. Es gibt mehrere Schwierigkeiten, Trumps Charakter anzugreifen. Zunächst einmal ist es zwar fair und in der Tat richtig, auf die Kluft hinzuweisen, die ihn von Harris trennt, wenn es um die Tugenden geht, die eine Führungspersönlichkeit besitzen sollte – grundlegender Anstand, Ehre, Mitgefühl, Ehrlichkeit, Bescheidenheit –, aber moralische Selbstdarstellung ist ein unwirksames Mittel, um Menschen auf seine Seite zu ziehen. Sie vermitteln den Eindruck von Überlegenheit und Hochmut.",
+            "Während viele verbale Attacken der Demokraten gegen Trump berechtigt sind, waren andere weniger vertretbar. Harris' Witzeleien darüber, dass er \"erschöpft\" sei, wovor Future Forward ebenfalls warnte, sind nicht überzeugend und dienen nur dazu, die Integrität ihrer eigenen Seite zu untergraben."
+          ]
+        },
+        {
+          "headline": [
+            "Jeff Bezos und Elon Musk bewundern Trump"
+          ],
+          "paragraphs": [
+            "Der andere Grund, warum es nicht fruchtet, Trump auf diese Weise anzugreifen, ist, dass er durchaus einige Eigenschaften besitzt, die ihn als moralisch integer erscheinen lassen, vor allem Mut. Elon Musk war nicht der einzige Multimilliardär, der von Trumps Mut schwärmte, nachdem dieser nach dem Attentat auf ihn am 13. Juli aufgestanden war und \"Kämpft! Kämpft! Kämpft!\" gerufen hatte. \"Unser ehemaliger Präsident hat heute Abend im wahrsten Sinne des Wortes Anmut und Mut bewiesen\", schrieb Jeff Bezos auf X.",
+            "Diese von Trump dargestellte Art von Mut ist nicht die Gleiche, über die Aristoteles sprach – die Art, die als Vermittler zwischen dem Laster der Feigheit und dem Laster der Rücksichtslosigkeit zum Wohle des größeren Ganzen fungiert. \"Es gibt einen physischen, animalischen Mut bei Trump, aber es fehlt der tugendhafte Mut\", sagt Edward Brooks, Geschäftsführer des Oxford Character Project.",
+            "Und doch schafft es Trump irgendwie, wie ein Mann mit Prinzipien rüberzukommen. Eine aktuelle Pew-Umfrage ergab, dass 69 Prozent der Wähler der Meinung sind, dass er \"für das eintritt, woran er glaubt\", das sind neun Prozentpunkte mehr als bei Harris.",
+            "Schon in Kürze werden wir herausfinden, ob Trumps Glück endgültig vorbei ist. Klar ist aber schon jetzt, dass er zwar den Anschein eines moralischen Charakters erweckt, aber nur wenig von dieser Tugend besitzt."
+          ]
+        }
+      ]
+    },
+    "images": [
+      {
+        "versions": [
+          {
+            "url": "https://image.stern.de/35200134/t/3S/v4/w480/r1.7778/-/donald-trump.jpg",
+            "query_width": null,
+            "size": {
+              "width": 480,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://image.stern.de/35200134/t/-3/v4/w480/r1/-/donald-trump.jpg",
+            "query_width": "max-width:767",
+            "size": {
+              "width": 480,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://image.stern.de/35200134/t/Wf/v4/w960/r1.7778/-/donald-trump.jpg",
+            "query_width": null,
+            "size": {
+              "width": 960,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://image.stern.de/35200134/t/v8/v4/w960/r1/-/donald-trump.jpg",
+            "query_width": "max-width:767",
+            "size": {
+              "width": 960,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://image.stern.de/35200134/t/tr/v4/w1440/r1.7778/-/donald-trump.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1440,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://image.stern.de/35200134/t/PO/v4/w1440/r1/-/donald-trump.jpg",
+            "query_width": "max-width:767",
+            "size": {
+              "width": 1440,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": true,
+        "description": "Donald Trump",
+        "caption": "Donald Trump bei einem Auftritt",
+        "authors": [
+          "ZUMA Press Wire / Imago Images"
+        ],
+        "position": 565
+      },
+      {
+        "versions": [
+          {
+            "url": "https://image.stern.de/34606440/t/jd/v4/w480/r1.7778/-/trump---john-paulson.jpg",
+            "query_width": null,
+            "size": {
+              "width": 480,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://image.stern.de/34606440/t/vG/v4/w480/r1/-/trump---john-paulson.jpg",
+            "query_width": "max-width:767",
+            "size": {
+              "width": 480,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://image.stern.de/34606440/t/fR/v4/w960/r1.7778/-/trump---john-paulson.jpg",
+            "query_width": null,
+            "size": {
+              "width": 960,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://image.stern.de/34606440/t/2S/v4/w960/r1/-/trump---john-paulson.jpg",
+            "query_width": "max-width:767",
+            "size": {
+              "width": 960,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://image.stern.de/34606440/t/_d/v4/w1440/r1.7778/-/trump---john-paulson.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1440,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://image.stern.de/34606440/t/3r/v4/w1440/r1/-/trump---john-paulson.jpg",
+            "query_width": "max-width:767",
+            "size": {
+              "width": 1440,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": false,
+        "description": "Trump-Unterstützer John Paulson",
+        "caption": "John Paulson Er war gewissermaßen der Gastgeber der Spendengala: Hedgefonds-Manager John Paulson hatte nach Palm Beach eingeladen, um anderen reichen Gästen das Geld aus den Taschen zu ziehen. Sein eigenes Vermögen liegt zwischen vier und fünf Milliarden Dollar. Gerüchten zufolge wird er Finanzminister in einem möglichen, neuen Trump-Kabinett.",
+        "authors": [
+          "Matt Campbell / DPA"
+        ],
+        "position": 599
+      },
+      {
+        "versions": [
+          {
+            "url": "https://image.stern.de/35200048/t/Vt/v1/w960/r1.7778/-/dixville-einwohner.jpg",
+            "query_width": null,
+            "size": null,
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": false,
+        "description": "Einwohner aus Dixville Notch erzählen, wen sie gewählt haben – und warum",
+        "caption": "Einwohner aus Dixville Notch erzählen, wen sie gewählt haben – und warum",
+        "authors": [
+          "n-tv.de"
+        ],
+        "position": 639
+      }
+    ],
+    "publishing_date": "2024-11-05 15:36:00+01:00",
+    "title": "Warum Kritik an Trumps Charakter so ineffektiv ist und verpufft",
+    "topics": [
+      "Donald Trump",
+      "US-Wahl",
+      "Kamala Harris",
+      "Wahlkampf"
     ]
   }
 }

@@ -88,6 +88,25 @@
         }
       ]
     },
+    "images": [
+      {
+        "versions": [
+          {
+            "url": "https://theintercept.com/wp-content/uploads/2024/02/GettyImages-2033886647-bushnell-vigil.jpg?fit=2500%2C1250",
+            "query_width": null,
+            "size": null,
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": true,
+        "description": "WASHINGTON - FEBRUARY 26: Pro-Palestine demonstrators gather during a vigil for U.S. Airman Aaron Bushnell outside the Embassy of Israel in Washington, on Monday, February 26, 2024. Bushnell, 25, died by self immolation outside the embassy in protest against the Israel-Hamas war. (Photo by Tom Brenner for The Washington Post via Getty Images)",
+        "caption": "Pro-Palestine demonstrators gather during a vigil for U.S. Airman Aaron Bushnell outside the Israeli Embassy in Washington, on Feb. 26, 2024.",
+        "authors": [
+          "Tom Brenner for The Washington Post via Getty Images"
+        ],
+        "position": 175
+      }
+    ],
     "publishing_date": "2024-02-28 14:54:09+00:00",
     "title": "Aaron Bushnell, Who Self-Immolated for Palestine, Had Grown Deeply Disillusioned With the Military",
     "topics": [
