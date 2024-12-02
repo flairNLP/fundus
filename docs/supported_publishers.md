@@ -994,7 +994,9 @@
           <span>www.abc.es</span>
         </a>
       </td>
-      <td>&#160;</td>
+      <td>
+        <code>images</code>
+      </td>
       <td>&#160;</td>
     </tr>
     <tr>
