@@ -5,13 +5,14 @@ from typing import List, Optional, Pattern
 from lxml.cssselect import CSSSelector
 from lxml.etree import XPath
 
-from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute
+from fundus.parser import ArticleBody, BaseParser, Image, ParserProxy, attribute
 from fundus.parser.utility import (
     apply_substitution_pattern_over_list,
     extract_article_body_with_selector,
     generic_date_parsing,
     generic_text_extraction_with_css,
     generic_topic_parsing,
+    image_extraction,
 )
 
 
@@ -21,12 +22,12 @@ class MDRParser(ParserProxy):
         # regex examples: https://regex101.com/r/2DSjAz/1
         _source_detection: str = r"^((MDR (AKTUELL ){0,1}\(([A-z]{2,3}(\/[A-z]{2,3})*|[A-z, ]{2,50}))\)|(Quell(e|en): (u.a. ){0,1}[A-z,]{3,4})|[A-z]{2,4}(, [A-z]{2,4}){0,3}( \([A-z]{2,4}\)){0,1}$|[A-z]{2,4}\/[A-z(), \/]{3,10}$)"
         _paragraph_selector = XPath(
-            f"//div[@class='paragraph '] "
+            f"//div[contains(@class, 'paragraph')]"
             f"/p[not(re:test(em, '{_source_detection}') or re:test(text(), '{_source_detection}'))]",
             namespaces={"re": "http://exslt.org/regular-expressions"},
         )
         _summary_selector = CSSSelector("p.einleitung")
-        _subheadline_selector = CSSSelector("div > .subtitle")
+        _subheadline_selector = CSSSelector("div > h3.subtitle")
         _author_selector = CSSSelector(".articleMeta > .author")
 
         @attribute
@@ -61,3 +62,15 @@ class MDRParser(ParserProxy):
         @attribute
         def title(self) -> Optional[str]:
             return title if isinstance(title := self.precomputed.ld.bf_search("headline"), str) else None
+
+        @attribute
+        def images(self) -> List[Image]:
+            return image_extraction(
+                doc=self.precomputed.doc,
+                paragraph_selector=self._paragraph_selector,
+                upper_boundary_selector=XPath("//div[@id='content']"),
+                image_selector=XPath("//div[contains(@class,'mediaCon ') and not(@data-ctrl-player)]//noscript/img"),
+                caption_selector=XPath("./ancestor::div[@class='media mediaA ']//span[@class='mediaSubtitle']"),
+                author_selector=XPath("./ancestor::div[@class='media mediaA ']//span[@class='mediaRights copyright']"),
+                author_filter=re.compile(r"(?i)bildrechte:"),
+            )

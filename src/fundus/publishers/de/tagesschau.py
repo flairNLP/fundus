@@ -5,11 +5,12 @@ from typing import List, Optional
 from lxml.cssselect import CSSSelector
 from lxml.etree import XPath
 
-from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute
+from fundus.parser import ArticleBody, BaseParser, Image, ParserProxy, attribute
 from fundus.parser.utility import (
     extract_article_body_with_selector,
     generic_author_parsing,
     generic_date_parsing,
+    image_extraction,
 )
 
 
@@ -50,3 +51,17 @@ class TagesschauParser(ParserProxy):
         def topics(self) -> List[str]:
             topic_nodes = self._topic_selector(self.precomputed.doc)
             return [node.text_content() for node in topic_nodes]
+
+        @attribute
+        def images(self) -> List[Image]:
+            return image_extraction(
+                doc=self.precomputed.doc,
+                paragraph_selector=self._paragraph_selector,
+                image_selector=XPath(
+                    "//*[not(self::div and @class='teaser-absatz__image')]/div[@class='ts-picture__wrapper']//img"
+                ),
+                author_filter=re.compile(r".*\|"),
+                author_selector=XPath("./@title"),
+                caption_selector=XPath("./ancestor::div[contains(@class, 'absatzbild ')]"),
+                lower_boundary_selector=self._topic_selector,
+            )

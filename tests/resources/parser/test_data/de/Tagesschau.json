@@ -54,6 +54,111 @@
         }
       ]
     },
+    "images": [
+      {
+        "versions": [
+          {
+            "url": "https://images.tagesschau.de/image/ca17764d-c950-4abf-9a41-2bc344a5cd43/AAABhnSXFss/AAABg8tMJbE/16x9-640/schuld-bruecke-101.jpg",
+            "query_width": "max-width:420",
+            "size": {
+              "width": 16,
+              "height": 9
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://images.tagesschau.de/image/ca17764d-c950-4abf-9a41-2bc344a5cd43/AAABhnSXFss/AAABg8tMJbE/16x9-640/schuld-bruecke-101.webp",
+            "query_width": "max-width:420",
+            "size": {
+              "width": 16,
+              "height": 9
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://images.tagesschau.de/image/ca17764d-c950-4abf-9a41-2bc344a5cd43/AAABhnSXFss/AAABg8tMKVE/16x9-768/schuld-bruecke-101.jpg",
+            "query_width": "max-width:767",
+            "size": {
+              "width": 16,
+              "height": 9
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://images.tagesschau.de/image/ca17764d-c950-4abf-9a41-2bc344a5cd43/AAABhnSXFss/AAABg8tMKVE/16x9-768/schuld-bruecke-101.webp",
+            "query_width": "max-width:767",
+            "size": {
+              "width": 16,
+              "height": 9
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://images.tagesschau.de/image/ca17764d-c950-4abf-9a41-2bc344a5cd43/AAABhnSXFss/AAABg8tMSqc/20x9-960/schuld-bruecke-101.jpg",
+            "query_width": "max-width:1023",
+            "size": {
+              "width": 20,
+              "height": 9
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://images.tagesschau.de/image/ca17764d-c950-4abf-9a41-2bc344a5cd43/AAABhnSXFss/AAABg8tMSqc/20x9-960/schuld-bruecke-101.webp",
+            "query_width": "max-width:1023",
+            "size": {
+              "width": 20,
+              "height": 9
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://images.tagesschau.de/image/ca17764d-c950-4abf-9a41-2bc344a5cd43/AAABhnSXFss/AAABg8tMRzY/20x9-1280/schuld-bruecke-101.jpg",
+            "query_width": "min-width:1024",
+            "size": {
+              "width": 20,
+              "height": 9
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://images.tagesschau.de/image/ca17764d-c950-4abf-9a41-2bc344a5cd43/AAABhnSXFss/AAABg8tMRzY/20x9-1280/schuld-bruecke-101.webp",
+            "query_width": "min-width:1024",
+            "size": {
+              "width": 20,
+              "height": 9
+            },
+            "type": "image/webp"
+          }
+        ],
+        "is_cover": true,
+        "description": "Die zerstörte Brücke in Schuld, aufgenommen zwei Tage nach dem verheerenden Hochwasser vom Juli 2021",
+        "caption": null,
+        "authors": [
+          "AP"
+        ],
+        "position": 991
+      },
+      {
+        "versions": [
+          {
+            "url": "https://images.tagesschau.de/image/ca17764d-c950-4abf-9a41-2bc344a5cd43/AAABhnSXFss/AAABg8tMRzY/20x9-1280/schuld-bruecke-101.jpg",
+            "query_width": null,
+            "size": {
+              "width": 20,
+              "height": 9
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": true,
+        "description": "Die zerstörte Brücke in Schuld, aufgenommen zwei Tage nach dem verheerenden Hochwasser vom Juli 2021",
+        "caption": null,
+        "authors": [
+          "AP"
+        ],
+        "position": 993
+      }
+    ],
     "publishing_date": "2023-04-28 17:23:42.981000+02:00",
     "title": "Ausschuss zur Ahrtal-Flut: Zwei Rücktritte - und viele offene Fragen",
     "topics": [

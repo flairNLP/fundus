@@ -103,6 +103,413 @@
         }
       ]
     },
+    "images": [
+      {
+        "versions": [
+          {
+            "url": "https://www.tagesspiegel.de/wissen/images/rekordhitze-in-den-weltmeeren/alternates/BASE_1_1_W320/rekordhitze-in-den-weltmeeren.jpeg",
+            "query_width": null,
+            "size": {
+              "width": 320,
+              "height": 320
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.tagesspiegel.de/wissen/images/rekordhitze-in-den-weltmeeren/alternates/BASE_1_1_W500/rekordhitze-in-den-weltmeeren.jpeg",
+            "query_width": null,
+            "size": {
+              "width": 500,
+              "height": 500
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.tagesspiegel.de/wissen/images/rekordhitze-in-den-weltmeeren/alternates/BASE_1_1_W767/rekordhitze-in-den-weltmeeren.jpeg",
+            "query_width": null,
+            "size": {
+              "width": 767,
+              "height": 767
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.tagesspiegel.de/wissen/images/rekordhitze-in-den-weltmeeren/alternates/BASE_21_9_W768/rekordhitze-in-den-weltmeeren.jpeg",
+            "query_width": null,
+            "size": {
+              "width": 768,
+              "height": 329
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.tagesspiegel.de/wissen/images/rekordhitze-in-den-weltmeeren/alternates/BASE_21_9_W886/rekordhitze-in-den-weltmeeren.jpeg",
+            "query_width": null,
+            "size": {
+              "width": 886,
+              "height": 380
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.tagesspiegel.de/wissen/images/rekordhitze-in-den-weltmeeren/alternates/BASE_21_9_W1000/rekordhitze-in-den-weltmeeren.jpeg",
+            "query_width": null,
+            "size": {
+              "width": 1000,
+              "height": 428
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": true,
+        "description": "Eine Welle bricht, während die Sonne am Windansea Beach in der Gemeinde La Jolla in San Diego untergeht (Archivbild von 2021).",
+        "caption": null,
+        "authors": [],
+        "position": 872
+      },
+      {
+        "versions": [
+          {
+            "url": "https://www.tagesspiegel.de/images/nordatlantikwassertemperaturrb1png/alternates/FREE_SMALL_340/nordatlantikwassertemperaturrb1png.png",
+            "query_width": null,
+            "size": {
+              "width": 340,
+              "height": 446
+            },
+            "type": "image/png"
+          },
+          {
+            "url": "https://www.tagesspiegel.de/images/nordatlantikwassertemperaturrb1png/alternates/FREE_620/nordatlantikwassertemperaturrb1png.png",
+            "query_width": null,
+            "size": {
+              "width": 620,
+              "height": 394
+            },
+            "type": "image/png"
+          },
+          {
+            "url": "https://www.tagesspiegel.de/images/nordatlantikwassertemperaturrb1png/alternates/FREE_SMALL_680/nordatlantikwassertemperaturrb1png.png",
+            "query_width": null,
+            "size": {
+              "width": 680,
+              "height": 892
+            },
+            "type": "image/png"
+          },
+          {
+            "url": "https://www.tagesspiegel.de/images/nordatlantikwassertemperaturrb1png/alternates/FREE_SMALL_1020/nordatlantikwassertemperaturrb1png.png",
+            "query_width": null,
+            "size": {
+              "width": 1020,
+              "height": 1338
+            },
+            "type": "image/png"
+          },
+          {
+            "url": "https://www.tagesspiegel.de/images/nordatlantikwassertemperaturrb1png/alternates/FREE_1240/nordatlantikwassertemperaturrb1png.png",
+            "query_width": null,
+            "size": {
+              "width": 1240,
+              "height": 788
+            },
+            "type": "image/png"
+          }
+        ],
+        "is_cover": false,
+        "description": "Die Temperatur des Oberflächenwassers im Nordatlantik befindet sich seit mehr als einem Jahr auf Rekordkurs.",
+        "caption": "Die Temperatur des Oberflächenwassers im Nordatlantik befindet sich seit mehr als einem Jahr auf Rekordkurs.",
+        "authors": [],
+        "position": 915
+      },
+      {
+        "versions": [
+          {
+            "url": "https://www.tagesspiegel.de/images/slowenien-uberschwemmungen-nach-starken-regenfallen1/alternates/BASE_4_3_W440/slowenien-ueberschwemmungen-nach-starken-regenfaellen.jpeg",
+            "query_width": null,
+            "size": {
+              "width": 440,
+              "height": 330
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.tagesspiegel.de/images/slowenien-uberschwemmungen-nach-starken-regenfallen1/alternates/BASE_4_3_W600/slowenien-ueberschwemmungen-nach-starken-regenfaellen.jpeg",
+            "query_width": null,
+            "size": {
+              "width": 600,
+              "height": 450
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.tagesspiegel.de/images/slowenien-uberschwemmungen-nach-starken-regenfallen1/alternates/BASE_4_3_W1000/slowenien-ueberschwemmungen-nach-starken-regenfaellen.jpeg",
+            "query_width": null,
+            "size": {
+              "width": 1000,
+              "height": 750
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": false,
+        "description": "Intensive Regenfälle brachten Slowenien und Südostösterreich Überschwemmungen: Überflutete Gebiete nördlich von Ljubljana.",
+        "caption": "Intensive Regenfälle brachten Slowenien und Südostösterreich Überschwemmungen: Überflutete Gebiete nördlich von Ljubljana.",
+        "authors": [],
+        "position": 935
+      },
+      {
+        "versions": [
+          {
+            "url": "https://www.tagesspiegel.de/images/burgess188jpg/alternates/BASE_1_1_W80/burgess188jpg.jpeg",
+            "query_width": null,
+            "size": {
+              "width": 80,
+              "height": 80
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.tagesspiegel.de/images/burgess188jpg/alternates/BASE_1_1_W160/burgess188jpg.jpeg",
+            "query_width": null,
+            "size": {
+              "width": 160,
+              "height": 160
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.tagesspiegel.de/images/burgess188jpg/alternates/BASE_1_1_W200/burgess188jpg.jpeg",
+            "query_width": null,
+            "size": {
+              "width": 200,
+              "height": 200
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.tagesspiegel.de/images/burgess188jpg/alternates/BASE_1_1_W320/burgess188jpg.jpeg",
+            "query_width": null,
+            "size": {
+              "width": 320,
+              "height": 320
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": false,
+        "description": null,
+        "caption": null,
+        "authors": [],
+        "position": 961
+      },
+      {
+        "versions": [
+          {
+            "url": "https://www.tagesspiegel.de/images/nordatlantiktemperaturanomalierb1png/alternates/FREE_SMALL_340/nordatlantiktemperaturanomalierb1png.png",
+            "query_width": null,
+            "size": {
+              "width": 340,
+              "height": 411
+            },
+            "type": "image/png"
+          },
+          {
+            "url": "https://www.tagesspiegel.de/images/nordatlantiktemperaturanomalierb1png/alternates/FREE_620/nordatlantiktemperaturanomalierb1png.png",
+            "query_width": null,
+            "size": {
+              "width": 620,
+              "height": 536
+            },
+            "type": "image/png"
+          },
+          {
+            "url": "https://www.tagesspiegel.de/images/nordatlantiktemperaturanomalierb1png/alternates/FREE_SMALL_680/nordatlantiktemperaturanomalierb1png.png",
+            "query_width": null,
+            "size": {
+              "width": 680,
+              "height": 822
+            },
+            "type": "image/png"
+          },
+          {
+            "url": "https://www.tagesspiegel.de/images/nordatlantiktemperaturanomalierb1png/alternates/FREE_SMALL_1020/nordatlantiktemperaturanomalierb1png.png",
+            "query_width": null,
+            "size": {
+              "width": 1020,
+              "height": 1233
+            },
+            "type": "image/png"
+          },
+          {
+            "url": "https://www.tagesspiegel.de/images/nordatlantiktemperaturanomalierb1png/alternates/FREE_1240/nordatlantiktemperaturanomalierb1png.png",
+            "query_width": null,
+            "size": {
+              "width": 1240,
+              "height": 1072
+            },
+            "type": "image/png"
+          }
+        ],
+        "is_cover": false,
+        "description": "Derzeit ist das Oberflächenwasser im Ostatlantik westlich der Kanaren viel zu warm, ähnlich wie bei dem Orkan Xynthia im Jahre 2010.",
+        "caption": "Derzeit ist das Oberflächenwasser im Ostatlantik westlich der Kanaren viel zu warm, ähnlich wie bei dem Orkan Xynthia im Jahre 2010.",
+        "authors": [],
+        "position": 973
+      },
+      {
+        "versions": [
+          {
+            "url": "https://www.tagesspiegel.de/images/map-of-the-atlantic-ocean-showing-the-course-of-the-gulf-stream-from-elisee-reclus-the-ocean-atmosp/alternates/BASE_4_3_W440/map-of-the-atlantic-ocean-showing-the-course-of-the-gulf-stream-from-elisee-reclus-the-ocean-atmosp.jpeg",
+            "query_width": null,
+            "size": {
+              "width": 440,
+              "height": 330
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.tagesspiegel.de/images/map-of-the-atlantic-ocean-showing-the-course-of-the-gulf-stream-from-elisee-reclus-the-ocean-atmosp/alternates/BASE_4_3_W600/map-of-the-atlantic-ocean-showing-the-course-of-the-gulf-stream-from-elisee-reclus-the-ocean-atmosp.jpeg",
+            "query_width": null,
+            "size": {
+              "width": 600,
+              "height": 450
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.tagesspiegel.de/images/map-of-the-atlantic-ocean-showing-the-course-of-the-gulf-stream-from-elisee-reclus-the-ocean-atmosp/alternates/BASE_4_3_W1000/map-of-the-atlantic-ocean-showing-the-course-of-the-gulf-stream-from-elisee-reclus-the-ocean-atmosp.jpeg",
+            "query_width": null,
+            "size": {
+              "width": 1000,
+              "height": 750
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": false,
+        "description": "Karte des Atlantischen Ozeans mit dem Verlauf des Golfstroms aus dem Jahr 1873.",
+        "caption": "Karte des Atlantischen Ozeans mit dem Verlauf des Golfstroms aus dem Jahr 1873.",
+        "authors": [],
+        "position": 987
+      },
+      {
+        "versions": [
+          {
+            "url": "https://www.tagesspiegel.de/wissen/images/heprodimagesfotos87120170412sahara1034120170411145410682jpg/alternates/BASE_4_3_W440/heprodimagesfotos87120170412sahara1034120170411145410682jpg.jpeg",
+            "query_width": null,
+            "size": {
+              "width": 440,
+              "height": 330
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.tagesspiegel.de/wissen/images/heprodimagesfotos87120170412sahara1034120170411145410682jpg/alternates/BASE_4_3_W600/heprodimagesfotos87120170412sahara1034120170411145410682jpg.jpeg",
+            "query_width": null,
+            "size": {
+              "width": 600,
+              "height": 450
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.tagesspiegel.de/wissen/images/heprodimagesfotos87120170412sahara1034120170411145410682jpg/alternates/BASE_4_3_W1000/heprodimagesfotos87120170412sahara1034120170411145410682jpg.jpeg",
+            "query_width": null,
+            "size": {
+              "width": 1000,
+              "height": 750
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": false,
+        "description": "Hitzewellen treten vor allem durch Südwindlagen auf, die häufig auch Saharastaub nach Europa bringen.",
+        "caption": "Hitzewellen treten vor allem durch Südwindlagen auf, die häufig auch Saharastaub nach Europa bringen.",
+        "authors": [],
+        "position": 1026
+      },
+      {
+        "versions": [
+          {
+            "url": "https://www.tagesspiegel.de/wissen/images/2022karsten-hausteinoo3a9871jpg/alternates/BASE_1_1_W80/2022karsten-hausteinoo3a9871jpg.jpeg",
+            "query_width": null,
+            "size": {
+              "width": 80,
+              "height": 80
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.tagesspiegel.de/wissen/images/2022karsten-hausteinoo3a9871jpg/alternates/BASE_1_1_W160/2022karsten-hausteinoo3a9871jpg.jpeg",
+            "query_width": null,
+            "size": {
+              "width": 160,
+              "height": 160
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.tagesspiegel.de/wissen/images/2022karsten-hausteinoo3a9871jpg/alternates/BASE_1_1_W200/2022karsten-hausteinoo3a9871jpg.jpeg",
+            "query_width": null,
+            "size": {
+              "width": 200,
+              "height": 200
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.tagesspiegel.de/wissen/images/2022karsten-hausteinoo3a9871jpg/alternates/BASE_1_1_W320/2022karsten-hausteinoo3a9871jpg.jpeg",
+            "query_width": null,
+            "size": {
+              "width": 320,
+              "height": 320
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": false,
+        "description": null,
+        "caption": null,
+        "authors": [],
+        "position": 1036
+      },
+      {
+        "versions": [
+          {
+            "url": "https://www.tagesspiegel.de/images/sunset-at-callao-salvajebrsanta-cruz-de-tenerife-spain-sunset-at-callao-salvaje-santa-cruz-de-tenerife-spain-copyright/alternates/BASE_4_3_W440/sunset-at-callao-salvajebrsanta-cruz-de-tenerife-spain-sunset-at-callao-salvaje-santa-cruz-de-tenerife-spain-copyright.jpeg",
+            "query_width": null,
+            "size": {
+              "width": 440,
+              "height": 330
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.tagesspiegel.de/images/sunset-at-callao-salvajebrsanta-cruz-de-tenerife-spain-sunset-at-callao-salvaje-santa-cruz-de-tenerife-spain-copyright/alternates/BASE_4_3_W600/sunset-at-callao-salvajebrsanta-cruz-de-tenerife-spain-sunset-at-callao-salvaje-santa-cruz-de-tenerife-spain-copyright.jpeg",
+            "query_width": null,
+            "size": {
+              "width": 600,
+              "height": 450
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.tagesspiegel.de/images/sunset-at-callao-salvajebrsanta-cruz-de-tenerife-spain-sunset-at-callao-salvaje-santa-cruz-de-tenerife-spain-copyright/alternates/BASE_4_3_W1000/sunset-at-callao-salvajebrsanta-cruz-de-tenerife-spain-sunset-at-callao-salvaje-santa-cruz-de-tenerife-spain-copyright.jpeg",
+            "query_width": null,
+            "size": {
+              "width": 1000,
+              "height": 750
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": false,
+        "description": "Ein Blick über Santa Cruz de Tenerife auf den Kanaren.",
+        "caption": "Ein Blick über Santa Cruz de Tenerife auf den Kanaren.",
+        "authors": [],
+        "position": 1071
+      }
+    ],
     "publishing_date": "2024-04-29 10:37:00+00:00",
     "title": "Eskalation im Nordatlantik: „Wenn die Ozeane überhitzen, führt das potenziell zu mehr Wetterextremen“",
     "topics": [

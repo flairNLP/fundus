@@ -1,6 +1,7 @@
+from pickle import dumps, loads
 from typing import Any, Dict, List
 
-from lxml.etree import XPath
+from lxml.etree import XPath, tostring
 
 from fundus.parser.data import LinkedDataMapping
 
@@ -22,3 +23,14 @@ class TestLinkedDataMapping:
         assert ld.xpath_search(XPath("//_U003AU002AU0040")) == ["Howdy"]
         assert ld.xpath_search(XPath("//dict")) == ["True"]
         assert ld.xpath_search(XPath("//Example2")) == [{"@type": "Example2", "value": "2", "_:*@": "Howdy"}]
+
+    def test_pickle(self):
+        ld = LinkedDataMapping(lds)
+        ld.__as_xml__()
+        ld_pickled = loads(dumps(ld))
+        assert ld_pickled.__getattribute__("Example1") == ld.__getattribute__("Example1")
+        assert ld_pickled.__getattribute__("Example2") == ld.__getattribute__("Example2")
+        assert ld_pickled.__getattribute__("UNKNOWN_TYPE") == ld.__getattribute__("UNKNOWN_TYPE")
+        assert tostring(ld_pickled.__getattribute__("_LinkedDataMapping__xml")) == tostring(
+            ld.__getattribute__("_LinkedDataMapping__xml")
+        )

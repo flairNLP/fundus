@@ -1,5 +1,5 @@
 from fundus.publishers.base_objects import Publisher, PublisherGroup
-from fundus.scraping.url import NewsMap, Sitemap
+from fundus.scraping.url import NewsMap, RSSFeed, Sitemap
 
 from ..shared import EuronewsParser
 from .le_figaro import LeFigaroParser
@@ -35,6 +35,8 @@ class FR(metaclass=PublisherGroup):
         sources=[
             Sitemap("https://sitemaps.lefigaro.fr/lefigaro.fr/articles.xml"),
             NewsMap("https://www.lefigaro.fr/sitemap_news.xml"),
+            RSSFeed("https://www.lefigaro.fr/rss/figaro_actualites.xml"),
+            RSSFeed("https://www.lefigaro.fr/rss/figaro_flash-actu.xml"),
         ],
     )
 
