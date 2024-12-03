@@ -119,7 +119,7 @@ class FilterResultWithMissingAttributes:
         return bool(self.missing_attributes)
 
 
-def _guarded_bool(value: Any):
+def guarded_bool(value: Any) -> bool:
     if isinstance(value, bool):
         return True
     else:
@@ -151,7 +151,7 @@ class Requires:
         """
         self.required_attributes = set(required_attributes)
         # somehow mypy does not recognize bool as callable :(
-        self._eval: Callable[[Any], bool] = bool if eval_booleans else _guarded_bool  # type: ignore[assignment]
+        self._eval: Callable[[Any], bool] = bool if eval_booleans else guarded_bool  # type: ignore[assignment]
 
     def __call__(self, extraction: Dict[str, Any]) -> FilterResultWithMissingAttributes:
         missing_attributes = [
