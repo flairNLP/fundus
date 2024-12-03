@@ -2,13 +2,15 @@ import datetime
 from typing import List, Optional
 
 from lxml.cssselect import CSSSelector
+from lxml.etree import XPath
 
-from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute
+from fundus.parser import ArticleBody, BaseParser, Image, ParserProxy, attribute
 from fundus.parser.utility import (
     extract_article_body_with_selector,
     generic_author_parsing,
     generic_date_parsing,
     generic_topic_parsing,
+    image_extraction,
     parse_title_from_root,
 )
 
@@ -45,6 +47,15 @@ class RollingStoneParser(ParserProxy):
         @attribute
         def topics(self) -> List[str]:
             return generic_topic_parsing(self.precomputed.meta.get("swiftype:topics"))
+
+        @attribute
+        def images(self) -> List[Image]:
+            return image_extraction(
+                doc=self.precomputed.doc,
+                paragraph_selector=self._paragraph_selector,
+                caption_selector=XPath("./ancestor::figure//figcaption//span"),
+                author_selector=XPath("./ancestor::figure//figcaption//cite"),
+            )
 
     class V1_1(V1):
         VALID_UNTIL = datetime.date.today()

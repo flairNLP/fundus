@@ -1,13 +1,15 @@
+import re
 from datetime import datetime
 from typing import List, Optional
 
 from lxml.etree import XPath
 
-from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute
+from fundus.parser import ArticleBody, BaseParser, Image, ParserProxy, attribute
 from fundus.parser.utility import (
     extract_article_body_with_selector,
     generic_author_parsing,
     generic_date_parsing,
+    image_extraction,
 )
 
 
@@ -40,3 +42,13 @@ class TheGatewayPunditParser(ParserProxy):
             if (title := self.precomputed.meta.get("og:title")) is not None:
                 title = title.split("|")[0].strip()
             return title
+
+        @attribute
+        def images(self) -> List[Image]:
+            return image_extraction(
+                doc=self.precomputed.doc,
+                paragraph_selector=self._paragraph_selector,
+                image_selector=XPath("//div[@class='entry-content']//img"),
+                author_selector=XPath("./ancestor::figure//figcaption"),
+                author_filter=re.compile(r"(?i).*\(credit:|\)|.*photo:|^(?!.*(credit:|photo:)).*$"),
+            )

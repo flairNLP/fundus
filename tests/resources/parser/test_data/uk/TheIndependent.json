@@ -1,7 +1,7 @@
 {
   "V1": {
     "authors": [
-      "Jamie Braidwood"
+      "Angus Thompson"
     ],
     "body": {
       "summary": [],
@@ -9,21 +9,71 @@
         {
           "headline": [],
           "paragraphs": [
-            "England are preparing to face Australia in the Women’s World Cup semi-finals, with the hosts gripped by Matildas fever ahead of Wednesday’s crunch clash in Sydney.",
-            "The Lionesses reached the semi-finals as they came from behind to beat Colombia on Saturday and will return to Stadium Australia to face the hosts, with Sarina Wiegman’s side looking to reach their first ever World Cup final. Australia defeated France on penalties in what was the most-watched sporting event in the country since the 2000 Olympics, with the excitement set to build even further ahead of facing rivals England.",
-            "The World Cup semi-finals kick off tomorrow with Spain meeting Sweden in Auckland for a place in Sunday’s showpiece final. All four teams left in the World Cup are looking to win the tournament for the first time, with European champions England remaining slight favourites. Sweden were impressive in knocking out Japan in the quarter-finals, while Spain have a hugely talented squad and Australia have the momentum and backing of their home support.",
-            "Follow all the latest World Cup news and updates ahead of the semi-finals in today’s live blog."
+            "Australian teenager Holly Bowles has become the sixth person to die from suspected methanol poisoning after travelling in Laos.",
+            "The 19-year-old’s death in a Thai hospital was confirmed in a family statement to Australian news outlets this morning and comes a day after her friend Bianca Jones, also 19, died from the same incident in the riverside party town Van Vieng.",
+            "Ms Bowles’ father, Shaun Bowles, confirmed his daughter’s passing to Nine News. “It is with broken hearts, and we are so sad to say that our beautiful girl Holly is now at peace,” he said.",
+            "British backpacker and lawyer Simone White was among those to have died in the suspected methanol poisoning case after allegedly being served free drinks in Laos.",
+            "It comes as Thai police have detained the owner and the manager of Nana Backpacker Hostel, where affected travellers who visited the town were staying, however no one has been charged over the incident.",
+            "This is a breaking new story - more to follow"
           ]
         }
       ]
     },
-    "publishing_date": "2023-08-14 09:17:08+00:00",
-    "title": "Women’s World Cup LIVE: England news as Lionesses prepare for Australia semi-final",
+    "images": [
+      {
+        "versions": [
+          {
+            "url": "https://static.independent.co.uk/2023/08/25/15/3_2.png?quality=75&width=360&crop=3%3A2%2Csmart&auto=webp",
+            "query_width": null,
+            "size": {
+              "width": 360,
+              "height": 0
+            },
+            "type": "image/png"
+          },
+          {
+            "url": "https://static.independent.co.uk/2023/08/25/15/3_2.png?quality=75&width=768&crop=3%3A2%2Csmart&auto=webp",
+            "query_width": null,
+            "size": {
+              "width": 768,
+              "height": 0
+            },
+            "type": "image/png"
+          },
+          {
+            "url": "https://static.independent.co.uk/2023/08/25/15/3_2.png?quality=75&width=1000&crop=3%3A2%2Csmart&auto=webp",
+            "query_width": null,
+            "size": {
+              "width": 1000,
+              "height": 0
+            },
+            "type": "image/png"
+          },
+          {
+            "url": "https://static.independent.co.uk/2023/08/25/15/3_2.png?quality=75&width=1250&crop=3%3A2%2Csmart&auto=webp",
+            "query_width": null,
+            "size": {
+              "width": 1250,
+              "height": 0
+            },
+            "type": "image/png"
+          }
+        ],
+        "is_cover": true,
+        "description": null,
+        "caption": null,
+        "authors": [
+          "(The Independent)"
+        ],
+        "position": 751
+      }
+    ],
+    "publishing_date": "2024-11-22 08:49:59+00:00",
+    "title": "Laos methanol poisonings: Australian teenager Holly Bowles becomes sixth to die as police detain hostel bosses",
     "topics": [
-      "Women's World Cup",
-      "Alessia Russo",
-      "England women",
-      "Lionesses",
+      "Australian",
+      "Laos",
+      "Thai",
       "Internal"
     ]
   }

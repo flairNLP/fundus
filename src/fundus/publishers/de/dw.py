@@ -5,7 +5,7 @@ from typing import List, Optional, Pattern
 from lxml.cssselect import CSSSelector
 from lxml.etree import XPath
 
-from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute
+from fundus.parser import ArticleBody, BaseParser, Image, ParserProxy, attribute
 from fundus.parser.utility import (
     apply_substitution_pattern_over_list,
     extract_article_body_with_selector,
@@ -13,6 +13,7 @@ from fundus.parser.utility import (
     generic_date_parsing,
     generic_text_extraction_with_css,
     generic_topic_parsing,
+    image_extraction,
     strip_nodes_to_text,
 )
 
@@ -59,6 +60,9 @@ class DWParser(ParserProxy):
         @attribute
         def topics(self) -> List[str]:
             return [node.text_content().strip() for node in self._topic_selector(self.precomputed.doc)]
+
+        # As of now, images cannot reliably be implemented for DW, since all pictures in the article, are loaded
+        # dynamically with URLs like 'https://static.dw.com/image/65166768_${formatId}.jpg'
 
     class V2_1(V2):
         VALID_UNTIL = datetime.date.today()

@@ -1,14 +1,16 @@
 import datetime
+import re
 from typing import List, Optional
 
 from lxml.cssselect import CSSSelector
 
-from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute
+from fundus.parser import ArticleBody, BaseParser, Image, ParserProxy, attribute
 from fundus.parser.utility import (
     extract_article_body_with_selector,
     generic_author_parsing,
     generic_date_parsing,
     generic_topic_parsing,
+    image_extraction,
 )
 
 
@@ -41,3 +43,13 @@ class INewsParser(ParserProxy):
         @attribute
         def topics(self) -> List[str]:
             return generic_topic_parsing(self.precomputed.ld.bf_search("keywords"))
+
+        @attribute
+        def images(self) -> List[Image]:
+            return image_extraction(
+                doc=self.precomputed.doc,
+                paragraph_selector=self._paragraph_selector,
+                upper_boundary_selector=CSSSelector("div.inews__main"),
+                image_selector=CSSSelector("figure:has(> figcaption) img"),
+                author_selector=re.compile(r"\((?P<credits>.*?)\)$"),
+            )

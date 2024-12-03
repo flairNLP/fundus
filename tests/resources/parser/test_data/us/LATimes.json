@@ -80,6 +80,959 @@
         }
       ]
     },
+    "images": [
+      {
+        "versions": [
+          {
+            "url": "https://ca-times.brightspotcdn.com/dims4/default/64a9e6d/2147483647/strip/true/crop/3000x2000+0+0/resize/320x213!/quality/80/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2F36%2F6a%2F98f298544788ba7d10446f7c55ca%2Fjpg-coliseum-composite.jpg",
+            "query_width": null,
+            "size": {
+              "width": 320,
+              "height": 213
+            },
+            "type": null
+          },
+          {
+            "url": "https://ca-times.brightspotcdn.com/dims4/default/2d865fe/2147483647/strip/true/crop/3000x2000+0+0/resize/320x213!/format/webp/quality/80/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2F36%2F6a%2F98f298544788ba7d10446f7c55ca%2Fjpg-coliseum-composite.jpg",
+            "query_width": null,
+            "size": {
+              "width": 320,
+              "height": 213
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://ca-times.brightspotcdn.com/dims4/default/4f7669c/2147483647/strip/true/crop/3000x2000+0+0/resize/568x379!/quality/80/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2F36%2F6a%2F98f298544788ba7d10446f7c55ca%2Fjpg-coliseum-composite.jpg",
+            "query_width": null,
+            "size": {
+              "width": 568,
+              "height": 379
+            },
+            "type": null
+          },
+          {
+            "url": "https://ca-times.brightspotcdn.com/dims4/default/396338b/2147483647/strip/true/crop/3000x2000+0+0/resize/568x379!/format/webp/quality/80/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2F36%2F6a%2F98f298544788ba7d10446f7c55ca%2Fjpg-coliseum-composite.jpg",
+            "query_width": null,
+            "size": {
+              "width": 568,
+              "height": 379
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://ca-times.brightspotcdn.com/dims4/default/c0a5385/2147483647/strip/true/crop/3000x2000+0+0/resize/768x512!/quality/80/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2F36%2F6a%2F98f298544788ba7d10446f7c55ca%2Fjpg-coliseum-composite.jpg",
+            "query_width": null,
+            "size": {
+              "width": 768,
+              "height": 512
+            },
+            "type": null
+          },
+          {
+            "url": "https://ca-times.brightspotcdn.com/dims4/default/e2346bf/2147483647/strip/true/crop/3000x2000+0+0/resize/768x512!/format/webp/quality/80/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2F36%2F6a%2F98f298544788ba7d10446f7c55ca%2Fjpg-coliseum-composite.jpg",
+            "query_width": null,
+            "size": {
+              "width": 768,
+              "height": 512
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://ca-times.brightspotcdn.com/dims4/default/31d8e34/2147483647/strip/true/crop/3000x2000+0+0/resize/1024x683!/quality/80/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2F36%2F6a%2F98f298544788ba7d10446f7c55ca%2Fjpg-coliseum-composite.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1024,
+              "height": 683
+            },
+            "type": null
+          },
+          {
+            "url": "https://ca-times.brightspotcdn.com/dims4/default/d7ac5fb/2147483647/strip/true/crop/3000x2000+0+0/resize/1024x683!/format/webp/quality/80/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2F36%2F6a%2F98f298544788ba7d10446f7c55ca%2Fjpg-coliseum-composite.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1024,
+              "height": 683
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://ca-times.brightspotcdn.com/dims4/default/569f52f/2147483647/strip/true/crop/3000x2000+0+0/resize/1240x827!/quality/80/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2F36%2F6a%2F98f298544788ba7d10446f7c55ca%2Fjpg-coliseum-composite.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1240,
+              "height": 827
+            },
+            "type": null
+          },
+          {
+            "url": "https://ca-times.brightspotcdn.com/dims4/default/0853339/2147483647/strip/true/crop/3000x2000+0+0/resize/1240x827!/format/webp/quality/80/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2F36%2F6a%2F98f298544788ba7d10446f7c55ca%2Fjpg-coliseum-composite.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1240,
+              "height": 827
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://ca-times.brightspotcdn.com/dims4/default/fec002c/2147483647/strip/true/crop/3000x2000+0+0/resize/1440x960!/quality/80/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2F36%2F6a%2F98f298544788ba7d10446f7c55ca%2Fjpg-coliseum-composite.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1440,
+              "height": 960
+            },
+            "type": null
+          },
+          {
+            "url": "https://ca-times.brightspotcdn.com/dims4/default/13f0952/2147483647/strip/true/crop/3000x2000+0+0/resize/1440x960!/format/webp/quality/80/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2F36%2F6a%2F98f298544788ba7d10446f7c55ca%2Fjpg-coliseum-composite.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1440,
+              "height": 960
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://ca-times.brightspotcdn.com/dims4/default/087132c/2147483647/strip/true/crop/3000x2000+0+0/resize/2400x1600!/quality/80/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2F36%2F6a%2F98f298544788ba7d10446f7c55ca%2Fjpg-coliseum-composite.jpg",
+            "query_width": null,
+            "size": {
+              "width": 2400,
+              "height": 1600
+            },
+            "type": null
+          },
+          {
+            "url": "https://ca-times.brightspotcdn.com/dims4/default/ec9673b/2147483647/strip/true/crop/3000x2000+0+0/resize/2400x1600!/format/webp/quality/80/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2F36%2F6a%2F98f298544788ba7d10446f7c55ca%2Fjpg-coliseum-composite.jpg",
+            "query_width": null,
+            "size": {
+              "width": 2400,
+              "height": 1600
+            },
+            "type": "image/webp"
+          }
+        ],
+        "is_cover": true,
+        "description": "Clockwise from left: Roy Campanella, Babe Didrikson; USC tailback Anthony Davis; the Staples Singers; John F. Kennedy",
+        "caption": null,
+        "authors": [
+          "Associated Press",
+          "Tim Hubbard / Los Angeles Times"
+        ],
+        "position": 520
+      },
+      {
+        "versions": [
+          {
+            "url": "https://ca-times.brightspotcdn.com/dims4/default/b5c1f50/2147483647/strip/true/crop/3000x2000+0+0/resize/320x213!/quality/80/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2Fec%2F81%2F2d8e46744303964e50d9a7efb39b%2Ftint-football-cuts.jpg",
+            "query_width": null,
+            "size": {
+              "width": 320,
+              "height": 213
+            },
+            "type": null
+          },
+          {
+            "url": "https://ca-times.brightspotcdn.com/dims4/default/8347ca1/2147483647/strip/true/crop/3000x2000+0+0/resize/320x213!/format/webp/quality/80/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2Fec%2F81%2F2d8e46744303964e50d9a7efb39b%2Ftint-football-cuts.jpg",
+            "query_width": null,
+            "size": {
+              "width": 320,
+              "height": 213
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://ca-times.brightspotcdn.com/dims4/default/8864565/2147483647/strip/true/crop/3000x2000+0+0/resize/568x379!/quality/80/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2Fec%2F81%2F2d8e46744303964e50d9a7efb39b%2Ftint-football-cuts.jpg",
+            "query_width": null,
+            "size": {
+              "width": 568,
+              "height": 379
+            },
+            "type": null
+          },
+          {
+            "url": "https://ca-times.brightspotcdn.com/dims4/default/f025caa/2147483647/strip/true/crop/3000x2000+0+0/resize/568x379!/format/webp/quality/80/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2Fec%2F81%2F2d8e46744303964e50d9a7efb39b%2Ftint-football-cuts.jpg",
+            "query_width": null,
+            "size": {
+              "width": 568,
+              "height": 379
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://ca-times.brightspotcdn.com/dims4/default/de571c0/2147483647/strip/true/crop/3000x2000+0+0/resize/768x512!/quality/80/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2Fec%2F81%2F2d8e46744303964e50d9a7efb39b%2Ftint-football-cuts.jpg",
+            "query_width": null,
+            "size": {
+              "width": 768,
+              "height": 512
+            },
+            "type": null
+          },
+          {
+            "url": "https://ca-times.brightspotcdn.com/dims4/default/1345840/2147483647/strip/true/crop/3000x2000+0+0/resize/768x512!/format/webp/quality/80/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2Fec%2F81%2F2d8e46744303964e50d9a7efb39b%2Ftint-football-cuts.jpg",
+            "query_width": null,
+            "size": {
+              "width": 768,
+              "height": 512
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://ca-times.brightspotcdn.com/dims4/default/83fa79d/2147483647/strip/true/crop/3000x2000+0+0/resize/1024x683!/quality/80/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2Fec%2F81%2F2d8e46744303964e50d9a7efb39b%2Ftint-football-cuts.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1024,
+              "height": 683
+            },
+            "type": null
+          },
+          {
+            "url": "https://ca-times.brightspotcdn.com/dims4/default/b31e365/2147483647/strip/true/crop/3000x2000+0+0/resize/1024x683!/format/webp/quality/80/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2Fec%2F81%2F2d8e46744303964e50d9a7efb39b%2Ftint-football-cuts.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1024,
+              "height": 683
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://ca-times.brightspotcdn.com/dims4/default/45600f9/2147483647/strip/true/crop/3000x2000+0+0/resize/1200x800!/quality/80/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2Fec%2F81%2F2d8e46744303964e50d9a7efb39b%2Ftint-football-cuts.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1200,
+              "height": 800
+            },
+            "type": null
+          },
+          {
+            "url": "https://ca-times.brightspotcdn.com/dims4/default/42c2d81/2147483647/strip/true/crop/3000x2000+0+0/resize/1200x800!/format/webp/quality/80/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2Fec%2F81%2F2d8e46744303964e50d9a7efb39b%2Ftint-football-cuts.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1200,
+              "height": 800
+            },
+            "type": "image/webp"
+          }
+        ],
+        "is_cover": false,
+        "description": "Clockwise from top left: Rams from 1946; USC's Anthony Davis; Green Bay Coach Vince Lombardi, Miami Coach Don Shula",
+        "caption": null,
+        "authors": [
+          "Associated Press",
+          "Tim Hubbard / Los Angeles Times"
+        ],
+        "position": 630
+      },
+      {
+        "versions": [
+          {
+            "url": "https://ca-times.brightspotcdn.com/dims4/default/a741452/2147483647/strip/true/crop/5408x3647+0+0/resize/320x216!/quality/80/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2F62%2F15%2F63827aef44c0b7c6ddd384ec9c78%2Frams-1946.jpeg",
+            "query_width": null,
+            "size": {
+              "width": 320,
+              "height": 216
+            },
+            "type": null
+          },
+          {
+            "url": "https://ca-times.brightspotcdn.com/dims4/default/0c84bf9/2147483647/strip/true/crop/5408x3647+0+0/resize/320x216!/format/webp/quality/80/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2F62%2F15%2F63827aef44c0b7c6ddd384ec9c78%2Frams-1946.jpeg",
+            "query_width": null,
+            "size": {
+              "width": 320,
+              "height": 216
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://ca-times.brightspotcdn.com/dims4/default/2d3444f/2147483647/strip/true/crop/5408x3647+0+0/resize/568x383!/quality/80/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2F62%2F15%2F63827aef44c0b7c6ddd384ec9c78%2Frams-1946.jpeg",
+            "query_width": null,
+            "size": {
+              "width": 568,
+              "height": 383
+            },
+            "type": null
+          },
+          {
+            "url": "https://ca-times.brightspotcdn.com/dims4/default/733fe88/2147483647/strip/true/crop/5408x3647+0+0/resize/568x383!/format/webp/quality/80/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2F62%2F15%2F63827aef44c0b7c6ddd384ec9c78%2Frams-1946.jpeg",
+            "query_width": null,
+            "size": {
+              "width": 568,
+              "height": 383
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://ca-times.brightspotcdn.com/dims4/default/45f5f96/2147483647/strip/true/crop/5408x3647+0+0/resize/768x518!/quality/80/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2F62%2F15%2F63827aef44c0b7c6ddd384ec9c78%2Frams-1946.jpeg",
+            "query_width": null,
+            "size": {
+              "width": 768,
+              "height": 518
+            },
+            "type": null
+          },
+          {
+            "url": "https://ca-times.brightspotcdn.com/dims4/default/66e11e5/2147483647/strip/true/crop/5408x3647+0+0/resize/768x518!/format/webp/quality/80/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2F62%2F15%2F63827aef44c0b7c6ddd384ec9c78%2Frams-1946.jpeg",
+            "query_width": null,
+            "size": {
+              "width": 768,
+              "height": 518
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://ca-times.brightspotcdn.com/dims4/default/0e0086a/2147483647/strip/true/crop/5408x3647+0+0/resize/1024x690!/quality/80/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2F62%2F15%2F63827aef44c0b7c6ddd384ec9c78%2Frams-1946.jpeg",
+            "query_width": null,
+            "size": {
+              "width": 1024,
+              "height": 690
+            },
+            "type": null
+          },
+          {
+            "url": "https://ca-times.brightspotcdn.com/dims4/default/651c9e5/2147483647/strip/true/crop/5408x3647+0+0/resize/1024x690!/format/webp/quality/80/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2F62%2F15%2F63827aef44c0b7c6ddd384ec9c78%2Frams-1946.jpeg",
+            "query_width": null,
+            "size": {
+              "width": 1024,
+              "height": 690
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://ca-times.brightspotcdn.com/dims4/default/0e49124/2147483647/strip/true/crop/5408x3647+0+0/resize/1200x809!/quality/80/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2F62%2F15%2F63827aef44c0b7c6ddd384ec9c78%2Frams-1946.jpeg",
+            "query_width": null,
+            "size": {
+              "width": 1200,
+              "height": 809
+            },
+            "type": null
+          },
+          {
+            "url": "https://ca-times.brightspotcdn.com/dims4/default/5e8c145/2147483647/strip/true/crop/5408x3647+0+0/resize/1200x809!/format/webp/quality/80/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2F62%2F15%2F63827aef44c0b7c6ddd384ec9c78%2Frams-1946.jpeg",
+            "query_width": null,
+            "size": {
+              "width": 1200,
+              "height": 809
+            },
+            "type": "image/webp"
+          }
+        ],
+        "is_cover": false,
+        "description": "Sept. 6, 1946: The Rams play a night game against the Washington Redskins at the Coliseum.",
+        "caption": "Sept. 6, 1946: The Rams play a night game against the Washington Redskins at the Coliseum.",
+        "authors": [
+          "Los Angeles Times"
+        ],
+        "position": 645
+      },
+      {
+        "versions": [
+          {
+            "url": "https://ca-times.brightspotcdn.com/dims4/default/e6afcc7/2147483647/strip/true/crop/3666x2596+0+0/resize/320x227!/quality/80/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2Fzbk%2Fdamlat_images%2FLA%2FLA_PHOTO_SELECTS%2FSDOCS%286%29%2Flyudgqpd.JPG",
+            "query_width": null,
+            "size": {
+              "width": 320,
+              "height": 227
+            },
+            "type": null
+          },
+          {
+            "url": "https://ca-times.brightspotcdn.com/dims4/default/0a0618b/2147483647/strip/true/crop/3666x2596+0+0/resize/320x227!/format/webp/quality/80/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2Fzbk%2Fdamlat_images%2FLA%2FLA_PHOTO_SELECTS%2FSDOCS%286%29%2Flyudgqpd.JPG",
+            "query_width": null,
+            "size": {
+              "width": 320,
+              "height": 227
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://ca-times.brightspotcdn.com/dims4/default/28fbf1d/2147483647/strip/true/crop/3666x2596+0+0/resize/568x402!/quality/80/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2Fzbk%2Fdamlat_images%2FLA%2FLA_PHOTO_SELECTS%2FSDOCS%286%29%2Flyudgqpd.JPG",
+            "query_width": null,
+            "size": {
+              "width": 568,
+              "height": 402
+            },
+            "type": null
+          },
+          {
+            "url": "https://ca-times.brightspotcdn.com/dims4/default/05ab064/2147483647/strip/true/crop/3666x2596+0+0/resize/568x402!/format/webp/quality/80/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2Fzbk%2Fdamlat_images%2FLA%2FLA_PHOTO_SELECTS%2FSDOCS%286%29%2Flyudgqpd.JPG",
+            "query_width": null,
+            "size": {
+              "width": 568,
+              "height": 402
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://ca-times.brightspotcdn.com/dims4/default/48f68da/2147483647/strip/true/crop/3666x2596+0+0/resize/768x544!/quality/80/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2Fzbk%2Fdamlat_images%2FLA%2FLA_PHOTO_SELECTS%2FSDOCS%286%29%2Flyudgqpd.JPG",
+            "query_width": null,
+            "size": {
+              "width": 768,
+              "height": 544
+            },
+            "type": null
+          },
+          {
+            "url": "https://ca-times.brightspotcdn.com/dims4/default/71af831/2147483647/strip/true/crop/3666x2596+0+0/resize/768x544!/format/webp/quality/80/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2Fzbk%2Fdamlat_images%2FLA%2FLA_PHOTO_SELECTS%2FSDOCS%286%29%2Flyudgqpd.JPG",
+            "query_width": null,
+            "size": {
+              "width": 768,
+              "height": 544
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://ca-times.brightspotcdn.com/dims4/default/46e11f8/2147483647/strip/true/crop/3666x2596+0+0/resize/1024x725!/quality/80/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2Fzbk%2Fdamlat_images%2FLA%2FLA_PHOTO_SELECTS%2FSDOCS%286%29%2Flyudgqpd.JPG",
+            "query_width": null,
+            "size": {
+              "width": 1024,
+              "height": 725
+            },
+            "type": null
+          },
+          {
+            "url": "https://ca-times.brightspotcdn.com/dims4/default/3a0abce/2147483647/strip/true/crop/3666x2596+0+0/resize/1024x725!/format/webp/quality/80/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2Fzbk%2Fdamlat_images%2FLA%2FLA_PHOTO_SELECTS%2FSDOCS%286%29%2Flyudgqpd.JPG",
+            "query_width": null,
+            "size": {
+              "width": 1024,
+              "height": 725
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://ca-times.brightspotcdn.com/dims4/default/03ddd2c/2147483647/strip/true/crop/3666x2596+0+0/resize/1200x850!/quality/80/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2Fzbk%2Fdamlat_images%2FLA%2FLA_PHOTO_SELECTS%2FSDOCS%286%29%2Flyudgqpd.JPG",
+            "query_width": null,
+            "size": {
+              "width": 1200,
+              "height": 850
+            },
+            "type": null
+          },
+          {
+            "url": "https://ca-times.brightspotcdn.com/dims4/default/7326603/2147483647/strip/true/crop/3666x2596+0+0/resize/1200x850!/format/webp/quality/80/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2Fzbk%2Fdamlat_images%2FLA%2FLA_PHOTO_SELECTS%2FSDOCS%286%29%2Flyudgqpd.JPG",
+            "query_width": null,
+            "size": {
+              "width": 1200,
+              "height": 850
+            },
+            "type": "image/webp"
+          }
+        ],
+        "is_cover": false,
+        "description": "Packers' Bart Starr throws a first-quater pass during Super Bowl game against the Kansas City Chief.",
+        "caption": "Jan. 15, 1967: Packers’ Bart Starr throws a first quarter pass complete to Elijah Pitts during Super Bowl game against the Kansas City Chiefs.",
+        "authors": [
+          "Ben Olender"
+        ],
+        "position": 665
+      },
+      {
+        "versions": [
+          {
+            "url": "https://ca-times.brightspotcdn.com/dims4/default/c1f0b7e/2147483647/strip/true/crop/3000x2000+0+0/resize/320x213!/quality/80/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2F51%2Fad%2Fa73ec5284cc78ba75e1965d87536%2Ftint-coliseum-baseball-cut.jpg",
+            "query_width": null,
+            "size": {
+              "width": 320,
+              "height": 213
+            },
+            "type": null
+          },
+          {
+            "url": "https://ca-times.brightspotcdn.com/dims4/default/672481b/2147483647/strip/true/crop/3000x2000+0+0/resize/320x213!/format/webp/quality/80/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2F51%2Fad%2Fa73ec5284cc78ba75e1965d87536%2Ftint-coliseum-baseball-cut.jpg",
+            "query_width": null,
+            "size": {
+              "width": 320,
+              "height": 213
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://ca-times.brightspotcdn.com/dims4/default/775e040/2147483647/strip/true/crop/3000x2000+0+0/resize/568x379!/quality/80/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2F51%2Fad%2Fa73ec5284cc78ba75e1965d87536%2Ftint-coliseum-baseball-cut.jpg",
+            "query_width": null,
+            "size": {
+              "width": 568,
+              "height": 379
+            },
+            "type": null
+          },
+          {
+            "url": "https://ca-times.brightspotcdn.com/dims4/default/608bc1d/2147483647/strip/true/crop/3000x2000+0+0/resize/568x379!/format/webp/quality/80/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2F51%2Fad%2Fa73ec5284cc78ba75e1965d87536%2Ftint-coliseum-baseball-cut.jpg",
+            "query_width": null,
+            "size": {
+              "width": 568,
+              "height": 379
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://ca-times.brightspotcdn.com/dims4/default/27220a4/2147483647/strip/true/crop/3000x2000+0+0/resize/768x512!/quality/80/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2F51%2Fad%2Fa73ec5284cc78ba75e1965d87536%2Ftint-coliseum-baseball-cut.jpg",
+            "query_width": null,
+            "size": {
+              "width": 768,
+              "height": 512
+            },
+            "type": null
+          },
+          {
+            "url": "https://ca-times.brightspotcdn.com/dims4/default/acf76b7/2147483647/strip/true/crop/3000x2000+0+0/resize/768x512!/format/webp/quality/80/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2F51%2Fad%2Fa73ec5284cc78ba75e1965d87536%2Ftint-coliseum-baseball-cut.jpg",
+            "query_width": null,
+            "size": {
+              "width": 768,
+              "height": 512
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://ca-times.brightspotcdn.com/dims4/default/e05388b/2147483647/strip/true/crop/3000x2000+0+0/resize/1024x683!/quality/80/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2F51%2Fad%2Fa73ec5284cc78ba75e1965d87536%2Ftint-coliseum-baseball-cut.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1024,
+              "height": 683
+            },
+            "type": null
+          },
+          {
+            "url": "https://ca-times.brightspotcdn.com/dims4/default/976d5a4/2147483647/strip/true/crop/3000x2000+0+0/resize/1024x683!/format/webp/quality/80/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2F51%2Fad%2Fa73ec5284cc78ba75e1965d87536%2Ftint-coliseum-baseball-cut.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1024,
+              "height": 683
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://ca-times.brightspotcdn.com/dims4/default/729dbac/2147483647/strip/true/crop/3000x2000+0+0/resize/1200x800!/quality/80/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2F51%2Fad%2Fa73ec5284cc78ba75e1965d87536%2Ftint-coliseum-baseball-cut.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1200,
+              "height": 800
+            },
+            "type": null
+          },
+          {
+            "url": "https://ca-times.brightspotcdn.com/dims4/default/0333e68/2147483647/strip/true/crop/3000x2000+0+0/resize/1200x800!/format/webp/quality/80/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2F51%2Fad%2Fa73ec5284cc78ba75e1965d87536%2Ftint-coliseum-baseball-cut.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1200,
+              "height": 800
+            },
+            "type": "image/webp"
+          }
+        ],
+        "is_cover": false,
+        "description": "Clockwise from top left: Vin Scully; 1959 World Series action; Roy Campanella",
+        "caption": null,
+        "authors": [
+          "Associated Press",
+          "Tim Hubbard / Los Angeles Times"
+        ],
+        "position": 692
+      },
+      {
+        "versions": [
+          {
+            "url": "https://ca-times.brightspotcdn.com/dims4/default/02b5a6f/2147483647/strip/true/crop/2801x2256+0+0/resize/320x258!/quality/80/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2Fzbk%2Fdamlat_images%2FLA%2FLA_PHOTO_SELECTS%2FSDOCS%288%29%2Fljroa2nc.JPG",
+            "query_width": null,
+            "size": {
+              "width": 320,
+              "height": 258
+            },
+            "type": null
+          },
+          {
+            "url": "https://ca-times.brightspotcdn.com/dims4/default/c3b50a7/2147483647/strip/true/crop/2801x2256+0+0/resize/320x258!/format/webp/quality/80/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2Fzbk%2Fdamlat_images%2FLA%2FLA_PHOTO_SELECTS%2FSDOCS%288%29%2Fljroa2nc.JPG",
+            "query_width": null,
+            "size": {
+              "width": 320,
+              "height": 258
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://ca-times.brightspotcdn.com/dims4/default/4c17383/2147483647/strip/true/crop/2801x2256+0+0/resize/568x458!/quality/80/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2Fzbk%2Fdamlat_images%2FLA%2FLA_PHOTO_SELECTS%2FSDOCS%288%29%2Fljroa2nc.JPG",
+            "query_width": null,
+            "size": {
+              "width": 568,
+              "height": 458
+            },
+            "type": null
+          },
+          {
+            "url": "https://ca-times.brightspotcdn.com/dims4/default/362edc0/2147483647/strip/true/crop/2801x2256+0+0/resize/568x458!/format/webp/quality/80/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2Fzbk%2Fdamlat_images%2FLA%2FLA_PHOTO_SELECTS%2FSDOCS%288%29%2Fljroa2nc.JPG",
+            "query_width": null,
+            "size": {
+              "width": 568,
+              "height": 458
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://ca-times.brightspotcdn.com/dims4/default/107866b/2147483647/strip/true/crop/2801x2256+0+0/resize/768x619!/quality/80/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2Fzbk%2Fdamlat_images%2FLA%2FLA_PHOTO_SELECTS%2FSDOCS%288%29%2Fljroa2nc.JPG",
+            "query_width": null,
+            "size": {
+              "width": 768,
+              "height": 619
+            },
+            "type": null
+          },
+          {
+            "url": "https://ca-times.brightspotcdn.com/dims4/default/ba0ca88/2147483647/strip/true/crop/2801x2256+0+0/resize/768x619!/format/webp/quality/80/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2Fzbk%2Fdamlat_images%2FLA%2FLA_PHOTO_SELECTS%2FSDOCS%288%29%2Fljroa2nc.JPG",
+            "query_width": null,
+            "size": {
+              "width": 768,
+              "height": 619
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://ca-times.brightspotcdn.com/dims4/default/d895c47/2147483647/strip/true/crop/2801x2256+0+0/resize/1024x825!/quality/80/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2Fzbk%2Fdamlat_images%2FLA%2FLA_PHOTO_SELECTS%2FSDOCS%288%29%2Fljroa2nc.JPG",
+            "query_width": null,
+            "size": {
+              "width": 1024,
+              "height": 825
+            },
+            "type": null
+          },
+          {
+            "url": "https://ca-times.brightspotcdn.com/dims4/default/b1466f1/2147483647/strip/true/crop/2801x2256+0+0/resize/1024x825!/format/webp/quality/80/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2Fzbk%2Fdamlat_images%2FLA%2FLA_PHOTO_SELECTS%2FSDOCS%288%29%2Fljroa2nc.JPG",
+            "query_width": null,
+            "size": {
+              "width": 1024,
+              "height": 825
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://ca-times.brightspotcdn.com/dims4/default/b8b635c/2147483647/strip/true/crop/2801x2256+0+0/resize/1200x967!/quality/80/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2Fzbk%2Fdamlat_images%2FLA%2FLA_PHOTO_SELECTS%2FSDOCS%288%29%2Fljroa2nc.JPG",
+            "query_width": null,
+            "size": {
+              "width": 1200,
+              "height": 967
+            },
+            "type": null
+          },
+          {
+            "url": "https://ca-times.brightspotcdn.com/dims4/default/a76b0b1/2147483647/strip/true/crop/2801x2256+0+0/resize/1200x967!/format/webp/quality/80/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2Fzbk%2Fdamlat_images%2FLA%2FLA_PHOTO_SELECTS%2FSDOCS%288%29%2Fljroa2nc.JPG",
+            "query_width": null,
+            "size": {
+              "width": 1200,
+              "height": 967
+            },
+            "type": "image/webp"
+          }
+        ],
+        "is_cover": false,
+        "description": "An aerial photo of the Coliseum during opening ceremonies for the first Dodgers game played in Los Angeles.",
+        "caption": "An aerial photo of the Coliseum during opening ceremonies for the first Dodgers game played in Los Angeles. The Dodgers beat the Giants 6–5 in front of a crowd of 78,672.",
+        "authors": [
+          "Los Angeles Times"
+        ],
+        "position": 704
+      },
+      {
+        "versions": [
+          {
+            "url": "https://ca-times.brightspotcdn.com/dims4/default/280c80c/2147483647/strip/true/crop/3000x2000+0+0/resize/320x213!/quality/80/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2F6e%2F43%2F99fd22304c5498d60ce268b7548f%2Ftint-other-sports-cut.jpg",
+            "query_width": null,
+            "size": {
+              "width": 320,
+              "height": 213
+            },
+            "type": null
+          },
+          {
+            "url": "https://ca-times.brightspotcdn.com/dims4/default/8540955/2147483647/strip/true/crop/3000x2000+0+0/resize/320x213!/format/webp/quality/80/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2F6e%2F43%2F99fd22304c5498d60ce268b7548f%2Ftint-other-sports-cut.jpg",
+            "query_width": null,
+            "size": {
+              "width": 320,
+              "height": 213
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://ca-times.brightspotcdn.com/dims4/default/6514822/2147483647/strip/true/crop/3000x2000+0+0/resize/568x379!/quality/80/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2F6e%2F43%2F99fd22304c5498d60ce268b7548f%2Ftint-other-sports-cut.jpg",
+            "query_width": null,
+            "size": {
+              "width": 568,
+              "height": 379
+            },
+            "type": null
+          },
+          {
+            "url": "https://ca-times.brightspotcdn.com/dims4/default/65f3adf/2147483647/strip/true/crop/3000x2000+0+0/resize/568x379!/format/webp/quality/80/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2F6e%2F43%2F99fd22304c5498d60ce268b7548f%2Ftint-other-sports-cut.jpg",
+            "query_width": null,
+            "size": {
+              "width": 568,
+              "height": 379
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://ca-times.brightspotcdn.com/dims4/default/682e026/2147483647/strip/true/crop/3000x2000+0+0/resize/768x512!/quality/80/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2F6e%2F43%2F99fd22304c5498d60ce268b7548f%2Ftint-other-sports-cut.jpg",
+            "query_width": null,
+            "size": {
+              "width": 768,
+              "height": 512
+            },
+            "type": null
+          },
+          {
+            "url": "https://ca-times.brightspotcdn.com/dims4/default/1b77e55/2147483647/strip/true/crop/3000x2000+0+0/resize/768x512!/format/webp/quality/80/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2F6e%2F43%2F99fd22304c5498d60ce268b7548f%2Ftint-other-sports-cut.jpg",
+            "query_width": null,
+            "size": {
+              "width": 768,
+              "height": 512
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://ca-times.brightspotcdn.com/dims4/default/0c686c9/2147483647/strip/true/crop/3000x2000+0+0/resize/1024x683!/quality/80/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2F6e%2F43%2F99fd22304c5498d60ce268b7548f%2Ftint-other-sports-cut.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1024,
+              "height": 683
+            },
+            "type": null
+          },
+          {
+            "url": "https://ca-times.brightspotcdn.com/dims4/default/4902694/2147483647/strip/true/crop/3000x2000+0+0/resize/1024x683!/format/webp/quality/80/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2F6e%2F43%2F99fd22304c5498d60ce268b7548f%2Ftint-other-sports-cut.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1024,
+              "height": 683
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://ca-times.brightspotcdn.com/dims4/default/9246a7a/2147483647/strip/true/crop/3000x2000+0+0/resize/1200x800!/quality/80/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2F6e%2F43%2F99fd22304c5498d60ce268b7548f%2Ftint-other-sports-cut.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1200,
+              "height": 800
+            },
+            "type": null
+          },
+          {
+            "url": "https://ca-times.brightspotcdn.com/dims4/default/1f367f2/2147483647/strip/true/crop/3000x2000+0+0/resize/1200x800!/format/webp/quality/80/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2F6e%2F43%2F99fd22304c5498d60ce268b7548f%2Ftint-other-sports-cut.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1200,
+              "height": 800
+            },
+            "type": "image/webp"
+          }
+        ],
+        "is_cover": false,
+        "description": "Clockwise from top: Mildred 'Babe' Didrikson; Joey Logano; Manchester City taking on Real Madrid; Joan Benoit Samuelson",
+        "caption": null,
+        "authors": [
+          "Associated Press",
+          "Tim Hubbard / Los Angeles Times"
+        ],
+        "position": 732
+      },
+      {
+        "versions": [
+          {
+            "url": "https://ca-times.brightspotcdn.com/dims4/default/e17392c/2147483647/strip/true/crop/3000x2000+0+0/resize/320x213!/quality/80/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2F46%2Fe1%2F86a4a9e9473c9f630c16006afb0c%2Ftint-political-cut.jpg",
+            "query_width": null,
+            "size": {
+              "width": 320,
+              "height": 213
+            },
+            "type": null
+          },
+          {
+            "url": "https://ca-times.brightspotcdn.com/dims4/default/f36475c/2147483647/strip/true/crop/3000x2000+0+0/resize/320x213!/format/webp/quality/80/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2F46%2Fe1%2F86a4a9e9473c9f630c16006afb0c%2Ftint-political-cut.jpg",
+            "query_width": null,
+            "size": {
+              "width": 320,
+              "height": 213
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://ca-times.brightspotcdn.com/dims4/default/e3cc77c/2147483647/strip/true/crop/3000x2000+0+0/resize/568x379!/quality/80/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2F46%2Fe1%2F86a4a9e9473c9f630c16006afb0c%2Ftint-political-cut.jpg",
+            "query_width": null,
+            "size": {
+              "width": 568,
+              "height": 379
+            },
+            "type": null
+          },
+          {
+            "url": "https://ca-times.brightspotcdn.com/dims4/default/346a37e/2147483647/strip/true/crop/3000x2000+0+0/resize/568x379!/format/webp/quality/80/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2F46%2Fe1%2F86a4a9e9473c9f630c16006afb0c%2Ftint-political-cut.jpg",
+            "query_width": null,
+            "size": {
+              "width": 568,
+              "height": 379
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://ca-times.brightspotcdn.com/dims4/default/8871454/2147483647/strip/true/crop/3000x2000+0+0/resize/768x512!/quality/80/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2F46%2Fe1%2F86a4a9e9473c9f630c16006afb0c%2Ftint-political-cut.jpg",
+            "query_width": null,
+            "size": {
+              "width": 768,
+              "height": 512
+            },
+            "type": null
+          },
+          {
+            "url": "https://ca-times.brightspotcdn.com/dims4/default/844e3ea/2147483647/strip/true/crop/3000x2000+0+0/resize/768x512!/format/webp/quality/80/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2F46%2Fe1%2F86a4a9e9473c9f630c16006afb0c%2Ftint-political-cut.jpg",
+            "query_width": null,
+            "size": {
+              "width": 768,
+              "height": 512
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://ca-times.brightspotcdn.com/dims4/default/f9118d4/2147483647/strip/true/crop/3000x2000+0+0/resize/1024x683!/quality/80/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2F46%2Fe1%2F86a4a9e9473c9f630c16006afb0c%2Ftint-political-cut.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1024,
+              "height": 683
+            },
+            "type": null
+          },
+          {
+            "url": "https://ca-times.brightspotcdn.com/dims4/default/cdbb1d2/2147483647/strip/true/crop/3000x2000+0+0/resize/1024x683!/format/webp/quality/80/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2F46%2Fe1%2F86a4a9e9473c9f630c16006afb0c%2Ftint-political-cut.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1024,
+              "height": 683
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://ca-times.brightspotcdn.com/dims4/default/8cf60d0/2147483647/strip/true/crop/3000x2000+0+0/resize/1200x800!/quality/80/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2F46%2Fe1%2F86a4a9e9473c9f630c16006afb0c%2Ftint-political-cut.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1200,
+              "height": 800
+            },
+            "type": null
+          },
+          {
+            "url": "https://ca-times.brightspotcdn.com/dims4/default/f98fbc2/2147483647/strip/true/crop/3000x2000+0+0/resize/1200x800!/format/webp/quality/80/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2F46%2Fe1%2F86a4a9e9473c9f630c16006afb0c%2Ftint-political-cut.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1200,
+              "height": 800
+            },
+            "type": "image/webp"
+          }
+        ],
+        "is_cover": false,
+        "description": "Clockwise from top left: Martin Luther King Jr.; Billy Graham; Pope John Paul II; John F. Kennedy",
+        "caption": null,
+        "authors": [
+          "Associated Press",
+          "Tim Hubbard / Los Angeles Times"
+        ],
+        "position": 763
+      },
+      {
+        "versions": [
+          {
+            "url": "https://ca-times.brightspotcdn.com/dims4/default/3ac9835/2147483647/strip/true/crop/3000x2000+0+0/resize/320x213!/quality/80/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2Fe7%2F1e%2F3b5525cf423fb29cf91ef3cf028c%2Ftint-music-cuts.jpg",
+            "query_width": null,
+            "size": {
+              "width": 320,
+              "height": 213
+            },
+            "type": null
+          },
+          {
+            "url": "https://ca-times.brightspotcdn.com/dims4/default/638259a/2147483647/strip/true/crop/3000x2000+0+0/resize/320x213!/format/webp/quality/80/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2Fe7%2F1e%2F3b5525cf423fb29cf91ef3cf028c%2Ftint-music-cuts.jpg",
+            "query_width": null,
+            "size": {
+              "width": 320,
+              "height": 213
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://ca-times.brightspotcdn.com/dims4/default/d53361b/2147483647/strip/true/crop/3000x2000+0+0/resize/568x379!/quality/80/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2Fe7%2F1e%2F3b5525cf423fb29cf91ef3cf028c%2Ftint-music-cuts.jpg",
+            "query_width": null,
+            "size": {
+              "width": 568,
+              "height": 379
+            },
+            "type": null
+          },
+          {
+            "url": "https://ca-times.brightspotcdn.com/dims4/default/ff33566/2147483647/strip/true/crop/3000x2000+0+0/resize/568x379!/format/webp/quality/80/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2Fe7%2F1e%2F3b5525cf423fb29cf91ef3cf028c%2Ftint-music-cuts.jpg",
+            "query_width": null,
+            "size": {
+              "width": 568,
+              "height": 379
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://ca-times.brightspotcdn.com/dims4/default/0738187/2147483647/strip/true/crop/3000x2000+0+0/resize/768x512!/quality/80/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2Fe7%2F1e%2F3b5525cf423fb29cf91ef3cf028c%2Ftint-music-cuts.jpg",
+            "query_width": null,
+            "size": {
+              "width": 768,
+              "height": 512
+            },
+            "type": null
+          },
+          {
+            "url": "https://ca-times.brightspotcdn.com/dims4/default/c7a2402/2147483647/strip/true/crop/3000x2000+0+0/resize/768x512!/format/webp/quality/80/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2Fe7%2F1e%2F3b5525cf423fb29cf91ef3cf028c%2Ftint-music-cuts.jpg",
+            "query_width": null,
+            "size": {
+              "width": 768,
+              "height": 512
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://ca-times.brightspotcdn.com/dims4/default/b781775/2147483647/strip/true/crop/3000x2000+0+0/resize/1024x683!/quality/80/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2Fe7%2F1e%2F3b5525cf423fb29cf91ef3cf028c%2Ftint-music-cuts.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1024,
+              "height": 683
+            },
+            "type": null
+          },
+          {
+            "url": "https://ca-times.brightspotcdn.com/dims4/default/d7591c8/2147483647/strip/true/crop/3000x2000+0+0/resize/1024x683!/format/webp/quality/80/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2Fe7%2F1e%2F3b5525cf423fb29cf91ef3cf028c%2Ftint-music-cuts.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1024,
+              "height": 683
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://ca-times.brightspotcdn.com/dims4/default/868a505/2147483647/strip/true/crop/3000x2000+0+0/resize/1200x800!/quality/80/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2Fe7%2F1e%2F3b5525cf423fb29cf91ef3cf028c%2Ftint-music-cuts.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1200,
+              "height": 800
+            },
+            "type": null
+          },
+          {
+            "url": "https://ca-times.brightspotcdn.com/dims4/default/b6d39c9/2147483647/strip/true/crop/3000x2000+0+0/resize/1200x800!/format/webp/quality/80/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2Fe7%2F1e%2F3b5525cf423fb29cf91ef3cf028c%2Ftint-music-cuts.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1200,
+              "height": 800
+            },
+            "type": "image/webp"
+          }
+        ],
+        "is_cover": false,
+        "description": "Mick Jagger; Clarence Clemons and Bruce Springsteen; Isaac Hayes; Sammy Hagar and Eddie Van Halen.",
+        "caption": null,
+        "authors": [
+          "Associated Press",
+          "Tim Hubbard / Los Angeles Times"
+        ],
+        "position": 798
+      }
+    ],
     "publishing_date": "2023-06-26 12:00:29.055000+00:00",
     "title": "One hundred years at the Coliseum: Much more than a sports venue"
   }

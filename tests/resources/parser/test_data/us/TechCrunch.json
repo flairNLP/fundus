@@ -133,6 +133,144 @@
         }
       ]
     },
+    "images": [
+      {
+        "versions": [
+          {
+            "url": "https://techcrunch.com/wp-content/uploads/2024/05/Dark-Mode-AI-e1715708581580.png?w=1024",
+            "query_width": null,
+            "size": {
+              "width": 1024,
+              "height": 576
+            },
+            "type": "image/png"
+          }
+        ],
+        "is_cover": true,
+        "description": "Strava dark mode and AI summaries",
+        "caption": "Image Credits: Strava",
+        "authors": [
+          "Strava"
+        ],
+        "position": 225
+      },
+      {
+        "versions": [
+          {
+            "url": "https://techcrunch.com/wp-content/uploads/2024/05/Leaderboard.gif?w=680",
+            "query_width": null,
+            "size": {
+              "width": 763,
+              "height": 488
+            },
+            "type": null
+          }
+        ],
+        "is_cover": false,
+        "description": "Strava: Leaderboard integrity powered by AI",
+        "caption": "Strava: Leaderboard integrity powered by AI Image Credits: Strava",
+        "authors": [
+          "Strava"
+        ],
+        "position": 246
+      },
+      {
+        "versions": [
+          {
+            "url": "https://techcrunch.com/wp-content/uploads/2024/05/Athlete-Intelligence-e1715702899261.png?w=680",
+            "query_width": null,
+            "size": {
+              "width": 1576,
+              "height": 1008
+            },
+            "type": "image/png"
+          }
+        ],
+        "is_cover": false,
+        "description": "Strava's \"athlete intelligence\"",
+        "caption": "Strava’s “athlete intelligence.” Image Credits: Strava",
+        "authors": [
+          "Strava"
+        ],
+        "position": 266
+      },
+      {
+        "versions": [
+          {
+            "url": "https://techcrunch.com/wp-content/uploads/2024/05/Dark-Mode-e1715703052788.png?w=680",
+            "query_width": null,
+            "size": {
+              "width": 1562,
+              "height": 998
+            },
+            "type": "image/png"
+          }
+        ],
+        "is_cover": false,
+        "description": "Strava's new dark mode",
+        "caption": "Strava’s new dark mode. Image Credits: Strava",
+        "authors": [
+          "Strava"
+        ],
+        "position": 281
+      },
+      {
+        "versions": [
+          {
+            "url": "https://techcrunch.com/wp-content/uploads/2024/05/FamilyPlan-Press-Hero_-ratio_-5_2_1a.png?resize=150,86",
+            "query_width": null,
+            "size": {
+              "width": 150,
+              "height": 86
+            },
+            "type": "image/png"
+          },
+          {
+            "url": "https://techcrunch.com/wp-content/uploads/2024/05/FamilyPlan-Press-Hero_-ratio_-5_2_1a.png?resize=300,172",
+            "query_width": null,
+            "size": {
+              "width": 300,
+              "height": 172
+            },
+            "type": "image/png"
+          },
+          {
+            "url": "https://techcrunch.com/wp-content/uploads/2024/05/FamilyPlan-Press-Hero_-ratio_-5_2_1a.png?resize=680,389",
+            "query_width": null,
+            "size": {
+              "width": 680,
+              "height": 389
+            },
+            "type": "image/png"
+          },
+          {
+            "url": "https://techcrunch.com/wp-content/uploads/2024/05/FamilyPlan-Press-Hero_-ratio_-5_2_1a.png?resize=768,439",
+            "query_width": null,
+            "size": {
+              "width": 768,
+              "height": 439
+            },
+            "type": "image/png"
+          },
+          {
+            "url": "https://techcrunch.com/wp-content/uploads/2024/05/FamilyPlan-Press-Hero_-ratio_-5_2_1a.png",
+            "query_width": null,
+            "size": {
+              "width": 1016,
+              "height": 581
+            },
+            "type": "image/png"
+          }
+        ],
+        "is_cover": false,
+        "description": "Strava family plan",
+        "caption": "Strava family plan. Image Credits: Strava",
+        "authors": [
+          "Strava"
+        ],
+        "position": 297
+      }
+    ],
     "publishing_date": "2024-05-16 18:00:00+00:00",
     "title": "Strava taps AI to weed out leaderboard cheats, unveils 'family' plan, dark mode and more",
     "topics": [

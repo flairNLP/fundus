@@ -5,13 +5,14 @@ from typing import List, Optional, Pattern
 from lxml.cssselect import CSSSelector
 from lxml.etree import XPath
 
-from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute
+from fundus.parser import ArticleBody, BaseParser, Image, ParserProxy, attribute
 from fundus.parser.utility import (
     apply_substitution_pattern_over_list,
     extract_article_body_with_selector,
     generic_author_parsing,
     generic_date_parsing,
     generic_topic_parsing,
+    image_extraction,
 )
 
 
@@ -50,6 +51,19 @@ class DieWeltParser(ParserProxy):
         @attribute
         def topics(self) -> List[str]:
             return generic_topic_parsing(self.precomputed.meta.get("keywords"))
+
+        @attribute
+        def images(self) -> List[Image]:
+            return image_extraction(
+                doc=self.precomputed.doc,
+                paragraph_selector=self._paragraph_selector,
+                image_selector=CSSSelector("figure:not(.c-inline-video) img"),
+                caption_selector=XPath("./ancestor::figure//span[@class='c-content-image__caption-alt']"),
+                author_selector=XPath("./ancestor::figure//span[@class='c-content-image__caption-source']"),
+                author_filter=re.compile(r"(?i)quelle:\s*"),
+                lower_boundary_selector=XPath("//section[@class='c-attached-content']"),
+                size_pattern=re.compile(r"-w(?P<width>[0-9]+)/"),
+            )
 
     class V1_1(V1):
         VALID_UNTIL = datetime.date.today()

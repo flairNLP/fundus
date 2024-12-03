@@ -19,6 +19,116 @@
         }
       ]
     },
+    "images": [
+      {
+        "versions": [
+          {
+            "url": "https://images.bhaskarassets.com/webp/thumb/360x0/web2images/521/2024/09/04/img2024090415303135_1725444731.jpg",
+            "query_width": "max-width:768",
+            "size": {
+              "width": 360,
+              "height": 270
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://images.bhaskarassets.com/webp/thumb/512x0/web2images/521/2024/09/04/img2024090415303135_1725444731.jpg",
+            "query_width": "min-width:768",
+            "size": {
+              "width": 512,
+              "height": 384
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://images.bhaskarassets.com/web2images/521/2024/09/04/img2024090415303135_1725444731.jpg",
+            "query_width": null,
+            "size": {
+              "width": 720,
+              "height": 540
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": true,
+        "description": "ASP संजय पांडे और थाना अध्यक्ष मनीषा कुमारी। - Dainik Bhaskar",
+        "caption": "ASP संजय पांडे और थाना अध्यक्ष मनीषा कुमारी।",
+        "authors": [],
+        "position": 351
+      },
+      {
+        "versions": [
+          {
+            "url": "https://images.bhaskarassets.com/webp/thumb/360x0/web2images/521/2024/09/04/img2024090415302212_1725444676.jpg",
+            "query_width": "max-width:768",
+            "size": {
+              "width": 360,
+              "height": 203
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://images.bhaskarassets.com/webp/thumb/512x0/web2images/521/2024/09/04/img2024090415302212_1725444676.jpg",
+            "query_width": "min-width:768",
+            "size": {
+              "width": 512,
+              "height": 289
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://images.bhaskarassets.com/web2images/521/2024/09/04/img2024090415302212_1725444676.jpg",
+            "query_width": null,
+            "size": {
+              "width": 848,
+              "height": 478
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": false,
+        "description": "जानकारी देते एएसपी",
+        "caption": "जानकारी देते एएसपी",
+        "authors": [],
+        "position": 371
+      },
+      {
+        "versions": [
+          {
+            "url": "https://images.bhaskarassets.com/webp/thumb/360x0/web2images/521/2024/09/04/img2024090415302640_1725444705.jpg",
+            "query_width": "max-width:768",
+            "size": {
+              "width": 360,
+              "height": 203
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://images.bhaskarassets.com/webp/thumb/512x0/web2images/521/2024/09/04/img2024090415302640_1725444705.jpg",
+            "query_width": "min-width:768",
+            "size": {
+              "width": 512,
+              "height": 289
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://images.bhaskarassets.com/web2images/521/2024/09/04/img2024090415302640_1725444705.jpg",
+            "query_width": null,
+            "size": {
+              "width": 848,
+              "height": 478
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": false,
+        "description": "बरामद गहना",
+        "caption": "बरामद गहना",
+        "authors": [],
+        "position": 379
+      }
+    ],
     "publishing_date": "2024-09-04 16:20:35+05:30",
     "title": "समस्तीपुर पुलिस ने 2 बदमाशों को पकड़ा: दो दिनों के अंदर चोरी कांड का किया खुलासा, गहना भी बरामद",
     "topics": [

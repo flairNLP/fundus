@@ -128,6 +128,131 @@
         }
       ]
     },
+    "images": [
+      {
+        "versions": [
+          {
+            "url": "https://im.haberturk.com/l/2024/07/03/ver1720022222/3700095/jpg/640x360",
+            "query_width": null,
+            "size": {
+              "width": 640,
+              "height": 360
+            },
+            "type": null
+          }
+        ],
+        "is_cover": true,
+        "description": "Türkiye'de orman yangınları!",
+        "caption": null,
+        "authors": [],
+        "position": 266
+      },
+      {
+        "versions": [
+          {
+            "url": "https://im.haberturk.com/2024/07/03/3700095_38e147bb1e9be3f6e6c3e35ae97d5a9d.jpg",
+            "query_width": null,
+            "size": null,
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": false,
+        "description": null,
+        "caption": null,
+        "authors": [],
+        "position": 284
+      },
+      {
+        "versions": [
+          {
+            "url": "https://im.haberturk.com/2024/07/03/3700095_d992e9eca703e00c5d034b6146961762.jpg",
+            "query_width": null,
+            "size": null,
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": false,
+        "description": null,
+        "caption": null,
+        "authors": [],
+        "position": 297
+      },
+      {
+        "versions": [
+          {
+            "url": "https://im.haberturk.com/2024/07/03/3700095_84c404689fd4b9e6a145341d7f9feff4.jpg",
+            "query_width": null,
+            "size": null,
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": false,
+        "description": null,
+        "caption": null,
+        "authors": [],
+        "position": 316
+      },
+      {
+        "versions": [
+          {
+            "url": "https://im.haberturk.com/2024/07/03/3700095_2bee4417d8919dee7e4f0bd018c613b8.jpg",
+            "query_width": null,
+            "size": null,
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": false,
+        "description": null,
+        "caption": null,
+        "authors": [],
+        "position": 338
+      },
+      {
+        "versions": [
+          {
+            "url": "https://im.haberturk.com/2024/07/03/3700095_4df193ec018e45c74f3792c65a114a81.jpg",
+            "query_width": null,
+            "size": null,
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": false,
+        "description": null,
+        "caption": null,
+        "authors": [],
+        "position": 356
+      },
+      {
+        "versions": [
+          {
+            "url": "https://im.haberturk.com/2024/07/03/3700095_fc49c6fe0ed4274da533d33086a478b5.jpg",
+            "query_width": null,
+            "size": null,
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": false,
+        "description": null,
+        "caption": null,
+        "authors": [],
+        "position": 374
+      },
+      {
+        "versions": [
+          {
+            "url": "https://im.haberturk.com/2024/07/03/3700095_ddef206e64ba2d35a783ceec1034a9b6.jpg",
+            "query_width": null,
+            "size": null,
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": false,
+        "description": null,
+        "caption": null,
+        "authors": [],
+        "position": 384
+      }
+    ],
     "publishing_date": "2024-07-03 18:24:28+03:00",
     "title": "Türkiye'de orman yangınları! Yangınlarda son durum! - Güncel haberler",
     "topics": [

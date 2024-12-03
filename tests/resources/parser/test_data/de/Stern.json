@@ -43,6 +43,46 @@
         }
       ]
     },
+    "images": [
+      {
+        "versions": [
+          {
+            "url": "https://image.stern.de/33420090/t/NN/v4/w480/r1.7778/-/bezahlsystem.jpg",
+            "query_width": null,
+            "size": {
+              "width": 480,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://image.stern.de/33420090/t/EH/v4/w960/r1.7778/-/bezahlsystem.jpg",
+            "query_width": null,
+            "size": {
+              "width": 960,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://image.stern.de/33420090/t/jW/v4/w1440/r1.7778/-/bezahlsystem.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1440,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": true,
+        "description": "Logos diverser Bezahlmethoden wie Mastercard und Apple Pay",
+        "caption": "Zu Bezahlmethoden wie Apple Pay, Mastercard, Paypal oder Sepa soll bald auch EPI hinzukommen",
+        "authors": [
+          "Picture Alliance"
+        ],
+        "position": 674
+      }
+    ],
     "publishing_date": "2023-04-28 19:09:00+02:00",
     "title": "Statt Paypal & Co.: So könnte Europas neues Bezahlsystem die US-Konkurrenz schlagen",
     "topics": [
@@ -106,6 +146,155 @@
         }
       ]
     },
+    "images": [
+      {
+        "versions": [
+          {
+            "url": "https://image.stern.de/35200134/t/3S/v4/w480/r1.7778/-/donald-trump.jpg",
+            "query_width": null,
+            "size": {
+              "width": 480,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://image.stern.de/35200134/t/-3/v4/w480/r1/-/donald-trump.jpg",
+            "query_width": "max-width:767",
+            "size": {
+              "width": 480,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://image.stern.de/35200134/t/Wf/v4/w960/r1.7778/-/donald-trump.jpg",
+            "query_width": null,
+            "size": {
+              "width": 960,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://image.stern.de/35200134/t/v8/v4/w960/r1/-/donald-trump.jpg",
+            "query_width": "max-width:767",
+            "size": {
+              "width": 960,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://image.stern.de/35200134/t/tr/v4/w1440/r1.7778/-/donald-trump.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1440,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://image.stern.de/35200134/t/PO/v4/w1440/r1/-/donald-trump.jpg",
+            "query_width": "max-width:767",
+            "size": {
+              "width": 1440,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": true,
+        "description": "Donald Trump",
+        "caption": "Donald Trump bei einem Auftritt",
+        "authors": [
+          "ZUMA Press Wire / Imago Images"
+        ],
+        "position": 565
+      },
+      {
+        "versions": [
+          {
+            "url": "https://image.stern.de/34606440/t/jd/v4/w480/r1.7778/-/trump---john-paulson.jpg",
+            "query_width": null,
+            "size": {
+              "width": 480,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://image.stern.de/34606440/t/vG/v4/w480/r1/-/trump---john-paulson.jpg",
+            "query_width": "max-width:767",
+            "size": {
+              "width": 480,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://image.stern.de/34606440/t/fR/v4/w960/r1.7778/-/trump---john-paulson.jpg",
+            "query_width": null,
+            "size": {
+              "width": 960,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://image.stern.de/34606440/t/2S/v4/w960/r1/-/trump---john-paulson.jpg",
+            "query_width": "max-width:767",
+            "size": {
+              "width": 960,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://image.stern.de/34606440/t/_d/v4/w1440/r1.7778/-/trump---john-paulson.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1440,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://image.stern.de/34606440/t/3r/v4/w1440/r1/-/trump---john-paulson.jpg",
+            "query_width": "max-width:767",
+            "size": {
+              "width": 1440,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": false,
+        "description": "Trump-Unterstützer John Paulson",
+        "caption": "John Paulson Er war gewissermaßen der Gastgeber der Spendengala: Hedgefonds-Manager John Paulson hatte nach Palm Beach eingeladen, um anderen reichen Gästen das Geld aus den Taschen zu ziehen. Sein eigenes Vermögen liegt zwischen vier und fünf Milliarden Dollar. Gerüchten zufolge wird er Finanzminister in einem möglichen, neuen Trump-Kabinett.",
+        "authors": [
+          "Matt Campbell / DPA"
+        ],
+        "position": 599
+      },
+      {
+        "versions": [
+          {
+            "url": "https://image.stern.de/35200048/t/Vt/v1/w960/r1.7778/-/dixville-einwohner.jpg",
+            "query_width": null,
+            "size": null,
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": false,
+        "description": "Einwohner aus Dixville Notch erzählen, wen sie gewählt haben – und warum",
+        "caption": "Einwohner aus Dixville Notch erzählen, wen sie gewählt haben – und warum",
+        "authors": [
+          "n-tv.de"
+        ],
+        "position": 639
+      }
+    ],
     "publishing_date": "2024-11-05 15:36:00+01:00",
     "title": "Warum Kritik an Trumps Charakter so ineffektiv ist und verpufft",
     "topics": [

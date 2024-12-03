@@ -27,6 +27,28 @@
         }
       ]
     },
+    "images": [
+      {
+        "versions": [
+          {
+            "url": "https://img.lemde.fr/2023/08/30/0/0/5120/3416/664/0/75/0/dd85876_1693399249509-000-33nt796.jpg",
+            "query_width": null,
+            "size": {
+              "width": 664,
+              "height": 443
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": true,
+        "description": "La secrétaire générale de la CGT, Sophie Binet, à Matignon, à Paris, le 12 juillet 2023.",
+        "caption": "La secrétaire générale de la CGT, Sophie Binet, à Matignon, à Paris, le 12 juillet 2023.",
+        "authors": [
+          "BERTRAND GUAY / AFP"
+        ],
+        "position": 684
+      }
+    ],
     "publishing_date": "2023-08-30 12:52:08+00:00",
     "title": "Sophie Binet met en garde Emmanuel Macron sur la « gravité de la situation dans le pays »",
     "topics": [

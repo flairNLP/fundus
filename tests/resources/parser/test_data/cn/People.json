@@ -27,6 +27,23 @@
         }
       ]
     },
+    "images": [
+      {
+        "versions": [
+          {
+            "url": "http://www.people.com.cn/img/2020wbc/imgs/icon_type.png",
+            "query_width": null,
+            "size": null,
+            "type": "image/png"
+          }
+        ],
+        "is_cover": true,
+        "description": null,
+        "caption": null,
+        "authors": [],
+        "position": 416
+      }
+    ],
     "publishing_date": "2024-04-24 00:00:00",
     "title": "促进航天技术更好惠及人民――习近平主席向首届“中国－拉美和加勒比国家航天合作论坛”致贺信为中拉深化航天合作指明方向--时政--人民网",
     "topics": [

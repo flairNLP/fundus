@@ -31,6 +31,152 @@
         }
       ]
     },
+    "images": [
+      {
+        "versions": [
+          {
+            "url": "https://i.dailymail.co.uk/1s/2024/04/27/15/84163521-13357113-image-a-8_1714229186037.jpg",
+            "query_width": null,
+            "size": {
+              "width": 634,
+              "height": 459
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": false,
+        "description": "Currency collectors nationwide are on hunt for some rare dollar bills, willing to pay up to $150,000 for those with a specific printing error",
+        "caption": "Currency collectors nationwide are on hunt for some rare dollar bills, willing to pay up to $150,000 for those with a specific printing error",
+        "authors": [],
+        "position": 392
+      },
+      {
+        "versions": [
+          {
+            "url": "https://i.dailymail.co.uk/1s/2024/04/27/15/84163521-13357113-image-a-8_1714229186037.jpg",
+            "query_width": null,
+            "size": {
+              "width": 634,
+              "height": 459
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": false,
+        "description": "Currency collectors nationwide are on hunt for some rare dollar bills, willing to pay up to $150,000 for those with a specific printing error",
+        "caption": "Currency collectors nationwide are on hunt for some rare dollar bills, willing to pay up to $150,000 for those with a specific printing error",
+        "authors": [],
+        "position": 394
+      },
+      {
+        "versions": [
+          {
+            "url": "https://i.dailymail.co.uk/1s/2024/04/27/15/84163487-13357113-According_to_the_personal_finance_blog_Wealthynickel_two_batches-a-20_1714229787445.jpg",
+            "query_width": null,
+            "size": {
+              "width": 634,
+              "height": 726
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": false,
+        "description": "According to the personal finance blog Wealthynickel , two batches of $1 bills printed in 2014 and 2016 contain this particular error from the US Bureau of Engraving and Printing",
+        "caption": "According to the personal finance blog Wealthynickel , two batches of $1 bills printed in 2014 and 2016 contain this particular error from the US Bureau of Engraving and Printing",
+        "authors": [],
+        "position": 399
+      },
+      {
+        "versions": [
+          {
+            "url": "https://i.dailymail.co.uk/1s/2024/04/27/15/84163487-13357113-According_to_the_personal_finance_blog_Wealthynickel_two_batches-a-20_1714229787445.jpg",
+            "query_width": null,
+            "size": {
+              "width": 634,
+              "height": 726
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": false,
+        "description": "According to the personal finance blog Wealthynickel , two batches of $1 bills printed in 2014 and 2016 contain this particular error from the US Bureau of Engraving and Printing",
+        "caption": "According to the personal finance blog Wealthynickel , two batches of $1 bills printed in 2014 and 2016 contain this particular error from the US Bureau of Engraving and Printing",
+        "authors": [],
+        "position": 401
+      },
+      {
+        "versions": [
+          {
+            "url": "https://i.dailymail.co.uk/1s/2024/04/27/15/84163527-13357113-image-a-12_1714229318837.jpg",
+            "query_width": null,
+            "size": {
+              "width": 634,
+              "height": 722
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": false,
+        "description": "Only nine of these pairs have been matched, leaving millions of rare $1 bills out there",
+        "caption": "Only nine of these pairs have been matched, leaving millions of rare $1 bills out there",
+        "authors": [],
+        "position": 406
+      },
+      {
+        "versions": [
+          {
+            "url": "https://i.dailymail.co.uk/1s/2024/04/27/15/84163527-13357113-image-a-12_1714229318837.jpg",
+            "query_width": null,
+            "size": {
+              "width": 634,
+              "height": 722
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": false,
+        "description": "Only nine of these pairs have been matched, leaving millions of rare $1 bills out there",
+        "caption": "Only nine of these pairs have been matched, leaving millions of rare $1 bills out there",
+        "authors": [],
+        "position": 408
+      },
+      {
+        "versions": [
+          {
+            "url": "https://i.dailymail.co.uk/1s/2024/04/27/15/84163519-13357113-image-a-13_1714229356999.jpg",
+            "query_width": null,
+            "size": {
+              "width": 634,
+              "height": 423
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": false,
+        "description": "While the first batch was issued in New York and the second was issued in Washington D.C., these bills could now be anywhere in the world",
+        "caption": "While the first batch was issued in New York and the second was issued in Washington D.C., these bills could now be anywhere in the world",
+        "authors": [],
+        "position": 428
+      },
+      {
+        "versions": [
+          {
+            "url": "https://i.dailymail.co.uk/1s/2024/04/27/15/84163519-13357113-image-a-13_1714229356999.jpg",
+            "query_width": null,
+            "size": {
+              "width": 634,
+              "height": 423
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": false,
+        "description": "While the first batch was issued in New York and the second was issued in Washington D.C., these bills could now be anywhere in the world",
+        "caption": "While the first batch was issued in New York and the second was issued in Washington D.C., these bills could now be anywhere in the world",
+        "authors": [],
+        "position": 430
+      }
+    ],
     "publishing_date": "2024-04-27 15:56:35+01:00",
     "title": "Your $1 bill could be worth up THOUSANDS - here's how to check",
     "topics": [

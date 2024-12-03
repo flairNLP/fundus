@@ -2,16 +2,18 @@ import datetime
 import re
 from typing import List, Optional
 
+from lxml.cssselect import CSSSelector
 from lxml.etree import XPath
 from lxml.html import fromstring, tostring
 
-from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute
+from fundus.parser import ArticleBody, BaseParser, Image, ParserProxy, attribute
 from fundus.parser.utility import (
     apply_substitution_pattern_over_list,
     extract_article_body_with_selector,
     generic_author_parsing,
     generic_date_parsing,
     generic_topic_parsing,
+    image_extraction,
 )
 
 
@@ -69,3 +71,17 @@ class TimesOfIndiaParser(ParserProxy):
                 for topic in generic_topic_parsing(self.precomputed.meta.get("news_keywords"))
                 if "News" not in topic.title()
             ]
+
+        @attribute
+        def images(self) -> List[Image]:
+            return image_extraction(
+                doc=self.precomputed.doc,
+                paragraph_selector=self._paragraph_selector,
+                upper_boundary_selector=CSSSelector("div.contentwrapper.clearfix"),
+                lower_boundary_selector=CSSSelector("div.authorComment"),
+                image_selector=CSSSelector("section.leadmedia img"),
+                caption_selector=XPath(
+                    "./ancestor::section[contains(@class, 'leadmedia')]//div[contains(@class, 'img_cptn')]"
+                ),
+                author_selector=re.compile(r"\((?P<credits>.*?)\)$"),
+            )

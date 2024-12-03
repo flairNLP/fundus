@@ -58,6 +58,46 @@
         }
       ]
     },
+    "images": [
+      {
+        "versions": [
+          {
+            "url": "https://www.theglobeandmail.com/resizer/v2/RMTZ5HLAMJG73JFSD4GK2USUVE.jpg?auth=5ac9a680bd02818584660011b173be2ca123c5ccb783f263bdbbaed4fb773821&width=600&quality=80",
+            "query_width": null,
+            "size": {
+              "width": 600,
+              "height": 400
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.theglobeandmail.com/resizer/v2/RMTZ5HLAMJG73JFSD4GK2USUVE.jpg?auth=5ac9a680bd02818584660011b173be2ca123c5ccb783f263bdbbaed4fb773821&width=900&quality=80",
+            "query_width": null,
+            "size": {
+              "width": 900,
+              "height": 600
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.theglobeandmail.com/resizer/v2/RMTZ5HLAMJG73JFSD4GK2USUVE.jpg?auth=5ac9a680bd02818584660011b173be2ca123c5ccb783f263bdbbaed4fb773821&width=1200&quality=80",
+            "query_width": null,
+            "size": {
+              "width": 1200,
+              "height": 800
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": false,
+        "description": null,
+        "caption": "Nvidia and Meta chief executives Jensen Huang and Mark Zuckerberg sport leather jackets at a tech conference in Denver on July 29. The temperature in Colorado's capital state reached 32.7 celsius that day.",
+        "authors": [
+          "The Associated Press"
+        ],
+        "position": 1313
+      }
+    ],
     "publishing_date": "2024-08-28 11:26:02.614000+00:00",
     "title": "Business Brief: Nvidia’s into nation building. We cool with that?",
     "topics": [

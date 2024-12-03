@@ -177,7 +177,7 @@ class TestParserProxy:
 
 # enforce test coverage for test parsing
 # because this is also used for the generate_parser_test_files script we export it here
-attributes_required_to_cover = {"title", "authors", "topics", "publishing_date", "body"}
+attributes_required_to_cover = {"title", "authors", "topics", "publishing_date", "body", "images"}
 
 attributes_parsers_are_required_to_cover = {"body"}
 
@@ -194,9 +194,10 @@ class TestParser:
             ), f"{versioned_parser.__name__!r} should implement at least {attributes_parsers_are_required_to_cover!r}"
             for attr in versioned_parser.attributes().validated:
                 if annotation := attribute_annotations_mapping[attr.__name__]:
-                    assert (
-                        attr.__annotations__.get("return") == annotation
-                    ), f"Attribute {attr.__name__!r} for {versioned_parser.__name__!r} failed"
+                    assert attr.__annotations__.get("return") == annotation, (
+                        f"Attribute {attr.__name__!r} for {versioned_parser.__name__!r} is of wrong type. "
+                        f"{attr.__annotations__.get('return')} != {annotation}"
+                    )
                 else:
                     raise KeyError(f"Unsupported attribute {attr.__name__!r}")
 
@@ -235,7 +236,7 @@ class TestParser:
             # compare data
             extraction = versioned_parser().parse(html.content, "raise")
             for key, value in version_data.items():
-                assert value == extraction[key]
+                assert value == extraction[key], f"{key!r} is not equal"
 
             # check if extraction is pickable
             pickle.dumps(extraction)

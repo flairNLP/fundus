@@ -49,6 +49,180 @@
         }
       ]
     },
+    "images": [
+      {
+        "versions": [
+          {
+            "url": "https://media.newyorker.com/photos/643d8573650fe81912f90fc2/master/w_2560%2Cc_limit/Riederer_Bright_Ice.gif",
+            "query_width": null,
+            "size": null,
+            "type": null
+          },
+          {
+            "url": "https://media.newyorker.com/photos/643d8573650fe81912f90fc2/master/w_120,c_limit/Riederer_Bright_Ice.gif",
+            "query_width": "max-width:767",
+            "size": {
+              "width": 120,
+              "height": 0
+            },
+            "type": null
+          },
+          {
+            "url": "https://media.newyorker.com/photos/643d8573650fe81912f90fc2/master/w_240,c_limit/Riederer_Bright_Ice.gif",
+            "query_width": "max-width:767",
+            "size": {
+              "width": 240,
+              "height": 0
+            },
+            "type": null
+          },
+          {
+            "url": "https://media.newyorker.com/photos/643d8573650fe81912f90fc2/master/w_320,c_limit/Riederer_Bright_Ice.gif",
+            "query_width": "max-width:767",
+            "size": {
+              "width": 320,
+              "height": 0
+            },
+            "type": null
+          },
+          {
+            "url": "https://media.newyorker.com/photos/643d8573650fe81912f90fc2/master/w_640,c_limit/Riederer_Bright_Ice.gif",
+            "query_width": "max-width:767",
+            "size": {
+              "width": 640,
+              "height": 0
+            },
+            "type": null
+          },
+          {
+            "url": "https://media.newyorker.com/photos/643d8573650fe81912f90fc2/master/w_960,c_limit/Riederer_Bright_Ice.gif",
+            "query_width": "max-width:767",
+            "size": {
+              "width": 960,
+              "height": 0
+            },
+            "type": null
+          },
+          {
+            "url": "https://media.newyorker.com/photos/643d8573650fe81912f90fc2/master/w_1280,c_limit/Riederer_Bright_Ice.gif",
+            "query_width": "min-width:768",
+            "size": {
+              "width": 1280,
+              "height": 0
+            },
+            "type": null
+          },
+          {
+            "url": "https://media.newyorker.com/photos/643d8573650fe81912f90fc2/master/w_1600,c_limit/Riederer_Bright_Ice.gif",
+            "query_width": "min-width:768",
+            "size": {
+              "width": 1600,
+              "height": 0
+            },
+            "type": null
+          },
+          {
+            "url": "https://media.newyorker.com/photos/643d8573650fe81912f90fc2/master/w_1920,c_limit/Riederer_Bright_Ice.gif",
+            "query_width": "min-width:768",
+            "size": {
+              "width": 1920,
+              "height": 0
+            },
+            "type": null
+          },
+          {
+            "url": "https://media.newyorker.com/photos/643d8573650fe81912f90fc2/master/w_2240,c_limit/Riederer_Bright_Ice.gif",
+            "query_width": "min-width:768",
+            "size": {
+              "width": 2240,
+              "height": 0
+            },
+            "type": null
+          }
+        ],
+        "is_cover": true,
+        "description": "An abstract illustration showing reflectivity and light",
+        "caption": null,
+        "authors": [
+          "Arina Kokoreva"
+        ],
+        "position": 279
+      },
+      {
+        "versions": [
+          {
+            "url": "https://media.newyorker.com/photos/6442ac41a765749b63ab2787/master/w_120,c_limit/RR-Ice-Shields-Secondary.jpg",
+            "query_width": null,
+            "size": {
+              "width": 120,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.newyorker.com/photos/6442ac41a765749b63ab2787/master/w_240,c_limit/RR-Ice-Shields-Secondary.jpg",
+            "query_width": null,
+            "size": {
+              "width": 240,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.newyorker.com/photos/6442ac41a765749b63ab2787/master/w_320,c_limit/RR-Ice-Shields-Secondary.jpg",
+            "query_width": null,
+            "size": {
+              "width": 320,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.newyorker.com/photos/6442ac41a765749b63ab2787/master/w_640,c_limit/RR-Ice-Shields-Secondary.jpg",
+            "query_width": null,
+            "size": {
+              "width": 640,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.newyorker.com/photos/6442ac41a765749b63ab2787/master/w_960,c_limit/RR-Ice-Shields-Secondary.jpg",
+            "query_width": null,
+            "size": {
+              "width": 960,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.newyorker.com/photos/6442ac41a765749b63ab2787/master/w_1280,c_limit/RR-Ice-Shields-Secondary.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1280,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.newyorker.com/photos/6442ac41a765749b63ab2787/master/w_1600,c_limit/RR-Ice-Shields-Secondary.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1600,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": false,
+        "description": "Aerial image of an experiment testing glass beads' ability to keep ice frozen longer",
+        "caption": "An aerial view of the glass-bubble-covered ice, at left, and the bare ice.Photograph by Doug Johnson An aerial view of the glass-bubble-covered ice, at left, and the bare ice.",
+        "authors": [
+          "Doug Johnson"
+        ],
+        "position": 345
+      }
+    ],
     "publishing_date": "2023-04-25 06:00:00-04:00",
     "title": "A Heat Shield for the Most Important Ice on Earth",
     "topics": [

@@ -4,12 +4,13 @@ from typing import List, Optional
 from lxml.cssselect import CSSSelector
 from lxml.etree import XPath
 
-from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute
+from fundus.parser import ArticleBody, BaseParser, Image, ParserProxy, attribute
 from fundus.parser.utility import (
     extract_article_body_with_selector,
     generic_author_parsing,
     generic_date_parsing,
     generic_topic_parsing,
+    image_extraction,
 )
 
 
@@ -47,3 +48,18 @@ class CNBCParser(ParserProxy):
         @attribute(validate=False)
         def key_points(self) -> List[str]:
             return [key_point.text_content() for key_point in self._key_points_selector(self.precomputed.doc)]
+
+        """
+        CNBC uses unconventional image loading, which is not supported at the time
+        @attribute
+        def images(self) -> List[Image]:
+            return image_extraction(
+                doc=self.precomputed.doc,
+                paragraph_selector=self._paragraph_selector,
+                upper_boundary_selector=XPath("//h1[@class='ArticleHeader-headline']"),
+                image_selector=XPath("//div[@class='InlineImage-wrapper']//img"),
+                caption_selector=XPath("./ancestor::div[@class='InlineImage-wrapper']//div[@class='InlineImage-imageEmbedCaption']"),
+                author_selector=XPath(
+                    "./ancestor::div[@class='InlineImage-wrapper']//div[@class='InlineImage-imageEmbedCredit']")
+            )
+        """

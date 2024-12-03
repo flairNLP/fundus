@@ -57,6 +57,45 @@
         }
       ]
     },
+    "images": [
+      {
+        "versions": [
+          {
+            "url": "https://www.thenation.com/cdn-cgi/image/width=896,quality=80,format=auto/wp-content/uploads/2023/05/Local-90-Tanner-Fischer-148KB.jpg",
+            "query_width": null,
+            "size": {
+              "width": 896,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": true,
+        "description": "Tanner Fischer speaks in front of UPS workers in Iowa.",
+        "caption": "Tanner Fischer leads a rally of UPS workers in Des Moines, Iowa.",
+        "authors": [
+          "(Courtesy of Tanner Fischer)"
+        ],
+        "position": 366
+      },
+      {
+        "versions": [
+          {
+            "url": "https://www.thenation.com/wp-content/uploads/2023/05/tanner-fischer.jpg",
+            "query_width": null,
+            "size": null,
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": false,
+        "description": null,
+        "caption": "Tanner Fischer.",
+        "authors": [
+          "( Sarah Lazare)"
+        ],
+        "position": 452
+      }
+    ],
     "publishing_date": "2023-05-15 09:00:37+00:00",
     "title": "Inside a Teamster Rebellion: This Is What Union Democracy Looks Like",
     "topics": [
@@ -94,6 +133,91 @@
         }
       ]
     },
+    "images": [
+      {
+        "versions": [
+          {
+            "url": "https://www.thenation.com/wp-content/uploads/2024/01/AP24010820434600-168x106.jpg",
+            "query_width": null,
+            "size": {
+              "width": 168,
+              "height": 106
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.thenation.com/wp-content/uploads/2024/01/AP24010820434600-275x173.jpg",
+            "query_width": null,
+            "size": {
+              "width": 275,
+              "height": 173
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.thenation.com/wp-content/uploads/2024/01/AP24010820434600-340x215.jpg",
+            "query_width": null,
+            "size": {
+              "width": 340,
+              "height": 214
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.thenation.com/wp-content/uploads/2024/01/AP24010820434600-382x240.jpg",
+            "query_width": null,
+            "size": {
+              "width": 382,
+              "height": 241
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.thenation.com/wp-content/uploads/2024/01/AP24010820434600-768x484.jpg",
+            "query_width": null,
+            "size": {
+              "width": 768,
+              "height": 484
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.thenation.com/wp-content/uploads/2024/01/AP24010820434600-793x500.jpg",
+            "query_width": null,
+            "size": {
+              "width": 793,
+              "height": 499
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.thenation.com/wp-content/uploads/2024/01/AP24010820434600-810x510.jpg",
+            "query_width": null,
+            "size": {
+              "width": 810,
+              "height": 510
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.thenation.com/wp-content/uploads/2024/01/AP24010820434600.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1440,
+              "height": 907
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": true,
+        "description": "Republican presidential candidate former New Jersey Gov. Chris Christie announces he is dropping out of the race during a town hall campaign event Wednesday, Jan. 10, 2024, in Windham, N.H. (AP Photo/Robert F. Bukaty)",
+        "caption": "Chris Christie announces he is dropping out of the race during a town hall campaign event Wednesday, January 10, 2024, in Windham, N.H.",
+        "authors": [
+          "Robert F. Bukaty / AP"
+        ],
+        "position": 413
+      }
+    ],
     "publishing_date": "2024-01-11 16:10:50+00:00",
     "title": "Chris Christie’s Exit Marks the End of the Fight for the Soul of the GOP",
     "topics": [

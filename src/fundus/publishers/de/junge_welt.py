@@ -4,12 +4,13 @@ from typing import List, Optional
 from lxml.cssselect import CSSSelector
 from lxml.etree import XPath
 
-from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute
+from fundus.parser import ArticleBody, BaseParser, Image, ParserProxy, attribute
 from fundus.parser.utility import (
     extract_article_body_with_selector,
     generic_author_parsing,
     generic_date_parsing,
     generic_topic_parsing,
+    image_extraction,
 )
 
 
@@ -50,3 +51,12 @@ class JungeWeltParser(ParserProxy):
         @attribute
         def publishing_date(self) -> Optional[datetime.datetime]:
             return generic_date_parsing(self.precomputed.ld.bf_search("datePublished"))
+
+        @attribute
+        def images(self) -> List[Image]:
+            return image_extraction(
+                doc=self.precomputed.doc,
+                paragraph_selector=self._paragraph_selector,
+                caption_selector=XPath("./ancestor::figure//div[contains(@class, 'caption')]"),
+                relative_urls=True,
+            )
