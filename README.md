@@ -123,7 +123,7 @@ for article in crawler.crawl(max_articles=1):
         print(image)
 ```
 
-This code will give you an output like this:
+For [this article](https://www.latimes.com/sports/lakers/story/2024-12-13/lakers-lebron-james-away-from-team-timberwolves) you will get the following output:
 
 ```console
 Fundus-Article Cover-Image:
