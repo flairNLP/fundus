@@ -107,7 +107,48 @@ for article in crawler.crawl(max_articles=2):
     print(article)
 ```
 
-## Example 3: Crawl 1 Million articles
+## Example 3: Crawl some images
+
+Fundus can also crawl images from articles. Let's crawl an article from the LA Times and print the images:
+
+```python
+from fundus import PublisherCollection, Crawler
+
+# initialize the crawler for The New York Times
+crawler = Crawler(PublisherCollection.us.LATimes)
+
+# crawl 1 article and print the images
+for article in crawler.crawl(max_articles=1):
+    for image in article.images:
+        print(image)
+```
+
+This code will give you an output like this:
+
+```console
+Fundus-Article Cover-Image:
+-URL:			 'https://ca-times.brightspotcdn.com/dims4/default/41c9bc4/2147483647/strip/true/crop/4598x3065+0+0/resize/1200x800!/format/webp/quality/75/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2F77%2Feb%2F7fed2d3942fd97b0f7325e7060cf%2Flakers-timberwolves-basketball-33765.jpg'
+-Description:	         'Minnesota Timberwolves forward Julius Randle (30) works toward the basket.'
+-Caption:		 'Minnesota Timberwolves forward Julius Randle, left, controls the ball in front of Lakers forward Anthony Davis during the first half of the Lakers’ 97-87 loss Friday.'
+-Authors:		 ['Abbie Parr / Associated Press']
+-Sizes:			 [320x213, 568x379, 768x512, 1024x683, 1200x800]
+
+Fundus-Article Image:
+-URL:			 'https://ca-times.brightspotcdn.com/dims4/default/9a22715/2147483647/strip/true/crop/4706x3137+0+0/resize/1200x800!/format/webp/quality/75/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2Ff7%2F52%2Fdcd6b263480ab579ac583a4fdbbf%2Flakers-timberwolves-basketball-48004.jpg'
+-Description:	         'Lakers coach JJ Redick talks with forward Anthony Davis during a loss to the Timberwolves.'
+-Caption:		 'Lakers coach JJ Redick, right, talks with forward Anthony Davis during the first half of a 97-87 loss to the Timberwolves on Friday night.'
+-Authors:		 ['Abbie Parr / Associated Press']
+-Sizes:			 [320x213, 568x379, 768x512, 1024x683, 1200x800]
+
+Fundus-Article Image:
+-URL:			 'https://ca-times.brightspotcdn.com/dims4/default/580bae4/2147483647/strip/true/crop/5093x3470+0+0/resize/1200x818!/format/webp/quality/75/?url=https%3A%2F%2Fcalifornia-times-brightspot.s3.amazonaws.com%2F3b%2Fdf%2F64c0198b4c2fb2b5824aaccb64b7%2F1486148-sp-nba-lakers-trailblazers-25-gmf.jpg'
+-Description:	         'Lakers star LeBron James sits in street clothes on the bench next to his son, Bronny James.'
+-Caption:		 'Lakers star LeBron James sits in street clothes on the bench next to his son, Bronny James, during a win over Portland at Crypto.com Arena on Dec. 8.'
+-Authors:		 ['Gina Ferazzi / Los Angeles Times']
+-Sizes:			 [320x218, 568x387, 768x524, 1024x698, 1200x818]
+```
+
+## Example 4: Crawl 1 Million articles
 
 To crawl such a vast amount of data, Fundus relies on the `CommonCrawl` web archive, in particular the news crawl `CC-NEWS`.
 If you're not familiar with [`CommonCrawl`](https://commoncrawl.org/) or [`CC-NEWS`](https://commoncrawl.org/blog/news-dataset-available) check out their websites.
