@@ -54,5 +54,4 @@ class FrankfurterRundschauParser(ParserProxy):
                 paragraph_selector=self._paragraph_selector,
                 upper_boundary_selector=CSSSelector("article"),
                 author_selector=XPath("./ancestor::figure//figcaption"),
-                author_filter=re.compile(r"(?s).*©"),
             )

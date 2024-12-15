@@ -57,6 +57,5 @@ class MotorSportMagazinParser(ParserProxy):
                 image_selector=XPath("//*[not(self::figure)]/picture//img"),
                 caption_selector=XPath("(./ancestor::picture/following-sibling::figcaption)[1]"),
                 author_selector=XPath("(./ancestor::picture/following-sibling::figcaption)[1]"),
-                author_filter=re.compile(r"(?i).*foto:"),
                 relative_urls=True,
             )

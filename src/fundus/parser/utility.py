@@ -433,10 +433,25 @@ def preprocess_url(url: str, domain: str) -> str:
 
 
 def image_author_parsing(authors: Union[str, List[str]], author_filter: Optional[Pattern[str]] = None) -> List[str]:
+    credit_keywords = [
+        "credits?",
+        "quellen?",
+        "bild(rechte)?",
+        "sources?",
+        r"(((f|ph)otos?(graph)?|image|illustration)\s*)+(by|:)",
+        "©",
+        "– alle rechte vorbehalten",
+        "copyright",
+        "all rights reserved",
+        "pictures?"
+        "courtesy of",
+        "＝"
+    ]
+    author_filter = re.compile(r"(?is)^(" + r"|".join(credit_keywords) + r"):?\s*")
+
     def clean(author: str):
-        if author_filter:
-            author = re.sub(author_filter, "", author)
-        author = re.sub(r"©|((f|ph)oto|image)\s*(by|:)", "", author, flags=re.IGNORECASE)
+        author = re.sub(r"^\((.*)\)$", r"\1", author).strip()
+        author = re.sub(author_filter, "", author, count=1)
         return author.strip()
 
     if isinstance(authors, list):
