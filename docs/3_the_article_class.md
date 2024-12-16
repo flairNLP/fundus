@@ -4,6 +4,7 @@
   * [What is an `Article`](#what-is-an-article)
   * [The articles' body](#the-articles-body)
   * [HTML](#html)
+  * [Images](#images)
   * [Language detection](#language-detection)
   * [Saving an Article](#saving-an-article)
 
@@ -129,9 +130,9 @@ Each `Image` object contains the following attributes:
   - `type`: the image format (e.g. `jpeg`, `png`).
 - `is_cover`: a boolean indicating whether the image is the cover image of the article.
 - `description`: a string describing the image (usually the alt-text).
-- `caption`: a string describing the image in the context of the article.
+- `caption`: the image caption as used in the article.
 - `authors`: a list of strings representing the authors of the image.
-- `position`: a string describing the position of the image in the article.
+- `position`: an integer describing the position of the image in the DOM-tree.
 
 ## Language detection
 
