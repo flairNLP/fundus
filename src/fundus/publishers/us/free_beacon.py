@@ -49,5 +49,5 @@ class FreeBeaconParser(ParserProxy):
             return image_extraction(
                 doc=self.precomputed.doc,
                 paragraph_selector=self._paragraph_selector,
-                author_selector=re.compile(r"\((?P<credits>.+)\)")
+                author_selector=re.compile(r"\((?P<credits>.+)\)$")
             )
