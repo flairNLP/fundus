@@ -43,5 +43,96 @@
       "Saudi Telecom",
       "Telefónica"
     ]
+  },
+  "V1_1": {
+    "authors": [
+      "Anna Sleegers"
+    ],
+    "body": {
+      "summary": [
+        "Der Zahlungsdienstleister VR Payment hat Wero zusammen mit zwei Volksbanken erstmals erfolgreich im E-Commerce eingesetzt. Für nächstes Jahr ist die Anbindung des Handels in Deutschland geplant."
+      ],
+      "sections": [
+        {
+          "headline": [],
+          "paragraphs": [
+            "Das im Aufbau befindliche europäische Zahlungssystem Wero hat den Praxistest im E-Commerce bestanden. Wie die Europäische Payment-Initiative (EPI) am Montag mitteilte, glückten den beteiligten Banken Zahlungsdienstleistern mehrere Transaktionen mit dem Onlineshop des 1. FC Kaiserslautern. Mit dem technischen Probelauf, an dem der genossenschaftlichen Zahlungsdienstleister VR Payment, Atruvia, die Volksbanken Südliche Weinstraße-Wasgau und RheinAhrEifel sowie die DZ Bank beteiligt waren, sei ein wichtiger Schritt für die im kommenden Sommer geplante Anbindung des Handels in Deutschland getan."
+          ]
+        },
+        {
+          "headline": [
+            "Bislang rund 700.000 Transaktionen in Deutschland"
+          ],
+          "paragraphs": [
+            "Bislang kann Wero nur Geld von Privatkonto zu Privatkonto transferieren. Und das auch nur zwischen registrieren Kunden, von denen es im Sparkassen- und Genossenschaftsbereich insgesamt rund 600.000 Kunden gibt.. Seit einigen Wochen bietet auch die Postbank ihren Kunden eine Schnittstelle zur Wero-App, im kommenden Jahr will die ING Diba folgen. Insgesamt wurden in Deutschland nach Angaben des EPI-Managers Chris Scheuermann rund 700.000 Transaktionen getätigt, wobei durchschnittlich rund 58 Euro transferiert worden seien."
+          ]
+        },
+        {
+          "headline": [
+            "Reibungslose Integration sichergestellt"
+          ],
+          "paragraphs": [
+            "Die Kooperation mit dem Zweitligisten diente als so genannter Proof of Concept für die kommerzielle Nutzung. In einer eigens geschaffenen Umgebung wickelten die beteiligten Genossen insgesamt etwa 20 Bezahlvorgänge über den Onlineshop der „Roten Teufel“ ab. Ihr positives Fazit: Wero lasse sich reibungslos in die Zahlungssysteme der Händler sowie in die Wallets der privaten Nutzer integrieren."
+          ]
+        },
+        {
+          "headline": [
+            "Zweiter Anlauf der deutschen Kreditwirtschaft"
+          ],
+          "paragraphs": [
+            "Wero ist nach dem in diesem Jahr endgültig begrabenen Gemeinschaftsprojekt Paydirekt bereits der zweite Anlauf der deutschen Kreditwirtschaft, den US-Anbietern Paypal, ApplePay und GooglePay die Stirn zu bieten. Gegenüber dem Vorgängerprojekt hat es den Vorteil, dass es dank der Beteiligung anderer europäischer Banken auch grenzüberschreitend funktionieren soll. Allerdings fehlen noch einige große Adressen, darunter auch die Commerzbank."
+          ]
+        },
+        {
+          "headline": [
+            "Keine flächendeckende Einführung"
+          ],
+          "paragraphs": [
+            "Auch wird das gemeinsame europäische Bezahlsystem nicht von Anfang an flächendeckend eingeführt. Außer Deutschland sind derzeit nur Frankreich, Belgien und Luxemburg dabei. Der für Ende 2026 vereinbarte Beitritt der Niederlande dürfte ordentlich Traffic auf die Plattform bringen. Denn dann soll mit iDeal ein Bezahlsystem auf die Wero-Plattform migriert werden, das mit derzeit rund 4 Milliarden Transaktionen im Jahr stark frequentiert ist.",
+            "Seine Popularität verdankt Deal vor allem der Tatsache, dass die niederländischen Banken rechtzeitig ihren Claim abgesteckt haben. Indem bereits 2005 ein gemeinsam entwickeltes Bezahlsystem lancierten, verhinderten sie den erfolgreichen Markteintritt von Paypal. Heute ist iDeal auf fast jedem Handy in den Niederlanden installiert. Genutzt wird es gleichermaßen für die schnelle Überweisung zwischen privaten Nutzern als auch im kommerziellen Bereich."
+          ]
+        },
+        {
+          "headline": [
+            "Wero funktioniert in Echtzeit"
+          ],
+          "paragraphs": [
+            "Gegenüber iDeal und den anderen etablierten Bezahldiensten kann Wero damit punkten, dass die Zahlung in Echtzeit erfolgt. Die Zahlung erfolgt dabei von Konto zu Konto, ohne dass zusätzliche Zahlungsmittel oder Instanzen dazwischen geschaltet würden. Das sei nicht nur einfach und schnell, sondern auch besonders sicher, unterstreichen die 16 beteiligten Institute und Zahlungsdienstleister.",
+            "Den Handel will Wero mit „wettbewerbsfähigen Konditionen“ locken. Denn viele Einzelhändler klagen über die satten Gebühren, die von den US-Anbietern erhoben werden. So verlangt etwa Paypal 3% der Transaktionssumme. Auch ApplePay gilt als hochpreisig. Vertriebsseitig hat Wero bereits vor gut einem Jahr begonnen, den Einzelhandel anzusteuern. Nach dem erfolgreichen Testlauf mit dem 1. FC Kaiserslautern steigen nun auch die Kreditgenossen in die Vermarktung ein. „Von Januar an werden wir das Vertriebsnetz unserer 700 Volks- und Raiffeisenbanken zur Ansprache der Firmenkunden nutzen“, sagt Carlos Gómez Sáez, Vorstandschef von VR Payment. „Größeren Kunden, die keine Geschäftsbeziehungen zu genossenschaftlichen Banken unterhalten, steht das zentrale Vertriebsteam mit 50 Mitarbeitern zur Seite.“"
+          ]
+        },
+        {
+          "headline": [
+            "Pilot in Deutschland"
+          ],
+          "paragraphs": [
+            "Neben den Kosten wird aus Sicht des an dem Probelauf beteiligten Zweitligisten auch die europäische Präsenz für das neue Zahlungssystem sprechen. „Obwohl wir ein deutscher Fußballclub sind, haben wir Fans in verschiedenen Ländern Europas. Das zwingt uns dazu, mehrere Zahlungsmöglichkeiten anzubieten“, sagt Thomas Hengen, Geschäftsführer des 1.FC Kaiserslautern. Bis dahin wird es jedoch noch dauern. So soll die Wero-Lösung für den Handel in Belgien erst im Herbst nächsten Jahres und in Frankreich Anfang 2026 eingeführt werden. Die Niederlande und Luxemburg folgen noch später, ganz zu schweigen von der Mehrzahl der europäischen Länder, in denen Wero zurzeit noch gar nicht aktiv ist."
+          ]
+        },
+        {
+          "headline": [
+            "Komplexere Zahlungsprozesse in Planung"
+          ],
+          "paragraphs": [
+            "Beim genossenschaftlichen Acquirer VR Payment stellt man indes die unkomplizierte Implementierung und Abwicklung für die Händler heraus. Die im Probelauf getesteten Standardanwendungen Einmalzahlung und Rückerstattung sollen später auch um komplexere Prozesse ergänzt werden, sagt Gómez Sáez. Dazu gehört etwa die Hinterlegung einer Kaution bei der Buchung von Ferienwohnungen oder die Bezahlung von Services mit variabler Nutzung, etwa bei Leihrollern oder SB-Tanksäulen."
+          ]
+        }
+      ]
+    },
+    "publishing_date": "2024-12-16 12:30:00+00:00",
+    "title": "Wero besteht Praxistest im digitalen Handel",
+    "topics": [
+      "1. FC Kaiserslautern",
+      "Carlos Gómez",
+      "Chris Scheuermann",
+      "EPI",
+      "Genossenschaftsbanken",
+      "Handel",
+      "Paydirekt",
+      "Paypal",
+      "Praxistest",
+      "VR Payment",
+      "Wero"
+    ]
   }
 }
