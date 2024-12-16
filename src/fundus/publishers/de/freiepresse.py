@@ -48,7 +48,9 @@ class FreiePresseParser(ParserProxy):
 
         @attribute
         def title(self) -> Optional[str]:
-            return re.sub(r"\s*\|.*", "", self.precomputed.meta.get("og:title"))
+            if title := self.precomputed.meta.get("og:title"):
+                return re.sub(r"\s*\|.*", "", title)
+            return None
 
         @attribute
         def topics(self) -> List[str]:
