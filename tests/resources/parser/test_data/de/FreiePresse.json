@@ -25,11 +25,398 @@
         }
       ]
     },
-    "images": [],
+    "images": [
+      {
+        "versions": [
+          {
+            "url": "https://pics.freiepresse.de/DYNIMG/chemnitzer-hutfestival-wann-das-fest-steigt-was-neu-ist-und-wer-fuer-eine-gute-show-sorgen-wird/w213Ko8B60gE5rTmW10p/22/17/13862217_M400x267.jpg",
+            "query_width": null,
+            "size": {
+              "width": 400,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://pics.freiepresse.de/DYNIMG/chemnitzer-hutfestival-wann-das-fest-steigt-was-neu-ist-und-wer-fuer-eine-gute-show-sorgen-wird/w213Ko8B60gE5rTmW10p/22/17/13862217_M650x433.jpg",
+            "query_width": null,
+            "size": {
+              "width": 650,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://pics.freiepresse.de/DYNIMG/chemnitzer-hutfestival-wann-das-fest-steigt-was-neu-ist-und-wer-fuer-eine-gute-show-sorgen-wird/w213Ko8B60gE5rTmW10p/22/17/13862217_M800x534.jpg",
+            "query_width": null,
+            "size": {
+              "width": 800,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://pics.freiepresse.de/DYNIMG/chemnitzer-hutfestival-wann-das-fest-steigt-was-neu-ist-und-wer-fuer-eine-gute-show-sorgen-wird/w213Ko8B60gE5rTmW10p/22/17/13862217_M1020x765.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1020,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://pics.freiepresse.de/DYNIMG/chemnitzer-hutfestival-wann-das-fest-steigt-was-neu-ist-und-wer-fuer-eine-gute-show-sorgen-wird/w213Ko8B60gE5rTmW10p/22/17/13862217_M1300x866.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1300,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://pics.freiepresse.de/DYNIMG/chemnitzer-hutfestival-wann-das-fest-steigt-was-neu-ist-und-wer-fuer-eine-gute-show-sorgen-wird/w213Ko8B60gE5rTmW10p/22/17/13862217_M2040x1530.jpg",
+            "query_width": null,
+            "size": {
+              "width": 2040,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": true,
+        "description": "Chemnitzer Hutfestival: Wann das Fest steigt, was neu ist und wer für eine gute Show sorgen wird - Im Vorjahr zog das Hutfestival Tausende Besucher an.",
+        "caption": "Im Vorjahr zog das Hutfestival Tausende Besucher an.",
+        "authors": [
+          "Andreas Seidel/Archiv"
+        ],
+        "position": 615
+      }
+    ],
     "publishing_date": "2024-04-30 00:00:00",
     "title": "Chemnitzer Hutfestival: Wann das Fest steigt, was neu ist und wer für eine gute Show sorgen wird",
     "topics": [
       "Veranstaltungen"
+    ]
+  },
+  "V1_1": {
+    "authors": [
+      "Patrick Hyslop"
+    ],
+    "body": {
+      "summary": [
+        "Bijan Djir-Sarai übernimmt die Verantwortung für das Agieren der Partei vor dem Ampel-Aus. Schon zuvor gab es teils heftige Kritik am Strategie-Papier zum Koalitionsbruch."
+      ],
+      "sections": [
+        {
+          "headline": [],
+          "paragraphs": [
+            "Derzeit zeigt sich die FDP von der militärischen Seite. Grund dafür: Das jüngst von ihr veröffentlichte „D-Day-Papier“. Beim Wörtchen D-Day dürften die meisten an den 6. Juni 1944 denken: An dem Tag landeten die Alliierten, um letztlich die Schreckensherrschaft der Nazis und den Zweiten Weltkrieg in Europa zu beenden. Dabei ist D-Day in etwa vergleichbar mit dem deutschen Begriff Tag X.",
+            "Die Militäroperation 1944 war generalstabsmäßig geplant – und offenbar ebenso militärisch-gründlich wollten die Liberalen in Sachen Ampel-Aus vorgehen. Die Partei unter Christian Lindner (ist Major der Reserve der Luftwaffe) hatte sich laut dem zunächst internen Papier etwa detailliert Gedanken zum idealen Zeitpunkt gemacht, um die Regierung mit SPD und Grünen platzen zu lassen, berechnete etwa die US-Wahlen am 5. November und deren Auswirkungen mit ein."
+          ]
+        },
+        {
+          "headline": [
+            "Narrativ: Bundesregierung größtes Standortrisiko"
+          ],
+          "paragraphs": [
+            "Auch ein Narrativ hatten sich die Liberalen zurechtgelegt. „Die fundamentalen Gegensätze zwischen Rot-Grün einerseits und den Liberalen andererseits sind nicht durch Kompromisse zu überbrücken. Die Bundesregierung ist damit selbst zum größten Standortrisiko geworden“, ist etwa im Papier zu lesen.",
+            "Und man wollte eine Richtungsentscheidung: „Die deutsche Bevölkerung sollte in vorgezogenen Neuwahlen entscheiden, welchen Weg Deutschland zukünftig geht: Subventionen und neue Schulden oder bessere Bedingungen für unsere Unternehmen durch weniger Bürokratie und geringere Steuern. Also: Planwirtschaft oder Soziale Marktwirtschaft. Das sollten wir jetzt entscheiden.“",
+            "Wie das alles nach außen kommuniziert werden sollte, wurde auch durchgespielt. Von einem Pressestatement, über ein Fernseh-Interview bis zu einem Gastbeitrag in der Frankfurter Allgemeinen Zeitung sind die Überlegungen schriftlich festgehalten."
+          ]
+        },
+        {
+          "headline": [
+            "Ablauf-Pyramide: Von „Impuls“ bis „Feldschlacht“"
+          ],
+          "paragraphs": [
+            "Auch die verschiedenen Phasen – die FDP nennt sie eine Ablaufpyramide. Die erste Phase („Impuls“) wäre etwa ein Statement vom ehemaligen Bundeswirtschaftsminister vor der Presse.",
+            "In der zweiten Phase wollten die Liberalen ihr Narrativ setzen – per Video von Lindner für seine Partei. In der dritten Phase sollte das Narrativ verbreitet werden (zum Beispiel per Kacheln und kurzen Clips in den sozialen Netzwerken), um dann in der letzten Phase – mit dem martialischen Namen „Offene Feldschlacht“ – zu münden.",
+            "Eine Recherche der „Zeit“ hatte bereits Diskussionen über Ursachen und Urheber des Koalitionsbruchs ausgelöst. In mehreren Treffen der engsten FDP-Führung wurden demnach seit Ende September Szenarien für ein Ende der Ampel-Koalition durchgespielt. Nachdem das Nachrichtenportal Table.Briefings über den internen Marschplan zum D-Day berichtet hatte, stellte die FDP das Papier auf ihre Homepage."
+          ]
+        },
+        {
+          "headline": [
+            "Generalsekretär Djir-Sarai tritt zurück"
+          ],
+          "paragraphs": [
+            "Es dauerte nicht lange, bis Kritik daran laut wurde. So fand es FDP-Präsidiumsmitglied Marie-Agnes Strack-Zimmermann zwar gut, dass man sich mit Ausstiegsszenarien auseinandersetzt. Aber: „Die Wortwahl ist der Sache nicht dienlich, eine Verschriftlichung mit dieser Tonalität nicht nachvollziehbar“, ließ sie auf dem Kurznachrichtendienst X wissen.",
+            "FDP-Generalsekretär Bijan Djir-Sarai musste sich derweil in Schadensbegrenzung bemühen: In einem Interview bei RTL/Ntv am 18. November hatte er mit Blick auf damalige Medienberichte über die „D-Day“-Formulierung noch betont: „Das stimmt nicht. Dieser Begriff ist nicht benutzt worden.“ Nachdem seine Partei das Papier nun online gestellt hatte, erklärte er gegenüber der Welt: „Das Papier ist auf Ebene der Mitarbeiter entstanden. Niemand aus der Führung der FDP kannte das Papier.“ Am Freitagvormittag schließlich wurde bekannt: Djir-Sarai tritt zurück.",
+            "In einem Statement sagte der 48-Jährige: „Ich habe unwissentlich falsch über ein internes Dokument informiert.“ Das sei nicht seine Absicht gewesen - denn er habe keine Kenntnis von dem Papier gehabt. Als Generalsekretär übernehme er die politische Verantwortung, „um Schaden von meiner Glaubwürdigkeit und der der FDP abzuwenden“. Es war nicht der einzige Rücktritt bei den Liberalen am Freitag. Kurz nach Djir-Sarai nahm FDP-Bundesgeschäftsführer Carsten Reymann seinen Hut.",
+            "Vom ehemaligen Koalitionspartner SPD gab es warme Worte. Generalsekretär Matthias Miersch warf der Spitze der Liberalen vor, die Öffentlichkeit wiederholt getäuscht zu haben, forderte eine Entschuldigung von Parteichef Lindner. Gegenüber dem Redaktionsnetzwerk Deutschland bezeichnete es Miersch als „zynisch“, dass die FDP in dem Papier für den Zeitpunkt des Ampel-Bruchs in ihrem Papier das Wort „D-Day“ benutzt und den nachfolgenden Wahlkampf als „offene Feldschlacht“ bezeichnet."
+          ]
+        },
+        {
+          "headline": [
+            "Ricarda Lang an FDP: „Niemand glaubt Euch“"
+          ],
+          "paragraphs": [
+            "Im Netz sorgte insbesondere die Ablaufpyramide der Liberalen für jede Menge Spott und Hohn. Die Tatsache, dass eine Pyramide von unten nach oben aufgebaut ist, die Liberalen aber ihre Phasen von oben nach unten geplant hatten, nahm dieser User auf X aufs Korn. „Ägypten, wenn der Pharao FDP-Mitglied gewesen wäre“, notierte er zum Bild einer auf dem Kopf stehenden Pyramide.",
+            "Ex-Grünen-Chefin Ricarda Lang störte sich derweil am militärischen Tonfall. „Wer Politik nur noch als Schlachtfeld begreift und als einziges verbleibendes Ziel Destruktion zum eigenen Nutzen hat, sollte keine politische Verantwortung tragen“, kommentierte sie.",
+            "In einem weiteren Tweet zitierte sie den schleswig-holsteinischen FDP-Bundestagsabgeordneten Max Mordhorst, empfahl ihm und seiner Partei: „Legt Eure Handys weg, macht Twitter zu. Das Ding ist durch, niemand glaubt Euch.“",
+            "Der militärische Tonfall des Papiers erinnerte einen User an den Film „Der Untergang“, insbesondere an die bekannte Szene mit Hitler und seinen Militärs im Berliner Führerbunker. „Die FDP-Parteiführung hat soeben Clausewitz ausgegeben“, spöttelt er.",
+            "Ein anderer Nutzer notierte trocken in Anlehnung an CDU-Mann Wolfgang Schäuble: „Kommunikativer Totalschaden. Isch over.“(phy)"
+          ]
+        }
+      ]
+    },
+    "images": [
+      {
+        "versions": [
+          {
+            "url": "https://www.freiepresse.de/DYNIMG/52/32/15125232_M400x267.jpg",
+            "query_width": null,
+            "size": {
+              "width": 400,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.freiepresse.de/DYNIMG/52/32/15125232_M650x433.jpg",
+            "query_width": null,
+            "size": {
+              "width": 650,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.freiepresse.de/DYNIMG/52/32/15125232_M800x534.jpg",
+            "query_width": null,
+            "size": {
+              "width": 800,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.freiepresse.de/DYNIMG/52/32/15125232_M1020x765.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1020,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.freiepresse.de/DYNIMG/52/32/15125232_M1300x866.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1300,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.freiepresse.de/DYNIMG/52/32/15125232_M2040x1530.jpg",
+            "query_width": null,
+            "size": {
+              "width": 2040,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": true,
+        "description": "Christian Lindner (FDP, M), scheidender Bundesminister der Finanzen und FDP-Bundesvorsitzender, äußert sich in der FDP-Parteizentrale bei einer Pressekonferenz. Im Hintergrund stehen Marco Buschmann (FDP, l), scheidender Bundesminister der Justiz, und Bijan Djir-Sarai, FDP-Generalsekretär, der mittlerweile zurückgetreten ist.",
+        "caption": null,
+        "authors": [],
+        "position": 431
+      },
+      {
+        "versions": [
+          {
+            "url": "https://www.freiepresse.de/DYNIMG/52/36/15125236_M400x267.jpg",
+            "query_width": null,
+            "size": {
+              "width": 400,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.freiepresse.de/DYNIMG/52/36/15125236_M650x433.jpg",
+            "query_width": null,
+            "size": {
+              "width": 650,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.freiepresse.de/DYNIMG/52/36/15125236_M800x534.jpg",
+            "query_width": null,
+            "size": {
+              "width": 800,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.freiepresse.de/DYNIMG/52/36/15125236_M1020x765.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1020,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.freiepresse.de/DYNIMG/52/36/15125236_M1300x866.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1300,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.freiepresse.de/DYNIMG/52/36/15125236_M2040x1530.jpg",
+            "query_width": null,
+            "size": {
+              "width": 2040,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": true,
+        "description": "Die FDP von Parteichef Christian Lindner ist derzeit im Netz in aller Munde - jedoch eher weniger in positivem Kontext.",
+        "caption": null,
+        "authors": [],
+        "position": 448
+      },
+      {
+        "versions": [
+          {
+            "url": "https://www.freiepresse.de/DYNIMG/52/41/15125241_M400x267.jpg",
+            "query_width": null,
+            "size": {
+              "width": 400,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.freiepresse.de/DYNIMG/52/41/15125241_M650x433.jpg",
+            "query_width": null,
+            "size": {
+              "width": 650,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.freiepresse.de/DYNIMG/52/41/15125241_M800x534.jpg",
+            "query_width": null,
+            "size": {
+              "width": 800,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.freiepresse.de/DYNIMG/52/41/15125241_M1020x765.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1020,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.freiepresse.de/DYNIMG/52/41/15125241_M1300x866.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1300,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.freiepresse.de/DYNIMG/52/41/15125241_M2040x1530.jpg",
+            "query_width": null,
+            "size": {
+              "width": 2040,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": false,
+        "description": "Diese Pyramide zeigt den angedachten Ablauf der einzelnen Phasen zum Ampel-Aus.",
+        "caption": null,
+        "authors": [],
+        "position": 577
+      },
+      {
+        "versions": [
+          {
+            "url": "https://www.freiepresse.de/DYNIMG/52/46/15125246_M400x267.jpg",
+            "query_width": null,
+            "size": {
+              "width": 400,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.freiepresse.de/DYNIMG/52/46/15125246_M650x433.jpg",
+            "query_width": null,
+            "size": {
+              "width": 650,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.freiepresse.de/DYNIMG/52/46/15125246_M800x534.jpg",
+            "query_width": null,
+            "size": {
+              "width": 800,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.freiepresse.de/DYNIMG/52/46/15125246_M1020x765.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1020,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.freiepresse.de/DYNIMG/52/46/15125246_M1300x866.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1300,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.freiepresse.de/DYNIMG/52/46/15125246_M2040x1530.jpg",
+            "query_width": null,
+            "size": {
+              "width": 2040,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": false,
+        "description": "Bijan Djir-Sarai am Frei, FDP-Generalsekretär, spricht während eines Statements in der FDP-Bundesgeschäftsstelle. Djir-Sarai zieht die Konsequenzen aus dem Bekanntwerden eines Strategiepapiers der Liberalen zum Ampel-Ausstieg und tritt zurück. Foto: Sebastian Christoph Gollnow/dpa +++ dpa-Bildfunk +++",
+        "caption": null,
+        "authors": [],
+        "position": 608
+      }
+    ],
+    "publishing_date": "2024-11-29 12:31:54+01:00",
+    "title": "„Niemand glaubt Euch“, „Totalschaden“: Netz-Spott über FDP - Generalsekretär tritt zurück",
+    "topics": [
+      "Kommunalpolitik"
     ]
   }
 }
