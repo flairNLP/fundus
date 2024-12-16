@@ -338,7 +338,7 @@ def generic_author_parsing(
         A parsed and striped list of authors
     """
 
-    common_delimiters = [",", ";", " und ", " and ", " & ", " \| "]
+    common_delimiters = [",", ";", " und ", " and ", " & ", r" \| "]
 
     parameter_type_error: TypeError = TypeError(
         f"<value> '{value}' has an unsupported type {type(value)}. "
