@@ -438,12 +438,11 @@ def image_author_parsing(authors: Union[str, List[str]]) -> List[str]:
         "quellen?",
         "bild(rechte)?",
         "sources?",
-        r"(((f|ph)oto(graph)?s?|image|illustrations?|cartoons?)\s*)+(by|:|courtesy)",
+        r"(((f|ph)oto(graph)?s?|image|illustrations?|cartoons?|pictures?)\s*)+(by|:|courtesy)",
         "©",
         "– alle rechte vorbehalten",
         "copyright",
         "all rights reserved",
-        "pictures?( by|:)",
         "courtesy of",
         "＝",
     ]
