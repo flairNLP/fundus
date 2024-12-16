@@ -76,7 +76,6 @@ class MetroParser(ParserProxy):
                 author_selector=re.compile(r"(?P<credits>\([^(]+\)$)"),
             )
 
-          
     class V1_1(V1):
         VALID_UNTIL = datetime.date.today()
         _summary_selector = XPath("//article//div[@class='article__content__inner']/p[1]")
