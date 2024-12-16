@@ -48,5 +48,5 @@ class MerkurParser(ParserProxy):
                 paragraph_selector=self._paragraph_selector,
                 upper_boundary_selector=XPath("//article"),
                 image_selector=XPath("//figure[@class='id-StoryElement-image']//img"),
-                author_selector=XPath("./ancestor::figure//figcaption"),
+                author_selector=re.compile(r"©(?P<credits>.+)")
             )
