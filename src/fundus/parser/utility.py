@@ -432,26 +432,29 @@ def preprocess_url(url: str, domain: str) -> str:
     return url
 
 
-def image_author_parsing(authors: Union[str, List[str]], author_filter: Optional[Pattern[str]] = None) -> List[str]:
+def image_author_parsing(authors: Union[str, List[str]]) -> List[str]:
     credit_keywords = [
         "credits?",
         "quellen?",
         "bild(rechte)?",
         "sources?",
-        r"(((f|ph)otos?(graph)?|image|illustration)\s*)+(by|:)",
+        r"(((f|ph)oto(graph)?s?|image|illustrations?|cartoons?)\s*)+(by|:|courtesy)",
         "©",
         "– alle rechte vorbehalten",
         "copyright",
         "all rights reserved",
-        "pictures?"
+        "pictures?( by|:)",
         "courtesy of",
-        "＝"
+        "＝",
     ]
     author_filter = re.compile(r"(?is)^(" + r"|".join(credit_keywords) + r"):?\s*")
 
     def clean(author: str):
         author = re.sub(r"^\((.*)\)$", r"\1", author).strip()
+        # filtering credit keywords
         author = re.sub(author_filter, "", author, count=1)
+        # filtering bloat follwing the author
+        author = re.sub(r"(?i)/?copyright.*", "", author)
         return author.strip()
 
     if isinstance(authors, list):
@@ -599,7 +602,6 @@ def parse_image_nodes(
     caption_selector: XPath,
     alt_selector: XPath,
     author_selector: Union[XPath, Pattern[str]],
-    author_filter: Optional[Pattern[str]] = None,
     domain: Optional[str] = None,
     size_pattern: Optional[Pattern[str]] = None,
 ) -> Iterator[Image]:
@@ -611,8 +613,6 @@ def parse_image_nodes(
         alt_selector: Selector selecting the descriptive text of an image. Defaults to selecting alt value.
         author_selector: Selector selecting the credits for an image. Defaults to selecting an arbitrary child of
             figure with copyright or credit in its class attribute.
-        author_filter: In case the author_selector cannot adequately select the author, this filter can be used to
-            remove unwanted substrings
         domain: If set, the domain will be prepended to URLs in case they are relative
         size_pattern: Regular expression to select <width>, <height> and <dpr> from the image URL. The given regExp
             will be matched with re.findall and overwrites existing values. Defaults to None.
@@ -637,6 +637,9 @@ def parse_image_nodes(
         # parse caption
         caption = nodes_to_text(caption_selector(node))
 
+        # parse description
+        description = nodes_to_text(alt_selector(node))
+
         # parse authors
         authors = []
         if isinstance(author_selector, Pattern):
@@ -644,14 +647,14 @@ def parse_image_nodes(
             if caption and (match := re.search(author_selector, caption)):
                 authors = [match.group("credits")]
                 caption = re.sub(author_selector, "", caption).strip() or None
+            elif description and (match := re.search(author_selector, description)):
+                authors = [match.group("credits")]
+                description = re.sub(author_selector, "", description).strip() or None
         else:
             # author is selectable as node
             if author_nodes := author_selector(node):
                 authors = generic_nodes_to_text(author_nodes, normalize=True)
-        authors = image_author_parsing(authors, author_filter)
-
-        # parse description
-        description = nodes_to_text(alt_selector(node))
+        authors = image_author_parsing(authors)
 
         yield Image(
             versions=versions,
@@ -707,7 +710,6 @@ def image_extraction(
     author_selector: Union[XPath, Pattern[str]] = XPath(
         "(./ancestor::figure//*[(contains(@class, 'copyright') or contains(@class, 'credit')) and text()])[1]"
     ),
-    author_filter: Optional[Pattern[str]] = None,
     relative_urls: Union[bool, XPath] = False,
     size_pattern: Pattern[str] = re.compile(
         r"width([=-])(?P<width>[0-9.]+)|height([=-])(?P<height>[0-9.]+)|dpr=(?P<dpr>[0-9.]+|)"
@@ -733,8 +735,6 @@ def image_extraction(
         alt_selector: Selector selecting the descriptive text of an image. Defaults to selecting alt value.
         author_selector: Selector selecting the credits for an image. Defaults to selecting an arbitrary child of
             figure with copyright or credit in its class attribute.
-        author_filter: In case the author_selector cannot adequately select the author, this filter can be used to
-            remove unwanted substrings.
         relative_urls: If True, the extractor assumes that image src URLs are relative and prepends the publisher
             domain
         size_pattern: Regular expression to select <width>, <height> and <dpr> from the image URL. The given regExp
@@ -774,7 +774,6 @@ def image_extraction(
             caption_selector=caption_selector,
             alt_selector=alt_selector,
             author_selector=author_selector,
-            author_filter=author_filter,
             domain=domain,
             size_pattern=size_pattern,
         )
