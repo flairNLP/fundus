@@ -77,5 +77,4 @@ class TheNewYorkerParser(ParserProxy):
                 author_selector=XPath(
                     "(./ancestor::*[self::figure or self::header]//*[(self::span and contains(@class, 'caption__credit')) or (self::div and contains(@class, '__credit'))])[last()]"
                 ),
-                author_filter=re.compile(r"(?i)(photographs?|cartoons?|illustrations?) (by|courtesy)"),
             )

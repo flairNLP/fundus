@@ -52,5 +52,4 @@ class YomiuriShimbunParser(ParserProxy):
                 upper_boundary_selector=XPath("//article"),
                 relative_urls=True,
                 author_selector=re.compile(r"(?P<credits>＝.*)"),
-                author_filter=re.compile(r"＝"),
             )

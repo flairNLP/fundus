@@ -50,5 +50,4 @@ class TheGatewayPunditParser(ParserProxy):
                 paragraph_selector=self._paragraph_selector,
                 image_selector=XPath("//div[@class='entry-content']//img"),
                 author_selector=XPath("./ancestor::figure//figcaption"),
-                author_filter=re.compile(r"(?i).*\(credit:|\)|.*photo:|^(?!.*(credit:|photo:)).*$"),
             )
