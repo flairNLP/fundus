@@ -15,6 +15,8 @@ from fundus.parser.utility import (
 
 class BoersenZeitungParser(ParserProxy):
     class V1(BaseParser):
+        VALID_UNTIL = datetime.date(2024, 12, 9)
+
         _paragraph_selector = CSSSelector("storefront-content-body .no-tts p")
         _subheadline_selector = XPath("//p[contains(@class, 'interline')]")
         _summary_selector = CSSSelector("storefront-html.excerpt > div")
@@ -55,3 +57,14 @@ class BoersenZeitungParser(ParserProxy):
         def free_access(self) -> bool:
             # print(self._paywall_selector(self.precomputed.doc).text_content().strip())
             return not [node.text_content().strip() for node in self._paywall_selector(self.precomputed.doc)]
+
+    class V1_1(V1):
+        VALID_UNTIL = datetime.date.today()
+
+        @attribute
+        def authors(self) -> List[str]:
+            return generic_author_parsing(self.precomputed.meta.get("twitter:data1"))
+
+        @attribute
+        def publishing_date(self) -> Optional[datetime.datetime]:
+            return generic_date_parsing(self.precomputed.meta.get("article:published_time"))
