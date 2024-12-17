@@ -57,8 +57,8 @@ class WDRParser(ParserProxy):
                 ),
                 upper_boundary_selector=XPath("//div[@class='segment']"),
                 lower_boundary_selector=XPath("//div[@class='shareCon']"),
-                author_selector=XPath("./@title"),
-                author_filter=re.compile(r"(?i).*bildquelle:"),
+                alt_selector=XPath("./@title"),
+                author_selector=re.compile(r"(?i)\|\s*bildquelle:(?P<credits>.+)"),
                 relative_urls=True,
                 caption_selector=XPath("./ancestor::div[@class='media mediaA']//p[@class='infotext']"),
             )

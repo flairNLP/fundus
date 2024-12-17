@@ -61,7 +61,6 @@ class NTVParser(ParserProxy):
                 upper_boundary_selector=XPath("//article[@class='article']"),
                 caption_selector=XPath("./ancestor::figure//figcaption/p[@class='article__caption']"),
                 author_selector=XPath("./ancestor::figure//figcaption/p[@class='article__credit']"),
-                author_filter=re.compile(r"[()]"),
             )
 
     class V1_1(V1):

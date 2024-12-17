@@ -62,5 +62,4 @@ class HessenschauParser(ParserProxy):
                 image_selector=XPath("//figure[not(@class='ar-1-1')]//*[not(self::noscript)]/img"),
                 caption_selector=XPath("./ancestor::figure//span[@class='pr-3']"),
                 author_selector=XPath("./ancestor::figure//span[@class='text-gray-scorpion dark:text-text-dark']"),
-                author_filter=re.compile(r"(?i)bild\s*©"),
             )

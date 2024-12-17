@@ -60,5 +60,4 @@ class WiredParser(ParserProxy):
                     "./ancestor::*[self::figure or (self::div and contains(@class, 'ProductEmbedWrapper'))]"
                     "//*[contains(@class, 'caption__credit') or contains(@class, 'CreditWrapper')]"
                 ),
-                author_filter=re.compile(r"(?i)(photograph|illustration):"),
             )

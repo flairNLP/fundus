@@ -60,8 +60,8 @@ class TagesschauParser(ParserProxy):
                 image_selector=XPath(
                     "//*[not(self::div and @class='teaser-absatz__image')]/div[@class='ts-picture__wrapper']//img"
                 ),
-                author_filter=re.compile(r".*\|"),
-                author_selector=XPath("./@title"),
+                alt_selector=XPath("./@title"),
+                author_selector=re.compile(r"\|(?P<credits>.+)"),
                 caption_selector=XPath("./ancestor::div[contains(@class, 'absatzbild ')]"),
                 lower_boundary_selector=self._topic_selector,
             )

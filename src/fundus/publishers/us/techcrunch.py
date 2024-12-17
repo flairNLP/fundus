@@ -92,6 +92,5 @@ class TechCrunchParser(ParserProxy):
                     "//h1[@class='wp-block-post-title']"
                 ),
                 caption_selector=XPath("./ancestor::figure//figcaption"),
-                author_selector=XPath("./ancestor::figure//figcaption"),
-                author_filter=re.compile(r"(?i)(.*image credits:|^(?!.*image credits:).*)"),
+                author_selector=re.compile(r"(?i)image credits:(?P<credits>.*)"),
             )

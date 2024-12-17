@@ -59,8 +59,8 @@ class SportSchauParser(ParserProxy):
                 paragraph_selector=self._paragraph_selector,
                 image_selector=XPath("//article//picture[not(contains(@class,'--list'))]//img"),
                 lower_boundary_selector=XPath("//div[contains(@class, 'back-to-top')]"),
-                author_selector=XPath("./@title"),
-                author_filter=re.compile(r".*\|"),
+                alt_selector=XPath("./@title"),
+                author_selector=re.compile(r"\|(?P<credits>.+)"),
                 caption_selector=XPath(
                     "./ancestor::div[contains(@class, 'absatzbild ')]/div[@class='absatzbild__info']"
                 ),

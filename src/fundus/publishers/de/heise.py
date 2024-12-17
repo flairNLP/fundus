@@ -89,5 +89,4 @@ class HeiseParser(ParserProxy):
                     "./ancestor::figure//p[@class='a-caption__source']|"
                     "./ancestor::div[@class='article-gallery ']//span[@class='copyright']"
                 ),
-                author_filter=re.compile(r"(?i)\(|bild:|\)"),
             )

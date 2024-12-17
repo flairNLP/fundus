@@ -558,7 +558,7 @@ class Image(DataclassSerializationMixin):
             f"-Description:\t {self.description!r}\n"
             f"-Caption:\t\t {self.caption!r}\n"
             f"-Authors:\t\t {self.authors}\n"
-            f"-Sizes:\t\t\t {sorted(set(v.size for v in self.versions if v.size is not None))}\n"
+            f"-Versions:\t\t {sorted(set(v.size for v in self.versions if v.size is not None))}\n"
         )
         return representation
 

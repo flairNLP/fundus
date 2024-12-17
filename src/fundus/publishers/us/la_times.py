@@ -47,7 +47,6 @@ class LATimesParser(ParserProxy):
                 doc=self.precomputed.doc,
                 paragraph_selector=self._paragraph_selector,
                 upper_boundary_selector=XPath("//div[@class='page-lead']|//h1[@class='headline']"),
-                author_filter=re.compile(r"(?i)[()]|photos? by|photo illustration by"),
                 caption_selector=XPath("./ancestor::figure//div[@class='figure-caption']"),
                 author_selector=XPath("./ancestor::figure//div[@class='figure-credit']"),
             )

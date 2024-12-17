@@ -69,5 +69,4 @@ class EuronewsParser(ParserProxy):
                     "//div[contains(@class, 'c-article-image-copyright')]|"
                     "./ancestor::figure//span[@class='widget__captionCredit']"
                 ),
-                author_filter=re.compile(r"(?i)(copyright\s*|the ap\. all rights reserved)"),
             )
