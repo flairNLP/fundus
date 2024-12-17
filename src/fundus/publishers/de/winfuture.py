@@ -5,12 +5,13 @@ from typing import List, Optional
 from lxml.etree import XPath
 from lxml.html import HtmlElement, fromstring, tostring
 
-from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute
+from fundus.parser import ArticleBody, BaseParser, Image, ParserProxy, attribute
 from fundus.parser.utility import (
     extract_article_body_with_selector,
     generic_author_parsing,
     generic_date_parsing,
     generic_topic_parsing,
+    image_extraction,
 )
 
 
@@ -59,3 +60,17 @@ class WinfutureParser(ParserProxy):
         @attribute
         def topics(self) -> List[str]:
             return generic_topic_parsing(self.precomputed.meta.get("article:tag"))
+
+        @attribute
+        def images(self) -> List[Image]:
+            return image_extraction(
+                doc=self.precomputed.doc,
+                paragraph_selector=self._paragraph_selector,
+                image_selector=XPath("//div[@class='primary_content']//img[@class='teaser_img' or @class='photo']"),
+                upper_boundary_selector=XPath("//div[@class='primary_content']"),
+                lower_boundary_selector=XPath("//div[@class='mb20 more_links']"),
+                caption_selector=XPath("./ancestor::span[contains(@class,'hmedia')]//a"),
+                author_selector=XPath(
+                    "./ancestor::div[@class='teaser_img_container']//div[@class='teaser_img_source']"
+                ),
+            )

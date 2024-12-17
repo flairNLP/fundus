@@ -1,5 +1,6 @@
 import datetime
-from typing import List
+import pickle
+from typing import Any, Dict, List, Optional, Tuple, Union
 
 import lxml.html
 import pytest
@@ -75,6 +76,54 @@ class TestBaseParser:
         assert (funcs := list(unvalidated)) != [parser.unvalidated]
         assert funcs[0].__func__ == parser.unvalidated.__func__
 
+    def test_default_values_for_attributes(self):
+        class Parser(BaseParser):
+            @attribute
+            def test_optional(self) -> Optional[str]:
+                raise Exception
+
+            @attribute
+            def test_collection(self) -> Tuple[str, ...]:
+                raise Exception
+
+            @attribute
+            def test_nested_collection(self) -> List[Tuple[str, str]]:
+                raise Exception
+
+            @attribute(default_factory=lambda: "This is a default")
+            def test_default_factory(self) -> Union[str, bool]:
+                raise Exception
+
+            @attribute
+            def test_boolean(self) -> bool:
+                raise Exception
+
+        parser = Parser()
+
+        default_values = {attr.__name__: attr.__default__ for attr in parser.attributes()}
+
+        expected_values: Dict[str, Any] = {
+            "test_optional": None,
+            "test_collection": tuple(),
+            "test_nested_collection": list(),
+            "test_default_factory": "This is a default",
+            "test_boolean": False,
+            "free_access": False,
+        }
+
+        for name, value in default_values.items():
+            assert value == expected_values[name]
+
+        class ParserWithUnion(BaseParser):
+            @attribute
+            def this_should_fail(self) -> Union[str, bool]:
+                raise Exception
+
+        parser_with_union = ParserWithUnion()
+
+        with pytest.raises(NotImplementedError):
+            default_values = {attr.__name__: attr.__default__ for attr in parser_with_union.attributes()}
+
 
 class TestParserProxy:
     def test_empty_proxy(self, empty_parser_proxy):
@@ -128,7 +177,7 @@ class TestParserProxy:
 
 # enforce test coverage for test parsing
 # because this is also used for the generate_parser_test_files script we export it here
-attributes_required_to_cover = {"title", "authors", "topics", "publishing_date", "body"}
+attributes_required_to_cover = {"title", "authors", "topics", "publishing_date", "body", "images"}
 
 attributes_parsers_are_required_to_cover = {"body"}
 
@@ -145,9 +194,10 @@ class TestParser:
             ), f"{versioned_parser.__name__!r} should implement at least {attributes_parsers_are_required_to_cover!r}"
             for attr in versioned_parser.attributes().validated:
                 if annotation := attribute_annotations_mapping[attr.__name__]:
-                    assert (
-                        attr.__annotations__.get("return") == annotation
-                    ), f"Attribute {attr.__name__!r} for {versioned_parser.__name__!r} failed"
+                    assert attr.__annotations__.get("return") == annotation, (
+                        f"Attribute {attr.__name__!r} for {versioned_parser.__name__!r} is of wrong type. "
+                        f"{attr.__annotations__.get('return')} != {annotation}"
+                    )
                 else:
                     raise KeyError(f"Unsupported attribute {attr.__name__!r}")
 
@@ -186,7 +236,10 @@ class TestParser:
             # compare data
             extraction = versioned_parser().parse(html.content, "raise")
             for key, value in version_data.items():
-                assert value == extraction[key]
+                assert value == extraction[key], f"{key!r} is not equal"
+
+            # check if extraction is pickable
+            pickle.dumps(extraction)
 
     def test_reserved_attribute_names(self, publisher: Publisher):
         parser = publisher.parser

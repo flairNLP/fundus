@@ -393,7 +393,9 @@
           <span>www.dw.com</span>
         </a>
       </td>
-      <td>&#160;</td>
+      <td>
+        <code>images</code>
+      </td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -1710,7 +1712,9 @@
           <span>www.cnbc.com</span>
         </a>
       </td>
-      <td>&#160;</td>
+      <td>
+        <code>images</code>
+      </td>
       <td>
         <code>key_points</code>
       </td>
@@ -1761,7 +1765,9 @@
           <span>occupydemocrats.com</span>
         </a>
       </td>
-      <td>&#160;</td>
+      <td>
+        <code>images</code>
+      </td>
       <td>
         <code>description</code>
       </td>
@@ -1780,7 +1786,9 @@
           <span>www.reuters.com</span>
         </a>
       </td>
-      <td>&#160;</td>
+      <td>
+        <code>images</code>
+      </td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -1910,6 +1918,7 @@
         </a>
       </td>
       <td>
+        <code>images</code>
         <code>topics</code>
       </td>
       <td>&#160;</td>
@@ -1944,6 +1953,7 @@
         </a>
       </td>
       <td>
+        <code>images</code>
         <code>topics</code>
       </td>
       <td>&#160;</td>

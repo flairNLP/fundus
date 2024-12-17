@@ -143,7 +143,11 @@ def main() -> None:
                     test_data[type(versioned_parser).__name__] = new
                 else:
                     entry.update(new)
-                    test_data[type(versioned_parser).__name__] = dict(sorted(entry.items()))
+
+                # sort entries
+                test_data[type(versioned_parser).__name__] = dict(
+                    sorted(test_data[type(versioned_parser).__name__].items())
+                )
 
             test_data_file.write(test_data)
             bar.update()

@@ -1,14 +1,17 @@
 import datetime
+import re
 from typing import List, Optional
 
 from lxml.cssselect import CSSSelector
+from lxml.etree import XPath
 
-from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute
+from fundus.parser import ArticleBody, BaseParser, Image, ParserProxy, attribute
 from fundus.parser.utility import (
     extract_article_body_with_selector,
     generic_author_parsing,
     generic_date_parsing,
     generic_topic_parsing,
+    image_extraction,
 )
 
 
@@ -45,3 +48,14 @@ class MotorSportMagazinParser(ParserProxy):
                 return generic_topic_parsing(self.precomputed.meta.get("news_keywords"))
             else:
                 return generic_topic_parsing(self.precomputed.meta.get("keywords"))
+
+        @attribute
+        def images(self) -> List[Image]:
+            return image_extraction(
+                doc=self.precomputed.doc,
+                paragraph_selector=self._paragraph_selector,
+                image_selector=XPath("//*[not(self::figure)]/picture//img"),
+                caption_selector=XPath("(./ancestor::picture/following-sibling::figcaption)[1]"),
+                author_selector=re.compile(r"(?i),?\s*foto:(?P<credits>.+)"),
+                relative_urls=True,
+            )

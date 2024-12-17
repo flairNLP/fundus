@@ -4,7 +4,15 @@ from typing import List, Optional
 from lxml.cssselect import CSSSelector
 from lxml.etree import XPath
 
-from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute, utility
+from fundus.parser import (
+    ArticleBody,
+    BaseParser,
+    Image,
+    ParserProxy,
+    attribute,
+    utility,
+)
+from fundus.parser.utility import image_extraction
 
 
 class KrautreporterParser(ParserProxy):
@@ -49,3 +57,19 @@ class KrautreporterParser(ParserProxy):
         @attribute
         def topics(self) -> List[str]:
             return utility.generic_topic_parsing(self._topic_selector(self.precomputed.doc))
+
+        @attribute
+        def images(self) -> List[Image]:
+            return image_extraction(
+                doc=self.precomputed.doc,
+                paragraph_selector=self._paragraph_selector,
+                image_selector=XPath(
+                    "//section[@class='article-headers-shared-teaser-image']//img|"
+                    "//figure[contains(@class, 'image--default')]//img"
+                ),
+                author_selector=XPath(
+                    "./ancestor::section[@class='article-headers-shared-teaser-image']"
+                    "//p[@class='article-headers-shared-teaser-image__credits']"
+                ),
+                relative_urls=True,
+            )
