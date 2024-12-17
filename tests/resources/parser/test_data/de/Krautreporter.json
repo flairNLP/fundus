@@ -185,6 +185,298 @@
         }
       ]
     },
+    "images": [
+      {
+        "versions": [
+          {
+            "url": "https://krautreporter.imgix.net/system/article/teaser_image/5481/haaretz.jpg?fit=min&auto=format%2Ccompress&w=100",
+            "query_width": null,
+            "size": {
+              "width": 100,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://krautreporter.imgix.net/system/article/teaser_image/5481/haaretz.jpg?fit=min&auto=format%2Ccompress&w=116",
+            "query_width": null,
+            "size": {
+              "width": 116,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://krautreporter.imgix.net/system/article/teaser_image/5481/haaretz.jpg?fit=min&auto=format%2Ccompress&w=135",
+            "query_width": null,
+            "size": {
+              "width": 135,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://krautreporter.imgix.net/system/article/teaser_image/5481/haaretz.jpg?fit=min&auto=format%2Ccompress&w=156",
+            "query_width": null,
+            "size": {
+              "width": 156,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://krautreporter.imgix.net/system/article/teaser_image/5481/haaretz.jpg?fit=min&auto=format%2Ccompress&w=181",
+            "query_width": null,
+            "size": {
+              "width": 181,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://krautreporter.imgix.net/system/article/teaser_image/5481/haaretz.jpg?fit=min&auto=format%2Ccompress&w=210",
+            "query_width": null,
+            "size": {
+              "width": 210,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://krautreporter.imgix.net/system/article/teaser_image/5481/haaretz.jpg?fit=min&auto=format%2Ccompress&w=244",
+            "query_width": null,
+            "size": {
+              "width": 244,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://krautreporter.imgix.net/system/article/teaser_image/5481/haaretz.jpg?fit=min&auto=format%2Ccompress&w=283",
+            "query_width": null,
+            "size": {
+              "width": 283,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://krautreporter.imgix.net/system/article/teaser_image/5481/haaretz.jpg?fit=min&auto=format%2Ccompress&w=328",
+            "query_width": null,
+            "size": {
+              "width": 328,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://krautreporter.imgix.net/system/article/teaser_image/5481/haaretz.jpg?fit=min&auto=format%2Ccompress&w=380",
+            "query_width": null,
+            "size": {
+              "width": 380,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://krautreporter.imgix.net/system/article/teaser_image/5481/haaretz.jpg?fit=min&auto=format%2Ccompress&w=441",
+            "query_width": null,
+            "size": {
+              "width": 441,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://krautreporter.imgix.net/system/article/teaser_image/5481/haaretz.jpg?fit=min&auto=format%2Ccompress&w=512",
+            "query_width": null,
+            "size": {
+              "width": 512,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://krautreporter.imgix.net/system/article/teaser_image/5481/haaretz.jpg?fit=min&auto=format%2Ccompress&w=594",
+            "query_width": null,
+            "size": {
+              "width": 594,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://krautreporter.imgix.net/system/article/teaser_image/5481/haaretz.jpg?fit=min&auto=format%2Ccompress&w=689",
+            "query_width": null,
+            "size": {
+              "width": 689,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://krautreporter.imgix.net/system/article/teaser_image/5481/haaretz.jpg?fit=min&auto=format%2Ccompress&w=799",
+            "query_width": null,
+            "size": {
+              "width": 799,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://krautreporter.imgix.net/system/article/teaser_image/5481/haaretz.jpg?fit=min&auto=format%2Ccompress&w=927",
+            "query_width": null,
+            "size": {
+              "width": 927,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://krautreporter.imgix.net/system/article/teaser_image/5481/haaretz.jpg?fit=min&auto=format%2Ccompress&w=1075",
+            "query_width": null,
+            "size": {
+              "width": 1075,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://krautreporter.imgix.net/system/article/teaser_image/5481/haaretz.jpg?fit=min&auto=format%2Ccompress&w=1247",
+            "query_width": null,
+            "size": {
+              "width": 1247,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://krautreporter.imgix.net/system/article/teaser_image/5481/haaretz.jpg?fit=min&auto=format%2Ccompress&w=1446",
+            "query_width": null,
+            "size": {
+              "width": 1446,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://krautreporter.imgix.net/system/article/teaser_image/5481/haaretz.jpg?fit=min&auto=format%2Ccompress&w=1678",
+            "query_width": null,
+            "size": {
+              "width": 1678,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://krautreporter.imgix.net/system/article/teaser_image/5481/haaretz.jpg?fit=min&auto=format%2Ccompress&w=1946",
+            "query_width": null,
+            "size": {
+              "width": 1946,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://krautreporter.imgix.net/system/article/teaser_image/5481/haaretz.jpg?fit=min&auto=format%2Ccompress&w=2257",
+            "query_width": null,
+            "size": {
+              "width": 2257,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://krautreporter.imgix.net/system/article/teaser_image/5481/haaretz.jpg?fit=min&auto=format%2Ccompress&w=2619",
+            "query_width": null,
+            "size": {
+              "width": 2619,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://krautreporter.imgix.net/system/article/teaser_image/5481/haaretz.jpg?fit=min&auto=format%2Ccompress&w=3038",
+            "query_width": null,
+            "size": {
+              "width": 3038,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://krautreporter.imgix.net/system/article/teaser_image/5481/haaretz.jpg?fit=min&auto=format%2Ccompress&w=3524",
+            "query_width": null,
+            "size": {
+              "width": 3524,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://krautreporter.imgix.net/system/article/teaser_image/5481/haaretz.jpg?fit=min&auto=format%2Ccompress&w=4087",
+            "query_width": null,
+            "size": {
+              "width": 4087,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://krautreporter.imgix.net/system/article/teaser_image/5481/haaretz.jpg?fit=min&auto=format%2Ccompress&w=4741",
+            "query_width": null,
+            "size": {
+              "width": 4741,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://krautreporter.imgix.net/system/article/teaser_image/5481/haaretz.jpg?fit=min&auto=format%2Ccompress&w=5500",
+            "query_width": null,
+            "size": {
+              "width": 5500,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://krautreporter.imgix.net/system/article/teaser_image/5481/haaretz.jpg?fit=min&auto=format%2Ccompress&w=6380",
+            "query_width": null,
+            "size": {
+              "width": 6380,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://krautreporter.imgix.net/system/article/teaser_image/5481/haaretz.jpg?fit=min&auto=format%2Ccompress&w=7401",
+            "query_width": null,
+            "size": {
+              "width": 7401,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://krautreporter.imgix.net/system/article/teaser_image/5481/haaretz.jpg?fit=min&auto=format%2Ccompress&w=8192",
+            "query_width": null,
+            "size": {
+              "width": 8192,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": true,
+        "description": "Eine Frau blickt in die Kamera. Sie trägt ein grünes Oberteil. Im Hintergrund stehen Bilder.",
+        "caption": null,
+        "authors": [
+          "Tomer Appelbaum/Haaretz"
+        ],
+        "position": 175
+      }
+    ],
     "publishing_date": "2024-08-22 12:00:00+02:00",
     "title": "„Ich wollte, dass sie mich mögen. So überlebt man.“",
     "topics": [

@@ -1,22 +1,25 @@
 import datetime
-from typing import List, Optional
+import re
+from typing import List, Optional, Union
 
 from lxml.cssselect import CSSSelector
 from lxml.etree import XPath
 
-from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute
+from fundus.parser import ArticleBody, BaseParser, Image, ParserProxy, attribute
 from fundus.parser.utility import (
     extract_article_body_with_selector,
     generic_author_parsing,
     generic_date_parsing,
     generic_topic_parsing,
+    image_extraction,
 )
 
 
 class MetroParser(ParserProxy):
     class V1(BaseParser):
+        VALID_UNTIL = datetime.date(2024, 11, 17)
         _summary_selector = XPath("//article / div[@class='article-body'] / p[1]")
-        _subheadline_selector = CSSSelector("article > div.article-body > h2")
+        _subheadline_selector: Union[CSSSelector, XPath] = CSSSelector("article > div.article-body > h2")
 
         _bloat_regex_ = (
             r"^Got a story|"
@@ -63,3 +66,18 @@ class MetroParser(ParserProxy):
         @attribute
         def topics(self) -> List[str]:
             return generic_topic_parsing(self.precomputed.meta.get("article:tag"))
+
+        @attribute
+        def images(self) -> List[Image]:
+            return image_extraction(
+                doc=self.precomputed.doc,
+                paragraph_selector=self._paragraph_selector,
+                upper_boundary_selector=XPath("//article"),
+                author_selector=re.compile(r"(?P<credits>\([^(]+\)$)"),
+            )
+
+    class V1_1(V1):
+        VALID_UNTIL = datetime.date.today()
+        _summary_selector = XPath("//article//div[@class='article__content__inner']/p[1]")
+        _paragraph_selector = XPath("//article//div[@class='article__content__inner']/p[not(@class) and position()>1]")
+        _subheadline_selector = XPath("//article//div[@class='article__content__inner']/h2")

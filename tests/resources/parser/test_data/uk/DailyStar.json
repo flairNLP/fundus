@@ -31,6 +31,105 @@
         }
       ]
     },
+    "images": [
+      {
+        "versions": [
+          {
+            "url": "https://i2-prod.dailystar.co.uk/incoming/article32649929.ece/ALTERNATES/s508/0_Crowd-of-people-at-the-Cinderella-Castle-in-Walt-Disney.jpg",
+            "query_width": null,
+            "size": {
+              "width": 508,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://i2-prod.dailystar.co.uk/incoming/article32649929.ece/ALTERNATES/s810/0_Crowd-of-people-at-the-Cinderella-Castle-in-Walt-Disney.jpg",
+            "query_width": null,
+            "size": {
+              "width": 810,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": true,
+        "description": "A crowd of people at the Cinderella Castle in Walt Disney World in Florida",
+        "caption": "A crowd of people at the Cinderella Castle in Walt Disney World in Florida",
+        "authors": [
+          "LightRocket via Getty Images"
+        ],
+        "position": 513
+      },
+      {
+        "versions": [
+          {
+            "url": "https://i2-prod.dailystar.co.uk/incoming/article32649963.ece/ALTERNATES/s615b/0_Walt-Disney-World-in-Orange-County.jpg",
+            "query_width": null,
+            "size": null,
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": false,
+        "description": "Tourists line Main Street and take photos of a parade going by at the Magic Kingdom Park at Walt Disney World",
+        "caption": "Tourists line Main Street and take photos of a parade going by at the Magic Kingdom Park at Walt Disney World",
+        "authors": [
+          "Anadolu Agency via Getty Images"
+        ],
+        "position": 541
+      },
+      {
+        "versions": [
+          {
+            "url": "https://i2-prod.dailystar.co.uk/incoming/article32650025.ece/ALTERNATES/s615b/0_GettyImages-453983795.jpg",
+            "query_width": null,
+            "size": null,
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": false,
+        "description": "Fireworks at Walt Disney World Florida's Sleeping Beauty castle",
+        "caption": "Fireworks at Walt Disney World Florida's Sleeping Beauty castle",
+        "authors": [
+          "Getty Images"
+        ],
+        "position": 558
+      },
+      {
+        "versions": [
+          {
+            "url": "https://i2-prod.dailystar.co.uk/incoming/article32650036.ece/ALTERNATES/s615b/0_Walt-Disney-World-Resort-Reopening.jpg",
+            "query_width": null,
+            "size": null,
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": false,
+        "description": "Guests stop to take a selfie at Magic Kingdom Park at Walt Disney World Resort",
+        "caption": "You can save a fortune by booking at the right time of year",
+        "authors": [
+          "Walt Disney World Resort via Getty Images"
+        ],
+        "position": 573
+      },
+      {
+        "versions": [
+          {
+            "url": "https://i2-prod.dailystar.co.uk/incoming/article32650054.ece/ALTERNATES/s615b/0_Walt-Disney-World-Resort-Reopening.jpg",
+            "query_width": null,
+            "size": null,
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": false,
+        "description": "You'll get to see all the magical parades and characters at Disney World",
+        "caption": "You'll get to see all the magical parades and characters at Disney World",
+        "authors": [
+          "Walt Disney World Resort via Getty Images"
+        ],
+        "position": 588
+      }
+    ],
     "publishing_date": "2024-04-23 10:58:49+00:00",
     "title": "'I sell Disney World holidays - booking the right day could save you thousands'",
     "topics": [

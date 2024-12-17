@@ -34,6 +34,297 @@
         }
       ]
     },
+    "images": [
+      {
+        "versions": [
+          {
+            "url": "https://imagenes.elpais.com/resizer/v2/PSKVEU3TZFHHTCBLL25HKORZD4?auth=3102c71c0a8b3e7a597d7458078e6a735cd258cb99f97aa64f152a6aa5d67da5&width=1200&height=675&smart=true",
+            "query_width": null,
+            "size": {
+              "width": 1200,
+              "height": 675
+            },
+            "type": null
+          }
+        ],
+        "is_cover": true,
+        "description": null,
+        "caption": "Foto: Florion Goga (REUTERS) | Vídeo: EPV",
+        "authors": [
+          "Florion Goga (REUTERS)",
+          "Vídeo: EPV"
+        ],
+        "position": 185
+      },
+      {
+        "versions": [
+          {
+            "url": "https://imagenes.elpais.com/resizer/v2/UZSCTY23DVFKLMCOJ6NOYNHLG4.jpg?auth=9ac09369c2f1e8d1f8d1910484c6a8214240242b077010ac3d704d78f9fe8e0f&width=414",
+            "query_width": null,
+            "size": {
+              "width": 414,
+              "height": 276
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://imagenes.elpais.com/resizer/v2/UZSCTY23DVFKLMCOJ6NOYNHLG4.jpg?auth=9ac09369c2f1e8d1f8d1910484c6a8214240242b077010ac3d704d78f9fe8e0f&width=828",
+            "query_width": null,
+            "size": {
+              "width": 828,
+              "height": 552
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": false,
+        "description": "Campamento italiano para la recepción de migrantes en la ciudad portuaria de Shengjin, en el norte de Albania, el 1 de agosto de 2024.",
+        "caption": "Campamento italiano para la recepción de migrantes en la ciudad portuaria de Shengjin, en el norte de Albania, el 1 de agosto de 2024.",
+        "authors": [
+          "Alketa Misja (dpa/picture alliance via Getty)"
+        ],
+        "position": 256
+      },
+      {
+        "versions": [
+          {
+            "url": "https://imagenes.elpais.com/resizer/v2/GEHMBGXQZZH3BGF536XU5G5L44.jpg?auth=c4adcf1c161a8839c6297a1f5107a3dd4a83ecb88aebd96086ec8f3a685dec6f&width=414",
+            "query_width": null,
+            "size": {
+              "width": 414,
+              "height": 276
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://imagenes.elpais.com/resizer/v2/GEHMBGXQZZH3BGF536XU5G5L44.jpg?auth=c4adcf1c161a8839c6297a1f5107a3dd4a83ecb88aebd96086ec8f3a685dec6f&width=828",
+            "query_width": null,
+            "size": {
+              "width": 828,
+              "height": 552
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": false,
+        "description": "Agentes de policías italianos vigilan las cámaras de seguridad del campamento para migrantes situado en la ciudad albanesa de Shengjin, el 1 de agosto de 2024.",
+        "caption": "Agentes de policías italianos vigilan las cámaras de seguridad del campamento para migrantes situado en la ciudad albanesa de Shengjin, el 1 de agosto de 2024.",
+        "authors": [
+          "Alketa Misja (dpa/picture alliance via Getty)"
+        ],
+        "position": 262
+      },
+      {
+        "versions": [
+          {
+            "url": "https://imagenes.elpais.com/resizer/v2/GYPNQ4DDQVBMROWGCVGFLDIG3Q.jpg?auth=4d2ce17fbb82839ad5b8eb112a286c474fde40bbdf07c0d4da61db09e2e943ed&width=414",
+            "query_width": null,
+            "size": {
+              "width": 414,
+              "height": 276
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://imagenes.elpais.com/resizer/v2/GYPNQ4DDQVBMROWGCVGFLDIG3Q.jpg?auth=4d2ce17fbb82839ad5b8eb112a286c474fde40bbdf07c0d4da61db09e2e943ed&width=828",
+            "query_width": null,
+            "size": {
+              "width": 828,
+              "height": 552
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": false,
+        "description": "Cámaras de vigilancia en un patio del campamento italiano para migrantes en la ciudad portuaria de Shengjin, en el norte de Albania, el 1 de agosto de 2024.",
+        "caption": "Cámaras de vigilancia en un patio del campamento italiano para migrantes en la ciudad portuaria de Shengjin, en el norte de Albania, el 1 de agosto de 2024.",
+        "authors": [
+          "Alketa Misja (dpa/picture alliance via Getty)"
+        ],
+        "position": 268
+      },
+      {
+        "versions": [
+          {
+            "url": "https://imagenes.elpais.com/resizer/v2/XLP6LSEVX5ALXD7I7QVZBXZXMI.jpg?auth=98e482417d619035e228948f34f14729b7c8463106ec097ba9df1ea11ddc21fd&width=414",
+            "query_width": null,
+            "size": {
+              "width": 414,
+              "height": 276
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://imagenes.elpais.com/resizer/v2/XLP6LSEVX5ALXD7I7QVZBXZXMI.jpg?auth=98e482417d619035e228948f34f14729b7c8463106ec097ba9df1ea11ddc21fd&width=828",
+            "query_width": null,
+            "size": {
+              "width": 828,
+              "height": 552
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": false,
+        "description": "Una litera y sillas de plástico en el interior de un contenedor que se usará de habitación en el campamento italiano para migrantes en Gjadër (Albania), el 1 de agosto de 2024.",
+        "caption": "Una litera y sillas de plástico en el interior de un contenedor que se usará de habitación en el campamento italiano para migrantes en Gjadër (Albania), el 1 de agosto de 2024.",
+        "authors": [
+          "Alketa Misja (dpa/picture alliance via Getty)"
+        ],
+        "position": 274
+      },
+      {
+        "versions": [
+          {
+            "url": "https://imagenes.elpais.com/resizer/v2/Z42VUFMC2ZEUZNUVXUYLHGATBA.jpg?auth=f89e4f5b32ab97f8d4635c3801dff0c1aaac68d57f918f0a42739973c5d94781&width=414",
+            "query_width": null,
+            "size": {
+              "width": 414,
+              "height": 276
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://imagenes.elpais.com/resizer/v2/Z42VUFMC2ZEUZNUVXUYLHGATBA.jpg?auth=f89e4f5b32ab97f8d4635c3801dff0c1aaac68d57f918f0a42739973c5d94781&width=828",
+            "query_width": null,
+            "size": {
+              "width": 828,
+              "height": 552
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": false,
+        "description": "Zona de baño y aseo, en el campamento para migrantes en Gjadër (Albania), el 1 de agosto.",
+        "caption": "Zona de baño y aseo, en el campamento para migrantes en Gjadër (Albania), el 1 de agosto.",
+        "authors": [
+          "Alketa Misja (dpa/picture alliance via Getty)"
+        ],
+        "position": 280
+      },
+      {
+        "versions": [
+          {
+            "url": "https://imagenes.elpais.com/resizer/v2/3RHI4S25JFA2NNDVPYDKO2TBVE.jpg?auth=82f64b41aaa67eeb94d95cd7bd5151dad1134b91c77935a18aa8721dbe409987&width=414",
+            "query_width": null,
+            "size": {
+              "width": 414,
+              "height": 276
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://imagenes.elpais.com/resizer/v2/3RHI4S25JFA2NNDVPYDKO2TBVE.jpg?auth=82f64b41aaa67eeb94d95cd7bd5151dad1134b91c77935a18aa8721dbe409987&width=828",
+            "query_width": null,
+            "size": {
+              "width": 828,
+              "height": 552
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": false,
+        "description": "Contenedores que servirán de habitaciones en el campamento italiano para migrantes en Gjadër (Albania), el 1 de agosto.",
+        "caption": "Contenedores que servirán de habitaciones en el campamento italiano para migrantes en Gjadër (Albania), el 1 de agosto.",
+        "authors": [
+          "Alketa Misja (dpa/picture alliance via Getty)"
+        ],
+        "position": 286
+      },
+      {
+        "versions": [
+          {
+            "url": "https://imagenes.elpais.com/resizer/v2/MTJ7JBI7KRH5JDS77CY6WCPCBE.jpg?auth=a5ad57f61cea752fcb2212cadb99536911f8e522ba7a422289601e99b727134d&width=414",
+            "query_width": null,
+            "size": {
+              "width": 414,
+              "height": 243
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://imagenes.elpais.com/resizer/v2/MTJ7JBI7KRH5JDS77CY6WCPCBE.jpg?auth=a5ad57f61cea752fcb2212cadb99536911f8e522ba7a422289601e99b727134d&width=828",
+            "query_width": null,
+            "size": {
+              "width": 828,
+              "height": 486
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://imagenes.elpais.com/resizer/v2/MTJ7JBI7KRH5JDS77CY6WCPCBE.jpg?auth=a5ad57f61cea752fcb2212cadb99536911f8e522ba7a422289601e99b727134d&width=980",
+            "query_width": null,
+            "size": {
+              "width": 980,
+              "height": 575
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://imagenes.elpais.com/resizer/v2/MTJ7JBI7KRH5JDS77CY6WCPCBE.jpg?auth=a5ad57f61cea752fcb2212cadb99536911f8e522ba7a422289601e99b727134d&width=1960",
+            "query_width": null,
+            "size": {
+              "width": 1960,
+              "height": 1150
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": false,
+        "description": "Agentes de la policía italiana en el campamento para migrantes de Gjadër (Albania), el 11 de octubre.",
+        "caption": "Agentes de la policía italiana en el campamento para migrantes de Gjadër (Albania), el 11 de octubre.",
+        "authors": [
+          "Florion Goga (REUTERS)"
+        ],
+        "position": 329
+      },
+      {
+        "versions": [
+          {
+            "url": "https://imagenes.elpais.com/resizer/v2/JLMWRXRKNBEB7JVP2QNQWVIFBM.jpg?auth=b064bab1dced02817466b6c47dfab58a4e6de3704f7f1ff825be47e618fa8856&width=414",
+            "query_width": null,
+            "size": {
+              "width": 414,
+              "height": 226
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://imagenes.elpais.com/resizer/v2/JLMWRXRKNBEB7JVP2QNQWVIFBM.jpg?auth=b064bab1dced02817466b6c47dfab58a4e6de3704f7f1ff825be47e618fa8856&width=828",
+            "query_width": null,
+            "size": {
+              "width": 828,
+              "height": 452
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://imagenes.elpais.com/resizer/v2/JLMWRXRKNBEB7JVP2QNQWVIFBM.jpg?auth=b064bab1dced02817466b6c47dfab58a4e6de3704f7f1ff825be47e618fa8856&width=980",
+            "query_width": null,
+            "size": {
+              "width": 980,
+              "height": 535
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://imagenes.elpais.com/resizer/v2/JLMWRXRKNBEB7JVP2QNQWVIFBM.jpg?auth=b064bab1dced02817466b6c47dfab58a4e6de3704f7f1ff825be47e618fa8856&width=1960",
+            "query_width": null,
+            "size": {
+              "width": 1960,
+              "height": 1070
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": false,
+        "description": "Deportaciones Italia a Albania",
+        "caption": "Un miembro de la Armada italiana en el campamento para migrantes construido en Gjadër (Albania), el 11 de octubre.",
+        "authors": [
+          "Florion Goga (REUTERS)"
+        ],
+        "position": 343
+      }
+    ],
     "publishing_date": "2024-10-15 08:22:57+02:00",
     "title": "Bruselas sondea la apertura de centros de deportación fuera de la Unión Europea ",
     "topics": [
