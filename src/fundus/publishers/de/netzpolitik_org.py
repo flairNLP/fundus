@@ -59,5 +59,4 @@ class NetzpolitikOrgParser(ParserProxy):
                 paragraph_selector=self._paragraph_selector,
                 caption_selector=XPath("./ancestor::figure//figcaption/text()"),
                 author_selector=XPath("./ancestor::figure//figcaption/span"),
-                author_filter=re.compile(r"(?i)– alle rechte vorbehalten"),
             )

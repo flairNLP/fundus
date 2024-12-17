@@ -127,6 +127,5 @@ class TheNationParser(ParserProxy):
                 doc=self.precomputed.doc,
                 paragraph_selector=self._paragraph_selector,
                 upper_boundary_selector=XPath("//h1[contains(@class,'title')]"),
-                author_filter=re.compile(r"[()]"),
                 caption_selector=XPath("./ancestor::figure//figcaption/text()|./ancestor::figure//figcaption/p"),
             )

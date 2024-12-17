@@ -72,5 +72,4 @@ class MDRParser(ParserProxy):
                 image_selector=XPath("//div[contains(@class,'mediaCon ') and not(@data-ctrl-player)]//noscript/img"),
                 caption_selector=XPath("./ancestor::div[@class='media mediaA ']//span[@class='mediaSubtitle']"),
                 author_selector=XPath("./ancestor::div[@class='media mediaA ']//span[@class='mediaRights copyright']"),
-                author_filter=re.compile(r"(?i)bildrechte:"),
             )

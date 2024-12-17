@@ -54,7 +54,6 @@ class SZParser(ParserProxy):
                 paragraph_selector=self._paragraph_selector,
                 caption_selector=XPath("./ancestor::figure//figcaption/text()"),
                 author_selector=XPath("./ancestor::figure//figcaption/small"),
-                author_filter=re.compile(r"[()]"),
             )
 
     class V1_1(V1):

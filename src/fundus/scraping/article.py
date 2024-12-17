@@ -157,8 +157,12 @@ class Article:
             f"{Fore.RED}--missing plaintext--{Style.RESET_ALL}" if self.plaintext is None else self.plaintext.strip()
         )
 
+        image_text = (
+            f" including {len(self.images)} image(s)" if self.images and not isinstance(self.images, Exception) else ""
+        )
+
         text = (
-            f"Fundus-Article:"
+            f"Fundus-Article{image_text}:"
             f'\n- Title: "{wrapped_title}"'
             f'\n- Text:  "{wrapped_plaintext}"'
             f"\n- URL:    {self.html.requested_url}"

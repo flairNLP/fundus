@@ -60,6 +60,5 @@ class NDRParser(ParserProxy):
                 ),
                 relative_urls=XPath("string(//link[@rel='canonical']/@href)"),
                 caption_selector=XPath("./ancestor::div[contains(@class,'contentimage')]//span[@class='caption']"),
-                author_filter=re.compile(r".*©"),
-                author_selector=XPath("./@alt"),
+                author_selector=re.compile(r"(?i)©\s*(ndr)?\s*(foto)?:?\s*(?P<credits>.+)"),
             )

@@ -65,5 +65,4 @@ class BoersenZeitungParser(ParserProxy):
                 upper_boundary_selector=XPath("//h1|//script"),
                 image_selector=XPath("//storefront-image|//figure//img"),
                 author_selector=XPath("./ancestor::storefront-section//storefront-html[@class='image-copyright']"),
-                author_filter=re.compile(r"(?i)^(quelle|source):\s*"),
             )

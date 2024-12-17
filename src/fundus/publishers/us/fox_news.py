@@ -56,5 +56,4 @@ class FoxNewsParser(ParserProxy):
                 author_selector=XPath(
                     "(./ancestor::div[@class='image-ct inline']//div[@class='caption']/p/span)[last()]"
                 ),
-                author_filter=re.compile(r"[()]"),
             )

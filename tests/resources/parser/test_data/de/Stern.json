@@ -1,108 +1,4 @@
 {
-  "V1": {
-    "authors": [
-      "Laura Eßlinger"
-    ],
-    "body": {
-      "summary": [
-        "Europas Banken wollen beim Zahlungsverkehr unabhängiger von US-Firmen wie Paypal, Visa oder Apple werden. Mit EPI bringen sie bald ein neues Bezahlsystem an den Markt. Doch um mithalten zu können, muss es die Konkurrenz in drei Punkten schlagen."
-      ],
-      "sections": [
-        {
-          "headline": [],
-          "paragraphs": [
-            "Nach Jahren des Hin und Hers hat sich Europa dazu durchgerungen, ein eigenes Zahlungssystem für Verbraucherinnen und Händler auf den Weg zu bringen. Europäische Banken hoffen, damit den US-Platzhirschen Visa, Mastercard und Apple Pay etwas entgegenzusetzen – und sich ein Stück vom ertragreichen Zahlungsmarkt sichern zu können.",
-            "Die European Payments Initiative (EPI) plant ab 2024 Echtzeitüberweisungen auf Basis von SEPA und Karten für den Massenzahlungsverkehr sowie für Zahlungen zwischen Privatpersonen. Verbraucherinnen und Verbraucher sollen sich dann zwischen einem weiteren Anbieter im weltweiten Markt entscheiden können. Die Kosten für Transaktionen dürften insgesamt günstiger werden."
-          ]
-        },
-        {
-          "headline": [
-            "Onlineshops sollen System 2024 bekommen"
-          ],
-          "paragraphs": [
-            "Ende 2023 soll laut EPI die Pilotphase starten, wo zunächst in Deutschland und Frankreich Zahlungen zwischen Privatpersonen über eine Wallet möglich sein werden. Belgien soll kommendes Jahr mitmachen, außerdem will die Initiative weitere EU-Länder mit ins Boot holen. Ende 2024 soll das Zahlungssystems in Onlineshops eingeführt werden, 2025 auch in Ladengeschäften. \"Dann werden Kunden sowohl ihre Bankkarte – in Deutschland zum Beispiel die Girocard – als auch Debit- und Kreditkarten der internationalen Anbieter für EPI nutzen können\", zitiert das Handelsblatt EPI-Chefin Martina Weimert.",
-            "Doch der Markteintritt von EPI kommt für viele zu spät. \"Der Zug ist noch nicht komplett abgefahren, aber schon ordentlich in Bewegung\", sagt Christiane Neumüller, Executive Director und Expertin für Zahlungsverkehr bei der Unternehmensberatung Capco. Volker Brühl vom Center for Financial Studies der Universität Frankfurt hielt EPI schon Ende 2021 für die letzte Möglichkeit, ein Zahlungssystem zu etablieren, das im globalen Wettbewerb mithalten könne. \"Wir in Europa sind eh schon hinten dran\", sagte der Finanzprofessor.",
-            "Im Gegensatz zum US-amerikanischen Markt gibt es in Europa keinen Zahlungsdienstleister, der mit den US-Anbietern konkurrieren kann. Von einem europäischen Zahlungssystem könnte der Bankensektor in Europa profitieren. \"Rentieren würde sich das für die Banken frühestens nach zehn Jahren\", prognostizierte Brühl. Hinzu kommt, dass die Europäische Zentralbank an einer eigenen virtuellen Währung bastelt, dem digitalen Euro. Der müsste dann in das EU-Zahlungssystem integriert werden, befand er.",
-            "Zum zeitlichen Wettbewerbsnachteil gegenüber der US-Konkurrenz kommt, dass von dem Zahlungssystem längst nicht alle Banken überzeugt sind. Es droht ein Flickenteppich in Europa. „Einen gemeinsamen Nenner haben die EU-Länder noch nicht gefunden. Das kostet EPI einiges an Schlagkraft\", sagt Zahlungsverkehr-Spezialistin Neumüller.",
-            "Die Initiative EPI wurde 2020 von mehreren großen europäischen Banken aus Frankreich, Deutschland und Spanien gegründet, darunter BNP Paribas, Société Generale, die deutschen Sparkassen und ING. Doch von den insgesamt 32 Unterstützern sprang die Hälfte ab und wollte kein Geld in das Zahlungssystem investieren. Derzeit wird EPI noch von 16 Kreditinstituten getragen. Aus Deutschland dabei sind Deutsche Bank, DZ Bank und die Sparkassen.",
-            "Dass das Projekt überhaupt umgesetzt werden kann, liegt auch daran, dass EPI zwei Firmen übernehmen will und damit auf bestehende Systeme aufspringt: Die EPI Company plant, das niederländische Zahlungssystem iDEAL und den Zahlungslösungsanbieter Payconiq International (PQI) zu kaufen."
-          ]
-        },
-        {
-          "headline": [
-            "\"Zweites PayPal zu sein, wird nicht reichen\""
-          ],
-          "paragraphs": [
-            "Dass Banken nun mit dem neuen Zahlungssystem um die Ecke kämen, heiße noch nicht, dass Kunden es auch tatsächlich annehmen, sagt Neumüller. \"Verbraucher werden nur von PayPal oder Apple Pay wechseln, wenn ihnen das neue Zahlungssystem genügend Anreize bietet\", so die Expertin. \"Einfach nur ein zweites PayPal zu sein, wird nicht reichen.\"",
-            "Neumüller sieht drei Bedingungen, die erfüllt sein müssen, damit EPI von Kundinnen und Kunden tatsächlich angenommen wird: Erstens, müsse das System einfach sein. Langwierige Autorisierungs- und Verifikationsprozesse schrecken viele Privatkunden ab. Händlerinnen und Händler sollten das Zahlungssystem problemlos einrichten können und keine IT-Ausbildung brauchen, um es in ihr Kassensystem zu integrieren, so Neumüller. Außerdem müsse EPI flächendeckend in so vielen Geschäften und Shops wie möglich nutzbar sein.",
-            "Zweitens, brauche es attraktive Konditionen. Darunter versteht die Capco-Expertin die Nutzungsgebühren für Händler, die diejenigen von Paypal oder Apple Pay schlagen müssen. Bei Paypal zum Beispiel zahlen die Händler den Großteil der Gebühren, geben ihre Kosten teilweise aber über den Preis an die Endkunden weiter. Für Privatkunden sei zudem wichtig, dass es eine Geld-zurück-Garantie für Käufe gebe.",
-            "Die dritte Bedingung ist, dass EPI mehr Funktionen anbieten muss als die Konkurrenz: Dafür müsse das Zahlungssystem komplett ins Online- und Mobilebanking integriert werden. Eine Aussage von EPI lässt vermuten, dass die Initiative genau daran arbeitet: \"EPIs Produkt wird eine digitale 'all in one' Wallet-Lösung als Zahlungslösung basierend auf SEPA Echtzeitzahlungen und vorhandenen Girokonten unter einer einheitlichen Marke umfassen.\" Im Idealfall, so Capco-Expertin Neumüller, könne man dann über einen Button EPI als präferiertes Zahlungssystem auswählen.",
-            "Darüber hinaus müsse es auch Rabattaktionen und Treueprogramme geben. Denkbar sei zum Beispiel, dass Händler ein Prozent ihres Umsatzes erstattet bekommen oder Endverbraucher Punkte erhalten, wenn sie EPI nutzen.",
-            "Dieser Artikel ist zuerst bei \"Capital\" erschienen."
-          ]
-        }
-      ]
-    },
-    "images": [
-      {
-        "versions": [
-          {
-            "url": "https://image.stern.de/33420090/t/NN/v4/w480/r1.7778/-/bezahlsystem.jpg",
-            "query_width": null,
-            "size": {
-              "width": 480,
-              "height": 0
-            },
-            "type": "image/jpeg"
-          },
-          {
-            "url": "https://image.stern.de/33420090/t/EH/v4/w960/r1.7778/-/bezahlsystem.jpg",
-            "query_width": null,
-            "size": {
-              "width": 960,
-              "height": 0
-            },
-            "type": "image/jpeg"
-          },
-          {
-            "url": "https://image.stern.de/33420090/t/jW/v4/w1440/r1.7778/-/bezahlsystem.jpg",
-            "query_width": null,
-            "size": {
-              "width": 1440,
-              "height": 0
-            },
-            "type": "image/jpeg"
-          }
-        ],
-        "is_cover": true,
-        "description": "Logos diverser Bezahlmethoden wie Mastercard und Apple Pay",
-        "caption": "Zu Bezahlmethoden wie Apple Pay, Mastercard, Paypal oder Sepa soll bald auch EPI hinzukommen",
-        "authors": [
-          "Picture Alliance"
-        ],
-        "position": 674
-      }
-    ],
-    "publishing_date": "2023-04-28 19:09:00+02:00",
-    "title": "Statt Paypal & Co.: So könnte Europas neues Bezahlsystem die US-Konkurrenz schlagen",
-    "topics": [
-      "Europa",
-      "Apple",
-      "Zahlungssystem",
-      "PayPal",
-      "Bezahlsystem",
-      "Deutschland",
-      "EU",
-      "SEPA",
-      "Frankreich",
-      "Brühl",
-      "MasterCard Incorporated",
-      "Belgien",
-      "Handelsblatt",
-      "Unternehmensberatung",
-      "Universität Frankfurt"
-    ]
-  },
   "V2": {
     "authors": [
       "Jemima Kelly"
@@ -302,6 +198,110 @@
       "US-Wahl",
       "Kamala Harris",
       "Wahlkampf"
+    ]
+  },
+  "V1": {
+    "authors": [
+      "Laura Eßlinger"
+    ],
+    "body": {
+      "summary": [
+        "Europas Banken wollen beim Zahlungsverkehr unabhängiger von US-Firmen wie Paypal, Visa oder Apple werden. Mit EPI bringen sie bald ein neues Bezahlsystem an den Markt. Doch um mithalten zu können, muss es die Konkurrenz in drei Punkten schlagen."
+      ],
+      "sections": [
+        {
+          "headline": [],
+          "paragraphs": [
+            "Nach Jahren des Hin und Hers hat sich Europa dazu durchgerungen, ein eigenes Zahlungssystem für Verbraucherinnen und Händler auf den Weg zu bringen. Europäische Banken hoffen, damit den US-Platzhirschen Visa, Mastercard und Apple Pay etwas entgegenzusetzen – und sich ein Stück vom ertragreichen Zahlungsmarkt sichern zu können.",
+            "Die European Payments Initiative (EPI) plant ab 2024 Echtzeitüberweisungen auf Basis von SEPA und Karten für den Massenzahlungsverkehr sowie für Zahlungen zwischen Privatpersonen. Verbraucherinnen und Verbraucher sollen sich dann zwischen einem weiteren Anbieter im weltweiten Markt entscheiden können. Die Kosten für Transaktionen dürften insgesamt günstiger werden."
+          ]
+        },
+        {
+          "headline": [
+            "Onlineshops sollen System 2024 bekommen"
+          ],
+          "paragraphs": [
+            "Ende 2023 soll laut EPI die Pilotphase starten, wo zunächst in Deutschland und Frankreich Zahlungen zwischen Privatpersonen über eine Wallet möglich sein werden. Belgien soll kommendes Jahr mitmachen, außerdem will die Initiative weitere EU-Länder mit ins Boot holen. Ende 2024 soll das Zahlungssystems in Onlineshops eingeführt werden, 2025 auch in Ladengeschäften. \"Dann werden Kunden sowohl ihre Bankkarte – in Deutschland zum Beispiel die Girocard – als auch Debit- und Kreditkarten der internationalen Anbieter für EPI nutzen können\", zitiert das Handelsblatt EPI-Chefin Martina Weimert.",
+            "Doch der Markteintritt von EPI kommt für viele zu spät. \"Der Zug ist noch nicht komplett abgefahren, aber schon ordentlich in Bewegung\", sagt Christiane Neumüller, Executive Director und Expertin für Zahlungsverkehr bei der Unternehmensberatung Capco. Volker Brühl vom Center for Financial Studies der Universität Frankfurt hielt EPI schon Ende 2021 für die letzte Möglichkeit, ein Zahlungssystem zu etablieren, das im globalen Wettbewerb mithalten könne. \"Wir in Europa sind eh schon hinten dran\", sagte der Finanzprofessor.",
+            "Im Gegensatz zum US-amerikanischen Markt gibt es in Europa keinen Zahlungsdienstleister, der mit den US-Anbietern konkurrieren kann. Von einem europäischen Zahlungssystem könnte der Bankensektor in Europa profitieren. \"Rentieren würde sich das für die Banken frühestens nach zehn Jahren\", prognostizierte Brühl. Hinzu kommt, dass die Europäische Zentralbank an einer eigenen virtuellen Währung bastelt, dem digitalen Euro. Der müsste dann in das EU-Zahlungssystem integriert werden, befand er.",
+            "Zum zeitlichen Wettbewerbsnachteil gegenüber der US-Konkurrenz kommt, dass von dem Zahlungssystem längst nicht alle Banken überzeugt sind. Es droht ein Flickenteppich in Europa. „Einen gemeinsamen Nenner haben die EU-Länder noch nicht gefunden. Das kostet EPI einiges an Schlagkraft\", sagt Zahlungsverkehr-Spezialistin Neumüller.",
+            "Die Initiative EPI wurde 2020 von mehreren großen europäischen Banken aus Frankreich, Deutschland und Spanien gegründet, darunter BNP Paribas, Société Generale, die deutschen Sparkassen und ING. Doch von den insgesamt 32 Unterstützern sprang die Hälfte ab und wollte kein Geld in das Zahlungssystem investieren. Derzeit wird EPI noch von 16 Kreditinstituten getragen. Aus Deutschland dabei sind Deutsche Bank, DZ Bank und die Sparkassen.",
+            "Dass das Projekt überhaupt umgesetzt werden kann, liegt auch daran, dass EPI zwei Firmen übernehmen will und damit auf bestehende Systeme aufspringt: Die EPI Company plant, das niederländische Zahlungssystem iDEAL und den Zahlungslösungsanbieter Payconiq International (PQI) zu kaufen."
+          ]
+        },
+        {
+          "headline": [
+            "\"Zweites PayPal zu sein, wird nicht reichen\""
+          ],
+          "paragraphs": [
+            "Dass Banken nun mit dem neuen Zahlungssystem um die Ecke kämen, heiße noch nicht, dass Kunden es auch tatsächlich annehmen, sagt Neumüller. \"Verbraucher werden nur von PayPal oder Apple Pay wechseln, wenn ihnen das neue Zahlungssystem genügend Anreize bietet\", so die Expertin. \"Einfach nur ein zweites PayPal zu sein, wird nicht reichen.\"",
+            "Neumüller sieht drei Bedingungen, die erfüllt sein müssen, damit EPI von Kundinnen und Kunden tatsächlich angenommen wird: Erstens, müsse das System einfach sein. Langwierige Autorisierungs- und Verifikationsprozesse schrecken viele Privatkunden ab. Händlerinnen und Händler sollten das Zahlungssystem problemlos einrichten können und keine IT-Ausbildung brauchen, um es in ihr Kassensystem zu integrieren, so Neumüller. Außerdem müsse EPI flächendeckend in so vielen Geschäften und Shops wie möglich nutzbar sein.",
+            "Zweitens, brauche es attraktive Konditionen. Darunter versteht die Capco-Expertin die Nutzungsgebühren für Händler, die diejenigen von Paypal oder Apple Pay schlagen müssen. Bei Paypal zum Beispiel zahlen die Händler den Großteil der Gebühren, geben ihre Kosten teilweise aber über den Preis an die Endkunden weiter. Für Privatkunden sei zudem wichtig, dass es eine Geld-zurück-Garantie für Käufe gebe.",
+            "Die dritte Bedingung ist, dass EPI mehr Funktionen anbieten muss als die Konkurrenz: Dafür müsse das Zahlungssystem komplett ins Online- und Mobilebanking integriert werden. Eine Aussage von EPI lässt vermuten, dass die Initiative genau daran arbeitet: \"EPIs Produkt wird eine digitale 'all in one' Wallet-Lösung als Zahlungslösung basierend auf SEPA Echtzeitzahlungen und vorhandenen Girokonten unter einer einheitlichen Marke umfassen.\" Im Idealfall, so Capco-Expertin Neumüller, könne man dann über einen Button EPI als präferiertes Zahlungssystem auswählen.",
+            "Darüber hinaus müsse es auch Rabattaktionen und Treueprogramme geben. Denkbar sei zum Beispiel, dass Händler ein Prozent ihres Umsatzes erstattet bekommen oder Endverbraucher Punkte erhalten, wenn sie EPI nutzen.",
+            "Dieser Artikel ist zuerst bei \"Capital\" erschienen."
+          ]
+        }
+      ]
+    },
+    "images": [
+      {
+        "versions": [
+          {
+            "url": "https://image.stern.de/33420090/t/NN/v4/w480/r1.7778/-/bezahlsystem.jpg",
+            "query_width": null,
+            "size": {
+              "width": 480,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://image.stern.de/33420090/t/EH/v4/w960/r1.7778/-/bezahlsystem.jpg",
+            "query_width": null,
+            "size": {
+              "width": 960,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://image.stern.de/33420090/t/jW/v4/w1440/r1.7778/-/bezahlsystem.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1440,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": true,
+        "description": "Logos diverser Bezahlmethoden wie Mastercard und Apple Pay",
+        "caption": "Zu Bezahlmethoden wie Apple Pay, Mastercard, Paypal oder Sepa soll bald auch EPI hinzukommen",
+        "authors": [
+          "Picture Alliance"
+        ],
+        "position": 674
+      }
+    ],
+    "publishing_date": "2023-04-28 19:09:00+02:00",
+    "title": "Statt Paypal & Co.: So könnte Europas neues Bezahlsystem die US-Konkurrenz schlagen",
+    "topics": [
+      "Europa",
+      "Apple",
+      "Zahlungssystem",
+      "PayPal",
+      "Bezahlsystem",
+      "Deutschland",
+      "EU",
+      "SEPA",
+      "Frankreich",
+      "Brühl",
+      "MasterCard Incorporated",
+      "Belgien",
+      "Handelsblatt",
+      "Unternehmensberatung",
+      "Universität Frankfurt"
     ]
   }
 }

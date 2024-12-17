@@ -66,7 +66,6 @@ class BRParser(ParserProxy):
                     f"re:match(./@title, '{author_pattern}')",
                     namespaces={"re": "http://exslt.org/regular-expressions"},
                 ),
-                author_filter=re.compile(r".*bild:", re.IGNORECASE),
             )
 
     class V1_1(V1):
