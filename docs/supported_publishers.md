@@ -984,6 +984,21 @@
   <tbody>
     <tr>
       <td>
+        <code>LaVanguardia</code>
+      </td>
+      <td>
+        <div> La Vanguardia</div>
+      </td>
+      <td>
+        <a href="https://www.lavanguardia.com/">
+          <span>www.lavanguardia.com</span>
+        </a>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
         <code>ABC</code>
       </td>
       <td>
@@ -1022,21 +1037,6 @@
       <td>
         <a href="https://elpais.com/">
           <span>elpais.com</span>
-        </a>
-      </td>
-      <td>&#160;</td>
-      <td>&#160;</td>
-    </tr>
-    <tr>
-      <td>
-        <code>LaVanguardia</code>
-      </td>
-      <td>
-        <div> La Vanguardia</div>
-      </td>
-      <td>
-        <a href="https://www.lavanguardia.com/">
-          <span>www.lavanguardia.com</span>
         </a>
       </td>
       <td>&#160;</td>
