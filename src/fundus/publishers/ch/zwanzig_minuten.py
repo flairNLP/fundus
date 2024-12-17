@@ -3,18 +3,19 @@ from typing import List, Optional
 
 from lxml.etree import XPath
 
-from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute
+from fundus.parser import ArticleBody, BaseParser, Image, ParserProxy, attribute
 from fundus.parser.utility import (
     extract_article_body_with_selector,
     generic_author_parsing,
     generic_date_parsing,
+    image_extraction,
 )
 
 
 class ZwanzigMinutenParser(ParserProxy):
     class V1(BaseParser):
         _summary_selector = XPath(
-            "//div[@class='Article_elementLead__N3pGr']/p| " "//div[@type='typeInfoboxSummary']//li"
+            "//div[@class='Article_elementLead__N3pGr']/p | (//div[@type='typeInfoboxSummary'])[1]//li"
         )
         _subheadline_selector = XPath("//section[@class='Article_body__60Liu']//h2[contains(@class, 'crosshead')]")
         _paragraph_selector = XPath("//div[@class='Article_elementTextblockarray__WNyan']/p")
@@ -39,3 +40,13 @@ class ZwanzigMinutenParser(ParserProxy):
         @attribute
         def title(self) -> Optional[str]:
             return self.precomputed.meta.get("og:title")
+
+        @attribute
+        def images(self) -> List[Image]:
+            return image_extraction(
+                doc=self.precomputed.doc,
+                paragraph_selector=self._paragraph_selector,
+                upper_boundary_selector=XPath("//article"),
+                caption_selector=XPath("./ancestor::figure//figcaption/span[@class='sc-d47814d6-2 bDLFoO']/p"),
+                author_selector=XPath("./ancestor::figure//figcaption/span[@class='sc-d47814d6-3 bmEwwn']"),
+            )
