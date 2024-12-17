@@ -33,6 +33,25 @@
         }
       ]
     },
+    "images": [
+      {
+        "versions": [
+          {
+            "url": "https://www.taipeitimes.com/images/2024/10/16/P01-241016-317.jpg",
+            "query_width": null,
+            "size": null,
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": false,
+        "description": null,
+        "caption": "Philippine Marine Corps Commandant Major-General Arturo Roja, second left, US Marines exercise representative Colonel Stuart Glenn, left, and Philippine Marine Corps and exercise director Brigadier General Vicente Blanco, second right, take part in the opening ceremony of the annual Kamandag joint military exercises at the Philippine Marines officers’ club at Fort Bonifacio, Metro Manila, yesterday.",
+        "authors": [
+          "AFP"
+        ],
+        "position": 170
+      }
+    ],
     "publishing_date": "2024-10-16 00:00:00+08:00",
     "title": "US, Manila launch war games after PRC’s Taiwan drills"
   }

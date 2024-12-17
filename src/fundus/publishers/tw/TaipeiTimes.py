@@ -4,11 +4,12 @@ from typing import List, Optional
 
 from lxml.etree import XPath
 
-from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute
+from fundus.parser import ArticleBody, BaseParser, Image, ParserProxy, attribute
 from fundus.parser.utility import (
     extract_article_body_with_selector,
     generic_author_parsing,
     generic_date_parsing,
+    image_extraction,
 )
 
 
@@ -47,3 +48,14 @@ class TaipeiTimesParser(ParserProxy):
         @attribute
         def title(self) -> Optional[str]:
             return self.precomputed.ld.bf_search("headline")
+
+        @attribute
+        def images(self) -> List[Image]:
+            return image_extraction(
+                doc=self.precomputed.doc,
+                paragraph_selector=self._paragraph_selector,
+                upper_boundary_selector=XPath("//div[@class='archives']"),
+                image_selector=XPath("//div[@class='imgboxa']//img"),
+                caption_selector=XPath("./ancestor::div[@class='imgboxa']//h1"),
+                author_selector=XPath("./ancestor::div[@class='imgboxa']//p"),
+            )
