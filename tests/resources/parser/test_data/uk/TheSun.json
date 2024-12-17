@@ -51,6 +51,244 @@
         }
       ]
     },
+    "images": [
+      {
+        "versions": [
+          {
+            "url": "https://www.thesun.co.uk/wp-content/uploads/2020/09/NINTCHDBPICT000567715187.jpg?w=335",
+            "query_width": null,
+            "size": {
+              "width": 335,
+              "height": 381
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.thesun.co.uk/wp-content/uploads/2020/09/NINTCHDBPICT000567715187.jpg?w=480",
+            "query_width": null,
+            "size": {
+              "width": 480,
+              "height": 545
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.thesun.co.uk/wp-content/uploads/2020/09/NINTCHDBPICT000567715187.jpg?w=620",
+            "query_width": null,
+            "size": {
+              "width": 620,
+              "height": 704
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.thesun.co.uk/wp-content/uploads/2020/09/NINTCHDBPICT000567715187.jpg?w=670",
+            "query_width": null,
+            "size": {
+              "width": 670,
+              "height": 761
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.thesun.co.uk/wp-content/uploads/2020/09/NINTCHDBPICT000567715187.jpg?w=960",
+            "query_width": null,
+            "size": {
+              "width": 960,
+              "height": 1091
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.thesun.co.uk/wp-content/uploads/2020/09/NINTCHDBPICT000567715187.jpg?w=1005",
+            "query_width": null,
+            "size": {
+              "width": 1005,
+              "height": 1142
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.thesun.co.uk/wp-content/uploads/2020/09/NINTCHDBPICT000567715187.jpg?w=1240",
+            "query_width": null,
+            "size": {
+              "width": 1240,
+              "height": 1409
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.thesun.co.uk/wp-content/uploads/2020/09/NINTCHDBPICT000567715187.jpg?w=1340",
+            "query_width": null,
+            "size": {
+              "width": 1340,
+              "height": 1523
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.thesun.co.uk/wp-content/uploads/2020/09/NINTCHDBPICT000567715187.jpg?w=1440",
+            "query_width": null,
+            "size": {
+              "width": 1440,
+              "height": 1636
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.thesun.co.uk/wp-content/uploads/2020/09/NINTCHDBPICT000567715187.jpg?w=1860",
+            "query_width": null,
+            "size": {
+              "width": 1860,
+              "height": 2113
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.thesun.co.uk/wp-content/uploads/2020/09/NINTCHDBPICT000567715187.jpg?w=1920",
+            "query_width": null,
+            "size": {
+              "width": 1920,
+              "height": 2182
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.thesun.co.uk/wp-content/uploads/2020/09/NINTCHDBPICT000567715187.jpg?w=2480",
+            "query_width": null,
+            "size": {
+              "width": 2480,
+              "height": 2818
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": false,
+        "description": "Phil Foden and Rebecca Cooke have been together since their teens",
+        "caption": "Phil Foden and Rebecca Cooke have been together since their teens",
+        "authors": [],
+        "position": 295
+      },
+      {
+        "versions": [
+          {
+            "url": "https://www.thesun.co.uk/wp-content/uploads/2020/11/englands-phil-foden-girlfriend-rebecca-779271224-1.jpg?w=335",
+            "query_width": null,
+            "size": {
+              "width": 335,
+              "height": 223
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.thesun.co.uk/wp-content/uploads/2020/11/englands-phil-foden-girlfriend-rebecca-779271224-1.jpg?w=480",
+            "query_width": null,
+            "size": {
+              "width": 480,
+              "height": 320
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.thesun.co.uk/wp-content/uploads/2020/11/englands-phil-foden-girlfriend-rebecca-779271224-1.jpg?w=620",
+            "query_width": null,
+            "size": {
+              "width": 620,
+              "height": 413
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.thesun.co.uk/wp-content/uploads/2020/11/englands-phil-foden-girlfriend-rebecca-779271224-1.jpg?w=670",
+            "query_width": null,
+            "size": {
+              "width": 670,
+              "height": 447
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.thesun.co.uk/wp-content/uploads/2020/11/englands-phil-foden-girlfriend-rebecca-779271224-1.jpg?w=960",
+            "query_width": null,
+            "size": {
+              "width": 960,
+              "height": 640
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.thesun.co.uk/wp-content/uploads/2020/11/englands-phil-foden-girlfriend-rebecca-779271224-1.jpg?w=1005",
+            "query_width": null,
+            "size": {
+              "width": 1005,
+              "height": 670
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.thesun.co.uk/wp-content/uploads/2020/11/englands-phil-foden-girlfriend-rebecca-779271224-1.jpg?w=1240",
+            "query_width": null,
+            "size": {
+              "width": 1240,
+              "height": 827
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.thesun.co.uk/wp-content/uploads/2020/11/englands-phil-foden-girlfriend-rebecca-779271224-1.jpg?w=1340",
+            "query_width": null,
+            "size": {
+              "width": 1340,
+              "height": 893
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.thesun.co.uk/wp-content/uploads/2020/11/englands-phil-foden-girlfriend-rebecca-779271224-1.jpg?w=1440",
+            "query_width": null,
+            "size": {
+              "width": 1440,
+              "height": 960
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.thesun.co.uk/wp-content/uploads/2020/11/englands-phil-foden-girlfriend-rebecca-779271224-1.jpg?w=1860",
+            "query_width": null,
+            "size": {
+              "width": 1860,
+              "height": 1240
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.thesun.co.uk/wp-content/uploads/2020/11/englands-phil-foden-girlfriend-rebecca-779271224-1.jpg?w=1920",
+            "query_width": null,
+            "size": {
+              "width": 1920,
+              "height": 1280
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.thesun.co.uk/wp-content/uploads/2020/11/englands-phil-foden-girlfriend-rebecca-779271224-1.jpg?w=2480",
+            "query_width": null,
+            "size": {
+              "width": 2480,
+              "height": 1653
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": false,
+        "description": "Rebecca Cooke supporting Phil Foden at the Qatar World Cup",
+        "caption": "Rebecca Cooke supporting Phil Foden at the Qatar World Cup",
+        "authors": [
+          "PA"
+        ],
+        "position": 314
+      }
+    ],
     "publishing_date": "2024-04-22 22:04:00+01:00",
     "title": "Who is Man City star Phil Foden’s girlfriend Rebecca Cooke and how many children do couple have?...",
     "topics": [

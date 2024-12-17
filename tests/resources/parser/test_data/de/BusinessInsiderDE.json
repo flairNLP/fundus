@@ -34,6 +34,127 @@
         }
       ]
     },
+    "images": [
+      {
+        "versions": [
+          {
+            "url": "https://cdn.businessinsider.de/wp-content/uploads/2021/09/614c8c34c2c9630018f5f431-75x56.jpg",
+            "query_width": null,
+            "size": {
+              "width": 75,
+              "height": 56
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://cdn.businessinsider.de/wp-content/uploads/2021/09/614c8c34c2c9630018f5f431-100x75.jpg",
+            "query_width": null,
+            "size": {
+              "width": 100,
+              "height": 75
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://cdn.businessinsider.de/wp-content/uploads/2021/09/614c8c34c2c9630018f5f431-175x131.jpg",
+            "query_width": null,
+            "size": {
+              "width": 175,
+              "height": 131
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://cdn.businessinsider.de/wp-content/uploads/2021/09/614c8c34c2c9630018f5f431-200x150.jpg",
+            "query_width": null,
+            "size": {
+              "width": 200,
+              "height": 150
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://cdn.businessinsider.de/wp-content/uploads/2021/09/614c8c34c2c9630018f5f431-400x300.jpg",
+            "query_width": null,
+            "size": {
+              "width": 400,
+              "height": 300
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://cdn.businessinsider.de/wp-content/uploads/2021/09/614c8c34c2c9630018f5f431-600x450.jpg",
+            "query_width": null,
+            "size": {
+              "width": 600,
+              "height": 450
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://cdn.businessinsider.de/wp-content/uploads/2021/09/614c8c34c2c9630018f5f431-768x576.jpg",
+            "query_width": null,
+            "size": {
+              "width": 768,
+              "height": 576
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://cdn.businessinsider.de/wp-content/uploads/2021/09/614c8c34c2c9630018f5f431-800x600.jpg",
+            "query_width": null,
+            "size": {
+              "width": 800,
+              "height": 600
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://cdn.businessinsider.de/wp-content/uploads/2021/09/614c8c34c2c9630018f5f431-1024x768.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1024,
+              "height": 768
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://cdn.businessinsider.de/wp-content/uploads/2021/09/614c8c34c2c9630018f5f431-1536x1152.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1536,
+              "height": 1152
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://cdn.businessinsider.de/wp-content/uploads/2021/09/614c8c34c2c9630018f5f431-2048x1536.jpg",
+            "query_width": null,
+            "size": {
+              "width": 2048,
+              "height": 1536
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://cdn.businessinsider.de/wp-content/uploads/2021/09/614c8c34c2c9630018f5f431-scaled.jpg",
+            "query_width": null,
+            "size": {
+              "width": 2560,
+              "height": 1920
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": true,
+        "description": "Kein anderes Unternehmen auf der Welt hat so hohe Schulden wie Evergrande.",
+        "caption": "Kein anderes Unternehmen auf der Welt hat so hohe Schulden wie Evergrande.",
+        "authors": [
+          "Noel Celis/Getty Images"
+        ],
+        "position": 505
+      }
+    ],
     "publishing_date": "2024-01-29 19:00:45+00:00",
     "title": "6 Statistiken, die die enorme Größe von Evergrande, Chinas hoch verschuldeten Immobilienriesen verdeutlichen",
     "topics": [

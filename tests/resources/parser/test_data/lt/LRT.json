@@ -29,6 +29,48 @@
         }
       ]
     },
+    "images": [
+      {
+        "versions": [
+          {
+            "url": "https://www.lrt.lt/img/2024/03/27/1736701-563848-756x425.jpg",
+            "query_width": null,
+            "size": {
+              "width": 756,
+              "height": 425
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": true,
+        "description": "Povilas Aleksandravičius",
+        "caption": "Povilas Aleksandravičius",
+        "authors": [
+          "J. Stacevičiaus / LRT nuotr"
+        ],
+        "position": 442
+      },
+      {
+        "versions": [
+          {
+            "url": "https://www.lrt.lt/img/2023/05/31/1522711-252564-756x425.jpg",
+            "query_width": null,
+            "size": {
+              "width": 756,
+              "height": 425
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": false,
+        "description": "Kryžius, asociatyvi nuotr.",
+        "caption": "Kryžius, asociatyvi nuotr.",
+        "authors": [
+          "J. Stacevičiaus / LRT nuotr"
+        ],
+        "position": 500
+      }
+    ],
     "publishing_date": "2024-03-31 16:59:00+00:00",
     "title": "Povilas Aleksandravičius. Kodėl Judas išdavė Jėzų?",
     "topics": [

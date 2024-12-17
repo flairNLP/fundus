@@ -1,7 +1,7 @@
 {
   "V1": {
     "authors": [
-      "ZUHYX International Monetary Corporation"
+      "Yiswaree Palansamy"
     ],
     "body": {
       "summary": [],
@@ -9,24 +9,46 @@
         {
           "headline": [],
           "paragraphs": [
-            "The issuer is solely responsible for the content of this announcement."
+            "PUTRAJAYA, Nov 22 — Private companies did not pay for Prime Minister Datuk Seri Anwar Ibrahim’s recent travels abroad, Communications Minister Fahmi Fadzil said today.",
+            "He said the government still covered the cost for Anwar’s delegation while corporate executives who travelled along paid for their own portion of the total expenses.",
+            "“The prime minister’s official trips which were joined by the minister of investment, trade and industry; the foreign minister and two other deputy ministers, was indeed to strengthen Malaysia’s economy, trade and diplomatic ties with Peru, Egypt and Brazil, especially.",
+            "“The business delegation that joined this trip, were fully funded by their respective companies and this reflects the deep interest of Malaysian companies in the trade and investment opportunities in the countries or regions which were visited.",
+            "“For everyone’s information, the total cost of the chartered Malaysia Airlines plane, which was the Airbus A350, is RM6.162 million. Whereby the cost borne by the Malaysian government for the official delegation is RM1.662 million, which is 27 per cent of the overall cost.",
+            "“Meanwhile, the business delegation paid 73 per cent of the cost, or RM4.5 million. So it is important for me to stress that the government paid for the prime minister’s flight,” the government spokesman said.",
+            "Fahmi said that using this private charter strategy resulted in cost savings of nearly RM900,000 compared to using an official government jet.",
+            "In Parliament yesterday, Anwar explained the government’s new strategy to reduce overseas travel expenses was to invite companies such as Petronas, Proton, and others to participate.",
+            "Anwar said the firms covered approximately 75 per cent of the total costs of his recent travels, which drew questions about the propriety of the arrangement.",
+            "During today’s press conference, Fahmi also clarified Anwar’s daughter, Nurul Izzah, joined his delegation in her official capacity and not a family member.",
+            "“I got confirmation from the prime minister’s chief press secretary that Izzah and Datuk Faiz (Prof Datuk Mohd Faiz Abdullah), who heads Isis (Institute of Strategic and International Studies), were invited by the organisers.",
+            "“So, she was invited in her capacity as the director of the think tank Seri (Social and Economic Research Initiative),” he said."
           ]
         }
       ]
     },
-    "publishing_date": "2024-04-30 16:20:00+08:00",
-    "title": "ZUHYX Obtains US MSB License, Setting the Highest Compliance Standards",
+    "images": [
+      {
+        "versions": [
+          {
+            "url": "https://cdn4.premiumread.com/?url=https://malaymail.com/malaymail/uploads/images/2024/11/22/246270.jpg&w=1000&q=100&f=jpg&t=6",
+            "query_width": null,
+            "size": null,
+            "type": null
+          }
+        ],
+        "is_cover": true,
+        "description": "A file photograph shows Communications Minister Fahmi Fadzil speaking at Menara KWSP in Shah Alam on November 19, 2024. — Picture by Yusof Mat Isa",
+        "caption": "A file photograph shows Communications Minister Fahmi Fadzil speaking at Menara KWSP in Shah Alam on November 19, 2024.",
+        "authors": [
+          "Yusof Mat Isa"
+        ],
+        "position": 467
+      }
+    ],
+    "publishing_date": "2024-11-22 16:55:35+08:00",
+    "title": "All paid their own way on PM Anwar’s foreign trips, Fahmi clarifies",
     "topics": [
-      "ZUHYX",
-      "Obtains",
-      "US",
-      "MSB",
-      "License",
-      "Setting",
-      "the",
-      "Highest",
-      "Compliance",
-      "Standards"
+      "anwar ibrahim",
+      "fahmi fadzil"
     ]
   }
 }

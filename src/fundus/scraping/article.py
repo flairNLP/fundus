@@ -7,7 +7,7 @@ import lxml.html
 from colorama import Fore, Style
 
 from fundus.logging import create_logger
-from fundus.parser import ArticleBody
+from fundus.parser import ArticleBody, Image
 from fundus.scraping.html import HTML
 from fundus.utils.serialization import JSONVal, is_jsonable
 
@@ -50,7 +50,7 @@ class Article:
 
     @property
     def authors(self) -> List[str]:
-        return self.__extraction__.get("authors") or []
+        return self.__extraction__.get("authors", [])
 
     @property
     def publishing_date(self) -> Optional[datetime]:
@@ -58,11 +58,15 @@ class Article:
 
     @property
     def topics(self) -> List[str]:
-        return self.__extraction__.get("topics") or []
+        return self.__extraction__.get("topics", [])
 
     @property
     def free_access(self) -> bool:
-        return self.__extraction__.get("free_access") or False
+        return self.__extraction__.get("free_access", False)
+
+    @property
+    def images(self) -> List[Image]:
+        return self.__extraction__.get("images", [])
 
     @property
     def publisher(self) -> str:
@@ -87,7 +91,7 @@ class Article:
 
     @property
     def plaintext(self) -> Optional[str]:
-        return str(self.body) or None
+        return str(self.body) or None if not isinstance(self.body, Exception) else None
 
     @property
     def lang(self) -> Optional[str]:
@@ -153,8 +157,12 @@ class Article:
             f"{Fore.RED}--missing plaintext--{Style.RESET_ALL}" if self.plaintext is None else self.plaintext.strip()
         )
 
+        image_text = (
+            f" including {len(self.images)} image(s)" if self.images and not isinstance(self.images, Exception) else ""
+        )
+
         text = (
-            f"Fundus-Article:"
+            f"Fundus-Article{image_text}:"
             f'\n- Title: "{wrapped_title}"'
             f'\n- Text:  "{wrapped_plaintext}"'
             f"\n- URL:    {self.html.requested_url}"

@@ -25,6 +25,127 @@
         }
       ]
     },
+    "images": [
+      {
+        "versions": [
+          {
+            "url": "https://www.srf.ch/static/cms/images/160w/d09eab.jpg",
+            "query_width": null,
+            "size": {
+              "width": 160,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.srf.ch/static/cms/images/160w/d09eab.webp",
+            "query_width": null,
+            "size": {
+              "width": 160,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://www.srf.ch/static/cms/images/320w/d09eab.jpg",
+            "query_width": null,
+            "size": {
+              "width": 320,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.srf.ch/static/cms/images/320w/d09eab.webp",
+            "query_width": null,
+            "size": {
+              "width": 320,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://www.srf.ch/static/cms/images/480w/d09eab.jpg",
+            "query_width": null,
+            "size": {
+              "width": 480,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.srf.ch/static/cms/images/480w/d09eab.webp",
+            "query_width": null,
+            "size": {
+              "width": 480,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://www.srf.ch/static/cms/images/640w/d09eab.jpg",
+            "query_width": null,
+            "size": {
+              "width": 640,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.srf.ch/static/cms/images/640w/d09eab.webp",
+            "query_width": null,
+            "size": {
+              "width": 640,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://www.srf.ch/static/cms/images/960w/d09eab.jpg",
+            "query_width": null,
+            "size": {
+              "width": 960,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.srf.ch/static/cms/images/960w/d09eab.webp",
+            "query_width": null,
+            "size": {
+              "width": 960,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://www.srf.ch/static/cms/images/1280w/d09eab.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1280,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.srf.ch/static/cms/images/1280w/d09eab.webp",
+            "query_width": null,
+            "size": {
+              "width": 1280,
+              "height": 0
+            },
+            "type": "image/webp"
+          }
+        ],
+        "is_cover": false,
+        "description": "Menschen in Raum.",
+        "caption": "Biden traf sich am Samstagabend im Weissen Haus mit seinen wichtigsten Sicherheitsberatern, um über den iranischen Angriff auf Israel zu diskutieren.",
+        "authors": [
+          "Keystone/The White House via AP/Adam Schultz"
+        ],
+        "position": 340
+      }
+    ],
     "publishing_date": "2024-04-15 13:38:00+02:00",
     "title": "«Die israelische Zurückhaltung hat viel mit den USA zu tun»"
   }
