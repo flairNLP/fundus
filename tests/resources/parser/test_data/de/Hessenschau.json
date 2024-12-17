@@ -54,6 +54,107 @@
         }
       ]
     },
+    "images": [
+      {
+        "versions": [
+          {
+            "url": "https://www.hessenschau.de/wirtschaft/ukrainerin-arbeitsmarkt-102~_t-1714196357123_v-16to9__small.jpg",
+            "query_width": null,
+            "size": {
+              "width": 320,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.hessenschau.de/wirtschaft/ukrainerin-arbeitsmarkt-102~_t-1714196357123_v-16to9__medium.jpg",
+            "query_width": null,
+            "size": {
+              "width": 480,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.hessenschau.de/wirtschaft/ukrainerin-arbeitsmarkt-102~_t-1714196357123_v-16to9__medium__extended.jpg",
+            "query_width": null,
+            "size": {
+              "width": 640,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.hessenschau.de/wirtschaft/ukrainerin-arbeitsmarkt-102~_t-1714196357123_v-16to9.jpg",
+            "query_width": null,
+            "size": {
+              "width": 960,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.hessenschau.de/wirtschaft/ukrainerin-arbeitsmarkt-102~_t-1714196357123_v-16to9__retina.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1920,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": true,
+        "description": "Eine junge Frau steht in einem Warenlager.",
+        "caption": null,
+        "authors": [],
+        "position": 464
+      },
+      {
+        "versions": [
+          {
+            "url": "https://www.hessenschau.de/wirtschaft/ukrainerin-arbeitsmarkt-100~_t-1714196355723_v-16toX__small.jpg",
+            "query_width": null,
+            "size": {
+              "width": 320,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.hessenschau.de/wirtschaft/ukrainerin-arbeitsmarkt-100~_t-1714196355723_v-16toX__medium.jpg",
+            "query_width": null,
+            "size": {
+              "width": 480,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.hessenschau.de/wirtschaft/ukrainerin-arbeitsmarkt-100~_t-1714196355723_v-16toX.jpg",
+            "query_width": null,
+            "size": {
+              "width": 960,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.hessenschau.de/wirtschaft/ukrainerin-arbeitsmarkt-100~_t-1714196355723_v-16toX__retina.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1920,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": false,
+        "description": "Eine junge Frau sitzt an einem Schreibtisch, neben ihr steht eine Frau in blauem Hosenanzug.",
+        "caption": null,
+        "authors": [],
+        "position": 488
+      }
+    ],
     "publishing_date": "2024-04-27 07:39:00+02:00",
     "title": "Schnellere Integration: \"Job-Turbo\" hilft Geflüchteten auf dem Arbeitsmarkt",
     "topics": [

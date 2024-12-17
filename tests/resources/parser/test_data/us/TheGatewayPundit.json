@@ -26,6 +26,125 @@
         }
       ]
     },
+    "images": [
+      {
+        "versions": [
+          {
+            "url": "https://www.thegatewaypundit.com/wp-content/uploads/IMG_1326-1-600x292.jpg",
+            "query_width": null,
+            "size": {
+              "width": 600,
+              "height": 292
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.thegatewaypundit.com/wp-content/uploads/IMG_1326-1-768x373.jpg",
+            "query_width": null,
+            "size": {
+              "width": 768,
+              "height": 373
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.thegatewaypundit.com/wp-content/uploads/IMG_1326-1-1024x498.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1024,
+              "height": 498
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.thegatewaypundit.com/wp-content/uploads/IMG_1326-1.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1169,
+              "height": 568
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": true,
+        "description": null,
+        "caption": null,
+        "authors": [],
+        "position": 422
+      },
+      {
+        "versions": [
+          {
+            "url": "https://www.thegatewaypundit.com/wp-content/uploads/0-517-600x332.jpg",
+            "query_width": null,
+            "size": {
+              "width": 600,
+              "height": 332
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.thegatewaypundit.com/wp-content/uploads/0-517-768x424.jpg",
+            "query_width": null,
+            "size": {
+              "width": 768,
+              "height": 424
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.thegatewaypundit.com/wp-content/uploads/0-517-1024x566.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1024,
+              "height": 566
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.thegatewaypundit.com/wp-content/uploads/0-517.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1169,
+              "height": 646
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": false,
+        "description": null,
+        "caption": null,
+        "authors": [],
+        "position": 430
+      },
+      {
+        "versions": [
+          {
+            "url": "https://www.thegatewaypundit.com/wp-content/uploads/kalyee-goncalves-ethan-chapin-xana-kernodle-madison-mogen-photo-combo-2-600x338.webp",
+            "query_width": null,
+            "size": {
+              "width": 600,
+              "height": 338
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://www.thegatewaypundit.com/wp-content/uploads/kalyee-goncalves-ethan-chapin-xana-kernodle-madison-mogen-photo-combo-2.webp",
+            "query_width": null,
+            "size": {
+              "width": 720,
+              "height": 405
+            },
+            "type": "image/webp"
+          }
+        ],
+        "is_cover": false,
+        "description": null,
+        "caption": null,
+        "authors": [],
+        "position": 438
+      }
+    ],
     "publishing_date": "2023-04-28 18:15:11+00:00",
     "title": "New Plot Twist in Idaho Quadruple Murders Case: Surviving Roommate Agrees to Interview with Kohberger's Defense Lawyers"
   }

@@ -28,6 +28,64 @@
         }
       ]
     },
+    "images": [
+      {
+        "versions": [
+          {
+            "url": "https://bmg-images.forward-publishing.io/2024/04/30/b3c40bdd-3f8c-4a16-ba06-f95c78d9b083.jpeg?w=160&auto=format",
+            "query_width": null,
+            "size": {
+              "width": 160,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://bmg-images.forward-publishing.io/2024/04/30/b3c40bdd-3f8c-4a16-ba06-f95c78d9b083.jpeg?w=320&auto=format",
+            "query_width": null,
+            "size": {
+              "width": 320,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://bmg-images.forward-publishing.io/2024/04/30/b3c40bdd-3f8c-4a16-ba06-f95c78d9b083.jpeg?w=640&auto=format",
+            "query_width": null,
+            "size": {
+              "width": 640,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://bmg-images.forward-publishing.io/2024/04/30/b3c40bdd-3f8c-4a16-ba06-f95c78d9b083.jpeg?w=1024&auto=format",
+            "query_width": null,
+            "size": {
+              "width": 1024,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://bmg-images.forward-publishing.io/2024/04/30/b3c40bdd-3f8c-4a16-ba06-f95c78d9b083.jpeg?w=2048&auto=format",
+            "query_width": null,
+            "size": {
+              "width": 2048,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": true,
+        "description": "Demonstration im September 2022 nach dem Tod der 22-jährigen Mahsa Amini.",
+        "caption": "Demonstration im September 2022 nach dem Tod der 22-jährigen Mahsa Amini.",
+        "authors": [
+          "Uncredited/AP/dpa"
+        ],
+        "position": 562
+      }
+    ],
     "publishing_date": "2024-04-30 16:58:00+00:00",
     "title": "Bei Protesten 2022: Bericht: Aktivistin getötet - Irans Justiz dementiert",
     "topics": [

@@ -34,6 +34,170 @@
         }
       ]
     },
+    "images": [
+      {
+        "versions": [
+          {
+            "url": "https://img.welt.de/img/wirtschaft/mobile245057420/9711626227-ci23x11-w600/DWO-Teaser-BIP-mki.jpg",
+            "query_width": null,
+            "size": {
+              "width": 600,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://img.welt.de/img/wirtschaft/mobile245057420/9711626227-ci23x11-w910/DWO-Teaser-BIP-mki.jpg",
+            "query_width": "min-width:600",
+            "size": {
+              "width": 910,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://img.welt.de/img/wirtschaft/mobile245057420/9712506227-ci102l-w1024/DWO-Teaser-BIP-mki.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1024,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://img.welt.de/img/wirtschaft/mobile245057420/9711626227-ci23x11-w1136/DWO-Teaser-BIP-mki.jpg",
+            "query_width": "min-width:910",
+            "size": {
+              "width": 1136,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": true,
+        "description": null,
+        "caption": null,
+        "authors": [],
+        "position": 938
+      },
+      {
+        "versions": [
+          {
+            "url": "https://img.welt.de/img/wirtschaft/mobile245057420/9711626227-ci23x11-w100/DWO-Teaser-BIP-mki.jpg",
+            "query_width": "min-width:910",
+            "size": {
+              "width": 100,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://img.welt.de/img/wirtschaft/mobile245057420/9712506227-ci102l-w1024/DWO-Teaser-BIP-mki.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1024,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": true,
+        "description": null,
+        "caption": null,
+        "authors": [],
+        "position": 948
+      },
+      {
+        "versions": [
+          {
+            "url": "https://img.welt.de/img/wirtschaft/mobile245056202/1890247437-ci3x2l-w600/DW-WI-Wirtschaftsraum-Deutschland-jb-Wirtschaftswachstum-jpg.jpg",
+            "query_width": null,
+            "size": {
+              "width": 600,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://img.welt.de/img/wirtschaft/mobile245056202/1890247437-ci3x2l-w680/DW-WI-Wirtschaftsraum-Deutschland-jb-Wirtschaftswachstum-jpg.jpg",
+            "query_width": "min-width:600",
+            "size": {
+              "width": 680,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://img.welt.de/img/wirtschaft/mobile245056202/1890247437-ci3x2l-w780/DW-WI-Wirtschaftsraum-Deutschland-jb-Wirtschaftswachstum-jpg.jpg",
+            "query_width": "min-width:910",
+            "size": {
+              "width": 780,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://img.welt.de/img/wirtschaft/mobile245056202/1892507437-ci102l-w1024/DW-WI-Wirtschaftsraum-Deutschland-jb-Wirtschaftswachstum-jpg.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1024,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": false,
+        "description": null,
+        "caption": null,
+        "authors": [],
+        "position": 1138
+      },
+      {
+        "versions": [
+          {
+            "url": "https://img.welt.de/img/wirtschaft/mobile245056200/6920241617-ci3x2l-w600/DW-WI-Wirtschaftsraum-Deutschland-jb-Wirtschaftsentwicklung-jpg.jpg",
+            "query_width": null,
+            "size": {
+              "width": 600,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://img.welt.de/img/wirtschaft/mobile245056200/6920241617-ci3x2l-w680/DW-WI-Wirtschaftsraum-Deutschland-jb-Wirtschaftsentwicklung-jpg.jpg",
+            "query_width": "min-width:600",
+            "size": {
+              "width": 680,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://img.welt.de/img/wirtschaft/mobile245056200/6920241617-ci3x2l-w780/DW-WI-Wirtschaftsraum-Deutschland-jb-Wirtschaftsentwicklung-jpg.jpg",
+            "query_width": "min-width:910",
+            "size": {
+              "width": 780,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://img.welt.de/img/wirtschaft/mobile245056200/6922501617-ci102l-w1024/DW-WI-Wirtschaftsraum-Deutschland-jb-Wirtschaftsentwicklung-jpg.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1024,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": false,
+        "description": null,
+        "caption": null,
+        "authors": [],
+        "position": 1164
+      }
+    ],
     "publishing_date": "2023-04-28 18:03:06+00:00",
     "title": "BIP: Diese Grafiken zeigen, wie schlecht es um Deutschlands Wirtschaft steht",
     "topics": [
@@ -81,6 +245,228 @@
         }
       ]
     },
+    "images": [
+      {
+        "versions": [
+          {
+            "url": "https://img.welt.de/img/politik/deutschland/mobile253202066/7197934087-ci23x11-w20/Wahl-Arena-des-Freien-Worts-mit-Spitzenkandidaten.jpg",
+            "query_width": null,
+            "size": {
+              "width": 20,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://img.welt.de/img/politik/deutschland/mobile253202066/7197934087-ci23x11-w200/Wahl-Arena-des-Freien-Worts-mit-Spitzenkandidaten.jpg",
+            "query_width": "min-width:0",
+            "size": {
+              "width": 200,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://img.welt.de/img/politik/deutschland/mobile253202066/7197934087-ci23x11-w400/Wahl-Arena-des-Freien-Worts-mit-Spitzenkandidaten.jpg",
+            "query_width": "min-width:0",
+            "size": {
+              "width": 400,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://img.welt.de/img/politik/deutschland/mobile253202066/7197934087-ci23x11-w600/Wahl-Arena-des-Freien-Worts-mit-Spitzenkandidaten.jpg",
+            "query_width": "min-width:0",
+            "size": {
+              "width": 600,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://img.welt.de/img/politik/deutschland/mobile253202066/7197934087-ci23x11-w800/Wahl-Arena-des-Freien-Worts-mit-Spitzenkandidaten.jpg",
+            "query_width": "min-width:0",
+            "size": {
+              "width": 800,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://img.welt.de/img/politik/deutschland/mobile253202066/7197934087-ci23x11-w1000/Wahl-Arena-des-Freien-Worts-mit-Spitzenkandidaten.jpg",
+            "query_width": "min-width:0",
+            "size": {
+              "width": 1000,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://img.welt.de/img/politik/deutschland/mobile253202066/7197934087-ci23x11-w1200/Wahl-Arena-des-Freien-Worts-mit-Spitzenkandidaten.jpg",
+            "query_width": "min-width:0",
+            "size": {
+              "width": 1200,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://img.welt.de/img/politik/deutschland/mobile253202066/7197934087-ci23x11-w1400/Wahl-Arena-des-Freien-Worts-mit-Spitzenkandidaten.jpg",
+            "query_width": "min-width:0",
+            "size": {
+              "width": 1400,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://img.welt.de/img/politik/deutschland/mobile253202066/7197934087-ci23x11-w1600/Wahl-Arena-des-Freien-Worts-mit-Spitzenkandidaten.jpg",
+            "query_width": "min-width:0",
+            "size": {
+              "width": 1600,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://img.welt.de/img/politik/deutschland/mobile253202066/7197934087-ci23x11-w1800/Wahl-Arena-des-Freien-Worts-mit-Spitzenkandidaten.jpg",
+            "query_width": "min-width:0",
+            "size": {
+              "width": 1800,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://img.welt.de/img/politik/deutschland/mobile253202066/7197934087-ci23x11-w2000/Wahl-Arena-des-Freien-Worts-mit-Spitzenkandidaten.jpg",
+            "query_width": "min-width:0",
+            "size": {
+              "width": 2000,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": true,
+        "description": "Mario Voigt (CDU) und Björn Höcke (AfD)",
+        "caption": "Mario Voigt (CDU) und Björn Höcke (AfD)",
+        "authors": [
+          "Hannes P. Albert/dpa/Hannes P Albert"
+        ],
+        "position": 982
+      },
+      {
+        "versions": [
+          {
+            "url": "https://img.welt.de/img/politik/deutschland/mobile253202074/7707934497-ci3x2l-w20/MDR-Sendung-Fakt-ist.jpg",
+            "query_width": null,
+            "size": {
+              "width": 20,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://img.welt.de/img/politik/deutschland/mobile253202074/7707934497-ci3x2l-w200/MDR-Sendung-Fakt-ist.jpg",
+            "query_width": "min-width:0",
+            "size": {
+              "width": 200,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://img.welt.de/img/politik/deutschland/mobile253202074/7707934497-ci3x2l-w400/MDR-Sendung-Fakt-ist.jpg",
+            "query_width": "min-width:0",
+            "size": {
+              "width": 400,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://img.welt.de/img/politik/deutschland/mobile253202074/7707934497-ci3x2l-w600/MDR-Sendung-Fakt-ist.jpg",
+            "query_width": "min-width:0",
+            "size": {
+              "width": 600,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://img.welt.de/img/politik/deutschland/mobile253202074/7707934497-ci3x2l-w800/MDR-Sendung-Fakt-ist.jpg",
+            "query_width": "min-width:0",
+            "size": {
+              "width": 800,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://img.welt.de/img/politik/deutschland/mobile253202074/7707934497-ci3x2l-w1000/MDR-Sendung-Fakt-ist.jpg",
+            "query_width": "min-width:0",
+            "size": {
+              "width": 1000,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://img.welt.de/img/politik/deutschland/mobile253202074/7707934497-ci3x2l-w1200/MDR-Sendung-Fakt-ist.jpg",
+            "query_width": "min-width:0",
+            "size": {
+              "width": 1200,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://img.welt.de/img/politik/deutschland/mobile253202074/7707934497-ci3x2l-w1400/MDR-Sendung-Fakt-ist.jpg",
+            "query_width": "min-width:0",
+            "size": {
+              "width": 1400,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://img.welt.de/img/politik/deutschland/mobile253202074/7707934497-ci3x2l-w1600/MDR-Sendung-Fakt-ist.jpg",
+            "query_width": "min-width:0",
+            "size": {
+              "width": 1600,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://img.welt.de/img/politik/deutschland/mobile253202074/7707934497-ci3x2l-w1800/MDR-Sendung-Fakt-ist.jpg",
+            "query_width": "min-width:0",
+            "size": {
+              "width": 1800,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://img.welt.de/img/politik/deutschland/mobile253202074/7707934497-ci3x2l-w2000/MDR-Sendung-Fakt-ist.jpg",
+            "query_width": "min-width:0",
+            "size": {
+              "width": 2000,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": false,
+        "description": "V. l.: Katja Wolf (BSW), Thomas L. Kemmerich (FDP), Madeleine Henfling (Grüne), Georg Maier (SPD), Björn Höcke (AfD), Mario Voigt (CDU) und Bodo Ramelow (Linke) im MDR-Studio",
+        "caption": "V. l.: Katja Wolf (BSW), Thomas L. Kemmerich (FDP), Madeleine Henfling (Grüne), Georg Maier (SPD), Björn Höcke (AfD), Mario Voigt (CDU) und Bodo Ramelow (Linke) im MDR-Studio",
+        "authors": [
+          "Martin Schutt/dpa"
+        ],
+        "position": 1103
+      }
+    ],
     "publishing_date": "2024-08-26 23:27:57+00:00",
     "title": "Landtagswahl in Thüringen: Voigt, Höcke und der Vorwurf einer Lüge vor laufender Kamera",
     "topics": [

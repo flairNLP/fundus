@@ -17,7 +17,8 @@
       * [Working with `lxml`](#working-with-lxml)
       * [CSS-Select](#css-select)
       * [XPath](#xpath)
-    * [Extract the ArticleBody](#extract-the-articlebody)
+    * [Extracting the ArticleBody](#extracting-the-articlebody)
+    * [Extracting the Images](#extracting-the-images)
     * [Checking the free_access attribute](#checking-the-free_access-attribute)
     * [Finishing the Parser](#finishing-the-parser)
   * [6. Generate unit tests and update tables](#6-generate-unit-tests-and-update-tables)
@@ -533,7 +534,7 @@ Instead, we recommend referring to [this](https://devhints.io/xpath) documentati
 Make sure to examine other parsers and consult the [attribute guidelines](attribute_guidelines.md) for specifics on attribute implementation. 
 We strongly encourage utilizing these utility functions, especially when parsing the `ArticleBody`.
 
-### Extract the ArticleBody
+### Extracting the ArticleBody
 
 In the context of Fundus, an article's body typically includes multiple paragraphs, and optionally, a summary and several subheadings.
 It's important to note that article layouts can vary significantly between publishers, with the most common layouts being:
@@ -546,6 +547,39 @@ To accurately extract the body of an article, use the `extract_article_body_with
 This function accepts selectors for the different body parts as input and returns a parsed `ArticleBody`.
 For practical examples, refer to existing parser implementations to understand how everything integrates.
 
+### Extracting the images
+
+Fundus offers a utility function `image_extraction` to extract images from the article.
+This function only requires the `doc` element of the article and the `_paragraph_selector` of the parser with further optional attributes that can be used if necessary.
+The skeleton of the function looks like this:
+
+```python
+from fundus.parser.utility import image_extraction
+from fundus.parser import Image
+
+@attribute
+def images(self) -> List[Image]:
+    return image_extraction(
+        doc=self.precomputed.doc,
+        paragraph_selector=self._paragraph_selector,
+    )
+```
+
+Once you have implemented this, you can try to extract your first images from the article body!
+What can happen now, is that you get an IndexError.
+This is caused by the `upper_boundary_selector` not selecting an element.
+You have to adjust it to select an element above the cover image, all images that lie before this upper boundary are discarded.
+Once you get your first images, you can further fine-tune your results:
+
+- `image_selector`: This selector is used to filter which image elements are selected.
+- `lower_boundary_selector`: By default, all images after the last paragraph are discarded. With this selector, you can define your custom boundary.
+- `caption_selector`: This selector is used to extract the caption of the image and should usually be of the form `XPath("./ancestor::...")`
+- `alt_selector`: This selector selects the alt text (description) of the image.
+- `author_selector`: You have two options, when selecting the author of the image:
+    - Preferably, the credits are within their own HTML element and can be directly addressed using a XPath selector.
+    - Alternatively, a `re.Pattern` object can be passed to select the authors from the caption. In this case, a selection group named `credits` is saved as the author, while the entire `Match` will be removed from the caption.
+- `relative_urls`: If set, an attempt will be made to complete relative URLs.
+- `size_pattern`: A `re.Pattern` object that can be used to extract the image sizes.
 
 ### Checking the free_access attribute
 

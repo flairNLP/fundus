@@ -176,6 +176,961 @@
         }
       ]
     },
+    "images": [
+      {
+        "versions": [
+          {
+            "url": "https://media.wired.com/photos/662c0667a51a7c00819e98a2/master/w_2560%2Cc_limit/best-sleeping-bags-guide-collage-SOURCE-Scott-Gilbertson.jpg",
+            "query_width": null,
+            "size": null,
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.wired.com/photos/662c0667a51a7c00819e98a2/master/w_120,c_limit/best-sleeping-bags-guide-collage-SOURCE-Scott-Gilbertson.jpg",
+            "query_width": "max-width:767",
+            "size": {
+              "width": 120,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.wired.com/photos/662c0667a51a7c00819e98a2/master/w_240,c_limit/best-sleeping-bags-guide-collage-SOURCE-Scott-Gilbertson.jpg",
+            "query_width": "max-width:767",
+            "size": {
+              "width": 240,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.wired.com/photos/662c0667a51a7c00819e98a2/master/w_320,c_limit/best-sleeping-bags-guide-collage-SOURCE-Scott-Gilbertson.jpg",
+            "query_width": "max-width:767",
+            "size": {
+              "width": 320,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.wired.com/photos/662c0667a51a7c00819e98a2/master/w_640,c_limit/best-sleeping-bags-guide-collage-SOURCE-Scott-Gilbertson.jpg",
+            "query_width": "max-width:767",
+            "size": {
+              "width": 640,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.wired.com/photos/662c0667a51a7c00819e98a2/master/w_960,c_limit/best-sleeping-bags-guide-collage-SOURCE-Scott-Gilbertson.jpg",
+            "query_width": "max-width:767",
+            "size": {
+              "width": 960,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.wired.com/photos/662c0667a51a7c00819e98a2/master/w_1280,c_limit/best-sleeping-bags-guide-collage-SOURCE-Scott-Gilbertson.jpg",
+            "query_width": "min-width:768",
+            "size": {
+              "width": 1280,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.wired.com/photos/662c0667a51a7c00819e98a2/master/w_1600,c_limit/best-sleeping-bags-guide-collage-SOURCE-Scott-Gilbertson.jpg",
+            "query_width": "min-width:768",
+            "size": {
+              "width": 1600,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.wired.com/photos/662c0667a51a7c00819e98a2/master/w_1920,c_limit/best-sleeping-bags-guide-collage-SOURCE-Scott-Gilbertson.jpg",
+            "query_width": "min-width:768",
+            "size": {
+              "width": 1920,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.wired.com/photos/662c0667a51a7c00819e98a2/master/w_2240,c_limit/best-sleeping-bags-guide-collage-SOURCE-Scott-Gilbertson.jpg",
+            "query_width": "min-width:768",
+            "size": {
+              "width": 2240,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": true,
+        "description": "Variety of sleeping bags each on the grass. Background green and silver chrome swirls.",
+        "caption": null,
+        "authors": [
+          "Scott Gilbertson",
+          "Getty Images"
+        ],
+        "position": 254
+      },
+      {
+        "versions": [
+          {
+            "url": "https://media.wired.com/photos/662bfb516923f876229bcca7/master/w_120,c_limit/Mountain-Hardware-Bishop-Pass-15-Reviewer-Photo-SOURCE-Scott-Gilbertson.jpg",
+            "query_width": null,
+            "size": {
+              "width": 120,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.wired.com/photos/662bfb516923f876229bcca7/master/w_240,c_limit/Mountain-Hardware-Bishop-Pass-15-Reviewer-Photo-SOURCE-Scott-Gilbertson.jpg",
+            "query_width": null,
+            "size": {
+              "width": 240,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.wired.com/photos/662bfb516923f876229bcca7/master/w_320,c_limit/Mountain-Hardware-Bishop-Pass-15-Reviewer-Photo-SOURCE-Scott-Gilbertson.jpg",
+            "query_width": null,
+            "size": {
+              "width": 320,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.wired.com/photos/662bfb516923f876229bcca7/master/w_640,c_limit/Mountain-Hardware-Bishop-Pass-15-Reviewer-Photo-SOURCE-Scott-Gilbertson.jpg",
+            "query_width": null,
+            "size": {
+              "width": 640,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.wired.com/photos/662bfb516923f876229bcca7/master/w_960,c_limit/Mountain-Hardware-Bishop-Pass-15-Reviewer-Photo-SOURCE-Scott-Gilbertson.jpg",
+            "query_width": null,
+            "size": {
+              "width": 960,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.wired.com/photos/662bfb516923f876229bcca7/master/w_1280,c_limit/Mountain-Hardware-Bishop-Pass-15-Reviewer-Photo-SOURCE-Scott-Gilbertson.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1280,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": false,
+        "description": "Long blue sleeping bag with yellow interior laid out on top of tan gravel surface",
+        "caption": "Mountain Hardwear Bishop Pass 15",
+        "authors": [
+          "Scott Gilbertson"
+        ],
+        "position": 373
+      },
+      {
+        "versions": [
+          {
+            "url": "https://media.wired.com/photos/662bfe27de2d498024232b5e/master/w_120,c_limit/REI-Siesta-Hooded-20-Sleeping-Bag-Offwhite-Background-SOURCE-REI.jpg",
+            "query_width": null,
+            "size": {
+              "width": 120,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.wired.com/photos/662bfe27de2d498024232b5e/master/w_240,c_limit/REI-Siesta-Hooded-20-Sleeping-Bag-Offwhite-Background-SOURCE-REI.jpg",
+            "query_width": null,
+            "size": {
+              "width": 240,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.wired.com/photos/662bfe27de2d498024232b5e/master/w_320,c_limit/REI-Siesta-Hooded-20-Sleeping-Bag-Offwhite-Background-SOURCE-REI.jpg",
+            "query_width": null,
+            "size": {
+              "width": 320,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.wired.com/photos/662bfe27de2d498024232b5e/master/w_640,c_limit/REI-Siesta-Hooded-20-Sleeping-Bag-Offwhite-Background-SOURCE-REI.jpg",
+            "query_width": null,
+            "size": {
+              "width": 640,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.wired.com/photos/662bfe27de2d498024232b5e/master/w_960,c_limit/REI-Siesta-Hooded-20-Sleeping-Bag-Offwhite-Background-SOURCE-REI.jpg",
+            "query_width": null,
+            "size": {
+              "width": 960,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.wired.com/photos/662bfe27de2d498024232b5e/master/w_1280,c_limit/REI-Siesta-Hooded-20-Sleeping-Bag-Offwhite-Background-SOURCE-REI.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1280,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": false,
+        "description": "Tan sleeping bag partially zipped up with the flap open to show the yellow interior",
+        "caption": "REI Co-op Siesta Hooded 20",
+        "authors": [
+          "REI"
+        ],
+        "position": 419
+      },
+      {
+        "versions": [
+          {
+            "url": "https://media.wired.com/photos/65b013364ba5b6b329666a2a/master/w_120,c_limit/Gear-Zenbivy-Original-Bag-SOURCE-Zenbivy.jpg",
+            "query_width": null,
+            "size": {
+              "width": 120,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.wired.com/photos/65b013364ba5b6b329666a2a/master/w_240,c_limit/Gear-Zenbivy-Original-Bag-SOURCE-Zenbivy.jpg",
+            "query_width": null,
+            "size": {
+              "width": 240,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.wired.com/photos/65b013364ba5b6b329666a2a/master/w_320,c_limit/Gear-Zenbivy-Original-Bag-SOURCE-Zenbivy.jpg",
+            "query_width": null,
+            "size": {
+              "width": 320,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.wired.com/photos/65b013364ba5b6b329666a2a/master/w_640,c_limit/Gear-Zenbivy-Original-Bag-SOURCE-Zenbivy.jpg",
+            "query_width": null,
+            "size": {
+              "width": 640,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.wired.com/photos/65b013364ba5b6b329666a2a/master/w_960,c_limit/Gear-Zenbivy-Original-Bag-SOURCE-Zenbivy.jpg",
+            "query_width": null,
+            "size": {
+              "width": 960,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.wired.com/photos/65b013364ba5b6b329666a2a/master/w_1280,c_limit/Gear-Zenbivy-Original-Bag-SOURCE-Zenbivy.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1280,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": false,
+        "description": "Zenbivy Sleeping Bag",
+        "caption": "Zenbivy Bed 25 Degree Sleeping Bag and Quilt System",
+        "authors": [
+          "Zenbivy"
+        ],
+        "position": 447
+      },
+      {
+        "versions": [
+          {
+            "url": "https://media.wired.com/photos/662bfebb91b8ce9c18843a2f/master/w_120,c_limit/Sea-to-Summit-Spark-Sleeping-Bag-Reviewer-Photo-SOURCE-Scott-Gilbertson.jpg",
+            "query_width": null,
+            "size": {
+              "width": 120,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.wired.com/photos/662bfebb91b8ce9c18843a2f/master/w_240,c_limit/Sea-to-Summit-Spark-Sleeping-Bag-Reviewer-Photo-SOURCE-Scott-Gilbertson.jpg",
+            "query_width": null,
+            "size": {
+              "width": 240,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.wired.com/photos/662bfebb91b8ce9c18843a2f/master/w_320,c_limit/Sea-to-Summit-Spark-Sleeping-Bag-Reviewer-Photo-SOURCE-Scott-Gilbertson.jpg",
+            "query_width": null,
+            "size": {
+              "width": 320,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.wired.com/photos/662bfebb91b8ce9c18843a2f/master/w_640,c_limit/Sea-to-Summit-Spark-Sleeping-Bag-Reviewer-Photo-SOURCE-Scott-Gilbertson.jpg",
+            "query_width": null,
+            "size": {
+              "width": 640,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.wired.com/photos/662bfebb91b8ce9c18843a2f/master/w_960,c_limit/Sea-to-Summit-Spark-Sleeping-Bag-Reviewer-Photo-SOURCE-Scott-Gilbertson.jpg",
+            "query_width": null,
+            "size": {
+              "width": 960,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.wired.com/photos/662bfebb91b8ce9c18843a2f/master/w_1280,c_limit/Sea-to-Summit-Spark-Sleeping-Bag-Reviewer-Photo-SOURCE-Scott-Gilbertson.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1280,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": false,
+        "description": "Grey and yellow sleeping bag on top of an inflatable sleeping pad, both on the grass",
+        "caption": "Sea to Summit Spark 15",
+        "authors": [
+          "Scott Gilbertson"
+        ],
+        "position": 617
+      },
+      {
+        "versions": [
+          {
+            "url": "https://media.wired.com/photos/662bfc4914ca43559658f9ae/master/w_120,c_limit/Therm-a-rest-Questar-20-Sleeping-Bag-Reviewer-Photo-SOURCE-Scott-Gilbertson.jpg",
+            "query_width": null,
+            "size": {
+              "width": 120,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.wired.com/photos/662bfc4914ca43559658f9ae/master/w_240,c_limit/Therm-a-rest-Questar-20-Sleeping-Bag-Reviewer-Photo-SOURCE-Scott-Gilbertson.jpg",
+            "query_width": null,
+            "size": {
+              "width": 240,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.wired.com/photos/662bfc4914ca43559658f9ae/master/w_320,c_limit/Therm-a-rest-Questar-20-Sleeping-Bag-Reviewer-Photo-SOURCE-Scott-Gilbertson.jpg",
+            "query_width": null,
+            "size": {
+              "width": 320,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.wired.com/photos/662bfc4914ca43559658f9ae/master/w_640,c_limit/Therm-a-rest-Questar-20-Sleeping-Bag-Reviewer-Photo-SOURCE-Scott-Gilbertson.jpg",
+            "query_width": null,
+            "size": {
+              "width": 640,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.wired.com/photos/662bfc4914ca43559658f9ae/master/w_960,c_limit/Therm-a-rest-Questar-20-Sleeping-Bag-Reviewer-Photo-SOURCE-Scott-Gilbertson.jpg",
+            "query_width": null,
+            "size": {
+              "width": 960,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.wired.com/photos/662bfc4914ca43559658f9ae/master/w_1280,c_limit/Therm-a-rest-Questar-20-Sleeping-Bag-Reviewer-Photo-SOURCE-Scott-Gilbertson.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1280,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": false,
+        "description": "Crumpled grey sleeping bag on top of light grey inflatable sleeping pad, both on the ground",
+        "caption": "Therm-a-Rest Questar 20F Sleeping Bag",
+        "authors": [
+          "Scott Gilbertson"
+        ],
+        "position": 668
+      },
+      {
+        "versions": [
+          {
+            "url": "https://media.wired.com/photos/662bff6245b043efb4b532ad/master/w_120,c_limit/Marmot-NanoWave-45-Sleeping-Bag-Offwhite-Background-SOURCE-Backcountry.com.jpg",
+            "query_width": null,
+            "size": {
+              "width": 120,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.wired.com/photos/662bff6245b043efb4b532ad/master/w_240,c_limit/Marmot-NanoWave-45-Sleeping-Bag-Offwhite-Background-SOURCE-Backcountry.com.jpg",
+            "query_width": null,
+            "size": {
+              "width": 240,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.wired.com/photos/662bff6245b043efb4b532ad/master/w_320,c_limit/Marmot-NanoWave-45-Sleeping-Bag-Offwhite-Background-SOURCE-Backcountry.com.jpg",
+            "query_width": null,
+            "size": {
+              "width": 320,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.wired.com/photos/662bff6245b043efb4b532ad/master/w_640,c_limit/Marmot-NanoWave-45-Sleeping-Bag-Offwhite-Background-SOURCE-Backcountry.com.jpg",
+            "query_width": null,
+            "size": {
+              "width": 640,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.wired.com/photos/662bff6245b043efb4b532ad/master/w_960,c_limit/Marmot-NanoWave-45-Sleeping-Bag-Offwhite-Background-SOURCE-Backcountry.com.jpg",
+            "query_width": null,
+            "size": {
+              "width": 960,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.wired.com/photos/662bff6245b043efb4b532ad/master/w_1280,c_limit/Marmot-NanoWave-45-Sleeping-Bag-Offwhite-Background-SOURCE-Backcountry.com.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1280,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": false,
+        "description": "Overhead view of red sleeping bag, fully closed with only an opening toward the top",
+        "caption": "Marmot Nanowave 45",
+        "authors": [
+          "Backcountry"
+        ],
+        "position": 839
+      },
+      {
+        "versions": [
+          {
+            "url": "https://media.wired.com/photos/662bfcda4d4e640b50fb40eb/master/w_120,c_limit/REI-Magma-15-Reviewer-Photo-Source-Scott-Gilbertson.jpg",
+            "query_width": null,
+            "size": {
+              "width": 120,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.wired.com/photos/662bfcda4d4e640b50fb40eb/master/w_240,c_limit/REI-Magma-15-Reviewer-Photo-Source-Scott-Gilbertson.jpg",
+            "query_width": null,
+            "size": {
+              "width": 240,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.wired.com/photos/662bfcda4d4e640b50fb40eb/master/w_320,c_limit/REI-Magma-15-Reviewer-Photo-Source-Scott-Gilbertson.jpg",
+            "query_width": null,
+            "size": {
+              "width": 320,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.wired.com/photos/662bfcda4d4e640b50fb40eb/master/w_640,c_limit/REI-Magma-15-Reviewer-Photo-Source-Scott-Gilbertson.jpg",
+            "query_width": null,
+            "size": {
+              "width": 640,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.wired.com/photos/662bfcda4d4e640b50fb40eb/master/w_960,c_limit/REI-Magma-15-Reviewer-Photo-Source-Scott-Gilbertson.jpg",
+            "query_width": null,
+            "size": {
+              "width": 960,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.wired.com/photos/662bfcda4d4e640b50fb40eb/master/w_1280,c_limit/REI-Magma-15-Reviewer-Photo-Source-Scott-Gilbertson.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1280,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": false,
+        "description": "Grey sleeping bag on top of light blue inflatable sleeping pad, both laying in the grass",
+        "caption": "REI Co-op Magma 15 Sleeping Bag",
+        "authors": [
+          "Scott Gilbertson"
+        ],
+        "position": 879
+      },
+      {
+        "versions": [
+          {
+            "url": "https://media.wired.com/photos/662bfd74f9c2fe3d844fe148/master/w_120,c_limit/Rab-Expedition-1000-Sleeping-Bag-Offwhite-Background-SOURCE-Rab.jpg",
+            "query_width": null,
+            "size": {
+              "width": 120,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.wired.com/photos/662bfd74f9c2fe3d844fe148/master/w_240,c_limit/Rab-Expedition-1000-Sleeping-Bag-Offwhite-Background-SOURCE-Rab.jpg",
+            "query_width": null,
+            "size": {
+              "width": 240,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.wired.com/photos/662bfd74f9c2fe3d844fe148/master/w_320,c_limit/Rab-Expedition-1000-Sleeping-Bag-Offwhite-Background-SOURCE-Rab.jpg",
+            "query_width": null,
+            "size": {
+              "width": 320,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.wired.com/photos/662bfd74f9c2fe3d844fe148/master/w_640,c_limit/Rab-Expedition-1000-Sleeping-Bag-Offwhite-Background-SOURCE-Rab.jpg",
+            "query_width": null,
+            "size": {
+              "width": 640,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.wired.com/photos/662bfd74f9c2fe3d844fe148/master/w_960,c_limit/Rab-Expedition-1000-Sleeping-Bag-Offwhite-Background-SOURCE-Rab.jpg",
+            "query_width": null,
+            "size": {
+              "width": 960,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.wired.com/photos/662bfd74f9c2fe3d844fe148/master/w_1280,c_limit/Rab-Expedition-1000-Sleeping-Bag-Offwhite-Background-SOURCE-Rab.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1280,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": false,
+        "description": "Overhead view of red sleeping bag, fully closed with only an opening toward the top",
+        "caption": "Rab Expedition 1000",
+        "authors": [
+          "Rab"
+        ],
+        "position": 1046
+      },
+      {
+        "versions": [
+          {
+            "url": "https://media.wired.com/photos/662c002c4000b7937b7fce20/master/w_120,c_limit/Therm-a-Rest-Vesper-32-Sleeping-Bag-Offwhite-Background-SOURCE-Amazon.jpg",
+            "query_width": null,
+            "size": {
+              "width": 120,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.wired.com/photos/662c002c4000b7937b7fce20/master/w_240,c_limit/Therm-a-Rest-Vesper-32-Sleeping-Bag-Offwhite-Background-SOURCE-Amazon.jpg",
+            "query_width": null,
+            "size": {
+              "width": 240,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.wired.com/photos/662c002c4000b7937b7fce20/master/w_320,c_limit/Therm-a-Rest-Vesper-32-Sleeping-Bag-Offwhite-Background-SOURCE-Amazon.jpg",
+            "query_width": null,
+            "size": {
+              "width": 320,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.wired.com/photos/662c002c4000b7937b7fce20/master/w_640,c_limit/Therm-a-Rest-Vesper-32-Sleeping-Bag-Offwhite-Background-SOURCE-Amazon.jpg",
+            "query_width": null,
+            "size": {
+              "width": 640,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.wired.com/photos/662c002c4000b7937b7fce20/master/w_960,c_limit/Therm-a-Rest-Vesper-32-Sleeping-Bag-Offwhite-Background-SOURCE-Amazon.jpg",
+            "query_width": null,
+            "size": {
+              "width": 960,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.wired.com/photos/662c002c4000b7937b7fce20/master/w_1280,c_limit/Therm-a-Rest-Vesper-32-Sleeping-Bag-Offwhite-Background-SOURCE-Amazon.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1280,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": false,
+        "description": "Shiny cone-shaped teal sleeping bag, partially opened",
+        "caption": "Therm-a-Rest Vesper 32",
+        "authors": [
+          "Amazon"
+        ],
+        "position": 1085
+      },
+      {
+        "versions": [
+          {
+            "url": "https://media.wired.com/photos/662c00c714ca43559658f9b6/master/w_120,c_limit/REI-Kindercone-Kids-Sleeping-bag-Offwhite-Background-SOURCE-REI.jpg",
+            "query_width": null,
+            "size": {
+              "width": 120,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.wired.com/photos/662c00c714ca43559658f9b6/master/w_240,c_limit/REI-Kindercone-Kids-Sleeping-bag-Offwhite-Background-SOURCE-REI.jpg",
+            "query_width": null,
+            "size": {
+              "width": 240,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.wired.com/photos/662c00c714ca43559658f9b6/master/w_320,c_limit/REI-Kindercone-Kids-Sleeping-bag-Offwhite-Background-SOURCE-REI.jpg",
+            "query_width": null,
+            "size": {
+              "width": 320,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.wired.com/photos/662c00c714ca43559658f9b6/master/w_640,c_limit/REI-Kindercone-Kids-Sleeping-bag-Offwhite-Background-SOURCE-REI.jpg",
+            "query_width": null,
+            "size": {
+              "width": 640,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.wired.com/photos/662c00c714ca43559658f9b6/master/w_960,c_limit/REI-Kindercone-Kids-Sleeping-bag-Offwhite-Background-SOURCE-REI.jpg",
+            "query_width": null,
+            "size": {
+              "width": 960,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.wired.com/photos/662c00c714ca43559658f9b6/master/w_1280,c_limit/REI-Kindercone-Kids-Sleeping-bag-Offwhite-Background-SOURCE-REI.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1280,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": false,
+        "description": "Puffy green cone-shaped sleeping bag",
+        "caption": "REI Co-op Kindercone",
+        "authors": [
+          "REI"
+        ],
+        "position": 1257
+      },
+      {
+        "versions": [
+          {
+            "url": "https://media.wired.com/photos/662c01ad4000b7937b7fce22/master/w_120,c_limit/Marmot-Ultra-Elite-20-Sleeping-Bag-Offwhite-Background-SOURCE-Amazon.jpg",
+            "query_width": null,
+            "size": {
+              "width": 120,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.wired.com/photos/662c01ad4000b7937b7fce22/master/w_240,c_limit/Marmot-Ultra-Elite-20-Sleeping-Bag-Offwhite-Background-SOURCE-Amazon.jpg",
+            "query_width": null,
+            "size": {
+              "width": 240,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.wired.com/photos/662c01ad4000b7937b7fce22/master/w_320,c_limit/Marmot-Ultra-Elite-20-Sleeping-Bag-Offwhite-Background-SOURCE-Amazon.jpg",
+            "query_width": null,
+            "size": {
+              "width": 320,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.wired.com/photos/662c01ad4000b7937b7fce22/master/w_640,c_limit/Marmot-Ultra-Elite-20-Sleeping-Bag-Offwhite-Background-SOURCE-Amazon.jpg",
+            "query_width": null,
+            "size": {
+              "width": 640,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.wired.com/photos/662c01ad4000b7937b7fce22/master/w_960,c_limit/Marmot-Ultra-Elite-20-Sleeping-Bag-Offwhite-Background-SOURCE-Amazon.jpg",
+            "query_width": null,
+            "size": {
+              "width": 960,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.wired.com/photos/662c01ad4000b7937b7fce22/master/w_1280,c_limit/Marmot-Ultra-Elite-20-Sleeping-Bag-Offwhite-Background-SOURCE-Amazon.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1280,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": false,
+        "description": "Blue sleeping bag",
+        "caption": "Marmot Ultra Elite 20",
+        "authors": [
+          "Amazon"
+        ],
+        "position": 1288
+      },
+      {
+        "versions": [
+          {
+            "url": "https://media.wired.com/photos/662c02a20f7a312efa20601e/master/w_120,c_limit/Nemo-Forte-20-Sleeping-Bag-Offwhite-Background-SOURCE-Nemo.jpg",
+            "query_width": null,
+            "size": {
+              "width": 120,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.wired.com/photos/662c02a20f7a312efa20601e/master/w_240,c_limit/Nemo-Forte-20-Sleeping-Bag-Offwhite-Background-SOURCE-Nemo.jpg",
+            "query_width": null,
+            "size": {
+              "width": 240,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.wired.com/photos/662c02a20f7a312efa20601e/master/w_320,c_limit/Nemo-Forte-20-Sleeping-Bag-Offwhite-Background-SOURCE-Nemo.jpg",
+            "query_width": null,
+            "size": {
+              "width": 320,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.wired.com/photos/662c02a20f7a312efa20601e/master/w_640,c_limit/Nemo-Forte-20-Sleeping-Bag-Offwhite-Background-SOURCE-Nemo.jpg",
+            "query_width": null,
+            "size": {
+              "width": 640,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.wired.com/photos/662c02a20f7a312efa20601e/master/w_960,c_limit/Nemo-Forte-20-Sleeping-Bag-Offwhite-Background-SOURCE-Nemo.jpg",
+            "query_width": null,
+            "size": {
+              "width": 960,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.wired.com/photos/662c02a20f7a312efa20601e/master/w_1280,c_limit/Nemo-Forte-20-Sleeping-Bag-Offwhite-Background-SOURCE-Nemo.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1280,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": false,
+        "description": "Dark blue sleeping bag, partially opened to show the yellow interior",
+        "caption": "Nemo Equipment Forte 20",
+        "authors": [
+          "Nemo"
+        ],
+        "position": 1453
+      },
+      {
+        "versions": [
+          {
+            "url": "https://media.wired.com/photos/662c076558d3bedf05061568/master/w_120,c_limit/Sleeping-Bags-Reviewer-Photo-SOURCE-Scott-Gilbertson.jpg",
+            "query_width": null,
+            "size": {
+              "width": 120,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.wired.com/photos/662c076558d3bedf05061568/master/w_240,c_limit/Sleeping-Bags-Reviewer-Photo-SOURCE-Scott-Gilbertson.jpg",
+            "query_width": null,
+            "size": {
+              "width": 240,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.wired.com/photos/662c076558d3bedf05061568/master/w_320,c_limit/Sleeping-Bags-Reviewer-Photo-SOURCE-Scott-Gilbertson.jpg",
+            "query_width": null,
+            "size": {
+              "width": 320,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.wired.com/photos/662c076558d3bedf05061568/master/w_640,c_limit/Sleeping-Bags-Reviewer-Photo-SOURCE-Scott-Gilbertson.jpg",
+            "query_width": null,
+            "size": {
+              "width": 640,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.wired.com/photos/662c076558d3bedf05061568/master/w_960,c_limit/Sleeping-Bags-Reviewer-Photo-SOURCE-Scott-Gilbertson.jpg",
+            "query_width": null,
+            "size": {
+              "width": 960,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.wired.com/photos/662c076558d3bedf05061568/master/w_1280,c_limit/Sleeping-Bags-Reviewer-Photo-SOURCE-Scott-Gilbertson.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1280,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.wired.com/photos/662c076558d3bedf05061568/master/w_1600,c_limit/Sleeping-Bags-Reviewer-Photo-SOURCE-Scott-Gilbertson.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1600,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": false,
+        "description": "3 sleeping bags side by side on top of the ground",
+        "caption": null,
+        "authors": [
+          "Scott Gilbertson"
+        ],
+        "position": 1805
+      }
+    ],
     "publishing_date": "2024-04-28 10:00:00-04:00",
     "title": "11 Best Sleeping Bags (2024): Ultralight, for Car Campers, Warm Weather, for Kids",
     "topics": [

@@ -5,10 +5,12 @@ from lxml.etree import XPath
 from lxml.html import HtmlElement
 
 from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute
+from fundus.parser.data import Image
 from fundus.parser.utility import (
     extract_article_body_with_selector,
     generic_author_parsing,
     generic_date_parsing,
+    image_extraction,
 )
 
 
@@ -66,3 +68,14 @@ class SRFParser(ParserProxy):
             else:
                 node: HtmlElement = title_node[0]
                 return node.text_content()
+
+        @attribute
+        def images(self) -> List[Image]:
+            return image_extraction(
+                doc=self.precomputed.doc,
+                paragraph_selector=self._paragraph_selector,
+                caption_selector=XPath("./ancestor::figure//span[@class='media-caption__description']"),
+                author_selector=XPath("./ancestor::figure//span[@class='media-caption__source']"),
+                image_selector=XPath("//picture[@class='image ']//img"),
+                lower_boundary_selector=XPath("(//div[@class='sharing-bar__container'])[2]"),
+            )

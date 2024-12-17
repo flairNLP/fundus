@@ -61,6 +61,26 @@
         }
       ]
     },
+    "images": [
+      {
+        "versions": [
+          {
+            "url": "https://static.toiimg.com/thumb/msid-112916719,imgsize-3011252,width-400,resizemode-4/112916719.jpg",
+            "query_width": null,
+            "size": {
+              "width": 400,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": false,
+        "description": "Anti-terror op turns sinister: Pakistani netizens being 'walled off' as army raises spectre of 'digital terrorism'",
+        "caption": null,
+        "authors": [],
+        "position": 385
+      }
+    ],
     "publishing_date": "2024-09-02 17:07:00+05:30",
     "title": "Anti-terror op turns sinister: Pakistani netizens being 'walled off' as army raises spectre of 'digital terrorism'",
     "topics": [

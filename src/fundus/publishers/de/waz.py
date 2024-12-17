@@ -5,12 +5,13 @@ from typing import List, Optional
 from lxml.cssselect import CSSSelector
 from lxml.etree import XPath
 
-from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute
+from fundus.parser import ArticleBody, BaseParser, Image, ParserProxy, attribute
 from fundus.parser.utility import (
     extract_article_body_with_selector,
     generic_author_parsing,
     generic_date_parsing,
     generic_topic_parsing,
+    image_extraction,
 )
 
 
@@ -54,6 +55,16 @@ class WAZParser(ParserProxy):
                 re.sub(r"\s*:.+", "", node.text_content()).strip()
                 for node in self._topics_selector(self.precomputed.doc)
             ]
+
+        @attribute
+        def images(self) -> List[Image]:
+            return image_extraction(
+                doc=self.precomputed.doc,
+                paragraph_selector=self._paragraph_selector,
+                lower_boundary_selector=XPath("//a[@href='/' and contains(text(), 'Startseite')]"),
+                caption_selector=XPath("(./ancestor::figure//figcaption//span)[1]"),
+                author_selector=XPath("(./ancestor::figure//figcaption//span)[2]"),
+            )
 
     class V1_1(V1):
         VALID_UNTIL = datetime.date.today()

@@ -41,6 +41,93 @@
         }
       ]
     },
+    "images": [
+      {
+        "versions": [
+          {
+            "url": "https://wp.inews.co.uk/wp-content/uploads/2023/08/comp-1693355557.png?crop=3px%2C0px%2C1494px%2C844px&resize=640%2C360",
+            "query_width": null,
+            "size": {
+              "width": 640,
+              "height": 360
+            },
+            "type": "image/png"
+          }
+        ],
+        "is_cover": true,
+        "description": null,
+        "caption": "All six British players won their matches on Tuesday at the US Open",
+        "authors": [
+          "Getty/AP"
+        ],
+        "position": 451
+      },
+      {
+        "versions": [
+          {
+            "url": "https://wp.inews.co.uk/wp-content/uploads/2023/08/SEI_169332397.jpg?resize=300,218",
+            "query_width": null,
+            "size": {
+              "width": 300,
+              "height": 218
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://wp.inews.co.uk/wp-content/uploads/2023/08/SEI_169332397.jpg?resize=380,276",
+            "query_width": null,
+            "size": {
+              "width": 380,
+              "height": 276
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://wp.inews.co.uk/wp-content/uploads/2023/08/SEI_169332397.jpg?resize=760,552",
+            "query_width": null,
+            "size": {
+              "width": 760,
+              "height": 552
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://wp.inews.co.uk/wp-content/uploads/2023/08/SEI_169332397.jpg?resize=1536,1115",
+            "query_width": null,
+            "size": {
+              "width": 1536,
+              "height": 1115
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://wp.inews.co.uk/wp-content/uploads/2023/08/SEI_169332397.jpg?resize=2048,1487",
+            "query_width": null,
+            "size": {
+              "width": 2048,
+              "height": 1487
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://wp.inews.co.uk/wp-content/uploads/2023/08/SEI_169332397.jpg",
+            "query_width": null,
+            "size": {
+              "width": 2445,
+              "height": 1775
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": false,
+        "description": "Tennis - U.S. Open - Flushing Meadows, New York, United States - August 29, 2023 Britain's Andy Murray reacts during his first round match against France's Corentin Moutet REUTERS/Mike Segar TPX IMAGES OF THE DAY",
+        "caption": "Britain’s Andy Murray reacts during his first round match against France’s Corentin Moutet",
+        "authors": [
+          "Reuters"
+        ],
+        "position": 521
+      }
+    ],
     "publishing_date": "2023-08-30 00:55:49+00:00",
     "title": "US Open 2023 results: Andy Murray among six British players to record first-round wins without dropping a set",
     "topics": [

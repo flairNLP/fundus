@@ -27,6 +27,31 @@
         }
       ]
     },
+    "images": [
+      {
+        "versions": [
+          {
+            "url": "https://www.golem.de/2404/184627-442864-442863_rc.jpg",
+            "query_width": null,
+            "size": null,
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.golem.de/2404/184627-442866-442863.jpg",
+            "query_width": null,
+            "size": null,
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": true,
+        "description": "Samsung hat Probleme vor Gericht.",
+        "caption": "Samsung hat Probleme vor Gericht.",
+        "authors": [
+          "Tobias Költzsch/Golem.de"
+        ],
+        "position": 385
+      }
+    ],
     "publishing_date": "2024-04-28 14:26:01+00:00",
     "title": "LTE-Patent: Samsung soll wegen Patentklage Smartphones zerstören",
     "topics": [

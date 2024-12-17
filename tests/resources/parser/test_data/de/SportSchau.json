@@ -38,6 +38,263 @@
         }
       ]
     },
+    "images": [
+      {
+        "versions": [
+          {
+            "url": "https://images.sportschau.de/image/7712864a-4701-4682-b09d-0ef6c2716bff/AAABjxH0Dsg/AAABjwnlXhk/original/liverpool-enttaeuscht-110.jpg",
+            "query_width": null,
+            "size": null,
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://images.sportschau.de/image/7712864a-4701-4682-b09d-0ef6c2716bff/AAABjxH0Dsg/AAABjwnlLPo/16x9-640/liverpool-enttaeuscht-110.jpg",
+            "query_width": "max-width:420",
+            "size": {
+              "width": 640,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://images.sportschau.de/image/7712864a-4701-4682-b09d-0ef6c2716bff/AAABjxH0Dsg/AAABjwnlLPo/16x9-640/liverpool-enttaeuscht-110.webp",
+            "query_width": "max-width:420",
+            "size": {
+              "width": 640,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://images.sportschau.de/image/7712864a-4701-4682-b09d-0ef6c2716bff/AAABjxH0Dsg/AAABjwnlMRA/16x9-768/liverpool-enttaeuscht-110.jpg",
+            "query_width": "max-width:767",
+            "size": {
+              "width": 768,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://images.sportschau.de/image/7712864a-4701-4682-b09d-0ef6c2716bff/AAABjxH0Dsg/AAABjwnlMRA/16x9-768/liverpool-enttaeuscht-110.webp",
+            "query_width": "max-width:767",
+            "size": {
+              "width": 768,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://images.sportschau.de/image/7712864a-4701-4682-b09d-0ef6c2716bff/AAABjxH0Dsg/AAABjwnlWck/20x9-960/liverpool-enttaeuscht-110.jpg",
+            "query_width": "max-width:1023",
+            "size": {
+              "width": 960,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://images.sportschau.de/image/7712864a-4701-4682-b09d-0ef6c2716bff/AAABjxH0Dsg/AAABjwnlWck/20x9-960/liverpool-enttaeuscht-110.webp",
+            "query_width": "max-width:1023",
+            "size": {
+              "width": 960,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://images.sportschau.de/image/7712864a-4701-4682-b09d-0ef6c2716bff/AAABjxH0Dsg/AAABjwnlVT8/20x9-1280/liverpool-enttaeuscht-110.jpg",
+            "query_width": "min-width:1024",
+            "size": {
+              "width": 1280,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://images.sportschau.de/image/7712864a-4701-4682-b09d-0ef6c2716bff/AAABjxH0Dsg/AAABjwnlVT8/20x9-1280/liverpool-enttaeuscht-110.webp",
+            "query_width": "min-width:1024",
+            "size": {
+              "width": 1280,
+              "height": 0
+            },
+            "type": "image/webp"
+          }
+        ],
+        "is_cover": true,
+        "description": "Andrew Robertson vom FC Liverpool",
+        "caption": null,
+        "authors": [
+          "AFP/Paul Ellis"
+        ],
+        "position": 2725
+      },
+      {
+        "versions": [
+          {
+            "url": "https://images.sportschau.de/image/b3189e59-2660-4145-8600-c7ac6d708481/AAABjxGoeOU/AAABjwnlTQs/1x1-640/everton-jubel-104.jpg",
+            "query_width": "max-width:420",
+            "size": {
+              "width": 640,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://images.sportschau.de/image/b3189e59-2660-4145-8600-c7ac6d708481/AAABjxGoeOU/AAABjwnlTQs/1x1-640/everton-jubel-104.webp",
+            "query_width": "max-width:420",
+            "size": {
+              "width": 640,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://images.sportschau.de/image/b3189e59-2660-4145-8600-c7ac6d708481/AAABjxGoeOU/AAABjwnlMRA/16x9-768/everton-jubel-104.jpg",
+            "query_width": "min-width:1024",
+            "size": {
+              "width": 768,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://images.sportschau.de/image/b3189e59-2660-4145-8600-c7ac6d708481/AAABjxGoeOU/AAABjwnlMRA/16x9-768/everton-jubel-104.webp",
+            "query_width": "min-width:1024",
+            "size": {
+              "width": 768,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://images.sportschau.de/image/b3189e59-2660-4145-8600-c7ac6d708481/AAABjxGoeOU/AAABjwnlUSc/1x1-840/everton-jubel-104.jpg",
+            "query_width": "max-width:767",
+            "size": {
+              "width": 840,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://images.sportschau.de/image/b3189e59-2660-4145-8600-c7ac6d708481/AAABjxGoeOU/AAABjwnlUSc/1x1-840/everton-jubel-104.webp",
+            "query_width": "max-width:767",
+            "size": {
+              "width": 840,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://images.sportschau.de/image/b3189e59-2660-4145-8600-c7ac6d708481/AAABjxGoeOU/AAABjwnlNY8/16x9-960/everton-jubel-104.jpg",
+            "query_width": "max-width:1023",
+            "size": {
+              "width": 960,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://images.sportschau.de/image/b3189e59-2660-4145-8600-c7ac6d708481/AAABjxGoeOU/AAABjwnlNY8/16x9-960/everton-jubel-104.webp",
+            "query_width": "max-width:1023",
+            "size": {
+              "width": 960,
+              "height": 0
+            },
+            "type": "image/webp"
+          }
+        ],
+        "is_cover": false,
+        "description": "Jarrad Branthwaite (FC Everton) jubelt nach seinem Treffer gegen den FC Liverpool",
+        "caption": "Jarrad Branthwaite (FC Everton) jubelt nach seinem Treffer gegen den FC Liverpool",
+        "authors": [
+          "Getty Images/Naomi Baker"
+        ],
+        "position": 2774
+      },
+      {
+        "versions": [
+          {
+            "url": "https://images.sportschau.de/image/326dffe1-008e-4364-a207-efc93172e129/AAABjxGMSyg/AAABjwnlTQs/1x1-640/manchester-sheffield-100.jpg",
+            "query_width": "max-width:420",
+            "size": {
+              "width": 640,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://images.sportschau.de/image/326dffe1-008e-4364-a207-efc93172e129/AAABjxGMSyg/AAABjwnlTQs/1x1-640/manchester-sheffield-100.webp",
+            "query_width": "max-width:420",
+            "size": {
+              "width": 640,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://images.sportschau.de/image/326dffe1-008e-4364-a207-efc93172e129/AAABjxGMSyg/AAABjwnlMRA/16x9-768/manchester-sheffield-100.jpg",
+            "query_width": "min-width:1024",
+            "size": {
+              "width": 768,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://images.sportschau.de/image/326dffe1-008e-4364-a207-efc93172e129/AAABjxGMSyg/AAABjwnlMRA/16x9-768/manchester-sheffield-100.webp",
+            "query_width": "min-width:1024",
+            "size": {
+              "width": 768,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://images.sportschau.de/image/326dffe1-008e-4364-a207-efc93172e129/AAABjxGMSyg/AAABjwnlUSc/1x1-840/manchester-sheffield-100.jpg",
+            "query_width": "max-width:767",
+            "size": {
+              "width": 840,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://images.sportschau.de/image/326dffe1-008e-4364-a207-efc93172e129/AAABjxGMSyg/AAABjwnlUSc/1x1-840/manchester-sheffield-100.webp",
+            "query_width": "max-width:767",
+            "size": {
+              "width": 840,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://images.sportschau.de/image/326dffe1-008e-4364-a207-efc93172e129/AAABjxGMSyg/AAABjwnlNY8/16x9-960/manchester-sheffield-100.jpg",
+            "query_width": "max-width:1023",
+            "size": {
+              "width": 960,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://images.sportschau.de/image/326dffe1-008e-4364-a207-efc93172e129/AAABjxGMSyg/AAABjwnlNY8/16x9-960/manchester-sheffield-100.webp",
+            "query_width": "max-width:1023",
+            "size": {
+              "width": 960,
+              "height": 0
+            },
+            "type": "image/webp"
+          }
+        ],
+        "is_cover": false,
+        "description": "Ben Osborn (Sheffield United) im Zweikampf mit Antony (Manchester United)",
+        "caption": "Ben Osborn (Sheffield United) im Zweikampf mit Antony (Manchester United)",
+        "authors": [
+          "AP/Dave Thompson"
+        ],
+        "position": 2813
+      }
+    ],
     "publishing_date": "2024-04-24 22:58:49",
     "title": "Rückschlag im Titelkampf - Liverpool verliert bei Everton",
     "topics": [

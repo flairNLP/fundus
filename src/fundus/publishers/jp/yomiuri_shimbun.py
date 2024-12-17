@@ -4,12 +4,13 @@ from typing import List, Optional
 
 from lxml.etree import XPath
 
-from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute
+from fundus.parser import ArticleBody, BaseParser, Image, ParserProxy, attribute
 from fundus.parser.utility import (
     extract_article_body_with_selector,
     generic_author_parsing,
     generic_date_parsing,
     generic_topic_parsing,
+    image_extraction,
 )
 
 
@@ -17,7 +18,7 @@ class YomiuriShimbunParser(ParserProxy):
     class V1(BaseParser):
         _paragraph_selector = XPath("//div[@class='p-main-contents ']/p")
 
-        _topic_selector = XPath("//div[@class='p-related-tags']/ul/li/a")
+        _topic_selector = XPath("//div[contains(@class,'p-related-tags')]/ul/li/a")
 
         @attribute
         def body(self) -> Optional[ArticleBody]:
@@ -41,3 +42,14 @@ class YomiuriShimbunParser(ParserProxy):
         @attribute
         def topics(self) -> List[str]:
             return [node.text_content() for node in self._topic_selector(self.precomputed.doc)]
+
+        @attribute
+        def images(self) -> List[Image]:
+            return image_extraction(
+                doc=self.precomputed.doc,
+                paragraph_selector=self._paragraph_selector,
+                image_selector=XPath("//div[@class='p-main-contents ']//img"),
+                upper_boundary_selector=XPath("//article"),
+                relative_urls=True,
+                author_selector=re.compile(r"(?P<credits>＝.*)"),
+            )

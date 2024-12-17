@@ -59,6 +59,83 @@
         }
       ]
     },
+    "images": [
+      {
+        "versions": [
+          {
+            "url": "https://cdn.netzpolitik.org/wp-upload/2024/04/housewife_baking_bread_advertisement_1950_1600px-160x90.jpg",
+            "query_width": null,
+            "size": {
+              "width": 160,
+              "height": 90
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://cdn.netzpolitik.org/wp-upload/2024/04/housewife_baking_bread_advertisement_1950_1600px-380x214.jpg",
+            "query_width": null,
+            "size": {
+              "width": 380,
+              "height": 214
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://cdn.netzpolitik.org/wp-upload/2024/04/housewife_baking_bread_advertisement_1950_1600px-660x372.jpg",
+            "query_width": null,
+            "size": {
+              "width": 660,
+              "height": 371
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://cdn.netzpolitik.org/wp-upload/2024/04/housewife_baking_bread_advertisement_1950_1600px-860x484.jpg",
+            "query_width": null,
+            "size": {
+              "width": 860,
+              "height": 484
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://cdn.netzpolitik.org/wp-upload/2024/04/housewife_baking_bread_advertisement_1950_1600px-1200x675.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1200,
+              "height": 675
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://cdn.netzpolitik.org/wp-upload/2024/04/housewife_baking_bread_advertisement_1950_1600px-1536x863.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1536,
+              "height": 864
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://cdn.netzpolitik.org/wp-upload/2024/04/housewife_baking_bread_advertisement_1950_1600px.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1600,
+              "height": 900
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": true,
+        "description": "housewife baking bread, advertisement 1950's",
+        "caption": "So beschaulich geht es nur in der Werbung der 1950er Jahre zu – und auf Instagram",
+        "authors": [
+          "– Midjourney („housewife baking bread",
+          "advertisement 1950’s“)"
+        ],
+        "position": 170
+      }
+    ],
     "publishing_date": "2024-04-28 08:52:55+02:00",
     "title": "Breakpoint: Hilfe, die Fundis kommen!",
     "topics": [

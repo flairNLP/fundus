@@ -89,6 +89,122 @@
         }
       ]
     },
+    "images": [
+      {
+        "versions": [
+          {
+            "url": "https://www.dagbladet.no/images/81343798.jpg?imageId=81343798&x=2.564102564102564&y=0&cropw=96.93877551020408&croph=99.54337899543378&width=760&height=436&compression=70",
+            "query_width": "max-width:640",
+            "size": {
+              "width": 760,
+              "height": 436
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.dagbladet.no/images/81343798.jpg?imageId=81343798&x=0&y=0&cropw=100&croph=100&width=912&height=507&compression=80",
+            "query_width": "max-width:1024",
+            "size": {
+              "width": 912,
+              "height": 507
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.dagbladet.no/images/81343798.jpg?imageId=81343798&x=0&y=0&cropw=100&croph=100&width=993&height=552&compression=80",
+            "query_width": null,
+            "size": {
+              "width": 993,
+              "height": 552
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": true,
+        "description": "KNIV: Denne kniven ble ifølge Metropolitan Police brukt til de ulovlige kastreringene. Foto: Metropolitan Police",
+        "caption": "KNIV: Denne kniven ble ifølge Metropolitan Police brukt til de ulovlige kastreringene.",
+        "authors": [
+          "Metropolitan Police Vis mer"
+        ],
+        "position": 344
+      },
+      {
+        "versions": [
+          {
+            "url": "https://www.dagbladet.no/images/78341581.jpg?imageId=78341581&x=0&y=7.3417721518987&cropw=97.643097643098&croph=89.367088607595&width=533&height=325&compression=80",
+            "query_width": "max-width:1024",
+            "size": {
+              "width": 533,
+              "height": 325
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.dagbladet.no/images/78341581.jpg?imageId=78341581&x=0&y=7.3417721518987&cropw=97.643097643098&croph=89.367088607595&width=581&height=354&compression=80",
+            "query_width": null,
+            "size": {
+              "width": 581,
+              "height": 354
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.dagbladet.no/images/78341581.jpg?imageId=78341581&x=5.3908355795148255&y=1.6260162601626018&cropw=94.60916442048517&croph=98.3739837398374&width=702&height=484&compression=70",
+            "query_width": "max-width:640",
+            "size": {
+              "width": 702,
+              "height": 484
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": false,
+        "description": "DØMT: Nordmannen i 40-åra ble dømt i den sentrale straffesaksdomstolen i London, Old Bailey. Foto: AP",
+        "caption": "DØMT: Nordmannen i 40-åra ble dømt i den sentrale straffesaksdomstolen i London, Old Bailey.",
+        "authors": [
+          "AP Vis mer"
+        ],
+        "position": 417
+      },
+      {
+        "versions": [
+          {
+            "url": "https://www.dagbladet.no/images/81345120.jpg?imageId=81345120&x=0&y=0&cropw=47.269763651182&croph=88.311688311688&width=533&height=500&compression=80",
+            "query_width": "max-width:1024",
+            "size": {
+              "width": 533,
+              "height": 500
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.dagbladet.no/images/81345120.jpg?imageId=81345120&x=0&y=0&cropw=47.269763651182&croph=88.311688311688&width=581&height=545&compression=80",
+            "query_width": null,
+            "size": {
+              "width": 581,
+              "height": 545
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.dagbladet.no/images/81345120.jpg?imageId=81345120&x=0&y=0&cropw=35.670731707317074&croph=87.2210953346856&width=702&height=860&compression=70",
+            "query_width": "max-width:640",
+            "size": {
+              "width": 702,
+              "height": 860
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": false,
+        "description": "VIA NETT: Mannen livestreamet ifølge påtalemyndighetene de ulovlige operasjonene via dette nettstedet. Foto: Skjermdump / Way Back Machine",
+        "caption": "VIA NETT: Mannen livestreamet ifølge påtalemyndighetene de ulovlige operasjonene via dette nettstedet.",
+        "authors": [
+          "Skjermdump / Way Back Machine Vis mer"
+        ],
+        "position": 475
+      }
+    ],
     "publishing_date": "2024-05-09 11:26:41+00:00",
     "title": "Nordmann dømt til livstid",
     "topics": [

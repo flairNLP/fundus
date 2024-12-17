@@ -78,6 +78,110 @@
         }
       ]
     },
+    "images": [
+      {
+        "versions": [
+          {
+            "url": "https://media.lesechos.com/api/v1/images/view/6698afdc9e51df7acd56b6db/320x180/01102954371876-web-tete.jpg",
+            "query_width": "max-width:400",
+            "size": {
+              "width": 320,
+              "height": 180
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.lesechos.com/api/v1/images/view/6698afdc9e51df7acd56b6db/320x180-webp/01102954371876-web-tete.webp",
+            "query_width": "max-width:400",
+            "size": {
+              "width": 320,
+              "height": 180
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://media.lesechos.com/api/v1/images/view/6698afdc9e51df7acd56b6db/640x360/01102954371876-web-tete.jpg",
+            "query_width": "max-width:720",
+            "size": {
+              "width": 640,
+              "height": 360
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.lesechos.com/api/v1/images/view/6698afdc9e51df7acd56b6db/640x360-webp/01102954371876-web-tete.webp",
+            "query_width": "max-width:720",
+            "size": {
+              "width": 640,
+              "height": 360
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://media.lesechos.com/api/v1/images/view/6698afdc9e51df7acd56b6db/976x549/01102954371876-web-tete.jpg",
+            "query_width": "max-width:1024",
+            "size": {
+              "width": 976,
+              "height": 549
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.lesechos.com/api/v1/images/view/6698afdc9e51df7acd56b6db/976x549-webp/01102954371876-web-tete.webp",
+            "query_width": "max-width:1024",
+            "size": {
+              "width": 976,
+              "height": 549
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://media.lesechos.com/api/v1/images/view/6698afdc9e51df7acd56b6db/1024x576/01102954371876-web-tete.jpg",
+            "query_width": "max-width:1440",
+            "size": {
+              "width": 1024,
+              "height": 576
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.lesechos.com/api/v1/images/view/6698afdc9e51df7acd56b6db/1024x576-webp/01102954371876-web-tete.webp",
+            "query_width": "max-width:1440",
+            "size": {
+              "width": 1024,
+              "height": 576
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://media.lesechos.com/api/v1/images/view/6698afdc9e51df7acd56b6db/1280x720/01102954371876-web-tete.jpg",
+            "query_width": "min-width:1440.1",
+            "size": {
+              "width": 1280,
+              "height": 720
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.lesechos.com/api/v1/images/view/6698afdc9e51df7acd56b6db/1280x720-webp/01102954371876-web-tete.webp",
+            "query_width": "min-width:1440.1",
+            "size": {
+              "width": 1280,
+              "height": 720
+            },
+            "type": "image/webp"
+          }
+        ],
+        "is_cover": true,
+        "description": "Après trois ans de croissance effrénée, les voitures électriques n'ont connu qu'une légère hausse (+1,3 %) au premier semestre.",
+        "caption": "Après trois ans de croissance effrénée, les voitures électriques n'ont connu qu'une légère hausse",
+        "authors": [
+          "+1",
+          "3 %) au premier semestre. (Fred Scheiber/SIPA"
+        ],
+        "position": 322
+      }
+    ],
     "publishing_date": "2024-07-18 08:01:58+02:00",
     "title": "Europe : les ventes de voitures neuves ont progressé au premier semestre",
     "topics": [

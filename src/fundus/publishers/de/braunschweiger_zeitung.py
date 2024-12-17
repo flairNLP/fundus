@@ -5,12 +5,14 @@ from typing import List, Optional, Pattern
 from lxml.etree import XPath
 
 from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute
+from fundus.parser.data import Image
 from fundus.parser.utility import (
     apply_substitution_pattern_over_list,
     extract_article_body_with_selector,
     generic_author_parsing,
     generic_date_parsing,
     generic_topic_parsing,
+    image_extraction,
 )
 
 
@@ -64,3 +66,14 @@ class BSZParser(ParserProxy):
         @attribute
         def publishing_date(self) -> Optional[datetime.datetime]:
             return generic_date_parsing(self.precomputed.ld.bf_search("datePublished"))
+
+        @attribute
+        def images(self) -> List[Image]:
+            return image_extraction(
+                doc=self.precomputed.doc,
+                paragraph_selector=XPath(
+                    "//div[@class='article-body']//p[not(not(text()) or @rel='author' or em[@class='print'])]"
+                ),
+                image_selector=XPath("//img[not(contains(@class, 'rounded-full'))]"),
+                author_selector=re.compile(r"©(?P<credits>.*)"),
+            )

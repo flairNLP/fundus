@@ -1,13 +1,16 @@
 import datetime
+import re
 from typing import List, Optional
 
 from lxml.cssselect import CSSSelector
+from lxml.etree import XPath
 
-from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute
+from fundus.parser import ArticleBody, BaseParser, Image, ParserProxy, attribute
 from fundus.parser.utility import (
     extract_article_body_with_selector,
     generic_date_parsing,
     generic_topic_parsing,
+    image_extraction,
     parse_title_from_root,
     strip_nodes_to_text,
 )
@@ -48,3 +51,12 @@ class NetzpolitikOrgParser(ParserProxy):
         @attribute
         def authors(self) -> List[str]:
             return [node.text_content() for node in (self._author_selector(self.precomputed.doc) or [])]
+
+        @attribute
+        def images(self) -> List[Image]:
+            return image_extraction(
+                doc=self.precomputed.doc,
+                paragraph_selector=self._paragraph_selector,
+                caption_selector=XPath("./ancestor::figure//figcaption/text()"),
+                author_selector=XPath("./ancestor::figure//figcaption/span"),
+            )
