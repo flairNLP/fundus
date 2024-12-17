@@ -55,3 +55,22 @@ class ES(metaclass=PublisherGroup):
             for d in reversed(list(rrule(MONTHLY, dtstart=datetime(2019, 1, 1), until=datetime.now())))
         ],
     )
+    ElMundo = Publisher(
+        name="El Mundo",
+        domain="https://www.elmundo.es/",
+        parser=ElMundoParser,
+        sources=[
+            RSSFeed("https://e00-elmundo.uecdn.es/elmundo/rss/portada.xml"),
+            RSSFeed("https://e00-elmundo.uecdn.es/elmundo/rss/espana.xml"),
+        ],
+    )
+    ABC = Publisher(
+        name="ABC",
+        domain="https://www.abc.es/",
+        parser=ABCParser,
+        sources=[
+            NewsMap("https://www.abc.es/sitemap.xml"),
+            RSSFeed("https://www.abc.es/rss/2.0/espana/"),
+            RSSFeed("https://www.abc.es/rss/2.0/portada/"),
+        ],
+    )
