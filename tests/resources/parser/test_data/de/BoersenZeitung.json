@@ -158,6 +158,26 @@
         }
       ]
     },
+    "images": [
+      {
+        "versions": [
+          {
+            "url": "https://c02.purpledshub.com/uploads/sites/43/files/sites/35/2024/12/288454943-scaled.jpg",
+            "query_width": null,
+            "size": null,
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": true,
+        "description": "Der 1. FC Kaiserslautern hat nicht erst seit seiner Rückkehr in die zweite Liga vor zwei Jahren Fans in ganz Europa.",
+        "caption": "Der 1. FC Kaiserslautern hat nicht erst seit seiner Rückkehr in die zweite Liga vor zwei Jahren Fans in ganz Europa.",
+        "authors": [
+          "picture alliance/dpa",
+          "Jan Woitas"
+        ],
+        "position": 623
+      }
+    ],
     "publishing_date": "2024-12-16 12:30:00+00:00",
     "title": "Wero besteht Praxistest im digitalen Handel",
     "topics": [
