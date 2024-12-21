@@ -15,12 +15,16 @@ from fundus.parser.utility import (
 
 class TheBBCParser(ParserProxy):
     class V1(BaseParser):
-        _subheadline_selector = CSSSelector("div[data-component='subheadline-block']")
-        _summary_selector = XPath("//div[@data-component='text-block'][1] //p[b]")
+        _subheadline_selector = XPath(
+            "//div[@data-component='subheadline-block' or contains(@class, 'ebmt73l0')]//*[self::h2 or (self::p and b and position()>1)]"
+        )
+        _summary_selector = XPath(
+            "(//div[@data-component='text-block' or contains(@class, 'ebmt73l0')])[1] //p[b and position()=1]"
+        )
         _paragraph_selector = XPath(
-            "//div[@data-component='text-block'][1]//p[not(b) and text()] |"
-            "//div[@data-component='text-block'][position()>1] //p[text()] |"
-            "//div[@data-component='text-block'] //ul /li[text()]"
+            "//div[@data-component='text-block' or contains(@class, 'ebmt73l0')][1]//p[not(b) and text()] |"
+            "//div[@data-component='text-block' or contains(@class, 'ebmt73l0')][position()>1] //p[text()] |"
+            "//div[@data-component='text-block' or contains(@class, 'ebmt73l0')] //ul /li[text()]"
         )
 
         _topic_selector = CSSSelector(
