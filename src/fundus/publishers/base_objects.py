@@ -1,7 +1,8 @@
 import inspect
 from textwrap import indent
-from typing import Dict, Iterator, List, Optional, Type, Union
+from typing import Dict, Iterator, List, Optional, Set, Type, Union
 from urllib.robotparser import RobotFileParser
+from warnings import warn
 
 import requests
 
@@ -55,6 +56,7 @@ class Robots:
 class Publisher:
     __name__: str
     __group__: "PublisherGroup"
+    _language_filter: Set[str] = set()
 
     def __init__(
         self,
@@ -106,7 +108,16 @@ class Publisher:
                 )
             source_mapping[type(url_source)].append(url_source)
 
-        self.source_mapping = source_mapping
+        self._source_mapping = source_mapping
+
+    @property
+    def source_mapping(self) -> Dict[Type[URLSource], List[URLSource]]:
+        if not self._language_filter:
+            return self._source_mapping
+        filtered_mapping = {}
+        for source_type, sources in self._source_mapping.items():
+            filtered_mapping[source_type] = [source for source in sources if source.languages & self._language_filter]
+        return filtered_mapping
 
     def __str__(self) -> str:
         return f"{self.name}"
@@ -127,16 +138,30 @@ class Publisher:
             and self.request_header == other.request_header
         )
 
-    def supports(self, source_types: List[Type[URLSource]]) -> bool:
+    def supports(
+        self, source_types: Optional[List[Type[URLSource]]] = None, languages: Optional[Set[str]] = None
+    ) -> bool:
         if not source_types:
-            raise ValueError(f"Got empty value '{source_types}' for parameter <source_types>.")
-        for source_type in source_types:
-            if not inspect.isclass(source_type) or not issubclass(source_type, URLSource):
-                raise TypeError(
-                    f"Got unexpected type {source_type!r}. "
-                    f"Allowed are {', '.join(repr(self.__name__) for self in iterate_all_subclasses(URLSource))}"
-                )
-        return all(bool(self.source_mapping.get(source_type)) for source_type in source_types)
+            supports_sources = True
+        else:
+            for source_type in source_types:
+                if not inspect.isclass(source_type) or not issubclass(source_type, URLSource):
+                    raise TypeError(
+                        f"Got unexpected type {source_type!r}. "
+                        f"Allowed are {', '.join(repr(self.__name__) for self in iterate_all_subclasses(URLSource))}"
+                    )
+            supports_sources = all(bool(self.source_mapping.get(source_type)) for source_type in source_types)
+        if not languages:
+            supports_languages = True
+        else:
+            supports_languages = False
+            for sources in self._source_mapping.values():
+                for source in sources:
+                    if source.languages & languages:
+                        self._language_filter = languages
+                        supports_languages = True
+                        break
+        return supports_sources and supports_languages
 
 
 class PublisherGroup(type):
@@ -198,18 +223,26 @@ class PublisherGroup(type):
         return representation
 
     def search(
-        cls, attributes: Optional[List[str]] = None, source_types: Optional[List[Type[URLSource]]] = None
+        cls,
+        attributes: Optional[List[str]] = None,
+        source_types: Optional[List[Type[URLSource]]] = None,
+        languages: Optional[List[str]] = None,
     ) -> List[Publisher]:
-        if not (attributes or source_types):
+        if not (attributes or source_types or languages):
             raise ValueError("You have to define at least one search condition")
         if not attributes:
             attributes = []
         matched = []
         unique_attributes = set(attributes)
+        unique_languages = set(languages)
         spec: Publisher
         for publisher in cls:
-            if unique_attributes.issubset(publisher.parser().attributes().names) and (
-                publisher.supports(source_types) if source_types else True
+            if (
+                unique_attributes.issubset(publisher.parser().attributes().names)
+                and (publisher.supports(source_types=source_types) if source_types else True)
+                and (publisher.supports(languages=unique_languages) if unique_languages else True)
             ):
                 matched.append(publisher)
+        if not matched:
+            warn("No publisher found matching the search criteria. Returning no publishers.")
         return matched

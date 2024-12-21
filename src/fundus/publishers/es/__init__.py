@@ -12,9 +12,9 @@ class ES(metaclass=PublisherGroup):
         name="El País",
         domain="https://elpais.com/",
         parser=ElPaisParser,
-        sources=[RSSFeed("https://feeds.elpais.com/mrss-s/pages/ep/site/elpais.com/portada")]
+        sources=[RSSFeed("https://feeds.elpais.com/mrss-s/pages/ep/site/elpais.com/portada", languages={"es"})]
         + [
-            Sitemap(f"https://elpais.com/sitemaps/{d.year}/{str(d.month).zfill(2)}/sitemap_0.xml")
+            Sitemap(f"https://elpais.com/sitemaps/{d.year}/{str(d.month).zfill(2)}/sitemap_0.xml", languages={"es"})
             for d in reversed(
                 list(rrule(MONTHLY, dtstart=datetime.datetime(1976, 5, 1), until=datetime.datetime.now()))
             )

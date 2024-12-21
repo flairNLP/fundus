@@ -26,8 +26,12 @@ class CH(metaclass=PublisherGroup):
         domain="https://www.nzz.ch/",
         parser=NZZParser,
         sources=[
-            NewsMap("https://www.nzz.ch/sitemap/news0.xml"),
-            Sitemap("https://www.nzz.ch/sitemap.xml", sitemap_filter=inverse(regex_filter(r"sitemap/[\d]{4}/[\d]{2}"))),
+            NewsMap("https://www.nzz.ch/sitemap/news0.xml", languages={"de"}),
+            Sitemap(
+                "https://www.nzz.ch/sitemap.xml",
+                sitemap_filter=inverse(regex_filter(r"sitemap/[\d]{4}/[\d]{2}")),
+                languages={"de"},
+            ),
         ],
     )
 
@@ -36,11 +40,12 @@ class CH(metaclass=PublisherGroup):
         domain="https://www.tagesanzeiger.ch/",
         parser=TAParser,
         sources=[
-            NewsMap("https://www.tagesanzeiger.ch/sitemaps/news.xml"),
+            NewsMap("https://www.tagesanzeiger.ch/sitemaps/news.xml", languages={"de"}),
             Sitemap(
                 "https://www.tagesanzeiger.ch/sitemaps/sitemapindex.xml",
                 reverse=True,
                 sitemap_filter=regex_filter("news|category"),
+                languages={"de"},
             ),
         ],
     )
