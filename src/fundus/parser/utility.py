@@ -648,7 +648,6 @@ def parse_image_nodes(
                 caption = re.sub(author_selector, "", caption).strip() or None
             elif description and (match := re.search(author_selector, description)):
                 authors = [match.group("credits")]
-                description = re.sub(author_selector, "", description).strip() or None
         else:
             # author is selectable as node
             if author_nodes := author_selector(node):
