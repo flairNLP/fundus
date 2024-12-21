@@ -10,10 +10,10 @@ class IND(metaclass=PublisherGroup):
         domain="https://www.timesofindia.indiatimes.com",
         parser=TimesOfIndiaParser,
         sources=[
-            NewsMap("https://timesofindia.indiatimes.com/sitemap/today"),
-            NewsMap("https://timesofindia.indiatimes.com/sitemap/yesterday"),
-            RSSFeed("https://timesofindia.indiatimes.com/rssfeedstopstories.cms"),
-            RSSFeed("https://timesofindia.indiatimes.com/rssfeedmostrecent.cms"),
+            NewsMap("https://timesofindia.indiatimes.com/sitemap/today", languages={"en"}),
+            NewsMap("https://timesofindia.indiatimes.com/sitemap/yesterday", languages={"en"}),
+            RSSFeed("https://timesofindia.indiatimes.com/rssfeedstopstories.cms", languages={"en"}),
+            RSSFeed("https://timesofindia.indiatimes.com/rssfeedmostrecent.cms", languages={"en"}),
         ],
     )
 
@@ -21,5 +21,5 @@ class IND(metaclass=PublisherGroup):
         name="Dainik Bhaskar",
         domain="https://www.bhaskar.com/",
         parser=BhaskarParser,
-        sources=[NewsMap("https://www.bhaskar.com/sitemaps-v1--sitemap-google-news-index.xml")],
+        sources=[NewsMap("https://www.bhaskar.com/sitemaps-v1--sitemap-google-news-index.xml", languages={"hi"})],
     )

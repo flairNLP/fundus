@@ -13,9 +13,9 @@ class CA(metaclass=PublisherGroup):
         domain="https://www.cbc.ca/",
         parser=CBCNewsParser,
         sources=[
-            RSSFeed("https://www.cbc.ca/webfeed/rss/rss-topstories"),
-            RSSFeed("https://www.cbc.ca/webfeed/rss/rss-world"),
-            RSSFeed("https://www.cbc.ca/webfeed/rss/rss-canada"),
+            RSSFeed("https://www.cbc.ca/webfeed/rss/rss-topstories", languages={"en"}),
+            RSSFeed("https://www.cbc.ca/webfeed/rss/rss-world", languages={"en"}),
+            RSSFeed("https://www.cbc.ca/webfeed/rss/rss-canada", languages={"en"}),
         ],
     )
     TheGlobeAndMail = Publisher(
@@ -23,8 +23,12 @@ class CA(metaclass=PublisherGroup):
         domain="https://www.theglobeandmail.com",
         parser=TheGlobeAndMailParser,
         sources=[
-            NewsMap("https://www.theglobeandmail.com/arc/outboundfeeds/news-sitemap-index/?outputType=xml"),
-            NewsMap("https://www.theglobeandmail.com/arc/outboundfeeds/sitemap-index/?outputType=xml"),
+            NewsMap(
+                "https://www.theglobeandmail.com/arc/outboundfeeds/news-sitemap-index/?outputType=xml", languages={"en"}
+            ),
+            NewsMap(
+                "https://www.theglobeandmail.com/arc/outboundfeeds/sitemap-index/?outputType=xml", languages={"en"}
+            ),
         ],
     )
 
@@ -33,8 +37,8 @@ class CA(metaclass=PublisherGroup):
         domain="https://nationalpost.com",
         parser=NationalPostParser,
         sources=[
-            NewsMap("https://nationalpost.com/sitemap-news.xml"),
-            Sitemap("https://nationalpost.com/sitemap-old.xml"),
-            RSSFeed("https://nationalpost.com/feed"),
+            NewsMap("https://nationalpost.com/sitemap-news.xml", languages={"en"}),
+            Sitemap("https://nationalpost.com/sitemap-old.xml", languages={"en"}),
+            RSSFeed("https://nationalpost.com/feed", languages={"en"}),
         ],
     )

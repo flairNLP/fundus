@@ -12,7 +12,7 @@ class AT(metaclass=PublisherGroup):
         name="Österreichischer Rundfunk",
         domain="https://www.orf.at",
         parser=OrfParser,
-        sources=[RSSFeed("https://rss.orf.at/news.xml")],
+        sources=[RSSFeed("https://rss.orf.at/news.xml", languages={"de"})],
     )
 
     DerStandard = Publisher(
@@ -20,9 +20,9 @@ class AT(metaclass=PublisherGroup):
         domain="https://derstandard.at",
         parser=DerStandardParser,
         sources=[
-            RSSFeed("https://www.derstandard.at/rss"),
-            NewsMap("https://www.derstandard.at/sitemaps/news.xml"),
-            Sitemap("https://www.derstandard.at/sitemaps/sitemap.xml"),
+            RSSFeed("https://www.derstandard.at/rss", languages={"de"}),
+            NewsMap("https://www.derstandard.at/sitemaps/news.xml", languages={"de"}),
+            Sitemap("https://www.derstandard.at/sitemaps/sitemap.xml", languages={"de"}),
         ],
         request_header={"user-agent": "Googlebot"},
     )

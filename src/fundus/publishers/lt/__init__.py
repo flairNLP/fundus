@@ -11,5 +11,8 @@ class LT(metaclass=PublisherGroup):
         name="Lithuanian National Radio and Television",
         domain="https://www.lrt.lt",
         parser=LRTParser,
-        sources=[Sitemap("https://www.lrt.lt/servisai/sitemap/sitemap-index.xml"), RSSFeed("https://www.lrt.lt/?rss")],
+        sources=[
+            Sitemap("https://www.lrt.lt/servisai/sitemap/sitemap-index.xml", languages={"lt"}),
+            RSSFeed("https://www.lrt.lt/?rss", languages={"lt"}),
+        ],
     )

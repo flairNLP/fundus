@@ -16,8 +16,9 @@ class TR(metaclass=PublisherGroup):
                 "https://www.haberturk.com/sitemap.xml",
                 sitemap_filter=inverse(regex_filter("news|special|posts|ozel_icerikler")),
                 reverse=True,
+                languages={"tr"},
             ),
-            NewsMap("https://www.haberturk.com/sitemap_google_news.xml"),
+            NewsMap("https://www.haberturk.com/sitemap_google_news.xml", languages={"tr"}),
         ],
     )
 
@@ -26,8 +27,10 @@ class TR(metaclass=PublisherGroup):
         domain="https://www.ntv.com.tr/",
         parser=NTVTRParser,
         sources=[
-            RSSFeed("https://www.ntv.com.tr/gundem.rss"),
-            NewsMap("https://www.ntv.com.tr/sitemaps/news-sitemap.xml"),
-            Sitemap("https://www.ntv.com.tr/sitemaps", sitemap_filter=regex_filter("news-sitemap.xml")),
+            RSSFeed("https://www.ntv.com.tr/gundem.rss", languages={"tr"}),
+            NewsMap("https://www.ntv.com.tr/sitemaps/news-sitemap.xml", languages={"tr"}),
+            Sitemap(
+                "https://www.ntv.com.tr/sitemaps", sitemap_filter=regex_filter("news-sitemap.xml"), languages={"tr"}
+            ),
         ],
     )

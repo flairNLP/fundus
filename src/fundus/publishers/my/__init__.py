@@ -9,7 +9,7 @@ class MY(metaclass=PublisherGroup):
         domain="https://www.malaymail.com/",
         parser=MalayMailParser,
         sources=[
-            Sitemap("https://www.malaymail.com/sitemap.xml"),
-            RSSFeed("https://www.malaymail.com/feed/rss/"),
+            Sitemap("https://www.malaymail.com/sitemap.xml", languages={"ms"}),
+            RSSFeed("https://www.malaymail.com/feed/rss/", languages={"ms"}),
         ],
     )
