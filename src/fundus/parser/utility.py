@@ -542,13 +542,13 @@ def get_versions_from_node(
                 query_width = f"{param}:{value}"
 
     # get width, height and init calculator
-    try:
-        width = float(source.get("width") or 0) or None
-    except ValueError:
+    if (width := source.get("width")) and width.replace(".", "", 1).isdigit():
+        width = float(width or 0) or None
+    else:
         width = None
-    try:
-        height = float(source.get("height") or 0) or None
-    except ValueError:
+    if (height := source.get("height")) and height.replace(".", "", 1).isdigit():
+        height = float(height or 0) or None
+    else:
         height = None
     if width and height:
         ratio = width / height
