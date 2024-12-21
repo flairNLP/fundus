@@ -16,7 +16,7 @@ from fundus.parser.utility import (
 class TheBBCParser(ParserProxy):
     class V1(BaseParser):
         _subheadline_selector = XPath(
-            "//div[@data-component='subheadline-block' or contains(@class, 'ebmt73l0')]//*[self::h2 or (self::p and b and position()>1)]"
+            "//div[@data-component='subheadline-block' or @data-component='text-block' or contains(@class, 'ebmt73l0')]//*[self::h2 or (self::p and b and position()>1)]"
         )
         _summary_selector = XPath(
             "(//div[@data-component='text-block' or contains(@class, 'ebmt73l0')])[1] //p[b and position()=1]"
