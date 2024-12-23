@@ -16,7 +16,7 @@ class DailyNewsTZParser(ParserProxy):
 
         @attribute
         def title(self) -> Optional[str]:
-            return re.sub(r"(?i)\s*-\s*(daily\s*news|habari\s*leo)\s*", "", self.precomputed.meta.get("og:title"))
+            return re.sub(r"(?i)\s*-\s*(daily\s*news|habari\s*leo)\s*", "", self.precomputed.meta.get("og:title") or "")
 
         @attribute
         def body(self) -> Optional[ArticleBody]:
