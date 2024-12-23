@@ -17,6 +17,7 @@ from fundus.publishers.my import MY
 from fundus.publishers.na import NA
 from fundus.publishers.no import NO
 from fundus.publishers.tr import TR
+from fundus.publishers.tz import TZ
 from fundus.publishers.uk import UK
 from fundus.publishers.us import US
 
@@ -68,4 +69,5 @@ class PublisherCollection(metaclass=PublisherCollectionMeta):
     no = NO
     ca = CA
     es = ES
+    tz = TZ
     jp = JP
