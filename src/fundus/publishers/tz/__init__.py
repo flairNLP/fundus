@@ -1,7 +1,8 @@
 from fundus.publishers.base_objects import Publisher, PublisherGroup
-from fundus.publishers.shared.daily_news_tz import DailyNewsTZParser
+from .daily_news_tz import DailyNewsTZParser
 from fundus.scraping.filter import inverse, regex_filter
 from fundus.scraping.url import NewsMap, RSSFeed, Sitemap
+
 
 class TZ(metaclass=PublisherGroup):
     DailyNewsTZ = Publisher(

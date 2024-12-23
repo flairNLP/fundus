@@ -1,4 +1,3 @@
-__all__ = ["EuronewsParser", "DailyNewsTZParser"]
+__all__ = ["EuronewsParser"]
 
-from .daily_news_tz import DailyNewsTZParser
 from .euronews import EuronewsParser
