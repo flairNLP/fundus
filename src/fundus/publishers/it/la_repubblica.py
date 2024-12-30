@@ -16,6 +16,7 @@ from fundus.parser.utility import (
 class LaRepubblicaParser(ParserProxy):
     class V1(BaseParser):
         # Selectors for article body parts
+        _summary_selector = CSSSelector("div.story__summary p")
         _paragraph_selector = CSSSelector("div.story__text p")
         _subheadline_selector = CSSSelector("div.story__text h2")
 
