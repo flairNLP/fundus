@@ -22,6 +22,3 @@ class IT(metaclass=PublisherGroup):
             )
         ],
     )
-
-
-print(IT.LaRepubblica.source_mapping)
