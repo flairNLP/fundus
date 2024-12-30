@@ -43,21 +43,12 @@ class LaRepubblicaParser(ParserProxy):
 
         @attribute
         def publishing_date(self) -> Optional[datetime]:
-            # Extract publishing date from schema.org NewsArticle data
-            date_str = self.precomputed.ld.xpath_search("//NewsArticle/datePublished")
-            return generic_date_parsing(date_str[0] if date_str else None)
+            # Use scalar parameter for direct value
+            date_str = self.precomputed.ld.xpath_search("//NewsArticle/datePublished", scalar=True)
+            return generic_date_parsing(date_str)
 
         @attribute
         def topics(self) -> List[str]:
-            # Extract topics from schema.org NewsArticle data
-            topics = self.precomputed.ld.xpath_search("//NewsArticle/about")
-            if topics:
-                return generic_topic_parsing([topic.get("name") for topic in topics if topic.get("name")])
-            return []
-
-        @attribute
-        def free_access(self) -> bool:
-            # Check if article is freely accessible from schema.org NewsArticle data
-            is_free = self.precomputed.ld.xpath_search("//NewsArticle/isAccessibleForFree")
-            free = True if is_free[0] == "True" else False
-            return free
+            # Simplified topic extraction using name in xpath
+            topics = self.precomputed.ld.xpath_search("//NewsArticle/about/name")
+            return generic_topic_parsing(topics) if topics else []
