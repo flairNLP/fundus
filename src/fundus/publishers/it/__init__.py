@@ -10,6 +10,6 @@ class IT(metaclass=PublisherGroup):
         parser=LaRepubblicaParser,
         sources=[
             RSSFeed("https://www.repubblica.it/rss/homepage/rss2.0.xml"),
-            Sitemap("https://www.repubblica.it/sitemap.xml", reverse=True, recursive=False),
+            Sitemap("https://www.repubblica.it/sitemap-n.xml", reverse=True, recursive=False),
         ],
     )
