@@ -59,4 +59,5 @@ class LaRepubblicaParser(ParserProxy):
         def free_access(self) -> bool:
             # Check if article is freely accessible from schema.org NewsArticle data
             is_free = self.precomputed.ld.xpath_search("//NewsArticle/isAccessibleForFree")
-            return bool(is_free[0]) if is_free else False
+            free = True if is_free[0] == "True" else False
+            return free
