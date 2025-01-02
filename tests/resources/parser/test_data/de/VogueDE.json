@@ -54,6 +54,670 @@
         }
       ]
     },
+    "images": [
+      {
+        "versions": [
+          {
+            "url": "https://media.vogue.de/photos/661e6e21ea8a857573e7ae3d/1:1/w_120,c_limit/Online0524_Cover_mit-rand%205800x3300.jpg",
+            "query_width": "max-width:767",
+            "size": {
+              "width": 120,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.vogue.de/photos/661e6e21ea8a857573e7ae3d/2:3/w_120,c_limit/Online0524_Cover_mit-rand%205800x3300.jpg",
+            "query_width": "min-width:768",
+            "size": {
+              "width": 120,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.vogue.de/photos/661e6e21ea8a857573e7ae3d/1:1/w_240,c_limit/Online0524_Cover_mit-rand%205800x3300.jpg",
+            "query_width": "max-width:767",
+            "size": {
+              "width": 240,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.vogue.de/photos/661e6e21ea8a857573e7ae3d/2:3/w_240,c_limit/Online0524_Cover_mit-rand%205800x3300.jpg",
+            "query_width": "min-width:768",
+            "size": {
+              "width": 240,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.vogue.de/photos/661e6e21ea8a857573e7ae3d/1:1/w_320,c_limit/Online0524_Cover_mit-rand%205800x3300.jpg",
+            "query_width": "max-width:767",
+            "size": {
+              "width": 320,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.vogue.de/photos/661e6e21ea8a857573e7ae3d/2:3/w_320,c_limit/Online0524_Cover_mit-rand%205800x3300.jpg",
+            "query_width": "min-width:768",
+            "size": {
+              "width": 320,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.vogue.de/photos/661e6e21ea8a857573e7ae3d/1:1/w_640,c_limit/Online0524_Cover_mit-rand%205800x3300.jpg",
+            "query_width": "max-width:767",
+            "size": {
+              "width": 640,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.vogue.de/photos/661e6e21ea8a857573e7ae3d/2:3/w_640,c_limit/Online0524_Cover_mit-rand%205800x3300.jpg",
+            "query_width": "min-width:768",
+            "size": {
+              "width": 640,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.vogue.de/photos/661e6e21ea8a857573e7ae3d/1:1/w_960,c_limit/Online0524_Cover_mit-rand%205800x3300.jpg",
+            "query_width": "max-width:767",
+            "size": {
+              "width": 960,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.vogue.de/photos/661e6e21ea8a857573e7ae3d/2:3/w_960,c_limit/Online0524_Cover_mit-rand%205800x3300.jpg",
+            "query_width": "min-width:768",
+            "size": {
+              "width": 960,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.vogue.de/photos/661e6e21ea8a857573e7ae3d/2:3/w_1280,c_limit/Online0524_Cover_mit-rand%205800x3300.jpg",
+            "query_width": "min-width:768",
+            "size": {
+              "width": 1280,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.vogue.de/photos/661e6e21ea8a857573e7ae3d/2:3/w_1600,c_limit/Online0524_Cover_mit-rand%205800x3300.jpg",
+            "query_width": "min-width:768",
+            "size": {
+              "width": 1600,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.vogue.de/photos/661e6e21ea8a857573e7ae3d/2:3/w_1920,c_limit/Online0524_Cover_mit-rand%205800x3300.jpg",
+            "query_width": "min-width:768",
+            "size": {
+              "width": 1920,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.vogue.de/photos/661e6e21ea8a857573e7ae3d/2:3/w_2240,c_limit/Online0524_Cover_mit-rand%205800x3300.jpg",
+            "query_width": "min-width:768",
+            "size": {
+              "width": 2240,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.vogue.de/photos/661e6e21ea8a857573e7ae3d/2:3/w_2560%2Cc_limit/Online0524_Cover_mit-rand%25205800x3300.jpg",
+            "query_width": null,
+            "size": {
+              "width": 25205800,
+              "height": 3300
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": true,
+        "description": "KATE MOSS trägt einen Look von VALENTINO",
+        "caption": null,
+        "authors": [],
+        "position": 249
+      },
+      {
+        "versions": [
+          {
+            "url": "https://media.vogue.de/photos/661e6d48ea8a857573e7ae36/master/w_120,c_limit/HR_24.01.06_NVB_Vogue%20x%20KM0154_F5.jpg",
+            "query_width": null,
+            "size": {
+              "width": 120,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.vogue.de/photos/661e6d48ea8a857573e7ae36/master/w_240,c_limit/HR_24.01.06_NVB_Vogue%20x%20KM0154_F5.jpg",
+            "query_width": null,
+            "size": {
+              "width": 240,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.vogue.de/photos/661e6d48ea8a857573e7ae36/master/w_320,c_limit/HR_24.01.06_NVB_Vogue%20x%20KM0154_F5.jpg",
+            "query_width": null,
+            "size": {
+              "width": 320,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.vogue.de/photos/661e6d48ea8a857573e7ae36/master/w_640,c_limit/HR_24.01.06_NVB_Vogue%20x%20KM0154_F5.jpg",
+            "query_width": null,
+            "size": {
+              "width": 640,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.vogue.de/photos/661e6d48ea8a857573e7ae36/master/w_960,c_limit/HR_24.01.06_NVB_Vogue%20x%20KM0154_F5.jpg",
+            "query_width": null,
+            "size": {
+              "width": 960,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.vogue.de/photos/661e6d48ea8a857573e7ae36/master/w_1280,c_limit/HR_24.01.06_NVB_Vogue%20x%20KM0154_F5.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1280,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.vogue.de/photos/661e6d48ea8a857573e7ae36/master/w_1600,c_limit/HR_24.01.06_NVB_Vogue%20x%20KM0154_F5.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1600,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": false,
+        "description": "Grauer Blazer und durchsichtiges Minikleid beides von GIVENCHY.",
+        "caption": "Grauer Blazer und durchsichtiges Minikleid, beides von GIVENCHY.",
+        "authors": [
+          "Nikolai von Bismarck. Styling: Kate Phelan. Haare: Syd Hayes. Make-up: Lucy Bridge"
+        ],
+        "position": 287
+      },
+      {
+        "versions": [
+          {
+            "url": "https://media.vogue.de/photos/661e6d45ea8a857573e7ae32/master/w_120,c_limit/HR_24.01.06_NVB_Vogue%20x%20KM0486_F5.jpg",
+            "query_width": null,
+            "size": {
+              "width": 120,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.vogue.de/photos/661e6d45ea8a857573e7ae32/master/w_240,c_limit/HR_24.01.06_NVB_Vogue%20x%20KM0486_F5.jpg",
+            "query_width": null,
+            "size": {
+              "width": 240,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.vogue.de/photos/661e6d45ea8a857573e7ae32/master/w_320,c_limit/HR_24.01.06_NVB_Vogue%20x%20KM0486_F5.jpg",
+            "query_width": null,
+            "size": {
+              "width": 320,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.vogue.de/photos/661e6d45ea8a857573e7ae32/master/w_640,c_limit/HR_24.01.06_NVB_Vogue%20x%20KM0486_F5.jpg",
+            "query_width": null,
+            "size": {
+              "width": 640,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.vogue.de/photos/661e6d45ea8a857573e7ae32/master/w_960,c_limit/HR_24.01.06_NVB_Vogue%20x%20KM0486_F5.jpg",
+            "query_width": null,
+            "size": {
+              "width": 960,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.vogue.de/photos/661e6d45ea8a857573e7ae32/master/w_1280,c_limit/HR_24.01.06_NVB_Vogue%20x%20KM0486_F5.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1280,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.vogue.de/photos/661e6d45ea8a857573e7ae32/master/w_1600,c_limit/HR_24.01.06_NVB_Vogue%20x%20KM0486_F5.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1600,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": false,
+        "description": "Hellblaues Kleid mit Knotendetails von JWANDERSON.",
+        "caption": "Hellblaues Kleid mit Knotendetails, von JWANDERSON.",
+        "authors": [
+          "Nikolai von Bismarck. Styling: Kate Phelan. Haare: Syd Hayes. Make-up: Lucy Bridge"
+        ],
+        "position": 409
+      },
+      {
+        "versions": [
+          {
+            "url": "https://media.vogue.de/photos/661e6d4eea8a857573e7ae38/master/w_120,c_limit/HR_NVB_VOGUE_COVER_KM_51+52_F5.jpg",
+            "query_width": null,
+            "size": {
+              "width": 120,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.vogue.de/photos/661e6d4eea8a857573e7ae38/master/w_240,c_limit/HR_NVB_VOGUE_COVER_KM_51+52_F5.jpg",
+            "query_width": null,
+            "size": {
+              "width": 240,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.vogue.de/photos/661e6d4eea8a857573e7ae38/master/w_320,c_limit/HR_NVB_VOGUE_COVER_KM_51+52_F5.jpg",
+            "query_width": null,
+            "size": {
+              "width": 320,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.vogue.de/photos/661e6d4eea8a857573e7ae38/master/w_640,c_limit/HR_NVB_VOGUE_COVER_KM_51+52_F5.jpg",
+            "query_width": null,
+            "size": {
+              "width": 640,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.vogue.de/photos/661e6d4eea8a857573e7ae38/master/w_960,c_limit/HR_NVB_VOGUE_COVER_KM_51+52_F5.jpg",
+            "query_width": null,
+            "size": {
+              "width": 960,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.vogue.de/photos/661e6d4eea8a857573e7ae38/master/w_1280,c_limit/HR_NVB_VOGUE_COVER_KM_51+52_F5.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1280,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.vogue.de/photos/661e6d4eea8a857573e7ae38/master/w_1600,c_limit/HR_NVB_VOGUE_COVER_KM_51+52_F5.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1600,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": false,
+        "description": "Schwarzer Badeanzug von ISABEL MARANT. OversizeAnzughose mit weitem Bein von RAEY über Matchesfashion.com.",
+        "caption": "Schwarzer Badeanzug von ISABEL MARANT. Oversize-Anzughose mit weitem Bein, von RAEY, über Matchesfashion.com.",
+        "authors": [
+          "Nikolai von Bismarck. Styling: Kate Phelan. Haare: Syd Hayes. Make-up: Lucy Bridge"
+        ],
+        "position": 534
+      },
+      {
+        "versions": [
+          {
+            "url": "https://media.vogue.de/photos/661e6d42427da6e226c37fce/master/w_120,c_limit/HR_24.01.06_NVB_Vogue%20x%20KM6974_F5.jpg",
+            "query_width": null,
+            "size": {
+              "width": 120,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.vogue.de/photos/661e6d42427da6e226c37fce/master/w_240,c_limit/HR_24.01.06_NVB_Vogue%20x%20KM6974_F5.jpg",
+            "query_width": null,
+            "size": {
+              "width": 240,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.vogue.de/photos/661e6d42427da6e226c37fce/master/w_320,c_limit/HR_24.01.06_NVB_Vogue%20x%20KM6974_F5.jpg",
+            "query_width": null,
+            "size": {
+              "width": 320,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.vogue.de/photos/661e6d42427da6e226c37fce/master/w_640,c_limit/HR_24.01.06_NVB_Vogue%20x%20KM6974_F5.jpg",
+            "query_width": null,
+            "size": {
+              "width": 640,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.vogue.de/photos/661e6d42427da6e226c37fce/master/w_960,c_limit/HR_24.01.06_NVB_Vogue%20x%20KM6974_F5.jpg",
+            "query_width": null,
+            "size": {
+              "width": 960,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.vogue.de/photos/661e6d42427da6e226c37fce/master/w_1280,c_limit/HR_24.01.06_NVB_Vogue%20x%20KM6974_F5.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1280,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.vogue.de/photos/661e6d42427da6e226c37fce/master/w_1600,c_limit/HR_24.01.06_NVB_Vogue%20x%20KM6974_F5.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1600,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": false,
+        "description": "Top mit Paillettenapplikation von GIORGIO ARMANI.",
+        "caption": "Top mit Paillettenapplikation, von GIORGIO ARMANI.",
+        "authors": [
+          "Nikolai von Bismarck. Styling: Kate Phelan. Haare: Syd Hayes. Make-up: Lucy Bridge"
+        ],
+        "position": 549
+      },
+      {
+        "versions": [
+          {
+            "url": "https://media.vogue.de/photos/661e6d35de21b96b8784d16a/master/w_120,c_limit/HR_24.01.06_NVB_Vogue%20x%20KM0139_F5.jpg",
+            "query_width": null,
+            "size": {
+              "width": 120,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.vogue.de/photos/661e6d35de21b96b8784d16a/master/w_240,c_limit/HR_24.01.06_NVB_Vogue%20x%20KM0139_F5.jpg",
+            "query_width": null,
+            "size": {
+              "width": 240,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.vogue.de/photos/661e6d35de21b96b8784d16a/master/w_320,c_limit/HR_24.01.06_NVB_Vogue%20x%20KM0139_F5.jpg",
+            "query_width": null,
+            "size": {
+              "width": 320,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.vogue.de/photos/661e6d35de21b96b8784d16a/master/w_640,c_limit/HR_24.01.06_NVB_Vogue%20x%20KM0139_F5.jpg",
+            "query_width": null,
+            "size": {
+              "width": 640,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.vogue.de/photos/661e6d35de21b96b8784d16a/master/w_960,c_limit/HR_24.01.06_NVB_Vogue%20x%20KM0139_F5.jpg",
+            "query_width": null,
+            "size": {
+              "width": 960,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.vogue.de/photos/661e6d35de21b96b8784d16a/master/w_1280,c_limit/HR_24.01.06_NVB_Vogue%20x%20KM0139_F5.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1280,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.vogue.de/photos/661e6d35de21b96b8784d16a/master/w_1600,c_limit/HR_24.01.06_NVB_Vogue%20x%20KM0139_F5.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1600,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": false,
+        "description": "Gestricktes Longsleeve mit Knopfleiste und asymmetrischer Rock beides von BOTTEGA VENETA.",
+        "caption": "Gestricktes Longsleeve mit Knopfleiste und asymmetrischer Rock, beides von BOTTEGA VENETA.",
+        "authors": [
+          "Nikolai von Bismarck. Styling: Kate Phelan. Haare: Syd Hayes. Make-up: Lucy Bridge"
+        ],
+        "position": 669
+      },
+      {
+        "versions": [
+          {
+            "url": "https://media.vogue.de/photos/661e6d3c427da6e226c37fcc/master/w_120,c_limit/HR_24.01.06_NVB_Vogue%20x%20KM0908_F5.jpg",
+            "query_width": null,
+            "size": {
+              "width": 120,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.vogue.de/photos/661e6d3c427da6e226c37fcc/master/w_240,c_limit/HR_24.01.06_NVB_Vogue%20x%20KM0908_F5.jpg",
+            "query_width": null,
+            "size": {
+              "width": 240,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.vogue.de/photos/661e6d3c427da6e226c37fcc/master/w_320,c_limit/HR_24.01.06_NVB_Vogue%20x%20KM0908_F5.jpg",
+            "query_width": null,
+            "size": {
+              "width": 320,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.vogue.de/photos/661e6d3c427da6e226c37fcc/master/w_640,c_limit/HR_24.01.06_NVB_Vogue%20x%20KM0908_F5.jpg",
+            "query_width": null,
+            "size": {
+              "width": 640,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.vogue.de/photos/661e6d3c427da6e226c37fcc/master/w_960,c_limit/HR_24.01.06_NVB_Vogue%20x%20KM0908_F5.jpg",
+            "query_width": null,
+            "size": {
+              "width": 960,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.vogue.de/photos/661e6d3c427da6e226c37fcc/master/w_1280,c_limit/HR_24.01.06_NVB_Vogue%20x%20KM0908_F5.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1280,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.vogue.de/photos/661e6d3c427da6e226c37fcc/master/w_1600,c_limit/HR_24.01.06_NVB_Vogue%20x%20KM0908_F5.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1600,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": false,
+        "description": "Blazer und schwarze Shorts mit goldenem Nadeldetail beides von LOEWE. Pumps von PIFERI.",
+        "caption": "Blazer und schwarze Shorts mit goldenem Nadeldetail, beides von LOEWE. Pumps von PIFERI.",
+        "authors": [
+          "Nikolai von Bismarck. Styling: Kate Phelan. Haare: Syd Hayes. Make-up: Lucy Bridge"
+        ],
+        "position": 901
+      },
+      {
+        "versions": [
+          {
+            "url": "https://media.vogue.de/photos/661e6d7bea8a857573e7ae3a/master/w_120,c_limit/VO0524_Cover_300_RGB.jpg",
+            "query_width": null,
+            "size": {
+              "width": 120,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.vogue.de/photos/661e6d7bea8a857573e7ae3a/master/w_240,c_limit/VO0524_Cover_300_RGB.jpg",
+            "query_width": null,
+            "size": {
+              "width": 240,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.vogue.de/photos/661e6d7bea8a857573e7ae3a/master/w_320,c_limit/VO0524_Cover_300_RGB.jpg",
+            "query_width": null,
+            "size": {
+              "width": 320,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.vogue.de/photos/661e6d7bea8a857573e7ae3a/master/w_640,c_limit/VO0524_Cover_300_RGB.jpg",
+            "query_width": null,
+            "size": {
+              "width": 640,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.vogue.de/photos/661e6d7bea8a857573e7ae3a/master/w_960,c_limit/VO0524_Cover_300_RGB.jpg",
+            "query_width": null,
+            "size": {
+              "width": 960,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.vogue.de/photos/661e6d7bea8a857573e7ae3a/master/w_1280,c_limit/VO0524_Cover_300_RGB.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1280,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://media.vogue.de/photos/661e6d7bea8a857573e7ae3a/master/w_1600,c_limit/VO0524_Cover_300_RGB.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1600,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": false,
+        "description": "KATE MOSS trägt einen Look von VALENTINO",
+        "caption": "KATE MOSS trägt einen Look von VALENTINO",
+        "authors": [
+          "Nikolai von Bismarck. Styling: Kate Phelan. Haare: Syd Hayes. Make-up: Lucy Bridge"
+        ],
+        "position": 1027
+      }
+    ],
     "publishing_date": "2024-04-23 07:56:00+00:00",
     "title": "Kate Moss auf dem VOGUE-Cover: \"Was ich nicht will: gewöhnlich sein\"",
     "topics": [

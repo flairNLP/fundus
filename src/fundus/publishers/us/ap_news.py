@@ -5,12 +5,13 @@ from typing import List, Optional, Pattern
 from lxml.cssselect import CSSSelector
 from lxml.etree import XPath
 
-from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute
+from fundus.parser import ArticleBody, BaseParser, Image, ParserProxy, attribute
 from fundus.parser.utility import (
     extract_article_body_with_selector,
     generic_author_parsing,
     generic_date_parsing,
     generic_topic_parsing,
+    image_extraction,
     normalize_whitespace,
 )
 
@@ -62,6 +63,8 @@ class APNewsParser(ParserProxy):
                 if not re.search(self._topic_bloat_pattern, topic)
             ]
 
+        # unfortunately we would need to render the site first before parsing images for this version
+
     class V1_1(V1):
         VALID_UNTIL = datetime.date.today()
 
@@ -72,3 +75,18 @@ class APNewsParser(ParserProxy):
             "/p[not(preceding-sibling::*[1][self::h2 and text()='___'])]"
             # only p-elements not directly following h2 elements with text() = '___'
         )
+
+        @attribute
+        def images(self) -> List[Image]:
+            return image_extraction(
+                doc=self.precomputed.doc,
+                paragraph_selector=self._paragraph_selector,
+                image_selector=XPath("//*[self::figure or @class='CarouselSlide']//img"),
+                caption_selector=XPath(
+                    "./ancestor::figure//figcaption | "
+                    "./ancestor::div[@class='CarouselSlide']//span[@class='CarouselSlide-infoDescription']"
+                ),
+                upper_boundary_selector=XPath("//div[@class='Page-content' or @class='Body']"),
+                lower_boundary_selector=CSSSelector("footer.Page-footer"),
+                author_selector=re.compile(r"\s*\((?P<credits>.*)\)$"),
+            )

@@ -6,10 +6,12 @@ import lxml.html
 from lxml.etree import XPath
 
 from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute
+from fundus.parser.data import Image
 from fundus.parser.utility import (
     extract_article_body_with_selector,
     generic_author_parsing,
     generic_date_parsing,
+    image_extraction,
 )
 
 
@@ -45,6 +47,14 @@ class TheNamibianParser(ParserProxy):
         def authors(self) -> List[str]:
             return generic_author_parsing(self.precomputed.ld.xpath_search(self._author_selector))
 
+        @attribute
+        def images(self) -> List[Image]:
+            return image_extraction(
+                doc=self.precomputed.doc,
+                paragraph_selector=self._paragraph_selector,
+                upper_boundary_selector=XPath("//h1[@class='tdb-title-text']"),
+            )
+
     class V1_1(V1):
         VALID_UNTIL = datetime.today().date()
         _paragraph_selector = XPath("//div[contains(@class, 'entry-content')]/p[(text() or strong) and position()>1]")
@@ -58,4 +68,12 @@ class TheNamibianParser(ParserProxy):
                 doc,
                 paragraph_selector=self._paragraph_selector,
                 summary_selector=self._summary_selector,
+            )
+
+        @attribute
+        def images(self) -> List[Image]:
+            return image_extraction(
+                doc=self.precomputed.doc,
+                paragraph_selector=self._paragraph_selector,
+                upper_boundary_selector=XPath("//main"),
             )

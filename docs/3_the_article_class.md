@@ -4,6 +4,7 @@
   * [What is an `Article`](#what-is-an-article)
   * [The articles' body](#the-articles-body)
   * [HTML](#html)
+  * [Images](#images)
   * [Language detection](#language-detection)
   * [Saving an Article](#saving-an-article)
 
@@ -116,6 +117,22 @@ Here you have access to the following information:
 3. `content: str`: The HTML content.
 4. `crawl_date: datetime`: The exact timestamp the article was crawled.
 5. `source_info: SourceInfo`: Some information about the HTML's origins, mostly for debugging purpose.
+
+## Images
+
+Some publishers provide images with their articles.
+To encompass all necessary information, the articles `images` attribute returns a list of custom `Image` objects.
+Each `Image` object contains the following attributes:
+- `url`: the URL of the image with the largest dimensions.
+- `versions`: a list of custom `ImageVersion` objects, each containing the following attributes:
+  - `url`: the URL of the image with the specific dimensions.
+  - `size`: a `Dimension` object with attributes `width` and `height`.
+  - `type`: the image format (e.g. `jpeg`, `png`).
+- `is_cover`: a boolean indicating whether the image is the cover image of the article.
+- `description`: a string describing the image (usually the alt-text).
+- `caption`: the image caption as used in the article.
+- `authors`: a list of strings representing the authors of the image.
+- `position`: an integer describing the position of the image in the DOM-tree.
 
 ## Language detection
 

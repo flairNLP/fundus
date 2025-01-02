@@ -113,7 +113,7 @@ class DE(metaclass=PublisherGroup):
             Sitemap("https://www.welt.de/sitemaps/sitemap/sitemap.xml"),
             NewsMap("https://www.welt.de/sitemaps/newssitemap/newssitemap.xml"),
         ],
-        url_filter=regex_filter("/Anlegertipps-|/videos[0-9]{2}"),
+        url_filter=regex_filter("/Anlegertipps-|/videos?[0-9]{2}|/mediathek/"),
     )
 
     MDR = Publisher(
@@ -389,6 +389,7 @@ class DE(metaclass=PublisherGroup):
             Sitemap("https://de.euronews.com/sitemaps/de/articles.xml"),
             NewsMap("https://de.euronews.com/sitemaps/de/latest-news.xml"),
         ],
+        url_filter=regex_filter("/video/"),
     )
 
     Hessenschau = Publisher(
@@ -407,6 +408,7 @@ class DE(metaclass=PublisherGroup):
         domain="https://www1.wdr.de/",
         parser=WDRParser,
         sources=[RSSFeed("https://www1.wdr.de/uebersicht-100.feed")],
+        url_filter=inverse(regex_filter("wdr.de/(?!mediathek/)")),
     )
 
     BR = Publisher(
@@ -448,6 +450,7 @@ class DE(metaclass=PublisherGroup):
             RSSFeed("https://follow.it/der-postillon-abo"),
             Sitemap("https://www.der-postillon.com/sitemap.xml"),
         ],
+        url_filter=regex_filter("https://follow.it/"),
     )
 
     Kicker = Publisher(
@@ -461,7 +464,7 @@ class DE(metaclass=PublisherGroup):
             ),
             NewsMap("https://newsfeed.kicker.de/googlesitemapnews.xml"),
         ],
-        url_filter=regex_filter("/slideshow|/video"),
+        url_filter=regex_filter("/slideshow|/video|heute-live|live-konferenz|/bilder|/ticker"),
     )
 
     Krautreporter = Publisher(

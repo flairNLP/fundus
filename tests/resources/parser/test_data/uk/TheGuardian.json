@@ -22,6 +22,172 @@
         }
       ]
     },
+    "images": [
+      {
+        "versions": [
+          {
+            "url": "https://i.guim.co.uk/img/media/ff01686bf0d0248408d12a6ddfb1eabddeb675cc/369_424_4616_2770/master/4616.jpg?width=465&dpr=1&s=none",
+            "query_width": "min-width:320",
+            "size": {
+              "width": 465,
+              "height": 279
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://i.guim.co.uk/img/media/ff01686bf0d0248408d12a6ddfb1eabddeb675cc/369_424_4616_2770/master/4616.jpg?width=620&dpr=1&s=none",
+            "query_width": "min-width:980",
+            "size": {
+              "width": 620,
+              "height": 372
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://i.guim.co.uk/img/media/ff01686bf0d0248408d12a6ddfb1eabddeb675cc/369_424_4616_2770/master/4616.jpg?width=645&dpr=1&s=none",
+            "query_width": "min-width:480",
+            "size": {
+              "width": 645,
+              "height": 387
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://i.guim.co.uk/img/media/ff01686bf0d0248408d12a6ddfb1eabddeb675cc/369_424_4616_2770/master/4616.jpg?width=700&dpr=1&s=none",
+            "query_width": "min-width:740",
+            "size": {
+              "width": 700,
+              "height": 420
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://i.guim.co.uk/img/media/ff01686bf0d0248408d12a6ddfb1eabddeb675cc/369_424_4616_2770/master/4616.jpg?width=465&dpr=2&s=none",
+            "query_width": "min-width:320",
+            "size": {
+              "width": 930,
+              "height": 558
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://i.guim.co.uk/img/media/ff01686bf0d0248408d12a6ddfb1eabddeb675cc/369_424_4616_2770/master/4616.jpg?width=620&dpr=2&s=none",
+            "query_width": "min-width:980",
+            "size": {
+              "width": 1240,
+              "height": 744
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://i.guim.co.uk/img/media/ff01686bf0d0248408d12a6ddfb1eabddeb675cc/369_424_4616_2770/master/4616.jpg?width=645&dpr=2&s=none",
+            "query_width": "min-width:480",
+            "size": {
+              "width": 1290,
+              "height": 774
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://i.guim.co.uk/img/media/ff01686bf0d0248408d12a6ddfb1eabddeb675cc/369_424_4616_2770/master/4616.jpg?width=700&dpr=2&s=none",
+            "query_width": "min-width:740",
+            "size": {
+              "width": 1400,
+              "height": 840
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": true,
+        "description": "The gutted remains of the two buildings, which had about 140 apartments",
+        "caption": "The gutted remains of the two buildings, which had about 140 apartments.",
+        "authors": [
+          "Eva Manez/Reuters"
+        ],
+        "position": 508
+      },
+      {
+        "versions": [
+          {
+            "url": "https://i.guim.co.uk/img/media/a3156580403b66410a1803ffa672e77245c9c03e/0_0_3916_2203/3916.jpg?width=465&dpr=1&s=none",
+            "query_width": "min-width:320",
+            "size": {
+              "width": 465,
+              "height": 262
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://i.guim.co.uk/img/media/a3156580403b66410a1803ffa672e77245c9c03e/0_0_3916_2203/3916.jpg?width=620&dpr=1&s=none",
+            "query_width": "min-width:980",
+            "size": {
+              "width": 620,
+              "height": 349
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://i.guim.co.uk/img/media/a3156580403b66410a1803ffa672e77245c9c03e/0_0_3916_2203/3916.jpg?width=645&dpr=1&s=none",
+            "query_width": "min-width:480",
+            "size": {
+              "width": 645,
+              "height": 363
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://i.guim.co.uk/img/media/a3156580403b66410a1803ffa672e77245c9c03e/0_0_3916_2203/3916.jpg?width=700&dpr=1&s=none",
+            "query_width": "min-width:740",
+            "size": {
+              "width": 700,
+              "height": 394
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://i.guim.co.uk/img/media/a3156580403b66410a1803ffa672e77245c9c03e/0_0_3916_2203/3916.jpg?width=465&dpr=2&s=none",
+            "query_width": "min-width:320",
+            "size": {
+              "width": 930,
+              "height": 524
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://i.guim.co.uk/img/media/a3156580403b66410a1803ffa672e77245c9c03e/0_0_3916_2203/3916.jpg?width=620&dpr=2&s=none",
+            "query_width": "min-width:980",
+            "size": {
+              "width": 1240,
+              "height": 698
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://i.guim.co.uk/img/media/a3156580403b66410a1803ffa672e77245c9c03e/0_0_3916_2203/3916.jpg?width=645&dpr=2&s=none",
+            "query_width": "min-width:480",
+            "size": {
+              "width": 1290,
+              "height": 726
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://i.guim.co.uk/img/media/a3156580403b66410a1803ffa672e77245c9c03e/0_0_3916_2203/3916.jpg?width=700&dpr=2&s=none",
+            "query_width": "min-width:740",
+            "size": {
+              "width": 1400,
+              "height": 788
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": false,
+        "description": "Firefighters search rooms in Valencia apartment block after deadly fire – video",
+        "caption": "Firefighters search rooms in Valencia apartment block after deadly fire – video",
+        "authors": [],
+        "position": 606
+      }
+    ],
     "publishing_date": "2024-02-24 11:42:23+00:00",
     "title": "Death toll in Valencia fire rises to 10 as remains of last missing person found",
     "topics": [

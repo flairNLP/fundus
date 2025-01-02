@@ -4,12 +4,13 @@ from typing import List, Optional
 from lxml.cssselect import CSSSelector
 from lxml.etree import XPath
 
-from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute
+from fundus.parser import ArticleBody, BaseParser, Image, ParserProxy, attribute
 from fundus.parser.utility import (
     extract_article_body_with_selector,
     generic_author_parsing,
     generic_date_parsing,
     generic_topic_parsing,
+    image_extraction,
     parse_title_from_root,
     strip_nodes_to_text,
 )
@@ -57,6 +58,8 @@ class FAZParser(ParserProxy):
         def title(self) -> Optional[str]:
             return self.precomputed.meta.get("og:title")
 
+        # As of now, images can't be implemented for FAZ, since they are not crawled by CC-Bot
+
     class V2(BaseParser):
         _summary_selector = CSSSelector("div.header-teaser")
         _paragraph_selector = CSSSelector(".body-elements__paragraph")
@@ -95,3 +98,13 @@ class FAZParser(ParserProxy):
         @attribute
         def title(self) -> Optional[str]:
             return self.precomputed.meta.get("og:title") or parse_title_from_root(self.precomputed.doc)
+
+        @attribute
+        def images(self) -> List[Image]:
+            return image_extraction(
+                doc=self.precomputed.doc,
+                paragraph_selector=self._paragraph_selector,
+                image_selector=XPath("//figure//img|//picture//img"),
+                caption_selector=XPath("./ancestor::figure//span"),
+                author_selector=XPath("./ancestor::figure//em"),
+            )

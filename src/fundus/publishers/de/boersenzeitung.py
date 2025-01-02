@@ -5,11 +5,12 @@ from typing import List, Optional
 from lxml.cssselect import CSSSelector
 from lxml.etree import XPath
 
-from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute
+from fundus.parser import ArticleBody, BaseParser, Image, ParserProxy, attribute
 from fundus.parser.utility import (
     extract_article_body_with_selector,
     generic_author_parsing,
     generic_date_parsing,
+    image_extraction,
 )
 
 
@@ -57,6 +58,16 @@ class BoersenZeitungParser(ParserProxy):
         def free_access(self) -> bool:
             # print(self._paywall_selector(self.precomputed.doc).text_content().strip())
             return not [node.text_content().strip() for node in self._paywall_selector(self.precomputed.doc)]
+
+        @attribute
+        def images(self) -> List[Image]:
+            return image_extraction(
+                doc=self.precomputed.doc,
+                paragraph_selector=self._paragraph_selector,
+                upper_boundary_selector=XPath("//h1|//script"),
+                image_selector=XPath("//storefront-image|//figure//img"),
+                author_selector=XPath("./ancestor::storefront-section//storefront-html[@class='image-copyright']"),
+            )
 
     class V1_1(V1):
         VALID_UNTIL = datetime.date.today()

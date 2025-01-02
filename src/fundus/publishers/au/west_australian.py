@@ -2,14 +2,16 @@ import datetime
 import re
 from typing import List, Optional
 
+from lxml.cssselect import CSSSelector
 from lxml.etree import XPath
 
 from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute, function
-from fundus.parser.data import ArticleSection, TextSequence
+from fundus.parser.data import ArticleSection, Image, TextSequence
 from fundus.parser.utility import (
     generic_author_parsing,
     generic_date_parsing,
     generic_topic_parsing,
+    image_extraction,
     parse_json,
 )
 
@@ -52,3 +54,14 @@ class WestAustralianParser(ParserProxy):
         @attribute
         def topics(self) -> List[str]:
             return generic_topic_parsing(self.precomputed.ld.bf_search("keywords"))
+
+        @attribute
+        def images(self) -> List[Image]:
+            return image_extraction(
+                doc=self.precomputed.doc,
+                paragraph_selector=CSSSelector("div#ArticleContent > p"),
+                upper_boundary_selector=CSSSelector("article"),
+                lower_boundary_selector=CSSSelector("div#footer"),
+                caption_selector=XPath("./ancestor::figure //span[contains(@class, 'CaptionText')] /span[1]"),
+                author_selector=XPath("./ancestor::figure //span[contains(@class, 'CaptionText')] /span[last()]"),
+            )

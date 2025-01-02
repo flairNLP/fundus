@@ -5,11 +5,12 @@ from typing import List, Match, Optional, Pattern
 from lxml.cssselect import CSSSelector
 from lxml.etree import XPath
 
-from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute
+from fundus.parser import ArticleBody, BaseParser, Image, ParserProxy, attribute
 from fundus.parser.utility import (
     extract_article_body_with_selector,
     generic_author_parsing,
     generic_date_parsing,
+    image_extraction,
 )
 
 
@@ -65,3 +66,20 @@ class FocusParser(ParserProxy):
             topic_names: List[str] = re.findall(self._topic_name_pattern, match.group(1))
 
             return topic_names
+
+        @attribute
+        def images(self) -> List[Image]:
+            return image_extraction(
+                doc=self.precomputed.doc,
+                paragraph_selector=self._paragraph_selector,
+                image_selector=XPath("//div[@class='image clearfix']//img|//figure//img"),
+                caption_selector=XPath(
+                    "./ancestor::div[@class='image clearfix']//span[@class='caption']|"
+                    "./ancestor::figure//span[@class='Image-Caption']"
+                ),
+                author_selector=XPath(
+                    "./ancestor::div[@class='image clearfix']//span[@class='source']|"
+                    "./ancestor::figure//span[@class='Image-Credit']"
+                ),
+                lower_boundary_selector=XPath("//footer"),
+            )
