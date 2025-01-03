@@ -542,13 +542,13 @@ def get_versions_from_node(
                 query_width = f"{param}:{value}"
 
     # get width, height and init calculator
-    try:
-        width = float(source.get("width") or 0) or None
-    except ValueError:
+    if (src_width := source.get("width")) and src_width.replace(".", "", 1).isdigit():
+        width = float(src_width or 0) or None
+    else:
         width = None
-    try:
-        height = float(source.get("height") or 0) or None
-    except ValueError:
+    if (src_height := source.get("height")) and src_height.replace(".", "", 1).isdigit():
+        height = float(src_height or 0) or None
+    else:
         height = None
     if width and height:
         ratio = width / height
@@ -654,7 +654,6 @@ def parse_image_nodes(
                 caption = re.sub(author_selector, "", caption).strip() or None
             elif description and (match := re.search(author_selector, description)):
                 authors = [match.group("credits")]
-                description = re.sub(author_selector, "", description).strip() or None
         else:
             # author is selectable as node
             if author_nodes := author_selector(node):

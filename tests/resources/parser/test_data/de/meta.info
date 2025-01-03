@@ -27,6 +27,10 @@
     "url": "https://www.boersen-zeitung.de/kapitalmaerkte/steigende-us-zinsen-setzen-dax-zu",
     "crawl_date": "2024-10-23 23:15:01.852750"
   },
+  "BoersenZeitung_2024_12_16.html.gz": {
+    "url": "https://www.boersen-zeitung.de/banken-finanzen/wero-besteht-praxistest-im-digitalen-handel",
+    "crawl_date": "2024-12-16 14:21:36.405815"
+  },
   "BusinessInsiderDE_2024_01_29.html.gz": {
     "url": "https://www.businessinsider.de/wirtschaft/international-business/wie-gross-ist-evergrande-chinas-sterbender-immobilienriese/",
     "crawl_date": "2024-01-29 22:53:02.986279"

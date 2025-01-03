@@ -1,0 +1,104 @@
+{
+  "V1": {
+    "authors": [
+      "Konstantin Furrer",
+      "Deutsche Presse-Agentur"
+    ],
+    "body": {
+      "summary": [
+        "Wahleinmischung per Algorithmus? Tiktok steht im Verdacht, ausländische Einflüsse nicht ausreichend zu bekämpfen. Es drohen Strafen.",
+        "Die Europäische Kommission untersucht den Einfluss von Tiktok auf die rumänischen Präsidentschaftswahlen.",
+        "Tiktok steht im Verdacht, ausländische Einmischung nicht ausreichend zu bekämpfen.",
+        "Tiktok weist die Vorwürfe zurück und betont, keine bezahlte politische Werbung zu akzeptieren."
+      ],
+      "sections": [
+        {
+          "headline": [],
+          "paragraphs": [
+            "Die Europäische Kommission hat im Zusammenhang mit der inzwischen annullierten Präsidentenwahl in Rumänien ein Verfahren gegen die Online-Plattform Tiktok eröffnet. Es soll geprüft werden, ob der chinesische Konzern bei Wahlen genug gegen die Einmischung von ausländischen Akteuren vorgeht, wie die Kommission in Brüssel mitteilte.",
+            "Konkret will sich die Brüsseler Behörde unter anderem Tiktoks Empfehlungssysteme anschauen, also den Algorithmus der Plattform. Dabei soll es um koordinierte, nicht authentische Manipulation sowie die automatisierte Nutzung des Dienstes gehen. Ausserdem steht im Fokus, wie Tiktok mit politischer Werbung und bezahlten politischen Inhalten umgeht."
+          ]
+        },
+        {
+          "headline": [
+            "Strenge Regeln durch EU-Gesetz"
+          ],
+          "paragraphs": [
+            "Plattformen wie Tiktok, Facebook, X, Google und viele andere müssen nach dem EU-Gesetz DSA (Digital Services Act) schneller und schärfer als früher gegen illegale Inhalte im Netz vorgehen. Sonst drohen ihnen Geldbussen. Grundsätzlich müssen grosse Dienste wie Facebook und Instagram mehr Regeln befolgen als kleine.",
+            "EU-Kommissionspräsidentin Ursula von der Leyen mahnte an, dass die Demokratien vor jeder Art von ausländischer Einmischung geschützt werden müssten. Nach ernsthaften Hinweisen darauf, dass sich ausländische Akteure mit Hilfe von Tiktok in die rumänischen Präsidentschaftswahlen eingemischt haben, werde nun gründlich untersucht, ob der Konzern solche Risiken ausreichend bekämpft, sagte sie. «Wann immer wir eine solche Einmischung vermuten, insbesondere bei Wahlen, müssen wir schnell und entschlossen handeln.»"
+          ]
+        },
+        {
+          "headline": [
+            "Vorwürfe gegen Tiktok in Rumänien"
+          ],
+          "paragraphs": [
+            "Der chinesische Konzern weist die Vorwürfe von sich. «Wir haben die Integrität unserer Plattform bei über 150 Wahlen auf der ganzen Welt geschützt», teilte eine Sprecherin auf Anfrage mit. «Wir akzeptieren keine bezahlte politische Werbung, wir entfernen proaktiv Inhalte, die gegen unsere Richtlinien zu Fehlinformationen, Belästigung und Hassreden verstossen.» Tiktok wolle weiterhin mit der Europäischen Kommission sowie mit regionalen und nationalen Behörden zusammenarbeiten, um Anfragen zu bearbeiten und Bedenken zu diskutieren.",
+            "Der Oberste Verteidigungsrat (CSAT) in Rumänien hatte Tiktok nach dem Erfolg des prorussischen Rechtsradikalen Calin Georgescu bei der Präsidentenwahl schwere Vorwürfe gemacht. Die Plattform habe es unterlassen, ihn bei seinen dort veröffentlichten Propagandamaterialien als Politiker zu identifizieren. Zur Methode des Wahlkampfs von Georgescu und dessen Finanzierung ermittelt inzwischen Rumäniens Staatsanwaltschaft.",
+            "Georgescu hatte vor allem auf Tiktok Wahlkampf betrieben. Er war in der ersten Runde der Präsidentenwahl auf Platz eins gekommen, gefolgt von der konservativ-liberalen Politikerin Elena Lasconi. Inzwischen hat das Verfassungsgericht die Wahl annulliert. Der gesamte Wahlprozess muss wiederholt werden. Einen Termin dafür gibt es noch nicht."
+          ]
+        }
+      ]
+    },
+    "images": [
+      {
+        "versions": [
+          {
+            "url": "https://image.20min.ch/2024/12/17/43ef34fc-44c2-4745-a495-6aca1f078fcb.jpeg?auto=format%2Ccompress%2Cenhance&fit=max&w=400&h=400&rect=0%2C0%2C4000%2C2668&s=faff33f729f74cfb0c9845bc22463846",
+            "query_width": null,
+            "size": {
+              "width": 400,
+              "height": 267
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://image.20min.ch/2024/12/17/43ef34fc-44c2-4745-a495-6aca1f078fcb.jpeg?auto=format%2Ccompress%2Cenhance&fit=max&w=800&h=800&rect=0%2C0%2C4000%2C2668&s=f2eb418733a24986c7a2025d254468a4",
+            "query_width": null,
+            "size": {
+              "width": 800,
+              "height": 533
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://image.20min.ch/2024/12/17/43ef34fc-44c2-4745-a495-6aca1f078fcb.jpeg?auto=format%2Ccompress%2Cenhance&fit=max&w=1200&h=1200&rect=0%2C0%2C4000%2C2668&s=a2415f57549c7112a8c3f9a5873b7311",
+            "query_width": null,
+            "size": {
+              "width": 1200,
+              "height": 800
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://image.20min.ch/2024/12/17/43ef34fc-44c2-4745-a495-6aca1f078fcb.jpeg?auto=format%2Ccompress%2Cenhance&fit=max&w=1600&h=1600&rect=0%2C0%2C4000%2C2668&s=3944bc50c1753e0bba311f62d0f5533f",
+            "query_width": null,
+            "size": {
+              "width": 1600,
+              "height": 1067
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://image.20min.ch/2024/12/17/43ef34fc-44c2-4745-a495-6aca1f078fcb.jpeg?auto=format%2Ccompress%2Cenhance&fit=max&w=2001&h=2000&rect=0%2C0%2C4000%2C2668&s=6c85d31359785915218bcf95f7283e51",
+            "query_width": null,
+            "size": {
+              "width": 2001,
+              "height": 1334
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": false,
+        "description": "«Wann immer wir eine solche Einmischung vermuten, insbesondere bei Wahlen, müssen wir schnell und entschlossen handeln», sagt EU-Kommissionspräsidentin Ursula von der Leyen.",
+        "caption": "«Wann immer wir eine solche Einmischung vermuten, insbesondere bei Wahlen, müssen wir schnell und entschlossen handeln», sagt EU-Kommissionspräsidentin Ursula von der Leyen.",
+        "authors": [
+          "Philipp von Ditfurth/dpa"
+        ],
+        "position": 459
+      }
+    ],
+    "publishing_date": "2024-12-17 12:17:15+01:00",
+    "title": "Tiktok: Brüssel untersucht Wahleinmischung"
+  }
+}

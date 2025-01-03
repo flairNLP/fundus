@@ -212,7 +212,7 @@ class LinkedDataMapping:
             xml = f"<result{i}>" + node2string(node) + f"</result{i}>"
             results.update(replace_keys_in_nested_dict(xmltodict.parse(xml), to_original_characters))
 
-        values = list(results.values())
+        values = list(filter(bool, results.values()))
 
         if scalar:
             if not values:

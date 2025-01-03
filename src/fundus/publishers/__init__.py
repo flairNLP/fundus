@@ -11,6 +11,7 @@ from fundus.publishers.de import DE
 from fundus.publishers.es import ES
 from fundus.publishers.fr import FR
 from fundus.publishers.ind import IND
+from fundus.publishers.it import IT
 from fundus.publishers.jp import JP
 from fundus.publishers.lt import LT
 from fundus.publishers.my import MY
@@ -70,4 +71,5 @@ class PublisherCollection(metaclass=PublisherCollectionMeta):
     ca = CA
     es = ES
     jp = JP
+    it = IT
     tw = TW
