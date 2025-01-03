@@ -1001,6 +1001,21 @@
   <tbody>
     <tr>
       <td>
+        <code>ElMundo</code>
+      </td>
+      <td>
+        <div>El Mundo</div>
+      </td>
+      <td>
+        <a href="https://www.elmundo.es/">
+          <span>www.elmundo.es</span>
+        </a>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
         <code>ElPais</code>
       </td>
       <td>
