@@ -11,7 +11,6 @@ from .berliner_zeitung import BerlinerZeitungParser
 from .bild import BildParser
 from .boersenzeitung import BoersenZeitungParser
 from .br import BRParser
-from .braunschweiger_zeitung import BSZParser
 from .business_insider_de import BusinessInsiderDEParser
 from .die_welt import DieWeltParser
 from .die_zeit import DieZeitParser
@@ -20,9 +19,9 @@ from .faz import FAZParser
 from .focus import FocusParser
 from .frankfurter_rundschau import FrankfurterRundschauParser
 from .freiepresse import FreiePresseParser
+from .funke import FunkeParser
 from .gamestar import GamestarParser
 from .golem import GolemParser
-from .hamburger_abendblatt import HamburgerAbendblattParser
 from .heise import HeiseParser
 from .hessenschau import HessenschauParser
 from .junge_welt import JungeWeltParser
@@ -30,7 +29,6 @@ from .kicker import KickerParser
 from .krautreporter import KrautreporterParser
 from .mdr import MDRParser
 from .merkur import MerkurParser
-from .morgenpost_berlin import BerlinerMorgenpostParser
 from .motorsport_magazin import MotorSportMagazinParser
 from .mz import MitteldeutscheZeitungParser
 from .ndr import NDRParser
@@ -82,7 +80,7 @@ class DE(metaclass=PublisherGroup):
     BerlinerMorgenpost = Publisher(
         name="Berliner Morgenpost",
         domain="https://www.morgenpost.de/",
-        parser=BerlinerMorgenpostParser,
+        parser=FunkeParser,
         sources=[NewsMap("https://www.morgenpost.de/sitemaps/news.xml")]
         + [
             Sitemap(f"https://www.morgenpost.de/sitemaps/archive/sitemap-{d.year}-{str(d.month).zfill(2)}-p00.xml.gz")
@@ -93,7 +91,7 @@ class DE(metaclass=PublisherGroup):
     HamburgerAbendblatt = Publisher(
         name="Hamburger Abendblatt",
         domain="https://www.abendblatt.de/",
-        parser=HamburgerAbendblattParser,
+        parser=FunkeParser,
         sources=[
             RSSFeed("https://www.abendblatt.de/rss"),
             NewsMap("https://www.abendblatt.de/sitemaps/news.xml"),
@@ -296,7 +294,7 @@ class DE(metaclass=PublisherGroup):
     BSZ = Publisher(
         name="Braunschweiger Zeitung",
         domain="https://www.braunschweiger-zeitung.de/",
-        parser=BSZParser,
+        parser=FunkeParser,
         sources=[
             RSSFeed("https://www.braunschweiger-zeitung.de/rss"),
             NewsMap("https://www.braunschweiger-zeitung.de/sitemaps/news.xml"),
