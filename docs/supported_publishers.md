@@ -1174,6 +1174,23 @@
   <tbody>
     <tr>
       <td>
+        <code>CorriereDellaSera</code>
+      </td>
+      <td>
+        <div>Corriere Della Sera</div>
+      </td>
+      <td>
+        <a href="https://www.corriere.it/">
+          <span>www.corriere.it</span>
+        </a>
+      </td>
+      <td>
+        <code>topics</code>
+      </td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
         <code>LaRepubblica</code>
       </td>
       <td>
