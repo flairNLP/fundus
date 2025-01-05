@@ -6,7 +6,7 @@ from fundus.publishers.base_objects import Publisher, PublisherGroup
 from fundus.scraping.filter import inverse, regex_filter
 from fundus.scraping.url import NewsMap, RSSFeed, Sitemap
 
-from ..shared import EuronewsParser, FunkeParser
+from ..shared import EuronewsParser
 from .berliner_zeitung import BerlinerZeitungParser
 from .bild import BildParser
 from .boersenzeitung import BoersenZeitungParser
@@ -19,6 +19,7 @@ from .faz import FAZParser
 from .focus import FocusParser
 from .frankfurter_rundschau import FrankfurterRundschauParser
 from .freiepresse import FreiePresseParser
+from .funke import FunkeParser
 from .gamestar import GamestarParser
 from .golem import GolemParser
 from .heise import HeiseParser
