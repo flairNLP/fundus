@@ -225,7 +225,7 @@ def get_ld_content(root: lxml.html.HtmlElement) -> LinkedDataMapping:
     return LinkedDataMapping(extract_json_from_dom(root, _ld_node_selector))
 
 
-_meta_node_selector = CSSSelector("head > meta, body > meta")
+_meta_node_selector = CSSSelector("head > meta, body > meta, article > meta")
 
 
 def get_meta_content(root: lxml.html.HtmlElement) -> Dict[str, str]:

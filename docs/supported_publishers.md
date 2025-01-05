@@ -206,6 +206,7 @@
         </a>
       </td>
       <td>
+        <code>images</code>
         <code>topics</code>
       </td>
       <td>&#160;</td>
