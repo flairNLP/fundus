@@ -25,7 +25,73 @@
         }
       ]
     },
-    "images": [],
+    "images": [
+      {
+        "versions": [
+          {
+            "url": "https://pics.freiepresse.de/DYNIMG/chemnitzer-hutfestival-wann-das-fest-steigt-was-neu-ist-und-wer-fuer-eine-gute-show-sorgen-wird/w213Ko8B60gE5rTmW10p/22/17/13862217_M400x267.jpg",
+            "query_width": null,
+            "size": {
+              "width": 400,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://pics.freiepresse.de/DYNIMG/chemnitzer-hutfestival-wann-das-fest-steigt-was-neu-ist-und-wer-fuer-eine-gute-show-sorgen-wird/w213Ko8B60gE5rTmW10p/22/17/13862217_M650x433.jpg",
+            "query_width": null,
+            "size": {
+              "width": 650,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://pics.freiepresse.de/DYNIMG/chemnitzer-hutfestival-wann-das-fest-steigt-was-neu-ist-und-wer-fuer-eine-gute-show-sorgen-wird/w213Ko8B60gE5rTmW10p/22/17/13862217_M800x534.jpg",
+            "query_width": null,
+            "size": {
+              "width": 800,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://pics.freiepresse.de/DYNIMG/chemnitzer-hutfestival-wann-das-fest-steigt-was-neu-ist-und-wer-fuer-eine-gute-show-sorgen-wird/w213Ko8B60gE5rTmW10p/22/17/13862217_M1020x765.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1020,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://pics.freiepresse.de/DYNIMG/chemnitzer-hutfestival-wann-das-fest-steigt-was-neu-ist-und-wer-fuer-eine-gute-show-sorgen-wird/w213Ko8B60gE5rTmW10p/22/17/13862217_M1300x866.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1300,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://pics.freiepresse.de/DYNIMG/chemnitzer-hutfestival-wann-das-fest-steigt-was-neu-ist-und-wer-fuer-eine-gute-show-sorgen-wird/w213Ko8B60gE5rTmW10p/22/17/13862217_M2040x1530.jpg",
+            "query_width": null,
+            "size": {
+              "width": 2040,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": true,
+        "description": "Chemnitzer Hutfestival: Wann das Fest steigt, was neu ist und wer für eine gute Show sorgen wird - Im Vorjahr zog das Hutfestival Tausende Besucher an.",
+        "caption": "Im Vorjahr zog das Hutfestival Tausende Besucher an.",
+        "authors": [
+          "Andreas Seidel/Archiv"
+        ],
+        "position": 615
+      }
+    ],
     "publishing_date": "2024-04-30 00:00:00",
     "title": "Chemnitzer Hutfestival: Wann das Fest steigt, was neu ist und wer für eine gute Show sorgen wird",
     "topics": [
