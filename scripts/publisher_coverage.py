@@ -76,6 +76,7 @@ def main() -> None:
                         f"publishing_date: {incomplete_article.publishing_date is not None}\n"
                         f"authors: {incomplete_article.authors is not None and not len(incomplete_article.authors) == 0}\n"
                         f"topics: {incomplete_article.topics is not None and not len(incomplete_article.topics) == 0}\n"
+                        f"images: {incomplete_article.images is not None and not len(incomplete_article.topics) == 0}\n"
                     )
                 failed += 1
                 continue
