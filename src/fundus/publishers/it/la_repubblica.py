@@ -29,7 +29,7 @@ class LaRepubblicaParser(ParserProxy):
 
         @attribute
         def body(self) -> Optional[ArticleBody]:
-            # Extract article body using utility function
+            # Extract the article body using utility function
             return extract_article_body_with_selector(
                 self.precomputed.doc,
                 summary_selector=self._summary_selector,
