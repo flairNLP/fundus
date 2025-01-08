@@ -1,15 +1,17 @@
+import re
 from datetime import datetime
 from typing import List, Optional
 
 from lxml.cssselect import CSSSelector
 from lxml.etree import XPath
 
-from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute
+from fundus.parser import ArticleBody, BaseParser, Image, ParserProxy, attribute
 from fundus.parser.utility import (
     extract_article_body_with_selector,
     generic_author_parsing,
     generic_date_parsing,
     generic_topic_parsing,
+    image_extraction,
 )
 
 
@@ -27,9 +29,10 @@ class LaRepubblicaParser(ParserProxy):
 
         @attribute
         def body(self) -> Optional[ArticleBody]:
-            # Extract article body using utility function
+            # Extract the article body using utility function
             return extract_article_body_with_selector(
                 self.precomputed.doc,
+                summary_selector=self._summary_selector,
                 paragraph_selector=self._paragraph_selector,
                 subheadline_selector=self._subheadline_selector,
             )
@@ -53,3 +56,12 @@ class LaRepubblicaParser(ParserProxy):
             # Simplified topic extraction using name in xpath
             topics = self.precomputed.ld.xpath_search("//NewsArticle/about/name")
             return generic_topic_parsing(topics) if topics else []
+
+        @attribute
+        def images(self) -> List[Image]:
+            return image_extraction(
+                doc=self.precomputed.doc,
+                paragraph_selector=self._paragraph_selector,
+                image_selector=XPath("//figure[not(@class='inline-article__media')]//*[not(self::noscript)]/img"),
+                author_selector=re.compile(r"\((foto)?(?P<credits>.*)\)$"),
+            )
