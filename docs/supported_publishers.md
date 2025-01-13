@@ -1222,6 +1222,21 @@
     </tr>
     <tr>
       <td>
+        <code>ChunichiShimbun</code>
+      </td>
+      <td>
+        <div>Chunichi Shimbun</div>
+      </td>
+      <td>
+        <a href="https://www.chunichi.co.jp/">
+          <span>www.chunichi.co.jp</span>
+        </a>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
         <code>TheJapanNews</code>
       </td>
       <td>

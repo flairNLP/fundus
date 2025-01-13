@@ -15,7 +15,7 @@ from fundus.parser.utility import (
 )
 
 
-class TokyoShimbunParser(ParserProxy):
+class TokyoChunichiShimbunParser(ParserProxy):
     class V1(BaseParser):
         _paragraph_selector = XPath("//div[@class='block' and not(descendant::div or descendant::h2)]")
         _subheadline_selector = XPath("//div[@class='block']//h2")
@@ -48,8 +48,11 @@ class TokyoShimbunParser(ParserProxy):
         def images(self) -> List[Image]:
             return image_extraction(
                 doc=self.precomputed.doc,
-                image_selector=CSSSelector("div.image img"),
-                caption_selector=XPath("./ancestor::div[@class='wrap']//p[@class='caption']"),
+                image_selector=CSSSelector("main div.image img, main div.thumb img"),
+                caption_selector=XPath(
+                    "./ancestor::div[@class='wrap']//p[@class='caption'] | "
+                    "./ancestor::div[@class='thumb']//p[@class='thumb-caption']"
+                ),
                 author_selector=re.compile(r"（(?P<credits>[^）]+)）\s*$"),
                 paragraph_selector=self._paragraph_selector,
                 relative_urls=True,
