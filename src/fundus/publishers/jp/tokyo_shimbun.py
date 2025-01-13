@@ -2,6 +2,7 @@ import datetime
 import re
 from typing import List, Optional
 
+from lxml.cssselect import CSSSelector
 from lxml.etree import XPath
 
 from fundus.parser import ArticleBody, BaseParser, Image, ParserProxy, attribute
@@ -9,21 +10,22 @@ from fundus.parser.utility import (
     extract_article_body_with_selector,
     generic_author_parsing,
     generic_date_parsing,
+    generic_topic_parsing,
     image_extraction,
 )
 
 
-class YomiuriShimbunParser(ParserProxy):
+class TokyoShimbunParser(ParserProxy):
     class V1(BaseParser):
-        _paragraph_selector = XPath("//div[@class='p-main-contents ']/p")
-
-        _topic_selector = XPath("//div[contains(@class,'p-related-tags')]/ul/li/a")
+        _paragraph_selector = XPath("//div[@class='block' and not(descendant::div or descendant::h2)]")
+        _subheadline_selector = XPath("//div[@class='block']//h2")
 
         @attribute
         def body(self) -> Optional[ArticleBody]:
             return extract_article_body_with_selector(
                 self.precomputed.doc,
                 paragraph_selector=self._paragraph_selector,
+                subheadline_selector=self._subheadline_selector,
             )
 
         @attribute
@@ -32,7 +34,7 @@ class YomiuriShimbunParser(ParserProxy):
 
         @attribute
         def publishing_date(self) -> Optional[datetime.datetime]:
-            return generic_date_parsing(self.precomputed.meta.get("article:published_time"))
+            return generic_date_parsing(self.precomputed.ld.bf_search("datePublished"))
 
         @attribute
         def authors(self) -> List[str]:
@@ -40,15 +42,15 @@ class YomiuriShimbunParser(ParserProxy):
 
         @attribute
         def topics(self) -> List[str]:
-            return [node.text_content() for node in self._topic_selector(self.precomputed.doc)]
+            return generic_topic_parsing(self.precomputed.ld.bf_search("articleSection"))
 
         @attribute
         def images(self) -> List[Image]:
             return image_extraction(
                 doc=self.precomputed.doc,
+                image_selector=CSSSelector("div.image img"),
+                caption_selector=XPath("./ancestor::div[@class='wrap']//p[@class='caption']"),
+                author_selector=re.compile(r"（(?P<credits>[^）]+)）\s*$"),
                 paragraph_selector=self._paragraph_selector,
-                image_selector=XPath("//div[@class='p-main-contents ']//img"),
-                upper_boundary_selector=XPath("//article"),
                 relative_urls=True,
-                author_selector=re.compile(r"(?P<credits>＝.*)"),
             )

@@ -1237,6 +1237,21 @@
     </tr>
     <tr>
       <td>
+        <code>TokyoShimbun</code>
+      </td>
+      <td>
+        <div>Tokyo Shimbun</div>
+      </td>
+      <td>
+        <a href="https://www.tokyo-np.co.jp/">
+          <span>www.tokyo-np.co.jp</span>
+        </a>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
         <code>YomiuriShimbun</code>
       </td>
       <td>
