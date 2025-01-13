@@ -1,9 +1,7 @@
 import datetime
-import re
 from typing import List, Optional
 
 from lxml.cssselect import CSSSelector
-from lxml.etree import XPath
 
 from fundus.parser import ArticleBody, BaseParser, Image, ParserProxy, attribute
 from fundus.parser.utility import (
@@ -26,6 +24,8 @@ class AsahiShimbunParser(ParserProxy):
             return extract_article_body_with_selector(
                 self.precomputed.doc,
                 paragraph_selector=self._paragraph_selector,
+                summary_selector=self._summary_selector,
+                subheadline_selector=self._subtitle_selector,
             )
 
         @attribute
