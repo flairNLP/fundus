@@ -44,9 +44,7 @@ class ABCParser(ParserProxy):
 
         @attribute
         def topics(self) -> List[str]:
-            return [
-                node.text_content().strip() for node in self._topics_selector(self.precomputed.doc)
-            ]
+            return [node.text_content().strip() for node in self._topics_selector(self.precomputed.doc)]
 
         @attribute
         def images(self) -> List[Image]:
