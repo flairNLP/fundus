@@ -1207,6 +1207,21 @@
   <tbody>
     <tr>
       <td>
+        <code>AsahiShimbun</code>
+      </td>
+      <td>
+        <div>Asahi Shimbun</div>
+      </td>
+      <td>
+        <a href="https://www.asahi.com/">
+          <span>www.asahi.com</span>
+        </a>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
         <code>TheJapanNews</code>
       </td>
       <td>
