@@ -6,6 +6,8 @@ from fundus.scraping.url import NewsMap, Sitemap
 
 
 class JP(metaclass=PublisherGroup):
+    default_languages = {"jp"}
+
     TheJapanNews = Publisher(
         name="The Japan News",
         domain="https://japannews.yomiuri.co.jp/",
@@ -14,8 +16,12 @@ class JP(metaclass=PublisherGroup):
             Sitemap(
                 "https://japannews.yomiuri.co.jp/sitemap.xml",
                 sitemap_filter=regex_filter(r"(sitemap-news|sitemap-root|category)"),
+                languages={"en"},
             ),
-            NewsMap("https://japannews.yomiuri.co.jp/sitemap-news.xml"),
+            NewsMap(
+                "https://japannews.yomiuri.co.jp/sitemap-news.xml",
+                languages={"en"},
+            ),
         ],
     )
 
@@ -24,7 +30,10 @@ class JP(metaclass=PublisherGroup):
         domain="https://www.yomiuri.co.jp/",
         parser=YomiuriShimbunParser,
         sources=[
-            Sitemap("https://www.yomiuri.co.jp/sitemap.xml", sitemap_filter=regex_filter("sitemap-news-latest")),
+            Sitemap(
+                "https://www.yomiuri.co.jp/sitemap.xml",
+                sitemap_filter=regex_filter("sitemap-news-latest"),
+            ),
             NewsMap("https://www.yomiuri.co.jp/sitemap-news-latest.xml"),
         ],
     )

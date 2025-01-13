@@ -7,6 +7,7 @@ from .ntvtr import NTVTRParser
 
 
 class TR(metaclass=PublisherGroup):
+    default_languages = {"tr"}
     Haberturk = Publisher(
         name="Haberturk",
         domain="https://www.haberturk.com/",
@@ -16,6 +17,7 @@ class TR(metaclass=PublisherGroup):
                 "https://www.haberturk.com/sitemap.xml",
                 sitemap_filter=inverse(regex_filter("news|special|posts|ozel_icerikler")),
                 reverse=True,
+                languages={"tr"},
             ),
             NewsMap("https://www.haberturk.com/sitemap_google_news.xml"),
         ],

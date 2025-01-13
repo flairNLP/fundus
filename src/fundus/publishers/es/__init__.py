@@ -10,6 +10,8 @@ from fundus.scraping.url import NewsMap, RSSFeed, Sitemap
 
 
 class ES(metaclass=PublisherGroup):
+    default_languages = {"es"}
+
     ElPais = Publisher(
         name="El País",
         domain="https://elpais.com/",

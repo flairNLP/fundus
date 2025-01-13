@@ -6,6 +6,8 @@ from .the_namibian import TheNamibianParser
 
 
 class NA(metaclass=PublisherGroup):
+    default_languages = {"en", "kj"}
+
     TheNamibian = Publisher(
         name="The Namibian",
         domain="https://www.namibian.com.na/",

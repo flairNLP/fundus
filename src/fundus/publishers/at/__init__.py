@@ -8,6 +8,8 @@ from .orf import OrfParser
 
 
 class AT(metaclass=PublisherGroup):
+    default_languages = {"de"}
+
     ORF = Publisher(
         name="Österreichischer Rundfunk",
         domain="https://www.orf.at",

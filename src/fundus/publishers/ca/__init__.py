@@ -8,6 +8,8 @@ from fundus.scraping.url import NewsMap, RSSFeed, Sitemap
 
 
 class CA(metaclass=PublisherGroup):
+    default_languages = {"en"}
+
     CBCNews = Publisher(
         name="CBC News",
         domain="https://www.cbc.ca/",

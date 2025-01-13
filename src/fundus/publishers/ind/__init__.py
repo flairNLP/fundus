@@ -5,6 +5,8 @@ from fundus.scraping.url import NewsMap, RSSFeed, Sitemap
 
 
 class IND(metaclass=PublisherGroup):
+    default_languages = {"en"}
+
     TimesOfIndia = Publisher(
         name="Times Of India",
         domain="https://www.timesofindia.indiatimes.com",
@@ -21,5 +23,5 @@ class IND(metaclass=PublisherGroup):
         name="Dainik Bhaskar",
         domain="https://www.bhaskar.com/",
         parser=BhaskarParser,
-        sources=[NewsMap("https://www.bhaskar.com/sitemaps-v1--sitemap-google-news-index.xml")],
+        sources=[NewsMap("https://www.bhaskar.com/sitemaps-v1--sitemap-google-news-index.xml", languages={"hi"})],
     )
