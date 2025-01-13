@@ -24,6 +24,8 @@ from .world_truth import WorldTruthParser
 
 
 class US(metaclass=PublisherGroup):
+    default_languages = {"en"}
+
     APNews = Publisher(
         name="Associated Press News",
         domain="https://apnews.com/",
@@ -44,8 +46,8 @@ class US(metaclass=PublisherGroup):
         domain="https://www.cnbc.com/",
         parser=CNBCParser,
         sources=[
-            Sitemap("https://www.cnbc.com/sitemapAll.xml", languages={"en"}),
-            NewsMap("https://www.cnbc.com/sitemap_news.xml", languages={"en"}),
+            Sitemap("https://www.cnbc.com/sitemapAll.xml"),
+            NewsMap("https://www.cnbc.com/sitemap_news.xml"),
         ],
     )
 
@@ -58,9 +60,8 @@ class US(metaclass=PublisherGroup):
                 "https://techcrunch.com/sitemap_index.xml",
                 sitemap_filter=inverse(regex_filter("post-sitemap")),
                 reverse=True,
-                languages={"en"},
             ),
-            NewsMap("https://techcrunch.com/news-sitemap.xml", languages={"en"}),
+            NewsMap("https://techcrunch.com/news-sitemap.xml"),
         ],
     )
 
@@ -69,12 +70,11 @@ class US(metaclass=PublisherGroup):
         domain="https://theintercept.com/",
         parser=TheInterceptParser,
         sources=[
-            RSSFeed("https://theintercept.com/feed/?lang=en", languages={"en"}),
+            RSSFeed("https://theintercept.com/feed/?lang=en"),
             Sitemap(
                 "https://theintercept.com/sitemap_index.xml",
                 reverse=True,
                 sitemap_filter=inverse(regex_filter("post-sitemap")),
-                languages={"en"},
             ),
         ],
     )
@@ -88,9 +88,8 @@ class US(metaclass=PublisherGroup):
                 "https://www.thegatewaypundit.com/sitemap_index.xml",
                 sitemap_filter=inverse(regex_filter("post-sitemap")),
                 reverse=True,
-                languages={"en"},
             ),
-            NewsMap("https://www.thegatewaypundit.com/news-sitemap.xml", languages={"en"}),
+            NewsMap("https://www.thegatewaypundit.com/news-sitemap.xml"),
         ],
     )
 
@@ -102,9 +101,8 @@ class US(metaclass=PublisherGroup):
             Sitemap(
                 "https://www.foxnews.com/sitemap.xml",
                 sitemap_filter=inverse(regex_filter("type=articles")),
-                languages={"en"},
             ),
-            NewsMap("https://www.foxnews.com/sitemap.xml?type=news", languages={"en"}),
+            NewsMap("https://www.foxnews.com/sitemap.xml?type=news"),
         ],
     )
 
@@ -117,9 +115,8 @@ class US(metaclass=PublisherGroup):
                 "https://www.thenation.com/sitemap_index.xml",
                 sitemap_filter=inverse(regex_filter("article-sitemap")),
                 reverse=True,
-                languages={"en"},
             ),
-            NewsMap("https://www.thenation.com/news-sitemap.xml", languages={"en"}),
+            NewsMap("https://www.thenation.com/news-sitemap.xml"),
         ],
     )
 
@@ -138,13 +135,11 @@ class US(metaclass=PublisherGroup):
                 "https://freebeacon.com/wp-sitemap.xml",
                 sitemap_filter=inverse(regex_filter("post-sitemap")),
                 reverse=True,
-                languages={"en"},
             ),
             Sitemap(
                 "https://freebeacon.com/wp-sitemap.xml",
                 sitemap_filter=inverse(regex_filter("blog-sitemap")),
                 reverse=True,
-                languages={"en"},
             ),
         ],
         parser=FreeBeaconParser,
@@ -155,9 +150,9 @@ class US(metaclass=PublisherGroup):
         domain="https://www.washingtontimes.com/",
         parser=WashingtonTimesParser,
         sources=[
-            RSSFeed("https://www.washingtontimes.com/rss/headlines/news/politics/", languages={"en"}),
-            Sitemap("https://www.washingtontimes.com/sitemap-stories.xml", languages={"en"}),
-            Sitemap("https://www.washingtontimes.com/sitemap-entries.xml", languages={"en"}),
+            RSSFeed("https://www.washingtontimes.com/rss/headlines/news/politics/"),
+            Sitemap("https://www.washingtontimes.com/sitemap-stories.xml"),
+            Sitemap("https://www.washingtontimes.com/sitemap-entries.xml"),
         ],
         deprecated=True,
     )
@@ -167,10 +162,10 @@ class US(metaclass=PublisherGroup):
         domain="https://www.washingtonpost.com/",
         parser=WashingtonPostParser,
         sources=[
-            Sitemap("https://www.washingtonpost.com/sitemaps/sitemap.xml.gz", languages={"en"}),
-            NewsMap("https://www.washingtonpost.com/sitemaps/news-sitemap.xml.gz", languages={"en"}),
-            RSSFeed("https://feeds.washingtonpost.com/rss/world", languages={"en"}),
-            RSSFeed("https://feeds.washingtonpost.com/rss/national", languages={"en"}),
+            Sitemap("https://www.washingtonpost.com/sitemaps/sitemap.xml.gz"),
+            NewsMap("https://www.washingtonpost.com/sitemaps/news-sitemap.xml.gz"),
+            RSSFeed("https://feeds.washingtonpost.com/rss/world"),
+            RSSFeed("https://feeds.washingtonpost.com/rss/national"),
         ],
         # Adds a URL-filter to ignore incomplete URLs
         url_filter=regex_filter(r"washingtonpost.com(\/)?$"),
@@ -182,8 +177,8 @@ class US(metaclass=PublisherGroup):
         domain="https://www.newyorker.com/",
         parser=TheNewYorkerParser,
         sources=[
-            Sitemap("https://www.newyorker.com/sitemap.xml", languages={"en"}),
-            NewsMap("https://www.newyorker.com/feed/google-news-sitemap-feed/sitemap-google-news", languages={"en"}),
+            Sitemap("https://www.newyorker.com/sitemap.xml"),
+            NewsMap("https://www.newyorker.com/feed/google-news-sitemap-feed/sitemap-google-news"),
         ],
     )
 
@@ -192,8 +187,8 @@ class US(metaclass=PublisherGroup):
         domain="https://www.reuters.com/",
         parser=ReutersParser,
         sources=[
-            Sitemap("https://www.reuters.com/arc/outboundfeeds/sitemap-index/?outputType=xml", languages={"en"}),
-            NewsMap("https://www.reuters.com/arc/outboundfeeds/news-sitemap-index/?outputType=xml", languages={"en"}),
+            Sitemap("https://www.reuters.com/arc/outboundfeeds/sitemap-index/?outputType=xml"),
+            NewsMap("https://www.reuters.com/arc/outboundfeeds/news-sitemap-index/?outputType=xml"),
         ],
         deprecated=True,
     )
@@ -206,7 +201,6 @@ class US(metaclass=PublisherGroup):
             Sitemap(
                 url="https://occupydemocrats.com/sitemap.xml",
                 sitemap_filter=inverse(regex_filter(r"post-sitemap")),
-                languages={"en"},
             )
         ],
         deprecated=True,
@@ -217,8 +211,8 @@ class US(metaclass=PublisherGroup):
         domain="https://www.latimes.com/",
         parser=LATimesParser,
         sources=[
-            Sitemap("https://www.latimes.com/sitemap.xml", languages={"en"}),
-            NewsMap("https://www.latimes.com/news-sitemap.xml", languages={"en"}),
+            Sitemap("https://www.latimes.com/sitemap.xml"),
+            NewsMap("https://www.latimes.com/news-sitemap.xml"),
         ],
     )
 
@@ -227,8 +221,8 @@ class US(metaclass=PublisherGroup):
         domain="https://www.businessinsider.com/",
         parser=BusinessInsiderParser,
         sources=[
-            NewsMap("https://www.businessinsider.com/sitemap/google-news.xml", languages={"en"}),
-            Sitemap("https://www.businessinsider.com/sitemap/2024-01.xml", languages={"en"}),
+            NewsMap("https://www.businessinsider.com/sitemap/google-news.xml"),
+            Sitemap("https://www.businessinsider.com/sitemap/2024-01.xml"),
         ],
     )
 
@@ -237,11 +231,10 @@ class US(metaclass=PublisherGroup):
         domain="https://www.rollingstone.com/",
         parser=RollingStoneParser,
         sources=[
-            NewsMap("https://www.rollingstone.com/news-sitemap.xml", languages={"en"}),
+            NewsMap("https://www.rollingstone.com/news-sitemap.xml"),
             Sitemap(
                 "https://www.rollingstone.com/sitemap_index.xml",
                 sitemap_filter=inverse(lor(regex_filter("/pmc_list-sitemap"), regex_filter("/post-sitemap"))),
-                languages={"en"},
             ),
         ],
     )
@@ -251,11 +244,10 @@ class US(metaclass=PublisherGroup):
         domain="https://www.voanews.com/",
         parser=VOAParser,
         sources=[
-            NewsMap("https://www.voanews.com/sitemap_415_news.xml.gz", languages={"en"}),
+            NewsMap("https://www.voanews.com/sitemap_415_news.xml.gz"),
             Sitemap(
                 "https://www.voanews.com/sitemap.xml",
                 sitemap_filter=inverse(regex_filter(r"sitemap_[\d_]*\.xml\.gz")),
-                languages={"en"},
             ),
         ],
     )
@@ -265,9 +257,9 @@ class US(metaclass=PublisherGroup):
         domain="https://www.wired.com",
         parser=WiredParser,
         sources=[
-            RSSFeed("https://www.wired.com/feed/rss", languages={"en"}),
-            NewsMap("https://www.wired.com/feed/google-latest-news/sitemap-google-news", languages={"en"}),
-            Sitemap("https://www.wired.com/sitemap.xml", languages={"en"}),
-            Sitemap("https://www.wired.com/sitemap-archive-1.xml", languages={"en"}),
+            RSSFeed("https://www.wired.com/feed/rss"),
+            NewsMap("https://www.wired.com/feed/google-latest-news/sitemap-google-news"),
+            Sitemap("https://www.wired.com/sitemap.xml"),
+            Sitemap("https://www.wired.com/sitemap-archive-1.xml"),
         ],
     )

@@ -10,6 +10,8 @@ from .ta import TAParser
 
 
 class CH(metaclass=PublisherGroup):
+    default_languages = {"de"}
+
     SRF = Publisher(
         name="Schweizer Radio und Fernsehen",
         domain="https://www.srf.ch/",
@@ -26,11 +28,10 @@ class CH(metaclass=PublisherGroup):
         domain="https://www.nzz.ch/",
         parser=NZZParser,
         sources=[
-            NewsMap("https://www.nzz.ch/sitemap/news0.xml", languages={"de"}),
+            NewsMap("https://www.nzz.ch/sitemap/news0.xml"),
             Sitemap(
                 "https://www.nzz.ch/sitemap.xml",
                 sitemap_filter=inverse(regex_filter(r"sitemap/[\d]{4}/[\d]{2}")),
-                languages={"de"},
             ),
         ],
     )

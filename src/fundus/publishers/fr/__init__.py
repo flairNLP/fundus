@@ -8,13 +8,15 @@ from .les_echos import LesEchosParser
 
 
 class FR(metaclass=PublisherGroup):
+    default_languages = {"fr"}
+
     LeMonde = Publisher(
         name="Le Monde",
         domain="https://www.lemonde.fr/",
         parser=LeMondeParser,
         sources=[
-            Sitemap("https://www.lemonde.fr/sitemap_index.xml", languages={"fr"}),
-            NewsMap("https://www.lemonde.fr/sitemap_news.xml", languages={"fr"}),
+            Sitemap("https://www.lemonde.fr/sitemap_index.xml"),
+            NewsMap("https://www.lemonde.fr/sitemap_news.xml"),
         ],
     )
 
@@ -23,8 +25,8 @@ class FR(metaclass=PublisherGroup):
         domain="https://fr.euronews.com/",
         parser=EuronewsParser,
         sources=[
-            Sitemap("https://fr.euronews.com/sitemaps/fr/articles.xml", languages={"fr"}),
-            NewsMap("https://fr.euronews.com/sitemaps/fr/latest-news.xml", languages={"fr"}),
+            Sitemap("https://fr.euronews.com/sitemaps/fr/articles.xml"),
+            NewsMap("https://fr.euronews.com/sitemaps/fr/latest-news.xml"),
         ],
     )
 
@@ -33,10 +35,10 @@ class FR(metaclass=PublisherGroup):
         domain="https://www.lefigaro.fr/",
         parser=LeFigaroParser,
         sources=[
-            Sitemap("https://sitemaps.lefigaro.fr/lefigaro.fr/articles.xml", languages={"fr"}),
-            NewsMap("https://www.lefigaro.fr/sitemap_news.xml", languages={"fr"}),
-            RSSFeed("https://www.lefigaro.fr/rss/figaro_actualites.xml", languages={"fr"}),
-            RSSFeed("https://www.lefigaro.fr/rss/figaro_flash-actu.xml", languages={"fr"}),
+            Sitemap("https://sitemaps.lefigaro.fr/lefigaro.fr/articles.xml"),
+            NewsMap("https://www.lefigaro.fr/sitemap_news.xml"),
+            RSSFeed("https://www.lefigaro.fr/rss/figaro_actualites.xml"),
+            RSSFeed("https://www.lefigaro.fr/rss/figaro_flash-actu.xml"),
         ],
     )
 
@@ -45,8 +47,8 @@ class FR(metaclass=PublisherGroup):
         domain="https://www.lesechos.fr/",
         parser=LesEchosParser,
         sources=[
-            Sitemap("https://sitemap.lesechos.fr/sitemap_index.xml", reverse=True, languages={"fr"}),
-            NewsMap("https://www.lesechos.fr/sitemap_news.xml", languages={"fr"}),
+            Sitemap("https://sitemap.lesechos.fr/sitemap_index.xml", reverse=True),
+            NewsMap("https://www.lesechos.fr/sitemap_news.xml"),
         ],
         deprecated=True,
     )

@@ -5,15 +5,17 @@ from fundus.scraping.url import NewsMap, RSSFeed, Sitemap
 
 
 class IND(metaclass=PublisherGroup):
+    default_languages = {"en"}
+
     TimesOfIndia = Publisher(
         name="Times Of India",
         domain="https://www.timesofindia.indiatimes.com",
         parser=TimesOfIndiaParser,
         sources=[
-            NewsMap("https://timesofindia.indiatimes.com/sitemap/today", languages={"en"}),
-            NewsMap("https://timesofindia.indiatimes.com/sitemap/yesterday", languages={"en"}),
-            RSSFeed("https://timesofindia.indiatimes.com/rssfeedstopstories.cms", languages={"en"}),
-            RSSFeed("https://timesofindia.indiatimes.com/rssfeedmostrecent.cms", languages={"en"}),
+            NewsMap("https://timesofindia.indiatimes.com/sitemap/today"),
+            NewsMap("https://timesofindia.indiatimes.com/sitemap/yesterday"),
+            RSSFeed("https://timesofindia.indiatimes.com/rssfeedstopstories.cms"),
+            RSSFeed("https://timesofindia.indiatimes.com/rssfeedmostrecent.cms"),
         ],
     )
 

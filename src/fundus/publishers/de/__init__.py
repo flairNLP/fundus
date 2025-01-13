@@ -55,14 +55,16 @@ from .zdf import ZDFParser
 
 # noinspection PyPep8Naming
 class DE(metaclass=PublisherGroup):
+    default_languages = {"de"}
+
     SportSchau = Publisher(
         name="Sportschau",
         domain="https://www.sportschau.de/",
         parser=SportSchauParser,
         sources=[
-            RSSFeed("https://www.sportschau.de/index~rss2.xml", languages={"de"}),
-            Sitemap("https://www.sportschau.de/index~sitemap_p-0.xml", languages={"de"}),
-            NewsMap("https://www.sportschau.de/kompakt-sp-100~news.xml", languages={"de"}),
+            RSSFeed("https://www.sportschau.de/index~rss2.xml"),
+            Sitemap("https://www.sportschau.de/index~sitemap_p-0.xml"),
+            NewsMap("https://www.sportschau.de/kompakt-sp-100~news.xml"),
         ],
         url_filter=inverse(regex_filter("sportschau.de")),
     )
@@ -75,9 +77,8 @@ class DE(metaclass=PublisherGroup):
             Sitemap(
                 "https://netzpolitik.org/sitemap.xml",
                 sitemap_filter=inverse(regex_filter("sitemap-posttype-post")),
-                languages={"de"},
             ),
-            RSSFeed("https://netzpolitik.org/feed/", languages={"de"}),
+            RSSFeed("https://netzpolitik.org/feed/"),
         ],
     )
 
@@ -85,11 +86,10 @@ class DE(metaclass=PublisherGroup):
         name="Berliner Morgenpost",
         domain="https://www.morgenpost.de/",
         parser=BerlinerMorgenpostParser,
-        sources=[NewsMap("https://www.morgenpost.de/sitemaps/news.xml", languages={"de"})]
+        sources=[NewsMap("https://www.morgenpost.de/sitemaps/news.xml")]
         + [
             Sitemap(
                 f"https://www.morgenpost.de/sitemaps/archive/sitemap-{d.year}-{str(d.month).zfill(2)}-p00.xml.gz",
-                languages={"de"},
             )
             for d in reversed(list(rrule(MONTHLY, dtstart=datetime(2003, 2, 1), until=datetime.now())))
         ],
@@ -100,13 +100,12 @@ class DE(metaclass=PublisherGroup):
         domain="https://www.abendblatt.de/",
         parser=HamburgerAbendblattParser,
         sources=[
-            RSSFeed("https://www.abendblatt.de/rss", languages={"de"}),
-            NewsMap("https://www.abendblatt.de/sitemaps/news.xml", languages={"de"}),
+            RSSFeed("https://www.abendblatt.de/rss"),
+            NewsMap("https://www.abendblatt.de/sitemaps/news.xml"),
         ]
         + [
             Sitemap(
                 f"https://www.abendblatt.de/sitemaps/archive/sitemap-{d.year}-{str(d.month).zfill(2)}-p00.xml.gz",
-                languages={"de"},
             )
             for d in reversed(list(rrule(MONTHLY, dtstart=datetime(2000, 4, 1), until=datetime.today())))
         ],
@@ -117,9 +116,9 @@ class DE(metaclass=PublisherGroup):
         domain="https://www.welt.de/",
         parser=DieWeltParser,
         sources=[
-            RSSFeed("https://www.welt.de/feeds/latest.rss", languages={"de"}),
-            Sitemap("https://www.welt.de/sitemaps/sitemap/sitemap.xml", languages={"de"}),
-            NewsMap("https://www.welt.de/sitemaps/newssitemap/newssitemap.xml", languages={"de"}),
+            RSSFeed("https://www.welt.de/feeds/latest.rss"),
+            Sitemap("https://www.welt.de/sitemaps/sitemap/sitemap.xml"),
+            NewsMap("https://www.welt.de/sitemaps/newssitemap/newssitemap.xml"),
         ],
         url_filter=regex_filter("/Anlegertipps-|/videos[0-9]{2}"),
     )
@@ -129,9 +128,9 @@ class DE(metaclass=PublisherGroup):
         domain="https://www.mdr.de/",
         parser=MDRParser,
         sources=[
-            RSSFeed("https://www.mdr.de/nachrichten/index-rss.xml", languages={"de"}),
-            Sitemap("https://www.mdr.de/sitemap-index-100.xml", languages={"de"}),
-            NewsMap("https://www.mdr.de/news-sitemap.xml", languages={"de"}),
+            RSSFeed("https://www.mdr.de/nachrichten/index-rss.xml"),
+            Sitemap("https://www.mdr.de/sitemap-index-100.xml"),
+            NewsMap("https://www.mdr.de/news-sitemap.xml"),
         ],
     )
 
@@ -140,13 +139,13 @@ class DE(metaclass=PublisherGroup):
         domain="https://www.faz.net/",
         parser=FAZParser,
         sources=[
-            RSSFeed("https://www.faz.net/rss/aktuell", languages={"de"}),
-            RSSFeed("https://www.faz.net/rss/aktuell/politik", languages={"de"}),
-            RSSFeed("https://www.faz.net/rss/aktuell/sport", languages={"de"}),
-            RSSFeed("https://www.faz.net/rss/aktuell/wirtschaft/", languages={"de"}),
-            RSSFeed("https://www.faz.net/rss/aktuell/gesellschaft/", languages={"de"}),
-            Sitemap("https://www.faz.net/sitemap-index.xml", languages={"de"}),
-            NewsMap("https://www.faz.net/sitemap-news.xml", languages={"de"}),
+            RSSFeed("https://www.faz.net/rss/aktuell"),
+            RSSFeed("https://www.faz.net/rss/aktuell/politik"),
+            RSSFeed("https://www.faz.net/rss/aktuell/sport"),
+            RSSFeed("https://www.faz.net/rss/aktuell/wirtschaft/"),
+            RSSFeed("https://www.faz.net/rss/aktuell/gesellschaft/"),
+            Sitemap("https://www.faz.net/sitemap-index.xml"),
+            NewsMap("https://www.faz.net/sitemap-news.xml"),
         ],
     )
 
@@ -154,7 +153,7 @@ class DE(metaclass=PublisherGroup):
         name="Focus Online",
         domain="https://www.focus.de/",
         parser=FocusParser,
-        sources=[RSSFeed("https://rss.focus.de/fol/XML/rss_folnews.xml", languages={"de"})],
+        sources=[RSSFeed("https://rss.focus.de/fol/XML/rss_folnews.xml")],
         request_header={"user-agent": "Fundus"},
     )
 
@@ -163,9 +162,9 @@ class DE(metaclass=PublisherGroup):
         domain="https://www.merkur.de/",
         parser=MerkurParser,
         sources=[
-            RSSFeed("https://www.merkur.de/welt/rssfeed.rdf", languages={"de"}),
-            Sitemap("https://www.merkur.de/sitemap-index.xml", languages={"de"}),
-            NewsMap("https://www.merkur.de/news.xml", languages={"de"}),
+            RSSFeed("https://www.merkur.de/welt/rssfeed.rdf"),
+            Sitemap("https://www.merkur.de/sitemap-index.xml"),
+            NewsMap("https://www.merkur.de/news.xml"),
         ],
     )
 
@@ -173,7 +172,7 @@ class DE(metaclass=PublisherGroup):
         name="Süddeutsche Zeitung",
         domain="https://www.sueddeutsche.de/",
         parser=SZParser,
-        sources=[RSSFeed("https://rss.sueddeutsche.de/alles", languages={"de"})],
+        sources=[RSSFeed("https://rss.sueddeutsche.de/alles")],
     )
 
     SpiegelOnline = Publisher(
@@ -181,9 +180,9 @@ class DE(metaclass=PublisherGroup):
         domain="https://www.spiegel.de/",
         parser=SPONParser,
         sources=[
-            RSSFeed("https://www.spiegel.de/schlagzeilen/index.rss", languages={"de"}),
-            Sitemap("https://www.spiegel.de/sitemap.xml", languages={"de"}),
-            NewsMap("https://www.spiegel.de/sitemaps/news-de.xml", languages={"de"}),
+            RSSFeed("https://www.spiegel.de/schlagzeilen/index.rss"),
+            Sitemap("https://www.spiegel.de/sitemap.xml"),
+            NewsMap("https://www.spiegel.de/sitemaps/news-de.xml"),
         ],
         request_header={"User-Agent": "Googlebot"},
     )
@@ -193,11 +192,10 @@ class DE(metaclass=PublisherGroup):
         domain="https://www.zeit.de/",
         parser=DieZeitParser,
         sources=[
-            RSSFeed("https://newsfeed.zeit.de/news/index", languages={"de"}),
-            Sitemap("https://www.zeit.de/gsitemaps/index.xml", reverse=True, languages={"de"}),
+            RSSFeed("https://newsfeed.zeit.de/news/index"),
+            Sitemap("https://www.zeit.de/gsitemaps/index.xml", reverse=True),
             NewsMap(
                 f"https://www.zeit.de/gsitemaps/index.xml?date={datetime.now().strftime('%Y-%m-%d')}&unit=days&period=1",
-                languages={"de"},
             ),
         ],
         url_filter=regex_filter(
@@ -211,9 +209,9 @@ class DE(metaclass=PublisherGroup):
         domain="https://www.berliner-zeitung.de/",
         parser=BerlinerZeitungParser,
         sources=[
-            RSSFeed("https://www.berliner-zeitung.de/feed.xml", languages={"de"}),
-            Sitemap("https://www.berliner-zeitung.de/sitemap.xml", languages={"de"}),
-            NewsMap("https://www.berliner-zeitung.de/news-sitemap.xml", languages={"de"}),
+            RSSFeed("https://www.berliner-zeitung.de/feed.xml"),
+            Sitemap("https://www.berliner-zeitung.de/sitemap.xml"),
+            NewsMap("https://www.berliner-zeitung.de/news-sitemap.xml"),
         ],
         url_filter=regex_filter("/news/"),
     )
@@ -222,7 +220,7 @@ class DE(metaclass=PublisherGroup):
         name="Tagesschau",
         domain="https://www.tagesschau.de/",
         parser=TagesschauParser,
-        sources=[RSSFeed("https://www.tagesschau.de/xml/rss2/", languages={"de"})],
+        sources=[RSSFeed("https://www.tagesschau.de/xml/rss2/")],
     )
 
     DW = Publisher(
@@ -230,16 +228,19 @@ class DE(metaclass=PublisherGroup):
         domain="https://www.dw.com/",
         parser=DWParser,
         sources=[
-            RSSFeed("https://rss.dw.com/xml/rss-de-all", languages={"de"}),
-            Sitemap("https://www.dw.com/de/article-sitemap.xml", languages={"de"}),
-            NewsMap("https://www.dw.com/de/news-sitemap.xml", languages={"de"}),
+            RSSFeed("https://rss.dw.com/xml/rss-de-all"),
+            Sitemap("https://www.dw.com/de/article-sitemap.xml"),
+            NewsMap("https://www.dw.com/de/news-sitemap.xml"),
+            RSSFeed("https://rss.dw.com/xml/rss-en-all", languages={"en"}),
+            Sitemap("https://www.dw.com/en/article-sitemap.xml", languages={"en"}),
+            NewsMap("https://www.dw.com/en/news-sitemap.xml", languages={"en"}),
         ],
     )
     Stern = Publisher(
         name="Stern",
         domain="https://www.stern.de/",
         parser=SternParser,
-        sources=[RSSFeed("https://www.stern.de/feed/standard/alle-nachrichten/", languages={"de"})],
+        sources=[RSSFeed("https://www.stern.de/feed/standard/alle-nachrichten/")],
     )
 
     NTV = Publisher(
@@ -247,10 +248,8 @@ class DE(metaclass=PublisherGroup):
         domain="https://www.n-tv.de/",
         parser=NTVParser,
         sources=[
-            NewsMap("https://www.n-tv.de/news.xml", languages={"de"}),
-            Sitemap(
-                "https://www.n-tv.de/sitemap.xml", sitemap_filter=regex_filter("sitemap-sections"), languages={"de"}
-            ),
+            NewsMap("https://www.n-tv.de/news.xml"),
+            Sitemap("https://www.n-tv.de/sitemap.xml", sitemap_filter=regex_filter("sitemap-sections")),
         ],
     )
 
@@ -259,8 +258,8 @@ class DE(metaclass=PublisherGroup):
         domain="https://www.ndr.de/",
         parser=NDRParser,
         sources=[
-            NewsMap("https://www.ndr.de/sitemap112-newssitemap.xml", languages={"de"}),
-            Sitemap("https://www.ndr.de/sitemap112-sitemap.xml", languages={"de"}),
+            NewsMap("https://www.ndr.de/sitemap112-newssitemap.xml"),
+            Sitemap("https://www.ndr.de/sitemap112-sitemap.xml"),
         ],
         url_filter=regex_filter("podcast[0-9]{4}|/index.html"),
     )
@@ -270,8 +269,8 @@ class DE(metaclass=PublisherGroup):
         domain="https://taz.de/",
         parser=TazParser,
         sources=[
-            NewsMap("https://taz.de/sitemap-google-news.xml", languages={"de"}),
-            Sitemap("https://taz.de/sitemap-index.xml", languages={"de"}),
+            NewsMap("https://taz.de/sitemap-google-news.xml"),
+            Sitemap("https://taz.de/sitemap-index.xml"),
         ],
     )
 
@@ -279,11 +278,10 @@ class DE(metaclass=PublisherGroup):
         name="Heise",
         domain="https://www.heise.de",
         sources=[
-            RSSFeed("https://www.heise.de/rss/heise.rdf", languages={"de"}),
+            RSSFeed("https://www.heise.de/rss/heise.rdf"),
             Sitemap(
                 "https://www.heise.de/sitemapindex.xml",
                 sitemap_filter=inverse(regex_filter("/news/")),
-                languages={"de"},
             ),
         ],
         parser=HeiseParser,
@@ -295,9 +293,9 @@ class DE(metaclass=PublisherGroup):
         domain="https://www.bild.de/",
         parser=BildParser,
         sources=[
-            RSSFeed("https://www.bild.de/rssfeeds/vw-neu/vw-neu-32001674,view=rss2.bild.xml", languages={"de"}),
-            NewsMap("https://www.bild.de/sitemap-news.xml", languages={"de"}),
-            Sitemap("https://www.bild.de/sitemap-index.xml", languages={"de"}),
+            RSSFeed("https://www.bild.de/rssfeeds/vw-neu/vw-neu-32001674,view=rss2.bild.xml"),
+            NewsMap("https://www.bild.de/sitemap-news.xml"),
+            Sitemap("https://www.bild.de/sitemap-index.xml"),
         ],
     )
 
@@ -305,7 +303,7 @@ class DE(metaclass=PublisherGroup):
         name="Westdeutsche Allgemeine Zeitung (WAZ)",
         domain="https://www.waz.de/",
         parser=WAZParser,
-        sources=[NewsMap("https://www.waz.de/sitemaps/news.xml", languages={"de"})],
+        sources=[NewsMap("https://www.waz.de/sitemaps/news.xml")],
     )
 
     BSZ = Publisher(
@@ -313,13 +311,12 @@ class DE(metaclass=PublisherGroup):
         domain="https://www.braunschweiger-zeitung.de/",
         parser=BSZParser,
         sources=[
-            RSSFeed("https://www.braunschweiger-zeitung.de/rss", languages={"de"}),
-            NewsMap("https://www.braunschweiger-zeitung.de/sitemaps/news.xml", languages={"de"}),
+            RSSFeed("https://www.braunschweiger-zeitung.de/rss"),
+            NewsMap("https://www.braunschweiger-zeitung.de/sitemaps/news.xml"),
         ]
         + [
             Sitemap(
                 f"https://www.braunschweiger-zeitung.de/sitemaps/archive/sitemap-{d.year}-{str(d.month).zfill(2)}-p00.xml.gz",
-                languages={"de"},
             )
             for d in list(rrule(MONTHLY, dtstart=datetime(2005, 12, 1), until=datetime.now()))
         ],
@@ -330,13 +327,12 @@ class DE(metaclass=PublisherGroup):
         domain="https://www.businessinsider.de/",
         parser=BusinessInsiderDEParser,
         sources=[
-            RSSFeed("https://www.businessinsider.de/feed/businessinsider-alle-artikel", languages={"de"}),
-            NewsMap("https://www.businessinsider.de/news-sitemap.xml", languages={"de"}),
+            RSSFeed("https://www.businessinsider.de/feed/businessinsider-alle-artikel"),
+            NewsMap("https://www.businessinsider.de/news-sitemap.xml"),
             Sitemap(
                 "https://www.businessinsider.de/sitemap_index.xml",
                 sitemap_filter=inverse(regex_filter("post-sitemap")),
                 reverse=True,
-                languages={"de"},
             ),
         ],
     )
@@ -346,9 +342,9 @@ class DE(metaclass=PublisherGroup):
         domain="https://rp-online.de/",
         parser=RheinischePostParser,
         sources=[
-            RSSFeed("https://rp-online.de/feed.rss", languages={"de"}),
-            NewsMap("https://rp-online.de/sitemap-news.xml", languages={"de"}),
-            Sitemap("https://rp-online.de/sitemap.xml", languages={"de"}),
+            RSSFeed("https://rp-online.de/feed.rss"),
+            NewsMap("https://rp-online.de/sitemap-news.xml"),
+            Sitemap("https://rp-online.de/sitemap.xml"),
         ],
     )
 
@@ -356,9 +352,9 @@ class DE(metaclass=PublisherGroup):
         name="Golem",
         domain="https://www.golem.de/",
         sources=[
-            RSSFeed("https://www.golem.de/rss", languages={"de"}),
-            NewsMap("https://www.golem.de/news/gsitemap-2404.xml", languages={"de"}),
-            Sitemap("https://www.golem.de/gsiteindex.xml", languages={"de"}),
+            RSSFeed("https://www.golem.de/rss"),
+            NewsMap("https://www.golem.de/news/gsitemap-2404.xml"),
+            Sitemap("https://www.golem.de/gsiteindex.xml"),
         ],
         request_header={"User-Agent": "Googlebot"},
         parser=GolemParser,
@@ -369,12 +365,11 @@ class DE(metaclass=PublisherGroup):
         domain="https://winfuture.de/",
         parser=WinfutureParser,
         sources=[
-            RSSFeed("https://static.winfuture.de/feeds/WinFuture-News-rss2.0.xml", languages={"de"}),
-            NewsMap("https://winfuture.de/sitemap-latest-news.xml.gz", languages={"de"}),
+            RSSFeed("https://static.winfuture.de/feeds/WinFuture-News-rss2.0.xml"),
+            NewsMap("https://winfuture.de/sitemap-latest-news.xml.gz"),
             Sitemap(
                 "https://winfuture.de/sitemap.xml",
                 sitemap_filter=inverse(regex_filter("sitemap-news")),
-                languages={"de"},
             ),
         ],
         url_filter=regex_filter("https:////winfuture/.de//news*"),
@@ -385,7 +380,7 @@ class DE(metaclass=PublisherGroup):
         domain="https://www.jungewelt.de/",
         parser=JungeWeltParser,
         sources=[
-            RSSFeed("https://www.jungewelt.de/feeds/newsticker.rss", languages={"de"}),
+            RSSFeed("https://www.jungewelt.de/feeds/newsticker.rss"),
         ],
     )
 
@@ -394,10 +389,10 @@ class DE(metaclass=PublisherGroup):
         domain="https://www.tagesspiegel.de/",
         parser=TagesspiegelParser,
         sources=[
-            NewsMap("https://www.tagesspiegel.de/news.xml", languages={"de"}),
+            NewsMap("https://www.tagesspiegel.de/news.xml"),
         ]
         + [
-            Sitemap(f"https://www.tagesspiegel.de/contentexport/static/sitemap-index_{date.year}.xml", languages={"de"})
+            Sitemap(f"https://www.tagesspiegel.de/contentexport/static/sitemap-index_{date.year}.xml")
             for date in reversed(list(rrule(YEARLY, dtstart=datetime(1996, 1, 1), until=datetime.today())))
         ],
     )
@@ -407,8 +402,8 @@ class DE(metaclass=PublisherGroup):
         domain="https://de.euronews.com/",
         parser=EuronewsParser,
         sources=[
-            Sitemap("https://de.euronews.com/sitemaps/de/articles.xml", languages={"de"}),
-            NewsMap("https://de.euronews.com/sitemaps/de/latest-news.xml", languages={"de"}),
+            Sitemap("https://de.euronews.com/sitemaps/de/articles.xml"),
+            NewsMap("https://de.euronews.com/sitemaps/de/latest-news.xml"),
         ],
     )
 
@@ -417,9 +412,9 @@ class DE(metaclass=PublisherGroup):
         domain="https://www.hessenschau.de/",
         parser=HessenschauParser,
         sources=[
-            RSSFeed("https://www.hessenschau.de/index.rss", languages={"de"}),
-            Sitemap("https://www.hessenschau.de/indexsitemap.nc.xml", languages={"de"}),
-            Sitemap("https://www.hessenschau.de/sitemap.nc.xml", languages={"de"}),
+            RSSFeed("https://www.hessenschau.de/index.rss"),
+            Sitemap("https://www.hessenschau.de/indexsitemap.nc.xml"),
+            Sitemap("https://www.hessenschau.de/sitemap.nc.xml"),
         ],
     )
 
@@ -427,7 +422,7 @@ class DE(metaclass=PublisherGroup):
         name="Westdeutscher Rundfunk",
         domain="https://www1.wdr.de/",
         parser=WDRParser,
-        sources=[RSSFeed("https://www1.wdr.de/uebersicht-100.feed", languages={"de"})],
+        sources=[RSSFeed("https://www1.wdr.de/uebersicht-100.feed")],
     )
 
     BR = Publisher(
@@ -435,8 +430,8 @@ class DE(metaclass=PublisherGroup):
         domain="https://www.br.de/",
         parser=BRParser,
         sources=[
-            Sitemap("https://www.br.de/sitemapIndex.xml", languages={"de"}),
-            NewsMap("https://www.br.de/nachrichten/sitemaps/news.xml", languages={"de"}),
+            Sitemap("https://www.br.de/sitemapIndex.xml"),
+            NewsMap("https://www.br.de/nachrichten/sitemaps/news.xml"),
         ],
     )
 
@@ -445,9 +440,9 @@ class DE(metaclass=PublisherGroup):
         domain="https://www.zdf.de/",
         parser=ZDFParser,
         sources=[
-            Sitemap("https://www.zdf.de/sitemap.xml", reverse=True, languages={"de"}),
-            NewsMap("https://www.zdf.de/news-sitemap.xml", languages={"de"}),
-            RSSFeed("https://www.zdf.de/rss/zdf/nachrichten", languages={"de"}),
+            Sitemap("https://www.zdf.de/sitemap.xml", reverse=True),
+            NewsMap("https://www.zdf.de/news-sitemap.xml"),
+            RSSFeed("https://www.zdf.de/rss/zdf/nachrichten"),
         ],
     )
 
@@ -456,8 +451,8 @@ class DE(metaclass=PublisherGroup):
         domain="https://www.motorsport-magazin.com/",
         parser=MotorSportMagazinParser,
         sources=[
-            RSSFeed("https://www.motorsport-magazin.com/rss/alle-rennserien.xml", languages={"de"}),
-            Sitemap("https://www.motorsport-magazin.com/sitemap.xml", languages={"de"}),
+            RSSFeed("https://www.motorsport-magazin.com/rss/alle-rennserien.xml"),
+            Sitemap("https://www.motorsport-magazin.com/sitemap.xml"),
         ],
     )
 
@@ -466,8 +461,8 @@ class DE(metaclass=PublisherGroup):
         domain="https://www.der-postillon.com/",
         parser=PostillonParser,
         sources=[
-            RSSFeed("https://follow.it/der-postillon-abo", languages={"de"}),
-            Sitemap("https://www.der-postillon.com/sitemap.xml", languages={"de"}),
+            RSSFeed("https://follow.it/der-postillon-abo"),
+            Sitemap("https://www.der-postillon.com/sitemap.xml"),
         ],
     )
 
@@ -476,13 +471,12 @@ class DE(metaclass=PublisherGroup):
         domain="https://www.kicker.de/",
         parser=KickerParser,
         sources=[
-            RSSFeed("https://newsfeed.kicker.de/news/aktuell", languages={"de"}),
+            RSSFeed("https://newsfeed.kicker.de/news/aktuell"),
             Sitemap(
                 "https://leserservice.kicker.de/sitemap_0.xml",
                 sitemap_filter=regex_filter("leserservice.kicker.de"),
-                languages={"de"},
             ),
-            NewsMap("https://newsfeed.kicker.de/googlesitemapnews.xml", languages={"de"}),
+            NewsMap("https://newsfeed.kicker.de/googlesitemapnews.xml"),
         ],
         url_filter=regex_filter("/slideshow|/video"),
     )
@@ -495,9 +489,9 @@ class DE(metaclass=PublisherGroup):
             # NOTE: robots.txt mentions that it reserves the right of use for text & data mining (§ 44 b UrhG),
             # but this is not in machine readable format, which is required by law for it to be effective.
             # NOTE: Unfortunately, both sitemap.xml and news.xml are identical.
-            Sitemap("https://krautreporter.de/sitemap.xml", reverse=True, languages={"de"}),
-            # NewsMap("https://krautreporter.de/news.xml", languages={"de"}),
-            RSSFeed("https://krautreporter.de/feeds.rss", languages={"de"}),
+            Sitemap("https://krautreporter.de/sitemap.xml", reverse=True),
+            # NewsMap("https://krautreporter.de/news.xml"),
+            RSSFeed("https://krautreporter.de/feeds.rss"),
         ],
         url_filter=regex_filter(r"/(pages|archiv|serien|thema|zusammenhaenge)/"),
     )
@@ -507,9 +501,9 @@ class DE(metaclass=PublisherGroup):
         domain="https://www.fr.de",
         parser=FrankfurterRundschauParser,
         sources=[
-            RSSFeed("https://fr.de/rssfeed.rdf", languages={"de"}),
-            Sitemap("https://www.fr.de/sitemap-index.xml", languages={"de"}),
-            NewsMap("https://www.fr.de/news.xml", languages={"de"}),
+            RSSFeed("https://fr.de/rssfeed.rdf"),
+            Sitemap("https://www.fr.de/sitemap-index.xml"),
+            NewsMap("https://www.fr.de/news.xml"),
         ],
     )
 
@@ -518,11 +512,10 @@ class DE(metaclass=PublisherGroup):
         domain="https://www.boersen-zeitung.de",
         parser=BoersenZeitungParser,
         sources=[
-            NewsMap("https://www.boersen-zeitung.de/sitemap/news.xml.gz", languages={"de"}),
+            NewsMap("https://www.boersen-zeitung.de/sitemap/news.xml.gz"),
             Sitemap(
                 "https://www.boersen-zeitung.de/sitemap/index.xml.gz",
                 sitemap_filter=regex_filter("/sitemap-0.xml.gz"),
-                languages={"de"},
             ),
         ],
     )
@@ -532,9 +525,9 @@ class DE(metaclass=PublisherGroup):
         domain="https://www.vogue.de/",
         parser=VogueDEParser,
         sources=[
-            RSSFeed("https://www.vogue.de/feed/rss", languages={"de"}),
-            NewsMap("https://www.vogue.de/feed/sitemap-news/sitemap-google-news", languages={"de"}),
-            Sitemap("https://www.vogue.de/sitemap.xml", languages={"de"}),
+            RSSFeed("https://www.vogue.de/feed/rss"),
+            NewsMap("https://www.vogue.de/feed/sitemap-news/sitemap-google-news"),
+            Sitemap("https://www.vogue.de/sitemap.xml"),
         ],
     )
 
@@ -543,8 +536,8 @@ class DE(metaclass=PublisherGroup):
         domain="https://www.mz.de/",
         parser=MitteldeutscheZeitungParser,
         sources=[
-            Sitemap("https://www.mz.de/sitemaps/sitemap-ressort-index.xml", languages={"de"}),
-            NewsMap("https://www.mz.de/sitemaps/newssitemap-index.xml", languages={"de"}),
+            Sitemap("https://www.mz.de/sitemaps/sitemap-ressort-index.xml"),
+            NewsMap("https://www.mz.de/sitemaps/newssitemap-index.xml"),
         ],
     )
 
@@ -553,18 +546,18 @@ class DE(metaclass=PublisherGroup):
         domain="https://www.freiepresse.de/",
         parser=FreiePresseParser,
         sources=[
-            RSSFeed("https://www.freiepresse.de/rss/rss_chemnitz.php", languages={"de"}),
-            RSSFeed("https://www.freiepresse.de/rss/rss_erzgebirge.php", languages={"de"}),
-            RSSFeed("https://www.freiepresse.de/rss/rss_mittelsachsen.php", languages={"de"}),
-            RSSFeed("https://www.freiepresse.de/rss/rss_vogtland.php", languages={"de"}),
-            RSSFeed("https://www.freiepresse.de/rss/rss_zwickau.php", languages={"de"}),
-            RSSFeed("https://www.freiepresse.de/rss/rss_politik.php", languages={"de"}),
-            RSSFeed("https://www.freiepresse.de/rss/rss_wirtschaft.php", languages={"de"}),
-            RSSFeed("https://www.freiepresse.de/rss/rss_kultur.php", languages={"de"}),
-            RSSFeed("https://www.freiepresse.de/rss/rss_sport.php", languages={"de"}),
-            RSSFeed("https://www.freiepresse.de/rss/rss_sachsen.php", languages={"de"}),
-            RSSFeed("https://www.freiepresse.de/rss/rss_regional.php", languages={"de"}),
-            Sitemap("https://www.freiepresse.de/sitemaps/articles_last2years.xml", reverse=True, languages={"de"}),
+            RSSFeed("https://www.freiepresse.de/rss/rss_chemnitz.php"),
+            RSSFeed("https://www.freiepresse.de/rss/rss_erzgebirge.php"),
+            RSSFeed("https://www.freiepresse.de/rss/rss_mittelsachsen.php"),
+            RSSFeed("https://www.freiepresse.de/rss/rss_vogtland.php"),
+            RSSFeed("https://www.freiepresse.de/rss/rss_zwickau.php"),
+            RSSFeed("https://www.freiepresse.de/rss/rss_politik.php"),
+            RSSFeed("https://www.freiepresse.de/rss/rss_wirtschaft.php"),
+            RSSFeed("https://www.freiepresse.de/rss/rss_kultur.php"),
+            RSSFeed("https://www.freiepresse.de/rss/rss_sport.php"),
+            RSSFeed("https://www.freiepresse.de/rss/rss_sachsen.php"),
+            RSSFeed("https://www.freiepresse.de/rss/rss_regional.php"),
+            Sitemap("https://www.freiepresse.de/sitemaps/articles_last2years.xml", reverse=True),
         ],
     )
 
@@ -573,13 +566,12 @@ class DE(metaclass=PublisherGroup):
         domain="https://www.ruhrnachrichten.de/",
         parser=RuhrNachrichtenParser,
         sources=[
-            RSSFeed("https://www.ruhrnachrichten.de/service/feed/", languages={"de"}),
-            NewsMap("https://www.ruhrnachrichten.de/news-sitemap.xml", languages={"de"}),
+            RSSFeed("https://www.ruhrnachrichten.de/service/feed/"),
+            NewsMap("https://www.ruhrnachrichten.de/news-sitemap.xml"),
             Sitemap(
                 "https://www.ruhrnachrichten.de/sitemap_index.xml",
                 reverse=True,
                 sitemap_filter=inverse(regex_filter("post-sitemap")),
-                languages={"de"},
             ),
         ],
     )
@@ -589,7 +581,7 @@ class DE(metaclass=PublisherGroup):
         domain="https://www.gamestar.de/",
         parser=GamestarParser,
         sources=[
-            NewsMap("https://www.gamestar.de/sitemapnews.xml", languages={"de"}),
-            Sitemap("https://www.gamestar.de/artikel_archiv_index.xml", languages={"de"}),
+            NewsMap("https://www.gamestar.de/sitemapnews.xml"),
+            Sitemap("https://www.gamestar.de/artikel_archiv_index.xml"),
         ],
     )

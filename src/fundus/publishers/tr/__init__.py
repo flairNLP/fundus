@@ -7,6 +7,7 @@ from .ntvtr import NTVTRParser
 
 
 class TR(metaclass=PublisherGroup):
+    default_languages = {"tr"}
     Haberturk = Publisher(
         name="Haberturk",
         domain="https://www.haberturk.com/",
@@ -18,7 +19,7 @@ class TR(metaclass=PublisherGroup):
                 reverse=True,
                 languages={"tr"},
             ),
-            NewsMap("https://www.haberturk.com/sitemap_google_news.xml", languages={"tr"}),
+            NewsMap("https://www.haberturk.com/sitemap_google_news.xml"),
         ],
     )
 
@@ -27,10 +28,8 @@ class TR(metaclass=PublisherGroup):
         domain="https://www.ntv.com.tr/",
         parser=NTVTRParser,
         sources=[
-            RSSFeed("https://www.ntv.com.tr/gundem.rss", languages={"tr"}),
-            NewsMap("https://www.ntv.com.tr/sitemaps/news-sitemap.xml", languages={"tr"}),
-            Sitemap(
-                "https://www.ntv.com.tr/sitemaps", sitemap_filter=regex_filter("news-sitemap.xml"), languages={"tr"}
-            ),
+            RSSFeed("https://www.ntv.com.tr/gundem.rss"),
+            NewsMap("https://www.ntv.com.tr/sitemaps/news-sitemap.xml"),
+            Sitemap("https://www.ntv.com.tr/sitemaps", sitemap_filter=regex_filter("news-sitemap.xml")),
         ],
     )

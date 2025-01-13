@@ -9,6 +9,8 @@ from .verdensgang import VerdensGangParser
 
 
 class NO(metaclass=PublisherGroup):
+    default_languages = {"no"}
+
     VerdensGang = Publisher(
         name="Verdens Gang",
         domain="https://www.vg.no/",
@@ -18,9 +20,8 @@ class NO(metaclass=PublisherGroup):
                 "https://www.vg.no/sitemap.xml",
                 sitemap_filter=inverse(regex_filter(r"vg\.no\/sitemaps/\d{4}\-\d{2}-articles.xml")),
                 reverse=True,
-                languages={"no"},
             ),
-            NewsMap("https://www.vg.no/sitemap/files/articles-48hrs.xml", languages={"no"}),
+            NewsMap("https://www.vg.no/sitemap/files/articles-48hrs.xml"),
         ],
     )
 
@@ -29,10 +30,8 @@ class NO(metaclass=PublisherGroup):
         domain="https://www.db.no/",
         parser=DagbladetParser,
         sources=[
-            Sitemap(
-                "https://www.dagbladet.no/app/jw-api-proxy/sitemap/index/dagbladet.xml", reverse=True, languages={"no"}
-            ),
-            NewsMap("https://www.dagbladet.no/sitemap", languages={"no"}),
+            Sitemap("https://www.dagbladet.no/app/jw-api-proxy/sitemap/index/dagbladet.xml", reverse=True),
+            NewsMap("https://www.dagbladet.no/sitemap"),
         ],
     )
 
@@ -41,7 +40,7 @@ class NO(metaclass=PublisherGroup):
         domain="https://www.nettavisen.no/",
         parser=NettavisenParser,
         sources=[
-            RSSFeed("https://www.nettavisen.no/service/rich-rss", languages={"no"}),
+            RSSFeed("https://www.nettavisen.no/service/rich-rss"),
         ],
     )
 
@@ -50,13 +49,13 @@ class NO(metaclass=PublisherGroup):
         domain="https://www.nrk.no/",
         parser=NRKParser,
         sources=[
-            RSSFeed("https://www.nrk.no/norge/toppsaker.rss", languages={"no"}),
-            RSSFeed("https://www.nrk.no/urix/toppsaker.rss", languages={"no"}),
-            RSSFeed("https://www.nrk.no/sport/toppsaker.rss", languages={"no"}),
-            RSSFeed("https://www.nrk.no/kultur/toppsaker.rss", languages={"no"}),
-            RSSFeed("https://www.nrk.no/livsstil/toppsaker.rss", languages={"no"}),
-            RSSFeed("https://www.nrk.no/viten/toppsaker.rss", languages={"no"}),
-            RSSFeed("https://www.nrk.no/dokumentar/toppsaker.rss", languages={"no"}),
-            Sitemap("https://www.nrk.no/sitemap.xml", languages={"no"}),
+            RSSFeed("https://www.nrk.no/norge/toppsaker.rss"),
+            RSSFeed("https://www.nrk.no/urix/toppsaker.rss"),
+            RSSFeed("https://www.nrk.no/sport/toppsaker.rss"),
+            RSSFeed("https://www.nrk.no/kultur/toppsaker.rss"),
+            RSSFeed("https://www.nrk.no/livsstil/toppsaker.rss"),
+            RSSFeed("https://www.nrk.no/viten/toppsaker.rss"),
+            RSSFeed("https://www.nrk.no/dokumentar/toppsaker.rss"),
+            Sitemap("https://www.nrk.no/sitemap.xml"),
         ],
     )

@@ -8,11 +8,13 @@ from .orf import OrfParser
 
 
 class AT(metaclass=PublisherGroup):
+    default_languages = {"de"}
+
     ORF = Publisher(
         name="Österreichischer Rundfunk",
         domain="https://www.orf.at",
         parser=OrfParser,
-        sources=[RSSFeed("https://rss.orf.at/news.xml", languages={"de"})],
+        sources=[RSSFeed("https://rss.orf.at/news.xml")],
     )
 
     DerStandard = Publisher(
@@ -20,9 +22,9 @@ class AT(metaclass=PublisherGroup):
         domain="https://derstandard.at",
         parser=DerStandardParser,
         sources=[
-            RSSFeed("https://www.derstandard.at/rss", languages={"de"}),
-            NewsMap("https://www.derstandard.at/sitemaps/news.xml", languages={"de"}),
-            Sitemap("https://www.derstandard.at/sitemaps/sitemap.xml", languages={"de"}),
+            RSSFeed("https://www.derstandard.at/rss"),
+            NewsMap("https://www.derstandard.at/sitemaps/news.xml"),
+            Sitemap("https://www.derstandard.at/sitemaps/sitemap.xml"),
         ],
         request_header={"user-agent": "Googlebot"},
     )

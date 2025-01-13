@@ -141,8 +141,10 @@ class Publisher:
     def supports(
         self, source_types: Optional[List[Type[URLSource]]] = None, languages: Optional[Set[str]] = None
     ) -> bool:
-        if not source_types:
+        if source_types is None:
             supports_sources = True
+        elif not isinstance(source_types, list):
+            raise ValueError(f"Expected list of source types, got {type(source_types).__name__!r}")
         else:
             for source_type in source_types:
                 if not inspect.isclass(source_type) or not issubclass(source_type, URLSource):
@@ -151,8 +153,10 @@ class Publisher:
                         f"Allowed are {', '.join(repr(self.__name__) for self in iterate_all_subclasses(URLSource))}"
                     )
             supports_sources = all(bool(self.source_mapping.get(source_type)) for source_type in source_types)
-        if not languages:
+        if languages is None:
             supports_languages = True
+        elif not isinstance(languages, set):
+            raise ValueError(f"Expected set of source types, got {type(source_types).__name__!r}")
         else:
             supports_languages = False
             for sources in self._source_mapping.values():
@@ -173,6 +177,11 @@ class PublisherGroup(type):
             if isinstance(value, Publisher):
                 value.__name__ = attribute
                 value.__group__ = new
+                if attributes.get("default_languages"):
+                    for source_type in value.source_mapping.values():
+                        for source in source_type:
+                            if not source.languages:
+                                source.languages = attributes["default_languages"]
 
         return new
 
@@ -232,6 +241,8 @@ class PublisherGroup(type):
             raise ValueError("You have to define at least one search condition")
         if not attributes:
             attributes = []
+        if not languages:
+            languages = []
         matched = []
         unique_attributes = set(attributes)
         unique_languages = set(languages)
