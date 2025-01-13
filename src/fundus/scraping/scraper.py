@@ -28,6 +28,7 @@ class BaseScraper:
         error_handling: Literal["suppress", "catch", "raise"],
         extraction_filter: Optional[ExtractionFilter] = None,
         url_filter: Optional[URLFilter] = None,
+        language_filter: Optional[List[str]] = None,
     ) -> Iterator[Article]:
         for source in self.sources:
             for html in source.fetch(url_filter=url_filter):
@@ -60,7 +61,10 @@ class BaseScraper:
                             logger.debug(f"Skipped article at {html.requested_url!r} because of extraction filter")
                     else:
                         article = Article(html=html, **extraction)
-                        yield article
+                        if language_filter and article.lang not in language_filter:
+                            logger.debug(f"Skipped article at {html.requested_url!r} because of language filter")
+                        else:
+                            yield article
 
 
 class WebScraper(BaseScraper):
