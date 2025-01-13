@@ -32,8 +32,8 @@ class TestCollection:
         assert publisher_group_with_news_map.value.supports(source_types=[NewsMap])
         assert not publisher_group_with_news_map.value.supports(source_types=[Sitemap])
         assert not publisher_group_with_news_map.value.supports(source_types=[RSSFeed])
-        assert publisher_group_with_languages.eng.supports(languages={"en"})
-        assert not publisher_group_with_languages.eng.supports(languages={"es"})
+        assert publisher_group_with_languages.eng.supports(languages=["en"])
+        assert not publisher_group_with_languages.eng.supports(languages=["es"])
         with pytest.raises(ValueError):
             publisher_group_with_news_map.value.supports(source_types="")
 
@@ -59,12 +59,12 @@ class TestCollection:
         assert len(publisher_group_with_news_map.search(later.names)) == 1
         assert len(publisher_group_with_news_map.search(earlier.names)) == 0
 
-        assert len(publisher_group_with_languages.search(languages={"en"})) == 1
-        assert len(publisher_group_with_languages.search(languages={"de"})) == 1
-        assert len(publisher_group_with_languages.search(languages={"en", "de"})) == 2
+        assert len(publisher_group_with_languages.search(languages=["en", "en"])) == 1
+        assert len(publisher_group_with_languages.search(languages=["de"])) == 1
+        assert len(publisher_group_with_languages.search(languages=["en", "de"])) == 2
 
-        assert len(publisher_group_with_languages.search(languages={"en"}, source_types=[NewsMap])) == 1
-        assert len(publisher_group_with_languages.search(languages={"en"}, source_types=[Sitemap])) == 0
+        assert len(publisher_group_with_languages.search(languages=["en"], source_types=[NewsMap])) == 1
+        assert len(publisher_group_with_languages.search(languages=["en"], source_types=[Sitemap])) == 0
 
         with pytest.raises(ValueError):
             publisher_group_with_news_map.search()

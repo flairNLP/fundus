@@ -139,7 +139,7 @@ class Publisher:
         )
 
     def supports(
-        self, source_types: Optional[List[Type[URLSource]]] = None, languages: Optional[Set[str]] = None
+        self, source_types: Optional[List[Type[URLSource]]] = None, languages: Optional[List[str]] = None
     ) -> bool:
         if source_types is None:
             supports_sources = True
@@ -155,14 +155,15 @@ class Publisher:
             supports_sources = all(bool(self.source_mapping.get(source_type)) for source_type in source_types)
         if languages is None:
             supports_languages = True
-        elif not isinstance(languages, set):
-            raise ValueError(f"Expected set of source types, got {type(source_types).__name__!r}")
+        elif not isinstance(languages, list):
+            raise ValueError(f"Expected list of languages, got {type(languages).__name__!r}")
         else:
             supports_languages = False
+            unique_languages = set(languages)
             for sources in self._source_mapping.values():
                 for source in sources:
-                    if source.languages & languages:
-                        self._language_filter = languages
+                    if source.languages & unique_languages:
+                        self._language_filter = unique_languages
                         supports_languages = True
                         break
         return supports_sources and supports_languages
@@ -245,13 +246,12 @@ class PublisherGroup(type):
             languages = []
         matched = []
         unique_attributes = set(attributes)
-        unique_languages = set(languages)
         spec: Publisher
         for publisher in cls:
             if (
                 unique_attributes.issubset(publisher.parser().attributes().names)
                 and (publisher.supports(source_types=source_types) if source_types else True)
-                and (publisher.supports(languages=unique_languages) if unique_languages else True)
+                and (publisher.supports(languages=languages) if languages else True)
             ):
                 matched.append(publisher)
         if not matched:
