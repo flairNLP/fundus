@@ -9,8 +9,6 @@ from fundus.parser.utility import (
     extract_article_body_with_selector,
     generic_author_parsing,
     generic_date_parsing,
-    generic_nodes_to_text,
-    generic_topic_parsing,
     image_extraction,
 )
 
@@ -18,11 +16,11 @@ from fundus.parser.utility import (
 class LaVanguardiaParser(ParserProxy):
     class V1(BaseParser):
         _paragraph_selector = XPath(
-            "//div[@class='article-modules']//p[@class='paragraph']|"
+            "//div[@class='article-modules']//p[@class='paragraph'] | "
             "//div[@class='widget' and not(@id)]//p[not(@class='creditos')]"
         )
         _subheadline_selector = XPath(
-            "//div[@class='article-modules']//h3[@class='subtitle']|"
+            "//div[@class='article-modules']//h3[@class='subtitle'] | "
             "//div[@class='widget' and not(@id)]//h2|//span[@class='ubicacion']"
         )
         _summary_selector = XPath("//h2[@class='epigraph']|//div[@id='slide-content-1']/p")
