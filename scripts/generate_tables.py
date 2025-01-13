@@ -34,12 +34,21 @@ class ColumnFactory(Protocol):
         ...
 
 
+def get_publisher_languages(publisher: Publisher) -> List[str]:
+    languages = set()
+    for source_type in publisher.source_mapping.values():
+        for source in source_type:
+            languages.update(source.languages)
+    return sorted(languages)
+
+
 column_mapping: Dict[str, ColumnFactory] = {
     "Class": lambda publisher: TD(CODE(publisher.__name__)),
     "Name": lambda publisher: TD(DIV(f"{publisher.name}"))
     if not publisher.deprecated
     else TD(DIV(STRIKE(f"{publisher.name}"))),
     "URL": lambda publisher: TD(A(SPAN(urlparse(publisher.domain).netloc), href=publisher.domain)),
+    "Languages": lambda publisher: TD(*[CODE(lang) for lang in get_publisher_languages(publisher)]),
     "Missing Attributes": lambda publisher: (
         TD(*[CODE(a) for a in sorted(attributes)])
         if (
