@@ -1,0 +1,87 @@
+{
+  "V1": {
+    "body": {
+      "summary": [],
+      "sections": [
+        {
+          "headline": [],
+          "paragraphs": [
+            "イオン銀行は14日、同日付で小林裕明社長（57）を解任する人事を発表した。イオン銀の持ち株会社にあたるイオンフィナンシャルサービスも藤田健二社長（55）が引責辞任する。金融庁から受けたマネーロンダリング（資金洗浄）対策の不備を巡る経営責任を明確にする。",
+            "イオンフィナンシャルサービスは「役員体制の早急な見直しが必要と判断した」と説明している。イオン銀はリスク管理本部長の穴田将人氏を解任する人事も発表した。再発防止策の策定と実行を急ぐ。",
+            "イオン銀社長の後任にはイオンフィナンシャルサービスの木坂有朗取締役（50）が就く。木坂氏は1997年にイオンクレジットサービス（現イオンフィナンシャルサービス）に入社し、同社の海外現地法人のトップなどを経て経営企画本部長を務める。新トップのもとでガバナンス（企業統治）の立て直しを急ぐ。",
+            "イオンフィナンシャルサービスは白川俊介会長（61）が社長を兼務する。白川氏は金融庁検査局などを経て2023年にイオン銀とイオンフィナンシャルサービスの会長に就いた。",
+            "金融庁は24年12月、イオン銀にマネロン対策の不備で銀行法に基づく業務改善命令を出した。マネロンの可能性がある取引への対応で犯罪収益移転防止法に違反した恐れがあるほか、システム面での対応が不十分だった。金融庁は特に経営陣の対応の不備を問題視していた。",
+            "イオン銀は改善計画の策定や体制強化のため、外部の専門家らによる組織を24年12月26日付で取締役会の下に設けており、25年1月末に改善計画をまとめる見通しだ。親会社のイオンも外部専門家による第三者委員会を設けて調査に乗り出している。"
+          ]
+        }
+      ]
+    },
+    "images": [
+      {
+        "versions": [
+          {
+            "url": "https://article-image-ix.nikkei.com/https%3A%2F%2Fimgix-proxy.n8s.jp%2FDSXZQO5868648014012025000000-1.jpg?ixlib=js-3.8.0&w=1276&h=790&auto=format%2Ccompress&fit=crop&bg=FFFFFF&s=7491ef9856e75dcf3fcc4a439cb59907",
+            "query_width": "min-width:1232",
+            "size": null,
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://article-image-ix.nikkei.com/https%3A%2F%2Fimgix-proxy.n8s.jp%2FDSXZQO5868648014012025000000-1.jpg?ixlib=js-3.8.0&w=638&h=395&auto=format%2Ccompress&fit=crop&bg=FFFFFF&s=9b1c8a6586d7f0852d159381699dba8a",
+            "query_width": "min-width:1232",
+            "size": null,
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://article-image-ix.nikkei.com/https%3A%2F%2Fimgix-proxy.n8s.jp%2FDSXZQO5868648014012025000000-1.jpg?ixlib=js-3.8.0&w=1200&h=742&auto=format%2Ccompress&fit=crop&bg=FFFFFF&s=8b5a9b63f54d55c8bdca61cfc1f1fe4c",
+            "query_width": "min-width:752",
+            "size": null,
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://article-image-ix.nikkei.com/https%3A%2F%2Fimgix-proxy.n8s.jp%2FDSXZQO5868648014012025000000-1.jpg?ixlib=js-3.8.0&w=600&h=371&auto=format%2Ccompress&fit=crop&bg=FFFFFF&s=513e9c062ddedad36eeb93d2824771dd",
+            "query_width": "min-width:752",
+            "size": null,
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": true,
+        "description": null,
+        "caption": "イオン銀行などは経営陣を刷新する",
+        "authors": [],
+        "position": 1039
+      },
+      {
+        "versions": [
+          {
+            "url": "https://article-image-ix.nikkei.com/https%3A%2F%2Fimgix-proxy.n8s.jp%2FDSXZQO5869791014012025000000-1.png?s=852e10af8ac1dcb094cc09eb0c730ce6",
+            "query_width": "min-width:1232",
+            "size": null,
+            "type": "image/png"
+          }
+        ],
+        "is_cover": false,
+        "description": null,
+        "caption": null,
+        "authors": [],
+        "position": 1060
+      },
+      {
+        "versions": [
+          {
+            "url": "https://article-image-ix.nikkei.com/https%3A%2F%2Fimgix-proxy.n8s.jp%2FDSXZQO5868780014012025000000-1.jpg?s=eca559925cd30f8a349cb51ac13a99f9",
+            "query_width": "min-width:1232",
+            "size": null,
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": false,
+        "description": null,
+        "caption": null,
+        "authors": [],
+        "position": 1074
+      }
+    ],
+    "publishing_date": "2025-01-14 20:00:00+09:00",
+    "title": "イオン銀行社長解任、金融庁処分で　持ち株社長も引責"
+  }
+}
