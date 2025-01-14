@@ -30,7 +30,7 @@ class AsahiShimbunParser(ParserProxy):
 
         @attribute
         def title(self) -> Optional[str]:
-            return self.precomputed.meta.get("og:title")
+            return self.precomputed.meta.get("TITLE")
 
         @attribute
         def publishing_date(self) -> Optional[datetime.datetime]:
