@@ -1237,6 +1237,21 @@
     </tr>
     <tr>
       <td>
+        <code>MainichiShimbun</code>
+      </td>
+      <td>
+        <div>Mainichi Shimbun</div>
+      </td>
+      <td>
+        <a href="https://mainichi.jp/">
+          <span>mainichi.jp</span>
+        </a>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
         <code>TheJapanNews</code>
       </td>
       <td>
