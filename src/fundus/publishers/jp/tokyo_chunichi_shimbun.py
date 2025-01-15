@@ -18,8 +18,8 @@ from fundus.parser.utility import (
 
 class TokyoChunichiShimbunParser(ParserProxy):
     class V1(BaseParser):
-        _paragraph_selector = XPath("//div[@class='block' and not(descendant::div or descendant::h2)]")
-        _subheadline_selector = XPath("//div[@class='block']//h2")
+        _paragraph_selector = XPath("//main//div[@class='block' and not(descendant::div or descendant::h2)]")
+        _subheadline_selector = XPath("//main//div[@class='block']//h2")
 
         _author_bloat_pattern = re.compile(r"記者")
         _topic_bloat_pattern = re.compile(r"話題・|話題")
@@ -64,6 +64,6 @@ class TokyoChunichiShimbunParser(ParserProxy):
                     "./ancestor::div[@class='wrap']//p[@class='caption'] | "
                     "./ancestor::div[@class='thumb']//p[@class='thumb-caption']"
                 ),
-                author_selector=re.compile(r".+（(?P<credits>[^）]*?)(撮影)?）\s*$"),
+                author_selector=re.compile(r"（(?P<credits>[^）]*?)(撮影)?）\s*$"),
                 relative_urls=True,
             )
