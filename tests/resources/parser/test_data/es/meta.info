@@ -10,5 +10,9 @@
   "ElPais_2024_10_15.html.gz": {
     "url": "https://elpais.com/internacional/2024-10-15/bruselas-sondea-la-apertura-de-centros-de-deportacion-fuera-de-la-union-europea.html",
     "crawl_date": "2024-10-15 17:43:35.457824"
+  },
+  "LaVanguardia_2025_01_13.html.gz": {
+    "url": "https://www.lavanguardia.com/politica/20250113/10277301/juez-cita-investigado-fiscal-general-revelar-datos-pareja-diaz-ayuso.html",
+    "crawl_date": "2025-01-13 19:51:18.100984"
   }
 }
