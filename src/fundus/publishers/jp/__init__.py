@@ -1,4 +1,5 @@
 from fundus.publishers.base_objects import Publisher, PublisherGroup
+from fundus.publishers.jp.asahi_shimbun import AsahiShimbunParser
 from fundus.publishers.jp.the_japan_news import TheJapanNewsParser
 from fundus.publishers.jp.yomiuri_shimbun import YomiuriShimbunParser
 from fundus.scraping.filter import regex_filter
@@ -27,4 +28,11 @@ class JP(metaclass=PublisherGroup):
             Sitemap("https://www.yomiuri.co.jp/sitemap.xml", sitemap_filter=regex_filter("sitemap-news-latest")),
             NewsMap("https://www.yomiuri.co.jp/sitemap-news-latest.xml"),
         ],
+    )
+
+    AsahiShimbun = Publisher(
+        name="Asahi Shimbun",
+        domain="https://www.asahi.com/",
+        parser=AsahiShimbunParser,
+        sources=[NewsMap("https://www.asahi.com/sitemap.xml")],
     )
