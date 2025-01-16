@@ -1271,6 +1271,21 @@
     </tr>
     <tr>
       <td>
+        <code>ChunichiShimbun</code>
+      </td>
+      <td>
+        <div>Chunichi Shimbun</div>
+      </td>
+      <td>
+        <a href="https://www.chunichi.co.jp/">
+          <span>www.chunichi.co.jp</span>
+        </a>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
         <code>TheJapanNews</code>
       </td>
       <td>
@@ -1279,6 +1294,21 @@
       <td>
         <a href="https://japannews.yomiuri.co.jp/">
           <span>japannews.yomiuri.co.jp</span>
+        </a>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
+        <code>TokyoShimbun</code>
+      </td>
+      <td>
+        <div>Tokyo Shimbun</div>
+      </td>
+      <td>
+        <a href="https://www.tokyo-np.co.jp/">
+          <span>www.tokyo-np.co.jp</span>
         </a>
       </td>
       <td>&#160;</td>
