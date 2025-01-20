@@ -59,6 +59,5 @@ class JP(metaclass=PublisherGroup):
         parser=MainichiShimbunParser,
         sources=[
             RSSFeed("https://mainichi.jp/rss/etc/mainichi-flash.rss"),
-            RSSFeed("https://mainichi.jp/rss/etc/opinion.rss"),
         ],
     )
