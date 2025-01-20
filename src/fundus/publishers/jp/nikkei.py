@@ -1,4 +1,5 @@
 import datetime
+import re
 from typing import List, Optional
 
 from lxml.cssselect import CSSSelector
@@ -37,5 +38,7 @@ class NikkeiParser(ParserProxy):
             return image_extraction(
                 doc=self.precomputed.doc,
                 paragraph_selector=self._paragraph_selector,
-                lower_boundary_selector=CSSSelector("div.paywall_pzomzzc"),
+                lower_boundary_selector=CSSSelector("p.title_thchiij"),
+                # https://regex101.com/r/qjEM41/1
+                author_selector=re.compile(r"=(?P<credits>[^=]*?)\s*$"),
             )
