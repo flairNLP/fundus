@@ -52,6 +52,7 @@ class MainichiShimbunParser(ParserProxy):
                 paragraph_selector=self._paragraph_selector,
                 image_selector=XPath("//figure//img[not(ancestor::a[contains(@class,'articledetail-image-scale')])]"),
                 upper_boundary_selector=CSSSelector("#main"),
-                author_selector=re.compile(r"(、|（撮影・)(?P<credits>[^、].*|[^）]+)(撮影|）)\s*$"),
+                # https://regex101.com/r/awU0Rq/1
+                author_selector=re.compile(r"(、|＝(?=.*?撮影$))(?P<credits>[^、]*?)(撮影)?\s*$"),
                 relative_urls=True,
             )
