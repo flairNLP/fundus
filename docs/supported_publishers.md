@@ -1252,6 +1252,21 @@
     </tr>
     <tr>
       <td>
+        <code>SankeiShimbun</code>
+      </td>
+      <td>
+        <div>Sankei Shimbun</div>
+      </td>
+      <td>
+        <a href="https://www.sankei.com/">
+          <span>www.sankei.com</span>
+        </a>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
         <code>TheJapanNews</code>
       </td>
       <td>
