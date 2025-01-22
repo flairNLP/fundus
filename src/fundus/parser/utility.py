@@ -404,7 +404,7 @@ def generic_topic_parsing(keywords: Optional[Union[str, List[str]]], delimiter: 
     return list(dict.fromkeys(topics))
 
 
-_tz_infos = {"CET": 3600, "CEST": 7200}
+_tz_infos = {"CET": 3600, "CEST": 7200, "IST": 19800}
 
 
 def generic_date_parsing(date_str: Optional[str]) -> Optional[datetime]:
