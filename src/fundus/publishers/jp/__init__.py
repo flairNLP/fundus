@@ -4,6 +4,7 @@ from fundus.scraping.url import NewsMap, RSSFeed, Sitemap
 
 from .asahi_shimbun import AsahiShimbunParser
 from .mainichi_shimbun import MainichiShimbunParser
+from .nikkan_geadai import NikkanGeadaiParser
 from .nikkei import NikkeiParser
 from .sankei_shimbun import SankeiShimbunParser
 from .the_japan_news import TheJapanNewsParser
@@ -85,5 +86,18 @@ class JP(metaclass=PublisherGroup):
         sources=[
             # The Google sitemap https://www.sankei.com/feeds/google-sitemapindex/ is included here as well
             NewsMap("https://www.sankei.com/feeds/sitemapindex-category/?outputType=xml"),
+        ],
+    )
+
+    NikkanGeadai = Publisher(
+        name="Nikkan Geadai",
+        domain="https://www.nikkan-gendai.com/",
+        parser=NikkanGeadaiParser,
+        sources=[
+            Sitemap(
+                "https://www.nikkan-gendai.com/sitemap.xml",
+                reverse=True,
+                sitemap_filter=inverse(regex_filter(r"type=articles")),
+            )
         ],
     )
