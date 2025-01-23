@@ -20,6 +20,7 @@ from fundus.parser.utility import (
 class MainichiShimbunParser(ParserProxy):
     class V1(BaseParser):
         _paragraph_selector = CSSSelector("#articledetail-body > p")
+        _subheadline_selector = CSSSelector("#articledetail-body > h2")
 
         _topic_bloat_pattern = re.compile("速報")
 
@@ -28,6 +29,7 @@ class MainichiShimbunParser(ParserProxy):
             return extract_article_body_with_selector(
                 self.precomputed.doc,
                 paragraph_selector=self._paragraph_selector,
+                subheadline_selector=self._subheadline_selector,
             )
 
         @attribute
