@@ -1,10 +1,11 @@
 from fundus.publishers.base_objects import Publisher, PublisherGroup
 from fundus.publishers.jp.asahi_shimbun import AsahiShimbunParser
+from fundus.publishers.jp.mainichi_shimbun import MainichiShimbunParser
 from fundus.publishers.jp.the_japan_news import TheJapanNewsParser
 from fundus.publishers.jp.tokyo_chunichi_shimbun import TokyoChunichiShimbunParser
 from fundus.publishers.jp.yomiuri_shimbun import YomiuriShimbunParser
 from fundus.scraping.filter import regex_filter
-from fundus.scraping.url import NewsMap, Sitemap
+from fundus.scraping.url import NewsMap, RSSFeed, Sitemap
 
 
 class JP(metaclass=PublisherGroup):
@@ -50,4 +51,13 @@ class JP(metaclass=PublisherGroup):
         domain="https://www.chunichi.co.jp/",
         parser=TokyoChunichiShimbunParser,
         sources=[NewsMap("https://www.chunichi.co.jp/sitemap.xml")],
+    )
+
+    MainichiShimbun = Publisher(
+        name="Mainichi Shimbun",
+        domain="https://mainichi.jp/",
+        parser=MainichiShimbunParser,
+        sources=[
+            RSSFeed("https://mainichi.jp/rss/etc/mainichi-flash.rss"),
+        ],
     )
