@@ -1210,16 +1210,29 @@
         <code>CorriereDellaSera</code>
       </td>
       <td>
-        <div>Corriere Della Sera</div>
+        <div>Corriere della Sera</div>
       </td>
       <td>
-        <a href="https://www.corriere.it/">
+        <a href="https://www.corriere.it">
           <span>www.corriere.it</span>
         </a>
       </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
       <td>
-        <code>topics</code>
+        <code>IlGiornale</code>
       </td>
+      <td>
+        <div>Il Giornale</div>
+      </td>
+      <td>
+        <a href="https://www.ilgiornale.it">
+          <span>www.ilgiornale.it</span>
+        </a>
+      </td>
+      <td>&#160;</td>
       <td>&#160;</td>
     </tr>
     <tr>
