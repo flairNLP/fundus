@@ -62,6 +62,7 @@ _ws_pattern: Pattern[str] = re.compile(rf'[{"".join(_space_characters.values())}
 
 
 def normalize_whitespace(text: str) -> str:
+    text = re.sub(r"\u202f", "", text)
     return re.sub(_ws_pattern, " ", text).strip()
 
 
