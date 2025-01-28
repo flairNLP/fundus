@@ -66,5 +66,9 @@
   "iNews_2023_08_30.html.gz": {
     "url": "https://inews.co.uk/sport/tennis/us-open-2023-british-players-results-andy-murray-katie-boulter-cam-norrie-evans-burrage-draper-2580837",
     "crawl_date": "2023-08-30 18:39:34.320432"
+  },
+  "iNews_2025_01_28.html.gz": {
+    "url": "https://inews.co.uk/news/environment/just-stop-oil-activists-disrupt-west-end-play-as-sigourney-weaver-performs-3504901",
+    "crawl_date": "2025-01-28 15:40:34.688064"
   }
 }
