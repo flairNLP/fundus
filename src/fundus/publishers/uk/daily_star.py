@@ -1,5 +1,5 @@
 import datetime
-from typing import List, Optional
+from typing import List, Optional, Union
 
 from lxml.cssselect import CSSSelector
 from lxml.etree import XPath
@@ -16,7 +16,8 @@ from fundus.parser.utility import (
 
 class DailyStarParser(ParserProxy):
     class V1(BaseParser):
-        _summary_selector = CSSSelector("p.sub-title")
+        VALID_UNTIL = datetime.date(2025, 1, 25)
+        _summary_selector: Union[XPath, CSSSelector] = CSSSelector("p.sub-title")
         _paragraph_selector = XPath("//div[@class='article-body'] /p[text()]")
 
         @attribute
@@ -51,4 +52,26 @@ class DailyStarParser(ParserProxy):
                 image_selector=CSSSelector("figure.in-article-image img"),
                 caption_selector=XPath("./ancestor::figure//figcaption/span[@class='caption']"),
                 author_selector=XPath("./ancestor::figure//figcaption/span[@class='credit']"),
+            )
+
+    class V1_1(V1):
+        VALID_UNTIL = datetime.date.today()
+
+        _paragraph_selector = XPath("//article[@id='article-body'] /p[text()]")
+        _summary_selector = XPath("//article/h2[@class='LeadText_lead-text__wd_PA']")
+
+        @attribute
+        def images(self) -> List[Image]:
+            return image_extraction(
+                doc=self.precomputed.doc,
+                paragraph_selector=self._paragraph_selector,
+                image_selector=CSSSelector("figure.Figure_figure__Uce4f img"),
+                caption_selector=XPath(
+                    "./ancestor::div[contains(@class, 'ImageEmbed_image-embed__0T8WX')]"
+                    "//figcaption/span[contains(@class,'title')]"
+                ),
+                author_selector=XPath(
+                    "./ancestor::div[contains(@class, 'ImageEmbed_image-embed__0T8WX')]"
+                    "//figcaption/span[contains(@class,'credit')]"
+                ),
             )
