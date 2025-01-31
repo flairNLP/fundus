@@ -303,7 +303,7 @@ def transform_breaks_to_paragraphs(element: lxml.html.HtmlElement, **attribs: st
         for child in element:
             element.remove(child)
         element.tail = None
-        element.text = "Test"
+        element.text = None
 
     # split content on <br> tags
     if not (paragraphs := get_paragraphs()):

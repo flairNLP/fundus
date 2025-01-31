@@ -31,6 +31,8 @@ class NikkanGeadaiParser(ParserProxy):
 
         _full_text_selector = CSSSelector("div.article-wrap p.full-text")
 
+        _topic_selector = XPath("//main //div[contains(@class, 'm-keyword-list')] /ul /li //text()")
+
         @function(priority=0)
         def _transform_br_element(self):
             if nodes := self._full_text_selector(self.precomputed.doc):
@@ -60,7 +62,9 @@ class NikkanGeadaiParser(ParserProxy):
 
         @attribute
         def topics(self) -> List[str]:
-            return generic_topic_parsing(self.precomputed.meta.get("keywords"))
+            if topics := self._topic_selector(self.precomputed.doc):
+                return generic_topic_parsing(topics)
+            return []
 
         @attribute
         def images(self) -> List[Image]:
