@@ -1316,6 +1316,23 @@
     </tr>
     <tr>
       <td>
+        <code>Nikkei</code>
+      </td>
+      <td>
+        <div>The Nikkei</div>
+      </td>
+      <td>
+        <a href="https://www.nikkei.com/">
+          <span>www.nikkei.com</span>
+        </a>
+      </td>
+      <td>
+        <code>authors</code>
+      </td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
         <code>TokyoShimbun</code>
       </td>
       <td>
