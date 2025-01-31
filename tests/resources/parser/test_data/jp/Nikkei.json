@@ -48,7 +48,7 @@
         "description": null,
         "caption": "イオン銀行などは経営陣を刷新する",
         "authors": [],
-        "position": 1039
+        "position": 1037
       },
       {
         "versions": [
@@ -63,7 +63,7 @@
         "description": null,
         "caption": null,
         "authors": [],
-        "position": 1060
+        "position": 1058
       },
       {
         "versions": [
@@ -78,10 +78,13 @@
         "description": null,
         "caption": null,
         "authors": [],
-        "position": 1074
+        "position": 1072
       }
     ],
     "publishing_date": "2025-01-14 20:00:00+09:00",
-    "title": "イオン銀行社長解任、金融庁処分で　持ち株社長も引責"
+    "title": "イオン銀行社長解任、金融庁処分で　持ち株社長も引責",
+    "topics": [
+      "金融機関"
+    ]
   }
 }

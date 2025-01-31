@@ -7,6 +7,7 @@ from lxml.etree import XPath
 
 from fundus.parser import ArticleBody, BaseParser, Image, ParserProxy, attribute
 from fundus.parser.utility import (
+    apply_substitution_pattern_over_list,
     extract_article_body_with_selector,
     generic_author_parsing,
     generic_date_parsing,
@@ -19,12 +20,16 @@ from fundus.parser.utility import (
 class MainichiShimbunParser(ParserProxy):
     class V1(BaseParser):
         _paragraph_selector = CSSSelector("#articledetail-body > p")
+        _subheadline_selector = CSSSelector("#articledetail-body > h2")
+
+        _topic_bloat_pattern = re.compile("速報")
 
         @attribute
         def body(self) -> Optional[ArticleBody]:
             return extract_article_body_with_selector(
                 self.precomputed.doc,
                 paragraph_selector=self._paragraph_selector,
+                subheadline_selector=self._subheadline_selector,
             )
 
         @attribute
@@ -43,7 +48,10 @@ class MainichiShimbunParser(ParserProxy):
 
         @attribute
         def topics(self) -> List[str]:
-            return generic_topic_parsing(self.precomputed.meta.get("keywords"), delimiter=[",", "・"])
+            return apply_substitution_pattern_over_list(
+                generic_topic_parsing(self.precomputed.meta.get("keywords"), delimiter=[",", "・"]),
+                self._topic_bloat_pattern,
+            )
 
         @attribute
         def images(self) -> List[Image]:
@@ -52,6 +60,7 @@ class MainichiShimbunParser(ParserProxy):
                 paragraph_selector=self._paragraph_selector,
                 image_selector=XPath("//figure//img[not(ancestor::a[contains(@class,'articledetail-image-scale')])]"),
                 upper_boundary_selector=CSSSelector("#main"),
-                author_selector=re.compile(r"(、|（撮影・)(?P<credits>[^、].*|[^）]+)(撮影|）)\s*$"),
+                # https://regex101.com/r/awU0Rq/1
+                author_selector=re.compile(r"(、|＝(?=.*?撮影$))(?P<credits>[^、]*?)(撮影)?\s*$"),
                 relative_urls=True,
             )

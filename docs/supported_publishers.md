@@ -1002,6 +1002,38 @@
   <tbody>
     <tr>
       <td>
+        <code>LaVanguardia</code>
+      </td>
+      <td>
+        <div> La Vanguardia</div>
+      </td>
+      <td>
+        <a href="https://www.lavanguardia.com/">
+          <span>www.lavanguardia.com</span>
+        </a>
+      </td>
+      <td>
+        <code>topics</code>
+      </td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
+        <code>ABC</code>
+      </td>
+      <td>
+        <div>ABC</div>
+      </td>
+      <td>
+        <a href="https://www.abc.es/">
+          <span>www.abc.es</span>
+        </a>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
         <code>ElMundo</code>
       </td>
       <td>
@@ -1175,6 +1207,23 @@
   <tbody>
     <tr>
       <td>
+        <code>CorriereDellaSera</code>
+      </td>
+      <td>
+        <div>Corriere Della Sera</div>
+      </td>
+      <td>
+        <a href="https://www.corriere.it/">
+          <span>www.corriere.it</span>
+        </a>
+      </td>
+      <td>
+        <code>topics</code>
+      </td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
         <code>LaRepubblica</code>
       </td>
       <td>
@@ -1309,7 +1358,6 @@
       </td>
       <td>
         <code>authors</code>
-        <code>topics</code>
       </td>
       <td>&#160;</td>
     </tr>
