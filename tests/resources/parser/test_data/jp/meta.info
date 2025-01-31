@@ -15,6 +15,10 @@
     "url": "https://www.nikkei.com/article/DGXZQOUB148MY0U5A110C2000000/",
     "crawl_date": "2025-01-27 16:41:04.576095"
   },
+  "SankeiShimbun_2025_01_21.html.gz": {
+    "url": "https://www.sankei.com/article/20250121-QBJP5I25BBIG5IZ76XZNDHDB5Q/",
+    "crawl_date": "2025-01-21 14:16:41.656839"
+  },
   "TheJapanNews_2024_10_13.html.gz": {
     "url": "https://japannews.yomiuri.co.jp/politics/politics-government/20241013-216478/",
     "crawl_date": "2024-10-13 16:27:01.520980"
