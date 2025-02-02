@@ -4,6 +4,7 @@ from typing import Set
 from fundus.publishers.at import AT
 from fundus.publishers.au import AU
 from fundus.publishers.base_objects import Publisher, PublisherGroup
+from fundus.publishers.be import BE
 from fundus.publishers.ca import CA
 from fundus.publishers.ch import CH
 from fundus.publishers.cn import CN
@@ -64,6 +65,7 @@ class PublisherCollection(metaclass=PublisherCollectionMeta):
     ch = CH
     lt = LT
     cn = CN
+    be = BE
     tr = TR
     my = MY
     ind = IND
