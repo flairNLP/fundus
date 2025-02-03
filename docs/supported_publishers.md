@@ -1301,6 +1301,21 @@
     </tr>
     <tr>
       <td>
+        <code>NikkanGeadai</code>
+      </td>
+      <td>
+        <div>Nikkan Geadai</div>
+      </td>
+      <td>
+        <a href="https://www.nikkan-gendai.com/">
+          <span>www.nikkan-gendai.com</span>
+        </a>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
         <code>SankeiShimbun</code>
       </td>
       <td>
