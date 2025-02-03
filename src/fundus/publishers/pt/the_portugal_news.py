@@ -41,9 +41,7 @@ class ThePortugalNewsParser(ParserProxy):
         @attribute
         def authors(self) -> List[str]:
             author_objects = self._author_selector(self.precomputed.doc)
-            if author_objects and (
-                author := re.search(r"(?i)by\s*(?P<authors>.*),[\r\sr\n]*in", author_objects[0])
-            ):
+            if author_objects and (author := re.search(r"(?i)by\s*(?P<authors>.*),[\r\sr\n]*in", author_objects[0])):
                 return generic_author_parsing(author.group("authors"))
             return []
 
