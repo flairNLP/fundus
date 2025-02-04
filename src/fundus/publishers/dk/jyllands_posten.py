@@ -63,5 +63,5 @@ class JyllandsPostenParser(ParserProxy):
             return image_extraction(
                 doc=self.precomputed.doc,
                 paragraph_selector=self._paragraph_selector,
-                author_selector=re.compile(r"\s*Foto:\s*(?P<credits>.*)\.?"),
+                author_selector=re.compile(r"\s*(Foto|Arkivfoto):\s*(?P<credits>.*)\.?"),
             )
