@@ -271,6 +271,55 @@ def get_meta_content(root: lxml.html.HtmlElement) -> Dict[str, str]:
     return metadata
 
 
+def transform_breaks_to_paragraphs(element: lxml.html.HtmlElement, **attribs: str) -> lxml.html.HtmlElement:
+    """Splits the content of <element> on <br> tags into paragraphs and transform them in <p> elements.
+
+    Args:
+        element: The element on which to perform the transformation
+        **attribs: The attributes of the wrapped paragraphs as keyword arguments. I.e. the
+            default {"class": "br-wrap"} wil produce the following elements: <p class='br-wrap'>.
+            To use python keywords wrap them dunder scores. __class__ for class.
+
+    Returns:
+        The transformed element
+    """
+
+    if not attribs:
+        attribs = {"class": "br-wrap"}
+    else:
+        attribs = {re.sub(r"^__(.*?)__$", r"\1", key): value for key, value in attribs.items()}
+
+    def get_paragraphs() -> List[str]:
+        raw_html = lxml.etree.tostring(element, method="html", encoding="unicode")
+        if match := re.match(r"^<[^>]*?>\s*(?P<content>.*?)\s*<[^>]*?>\s*$", raw_html, re.S):
+            content = match.group("content")
+            return list(filter(bool, (text.strip() for text in content.split("<br>"))))
+        return []
+
+    def generate_attrs() -> str:
+        return " ".join([f"{attribute}='{value}'" for attribute, value in attribs.items()]) if attribs else ""
+
+    def clear_element():
+        for child in element:
+            element.remove(child)
+        element.tail = None
+        element.text = None
+
+    # split content on <br> tags
+    if not (paragraphs := get_paragraphs()):
+        return element
+
+    # remove children, tail and text from element
+    clear_element()
+
+    # add paragraphs to cleared element
+    for paragraph in paragraphs:
+        wrapped = f"<p{' ' + generate_attrs()}>{paragraph}</p>"
+        element.append(lxml.html.fromstring(wrapped))
+
+    return element
+
+
 def strip_nodes_to_text(text_nodes: List[lxml.html.HtmlElement], join_on: str = "\n\n") -> Optional[str]:
     if not text_nodes:
         return None

@@ -1,6 +1,6 @@
 import datetime
 import re
-from typing import List, Optional
+from typing import List, Optional, Union
 
 from lxml.cssselect import CSSSelector
 from lxml.etree import XPath
@@ -18,11 +18,19 @@ from fundus.parser.utility import (
 
 class DagbladetParser(ParserProxy):
     class V1(BaseParser):
-        _summary_selector = CSSSelector("#main > article > div.article-top.expand > div > header > h3")
-        _subheadline_selector = CSSSelector("#main > article > div.body-copy > h2")
-        _paragraph_selector = CSSSelector("#main > article > div.body-copy > p")
+        _summary_selector = XPath(
+            "//main/article/div[@class='article-top expand']//header/h3 | "
+            "//main/article/div[contains(@class, 'articleHeader')]/h2 | "
+            "(//main/article/div[contains(@class, 'bodytext')]/*)[1][self::div and contains(@class,'factbox')]//p"
+        )
+        _subheadline_selector = CSSSelector(
+            "#main > article > div.body-copy > h2, #main > article > div[class~='bodytext'] > h3"
+        )
+        _paragraph_selector = CSSSelector(
+            "#main > article > div.body-copy > p, #main > article > div[class~='bodytext'] > p"
+        )
 
-        _author_selector = CSSSelector("section.meta div[itemtype='http://schema.org/Person'] address.name")
+        _author_selector = CSSSelector("div[itemtype='http://schema.org/Person'] address.name > a")
 
         @attribute
         def body(self) -> Optional[ArticleBody]:
@@ -55,5 +63,11 @@ class DagbladetParser(ParserProxy):
                 doc=self.precomputed.doc,
                 paragraph_selector=self._paragraph_selector,
                 author_selector=re.compile(r"Foto:(?P<credits>.*)"),
-                image_selector=XPath("//figure[contains(@class, 'image')]//img"),
+                image_selector=XPath(
+                    "//figure[contains(@class, 'image')]//img | "
+                    "//article//figure//div[contains(@class,'img')]//img[not(contains(@class, 'lazyload'))]"
+                ),
+                caption_selector=XPath(
+                    "./ancestor::*[self::figure or (self::div and contains(@class,'articleHeader'))]//figcaption"
+                ),
             )

@@ -987,6 +987,40 @@
 </table>
 
 
+## DK-Publishers
+
+<table class="publishers dk">
+  <thead>
+    <tr>
+      <th>Class&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</th>
+      <th>Name&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</th>
+      <th>URL&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</th>
+      <th>Missing&#160;Attributes</th>
+      <th>Additional&#160;Attributes&#160;&#160;&#160;&#160;</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <code>JyllandsPosten</code>
+      </td>
+      <td>
+        <div>Jyllands Posten</div>
+      </td>
+      <td>
+        <a href="https://jyllands-posten.dk/">
+          <span>jyllands-posten.dk</span>
+        </a>
+      </td>
+      <td>
+        <code>topics</code>
+      </td>
+      <td>&#160;</td>
+    </tr>
+  </tbody>
+</table>
+
+
 ## ES-Publishers
 
 <table class="publishers es">
@@ -1301,6 +1335,36 @@
     </tr>
     <tr>
       <td>
+        <code>NikkanGeadai</code>
+      </td>
+      <td>
+        <div>Nikkan Geadai</div>
+      </td>
+      <td>
+        <a href="https://www.nikkan-gendai.com/">
+          <span>www.nikkan-gendai.com</span>
+        </a>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
+        <code>SankeiShimbun</code>
+      </td>
+      <td>
+        <div>Sankei Shimbun</div>
+      </td>
+      <td>
+        <a href="https://www.sankei.com/">
+          <span>www.sankei.com</span>
+        </a>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
         <code>TheJapanNews</code>
       </td>
       <td>
@@ -1312,6 +1376,23 @@
         </a>
       </td>
       <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
+        <code>Nikkei</code>
+      </td>
+      <td>
+        <div>The Nikkei</div>
+      </td>
+      <td>
+        <a href="https://www.nikkei.com/">
+          <span>www.nikkei.com</span>
+        </a>
+      </td>
+      <td>
+        <code>authors</code>
+      </td>
       <td>&#160;</td>
     </tr>
     <tr>
