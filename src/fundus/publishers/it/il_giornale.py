@@ -27,7 +27,7 @@ class IlGiornaleParser(ParserProxy):
         _subheadline_selector = CSSSelector("div.typography--content h2:not([class])")
         _summary_selector = CSSSelector("p.article__abstract, div.article__abstract")
         _image_selector = XPath(
-            "//figure[contains(@class, 'article__image')]//img | //div[contains(@class, 'article__media')]//img"
+            "//div[contains(@class, 'article__media')]//img | //section[contains(@class, 'article__content')]//img"
         )
 
         @attribute
@@ -58,9 +58,9 @@ class IlGiornaleParser(ParserProxy):
 
         @attribute
         def body(self) -> Optional[ArticleBody]:
-            # Clean up HTML by removing ads and handling em/strong tags
+            # Clean up HTML by removing ads and handling em/strong/cite tags
             html_string = tostring(self.precomputed.doc).decode("utf-8")
-            html_string = re.sub(r"</?(em|strong)>", "", html_string)
+            html_string = re.sub(r"</?(em|strong|cite)>", "", html_string)
             html_string = re.sub(r"<!-- EVOLUTION ADV -->", "", html_string)
             doc = document_fromstring(html_string)
 
@@ -92,27 +92,9 @@ class IlGiornaleParser(ParserProxy):
         @attribute
         def images(self) -> List[Image]:
             # Extract images using the utility function
-            images = image_extraction(
+            return image_extraction(
                 doc=self.precomputed.doc,
                 paragraph_selector=self._paragraph_selector,
                 image_selector=self._image_selector,
-                author_selector=re.compile(r"(?:Foto:?\s*)?(?P<credits>[^()]+)(?:\s*\([^)]+\))?$"),
                 caption_selector=XPath(".//figcaption/text()"),
             )
-
-            # Try to get cover image from meta tags if no images found
-            if not images:
-                og_image = self.precomputed.meta.get("og:image")
-                if og_image:
-                    images = [
-                        Image(
-                            versions=[ImageVersion(url=og_image, query_width=None)],
-                            is_cover=True,
-                            description=self.precomputed.meta.get("og:image:alt"),
-                            caption=None,
-                            authors=[],
-                            position=0,
-                        )
-                    ]
-
-            return images
