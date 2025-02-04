@@ -20,7 +20,14 @@ class DailyNewsTZParser(ParserProxy):
     class V1(BaseParser):
         _summary_selector = CSSSelector("div.cs-entry__subtitle")
         _subheadline_selector = XPath("//div[@class='entry-content']//p[not(text() or position()=1)]//span//strong")
-        _paragraph_selector = XPath("//div[@class='entry-content']//p[text() or position()=1]")
+        _paragraph_selector = XPath(
+            "//div[@class='entry-content']"
+            "//p[not(re:test(string(.), '^(SOMA|ALSO READ):') or span)] | "
+            "//div[@class='entry-content']//p[not(position()=1)]//span[not(span) and text()] |"
+            "//div[@class='entry-content']//p//span/span[text()] | "
+            "//div[@class='entry-content']//p[position()=1]",
+            namespaces={"re": "http://exslt.org/regular-expressions"},
+        )
 
         @attribute
         def title(self) -> Optional[str]:
