@@ -62,7 +62,6 @@ _ws_pattern: Pattern[str] = re.compile(rf'[{"".join(_space_characters.values())}
 
 
 def normalize_whitespace(text: str) -> str:
-    text = re.sub(r"\u202f", "", text)
     return re.sub(_ws_pattern, " ", text).strip()
 
 
@@ -504,9 +503,9 @@ def parse_urls(node: lxml.html.HtmlElement) -> Optional[Dict[str, str]]:
         return sorted(strings, key=len)[-1]
 
     if srcset := cast(List[str], _srcset_selector(node)):
-        return parse_srcset(normalize_whitespace(get_longest_string(srcset)))
+        return parse_srcset(get_longest_string(srcset))
     elif src := cast(List[str], _src_selector(node)):
-        return {"1x": normalize_whitespace(get_longest_string(src))}
+        return {"1x": get_longest_string(src)}
     else:
         return None
 
