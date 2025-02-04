@@ -28,8 +28,11 @@ class JyllandsPostenParser(ParserProxy):
             "//section/article/div[contains(@class, 'c-article-inline')]"
             "/div[contains(@class, 'c-article-inline')]"
             "/div[contains(@class, 'c-article-inline')]"
-            "/div/div/h3"
+            "/div/div/h3 | "
+            "//article/h3"
         )
+
+        _headline_selector = XPath("//h1/text()")
 
         @attribute
         def body(self) -> Optional[ArticleBody]:
@@ -42,7 +45,10 @@ class JyllandsPostenParser(ParserProxy):
 
         @attribute
         def title(self) -> Optional[str]:
-            return self.precomputed.meta.get("og:title")
+            headlines: List[str] = self._headline_selector(self.precomputed.doc)
+            if headlines:
+                return headlines[0].strip()
+            return None
 
         @attribute
         def authors(self) -> List[str]:
