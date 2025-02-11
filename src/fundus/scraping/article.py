@@ -9,7 +9,7 @@ from colorama import Fore, Style
 from fundus.logging import create_logger
 from fundus.parser import ArticleBody, Image
 from fundus.scraping.html import HTML
-from fundus.utils.serialization import JSONVal, is_jsonable
+from fundus.utils.serialization import JSONVal
 
 logger = create_logger(__name__)
 
@@ -128,20 +128,23 @@ class Article:
         if not attributes:
             attributes = tuple(set(self.__extraction__.keys()) - {"meta", "ld"})
 
-        serialization = {}
+        def serialize(v: Any) -> JSONVal:
+            if hasattr(v, "serialize"):
+                return v.serialize()  # type: ignore[no-any-return]
+            elif isinstance(v, datetime):
+                return str(v)
+            raise TypeError(f"Attribute {attribute!r} of type {type(v)!r} is not JSON serializable")
+
+        serialization: Dict[str, JSONVal] = {}
         for attribute in attributes:
             if not hasattr(self, attribute):
                 continue
             value = getattr(self, attribute)
 
-            if hasattr(value, "serialize"):
-                value = value.serialize()
-            elif isinstance(value, datetime):
-                value = str(value)
-            elif not is_jsonable(value):
-                raise TypeError(f"Attribute {attribute!r} of type {type(value)!r} is not JSON serializable")
-
-            serialization[attribute] = value
+            if isinstance(value, list):
+                serialization[attribute] = [serialize(item) for item in value]
+            else:
+                serialization[attribute] = value
 
         return serialization
 
