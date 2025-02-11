@@ -16,7 +16,7 @@ from fundus.parser.utility import (
 class ThePortugalNewsParser(ParserProxy):
     class V1(BaseParser):
         _paragraph_selector = XPath("//div[@class='article-body']//p[string-length(text())>1]")
-        _subheadline_selector = XPath("//div[@class='article-body']/p/b")
+        _subheadline_selector = XPath("//div[@class='article-body']/p/b[not(u)]")
         _summary_selector = XPath("//div[@class='fs-4 font-semibold mb-3']")
 
         _author_selector = XPath("//div[@class='col-lg-10 order-lg-1']/p//text()")
