@@ -16,6 +16,7 @@ from fundus.publishers.ind import IND
 from fundus.publishers.it import IT
 from fundus.publishers.jp import JP
 from fundus.publishers.lt import LT
+from fundus.publishers.mx import MX
 from fundus.publishers.my import MY
 from fundus.publishers.na import NA
 from fundus.publishers.no import NO
@@ -70,6 +71,7 @@ class PublisherCollection(metaclass=PublisherCollectionMeta):
     be = BE
     tr = TR
     my = MY
+    mx = MX
     ind = IND
     no = NO
     ca = CA
