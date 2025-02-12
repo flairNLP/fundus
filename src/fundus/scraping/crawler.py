@@ -336,6 +336,9 @@ class CrawlerBase(ABC):
         finally:
             session_handler.close_current_session()
             if save_to_file is not None:
+                if isinstance(save_to_file, str):
+                    save_to_file = Path(save_to_file)
+                save_to_file.parent.mkdir(parents=True, exist_ok=True)
                 with open(save_to_file, "w", encoding="utf-8") as file:
                     logger.info(f"Writing crawled articles to {save_to_file!r}")
                     file.write(
