@@ -9,7 +9,7 @@ from colorama import Fore, Style
 from fundus.logging import create_logger
 from fundus.parser import ArticleBody, Image
 from fundus.scraping.html import HTML
-from fundus.utils.serialization import JSONVal
+from fundus.utils.serialization import JSONVal, is_jsonable
 
 logger = create_logger(__name__)
 
@@ -133,7 +133,9 @@ class Article:
                 return v.serialize()  # type: ignore[no-any-return]
             elif isinstance(v, datetime):
                 return str(v)
-            raise TypeError(f"Attribute {attribute!r} of type {type(v)!r} is not JSON serializable")
+            elif not is_jsonable(v):
+                raise TypeError(f"Attribute {attribute!r} of type {type(v)!r} is not JSON serializable")
+            return v  # type: ignore[no-any-return]
 
         serialization: Dict[str, JSONVal] = {}
         for attribute in attributes:
@@ -144,7 +146,7 @@ class Article:
             if isinstance(value, list):
                 serialization[attribute] = [serialize(item) for item in value]
             else:
-                serialization[attribute] = value
+                serialization[attribute] = serialize(value)
 
         return serialization
 
