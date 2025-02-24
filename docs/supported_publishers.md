@@ -1968,7 +1968,9 @@
         <code>TheTelegraph</code>
       </td>
       <td>
-        <div>The Telegraph</div>
+        <div>
+          <strike>The Telegraph</strike>
+        </div>
       </td>
       <td>
         <a href="https://www.telegraph.co.uk/">
