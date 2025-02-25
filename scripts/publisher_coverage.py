@@ -11,7 +11,6 @@ from typing import Any, Callable, List, Optional, Union
 from fundus import Crawler, PublisherCollection
 from fundus.publishers.base_objects import Publisher, PublisherGroup
 from fundus.scraping.article import Article
-from fundus.scraping.filter import RequiresAll, Requires
 
 
 def main() -> None:
