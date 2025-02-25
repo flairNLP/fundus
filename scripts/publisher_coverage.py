@@ -11,11 +11,12 @@ from typing import Any, Callable, List, Optional, Union
 from fundus import Crawler, PublisherCollection
 from fundus.publishers.base_objects import Publisher, PublisherGroup
 from fundus.scraping.article import Article
+from fundus.scraping.filter import RequiresAll, Requires
 
 
 def main() -> None:
     failed: int = 0
-    timeout_in_seconds: int = 10
+    timeout_in_seconds: int = 20
 
     publisher_regions: List[PublisherGroup] = sorted(
         PublisherCollection.get_subgroup_mapping().values(), key=lambda region: region.__name__
