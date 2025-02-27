@@ -95,6 +95,9 @@ class WebScraper(BaseScraper):
         parser_mapping: Dict[str, ParserProxy] = {publisher.name: publisher.parser}
         super().__init__(*html_sources, parser_mapping=parser_mapping)
 
+        WebSource.__EVENTS__.register_event("stop", publisher.name)
+        WebSource.__EVENTS__.register_event("bridge", publisher.name)
+
 
 class CCNewsScraper(BaseScraper):
     def __init__(self, source: CCNewsSource):

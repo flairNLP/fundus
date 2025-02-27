@@ -19,6 +19,7 @@ from fundus.scraping.delay import Delay
 from fundus.scraping.filter import URLFilter
 from fundus.scraping.session import _default_header, session_handler
 from fundus.scraping.url import URLSource
+from fundus.utils.events import EventDict
 
 __all__ = [
     "HTML",
@@ -94,6 +95,8 @@ class HTMLSource(Protocol):
 
 
 class WebSource:
+    __EVENTS__: EventDict = EventDict()
+
     def __init__(
         self,
         url_source: Iterable[str],
@@ -130,10 +133,17 @@ class WebSource:
                     )
                     self.delay = lambda: robots_delay
 
+    @property
+    def _is_stopped(self):
+        return self.__EVENTS__.is_event_set("stop")
+
     def fetch(self, url_filter: Optional[URLFilter] = None) -> Iterator[HTML]:
         combined_filters: List[URLFilter] = ([self.url_filter] if self.url_filter else []) + (
             [url_filter] if url_filter else []
         )
+
+        if self._is_stopped:
+            return
 
         timestamp = time.time() + self.delay() if self.delay is not None else time.time()
 
@@ -141,6 +151,9 @@ class WebSource:
             return any(f(u) for f in combined_filters)
 
         for url in self.url_source:
+            if self._is_stopped:
+                return
+
             if not validators.url(url):
                 logger.debug(f"Skipped requested URL {url!r} because the URL is malformed")
                 continue
