@@ -5,10 +5,13 @@ from urllib.robotparser import RobotFileParser
 
 import requests
 
+from fundus.logging import create_logger
 from fundus.parser.base_parser import ParserProxy
 from fundus.scraping.filter import URLFilter
 from fundus.scraping.url import NewsMap, RSSFeed, Sitemap, URLSource
 from fundus.utils.iteration import iterate_all_subclasses
+
+logger = create_logger(__name__)
 
 
 class CustomRobotFileParser(RobotFileParser):
@@ -41,7 +44,11 @@ class Robots:
         self.ready: bool = False
 
     def read(self, headers: Optional[Dict[str, str]] = None) -> None:
-        self.robots_file_parser.read(headers=headers)
+        try:
+            self.robots_file_parser.read(headers=headers)
+        except requests.exceptions.ConnectionError as err:
+            logger.warning(f"Could not load robots {self.url!r}. Ignoring robots and continuing.")
+            self.robots_file_parser.allow_all = True
         self.ready = True
 
     def can_fetch(self, useragent: str, url: str) -> bool:

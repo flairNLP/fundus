@@ -14,7 +14,7 @@ from lxml.etree import XPath
 from requests import ConnectionError, HTTPError
 
 from fundus.logging import create_logger
-from fundus.publishers.base_objects import Publisher
+from fundus.publishers.base_objects import Publisher, Robots
 from fundus.scraping.delay import Delay
 from fundus.scraping.filter import URLFilter
 from fundus.scraping.session import _default_header, session_handler
@@ -112,9 +112,23 @@ class WebSource:
         self.query_parameters = query_parameters or {}
         if isinstance(url_source, URLSource):
             url_source.set_header(self.request_header)
+
         self.delay = delay
-        self.ignore_robots = ignore_robots
-        self.ignore_crawl_delay = ignore_crawl_delay
+
+        # parse robots:
+        self.robots: Optional[Robots] = None
+        if not ignore_robots:
+            self.robots = self.publisher.robots
+            if not self.robots.ready:
+                self.publisher.robots.read(headers=self.request_header)
+
+            if not ignore_crawl_delay:
+                if robots_delay := self.robots.crawl_delay(self.request_header.get("user-agent") or "*"):
+                    logger.debug(
+                        f"Found crawl-delay of {robots_delay} seconds in robots.txt for {self.publisher.name}. "
+                        f"Overwriting existing delay."
+                    )
+                    self.delay = lambda: robots_delay
 
     def fetch(self, url_filter: Optional[URLFilter] = None) -> Iterator[HTML]:
         combined_filters: List[URLFilter] = ([self.url_filter] if self.url_filter else []) + (
@@ -122,19 +136,6 @@ class WebSource:
         )
 
         timestamp = time.time() + self.delay() if self.delay is not None else time.time()
-
-        robots = self.publisher.robots
-
-        if not robots.ready:
-            robots.read(headers=self.request_header)
-
-        if not (self.ignore_robots or self.ignore_crawl_delay):
-            if delay := robots.crawl_delay(self.request_header.get("user-agent") or "*"):
-                logger.debug(
-                    f"Found crawl-delay of {delay} seconds in robots.txt for {self.publisher.name}. "
-                    f"Overwriting existing delay."
-                )
-                self.delay = lambda: delay
 
         def filter_url(u: str) -> bool:
             return any(f(u) for f in combined_filters)
@@ -148,7 +149,7 @@ class WebSource:
                 logger.debug(f"Skipped requested URL {url!r} because of URL filter")
                 continue
 
-            if not (self.ignore_robots or robots.can_fetch(self.request_header.get("user-agent") or "*", url)):
+            if not (self.robots is None or self.robots.can_fetch(self.request_header.get("user-agent") or "*", url)):
                 logger.debug(f"Skipped requested URL {url!r} because of robots.txt")
                 continue
 
