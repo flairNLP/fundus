@@ -350,8 +350,6 @@ class CrawlerBase(ABC):
                         yield article
                     if sum(article_count.values()) == max_articles:
                         break
-        except Exception as err:
-            raise err
         finally:
             session_handler.close_current_session()
             if save_to_file is not None:
