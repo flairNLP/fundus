@@ -15,7 +15,7 @@ from fundus.scraping.article import Article
 
 def main() -> None:
     failed: int = 0
-    timeout_in_seconds: int = 20
+    timeout_in_seconds: int = 30
 
     publisher_regions: List[PublisherGroup] = sorted(
         PublisherCollection.get_subgroup_mapping().values(), key=lambda region: region.__name__
