@@ -12,6 +12,7 @@ import threading
 import time
 import traceback
 from abc import ABC, abstractmethod
+from collections import defaultdict
 from datetime import datetime
 from functools import lru_cache, partial, wraps
 from multiprocessing import Manager
@@ -23,6 +24,7 @@ from queue import Empty, Queue
 from typing import (
     Any,
     Callable,
+    Dict,
     Generic,
     Iterator,
     List,
@@ -221,6 +223,7 @@ class CrawlerBase(ABC):
     def crawl(
         self,
         max_articles: Optional[int] = None,
+        max_articles_per_publisher: Optional[int] = None,
         timeout: Optional[int] = None,
         error_handling: Literal["suppress", "catch", "raise"] = "suppress",
         only_complete: Union[bool, ExtractionFilter] = Requires("title", "body", "publishing_date"),
@@ -234,6 +237,8 @@ class CrawlerBase(ABC):
             max_articles (Optional[int]): Number of articles to crawl. If there are fewer articles
                 than max_articles the Iterator will stop before max_articles. If None, all retrievable
                 articles are returned. Defaults to None.
+            max_articles_per_publisher: Specify the number of articles to crawl per publisher.
+                Disables <max_articles>. Defaults to None.
             timeout (Optional[int]): timeout (Optional[int]): Specifies the duration in seconds the crawler
                 will wait without receiving any articles before stopping. If set <= 0, or if not provided,
                 the crawler will run until all sources are exhausted. Defaults to None.
@@ -263,6 +268,14 @@ class CrawlerBase(ABC):
 
         max_articles = max_articles or -1
         timeout = timeout or -1
+
+        if max_articles_per_publisher:
+            if timeout < 120:
+                print(
+                    "It is recommended to set a minimum <timeout> of 120 seconds when using "
+                    "max_articles_per_publisher."
+                )
+            max_articles = -1
 
         def build_extraction_filter() -> Optional[ExtractionFilter]:
             if isinstance(only_complete, bool):
@@ -299,8 +312,8 @@ class CrawlerBase(ABC):
         else:
             fitting_publishers = self.publishers
 
-        article_count = 0
-        crawled_articles = []
+        article_count: Dict[str, int] = defaultdict(int)
+        crawled_articles: Dict[str, List[Article]] = defaultdict(list)
 
         # Unfortunately we relly on this little workaround here to terminate the 'Pool' used within
         # the 'CCNewsCrawler'. The 'Timeout' contextmanager utilizes '_thread.interrupt_main',
@@ -323,15 +336,19 @@ class CrawlerBase(ABC):
                 for article in self._build_article_iterator(
                     tuple(fitting_publishers), error_handling, build_extraction_filter(), url_filter
                 ):
+                    if max_articles_per_publisher and article_count[article.publisher] == max_articles_per_publisher:
+                        if sum(article_count.values()) == len(self.publishers) * max_articles_per_publisher:
+                            break
+                        continue
                     timer.reset()
                     url_without_query_parameters = remove_query_parameters_from_url(article.html.responded_url)
                     if not only_unique or url_without_query_parameters not in response_cache:
                         response_cache.add(url_without_query_parameters)
-                        article_count += 1
-                        if save_to_file is not None:
-                            crawled_articles.append(article)
+                        article_count[article.publisher] += 1
+                        if save_to_file:
+                            crawled_articles[article.publisher].append(article)
                         yield article
-                    if article_count == max_articles:
+                    if sum(article_count.values()) == max_articles:
                         break
         finally:
             session_handler.close_current_session()
