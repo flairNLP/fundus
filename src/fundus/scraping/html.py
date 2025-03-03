@@ -148,7 +148,6 @@ class WebSource:
             return any(f(u) for f in combined_filters)
 
         while not self._is_stopped and (url := next(iter(self.url_source), None)) is not None:
-
             if not validators.url(url):
                 logger.debug(f"Skipped requested URL {url!r} because the URL is malformed")
                 continue

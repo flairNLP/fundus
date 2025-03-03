@@ -337,9 +337,7 @@ class CrawlerBase(ABC):
                     tuple(fitting_publishers), error_handling, build_extraction_filter(), url_filter
                 ):
                     if max_articles_per_publisher and article_count[article.publisher] == max_articles_per_publisher:
-                        if isinstance(self, Crawler) and not WebSource.__EVENTS__.is_event_set(
-                            "stop", article.publisher
-                        ):
+                        if isinstance(self, Crawler) and not WebSource.__EVENTS__.is_event_set("stop", article.publisher):
                             WebSource.__EVENTS__.set_event("stop", article.publisher)
                         if sum(article_count.values()) == len(self.publishers) * max_articles_per_publisher:
                             break
@@ -430,8 +428,6 @@ class Crawler(CrawlerBase):
         self.ignore_robots = ignore_robots
         self.ignore_crawl_delay = ignore_crawl_delay
 
-        WebSource.__EVENTS__.clear_all()
-
     def _fetch_articles(
         self,
         publisher: Publisher,
@@ -481,8 +477,9 @@ class Crawler(CrawlerBase):
                 yield from pool_queue_iter(pool.map_async(wrapped_article_task, publishers), result_queue)
         finally:
             logger.debug(f"Shutting down {type(self).__name__!r} ...")
-            WebSource.__EVENTS__.set_all("stop")
+            WebSource.__EVENTS__.set_for_all("stop")
             pool.join()
+            WebSource.__EVENTS__.clear_for_all("stop")
             logger.debug("Shutdown done")
 
     def _build_article_iterator(
