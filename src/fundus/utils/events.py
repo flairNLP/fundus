@@ -53,20 +53,38 @@ class EventDict:
             self._events[self._resolve(key)][event].set()
             logger.debug(f"Set event {event!r} for {self._resolve(key)}")
 
-    def set_all(self, event: Optional[str] = None):
+    def set_for_all(self, event: Optional[str] = None):
+        """Set <event> for all registered keys
+
+        If <event> is None, all events for every registered key will be set.
+        Args:
+            event: The event to set. Defaults to None.
+
+        Returns:
+            None
+        """
         with self._lock:
             for events in self._events.values():
-                if event is not None and event not in events:
+                if event is not None and event in events:
                     events[event].set()
                 else:
                     for flag in events.values():
                         flag.set()
 
-    def clear_all(self, event: Optional[str] = None):
+    def clear_for_all(self, event: Optional[str] = None):
+        """Clear <event> for all registered keys
+
+        If <event> is None, all events for every registered key will be cleared.
+        Args:
+            event: The event to clear. Defaults to None.
+
+        Returns:
+            None
+        """
         with self._lock:
             for events in self._events.values():
-                if event is not None and event not in events:
-                    events[event].set()
+                if event is not None and event in events:
+                    events[event].clear()
                 else:
                     for flag in events.values():
                         flag.clear()

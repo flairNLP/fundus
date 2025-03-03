@@ -337,7 +337,9 @@ class CrawlerBase(ABC):
                     tuple(fitting_publishers), error_handling, build_extraction_filter(), url_filter
                 ):
                     if max_articles_per_publisher and article_count[article.publisher] == max_articles_per_publisher:
-                        if isinstance(self, Crawler) and not WebSource.__EVENTS__.is_event_set("stop", article.publisher):
+                        if isinstance(self, Crawler) and not WebSource.__EVENTS__.is_event_set(
+                            "stop", article.publisher
+                        ):
                             WebSource.__EVENTS__.set_event("stop", article.publisher)
                         if sum(article_count.values()) == len(self.publishers) * max_articles_per_publisher:
                             break
