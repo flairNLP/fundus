@@ -51,6 +51,16 @@ class CorriereDellaSeraParser(ParserProxy):
             return generic_date_parsing(date_str)
 
         @attribute
+        def topics(self) -> List[str]:
+            breadcrumb_items = self.precomputed.ld.xpath_search("//BreadcrumbList/itemListElement/*/name")
+            if breadcrumb_items:
+                return generic_topic_parsing(breadcrumb_items[1:])
+            section = self.precomputed.ld.xpath_search("//NewsArticle/articleSection", scalar=True)
+            if section:
+                return generic_topic_parsing([section])
+            return []
+
+        @attribute
         def images(self) -> List[Image]:
             return image_extraction(
                 doc=self.precomputed.doc,
