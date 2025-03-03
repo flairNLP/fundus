@@ -142,17 +142,12 @@ class WebSource:
             [url_filter] if url_filter else []
         )
 
-        if self._is_stopped:
-            return
-
         timestamp = time.time() + self.delay() if self.delay is not None else time.time()
 
         def filter_url(u: str) -> bool:
             return any(f(u) for f in combined_filters)
 
-        for url in self.url_source:
-            if self._is_stopped:
-                return
+        while not self._is_stopped and (url := next(iter(self.url_source), None)) is not None:
 
             if not validators.url(url):
                 logger.debug(f"Skipped requested URL {url!r} because the URL is malformed")
