@@ -19,8 +19,8 @@ from fundus.publishers.lt import LT
 from fundus.publishers.my import MY
 from fundus.publishers.na import NA
 from fundus.publishers.no import NO
-from fundus.publishers.pt import PT
 from fundus.publishers.pl import PL
+from fundus.publishers.pt import PT
 from fundus.publishers.tr import TR
 from fundus.publishers.tw import TW
 from fundus.publishers.tz import TZ
