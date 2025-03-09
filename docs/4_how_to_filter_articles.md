@@ -70,10 +70,10 @@ If a filter returns True on a specific element the element will be dropped.
 #### Some more extraction filter examples:
 
 ````python
-# only select articles from the past seven days
+# only select articles that are >= 1 week old but <= 3 weeks old
 def date_filter(extracted: Dict[str, Any]) -> bool:
     end_date = datetime.date.today() - datetime.timedelta(weeks=1)
-    start_date = end_date - datetime.timedelta(weeks=1)
+    start_date = end_date - datetime.timedelta(weeks=2)
     if publishing_date := extracted.get("publishing_date"):
         return not (start_date <= publishing_date.date() <= end_date)
     return True
