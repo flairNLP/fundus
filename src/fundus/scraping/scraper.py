@@ -96,7 +96,6 @@ class WebScraper(BaseScraper):
         super().__init__(*html_sources, parser_mapping=parser_mapping)
 
         WebSource.__EVENTS__.register_event("stop", publisher.name)
-        WebSource.__EVENTS__.register_event("bridge", publisher.name)
 
 
 class CCNewsScraper(BaseScraper):
