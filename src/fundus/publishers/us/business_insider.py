@@ -17,6 +17,7 @@ from fundus.parser.utility import (
 class BusinessInsiderParser(ParserProxy):
     class V1(BaseParser):
         VALID_UNTIL = datetime.date(2025, 3, 24)
+
         _summary_selector = CSSSelector("article ul[class^='summary-list'] > li")
         _subheadline_selector = CSSSelector("article h2, div.slideshow-slide-container h2")
         _paragraph_selector = XPath(
