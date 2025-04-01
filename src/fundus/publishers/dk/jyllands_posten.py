@@ -52,7 +52,9 @@ class JyllandsPostenParser(ParserProxy):
 
         @attribute
         def authors(self) -> List[str]:
-            return generic_author_parsing(self.precomputed.ld.bf_search("author"))
+            return generic_author_parsing(
+                self.precomputed.ld.bf_search("author") or self.precomputed.meta.get("author"), split_on=["/"]
+            )
 
         @attribute
         def publishing_date(self) -> Optional[datetime.datetime]:
