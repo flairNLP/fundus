@@ -230,8 +230,8 @@ class US(metaclass=PublisherGroup):
         name="Voice Of America",
         domain="https://www.voanews.com/",
         parser=VOAParser,
+        url_filter=inverse(regex_filter(r"voanews\.com\/a\/[a-z-]+\/[0-9]+\.html")),
         sources=[
-            NewsMap("https://www.voanews.com/sitemap_415_news.xml.gz"),
             Sitemap(
                 "https://www.voanews.com/sitemap.xml", sitemap_filter=inverse(regex_filter(r"sitemap_[\d_]*\.xml\.gz"))
             ),
