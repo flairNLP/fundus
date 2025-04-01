@@ -2105,7 +2105,9 @@
           <span>www.businessinsider.com</span>
         </a>
       </td>
-      <td>&#160;</td>
+      <td>
+        <code>images</code>
+      </td>
       <td>&#160;</td>
     </tr>
     <tr>
