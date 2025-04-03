@@ -1732,6 +1732,21 @@
   <tbody>
     <tr>
       <td>
+        <code>ANADOLUAJANSI</code>
+      </td>
+      <td>
+        <div>ANADOLUAJANSI</div>
+      </td>
+      <td>
+        <a href="https://www.aa.com.tr/">
+          <span>www.aa.com.tr</span>
+        </a>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
         <code>Haberturk</code>
       </td>
       <td>

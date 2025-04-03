@@ -2,6 +2,7 @@ from fundus.publishers.base_objects import Publisher, PublisherGroup
 from fundus.scraping.filter import inverse, regex_filter
 from fundus.scraping.url import NewsMap, RSSFeed, Sitemap
 
+from .anadoluajansi import AnadoluAjansiParser
 from .haberturk import HaberturkParser
 from .ntvtr import NTVTRParser
 
@@ -30,4 +31,11 @@ class TR(metaclass=PublisherGroup):
             NewsMap("https://www.ntv.com.tr/sitemaps/news-sitemap.xml"),
             Sitemap("https://www.ntv.com.tr/sitemaps", sitemap_filter=regex_filter("news-sitemap.xml")),
         ],
+    )
+
+    ANADOLUAJANSI = Publisher(
+        name="ANADOLUAJANSI",
+        domain="https://www.aa.com.tr/",
+        parser=AnadoluAjansiParser,
+        sources=[RSSFeed("https://www.aa.com.tr/tr/rss/default?cat=guncel")],
     )
