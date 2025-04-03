@@ -20,7 +20,6 @@ logger = create_logger(__name__)
 
 
 def get_test_article(publisher: Publisher, url: Optional[str] = None) -> Optional[Article]:
-    WebSource.__EVENTS__.register_event("stop", publisher.name)
     if url is not None:
         source = WebSource([url], publisher=publisher)
         scraper = BaseScraper(source, parser_mapping={publisher.name: publisher.parser})

@@ -118,6 +118,9 @@ class WebSource:
 
         self.delay = delay
 
+        # register default events
+        self.__EVENTS__.register_event("stop")
+
         # parse robots:
         self.robots: Optional[Robots] = None
         if not ignore_robots:
@@ -136,6 +139,9 @@ class WebSource:
     @property
     def _is_stopped(self):
         return self.__EVENTS__.is_event_set("stop")
+
+    def sleep(self, s: float):
+        self.__EVENTS__.get("stop").wait(s)
 
     def fetch(self, url_filter: Optional[URLFilter] = None) -> Iterator[HTML]:
         combined_filters: List[URLFilter] = ([self.url_filter] if self.url_filter else []) + (
@@ -169,7 +175,9 @@ class WebSource:
                     url += "?" + key + "=" + value
 
             if self.delay:
-                time.sleep(max(0.0, self.delay() - time.time() + timestamp))
+                # Instead of using time.sleep, we use a custom sleep function that waits
+                # for the "stop" event. This ensures that sleep does not block the shutdown process.
+                self.sleep(max(0.0, self.delay() - time.time() + timestamp))
                 timestamp = time.time()
 
             try:
