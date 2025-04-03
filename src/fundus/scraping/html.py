@@ -118,6 +118,9 @@ class WebSource:
 
         self.delay = delay
 
+        # register default events
+        self.__EVENTS__.register_event("stop")
+
         # parse robots:
         self.robots: Optional[Robots] = None
         if not ignore_robots:

@@ -8,7 +8,17 @@ logger = create_logger(__name__)
 
 
 class EventDict:
-    """A threadsafe event dictionary"""
+    """A thread-safe event dictionary.
+
+    Events are registered by name and stored per thread in a dictionary, using the
+    thread's identifier as the key. For example, calling `register_event("stop")`
+    registers a "stop" event for the current thread's identifier.
+
+    To enhance usability, threads can be assigned aliases. Calling
+    `register_event("stop", "BR")` registers the "stop" event (if it is not already
+    registered) for the current thread and automatically creates an alias mapping
+    "BR" to the thread's identifier.
+    """
 
     def __init__(self):
         self._events: Dict[int, Dict[str, threading.Event]] = defaultdict(dict)
@@ -46,7 +56,7 @@ class EventDict:
                 self._alias(key)
             if (resolved := self._resolve(key)) not in self._events:
                 self._events[resolved][event] = threading.Event()
-            logger.debug(f"Registered event {event!r} for {resolved}")
+                logger.debug(f"Registered event {event!r} for {resolved}")
 
     def set_event(self, event: str, key: Union[int, str, None] = None):
         with self._lock:
@@ -96,3 +106,11 @@ class EventDict:
     def alias(self, alias: str, key: Optional[int] = None):
         with self._lock:
             self._alias(alias, key)
+
+    def remove_alias(self, alias: str):
+        with self._lock:
+            self._aliases.pop(alias, None)
+
+    def get(self, event: str, key: Optional[Union[int, str, None]] = None) -> threading.Event:
+        with self._lock:
+            return self._events[self._resolve(key)][event]
