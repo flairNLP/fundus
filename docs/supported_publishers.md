@@ -1288,6 +1288,25 @@
     </tr>
     <tr>
       <td>
+        <code>Tageszeitung</code>
+      </td>
+      <td>
+        <div>Die Neue S&#252;dtiroler Tageszeitung</div>
+      </td>
+      <td>
+        <a href="https://www.tageszeitung.it">
+          <span>www.tageszeitung.it</span>
+        </a>
+      </td>
+      <td>
+        <code>authors</code>
+        <code>publishing_date</code>
+        <code>topics</code>
+      </td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
         <code>IlGiornale</code>
       </td>
       <td>
