@@ -23,7 +23,7 @@ Additionally, we also want to limit ourselves to sources containing articles in 
 from fundus import Crawler, PublisherCollection, NewsMap
 
 fitting_publishers = PublisherCollection.us.search(attributes=["topics"], source_types=[NewsMap], languages=["es"])
-crawler = Crawler(fitting_publishers)
+crawler = Crawler(*fitting_publishers)
 ````
 
 ## Working with deprecated publishers
