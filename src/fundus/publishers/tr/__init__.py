@@ -33,9 +33,21 @@ class TR(metaclass=PublisherGroup):
         ],
     )
 
-    ANADOLUAJANSI = Publisher(
-        name="ANADOLUAJANSI",
+    AnadoluAjansi = Publisher(
+        name="Anadolu Ajansı",
         domain="https://www.aa.com.tr/",
         parser=AnadoluAjansiParser,
-        sources=[RSSFeed("https://www.aa.com.tr/tr/rss/default?cat=guncel")],
+        sources=[
+            RSSFeed("https://www.aa.com.tr/tr/rss/default?cat=guncel"),
+            RSSFeed("https://www.aa.com.tr/tr/teyithatti/rss/news?cat=gazze"),
+            RSSFeed("https://www.aa.com.tr/tr/teyithatti/rss/news?cat=politika"),
+            RSSFeed("https://www.aa.com.tr/tr/teyithatti/rss/news?cat=aktuel"),
+            RSSFeed("https://www.aa.com.tr/tr/teyithatti/rss/news?cat=kultur-sanat"),
+            RSSFeed("https://www.aa.com.tr/tr/teyithatti/rss/news?cat=bilim-teknoloji"),
+            RSSFeed("https://www.aa.com.tr/tr/teyithatti/rss/news?cat=blog"),
+            RSSFeed("https://www.aa.com.tr/tr/teyithatti/rss/news?cat=teyit-sozlugu"),
+            RSSFeed("https://www.aa.com.tr/tr/teyithatti/rss/news?cat=ekonomi"),
+            RSSFeed("https://www.aa.com.tr/tr/teyithatti/rss/news?cat=0"),
+            RSSFeed("https://www.aa.com.tr/tr/teyithatti/rss/video")
+        ],
     )

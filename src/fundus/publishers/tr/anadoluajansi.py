@@ -3,6 +3,7 @@ import re
 from typing import List, Optional
 
 from lxml.cssselect import CSSSelector
+from lxml.etree import XPath
 
 from fundus.parser import ArticleBody, BaseParser, Image, ParserProxy, attribute
 from fundus.parser.utility import (
@@ -17,7 +18,9 @@ from fundus.parser.utility import (
 class AnadoluAjansiParser(ParserProxy):
     class V1(BaseParser):
         _summary_selector = CSSSelector("div.detay-bg > div > div > h4")
-        _paragraph_selector = CSSSelector("div.detay-icerik p")
+        _paragraph_selector = XPath("//div[@class='detay-icerik']"
+                                    "//h6[not(ancestor::div[@class='detay-paylas'])] | "
+                                    "//div[@class='detay-icerik']//p")
         _subheadline_Selector = CSSSelector("div.detay-icerik > div:nth-child(2) > h3")
         _author_selector = CSSSelector("div.detay-bg > div > div > div > span:nth-child(1)")
         _date_selector = CSSSelector("div.detay-bg > div > div > div > span.tarih")
@@ -59,9 +62,8 @@ class AnadoluAjansiParser(ParserProxy):
                 generic_topic_parsing(self.precomputed.meta.get("keywords"))
                 or generic_topic_parsing(self.precomputed.ld.bf_search("keywords"))
             ):
-                if keywords_ is None:
-                    return None
-                keywords_.remove("Anadolu Ajansı")
+                if "Anadolu Ajansı" in keywords_:
+                    keywords_.remove("Anadolu Ajansı")
                 return keywords_
 
         @attribute
@@ -69,5 +71,7 @@ class AnadoluAjansiParser(ParserProxy):
             return image_extraction(
                 doc=self.precomputed.doc,
                 paragraph_selector=self._paragraph_selector,
-                image_selector=CSSSelector("div.row.detay.container > div.col-md-10 > img"),
+                image_selector=CSSSelector("div.row.detay.container > div.col-md-10 > img,"
+                                           "div img[alt='']"),
+                relative_urls=True
             )
