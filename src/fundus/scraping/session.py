@@ -152,7 +152,7 @@ class SessionHandler:
         cls.CONFIG = CONFIG(**kwargs)
 
         try:
-            yield None
+            yield cls
         finally:
             cls.CONFIG = CONFIG()
 
