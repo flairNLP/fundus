@@ -1,15 +1,53 @@
+import socket
 import threading
+from concurrent.futures import ThreadPoolExecutor, TimeoutError
 from contextlib import contextmanager
-from typing import Iterator, Optional
+from dataclasses import dataclass
+from typing import Optional
 
 import requests.adapters
-from typing_extensions import Self
 
 from fundus.logging import create_logger
+from fundus.utils.events import __EVENTS__
 
 logger = create_logger(__name__)
 
 _default_header = {"user-agent": "Fundus"}
+
+
+class InterruptableSession(requests.Session):
+    def __init__(self, timeout: Optional[int] = None):
+        super().__init__()
+        self.timeout = timeout
+
+    def get_with_interrupt(self, *args, **kwargs) -> Optional[requests.Response]:
+        def _req() -> requests.Response:
+            return self.get(*args, **kwargs, timeout=self.timeout)
+
+        if args:
+            url = args[0]
+        else:
+            url = kwargs.get("url")
+
+        with ThreadPoolExecutor(max_workers=1) as executor:
+            future = executor.submit(_req)
+            while True:
+                try:
+                    response = future.result(timeout=1)
+                except TimeoutError:
+                    if __EVENTS__.is_event_set("stop"):
+                        logger.debug(f"Interrupt request for {url!r}")
+                        future.cancel()
+                        raise requests.exceptions.Timeout("Manually interrupted request")
+                else:
+                    return response
+
+
+@dataclass
+class CONFIG:
+    POOL_CONNECTIONS: int = 50
+    POOL_MAXSIZE: int = 1
+    TIMEOUT: Optional[int] = 30
 
 
 class SessionHandler:
@@ -24,13 +62,13 @@ class SessionHandler:
     tear-downed and the next call to get_session() will build a new session.
     """
 
-    def __init__(self, pool_connections: int = 50, pool_maxsize: int = 1):
-        self.session: Optional[requests.Session] = None
-        self.pool_connections = pool_connections
-        self.pool_maxsize = pool_maxsize
+    CONFIG: CONFIG = CONFIG()
+
+    def __init__(self):
+        self.session: Optional[InterruptableSession] = None
         self.lock = threading.Lock()
 
-    def _session_factory(self) -> requests.Session:
+    def _session_factory(self) -> InterruptableSession:
         """Builds a new Session
 
         This returns a new client session build from pre-defined configurations:
@@ -43,7 +81,7 @@ class SessionHandler:
         """
 
         logger.debug("Creating new session")
-        session = requests.Session()
+        session = InterruptableSession(timeout=self.CONFIG.TIMEOUT)
 
         def _response_log(response: requests.Response, *args, **kwargs) -> None:
             history = response.history
@@ -61,16 +99,20 @@ class SessionHandler:
         # adapters
         session.mount(
             "http://",
-            requests.adapters.HTTPAdapter(pool_connections=self.pool_connections, pool_maxsize=self.pool_maxsize),
+            requests.adapters.HTTPAdapter(
+                pool_connections=self.CONFIG.POOL_CONNECTIONS, pool_maxsize=self.CONFIG.POOL_MAXSIZE
+            ),
         )
         session.mount(
             "https://",
-            requests.adapters.HTTPAdapter(pool_connections=self.pool_connections, pool_maxsize=self.pool_maxsize),
+            requests.adapters.HTTPAdapter(
+                pool_connections=self.CONFIG.POOL_CONNECTIONS, pool_maxsize=self.CONFIG.POOL_MAXSIZE
+            ),
         )
 
         return session
 
-    def get_session(self) -> requests.Session:
+    def get_session(self) -> InterruptableSession:
         """Requests the current build session
 
         If called for the first time or after close_current_session was called,
@@ -98,29 +140,32 @@ class SessionHandler:
             session.close()
             self.session = None
 
+    @classmethod
     @contextmanager
-    def context(self, pool_connections: int, pool_maxsize: int) -> Iterator[Self]:
-        """Context manager to temporarily overwrite parameter and build a new session.
-
-        Args:
-            pool_connections: see requests.Session documentation.
-            pool_maxsize: see requests.Session documentation.
+    def context(cls, **kwargs):
+        """Context manager to temporarily overwrite session parameters.
 
         Returns:
             SessionHandler: The session handler instance.
         """
-        previous_pool_connections = self.pool_connections
-        previous_pool_maxsize = self.pool_maxsize
 
-        self.close_current_session()
+        cls.CONFIG = CONFIG(**kwargs)
 
         try:
-            self.pool_connections = pool_connections
-            self.pool_maxsize = pool_maxsize
-            yield self
+            yield None
         finally:
-            self.pool_connections = previous_pool_connections
-            self.pool_maxsize = previous_pool_maxsize
+            cls.CONFIG = CONFIG()
+
+
+@contextmanager
+def socket_timeout(timeout: Optional[int] = None):
+    """Temporarily sets the socket timeout within this context."""
+    old_timeout = socket.getdefaulttimeout()
+    socket.setdefaulttimeout(timeout)
+    try:
+        yield
+    finally:
+        socket.setdefaulttimeout(old_timeout)
 
 
 session_handler = SessionHandler()

@@ -130,7 +130,8 @@ class RSSFeed(URLSource):
     def __iter__(self) -> Iterator[str]:
         session = session_handler.get_session()
         try:
-            response = session.get(self.url, headers=self._request_header)
+            if not (response := session.get_with_interrupt(self.url, headers=self._request_header)):
+                return
         except (HTTPError, ConnectionError) as err:
             logger.warning(f"Warning! Couldn't parse rss feed {self.url!r} because of {err}")
             return
@@ -159,7 +160,8 @@ class Sitemap(URLSource):
             if not validators.url(sitemap_url):
                 logger.info(f"Skipped sitemap {sitemap_url!r} because the URL is malformed")
             try:
-                response = session.get(url=sitemap_url, headers=self._request_header)
+                if not (response := session.get_with_interrupt(url=sitemap_url, headers=self._request_header)):
+                    return
             except (HTTPError, ConnectionError) as error:
                 logger.warning(f"Warning! Couldn't reach sitemap {sitemap_url!r} because of {error!r}")
                 return
