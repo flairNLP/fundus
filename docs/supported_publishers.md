@@ -1732,10 +1732,10 @@
   <tbody>
     <tr>
       <td>
-        <code>ANADOLUAJANSI</code>
+        <code>AnadoluAjansi</code>
       </td>
       <td>
-        <div>ANADOLUAJANSI</div>
+        <div>Anadolu Ajans&#305;</div>
       </td>
       <td>
         <a href="https://www.aa.com.tr/">
