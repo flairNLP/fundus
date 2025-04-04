@@ -19,7 +19,7 @@ from fundus.scraping.delay import Delay
 from fundus.scraping.filter import URLFilter
 from fundus.scraping.session import _default_header, session_handler
 from fundus.scraping.url import URLSource
-from fundus.utils.events import EventDict
+from fundus.utils.events import __EVENTS__
 
 __all__ = [
     "HTML",
@@ -95,8 +95,6 @@ class HTMLSource(Protocol):
 
 
 class WebSource:
-    __EVENTS__: EventDict = EventDict()
-
     def __init__(
         self,
         url_source: Iterable[str],
@@ -119,7 +117,7 @@ class WebSource:
         self.delay = delay
 
         # register default events
-        self.__EVENTS__.register_event("stop")
+        __EVENTS__.register_event("stop")
 
         # parse robots:
         self.robots: Optional[Robots] = None
@@ -138,10 +136,11 @@ class WebSource:
 
     @property
     def _is_stopped(self):
-        return self.__EVENTS__.is_event_set("stop")
+        return __EVENTS__.is_event_set("stop")
 
-    def sleep(self, s: float):
-        self.__EVENTS__.get("stop").wait(s)
+    @staticmethod
+    def sleep(s: float):
+        __EVENTS__.get("stop").wait(s)
 
     def fetch(self, url_filter: Optional[URLFilter] = None) -> Iterator[HTML]:
         combined_filters: List[URLFilter] = ([self.url_filter] if self.url_filter else []) + (
@@ -186,7 +185,7 @@ class WebSource:
             except (HTTPError, ConnectionError) as error:
                 logger.info(f"Skipped requested URL {url!r} because of {error!r}")
                 if isinstance(error, HTTPError) and error.response.status_code >= 500:
-                    logger.info(f"Skipped {self.publisher!r} due to server errors: {error!r}")
+                    logger.info(f"Skipped {self.publisher.name!r} due to server errors: {error!r}")
                 continue
 
             except Exception as error:
