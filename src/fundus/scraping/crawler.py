@@ -8,7 +8,6 @@ import multiprocessing
 import os
 import random
 import re
-import threading
 import time
 import traceback
 from abc import ABC, abstractmethod
@@ -21,6 +20,7 @@ from multiprocessing.managers import BaseManager
 from multiprocessing.pool import MapResult, Pool, ThreadPool
 from pathlib import Path
 from queue import Empty, Queue
+from threading import current_thread
 from typing import (
     Any,
     Callable,
@@ -127,13 +127,11 @@ def get_execution_context():
         ident (int): Thread ID or Process ID
     """
     if multiprocessing.current_process().name != "MainProcess":
-        # In a child process
-        current_process = multiprocessing.current_process()
-        return current_process.name, current_process.ident
+        process = multiprocessing.current_process()
+        return process.name, process.ident
     else:
-        # In the main process, check for threading
-        current_thread = threading.current_thread()
-        return current_thread.name, current_thread.ident
+        thread = current_thread()
+        return thread.name, thread.ident
 
 
 def queue_wrapper(queue: Queue[Union[_T, Exception]], target: Callable[_P, Iterator[_T]]) -> Callable[_P, None]:
@@ -160,6 +158,10 @@ def queue_wrapper(queue: Queue[Union[_T, Exception]], target: Callable[_P, Itera
                     f"There was a(n) {type(err).__name__!r} occurring in {context} with ident {ident}\n{tb_str}"
                 )
             )
+
+            logger.debug(f"Encountered remote exception: {err!r}")
+            # prevents a race condition where the ThreadPool shuts down before the exception is pulled from the queue
+            time.sleep(0.2)
 
     return wrapper
 
