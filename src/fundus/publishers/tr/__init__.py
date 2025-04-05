@@ -48,6 +48,6 @@ class TR(metaclass=PublisherGroup):
             RSSFeed("https://www.aa.com.tr/tr/teyithatti/rss/news?cat=teyit-sozlugu"),
             RSSFeed("https://www.aa.com.tr/tr/teyithatti/rss/news?cat=ekonomi"),
             RSSFeed("https://www.aa.com.tr/tr/teyithatti/rss/news?cat=0"),
-            RSSFeed("https://www.aa.com.tr/tr/teyithatti/rss/video")
+            RSSFeed("https://www.aa.com.tr/tr/teyithatti/rss/video"),
         ],
     )
