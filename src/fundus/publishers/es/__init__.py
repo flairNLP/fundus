@@ -8,7 +8,7 @@ from fundus.scraping.url import RSSFeed, Sitemap
 
 
 class ES(metaclass=PublisherGroup):
-    default_languages = {"es"}
+    default_language = "es"
 
     ElPais = Publisher(
         name="El País",

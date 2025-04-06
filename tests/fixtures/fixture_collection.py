@@ -95,7 +95,7 @@ def group_with_two_valid_publisher_subgroups(parser_proxy_with_version):
 @pytest.fixture
 def publisher_group_with_languages(parser_proxy_with_version):
     class LangPubGroup(metaclass=PublisherGroup):
-        default_languages = {"en"}
+        default_language = "en"
 
         eng = Publisher(
             name="test_pub_eng",

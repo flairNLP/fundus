@@ -22,7 +22,7 @@ from .the_telegraph import TheTelegraphParser
 
 
 class UK(metaclass=PublisherGroup):
-    default_languages = {"en"}
+    default_language = "en"
 
     TheGuardian = Publisher(
         name="The Guardian",

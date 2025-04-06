@@ -178,11 +178,11 @@ class PublisherGroup(type):
             if isinstance(value, Publisher):
                 value.__name__ = attribute
                 value.__group__ = new
-                if attributes.get("default_languages"):
+                if attributes.get("default_language"):
                     for source_type in value.source_mapping.values():
                         for source in source_type:
                             if not source.languages:
-                                source.languages = attributes["default_languages"]
+                                source.languages = {attributes["default_language"]}
 
         return new
 

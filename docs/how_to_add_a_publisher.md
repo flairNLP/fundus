@@ -67,10 +67,10 @@ As an example, if you were to add the US, it should look something like this:
 from fundus.publishers.base_objects import PublisherGroup
 
 class US(metaclass=PublisherGroup):
-    default_languages = {"en"}
+    default_language = "en"
 ```
 
-The `default_languages` attribute specifies the most common languages of the area.
+The `default_language` attribute specifies the most common language of the area.
 
 Next, you should open the file `fundus/publishers/__init__.py` and make sure that the class PublisherCollection has an attribute corresponding to your newly added country:
 
@@ -145,7 +145,7 @@ If your publisher provides a `NewsFeed`, there is no need to specify an `RSSFeed
 #### How to specify a `URLSource`
 
 To instantiate an object inheriting from URLSource like `RSSFeed` or `Sitemap`, you first need to find a link to the corresponding feed or sitemap and then set it as the entry point using the `url` parameter of `URLSource`.
-If the publisher offers multilingual content or articles, in a language different from the default language of the `PublisherGroup` as specified in the `default_languages` attribute, please set the `language` parameter of `URLSource` to a set containing the corresponding language code(s).
+If the publisher offers multilingual content or articles, in a language different from the default language of the `PublisherGroup` as specified in the `default_language` attribute, please set the `language` parameter of `URLSource` to a set containing the corresponding language code(s).
 For the German publisher `DW` one of the sources is initialized like this:
 ```python
 Sitemap("https://www.dw.com/en/article-sitemap.xml", languages={"en"}),

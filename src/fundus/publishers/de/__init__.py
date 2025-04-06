@@ -55,7 +55,7 @@ from .zdf import ZDFParser
 
 # noinspection PyPep8Naming
 class DE(metaclass=PublisherGroup):
-    default_languages = {"de"}
+    default_language = "de"
 
     SportSchau = Publisher(
         name="Sportschau",

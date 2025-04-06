@@ -5,7 +5,7 @@ from .people import PeopleParser
 
 
 class CN(metaclass=PublisherGroup):
-    default_languages = {"zh"}
+    default_language = "zh"
 
     People = Publisher(
         name="People",

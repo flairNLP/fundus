@@ -7,7 +7,7 @@ from .lrt import LRTParser
 
 
 class LT(metaclass=PublisherGroup):
-    default_languages = {"lt"}
+    default_language = "lt"
 
     LRT = Publisher(
         name="Lithuanian National Radio and Television",

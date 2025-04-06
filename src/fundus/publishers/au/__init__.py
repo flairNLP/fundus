@@ -7,7 +7,7 @@ from .west_australian import WestAustralianParser
 
 
 class AU(metaclass=PublisherGroup):
-    default_languages = {"en"}
+    default_language = "en"
 
     NineNews = Publisher(
         name="Nine News",

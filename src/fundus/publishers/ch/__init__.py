@@ -10,7 +10,7 @@ from .ta import TAParser
 
 
 class CH(metaclass=PublisherGroup):
-    default_languages = {"de"}
+    default_language = "de"
 
     SRF = Publisher(
         name="Schweizer Radio und Fernsehen",
@@ -41,7 +41,7 @@ class CH(metaclass=PublisherGroup):
         domain="https://www.tagesanzeiger.ch/",
         parser=TAParser,
         sources=[
-            NewsMap("https://www.tagesanzeiger.ch/sitemaps/news.xml", languages={"de"}),
+            NewsMap("https://www.tagesanzeiger.ch/sitemaps/news.xml"),
             Sitemap(
                 "https://www.tagesanzeiger.ch/sitemaps/sitemapindex.xml",
                 reverse=True,

@@ -9,7 +9,7 @@ from .verdensgang import VerdensGangParser
 
 
 class NO(metaclass=PublisherGroup):
-    default_languages = {"no"}
+    default_language = "no"
 
     VerdensGang = Publisher(
         name="Verdens Gang",

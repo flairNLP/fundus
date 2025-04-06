@@ -5,7 +5,7 @@ from fundus.scraping.url import NewsMap, RSSFeed, Sitemap
 
 
 class IND(metaclass=PublisherGroup):
-    default_languages = {"hi"}
+    default_language = "hi"
 
     TimesOfIndia = Publisher(
         name="Times Of India",

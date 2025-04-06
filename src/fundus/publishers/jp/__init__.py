@@ -6,7 +6,7 @@ from fundus.scraping.url import NewsMap, Sitemap
 
 
 class JP(metaclass=PublisherGroup):
-    default_languages = {"jp"}
+    default_language = "jp"
 
     TheJapanNews = Publisher(
         name="The Japan News",

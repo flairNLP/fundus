@@ -8,7 +8,7 @@ from .les_echos import LesEchosParser
 
 
 class FR(metaclass=PublisherGroup):
-    default_languages = {"fr"}
+    default_language = "fr"
 
     LeMonde = Publisher(
         name="Le Monde",

@@ -24,7 +24,7 @@ from .world_truth import WorldTruthParser
 
 
 class US(metaclass=PublisherGroup):
-    default_languages = {"en"}
+    default_language = "en"
 
     APNews = Publisher(
         name="Associated Press News",
