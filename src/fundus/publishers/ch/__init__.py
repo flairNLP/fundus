@@ -46,7 +46,6 @@ class CH(metaclass=PublisherGroup):
                 "https://www.tagesanzeiger.ch/sitemaps/sitemapindex.xml",
                 reverse=True,
                 sitemap_filter=regex_filter("news|category"),
-                languages={"de"},
             ),
         ],
     )

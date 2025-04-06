@@ -18,7 +18,6 @@ class AU(metaclass=PublisherGroup):
             Sitemap(
                 "https://www.9news.com.au/sitemap.xml",
                 sitemap_filter=inverse(regex_filter("sitemap-content-")),
-                languages={"en"},
             ),
         ],
     )

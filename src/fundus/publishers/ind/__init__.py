@@ -5,17 +5,17 @@ from fundus.scraping.url import NewsMap, RSSFeed, Sitemap
 
 
 class IND(metaclass=PublisherGroup):
-    default_languages = {"en"}
+    default_languages = {"hi"}
 
     TimesOfIndia = Publisher(
         name="Times Of India",
         domain="https://www.timesofindia.indiatimes.com",
         parser=TimesOfIndiaParser,
         sources=[
-            NewsMap("https://timesofindia.indiatimes.com/sitemap/today"),
-            NewsMap("https://timesofindia.indiatimes.com/sitemap/yesterday"),
-            RSSFeed("https://timesofindia.indiatimes.com/rssfeedstopstories.cms"),
-            RSSFeed("https://timesofindia.indiatimes.com/rssfeedmostrecent.cms"),
+            NewsMap("https://timesofindia.indiatimes.com/sitemap/today", languages={"en"}),
+            NewsMap("https://timesofindia.indiatimes.com/sitemap/yesterday", languages={"en"}),
+            RSSFeed("https://timesofindia.indiatimes.com/rssfeedstopstories.cms", languages={"en"}),
+            RSSFeed("https://timesofindia.indiatimes.com/rssfeedmostrecent.cms", languages={"en"}),
         ],
     )
 
@@ -23,5 +23,5 @@ class IND(metaclass=PublisherGroup):
         name="Dainik Bhaskar",
         domain="https://www.bhaskar.com/",
         parser=BhaskarParser,
-        sources=[NewsMap("https://www.bhaskar.com/sitemaps-v1--sitemap-google-news-index.xml", languages={"hi"})],
+        sources=[NewsMap("https://www.bhaskar.com/sitemaps-v1--sitemap-google-news-index.xml")],
     )
