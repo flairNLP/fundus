@@ -18,7 +18,7 @@ class NA(metaclass=PublisherGroup):
                 "https://namibian.com.na/sitemap_index.xml",
                 sitemap_filter=inverse(regex_filter("post-sitemap")),
                 reverse=True,
-                languages={"en", "kj"}
+                languages={"en", "kj"},
             ),
         ],
     )

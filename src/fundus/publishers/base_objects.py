@@ -141,32 +141,33 @@ class Publisher:
     def supports(
         self, source_types: Optional[List[Type[URLSource]]] = None, languages: Optional[List[str]] = None
     ) -> bool:
+        return self._validate_source_types(source_types) and self._validate_languages(languages)
+
+    def _validate_source_types(self, source_types: Optional[List[Type[URLSource]]]) -> bool:
         if source_types is None:
-            supports_sources = True
-        elif not isinstance(source_types, list):
+            return True
+        if not isinstance(source_types, list):
             raise ValueError(f"Expected list of source types, got {type(source_types).__name__!r}")
-        else:
-            for source_type in source_types:
-                if not inspect.isclass(source_type) or not issubclass(source_type, URLSource):
-                    raise TypeError(
-                        f"Got unexpected type {source_type!r}. "
-                        f"Allowed are {', '.join(repr(self.__name__) for self in iterate_all_subclasses(URLSource))}"
-                    )
-            supports_sources = all(bool(self.source_mapping.get(source_type)) for source_type in source_types)
+        for source_type in source_types:
+            if not inspect.isclass(source_type) or not issubclass(source_type, URLSource):
+                raise TypeError(
+                    f"Got unexpected type {source_type!r}. "
+                    f"Allowed are {', '.join(repr(cls.__name__) for cls in iterate_all_subclasses(URLSource))}"
+                )
+        return all(bool(self.source_mapping.get(source_type)) for source_type in source_types)
+
+    def _validate_languages(self, languages: Optional[List[str]]) -> bool:
         if languages is None:
-            supports_languages = True
-        elif not isinstance(languages, list):
+            return True
+        if not isinstance(languages, list):
             raise ValueError(f"Expected list of languages, got {type(languages).__name__!r}")
-        else:
-            supports_languages = False
-            unique_languages = set(languages)
-            for sources in self._source_mapping.values():
-                for source in sources:
-                    if source.languages & unique_languages:
-                        self._language_filter = unique_languages
-                        supports_languages = True
-                        break
-        return supports_sources and supports_languages
+        unique_languages = set(languages)
+        for sources in self._source_mapping.values():
+            for source in sources:
+                if source.languages & unique_languages:
+                    self._language_filter = unique_languages
+                    return True
+        return False
 
 
 class PublisherGroup(type):
