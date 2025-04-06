@@ -62,7 +62,10 @@ class BaseScraper:
                     else:
                         article = Article(html=html, **extraction)
                         if language_filter and article.lang not in language_filter:
-                            logger.debug(f"Skipped article at {html.requested_url!r} because of language filter")
+                            logger.debug(
+                                f"Skipped article at {html.requested_url!r} because article language: "
+                                f"{article.lang!r} is not in allowed languages: {language_filter!r}"
+                            )
                         else:
                             yield article
 
