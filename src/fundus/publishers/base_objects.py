@@ -1,3 +1,4 @@
+import copy
 import inspect
 from textwrap import indent
 from typing import Dict, Iterator, List, Optional, Set, Type, Union
@@ -165,9 +166,35 @@ class Publisher:
         for sources in self._source_mapping.values():
             for source in sources:
                 if source.languages & unique_languages:
-                    self._language_filter = unique_languages
+                    # self._language_filter = unique_languages
                     return True
         return False
+
+    def apply_language_filter(self, languages: List[str]):
+        """Set the language filter for the publisher.
+
+        Args:
+            languages (List[str]): List of languages to be used as filter.
+
+        """
+        if not isinstance(languages, list):
+            raise ValueError(f"Expected list of languages, got {type(languages).__name__!r}")
+        self._language_filter = set(languages)
+
+    def clear_language_filter(self):
+        """Clear the language filter for the publisher."""
+        self._language_filter = set()
+
+    def publisher_with_language_filter(self, language_filter: List[str]) -> "Publisher":
+        """Return a copy of the publisher with the language filter applied.
+
+        Returns:
+            Publisher: A copy of the publisher with the language filter applied.
+
+        """
+        new_publisher = copy.deepcopy(self)
+        new_publisher.apply_language_filter(language_filter)
+        return new_publisher
 
 
 class PublisherGroup(type):
@@ -254,7 +281,7 @@ class PublisherGroup(type):
                 and (publisher.supports(source_types=source_types) if source_types else True)
                 and (publisher.supports(languages=languages) if languages else True)
             ):
-                matched.append(publisher)
+                matched.append(publisher.publisher_with_language_filter(languages) if languages else publisher)
         if not matched:
             warn("No publisher found matching the search criteria. Returning no publishers.")
         return matched

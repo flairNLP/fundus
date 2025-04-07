@@ -315,6 +315,19 @@ class CrawlerBase(ABC):
         else:
             fitting_publishers = self.publishers
 
+        publisher_language_filter: Set[str] = set()
+        for publisher in fitting_publishers:
+            publisher_language_filter = publisher_language_filter.union(publisher._language_filter)
+        if language_filter and publisher_language_filter:
+            language_filter = list(set(language_filter).union(publisher_language_filter))
+            logger.info(
+                f"Publisher language filter: {publisher_language_filter} will be added to the given language filter: "
+                f"{language_filter}. "
+            )
+        elif publisher_language_filter:
+            language_filter = list(publisher_language_filter)
+            logger.info(f"Publisher language filter: {publisher_language_filter} will be used as the language filter. ")
+
         article_count = 0
         crawled_articles = []
 
