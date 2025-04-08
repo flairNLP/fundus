@@ -8,6 +8,7 @@ from fundus.publishers.be import BE
 from fundus.publishers.ca import CA
 from fundus.publishers.ch import CH
 from fundus.publishers.cn import CN
+from fundus.publishers.cz import CZ
 from fundus.publishers.de import DE
 from fundus.publishers.dk import DK
 from fundus.publishers.es import ES
@@ -69,6 +70,7 @@ class PublisherCollection(metaclass=PublisherCollectionMeta):
     ch = CH
     lt = LT
     cn = CN
+    cz = CZ
     be = BE
     tr = TR
     my = MY
