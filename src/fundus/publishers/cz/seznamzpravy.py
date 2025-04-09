@@ -19,12 +19,10 @@ from fundus.parser.utility import (
 class SeznamZpravyParser(ParserProxy):
     class V1(BaseParser):
         _paragraph_selector = XPath(
-            "//article//div[contains(@class, 'speakable')"
-            "and not(ancestor::div[contains(@class, 'mol-post-card__body')])]"
-            "/p[contains(@class, 'e_bg')]"
+            "//div[contains(@class,'mol-rich-content--for-article')]" "/div[contains(@class,'speakable')]/p"
         )
-        _summary_selector = XPath("//div/p[contains(@class, 'speakable')" "and @*[contains(., 'ogm-article-perex')]]")
-        _subheadline_selector = CSSSelector("div > h2.speakable")
+        _summary_selector = XPath("//div/p[contains(@class, 'speakable') and @*[contains(., 'ogm-article-perex')]]")
+        _subheadline_selector = XPath("//div[contains(@class,'mol-rich-content--for-article')]/h2")
         _author_substitution_pattern: Pattern[str] = re.compile(r"Seznam Zprávy")
 
         @attribute
@@ -61,6 +59,7 @@ class SeznamZpravyParser(ParserProxy):
             return image_extraction(
                 doc=self.precomputed.doc,
                 paragraph_selector=self._paragraph_selector,
+                image_selector=XPath("//figure//img[not(ancestor::div[contains(@class, 'mol-post-card__body')])]"),
                 author_selector=XPath("./ancestor::figure//span[@*[contains(., 'atm-media-item-image-caption')]]"),
                 relative_urls=True,
             )
