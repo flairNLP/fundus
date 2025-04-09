@@ -19,7 +19,7 @@ from fundus.parser.utility import (
 class SeznamZpravyParser(ParserProxy):
     class V1(BaseParser):
         _paragraph_selector = XPath(
-            "//div[contains(@class,'mol-rich-content--for-article')]" "/div[contains(@class,'speakable')]/p"
+            "//div[contains(@class,'mol-rich-content--for-article')]/div[contains(@class,'speakable')]/p"
         )
         _summary_selector = XPath("//div/p[contains(@class, 'speakable') and @*[contains(., 'ogm-article-perex')]]")
         _subheadline_selector = XPath("//div[contains(@class,'mol-rich-content--for-article')]/h2")
