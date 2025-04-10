@@ -20,7 +20,21 @@ class InterruptableSession(requests.Session):
         super().__init__()
         self.timeout = timeout
 
-    def get_with_interrupt(self, *args, **kwargs) -> Optional[requests.Response]:
+    def get_with_interrupt(self, *args, **kwargs) -> requests.Response:
+        """Interruptable request.
+
+        This function outsources the request to another thread and checks every second
+        for an interrupt event. If there was an interrupt event, this function raises
+        a requests.exceptions.Timeout error.
+
+        Args:
+            *args: requests.Session.get(*) arguments.
+            **kwargs: requests.Session.get(**) keyword arguments.
+
+        Returns:
+            The response
+        """
+
         def _req() -> requests.Response:
             return self.get(*args, **kwargs, timeout=self.timeout)
 
@@ -29,6 +43,7 @@ class InterruptableSession(requests.Session):
         else:
             url = kwargs.get("url")
 
+        # for ease of use we use a ThreadPoolExecutor
         with ThreadPoolExecutor(max_workers=1) as executor:
             future = executor.submit(_req)
             while True:
@@ -47,7 +62,7 @@ class InterruptableSession(requests.Session):
 class CONFIG:
     POOL_CONNECTIONS: int = 50
     POOL_MAXSIZE: int = 1
-    TIMEOUT: Optional[int] = 30
+    TIMEOUT: Optional[int] = 10
 
 
 class SessionHandler:

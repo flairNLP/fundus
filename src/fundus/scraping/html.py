@@ -180,8 +180,7 @@ class WebSource:
                 timestamp = time.time()
 
             try:
-                if not (response := session.get_with_interrupt(url, headers=self.request_header)):
-                    return
+                response = session.get_with_interrupt(url, headers=self.request_header)
 
             except (HTTPError, ConnectionError) as error:
                 logger.info(f"Skipped requested URL {url!r} because of {error!r}")
