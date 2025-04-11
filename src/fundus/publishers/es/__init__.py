@@ -7,6 +7,7 @@ from fundus.publishers.es.abc import ABCParser
 from fundus.publishers.es.el_mundo import ElMundoParser
 from fundus.publishers.es.el_pais import ElPaisParser
 from fundus.publishers.es.la_vanguardia import LaVanguardiaParser
+from fundus.publishers.es.mallorca_zeitung import MallorcaZeitungParser
 from fundus.scraping.url import NewsMap, RSSFeed, Sitemap
 
 
@@ -57,5 +58,15 @@ class ES(metaclass=PublisherGroup):
             for d in reversed(
                 list(rrule(MONTHLY, dtstart=datetime.datetime(2019, 1, 1), until=datetime.datetime.now()))
             )
+        ],
+    )
+
+    MallorcaZeitung = Publisher(
+        name="Mallorca Zeitung",
+        domain="https://www.mallorcazeitung.es/",
+        parser=MallorcaZeitungParser,
+        sources=[
+            NewsMap("https://www.mallorcazeitung.es/sitemap_google_news_8d82b.xml"),
+            RSSFeed("https://www.mallorcazeitung.es/rss/section/28000"),
         ],
     )
