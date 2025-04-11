@@ -478,7 +478,7 @@ class Crawler(CrawlerBase):
 
         try:
             with ThreadPool(processes=len(publishers) or None) as pool, session_handler.context(
-                POOL_CONNECTIONS=len(publishers)
+                POOL_CONNECTIONS=len(publishers),
             ):
                 yield from pool_queue_iter(pool.map_async(wrapped_article_task, publishers), result_queue)
         finally:

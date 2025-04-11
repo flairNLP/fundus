@@ -51,6 +51,7 @@ class BaseScraper:
                         raise ValueError(f"Unknown value {error_handling!r} for parameter <error_handling>'")
 
                 else:
+                    extraction["url"] = html.responded_url
                     if extraction_filter and (filter_result := extraction_filter(extraction)):
                         if isinstance(filter_result, FilterResultWithMissingAttributes):
                             logger.debug(

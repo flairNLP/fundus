@@ -11,7 +11,7 @@ import validators
 from fastwarc import ArchiveIterator, WarcRecord, WarcRecordType
 from lxml.cssselect import CSSSelector
 from lxml.etree import XPath
-from requests import ConnectionError, HTTPError
+from requests import ConnectionError, HTTPError, ReadTimeout
 
 from fundus.logging import create_logger
 from fundus.publishers.base_objects import Publisher, Robots
@@ -49,7 +49,7 @@ def _detect_charset_from_response(response: requests.Response) -> str:
     """
     # see https://github.com/flairNLP/fundus/issues/446
     # use response fallback to decode HTML in a first guess
-    guessed_text = response.content.decode(response.encoding or "utf-8")
+    guessed_text = response.content.decode(response.encoding or "utf-8", errors="replace")
     document = lxml.html.document_fromstring(guessed_text)
     if (content_type_nodes := _content_type_selector(document)) and len(content_type_nodes) == 1:
         content_type_node = content_type_nodes.pop()
@@ -153,7 +153,11 @@ class WebSource:
             return any(f(u) for f in combined_filters)
 
         url_iterator = iter(self.url_source)
-        while not self._is_stopped and (url := next(url_iterator, None)) is not None:
+
+        while not self._is_stopped:
+            if (url := next(url_iterator, None)) is None:
+                return
+
             if not validators.url(url):
                 logger.debug(f"Skipped requested URL {url!r} because the URL is malformed")
                 continue
@@ -182,14 +186,14 @@ class WebSource:
             try:
                 response = session.get_with_interrupt(url, headers=self.request_header)
 
-            except (HTTPError, ConnectionError) as error:
-                logger.info(f"Skipped requested URL {url!r} because of {error!r}")
+            except (HTTPError, ConnectionError, ReadTimeout) as error:
+                logger.warning(f"Skipped requested URL {url!r} because of {error!r}")
                 if isinstance(error, HTTPError) and error.response.status_code >= 500:
-                    logger.info(f"Skipped {self.publisher.name!r} due to server errors: {error!r}")
+                    logger.warning(f"Skipped {self.publisher.name!r} due to server errors: {error!r}")
                 continue
 
             except Exception as error:
-                logger.warning(f"Warning! Skipped  requested URL {url!r} because of an unexpected error {error!r}")
+                logger.error(f"Warning! Skipped requested URL {url!r} because of an unexpected error {error!r}")
                 continue
 
             else:

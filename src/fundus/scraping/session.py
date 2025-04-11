@@ -1,9 +1,9 @@
 import socket
 import threading
-from concurrent.futures import ThreadPoolExecutor, TimeoutError
 from contextlib import contextmanager
 from dataclasses import dataclass
-from typing import Optional
+from queue import Empty, Queue
+from typing import Optional, Union
 
 import requests.adapters
 
@@ -23,7 +23,7 @@ class InterruptableSession(requests.Session):
     def get_with_interrupt(self, *args, **kwargs) -> requests.Response:
         """Interruptable request.
 
-        This function outsources the request to another thread and checks every second
+        This function hands over the request to another thread and checks every second
         for an interrupt event. If there was an interrupt event, this function raises
         a requests.exceptions.Timeout error.
 
@@ -32,37 +32,42 @@ class InterruptableSession(requests.Session):
             **kwargs: requests.Session.get(**) keyword arguments.
 
         Returns:
-            The response
+            The response.
         """
 
-        def _req() -> requests.Response:
-            return self.get(*args, **kwargs, timeout=self.timeout)
+        def _req():
+            try:
+                response_queue.put(self.get(*args, **kwargs, timeout=self.timeout))
+            except Exception as error:
+                response_queue.put(error)
 
         if args:
             url = args[0]
         else:
             url = kwargs.get("url")
 
-        # for ease of use we use a ThreadPoolExecutor
-        with ThreadPoolExecutor(max_workers=1) as executor:
-            future = executor.submit(_req)
-            while True:
-                try:
-                    response = future.result(timeout=1)
-                except TimeoutError:
-                    if __EVENTS__.is_event_set("stop"):
-                        logger.debug(f"Interrupt request for {url!r}")
-                        future.cancel()
-                        raise requests.exceptions.Timeout("Manually interrupted request")
-                else:
-                    return response
+        response_queue: Queue[Union[requests.Response, Exception]] = Queue()
+        thread = threading.Thread(target=_req, daemon=True)
+        thread.start()
+
+        while True:
+            try:
+                response = response_queue.get(timeout=1)
+            except Empty:
+                if __EVENTS__.is_event_set("stop"):
+                    logger.debug(f"Interrupt request for {url!r}")
+                    exit(1)
+            else:
+                if isinstance(response, Exception):
+                    raise response
+                return response
 
 
 @dataclass
 class CONFIG:
     POOL_CONNECTIONS: int = 50
     POOL_MAXSIZE: int = 1
-    TIMEOUT: Optional[int] = 10
+    TIMEOUT: Optional[int] = 30
 
 
 class SessionHandler:
