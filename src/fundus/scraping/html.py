@@ -11,7 +11,7 @@ import validators
 from fastwarc import ArchiveIterator, WarcRecord, WarcRecordType
 from lxml.cssselect import CSSSelector
 from lxml.etree import XPath
-from requests import ConnectionError, HTTPError
+from requests import ConnectionError, HTTPError, ReadTimeout
 
 from fundus.logging import create_logger
 from fundus.publishers.base_objects import Publisher, Robots
@@ -19,7 +19,7 @@ from fundus.scraping.delay import Delay
 from fundus.scraping.filter import URLFilter
 from fundus.scraping.session import _default_header, session_handler
 from fundus.scraping.url import URLSource
-from fundus.utils.events import EventDict
+from fundus.utils.events import __EVENTS__
 
 __all__ = [
     "HTML",
@@ -49,7 +49,7 @@ def _detect_charset_from_response(response: requests.Response) -> str:
     """
     # see https://github.com/flairNLP/fundus/issues/446
     # use response fallback to decode HTML in a first guess
-    guessed_text = response.content.decode(response.encoding or "utf-8")
+    guessed_text = response.content.decode(response.encoding or "utf-8", errors="replace")
     document = lxml.html.document_fromstring(guessed_text)
     if (content_type_nodes := _content_type_selector(document)) and len(content_type_nodes) == 1:
         content_type_node = content_type_nodes.pop()
@@ -95,8 +95,6 @@ class HTMLSource(Protocol):
 
 
 class WebSource:
-    __EVENTS__: EventDict = EventDict()
-
     def __init__(
         self,
         url_source: Iterable[str],
@@ -119,7 +117,7 @@ class WebSource:
         self.delay = delay
 
         # register default events
-        self.__EVENTS__.register_event("stop")
+        __EVENTS__.register_event("stop")
 
         # parse robots:
         self.robots: Optional[Robots] = None
@@ -138,10 +136,11 @@ class WebSource:
 
     @property
     def _is_stopped(self):
-        return self.__EVENTS__.is_event_set("stop")
+        return __EVENTS__.is_event_set("stop")
 
-    def sleep(self, s: float):
-        self.__EVENTS__.get("stop").wait(s)
+    @staticmethod
+    def sleep(s: float):
+        __EVENTS__.get("stop").wait(s)
 
     def fetch(self, url_filter: Optional[URLFilter] = None) -> Iterator[HTML]:
         combined_filters: List[URLFilter] = ([self.url_filter] if self.url_filter else []) + (
@@ -154,7 +153,11 @@ class WebSource:
             return any(f(u) for f in combined_filters)
 
         url_iterator = iter(self.url_source)
-        while not self._is_stopped and (url := next(url_iterator, None)) is not None:
+
+        while not self._is_stopped:
+            if (url := next(url_iterator, None)) is None:
+                return
+
             if not validators.url(url):
                 logger.debug(f"Skipped requested URL {url!r} because the URL is malformed")
                 continue
@@ -181,16 +184,16 @@ class WebSource:
                 timestamp = time.time()
 
             try:
-                response = session.get(url, headers=self.request_header)
+                response = session.get_with_interrupt(url, headers=self.request_header)
 
-            except (HTTPError, ConnectionError) as error:
-                logger.info(f"Skipped requested URL {url!r} because of {error!r}")
+            except (HTTPError, ConnectionError, ReadTimeout) as error:
+                logger.warning(f"Skipped requested URL {url!r} because of {error!r}")
                 if isinstance(error, HTTPError) and error.response.status_code >= 500:
-                    logger.info(f"Skipped {self.publisher!r} due to server errors: {error!r}")
+                    logger.warning(f"Skipped {self.publisher.name!r} due to server errors: {error!r}")
                 continue
 
             except Exception as error:
-                logger.warning(f"Warning! Skipped  requested URL {url!r} because of an unexpected error {error!r}")
+                logger.error(f"Warning! Skipped requested URL {url!r} because of an unexpected error {error!r}")
                 continue
 
             else:
