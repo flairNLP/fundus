@@ -1,5 +1,3 @@
-import warnings
-
 import pytest
 
 from fundus import NewsMap, RSSFeed, Sitemap
@@ -34,11 +32,6 @@ class TestCollection:
         assert not publisher_group_with_news_map.value.supports(source_types=[RSSFeed])
         assert publisher_group_with_languages.eng.supports(languages=["en"])
         assert not publisher_group_with_languages.eng.supports(languages=["es"])
-        with pytest.raises(ValueError):
-            publisher_group_with_news_map.value.supports(source_types="")
-
-        with pytest.raises(TypeError):
-            publisher_group_with_news_map.value.supports(source_types=[""])
 
     @pytest.mark.filterwarnings("ignore::UserWarning")
     def test_search(
@@ -53,7 +46,7 @@ class TestCollection:
 
         assert len(publisher_group_with_news_map.search(later.names, source_types=[NewsMap])) == 1
         assert len(publisher_group_with_news_map.search(later.names, source_types=[RSSFeed, Sitemap])) == 0
-        assert len(publisher_group_with_news_map.search(later.names, source_types=[NewsMap, RSSFeed])) == 0
+        assert len(publisher_group_with_news_map.search(later.names, source_types=[NewsMap, RSSFeed])) == 1
 
         # check that only latest version is supported with search
         assert len(publisher_group_with_news_map.search(later.names)) == 1
@@ -65,6 +58,35 @@ class TestCollection:
 
         assert len(publisher_group_with_languages.search(languages=["en"], source_types=[NewsMap])) == 1
         assert len(publisher_group_with_languages.search(languages=["en"], source_types=[Sitemap])) == 0
+
+        assert len(publishers := publisher_group_with_languages.search(languages=["es"])) == 1
+        assert len(publishers[0].source_mapping) == 2
+
+        assert len(publishers := publisher_group_with_languages.search(languages=["ind"])) == 1
+        assert len(publishers[0].source_mapping) == 1
+
+        assert len(publishers := publisher_group_with_languages.search(languages=["pl"])) == 1
+        assert len(publishers[0].source_mapping) == 1
+
+        assert len(publishers := publisher_group_with_languages.search(languages=["es", "ind"])) == 1
+        assert len(publishers[0].source_mapping) == 3
+
+        assert len(publishers := publisher_group_with_languages.search(languages=["pl", "ind"])) == 1
+        assert len(publishers[0].source_mapping) == 2
+
+        assert len(publishers := publisher_group_with_languages.search(languages=["es"], source_types=[RSSFeed])) == 1
+        assert len(publishers[0].source_mapping) == 1
+
+        assert len(publishers := publisher_group_with_languages.search(languages=["es"], source_types=[NewsMap])) == 1
+        assert len(publishers[0].source_mapping) == 1
+
+        assert len(publisher_group_with_languages.search(languages=["es"], source_types=[Sitemap])) == 0
+
+        assert (
+            len(publishers := publisher_group_with_languages.search(languages=["es", "ind"], source_types=[Sitemap]))
+            == 1
+        )
+        assert len(publishers[0].source_mapping) == 1
 
         with pytest.raises(ValueError):
             publisher_group_with_news_map.search()
