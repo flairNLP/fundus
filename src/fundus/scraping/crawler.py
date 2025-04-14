@@ -8,7 +8,6 @@ import multiprocessing
 import os
 import random
 import re
-import threading
 import time
 import traceback
 from abc import ABC, abstractmethod
@@ -21,6 +20,7 @@ from multiprocessing.managers import BaseManager
 from multiprocessing.pool import MapResult, Pool, ThreadPool
 from pathlib import Path
 from queue import Empty, Queue
+from threading import current_thread
 from typing import (
     Any,
     Callable,
@@ -55,10 +55,11 @@ from fundus.publishers.base_objects import Publisher, PublisherGroup
 from fundus.scraping.article import Article
 from fundus.scraping.delay import Delay
 from fundus.scraping.filter import ExtractionFilter, Requires, RequiresAll, URLFilter
-from fundus.scraping.html import CCNewsSource, WebSource
+from fundus.scraping.html import CCNewsSource
 from fundus.scraping.scraper import CCNewsScraper, WebScraper
 from fundus.scraping.session import session_handler
 from fundus.scraping.url import URLSource
+from fundus.utils.events import __EVENTS__
 from fundus.utils.timeout import Timeout
 
 logger = create_logger(__name__)
@@ -67,8 +68,6 @@ _T = TypeVar("_T")
 _P = ParamSpec("_P")
 
 PublisherType: TypeAlias = Union[Publisher, PublisherGroup]
-
-_stop_event = threading.Event()
 
 
 class RemoteException(Exception):
@@ -128,13 +127,11 @@ def get_execution_context():
         ident (int): Thread ID or Process ID
     """
     if multiprocessing.current_process().name != "MainProcess":
-        # In a child process
-        current_process = multiprocessing.current_process()
-        return current_process.name, current_process.ident
+        process = multiprocessing.current_process()
+        return process.name, process.ident
     else:
-        # In the main process, check for threading
-        current_thread = threading.current_thread()
-        return current_thread.name, current_thread.ident
+        thread = current_thread()
+        return thread.name, thread.ident
 
 
 def queue_wrapper(queue: Queue[Union[_T, Exception]], target: Callable[_P, Iterator[_T]]) -> Callable[_P, None]:
@@ -162,6 +159,10 @@ def queue_wrapper(queue: Queue[Union[_T, Exception]], target: Callable[_P, Itera
                 )
             )
 
+            logger.debug(f"Encountered remote exception: {err!r}")
+            # prevents a race condition where the ThreadPool shuts down before the exception is pulled from the queue
+            time.sleep(0.2)
+
     return wrapper
 
 
@@ -188,8 +189,8 @@ def pool_queue_iter(handle: MapResult[Any], queue: Queue[Union[_T, Exception]]) 
             try:
                 handle.get(timeout=0.1)
             except TimeoutError:
-                if _stop_event.is_set():
-                    _stop_event.clear()
+                if __EVENTS__.is_event_set("stop"):
+                    __EVENTS__.clear_event("stop")
                     break
                 continue
             return
@@ -209,6 +210,9 @@ class CrawlerBase(ABC):
         self.publishers: List[Publisher] = list(set(more_itertools.collapse(publishers)))
         if not self.publishers:
             raise ValueError("param <publishers> of <Crawler.__init__> must include at least one publisher.")
+
+        __EVENTS__.alias("main-thread")
+        __EVENTS__.register_event("stop")
 
     @abstractmethod
     def _build_article_iterator(
@@ -326,7 +330,7 @@ class CrawlerBase(ABC):
         if isinstance(self, CCNewsCrawler) and self.processes > 0:
 
             def callback() -> None:
-                _stop_event.set()
+                __EVENTS__.set_event("stop", "main-thread")
 
         else:
             callback = None
@@ -337,10 +341,8 @@ class CrawlerBase(ABC):
                     tuple(fitting_publishers), error_handling, build_extraction_filter(), url_filter
                 ):
                     if max_articles_per_publisher and article_count[article.publisher] == max_articles_per_publisher:
-                        if isinstance(self, Crawler) and not WebSource.__EVENTS__.is_event_set(
-                            "stop", article.publisher
-                        ):
-                            WebSource.__EVENTS__.set_event("stop", article.publisher)
+                        if isinstance(self, Crawler) and not __EVENTS__.is_event_set("stop", article.publisher):
+                            __EVENTS__.set_event("stop", article.publisher)
                         if sum(article_count.values()) == len(self.publishers) * max_articles_per_publisher:
                             break
                         continue
@@ -475,13 +477,15 @@ class Crawler(CrawlerBase):
         wrapped_article_task = queue_wrapper(result_queue, article_task)
 
         try:
-            with ThreadPool(processes=len(publishers) or None) as pool, session_handler.context(len(publishers), 1):
+            with ThreadPool(processes=len(publishers) or None) as pool, session_handler.context(
+                POOL_CONNECTIONS=len(publishers),
+            ):
                 yield from pool_queue_iter(pool.map_async(wrapped_article_task, publishers), result_queue)
         finally:
             logger.debug(f"Shutting down {type(self).__name__!r} ...")
-            WebSource.__EVENTS__.set_for_all("stop")
+            __EVENTS__.set_for_all("stop")
             pool.join()
-            WebSource.__EVENTS__.clear_for_all("stop")
+            __EVENTS__.clear_for_all("stop")
             logger.debug("Shutdown done")
 
     def _build_article_iterator(

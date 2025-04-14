@@ -63,6 +63,11 @@ class EventDict:
             self._events[self._resolve(key)][event].set()
             logger.debug(f"Set event {event!r} for {self._resolve(key)}")
 
+    def clear_event(self, event: str, key: Union[int, str, None] = None):
+        with self._lock:
+            self._events[self._resolve(key)][event].clear()
+            logger.debug(f"Cleared event {event!r} for {self._resolve(key)}")
+
     def set_for_all(self, event: Optional[str] = None):
         """Set <event> for all registered keys
 
@@ -114,3 +119,6 @@ class EventDict:
     def get(self, event: str, key: Optional[Union[int, str, None]] = None) -> threading.Event:
         with self._lock:
             return self._events[self._resolve(key)][event]
+
+
+__EVENTS__: EventDict = EventDict()
