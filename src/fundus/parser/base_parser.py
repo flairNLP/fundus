@@ -83,9 +83,11 @@ class Attribute(RegisteredFunction):
         func: Callable[[object], Any],
         priority: Optional[int],
         validate: bool,
+        deprecated: bool,
         default_factory: Optional[Callable[[], Any]],
     ):
         self.validate = validate
+        self.deprecated = deprecated
         self.default_factory = default_factory
         super(Attribute, self).__init__(func=func, priority=priority)
 
@@ -135,9 +137,16 @@ def attribute(
     *,
     priority: Optional[int] = None,
     validate: bool = True,
+    deprecated: bool = False,
     default_factory: Optional[Callable[[], Any]] = None,
 ):
-    return _register(cls, factory=Attribute, priority=priority, validate=validate, default_factory=default_factory)
+    return _register(
+        cls,
+        factory=Attribute,
+        priority=priority,
+        validate=validate,
+        deprecated=deprecated,
+        default_factory=default_factory)
 
 
 def function(cls=None, /, *, priority: Optional[int] = None):
@@ -176,6 +185,10 @@ class AttributeCollection(RegisteredFunctionCollection[Attribute]):
     @property
     def unvalidated(self) -> "AttributeCollection":
         return AttributeCollection(*[attr for attr in self.functions if not attr.validate])
+
+    @property
+    def deprecated(self) -> "AttributeCollection":
+        return AttributeCollection(*[attr for attr in self.functions if attr.deprecated])
 
 
 class FunctionCollection(RegisteredFunctionCollection[Function]):
