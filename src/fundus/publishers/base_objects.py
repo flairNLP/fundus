@@ -5,13 +5,17 @@ from urllib.robotparser import RobotFileParser
 from warnings import warn
 
 import more_itertools
-import requests
+from requests.exceptions import ConnectionError, HTTPError, ReadTimeout
 from typing_extensions import TypeAlias
 
+from fundus.logging import create_logger
 from fundus.parser.base_parser import ParserProxy
 from fundus.scraping.filter import URLFilter
+from fundus.scraping.session import session_handler
 from fundus.scraping.url import NewsMap, RSSFeed, Sitemap, URLSource
 from fundus.utils.iteration import iterate_all_subclasses
+
+logger = create_logger(__name__)
 
 FilterResult: TypeAlias = Union[List["FilteredPublisher"], List["Publisher"]]
 
@@ -28,15 +32,15 @@ class CustomRobotFileParser(RobotFileParser):
         """Reads the robots.txt URL and feeds it to the parser."""
         try:
             # noinspection PyUnresolvedReferences
-            f = requests.Session().get(self.url, headers=headers)  # type: ignore[attr-defined]
-            f.raise_for_status()
-        except requests.exceptions.HTTPError as err:
+            session = session_handler.get_session()
+            response = session.get_with_interrupt(self.url, headers=headers)  # type: ignore[attr-defined]
+        except HTTPError as err:
             if err.response.status_code in (401, 403):
                 self.disallow_all = True
             elif 400 <= err.response.status_code < 500:
                 self.allow_all = True
         else:
-            self.parse(f.text.splitlines())
+            self.parse(response.text.splitlines())
 
 
 class Robots:
@@ -46,7 +50,11 @@ class Robots:
         self.ready: bool = False
 
     def read(self, headers: Optional[Dict[str, str]] = None) -> None:
-        self.robots_file_parser.read(headers=headers)
+        try:
+            self.robots_file_parser.read(headers=headers)
+        except (ConnectionError, ReadTimeout):
+            logger.warning(f"Could not load robots {self.url!r}. Ignoring robots and continuing.")
+            self.robots_file_parser.allow_all = True
         self.ready = True
 
     def can_fetch(self, useragent: str, url: str) -> bool:

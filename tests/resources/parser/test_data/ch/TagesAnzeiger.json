@@ -49,6 +49,64 @@
         }
       ]
     },
+    "images": [
+      {
+        "versions": [
+          {
+            "url": "https://cdn.unitycms.io/images/C_X_w9Cp4j_BEHmX5sAbP3.jpg?op=ocroped&val=400,200,1000,1000,0,0&sum=nFxZBUtu20g",
+            "query_width": null,
+            "size": {
+              "width": 400,
+              "height": 267
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://cdn.unitycms.io/images/C_X_w9Cp4j_BEHmX5sAbP3.jpg?op=ocroped&val=900,600,1000,1000,0,0&sum=Ui77CyVw120",
+            "query_width": null,
+            "size": {
+              "width": 900,
+              "height": 600
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://cdn.unitycms.io/images/C_X_w9Cp4j_BEHmX5sAbP3.jpg?op=ocroped&val=1200,800,1000,1000,0,0&sum=w99GGK3QrAI",
+            "query_width": null,
+            "size": {
+              "width": 1200,
+              "height": 800
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://cdn.unitycms.io/images/C_X_w9Cp4j_BEHmX5sAbP3.jpg?op=ocroped&val=1600,1200,1000,1000,0,0&sum=qmYmGR8bLOc",
+            "query_width": null,
+            "size": {
+              "width": 1600,
+              "height": 1067
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://cdn.unitycms.io/images/C_X_w9Cp4j_BEHmX5sAbP3.jpg?op=ocroped&val=2001,1600,1000,1000,0,0&sum=_bGWJTtIISE",
+            "query_width": null,
+            "size": {
+              "width": 2001,
+              "height": 1334
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": true,
+        "description": "Der Parteipräsident der SVP Schweiz, Marco Chiesa, bei seiner Rede in Küssnacht am Rigi.",
+        "caption": "Der Parteipräsident der SVP Schweiz, Marco Chiesa, bei seiner Rede in Küssnacht am Rigi.",
+        "authors": [
+          "Urs Flueeler (Keystone)"
+        ],
+        "position": 601
+      }
+    ],
     "publishing_date": "2023-07-01 11:16:11+02:00",
     "title": "Chiesa ruft zum «politischen Widerstand» gegen die Schweizer Asylpolitik auf"
   }

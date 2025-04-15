@@ -41,6 +41,93 @@
         }
       ]
     },
+    "images": [
+      {
+        "versions": [
+          {
+            "url": "https://wp.inews.co.uk/wp-content/uploads/2023/08/comp-1693355557.png?crop=3px%2C0px%2C1494px%2C844px&resize=640%2C360",
+            "query_width": null,
+            "size": {
+              "width": 640,
+              "height": 360
+            },
+            "type": "image/png"
+          }
+        ],
+        "is_cover": true,
+        "description": null,
+        "caption": "All six British players won their matches on Tuesday at the US Open",
+        "authors": [
+          "Getty/AP"
+        ],
+        "position": 451
+      },
+      {
+        "versions": [
+          {
+            "url": "https://wp.inews.co.uk/wp-content/uploads/2023/08/SEI_169332397.jpg?resize=300,218",
+            "query_width": null,
+            "size": {
+              "width": 300,
+              "height": 218
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://wp.inews.co.uk/wp-content/uploads/2023/08/SEI_169332397.jpg?resize=380,276",
+            "query_width": null,
+            "size": {
+              "width": 380,
+              "height": 276
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://wp.inews.co.uk/wp-content/uploads/2023/08/SEI_169332397.jpg?resize=760,552",
+            "query_width": null,
+            "size": {
+              "width": 760,
+              "height": 552
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://wp.inews.co.uk/wp-content/uploads/2023/08/SEI_169332397.jpg?resize=1536,1115",
+            "query_width": null,
+            "size": {
+              "width": 1536,
+              "height": 1115
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://wp.inews.co.uk/wp-content/uploads/2023/08/SEI_169332397.jpg?resize=2048,1487",
+            "query_width": null,
+            "size": {
+              "width": 2048,
+              "height": 1487
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://wp.inews.co.uk/wp-content/uploads/2023/08/SEI_169332397.jpg",
+            "query_width": null,
+            "size": {
+              "width": 2445,
+              "height": 1775
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": false,
+        "description": "Tennis - U.S. Open - Flushing Meadows, New York, United States - August 29, 2023 Britain's Andy Murray reacts during his first round match against France's Corentin Moutet REUTERS/Mike Segar TPX IMAGES OF THE DAY",
+        "caption": "Britain’s Andy Murray reacts during his first round match against France’s Corentin Moutet",
+        "authors": [
+          "Reuters"
+        ],
+        "position": 521
+      }
+    ],
     "publishing_date": "2023-08-30 00:55:49+00:00",
     "title": "US Open 2023 results: Andy Murray among six British players to record first-round wins without dropping a set",
     "topics": [
@@ -50,6 +137,116 @@
       "Jack Draper",
       "Katie Boulter",
       "US Open"
+    ]
+  },
+  "V1_1": {
+    "authors": [
+      "Jacqui Housden"
+    ],
+    "body": {
+      "summary": [
+        "Hollywood legend escorted off stage after protesters climb up holding sign saying 'over 1.5 degrees is a global shipwreck'"
+      ],
+      "sections": [
+        {
+          "headline": [],
+          "paragraphs": [
+            "Two people have been arrested after Just Stop Oil protesters disrupted a West End performance of The Tempest starring Sigourney Weaver on Monday night.",
+            "A 42-year-old woman and a 60-year-old man have been arrested, the Metropolitan Police said.",
+            "A video posted on social media by the group showed two activists climbing on stage holding a sign that read “over 1.5 degrees is a global shipwreck”, a reference to the recent announcement that 2024 had been the warmest on record globally and the first full year when the average temperature exceeded 1.5°C above pre-industrial levels.",
+            "The pair also launched a confetti cannon just after Weaver uttered the lines: “Upon thy wicked dam, come forth!”",
+            "A voice is then heard saying: “We’ll have to stop the show ladies and gentlemen, sorry”.",
+            "Hollywood legend Weaver, who had been sitting on a chair, was escorted off stage at the Theatre Royal in Drury Lane on Monday, while the two protesters faced boos and a few cheers from the audience.",
+            "One of the protesters, Hayley Walsh, 42, a lecturer from Nottingham, said: “Years of writing to MPs, going on marches and teaching my students to be more sustainable hasn’t seen the urgent change needed.",
+            "“I am scared for my children, I can’t sleepwalk them into a future of food shortages, life-threatening storms and wars for resources.",
+            "“1.5 degrees is a global shipwreck we can’t ignore. Wildfires in California, deadly floods in Valencia and hundreds of thousands without power in the UK this weekend.",
+            "“This isn’t a distant, future problem. We need a global treaty to stop fossil fuel burning and a global emergency response.”",
+            "Fellow protester, mechanical engineer Richard Weir, 60, from Tynemouth, North Tyneside, said: “I started my career in the shipyards of Tyneside and I watched management inaction lead to the collapse of UK manufacturing.",
+            "“Now I see similar failures of leadership as politicians refuse to take action to protect us and our loved ones.",
+            "“We’re already seeing the damage this crisis is doing to crops, homes and entire neighbourhoods. Unless we come together and demand a move away from fossil fuels by 2030, we will go the same way as manufacturing in the UK.”",
+            "Bafta-award winning actress Weaver plays the storm-creating magician Prospero in the new staging of the Shakespeare classic, in a role typically played by a man.",
+            "The production opened in December and will run until February 1."
+          ]
+        }
+      ]
+    },
+    "images": [
+      {
+        "versions": [
+          {
+            "url": "https://inews.co.uk/wp-content/uploads/2025/01/01JJMXM1T3Z99HXM3DJ5QB8YQF.jpg?crop=0px%2C33px%2C1198px%2C677px&resize=640%2C360",
+            "query_width": null,
+            "size": {
+              "width": 16,
+              "height": 9
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": true,
+        "description": "Article thumbnail image",
+        "caption": "The protesters came on stage during Sigourney Weaver’s performance as Prospero in Shakespeare’s ‘The Tempest’",
+        "authors": [
+          "Just Stop Oil/PA Wire"
+        ],
+        "position": 576
+      },
+      {
+        "versions": [
+          {
+            "url": "https://inews.co.uk/wp-content/uploads/2025/01/01JJMTKRSAHE83RF1X0TJSKAPX.jpg?resize=300,175",
+            "query_width": null,
+            "size": {
+              "width": 300,
+              "height": 175
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://inews.co.uk/wp-content/uploads/2025/01/01JJMTKRSAHE83RF1X0TJSKAPX.jpg?resize=380,222",
+            "query_width": null,
+            "size": {
+              "width": 380,
+              "height": 222
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://inews.co.uk/wp-content/uploads/2025/01/01JJMTKRSAHE83RF1X0TJSKAPX.jpg?resize=760,444",
+            "query_width": null,
+            "size": {
+              "width": 760,
+              "height": 444
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://inews.co.uk/wp-content/uploads/2025/01/01JJMTKRSAHE83RF1X0TJSKAPX.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1200,
+              "height": 701
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": false,
+        "description": null,
+        "caption": "One of the protesters said she wanted to see a global treaty to stop fossil fuel burning",
+        "authors": [
+          "Just Stop Oil/PA Wire"
+        ],
+        "position": 650
+      }
+    ],
+    "publishing_date": "2025-01-28 11:30:00+00:00",
+    "title": "Two arrested after Just Stop Oil protest at Sigourney Weaver West End play",
+    "topics": [
+      "Climate Change",
+      "Global Warming",
+      "Just Stop Oil",
+      "Protests",
+      "West End Theatre"
     ]
   }
 }

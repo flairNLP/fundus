@@ -144,12 +144,404 @@
         }
       ]
     },
+    "images": [
+      {
+        "versions": [
+          {
+            "url": "https://i.insider.com/65c677fb917a1dae0245235f?width=400&format=jpeg&auto=webp",
+            "query_width": null,
+            "size": {
+              "width": 400,
+              "height": 0
+            },
+            "type": null
+          },
+          {
+            "url": "https://i.insider.com/65c677fb917a1dae0245235f?width=500&format=jpeg&auto=webp",
+            "query_width": null,
+            "size": {
+              "width": 500,
+              "height": 0
+            },
+            "type": null
+          },
+          {
+            "url": "https://i.insider.com/65c677fb917a1dae0245235f?width=700&format=jpeg&auto=webp",
+            "query_width": null,
+            "size": {
+              "width": 700,
+              "height": 0
+            },
+            "type": null
+          },
+          {
+            "url": "https://i.insider.com/65c677fb917a1dae0245235f?width=1000&format=jpeg&auto=webp",
+            "query_width": null,
+            "size": {
+              "width": 1000,
+              "height": 0
+            },
+            "type": null
+          },
+          {
+            "url": "https://i.insider.com/65c677fb917a1dae0245235f?width=1300&format=jpeg&auto=webp",
+            "query_width": null,
+            "size": {
+              "width": 1300,
+              "height": 0
+            },
+            "type": null
+          }
+        ],
+        "is_cover": true,
+        "description": "Zendaya attends a 2024 \"Dune: Part Two\" photocall in Mexico City.",
+        "caption": null,
+        "authors": [],
+        "position": 498
+      },
+      {
+        "versions": [
+          {
+            "url": "https://i.insider.com/65ccde9af533b039a88380ae?width=600&format=jpeg&auto=webp",
+            "query_width": null,
+            "size": {
+              "width": 600,
+              "height": 0
+            },
+            "type": null
+          }
+        ],
+        "is_cover": false,
+        "description": null,
+        "caption": null,
+        "authors": [],
+        "position": 599
+      },
+      {
+        "versions": [
+          {
+            "url": "https://i.insider.com/65c53a7043bb77284ba512fc?width=600&format=jpeg&auto=webp",
+            "query_width": null,
+            "size": {
+              "width": 600,
+              "height": 0
+            },
+            "type": null
+          }
+        ],
+        "is_cover": false,
+        "description": null,
+        "caption": null,
+        "authors": [],
+        "position": 621
+      },
+      {
+        "versions": [
+          {
+            "url": "https://i.insider.com/65c5311343bb77284ba50c4f?width=600&format=jpeg&auto=webp",
+            "query_width": null,
+            "size": {
+              "width": 600,
+              "height": 0
+            },
+            "type": null
+          }
+        ],
+        "is_cover": false,
+        "description": null,
+        "caption": null,
+        "authors": [],
+        "position": 641
+      },
+      {
+        "versions": [
+          {
+            "url": "https://i.insider.com/65c53af96fcb546d2d4da713?width=600&format=jpeg&auto=webp",
+            "query_width": null,
+            "size": {
+              "width": 600,
+              "height": 0
+            },
+            "type": null
+          }
+        ],
+        "is_cover": false,
+        "description": null,
+        "caption": null,
+        "authors": [],
+        "position": 662
+      },
+      {
+        "versions": [
+          {
+            "url": "https://i.insider.com/65ccde50f533b039a8838049?width=600&format=jpeg&auto=webp",
+            "query_width": null,
+            "size": {
+              "width": 600,
+              "height": 0
+            },
+            "type": null
+          }
+        ],
+        "is_cover": false,
+        "description": null,
+        "caption": null,
+        "authors": [],
+        "position": 682
+      },
+      {
+        "versions": [
+          {
+            "url": "https://i.insider.com/65c5322a917a1dae02449ecd?width=600&format=jpeg&auto=webp",
+            "query_width": null,
+            "size": {
+              "width": 600,
+              "height": 0
+            },
+            "type": null
+          }
+        ],
+        "is_cover": false,
+        "description": null,
+        "caption": null,
+        "authors": [],
+        "position": 703
+      },
+      {
+        "versions": [
+          {
+            "url": "https://i.insider.com/6537e5e9356802a56be23286?width=600&format=jpeg&auto=webp",
+            "query_width": null,
+            "size": {
+              "width": 600,
+              "height": 0
+            },
+            "type": null
+          }
+        ],
+        "is_cover": false,
+        "description": null,
+        "caption": null,
+        "authors": [],
+        "position": 723
+      },
+      {
+        "versions": [
+          {
+            "url": "https://i.insider.com/65c531a76fcb546d2d4da08a?width=600&format=jpeg&auto=webp",
+            "query_width": null,
+            "size": {
+              "width": 600,
+              "height": 0
+            },
+            "type": null
+          }
+        ],
+        "is_cover": false,
+        "description": null,
+        "caption": null,
+        "authors": [],
+        "position": 743
+      },
+      {
+        "versions": [
+          {
+            "url": "https://i.insider.com/65ccdde894aa8ee8e84b36e0?width=600&format=jpeg&auto=webp",
+            "query_width": null,
+            "size": {
+              "width": 600,
+              "height": 0
+            },
+            "type": null
+          }
+        ],
+        "is_cover": false,
+        "description": null,
+        "caption": null,
+        "authors": [],
+        "position": 764
+      },
+      {
+        "versions": [
+          {
+            "url": "https://i.insider.com/65c53e49917a1dae0244a77c?width=600&format=jpeg&auto=webp",
+            "query_width": null,
+            "size": {
+              "width": 600,
+              "height": 0
+            },
+            "type": null
+          }
+        ],
+        "is_cover": false,
+        "description": null,
+        "caption": null,
+        "authors": [],
+        "position": 784
+      },
+      {
+        "versions": [
+          {
+            "url": "https://i.insider.com/65c5426f6fcb546d2d4dac53?width=600&format=jpeg&auto=webp",
+            "query_width": null,
+            "size": {
+              "width": 600,
+              "height": 0
+            },
+            "type": null
+          }
+        ],
+        "is_cover": false,
+        "description": null,
+        "caption": null,
+        "authors": [],
+        "position": 804
+      },
+      {
+        "versions": [
+          {
+            "url": "https://i.insider.com/65c545676fcb546d2d4daf26?width=600&format=jpeg&auto=webp",
+            "query_width": null,
+            "size": {
+              "width": 600,
+              "height": 0
+            },
+            "type": null
+          }
+        ],
+        "is_cover": false,
+        "description": null,
+        "caption": null,
+        "authors": [],
+        "position": 825
+      },
+      {
+        "versions": [
+          {
+            "url": "https://i.insider.com/65c541116fcb546d2d4daafd?width=600&format=jpeg&auto=webp",
+            "query_width": null,
+            "size": {
+              "width": 600,
+              "height": 0
+            },
+            "type": null
+          }
+        ],
+        "is_cover": false,
+        "description": null,
+        "caption": null,
+        "authors": [],
+        "position": 846
+      }
+    ],
     "publishing_date": "2024-02-14 16:15:30+00:00",
     "title": "Every outfit Zendaya has worn to promote the 'Dune' franchise, ranked from least to most daring",
     "topics": [
       "Style",
       "Celebrity style",
       "Daring looks"
+    ]
+  },
+  "V2": {
+    "authors": [
+      "Serafina Kenny"
+    ],
+    "body": {
+      "summary": [
+        "Emma Roma Jayne struggled with her weight until she got bariatric surgery in 2023.",
+        "She lost 130 pounds in two years and experienced some unexpected changes other than the weight loss.",
+        "These changes included her feet shrinking, starting to like avocados, and losing friends."
+      ],
+      "sections": [
+        {
+          "headline": [],
+          "paragraphs": [
+            "On a family trip in 2022, Emma Roma Jayne stayed in the car as everyone else went to the beach. The thought of being in shorts in public, and having the body she was so insecure about on display, made her feel viscerally uncomfortable.",
+            "Roma Jayne, a TikTok creator and influencer partnership manager in Australia, had always struggled with her weight. She said she tried to eat healthily, trying different diets and exercising \"all the time,\" but she wasn't losing weight.",
+            "After the beach trip, her mom told her enough was enough.",
+            "\"She was like: 'This isn't right. You're 22. You should be enjoying your life and be able to go to the beach whenever you want and feel comfortable.' She suggested that I should get weight loss surgery like she had,\" Roma Jayne told Business Insider.",
+            "So, in 2023, Roma Jayne had bariatric surgery, and her relationship with food and her body has been totally different since.",
+            "\"At first, I was very much like: 'That's cheating. You need to put in the hard work to lose weight.' But I looked at weight loss surgery as a way that I could stop the food noise and then change my lifestyle, because I didn't want to spend the next 10 years still struggling with the same issues,\" she said.",
+            "She lost about 110 pounds in the year after the surgery. Now 24, she's lost a further 22 pounds in the year since — and kept the weight off — having made huge lifestyle changes; she now works out six times a week and eats a high-protein, low-carb, balanced diet.",
+            "A study published last year found that bariatric surgery was becoming less common but that more people were being prescribed drugs such as Ozempic and Mounjaro to lose weight.",
+            "Roma Jayne said weight loss surgery \"is the best decision I have ever made in my entire life.\"",
+            "\"It has transformed my life completely,\" she said.",
+            "Aside from the obvious, Roma Jayne has noticed seven unexpected changes after her weight loss."
+          ]
+        },
+        {
+          "headline": [
+            "People are more friendly"
+          ],
+          "paragraphs": [
+            "\"There's no beating around the bush, I was definitely treated differently when I was bigger,\" Roma Jayne said. \"People were just not as friendly, but they are so nice to me now.\"",
+            "She said people now hold doors for her, greet her in the street, and strike up conversations with her, whereas before she lost weight she felt \"invisible.\""
+          ]
+        },
+        {
+          "headline": [
+            "Her feet have gotten smaller"
+          ],
+          "paragraphs": [
+            "\"One of the more random changes that I didn't even know that was a thing is that my feet shrunk,\" Roma Jayne said.",
+            "She has four pairs of shoes, all in different sizes, which she bought as her feet got smaller as she lost weight.",
+            "Her feet are slimmer now, and she went from a US size 9 shoe to a 7.5.",
+            "A 2014 study published in the Turkish Journal of Surgery found that 80% of the 212 participants, who all underwent bariatric surgery, bought shoes at least one size smaller a year after the surgery. The researchers suggested this could be because of fat loss on the foot, as well as the arches getting higher once there is less weight pushing them down."
+          ]
+        },
+        {
+          "headline": [
+            "Her voice has changed"
+          ],
+          "paragraphs": [
+            "Roma Jayne also said her voice has gotten higher and clearer since her surgery.",
+            "There's not much research on the impacts of weight loss on voice. A few small, limited studies have suggested that there could be minor changes to people's voices after bariatric surgery, but the differences aren't noticeable enough to hear."
+          ]
+        },
+        {
+          "headline": [
+            "Her skin is clearer"
+          ],
+          "paragraphs": [
+            "Roma Jayne has previously struggled with acne, but she found that her skin cleared up when she lost weight.",
+            "She said she eats a low-carb diet and has cut out sugar. According to the American Academy of Dermatology, eating high-glycemic foods that raise your blood sugar quickly — such as white bread, potato chips, pastries, and white rice — is associated with acne.",
+            "Roma Jayne also has polycystic ovary syndrome, of which acne is a symptom. The UK's National Health Service says weight loss can improve symptoms of PCOS."
+          ]
+        },
+        {
+          "headline": [
+            "Her tastes have changed"
+          ],
+          "paragraphs": [
+            "Roma Jayne used to hate avocados, and now she loves them. She also used to eat a lot of fruit, but she now eats far less fruit and far more vegetables.",
+            "A systematic review of research, published in the Nutrition Journal in 2023, found that across 26 studies, it seemed that weight gain and obesity could change people's perception of tastes and increase their preferences for sweetness. However, the authors said that these results weren't conclusive and that more research needed to be done."
+          ]
+        },
+        {
+          "headline": [
+            "She lost some friendships"
+          ],
+          "paragraphs": [
+            "Roma Jayne said that when she lost weight, she dealt with \"a lot of jealousy and resentment from friends.\"",
+            "\"I realized that they were my friends when I was bigger because I made them feel better about themselves,\" she said. \"But now that I'm on my own journey and bettering myself and making these healthy changes, suddenly they had a problem with that.\""
+          ]
+        },
+        {
+          "headline": [
+            "She's more confident"
+          ],
+          "paragraphs": [
+            "\"When I was bigger, I definitely used my size as a shield to protect myself from other people knowing the real me. Now that I feel so much more confident in myself and I have so much appreciation and love for myself,\" Roma Jayne said.",
+            "\"I'm the most confident version of myself that I've ever been, and I continue to get more and more confident every day.\"",
+            "She said surrounding herself with the right people has also improved her confidence."
+          ]
+        }
+      ]
+    },
+    "publishing_date": "2025-03-29 11:36:01+00:00",
+    "title": "A woman who lost 130 pounds shares 7 changes she wasn't expecting — from people being nicer to her to food tasting different",
+    "topics": [
+      "Weight Loss"
     ]
   }
 }

@@ -8,10 +8,10 @@ import multiprocessing
 import os
 import random
 import re
-import threading
 import time
 import traceback
 from abc import ABC, abstractmethod
+from collections import defaultdict
 from datetime import datetime
 from functools import lru_cache, partial, wraps
 from multiprocessing import Manager
@@ -20,9 +20,11 @@ from multiprocessing.managers import BaseManager
 from multiprocessing.pool import MapResult, Pool, ThreadPool
 from pathlib import Path
 from queue import Empty, Queue
+from threading import current_thread
 from typing import (
     Any,
     Callable,
+    Dict,
     Generic,
     Iterator,
     List,
@@ -36,7 +38,6 @@ from typing import (
     Union,
     cast,
 )
-from urllib.parse import urljoin, urlparse
 
 import dill
 import fastwarc.stream_io
@@ -49,6 +50,7 @@ from tqdm import tqdm
 from typing_extensions import ParamSpec, TypeAlias
 
 from fundus.logging import create_logger, get_current_config
+from fundus.parser.data import remove_query_parameters_from_url
 from fundus.publishers.base_objects import FilteredPublisher, Publisher, PublisherGroup
 from fundus.scraping.article import Article
 from fundus.scraping.delay import Delay
@@ -57,6 +59,7 @@ from fundus.scraping.html import CCNewsSource
 from fundus.scraping.scraper import CCNewsScraper, WebScraper
 from fundus.scraping.session import session_handler
 from fundus.scraping.url import URLSource
+from fundus.utils.events import __EVENTS__
 from fundus.utils.timeout import Timeout
 
 logger = create_logger(__name__)
@@ -65,8 +68,6 @@ _T = TypeVar("_T")
 _P = ParamSpec("_P")
 
 PublisherType: TypeAlias = Union[Publisher, PublisherGroup]
-
-_stop_event = threading.Event()
 
 
 class RemoteException(Exception):
@@ -126,13 +127,11 @@ def get_execution_context():
         ident (int): Thread ID or Process ID
     """
     if multiprocessing.current_process().name != "MainProcess":
-        # In a child process
-        current_process = multiprocessing.current_process()
-        return current_process.name, current_process.ident
+        process = multiprocessing.current_process()
+        return process.name, process.ident
     else:
-        # In the main process, check for threading
-        current_thread = threading.current_thread()
-        return current_thread.name, current_thread.ident
+        thread = current_thread()
+        return thread.name, thread.ident
 
 
 def queue_wrapper(queue: Queue[Union[_T, Exception]], target: Callable[_P, Iterator[_T]]) -> Callable[_P, None]:
@@ -160,6 +159,10 @@ def queue_wrapper(queue: Queue[Union[_T, Exception]], target: Callable[_P, Itera
                 )
             )
 
+            logger.debug(f"Encountered remote exception: {err!r}")
+            # prevents a race condition where the ThreadPool shuts down before the exception is pulled from the queue
+            time.sleep(0.2)
+
     return wrapper
 
 
@@ -186,8 +189,8 @@ def pool_queue_iter(handle: MapResult[Any], queue: Queue[Union[_T, Exception]]) 
             try:
                 handle.get(timeout=0.1)
             except TimeoutError:
-                if _stop_event.is_set():
-                    _stop_event.clear()
+                if __EVENTS__.is_event_set("stop"):
+                    __EVENTS__.clear_event("stop")
                     break
                 continue
             return
@@ -202,17 +205,14 @@ def random_sleep(func: Callable[_P, _T], between: Tuple[float, float]) -> Callab
     return wrapper
 
 
-def remove_query_parameters_from_url(url: str) -> str:
-    if any(parameter_indicator in url for parameter_indicator in ("?", "#")):
-        return urljoin(url, urlparse(url).path)
-    return url
-
-
 class CrawlerBase(ABC):
     def __init__(self, *publishers: PublisherType):
         self.publishers: List[Union[Publisher, FilteredPublisher]] = list(set(more_itertools.collapse(publishers)))
         if not self.publishers:
             raise ValueError("param <publishers> of <Crawler.__init__> must include at least one publisher.")
+
+        __EVENTS__.alias("main-thread")
+        __EVENTS__.register_event("stop")
 
     @abstractmethod
     def _build_article_iterator(
@@ -228,6 +228,7 @@ class CrawlerBase(ABC):
     def crawl(
         self,
         max_articles: Optional[int] = None,
+        max_articles_per_publisher: Optional[int] = None,
         timeout: Optional[int] = None,
         error_handling: Literal["suppress", "catch", "raise"] = "suppress",
         only_complete: Union[bool, ExtractionFilter] = Requires("title", "body", "publishing_date"),
@@ -242,6 +243,8 @@ class CrawlerBase(ABC):
             max_articles (Optional[int]): Number of articles to crawl. If there are fewer articles
                 than max_articles the Iterator will stop before max_articles. If None, all retrievable
                 articles are returned. Defaults to None.
+            max_articles_per_publisher: Specify the number of articles to crawl per publisher.
+                Disables <max_articles>. Defaults to None.
             timeout (Optional[int]): timeout (Optional[int]): Specifies the duration in seconds the crawler
                 will wait without receiving any articles before stopping. If set <= 0, or if not provided,
                 the crawler will run until all sources are exhausted. Defaults to None.
@@ -274,6 +277,14 @@ class CrawlerBase(ABC):
 
         max_articles = max_articles or -1
         timeout = timeout or -1
+
+        if max_articles_per_publisher:
+            if timeout < 120:
+                print(
+                    "It is recommended to set a minimum <timeout> of 120 seconds when using "
+                    "max_articles_per_publisher."
+                )
+            max_articles = -1
 
         def build_extraction_filter() -> Optional[ExtractionFilter]:
             if isinstance(only_complete, bool):
@@ -331,8 +342,8 @@ class CrawlerBase(ABC):
             language_filter = list(publisher_language_filter)
             logger.info(f"Publisher language filter: {publisher_language_filter} will be used as the language filter. ")
 
-        article_count = 0
-        crawled_articles = []
+        article_count: Dict[str, int] = defaultdict(int)
+        crawled_articles: Dict[str, List[Article]] = defaultdict(list)
 
         # Unfortunately we relly on this little workaround here to terminate the 'Pool' used within
         # the 'CCNewsCrawler'. The 'Timeout' contextmanager utilizes '_thread.interrupt_main',
@@ -345,7 +356,7 @@ class CrawlerBase(ABC):
         if isinstance(self, CCNewsCrawler) and self.processes > 0:
 
             def callback() -> None:
-                _stop_event.set()
+                __EVENTS__.set_event("stop", "main-thread")
 
         else:
             callback = None
@@ -355,19 +366,28 @@ class CrawlerBase(ABC):
                 for article in self._build_article_iterator(
                     tuple(fitting_publishers), error_handling, build_extraction_filter(), url_filter, language_filter
                 ):
+                    if max_articles_per_publisher and article_count[article.publisher] == max_articles_per_publisher:
+                        if isinstance(self, Crawler) and not __EVENTS__.is_event_set("stop", article.publisher):
+                            __EVENTS__.set_event("stop", article.publisher)
+                        if sum(article_count.values()) == len(self.publishers) * max_articles_per_publisher:
+                            break
+                        continue
                     timer.reset()
                     url_without_query_parameters = remove_query_parameters_from_url(article.html.responded_url)
                     if not only_unique or url_without_query_parameters not in response_cache:
                         response_cache.add(url_without_query_parameters)
-                        article_count += 1
-                        if save_to_file is not None:
-                            crawled_articles.append(article)
+                        article_count[article.publisher] += 1
+                        if save_to_file:
+                            crawled_articles[article.publisher].append(article)
                         yield article
-                    if article_count == max_articles:
+                    if sum(article_count.values()) == max_articles:
                         break
         finally:
             session_handler.close_current_session()
             if save_to_file is not None:
+                if isinstance(save_to_file, str):
+                    save_to_file = Path(save_to_file)
+                save_to_file.parent.mkdir(parents=True, exist_ok=True)
                 with open(save_to_file, "w", encoding="utf-8") as file:
                     logger.info(f"Writing crawled articles to {save_to_file!r}")
                     file.write(
@@ -477,15 +497,23 @@ class Crawler(CrawlerBase):
         article_iterators = [article_task(publisher) for publisher in publishers]
         yield from roundrobin(*article_iterators)
 
-    @staticmethod
     def _threaded_crawl(
-        publishers: Tuple[Publisher, ...], article_task: Callable[[Publisher], Iterator[Article]]
+        self, publishers: Tuple[Publisher, ...], article_task: Callable[[Publisher], Iterator[Article]]
     ) -> Iterator[Article]:
         result_queue: Queue[Union[Article, Exception]] = Queue(len(publishers))
         wrapped_article_task = queue_wrapper(result_queue, article_task)
 
-        with ThreadPool(processes=len(publishers) or None) as pool, session_handler.context(len(publishers), 1):
-            yield from pool_queue_iter(pool.map_async(wrapped_article_task, publishers), result_queue)
+        try:
+            with ThreadPool(processes=len(publishers) or None) as pool, session_handler.context(
+                POOL_CONNECTIONS=len(publishers),
+            ):
+                yield from pool_queue_iter(pool.map_async(wrapped_article_task, publishers), result_queue)
+        finally:
+            logger.debug(f"Shutting down {type(self).__name__!r} ...")
+            __EVENTS__.set_for_all("stop")
+            pool.join()
+            __EVENTS__.clear_for_all("stop")
+            logger.debug("Shutdown done")
 
     def _build_article_iterator(
         self,
@@ -614,24 +642,32 @@ class CCNewsCrawler(CrawlerBase):
         # As one could think, because we're downloading a bunch of files, this task is IO-bound, but it is actually
         # process-bound. The reason is that we stream the data and process it on the fly rather than downloading all
         # files and processing them afterward. Therefore, we utilize multiprocessing here instead of multithreading.
-        with Manager() as manager, Pool(
-            processes=min(self.processes, len(warc_paths)),
-            initializer=initializer,
-        ) as pool:
-            result_queue: Queue[Union[Article, Exception]] = manager.Queue(maxsize=1000)
+        try:
+            with Manager() as manager, Pool(
+                processes=min(self.processes, len(warc_paths)),
+                initializer=initializer,
+            ) as pool:
+                result_queue: Queue[Union[Article, Exception]] = manager.Queue(maxsize=1000)
 
-            # Because multiprocessing.Pool does not support iterators as targets,
-            # we wrap the article_task to write the articles to a queue instead of returning them directly.
-            wrapped_article_task: Callable[[str], None] = queue_wrapper(result_queue, article_task)
+                # Because multiprocessing.Pool does not support iterators as targets,
+                # we wrap the article_task to write the articles to a queue instead of returning them directly.
+                wrapped_article_task: Callable[[str], None] = queue_wrapper(result_queue, article_task)
 
-            # To avoid 503 errors we spread tasks to not start all at once
-            spread_article_task = random_sleep(wrapped_article_task, (0, 3))
+                # To avoid 503 errors we spread tasks to not start all at once
+                spread_article_task = random_sleep(wrapped_article_task, (0, 3))
 
-            # To avoid restricting the article_task to use only pickleable objects, we serialize it using dill.
-            serialized_article_task = dill_wrapper(spread_article_task)
+                # To avoid restricting the article_task to use only pickleable objects, we serialize it using dill.
+                serialized_article_task = dill_wrapper(spread_article_task)
 
-            # Finally, we build an iterator around the queue, exhausting the queue until the pool is finished.
-            yield from pool_queue_iter(pool.map_async(serialized_article_task, warc_paths), result_queue)
+                # Finally, we build an iterator around the queue, exhausting the queue until the pool is finished.
+                yield from pool_queue_iter(pool.map_async(serialized_article_task, warc_paths), result_queue)
+        finally:
+            logger.debug(f"Shutting down {type(self).__name__!r} ...")
+            logger.debug("Joining manager ...")
+            manager.join()
+            logger.debug("Joining pool ...")
+            pool.join()
+            logger.debug("Shutdown done")
 
     def _get_warc_paths(self) -> List[str]:
         # Date regex examples: https://regex101.com/r/yDX3G6/1
@@ -665,8 +701,11 @@ class CCNewsCrawler(CrawlerBase):
                 # use two threads per process, default two threads per core
                 max_number_of_threads = self.processes * 2
 
-                with ThreadPool(processes=min(len(urls), max_number_of_threads)) as pool:
-                    nested_warc_paths = pool.map(random_sleep(load_paths, (0, 3)), urls)
+                try:
+                    with ThreadPool(processes=min(len(urls), max_number_of_threads)) as pool:
+                        nested_warc_paths = pool.map(random_sleep(load_paths, (0, 3)), urls)
+                finally:
+                    pool.join()
 
         warc_paths: Iterator[str] = more_itertools.flatten(nested_warc_paths)
 

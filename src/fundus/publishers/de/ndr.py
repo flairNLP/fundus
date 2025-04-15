@@ -1,15 +1,17 @@
 import datetime
+import re
 from typing import List, Optional
 
 from lxml.cssselect import CSSSelector
 from lxml.etree import XPath
 
-from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute
+from fundus.parser import ArticleBody, BaseParser, Image, ParserProxy, attribute
 from fundus.parser.utility import (
     extract_article_body_with_selector,
     generic_author_parsing,
     generic_date_parsing,
     generic_topic_parsing,
+    image_extraction,
 )
 
 
@@ -46,3 +48,17 @@ class NDRParser(ParserProxy):
         @attribute
         def title(self) -> Optional[str]:
             return self.precomputed.meta.get("title")
+
+        @attribute
+        def images(self) -> List[Image]:
+            return image_extraction(
+                doc=self.precomputed.doc,
+                paragraph_selector=self._paragraph_selector,
+                upper_boundary_selector=XPath("//div[@id='page']"),
+                image_selector=XPath(
+                    "//div[@id='page']//*[(self::div and not(@class='teaserimage')) or (self::a and @class='zoomimage')]/div[contains(@class,'image-container')]//picture//img"
+                ),
+                relative_urls=XPath("string(//link[@rel='canonical']/@href)"),
+                caption_selector=XPath("./ancestor::div[contains(@class,'contentimage')]//span[@class='caption']"),
+                author_selector=re.compile(r"(?i)©\s*(ndr)?\s*(foto)?:?\s*(?P<credits>.+)"),
+            )

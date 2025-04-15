@@ -16,6 +16,71 @@
         }
       ]
     },
+    "images": [
+      {
+        "versions": [
+          {
+            "url": "https://cdn1.ntv.com.tr/gorsel/4NU7IAz2DkSUKQxQ7op8lA.jpg?width=660&mode=both&scale=both",
+            "query_width": "min-width:992",
+            "size": {
+              "width": 660,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://cdn1.ntv.com.tr/gorsel/4NU7IAz2DkSUKQxQ7op8lA.jpg?width=710&height=533&mode=both&scale=both&meta=square",
+            "query_width": "max-width:767",
+            "size": {
+              "width": 710,
+              "height": 533
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://cdn1.ntv.com.tr/gorsel/4NU7IAz2DkSUKQxQ7op8lA.jpg?width=952&mode=both&scale=both",
+            "query_width": "max-width:991",
+            "size": {
+              "width": 952,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://cdn1.ntv.com.tr/gorsel/4NU7IAz2DkSUKQxQ7op8lA.jpg?width=952&height=540&mode=both&scale=both",
+            "query_width": null,
+            "size": {
+              "width": 952,
+              "height": 540
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": true,
+        "description": "Süper Lig’de golcülerin yarışı kıyasıya",
+        "caption": null,
+        "authors": [],
+        "position": 154
+      },
+      {
+        "versions": [
+          {
+            "url": "https://cdn1.ntv.com.tr/gorsel/hDXAEzL6okymiPzXH_2Whg.jpg?width=960&mode=crop&scale=both",
+            "query_width": null,
+            "size": {
+              "width": 960,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": false,
+        "description": "Süper Lig’de golcülerin yarışı kıyasıya - 1",
+        "caption": null,
+        "authors": [],
+        "position": 212
+      }
+    ],
     "publishing_date": "2024-04-30 16:48:00+03:00",
     "title": "Süper Lig’de golcülerin yarışı kıyasıya",
     "topics": [

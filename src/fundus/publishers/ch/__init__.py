@@ -5,6 +5,7 @@ from ...scraping.filter import inverse, regex_filter
 from .nzz import NZZParser
 from .srf import SRFParser
 from .ta import TAParser
+from .zwanzig_minuten import ZwanzigMinutenParser
 
 # noinspection PyPep8Naming
 
@@ -47,5 +48,16 @@ class CH(metaclass=PublisherGroup):
                 reverse=True,
                 sitemap_filter=regex_filter("news|category"),
             ),
+        ],
+    )
+    ZwanzigMinuten = Publisher(
+        name="Zwanzig Minuten",
+        domain="https://www.20min.ch/",
+        parser=ZwanzigMinutenParser,
+        sources=[
+            NewsMap("https://www.20min.ch/sitemaps/de/news.xml"),
+            Sitemap("https://www.20min.ch/sitemaps/de/articles.xml"),
+            NewsMap("https://www.20min.ch/sitemaps/fr/news.xml"),
+            Sitemap("https://www.20min.ch/sitemaps/fr/articles.xml"),
         ],
     )

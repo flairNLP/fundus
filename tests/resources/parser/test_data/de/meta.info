@@ -23,9 +23,9 @@
     "url": "https://www.bild.de/sport/fussball/fortuna-duesseldorf/bubi-bomber-wieder-da-thioune-fordert-geduld-mit-niemiec-83936220.bild.html",
     "crawl_date": "2023-05-15 13:55:04.823203"
   },
-  "BoersenZeitung_2024_04_27.html.gz": {
-    "url": "https://www.boersen-zeitung.de/meinung-analyse/spaniens-neuer-drang-zum-interventionismus",
-    "crawl_date": "2024-04-27 20:40:42.807211"
+  "BoersenZeitung_2024_10_23.html.gz": {
+    "url": "https://www.boersen-zeitung.de/kapitalmaerkte/steigende-us-zinsen-setzen-dax-zu",
+    "crawl_date": "2024-10-23 23:15:01.852750"
   },
   "BoersenZeitung_2024_12_16.html.gz": {
     "url": "https://www.boersen-zeitung.de/banken-finanzen/wero-besteht-praxistest-im-digitalen-handel",
@@ -82,6 +82,10 @@
   "FreiePresse_2024_04_30.html.gz": {
     "url": "https://www.freiepresse.de/chemnitz/chemnitzer-hutfestival-wann-das-fest-steigt-was-neu-ist-und-wer-fuer-eine-gute-show-sorgen-wird-artikel13351201",
     "crawl_date": "2024-04-30 15:23:59.090631"
+  },
+  "FreiePresse_2024_11_29.html.gz": {
+    "url": "https://www.freiepresse.de/nachrichten/panorama/niemand-glaubt-euch-totalschaden-netz-spott-ueber-fdp-generalsekretaer-tritt-zurueck-artikel13615373",
+    "crawl_date": "2024-11-29 12:34:30.620860"
   },
   "Gamestar_2024_04_28.html.gz": {
     "url": "https://www.gamestar.de/artikel/samsung-unpacked-2024-juli-leak,3412544.html",
@@ -203,9 +207,9 @@
     "url": "https://taz.de/Entwurf-des-Selbstbestimmungsgesetzes/!5928990/",
     "crawl_date": "2023-04-28 20:32:15.077826"
   },
-  "Taz_2024_10_22.html.gz": {
-    "url": "https://taz.de/Berliner-Verfassungsschutz/!6036525/",
-    "crawl_date": "2024-10-22 09:54:14.048592"
+  "Taz_2024_10_23.html.gz": {
+    "url": "https://taz.de/Entwurf-des-Selbstbestimmungsgesetzes/!5928990/",
+    "crawl_date": "2024-10-23 23:17:51.034595"
   },
   "VogueDE_2024_04_30.html.gz": {
     "url": "https://www.vogue.de/artikel/kate-moss-cover-model-interview",

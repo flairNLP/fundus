@@ -4,23 +4,28 @@ from typing import List, Optional
 from lxml.cssselect import CSSSelector
 from lxml.etree import XPath
 
-from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute
+from fundus.parser import ArticleBody, BaseParser, Image, ParserProxy, attribute
 from fundus.parser.utility import (
     extract_article_body_with_selector,
     generic_author_parsing,
     generic_date_parsing,
+    image_extraction,
     normalize_whitespace,
 )
 
 
 class TheBBCParser(ParserProxy):
     class V1(BaseParser):
-        _subheadline_selector = CSSSelector("div[data-component='subheadline-block']")
-        _summary_selector = XPath("//div[@data-component='text-block'][1] //p[b]")
+        _subheadline_selector = XPath(
+            "//div[@data-component='subheadline-block' or @data-component='text-block' or contains(@class, 'ebmt73l0')]//*[self::h2 or (self::p and b and position()>1)]"
+        )
+        _summary_selector = XPath(
+            "(//div[@data-component='text-block' or contains(@class, 'ebmt73l0')])[1] //p[b and position()=1]"
+        )
         _paragraph_selector = XPath(
-            "//div[@data-component='text-block'][1]//p[not(b) and text()] |"
-            "//div[@data-component='text-block'][position()>1] //p[text()] |"
-            "//div[@data-component='text-block'] //ul /li[text()]"
+            "//div[@data-component='text-block' or contains(@class, 'ebmt73l0')][1]//p[not(b) and text()] |"
+            "//div[@data-component='text-block' or contains(@class, 'ebmt73l0')][position()>1] //p[text()] |"
+            "//div[@data-component='text-block' or contains(@class, 'ebmt73l0')] //ul /li[text()]"
         )
 
         _topic_selector = CSSSelector(
@@ -52,3 +57,13 @@ class TheBBCParser(ParserProxy):
         def topics(self) -> List[str]:
             topic_nodes = self._topic_selector(self.precomputed.doc)
             return [normalize_whitespace(node.text_content()) for node in topic_nodes]
+
+        @attribute
+        def images(self) -> List[Image]:
+            return image_extraction(
+                doc=self.precomputed.doc,
+                paragraph_selector=self._paragraph_selector,
+                image_selector=XPath("//figure //img[not(@src='/bbcx/grey-placeholder.png')]"),
+                caption_selector=XPath("./ancestor::figure//figcaption//p"),
+                author_selector=XPath("./ancestor::figure//span[@role='text']/text()"),
+            )

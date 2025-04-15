@@ -11,7 +11,6 @@ from .berliner_zeitung import BerlinerZeitungParser
 from .bild import BildParser
 from .boersenzeitung import BoersenZeitungParser
 from .br import BRParser
-from .braunschweiger_zeitung import BSZParser
 from .business_insider_de import BusinessInsiderDEParser
 from .die_welt import DieWeltParser
 from .die_zeit import DieZeitParser
@@ -20,9 +19,9 @@ from .faz import FAZParser
 from .focus import FocusParser
 from .frankfurter_rundschau import FrankfurterRundschauParser
 from .freiepresse import FreiePresseParser
+from .funke import FunkeParser
 from .gamestar import GamestarParser
 from .golem import GolemParser
-from .hamburger_abendblatt import HamburgerAbendblattParser
 from .heise import HeiseParser
 from .hessenschau import HessenschauParser
 from .junge_welt import JungeWeltParser
@@ -30,7 +29,6 @@ from .kicker import KickerParser
 from .krautreporter import KrautreporterParser
 from .mdr import MDRParser
 from .merkur import MerkurParser
-from .morgenpost_berlin import BerlinerMorgenpostParser
 from .motorsport_magazin import MotorSportMagazinParser
 from .mz import MitteldeutscheZeitungParser
 from .ndr import NDRParser
@@ -85,7 +83,7 @@ class DE(metaclass=PublisherGroup):
     BerlinerMorgenpost = Publisher(
         name="Berliner Morgenpost",
         domain="https://www.morgenpost.de/",
-        parser=BerlinerMorgenpostParser,
+        parser=FunkeParser,
         sources=[NewsMap("https://www.morgenpost.de/sitemaps/news.xml")]
         + [
             Sitemap(
@@ -98,7 +96,7 @@ class DE(metaclass=PublisherGroup):
     HamburgerAbendblatt = Publisher(
         name="Hamburger Abendblatt",
         domain="https://www.abendblatt.de/",
-        parser=HamburgerAbendblattParser,
+        parser=FunkeParser,
         sources=[
             RSSFeed("https://www.abendblatt.de/rss"),
             NewsMap("https://www.abendblatt.de/sitemaps/news.xml"),
@@ -120,7 +118,7 @@ class DE(metaclass=PublisherGroup):
             Sitemap("https://www.welt.de/sitemaps/sitemap/sitemap.xml"),
             NewsMap("https://www.welt.de/sitemaps/newssitemap/newssitemap.xml"),
         ],
-        url_filter=regex_filter("/Anlegertipps-|/videos[0-9]{2}"),
+        url_filter=regex_filter("/Anlegertipps-|/videos?[0-9]{2}|/mediathek/"),
     )
 
     MDR = Publisher(
@@ -309,7 +307,7 @@ class DE(metaclass=PublisherGroup):
     BSZ = Publisher(
         name="Braunschweiger Zeitung",
         domain="https://www.braunschweiger-zeitung.de/",
-        parser=BSZParser,
+        parser=FunkeParser,
         sources=[
             RSSFeed("https://www.braunschweiger-zeitung.de/rss"),
             NewsMap("https://www.braunschweiger-zeitung.de/sitemaps/news.xml"),
@@ -405,6 +403,7 @@ class DE(metaclass=PublisherGroup):
             Sitemap("https://de.euronews.com/sitemaps/de/articles.xml"),
             NewsMap("https://de.euronews.com/sitemaps/de/latest-news.xml"),
         ],
+        url_filter=regex_filter("/video/"),
     )
 
     Hessenschau = Publisher(
@@ -423,6 +422,7 @@ class DE(metaclass=PublisherGroup):
         domain="https://www1.wdr.de/",
         parser=WDRParser,
         sources=[RSSFeed("https://www1.wdr.de/uebersicht-100.feed")],
+        url_filter=inverse(regex_filter("wdr.de/(?!mediathek/)")),
     )
 
     BR = Publisher(
@@ -464,6 +464,7 @@ class DE(metaclass=PublisherGroup):
             RSSFeed("https://follow.it/der-postillon-abo"),
             Sitemap("https://www.der-postillon.com/sitemap.xml"),
         ],
+        url_filter=regex_filter("https://follow.it/"),
     )
 
     Kicker = Publisher(
@@ -478,7 +479,7 @@ class DE(metaclass=PublisherGroup):
             ),
             NewsMap("https://newsfeed.kicker.de/googlesitemapnews.xml"),
         ],
-        url_filter=regex_filter("/slideshow|/video"),
+        url_filter=regex_filter("/slideshow|/video|heute-live|live-konferenz|/bilder|/ticker"),
     )
 
     Krautreporter = Publisher(

@@ -66,4 +66,11 @@ Those attributes will be validated with unit tests when used.
         <td><code>bool</code></td>
         <td></td>
     </tr>
+    <tr>
+        <td>images</td>
+        <td>A list of `Images` - Fundus own datatype for image representation - included within the article. 
+        The `Images` include metadata like caption, authors, and position if available.</td>
+        <td><code>List[Image]</code></td>
+        <td><code>image_extraction</code></td>
+    </tr>
 </table>
