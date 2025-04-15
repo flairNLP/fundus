@@ -51,7 +51,7 @@ class MallorcaMagazinParser(ParserProxy):
         def images(self) -> List[Image]:
             return image_extraction(
                 doc=self.precomputed.doc,
-                image_selector=XPath("//figure//img | //div[@id='post-text']//img[@class='show-modal']"),
+                image_selector=XPath("//figure//img|//div[@id='post-text']//img[@class='show-modal']"),
                 paragraph_selector=self._paragraph_selector,
                 caption_selector=XPath(
                     "./ancestor::div[@class='col-sm-12']//p[@class='img-description'] | "
