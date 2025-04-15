@@ -200,6 +200,6 @@ You can alter this behavior by setting the `only_unique` parameter.
 ## Filter articles by language
 
 Finally, the `crawl()` method also allows you to filter articles by language.
-You can do so by passing a list of language codes to the method using the `language` parameter.
+You can do so by passing a list of 2 letter language codes ([ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes)) to the method using the `language_filter` parameter.
 
 In the [next section](5_advanced_topics) we will guide you through advanced topics as how to search through publishers in the `PublisherCollection` and how to deal with deprecated publishers.
