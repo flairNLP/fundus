@@ -1,5 +1,4 @@
 from datetime import datetime, timedelta
-from typing import Optional
 
 from dateutil.rrule import MONTHLY, rrule
 
