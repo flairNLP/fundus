@@ -49,7 +49,7 @@ from tqdm import tqdm
 from typing_extensions import ParamSpec, TypeAlias
 
 from fundus.logging import create_logger, get_current_config
-from fundus.publishers.base_objects import Publisher, PublisherGroup
+from fundus.publishers.base_objects import FilteredPublisher, Publisher, PublisherGroup
 from fundus.scraping.article import Article
 from fundus.scraping.delay import Delay
 from fundus.scraping.filter import ExtractionFilter, Requires, RequiresAll, URLFilter
@@ -210,7 +210,7 @@ def remove_query_parameters_from_url(url: str) -> str:
 
 class CrawlerBase(ABC):
     def __init__(self, *publishers: PublisherType):
-        self.publishers: List[Publisher] = list(set(more_itertools.collapse(publishers)))
+        self.publishers: List[Union[Publisher, FilteredPublisher]] = list(set(more_itertools.collapse(publishers)))
         if not self.publishers:
             raise ValueError("param <publishers> of <Crawler.__init__> must include at least one publisher.")
 
@@ -284,7 +284,7 @@ class CrawlerBase(ABC):
         response_cache: Set[str] = set()
 
         extraction_filter = build_extraction_filter()
-        fitting_publishers: List[Publisher] = []
+        fitting_publishers: List[Union[Publisher, FilteredPublisher]] = []
 
         if isinstance(extraction_filter, Requires):
             for publisher in self.publishers:
@@ -315,9 +315,12 @@ class CrawlerBase(ABC):
         else:
             fitting_publishers = self.publishers
 
-        publisher_language_filter: Set[str] = set()
+        # check if there are filtered publishers and if so, adopt their language restrictions
+        publisher_language_filter = set()
         for publisher in fitting_publishers:
-            publisher_language_filter = publisher_language_filter.union(publisher._language_filter)
+            if isinstance(publisher, FilteredPublisher):
+                publisher_language_filter.update(publisher.language_filter)
+
         if language_filter and publisher_language_filter:
             language_filter = list(set(language_filter).union(publisher_language_filter))
             logger.info(

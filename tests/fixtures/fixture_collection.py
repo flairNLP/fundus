@@ -111,4 +111,15 @@ def publisher_group_with_languages(parser_proxy_with_version):
             parser=parser_proxy_with_version,
         )
 
+        mixed = Publisher(
+            name="test_pub_mixed",
+            domain="https://test.com/",
+            sources=[
+                RSSFeed("https://test.com/test_feed", languages={"es", "pl"}),
+                NewsMap("https://test.com/test_newsmap", languages={"es"}),
+                Sitemap("https://test.com/test_sitemap", languages={"ind"}),
+            ],
+            parser=parser_proxy_with_version,
+        )
+
     return LangPubGroup
