@@ -4,11 +4,12 @@ from typing import List, Optional
 from lxml.cssselect import CSSSelector
 from lxml.etree import XPath
 
-from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute
+from fundus.parser import ArticleBody, BaseParser, Image, ParserProxy, attribute
 from fundus.parser.utility import (
     extract_article_body_with_selector,
     generic_author_parsing,
     generic_date_parsing,
+    image_extraction,
 )
 
 
@@ -63,3 +64,21 @@ class TheInterceptParser(ParserProxy):
         )
         _paragraph_selector = CSSSelector("div.entry-content > div.entry-content__content > p, blockquote > p")
         _subheadline_selector = CSSSelector("div.entry-content > div.entry-content__content > h2")
+
+        @attribute
+        def images(self) -> List[Image]:
+            return image_extraction(
+                doc=self.precomputed.doc,
+                paragraph_selector=self._paragraph_selector,
+                image_selector=XPath(
+                    "//img[(string-length(@alt) > 0 and not(contains(@class, 'attachment') or contains(@class, ':hidden'))) or @loading='eager']|//figure//img"
+                ),
+                caption_selector=XPath(
+                    "(./parent::article//div[contains(@class, 'image__caption')]/span[not(@class)])[1]|"
+                    "./ancestor::figure//figcaption/span[@class='photo__caption']"
+                ),
+                author_selector=XPath(
+                    "(./parent::article//div[contains(@class, 'image__caption')]/span)[last()]|"
+                    "./ancestor::figure//figcaption/span[@class='photo__credit']"
+                ),
+            )

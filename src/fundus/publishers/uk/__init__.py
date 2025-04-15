@@ -62,6 +62,7 @@ class UK(metaclass=PublisherGroup):
             Sitemap("https://www.telegraph.co.uk/sitemap.xml"),
             NewsMap("https://www.telegraph.co.uk/custom/daily-news/sitemap.xml"),
         ],
+        deprecated=True,
     )
 
     iNews = Publisher(

@@ -11,7 +11,7 @@ from typing_extensions import Self
 
 from fundus import PublisherCollection
 from fundus.parser import ArticleBody, BaseParser
-from fundus.parser.data import TextSequenceTree
+from fundus.parser.data import Image, TextSequenceTree
 from fundus.publishers.base_objects import Publisher, PublisherGroup
 from fundus.scraping.article import Article
 from fundus.scraping.html import HTML, SourceInfo
@@ -112,9 +112,12 @@ class ExtractionEncoder(json.JSONEncoder):
     def default(self, obj: object):
         if isinstance(obj, datetime.datetime):
             return str(obj)
-        if isinstance(obj, TextSequenceTree):
+        elif isinstance(obj, TextSequenceTree):
             return obj.serialize()
-        return json.JSONEncoder.default(self, obj)
+        elif isinstance(obj, Image):
+            return obj.serialize()
+        else:
+            return json.JSONEncoder.default(self, obj)
 
 
 class ExtractionDecoder(json.JSONDecoder):
@@ -122,6 +125,7 @@ class ExtractionDecoder(json.JSONDecoder):
         "crawl_date": datetime.datetime.fromisoformat,
         "publishing_date": datetime.datetime.fromisoformat,
         "body": ArticleBody.deserialize,
+        "images": lambda images: [Image.deserialize(image) for image in images],
     }
 
     def __init__(self, *args, **kwargs):

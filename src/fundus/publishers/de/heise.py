@@ -3,12 +3,13 @@ from typing import List, Optional
 
 from lxml.etree import XPath
 
-from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute
+from fundus.parser import ArticleBody, BaseParser, Image, ParserProxy, attribute
 from fundus.parser.utility import (
     extract_article_body_with_selector,
     generic_author_parsing,
     generic_date_parsing,
     generic_topic_parsing,
+    image_extraction,
 )
 
 
@@ -61,3 +62,30 @@ class HeiseParser(ParserProxy):
         @attribute
         def topics(self) -> List[str]:
             return generic_topic_parsing(self.precomputed.meta.get("keywords"))
+
+        @attribute
+        def images(self) -> List[Image]:
+            # There some (rare) cases there are some images that are not being extracted with this, because they are
+            # referenced by relative URLs. e.g.
+            # https://www.heise.de/hintergrund/Zahlen-bitte-136199-Eris-Der-Grund-warum-Pluto-kein-Planet-mehr-ist-9993800.html
+            return image_extraction(
+                doc=self.precomputed.doc,
+                paragraph_selector=self._paragraph_selector,
+                upper_boundary_selector=XPath(
+                    "//h1[@class='article-headline ' or contains(@class, 'a-article-header__title')]"
+                ),
+                image_selector=XPath(
+                    "//div[@class='article-image__gallery-container']//img|"
+                    "//div[@class='image-container']//img|"
+                    "//div[@class='article-layout__content']//figure[not(@class)]//noscript//img"
+                ),
+                caption_selector=XPath(
+                    "./ancestor::figure//p[@class='a-caption__text']|"
+                    "./ancestor::figure//div[@class='text']|"
+                    "./ancestor::div[@class='article-gallery ']//span[@class='caption']"
+                ),
+                author_selector=XPath(
+                    "./ancestor::figure//p[@class='a-caption__source']|"
+                    "./ancestor::div[@class='article-gallery ']//span[@class='copyright']"
+                ),
+            )

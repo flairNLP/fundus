@@ -4,19 +4,27 @@ from typing import Set
 from fundus.publishers.at import AT
 from fundus.publishers.au import AU
 from fundus.publishers.base_objects import Publisher, PublisherGroup
+from fundus.publishers.be import BE
 from fundus.publishers.ca import CA
 from fundus.publishers.ch import CH
 from fundus.publishers.cn import CN
+from fundus.publishers.cz import CZ
 from fundus.publishers.de import DE
+from fundus.publishers.dk import DK
 from fundus.publishers.es import ES
 from fundus.publishers.fr import FR
 from fundus.publishers.ind import IND
+from fundus.publishers.it import IT
 from fundus.publishers.jp import JP
 from fundus.publishers.lt import LT
 from fundus.publishers.my import MY
 from fundus.publishers.na import NA
 from fundus.publishers.no import NO
+from fundus.publishers.pl import PL
+from fundus.publishers.pt import PT
 from fundus.publishers.tr import TR
+from fundus.publishers.tw import TW
+from fundus.publishers.tz import TZ
 from fundus.publishers.uk import UK
 from fundus.publishers.us import US
 
@@ -62,10 +70,18 @@ class PublisherCollection(metaclass=PublisherCollectionMeta):
     ch = CH
     lt = LT
     cn = CN
+    cz = CZ
+    be = BE
     tr = TR
     my = MY
+    pt = PT
+    pl = PL
     ind = IND
     no = NO
     ca = CA
     es = ES
     jp = JP
+    it = IT
+    tw = TW
+    tz = TZ
+    dk = DK

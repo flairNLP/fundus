@@ -4,12 +4,13 @@ from typing import List, Optional
 from lxml.cssselect import CSSSelector
 from lxml.etree import XPath
 
-from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute
+from fundus.parser import ArticleBody, BaseParser, Image, ParserProxy, attribute
 from fundus.parser.utility import (
     extract_article_body_with_selector,
     generic_author_parsing,
     generic_date_parsing,
     generic_topic_parsing,
+    image_extraction,
 )
 
 
@@ -51,3 +52,13 @@ class HessenschauParser(ParserProxy):
         @attribute
         def topics(self) -> List[str]:
             return generic_topic_parsing(self.precomputed.meta.get("news_keywords"))
+
+        @attribute
+        def images(self) -> List[Image]:
+            return image_extraction(
+                doc=self.precomputed.doc,
+                paragraph_selector=self._paragraph_selector,
+                image_selector=XPath("//figure[not(@class='ar-1-1')]//*[not(self::noscript)]/img"),
+                caption_selector=XPath("./ancestor::figure//span[@class='pr-3']"),
+                author_selector=XPath("./ancestor::figure//span[@class='text-gray-scorpion dark:text-text-dark']"),
+            )

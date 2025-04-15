@@ -1,7 +1,7 @@
 from fundus.publishers.base_objects import Publisher, PublisherGroup
 from fundus.publishers.ind.bhaskar import BhaskarParser
 from fundus.publishers.ind.times_of_india import TimesOfIndiaParser
-from fundus.scraping.url import NewsMap, RSSFeed, Sitemap
+from fundus.scraping.url import NewsMap, RSSFeed
 
 
 class IND(metaclass=PublisherGroup):

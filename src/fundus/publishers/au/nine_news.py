@@ -3,11 +3,12 @@ from typing import List, Optional
 
 from lxml.etree import XPath
 
-from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute
+from fundus.parser import ArticleBody, BaseParser, Image, ParserProxy, attribute
 from fundus.parser.utility import (
     extract_article_body_with_selector,
     generic_author_parsing,
     generic_date_parsing,
+    image_extraction,
 )
 
 
@@ -43,3 +44,12 @@ class NineNewsParser(ParserProxy):
         @attribute
         def authors(self) -> List[str]:
             return generic_author_parsing(self.precomputed.ld.bf_search("author"))
+
+        @attribute
+        def images(self) -> List[Image]:
+            return image_extraction(
+                doc=self.precomputed.doc,
+                paragraph_selector=self._paragraph_selector,
+                caption_selector=XPath("./ancestor::figure//figcaption/text()[1]"),
+                author_selector=XPath("./ancestor::figure//figcaption/text()[last()]"),
+            )

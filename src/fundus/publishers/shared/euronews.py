@@ -2,8 +2,17 @@ from datetime import datetime
 from typing import List, Optional
 
 from lxml.cssselect import CSSSelector
+from lxml.etree import XPath
 
-from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute, utility
+from fundus.parser import (
+    ArticleBody,
+    BaseParser,
+    Image,
+    ParserProxy,
+    attribute,
+    utility,
+)
+from fundus.parser.utility import image_extraction
 
 
 class EuronewsParser(ParserProxy):
@@ -40,3 +49,23 @@ class EuronewsParser(ParserProxy):
         def topics(self) -> List[str]:
             keyword_string = self.precomputed.meta.get("keywords")
             return utility.generic_topic_parsing(keyword_string)
+
+        @attribute
+        def images(self) -> List[Image]:
+            return image_extraction(
+                doc=self.precomputed.doc,
+                paragraph_selector=self._paragraph_selector,
+                image_selector=XPath(
+                    "//img[contains(@class, 'c-article-media__img')" " or contains(@class, 'widgetImage__image')]"
+                ),
+                caption_selector=XPath(
+                    "./ancestor::div[contains(@class, 'c-article-image-video')]"
+                    "//div[contains(@class, 'c-article-caption__content')]|"
+                    "./ancestor::figure//span[@class='widget__captionText']"
+                ),
+                author_selector=XPath(
+                    "./ancestor::div[contains(@class, 'c-article-image-video')]"
+                    "//div[contains(@class, 'c-article-image-copyright')]|"
+                    "./ancestor::figure//span[@class='widget__captionCredit']"
+                ),
+            )

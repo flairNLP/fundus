@@ -76,6 +76,152 @@
         }
       ]
     },
+    "images": [
+      {
+        "versions": [
+          {
+            "url": "https://ichef.bbci.co.uk/news/240/cpsprodpb/20AB/production/_127036380_gettyimages-841304270-3.jpg.webp",
+            "query_width": null,
+            "size": {
+              "width": 240,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://ichef.bbci.co.uk/news/320/cpsprodpb/20AB/production/_127036380_gettyimages-841304270-3.jpg.webp",
+            "query_width": null,
+            "size": {
+              "width": 320,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://ichef.bbci.co.uk/news/480/cpsprodpb/20AB/production/_127036380_gettyimages-841304270-3.jpg.webp",
+            "query_width": null,
+            "size": {
+              "width": 480,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://ichef.bbci.co.uk/news/640/cpsprodpb/20AB/production/_127036380_gettyimages-841304270-3.jpg.webp",
+            "query_width": null,
+            "size": {
+              "width": 640,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://ichef.bbci.co.uk/news/800/cpsprodpb/20AB/production/_127036380_gettyimages-841304270-3.jpg.webp",
+            "query_width": null,
+            "size": {
+              "width": 800,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://ichef.bbci.co.uk/news/1024/cpsprodpb/20AB/production/_127036380_gettyimages-841304270-3.jpg.webp",
+            "query_width": null,
+            "size": {
+              "width": 1024,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://ichef.bbci.co.uk/news/1536/cpsprodpb/20AB/production/_127036380_gettyimages-841304270-3.jpg.webp",
+            "query_width": null,
+            "size": {
+              "width": 1536,
+              "height": 0
+            },
+            "type": "image/webp"
+          }
+        ],
+        "is_cover": true,
+        "description": "Getty Images City of London timelapse",
+        "caption": null,
+        "authors": [],
+        "position": 430
+      },
+      {
+        "versions": [
+          {
+            "url": "https://ichef.bbci.co.uk/news/240/cpsprodpb/11CDC/production/_132842927_1bb518b98e2fa3ebeaf1bcf8ee5371af9fb111cd.jpg.webp",
+            "query_width": null,
+            "size": {
+              "width": 240,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://ichef.bbci.co.uk/news/320/cpsprodpb/11CDC/production/_132842927_1bb518b98e2fa3ebeaf1bcf8ee5371af9fb111cd.jpg.webp",
+            "query_width": null,
+            "size": {
+              "width": 320,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://ichef.bbci.co.uk/news/480/cpsprodpb/11CDC/production/_132842927_1bb518b98e2fa3ebeaf1bcf8ee5371af9fb111cd.jpg.webp",
+            "query_width": null,
+            "size": {
+              "width": 480,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://ichef.bbci.co.uk/news/640/cpsprodpb/11CDC/production/_132842927_1bb518b98e2fa3ebeaf1bcf8ee5371af9fb111cd.jpg.webp",
+            "query_width": null,
+            "size": {
+              "width": 640,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://ichef.bbci.co.uk/news/800/cpsprodpb/11CDC/production/_132842927_1bb518b98e2fa3ebeaf1bcf8ee5371af9fb111cd.jpg.webp",
+            "query_width": null,
+            "size": {
+              "width": 800,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://ichef.bbci.co.uk/news/1024/cpsprodpb/11CDC/production/_132842927_1bb518b98e2fa3ebeaf1bcf8ee5371af9fb111cd.jpg.webp",
+            "query_width": null,
+            "size": {
+              "width": 1024,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://ichef.bbci.co.uk/news/1536/cpsprodpb/11CDC/production/_132842927_1bb518b98e2fa3ebeaf1bcf8ee5371af9fb111cd.jpg.webp",
+            "query_width": null,
+            "size": {
+              "width": 1536,
+              "height": 0
+            },
+            "type": "image/webp"
+          }
+        ],
+        "is_cover": false,
+        "description": "EPA Kwasi Kwarteng and Liz Truss",
+        "caption": null,
+        "authors": [],
+        "position": 507
+      }
+    ],
     "publishing_date": "2022-10-10 13:21:17+00:00",
     "title": "Office for Budget Responsibility: What is the OBR and what does it do?",
     "topics": [

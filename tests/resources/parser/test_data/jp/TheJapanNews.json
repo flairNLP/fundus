@@ -35,6 +35,25 @@
         }
       ]
     },
+    "images": [
+      {
+        "versions": [
+          {
+            "url": "https://japannews.yomiuri.co.jp/wp-content/uploads/2024/10/scanner-debate.jpg",
+            "query_width": null,
+            "size": null,
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": true,
+        "description": null,
+        "caption": "The leaders of seven political parties, including Liberal Democratic Party President Shigeru Ishiba, center, participate in a debate hosted by the Japan National Press Club in Tokyo on Saturday.",
+        "authors": [
+          "The Yomiuri Shimbun"
+        ],
+        "position": 593
+      }
+    ],
     "publishing_date": "2024-10-13 17:41:00+09:00",
     "title": "Japan Prime Minister Dodges Criticism During Leaders Debate; Takes Cautious Stance on Revising Japan-U.S. Pact",
     "topics": [

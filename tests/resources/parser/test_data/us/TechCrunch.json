@@ -1,4 +1,210 @@
 {
+  "V1_1": {
+    "authors": [
+      "Paul Sawers"
+    ],
+    "body": {
+      "summary": [
+        "Strava on Thursday announced a slew of new features and updates at its annual Camp Strava event, as the San Francisco-headquartered company doubles down on efforts to make its social fitness app stickier both for free and premium subscribers — with artificial intelligence (AI) playing a central role."
+      ],
+      "sections": [
+        {
+          "headline": [],
+          "paragraphs": [
+            "One of the perennial complaints emanating from the Strava community is that users sometimes cheat to attain lofty leaderboard positions on the app. Leaderboards are one of Strava’s core features, designed to stir competition by allowing users to challenge each other over predefined routes called “segments.” Cheating might involve something like using a motorbike or e-bike rather than a pedal bike to set a record, for instance.",
+            "Strava already has some mechanisms in place to let users manually flag dubious leaderboard activity, and last year, the company updated its algorithms to “make leaderboards more credible.” That included withholding activities that may have been incorrectly labeled (e.g., users tagging a run as a bike ride), or where faulty GPS data might be at play.",
+            "Now Strava says it will start using more sophisticated machine learning to detect “questionable” activities when they’re uploaded to the platform and automatically remove said activities. The company says it is doing so by training its algorithms on millions of historical activities to better understand what “normal” activity looks like.",
+            "Apparently, this is one of Strava’s most-requested features, with a quick glance at its fervent online community revealing various ideas on how to deal with the “digital doping” problem.",
+            "When pushed to provide more details on how this works, and how exactly it differs from its existing automated leaderboard integrity tooling, chief product officer Matt Salazar merely said that it’s a “step-change” in how Strava is using AI, machine learning, and other technologies to “close gaps.”",
+            "“Last year, the team implemented new logic rules to existing auto-flagging tools, and now, we are leveraging newer technologies to deliver one of our most requested features from athletes,” Salazar said in a statement issued to TechCrunch.",
+            "On a similar note, Strava on Thursday announced the private beta of a feature it’s calling “athlete intelligence,” which amounts to generative AI that analyzes user data to create summaries and guidance on their performance and fitness goals. This will be available to premium subscribers only.",
+            "Strava wouldn’t confirm whether the underlying engine is one of OpenAI’s GPT-X models or something else, but Salazar did say the company is currently experimenting with different technologies ahead of a broader rollout.",
+            "“We have several models and tools that we have looked at and currently applied a model that works for the beta,” Salazar said. “We’re continuing to evaluate what will provide the best result for our community.”",
+            "Strava is also introducing dark mode, which, according to data on the Strava Community Hub, is the app’s second most desired feature by number of votes.",
+            "This has been a long time coming, certainly compared to other popular apps — just last week, WhatsApp went so far as to launch an even “darker” dark mode.",
+            "Still, better late than never. Strava says it will introduce dark mode “later this summer,” with the ability to keep the app permanently in dark mode or configure it so that it matches the device settings. This will be available to both premium and free users when it launches."
+          ]
+        },
+        {
+          "headline": [
+            "It’s (not strictly) a family affair"
+          ],
+          "paragraphs": [
+            "Similar to other online subscription services such as Spotify, Strava is now throwing its weight behind what it calls a “family plan” to entice bulk sign-ups through subscription discounts and get more people using the platform. Up to four people, including the primary subscriber, can be included in one family plan.",
+            "But “family plan” is actually something of a misnomer here, as it doesn’t have to include actual family members or even anyone living at the same address. It can be anyone who lives in the same country.",
+            "“It will create more opportunities for Strava athletes to continue finding and experiencing motivation, and make it more cost-effective too,” Salazar said. “The great part of this new annual subscription is that you choose who is part of your family plan — it can be your friends, running crew or teammates.”",
+            "Playing liberally with the definition of “family” in this context does make sense, given that families won’t consume Strava in the same way as they might Netflix or Spotify. But the name of the plan might confuse some users in terms of who qualifies for coverage. Perhaps “group subscription plan” or something to that effect might make more sense.",
+            "At any rate, Strava is still a little cagey on the details, including how much this bulk discount will amount to (it does say the percentage savings will vary by country), how one goes about sharing their subscription, and what happens in the event of a “family” fallout — can one member of a group easily keep their own account and data, for example?",
+            "The new plan will kick off in “select countries” this summer, starting with Australia and Canada, with a broader international rollout following later in the year.",
+            "These announcements come at a turbulent time for Strava. Co-founder Michael Horvath recently stepped down from the CEO position for the second time and was replaced in January by former YouTube executive Michael Martin. The company also last month procured a new chief technology officer (CTO) alongside Salazar, who left Epic Games to join Strava as chief product officer.",
+            "The news also follows a year after Strava introduced a new premium pricing structure that drew considerable criticism over its lack of transparency.",
+            "However, it’s clear that Strava is trying to bolster its value proposition for users, borrowing some tried-and-true tricks from the wider social networking sphere. The importance of Strava’s social positioning can’t be understated in terms of differentiating it from other data-centric fitness tracking services such as Apple Fitness or Garmin. This is why Strava rolled out in-app messaging last year, intended to foster communities that exist entirely within Strava without having to rely on third-party messaging apps like WhatsApp to organize events and outings.",
+            "These new updates build on that, mixing free features that everyone gets with premium features for power users."
+          ]
+        },
+        {
+          "headline": [
+            "Demographics"
+          ],
+          "paragraphs": [
+            "One way Strava can entice new users is by broadening its appeal to different demographics. It’s doing just that with an upcoming new feature that builds on its existing global heatmaps feature, which highlights the most well-trodden running, riding, and walking routes.",
+            "Taking things a step further, “night heatmaps,” when it launches later this year, will focus specifically on activities that happen between sundown and sunrise, which might be useful for those concerned about going out for a walk or a jog in less-trafficked areas. This, Strava hopes, will help encourage more women to start using the platform, though in reality it will appeal to anyone wishing to avoid quieter places in the wee hours.",
+            "“Studies show that women of all ages participate in sports at a far lower rate than men, and overall, despite wanting to be active, find less time to dedicate to an active lifestyle,” Strava wrote in a blog post accompanying the announcements. “As the company continues on its mission to motivate people to live their best active lives, building for women on the platform will ultimately serve everyone in the Strava community.”",
+            "On top of that, not everyone wants to share all their activity data with everyone all the time. Thus, Strava said it will launch a new “quick edit” feature that lets users more easily conceal certain metrics from their workout stats, the type of activity they did, their location, and more.",
+            "While “quick edit” will be free, Strava says that night heatmaps will be a premium feature, meaning that anyone wanting to see what the safest routes are after dark will have to pony up $12/month or $80/year to access this.",
+            "Strava wouldn’t confirm how many of its 125 million members are active users, or what the gender split is. But the company previously reported that women are “23% less likely than men to record any type of activity pre-sunrise, and 8% less likely to do so post-sunset.”",
+            "But Salazar said that certain demographics are showing signs of growth on the platform.",
+            "“Whilst we don’t provide exact details on the Strava community as a whole, what we can share is that globally and in the U.S., our user-demographic of Gen Z women has experienced great growth, taking it to twice that of what it was at this time last year,” he said."
+          ]
+        }
+      ]
+    },
+    "images": [
+      {
+        "versions": [
+          {
+            "url": "https://techcrunch.com/wp-content/uploads/2024/05/Dark-Mode-AI-e1715708581580.png?w=1024",
+            "query_width": null,
+            "size": {
+              "width": 1024,
+              "height": 576
+            },
+            "type": "image/png"
+          }
+        ],
+        "is_cover": true,
+        "description": "Strava dark mode and AI summaries",
+        "caption": null,
+        "authors": [
+          "Strava"
+        ],
+        "position": 225
+      },
+      {
+        "versions": [
+          {
+            "url": "https://techcrunch.com/wp-content/uploads/2024/05/Leaderboard.gif?w=680",
+            "query_width": null,
+            "size": {
+              "width": 763,
+              "height": 488
+            },
+            "type": null
+          }
+        ],
+        "is_cover": false,
+        "description": "Strava: Leaderboard integrity powered by AI",
+        "caption": "Strava: Leaderboard integrity powered by AI",
+        "authors": [
+          "Strava"
+        ],
+        "position": 246
+      },
+      {
+        "versions": [
+          {
+            "url": "https://techcrunch.com/wp-content/uploads/2024/05/Athlete-Intelligence-e1715702899261.png?w=680",
+            "query_width": null,
+            "size": {
+              "width": 1576,
+              "height": 1008
+            },
+            "type": "image/png"
+          }
+        ],
+        "is_cover": false,
+        "description": "Strava's \"athlete intelligence\"",
+        "caption": "Strava’s “athlete intelligence.”",
+        "authors": [
+          "Strava"
+        ],
+        "position": 266
+      },
+      {
+        "versions": [
+          {
+            "url": "https://techcrunch.com/wp-content/uploads/2024/05/Dark-Mode-e1715703052788.png?w=680",
+            "query_width": null,
+            "size": {
+              "width": 1562,
+              "height": 998
+            },
+            "type": "image/png"
+          }
+        ],
+        "is_cover": false,
+        "description": "Strava's new dark mode",
+        "caption": "Strava’s new dark mode.",
+        "authors": [
+          "Strava"
+        ],
+        "position": 281
+      },
+      {
+        "versions": [
+          {
+            "url": "https://techcrunch.com/wp-content/uploads/2024/05/FamilyPlan-Press-Hero_-ratio_-5_2_1a.png?resize=150,86",
+            "query_width": null,
+            "size": {
+              "width": 150,
+              "height": 86
+            },
+            "type": "image/png"
+          },
+          {
+            "url": "https://techcrunch.com/wp-content/uploads/2024/05/FamilyPlan-Press-Hero_-ratio_-5_2_1a.png?resize=300,172",
+            "query_width": null,
+            "size": {
+              "width": 300,
+              "height": 172
+            },
+            "type": "image/png"
+          },
+          {
+            "url": "https://techcrunch.com/wp-content/uploads/2024/05/FamilyPlan-Press-Hero_-ratio_-5_2_1a.png?resize=680,389",
+            "query_width": null,
+            "size": {
+              "width": 680,
+              "height": 389
+            },
+            "type": "image/png"
+          },
+          {
+            "url": "https://techcrunch.com/wp-content/uploads/2024/05/FamilyPlan-Press-Hero_-ratio_-5_2_1a.png?resize=768,439",
+            "query_width": null,
+            "size": {
+              "width": 768,
+              "height": 439
+            },
+            "type": "image/png"
+          },
+          {
+            "url": "https://techcrunch.com/wp-content/uploads/2024/05/FamilyPlan-Press-Hero_-ratio_-5_2_1a.png",
+            "query_width": null,
+            "size": {
+              "width": 1016,
+              "height": 581
+            },
+            "type": "image/png"
+          }
+        ],
+        "is_cover": false,
+        "description": "Strava family plan",
+        "caption": "Strava family plan.",
+        "authors": [
+          "Strava"
+        ],
+        "position": 297
+      }
+    ],
+    "publishing_date": "2024-05-16 18:00:00+00:00",
+    "title": "Strava taps AI to weed out leaderboard cheats, unveils 'family' plan, dark mode and more",
+    "topics": [
+      "Dark Mode",
+      "leaderboards",
+      "Strava"
+    ]
+  },
   "V1": {
     "authors": [
       "Kyle Wiggers"
@@ -71,74 +277,6 @@
       "Generative AI",
       "robotic process automation",
       "RPA"
-    ]
-  },
-  "V1_1": {
-    "authors": [
-      "Paul Sawers"
-    ],
-    "body": {
-      "summary": [
-        "Strava on Thursday announced a slew of new features and updates at its annual Camp Strava event, as the San Francisco-headquartered company doubles down on efforts to make its social fitness app stickier both for free and premium subscribers — with artificial intelligence (AI) playing a central role."
-      ],
-      "sections": [
-        {
-          "headline": [],
-          "paragraphs": [
-            "One of the perennial complaints emanating from the Strava community is that users sometimes cheat to attain lofty leaderboard positions on the app. Leaderboards are one of Strava’s core features, designed to stir competition by allowing users to challenge each other over predefined routes called “segments.” Cheating might involve something like using a motorbike or e-bike rather than a pedal bike to set a record, for instance.",
-            "Strava already has some mechanisms in place to let users manually flag dubious leaderboard activity, and last year, the company updated its algorithms to “make leaderboards more credible.” That included withholding activities that may have been incorrectly labeled (e.g., users tagging a run as a bike ride), or where faulty GPS data might be at play.",
-            "Now Strava says it will start using more sophisticated machine learning to detect “questionable” activities when they’re uploaded to the platform and automatically remove said activities. The company says it is doing so by training its algorithms on millions of historical activities to better understand what “normal” activity looks like.",
-            "Apparently, this is one of Strava’s most-requested features, with a quick glance at its fervent online community revealing various ideas on how to deal with the “digital doping” problem.",
-            "When pushed to provide more details on how this works, and how exactly it differs from its existing automated leaderboard integrity tooling, chief product officer Matt Salazar merely said that it’s a “step-change” in how Strava is using AI, machine learning, and other technologies to “close gaps.”",
-            "“Last year, the team implemented new logic rules to existing auto-flagging tools, and now, we are leveraging newer technologies to deliver one of our most requested features from athletes,” Salazar said in a statement issued to TechCrunch.",
-            "On a similar note, Strava on Thursday announced the private beta of a feature it’s calling “athlete intelligence,” which amounts to generative AI that analyzes user data to create summaries and guidance on their performance and fitness goals. This will be available to premium subscribers only.",
-            "Strava wouldn’t confirm whether the underlying engine is one of OpenAI’s GPT-X models or something else, but Salazar did say the company is currently experimenting with different technologies ahead of a broader rollout.",
-            "“We have several models and tools that we have looked at and currently applied a model that works for the beta,” Salazar said. “We’re continuing to evaluate what will provide the best result for our community.”",
-            "Strava is also introducing dark mode, which, according to data on the Strava Community Hub, is the app’s second most desired feature by number of votes.",
-            "This has been a long time coming, certainly compared to other popular apps — just last week, WhatsApp went so far as to launch an even “darker” dark mode.",
-            "Still, better late than never. Strava says it will introduce dark mode “later this summer,” with the ability to keep the app permanently in dark mode or configure it so that it matches the device settings. This will be available to both premium and free users when it launches."
-          ]
-        },
-        {
-          "headline": [
-            "It’s (not strictly) a family affair"
-          ],
-          "paragraphs": [
-            "Similar to other online subscription services such as Spotify, Strava is now throwing its weight behind what it calls a “family plan” to entice bulk sign-ups through subscription discounts and get more people using the platform. Up to four people, including the primary subscriber, can be included in one family plan.",
-            "But “family plan” is actually something of a misnomer here, as it doesn’t have to include actual family members or even anyone living at the same address. It can be anyone who lives in the same country.",
-            "“It will create more opportunities for Strava athletes to continue finding and experiencing motivation, and make it more cost-effective too,” Salazar said. “The great part of this new annual subscription is that you choose who is part of your family plan — it can be your friends, running crew or teammates.”",
-            "Playing liberally with the definition of “family” in this context does make sense, given that families won’t consume Strava in the same way as they might Netflix or Spotify. But the name of the plan might confuse some users in terms of who qualifies for coverage. Perhaps “group subscription plan” or something to that effect might make more sense.",
-            "At any rate, Strava is still a little cagey on the details, including how much this bulk discount will amount to (it does say the percentage savings will vary by country), how one goes about sharing their subscription, and what happens in the event of a “family” fallout — can one member of a group easily keep their own account and data, for example?",
-            "The new plan will kick off in “select countries” this summer, starting with Australia and Canada, with a broader international rollout following later in the year.",
-            "These announcements come at a turbulent time for Strava. Co-founder Michael Horvath recently stepped down from the CEO position for the second time and was replaced in January by former YouTube executive Michael Martin. The company also last month procured a new chief technology officer (CTO) alongside Salazar, who left Epic Games to join Strava as chief product officer.",
-            "The news also follows a year after Strava introduced a new premium pricing structure that drew considerable criticism over its lack of transparency.",
-            "However, it’s clear that Strava is trying to bolster its value proposition for users, borrowing some tried-and-true tricks from the wider social networking sphere. The importance of Strava’s social positioning can’t be understated in terms of differentiating it from other data-centric fitness tracking services such as Apple Fitness or Garmin. This is why Strava rolled out in-app messaging last year, intended to foster communities that exist entirely within Strava without having to rely on third-party messaging apps like WhatsApp to organize events and outings.",
-            "These new updates build on that, mixing free features that everyone gets with premium features for power users."
-          ]
-        },
-        {
-          "headline": [
-            "Demographics"
-          ],
-          "paragraphs": [
-            "One way Strava can entice new users is by broadening its appeal to different demographics. It’s doing just that with an upcoming new feature that builds on its existing global heatmaps feature, which highlights the most well-trodden running, riding, and walking routes.",
-            "Taking things a step further, “night heatmaps,” when it launches later this year, will focus specifically on activities that happen between sundown and sunrise, which might be useful for those concerned about going out for a walk or a jog in less-trafficked areas. This, Strava hopes, will help encourage more women to start using the platform, though in reality it will appeal to anyone wishing to avoid quieter places in the wee hours.",
-            "“Studies show that women of all ages participate in sports at a far lower rate than men, and overall, despite wanting to be active, find less time to dedicate to an active lifestyle,” Strava wrote in a blog post accompanying the announcements. “As the company continues on its mission to motivate people to live their best active lives, building for women on the platform will ultimately serve everyone in the Strava community.”",
-            "On top of that, not everyone wants to share all their activity data with everyone all the time. Thus, Strava said it will launch a new “quick edit” feature that lets users more easily conceal certain metrics from their workout stats, the type of activity they did, their location, and more.",
-            "While “quick edit” will be free, Strava says that night heatmaps will be a premium feature, meaning that anyone wanting to see what the safest routes are after dark will have to pony up $12/month or $80/year to access this.",
-            "Strava wouldn’t confirm how many of its 125 million members are active users, or what the gender split is. But the company previously reported that women are “23% less likely than men to record any type of activity pre-sunrise, and 8% less likely to do so post-sunset.”",
-            "But Salazar said that certain demographics are showing signs of growth on the platform.",
-            "“Whilst we don’t provide exact details on the Strava community as a whole, what we can share is that globally and in the U.S., our user-demographic of Gen Z women has experienced great growth, taking it to twice that of what it was at this time last year,” he said."
-          ]
-        }
-      ]
-    },
-    "publishing_date": "2024-05-16 18:00:00+00:00",
-    "title": "Strava taps AI to weed out leaderboard cheats, unveils 'family' plan, dark mode and more",
-    "topics": [
-      "Dark Mode",
-      "leaderboards",
-      "Strava"
     ]
   }
 }

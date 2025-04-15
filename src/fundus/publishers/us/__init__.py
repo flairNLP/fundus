@@ -97,12 +97,23 @@ class US(metaclass=PublisherGroup):
         name="Fox News",
         domain="https://www.foxnews.com/",
         parser=FoxNewsParser,
+        url_filter=regex_filter(r"\/video\/"),
         sources=[
             Sitemap(
                 "https://www.foxnews.com/sitemap.xml",
                 sitemap_filter=inverse(regex_filter("type=articles")),
             ),
             NewsMap("https://www.foxnews.com/sitemap.xml?type=news"),
+            RSSFeed("https://moxie.foxnews.com/google-publisher/latest.xml"),
+            RSSFeed("https://moxie.foxnews.com/google-publisher/world.xml"),
+            RSSFeed("https://moxie.foxnews.com/google-publisher/politics.xml"),
+            RSSFeed("https://moxie.foxnews.com/google-publisher/us.xml"),
+            RSSFeed("https://moxie.foxnews.com/google-publisher/world.xml"),
+            RSSFeed("https://moxie.foxnews.com/google-publisher/travel.xml"),
+            RSSFeed("https://moxie.foxnews.com/google-publisher/opinion.xml"),
+            RSSFeed("https://moxie.foxnews.com/google-publisher/tech.xml"),
+            RSSFeed("https://moxie.foxnews.com/google-publisher/science.xml"),
+            RSSFeed("https://moxie.foxnews.com/google-publisher/health.xml"),
         ],
     )
 
@@ -243,8 +254,8 @@ class US(metaclass=PublisherGroup):
         name="Voice Of America",
         domain="https://www.voanews.com/",
         parser=VOAParser,
+        url_filter=inverse(regex_filter(r"voanews\.com\/a\/[a-z-]+\/[0-9]+\.html")),
         sources=[
-            NewsMap("https://www.voanews.com/sitemap_415_news.xml.gz"),
             Sitemap(
                 "https://www.voanews.com/sitemap.xml",
                 sitemap_filter=inverse(regex_filter(r"sitemap_[\d_]*\.xml\.gz")),

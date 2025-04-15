@@ -6,11 +6,12 @@ Note that this script does not check the attributes' correctness, only their pre
 """
 import sys
 import traceback
-from typing import List, Optional
+from typing import Any, Callable, List, Optional, Union
 
 from fundus import Crawler, PublisherCollection
 from fundus.publishers.base_objects import Publisher, PublisherGroup
 from fundus.scraping.article import Article
+from fundus.scraping.session import socket_timeout
 
 
 def main() -> None:
@@ -21,67 +22,83 @@ def main() -> None:
         PublisherCollection.get_subgroup_mapping().values(), key=lambda region: region.__name__
     )
 
-    for publisher_region in publisher_regions:
-        print(f"{publisher_region.__name__:-^50}")
+    # interrupts running network connections after <timeout_in_seconds>
+    with socket_timeout(timeout_in_seconds):
+        for publisher_region in publisher_regions:
+            print(f"{publisher_region.__name__:-^50}")
 
-        publisher: Publisher
-        for publisher in sorted(publisher_region, key=lambda p: p.name):
-            publisher_name: str = publisher.name
+            publisher: Publisher
+            for publisher in sorted(publisher_region, key=lambda p: p.name):
+                publisher_name: str = publisher.name
 
-            if not any(publisher.source_mapping.values()):
-                # skip publishers providing no sources for forward crawling
-                print(f"⏩  SKIPPED: {publisher_name!r} - No sources defined")
-                continue
-            if publisher.deprecated:  # type: ignore[attr-defined]
-                print(f"⏩  SKIPPED: {publisher_name!r} - Deprecated")
-                continue
-            crawler: Crawler = Crawler(publisher, delay=0.4, ignore_robots=True)
+                if not any(publisher.source_mapping.values()):
+                    # skip publishers providing no sources for forward crawling
+                    print(f"⏩  SKIPPED: {publisher_name!r} - No sources defined")
+                    continue
+                if publisher.deprecated:  # type: ignore[attr-defined]
+                    print(f"⏩  SKIPPED: {publisher_name!r} - Deprecated")
+                    continue
+                crawler: Crawler = Crawler(publisher, delay=0.4, ignore_robots=True)
 
-            complete_article: Optional[Article] = next(
-                crawler.crawl(
-                    max_articles=1, timeout=timeout_in_seconds, only_complete=True, error_handling="suppress"
-                ),
-                None,
-            )
-
-            if complete_article is None:
-                incomplete_article: Optional[Article] = next(
+                complete_article: Optional[Article] = next(
                     crawler.crawl(
-                        max_articles=1, timeout=timeout_in_seconds, only_complete=False, error_handling="catch"
+                        max_articles=1, timeout=timeout_in_seconds, only_complete=True, error_handling="suppress"
                     ),
                     None,
                 )
 
-                if incomplete_article is None:
-                    print(f"❌ FAILED: {publisher_name!r} - No articles received")
-
-                elif incomplete_article.exception is not None:
-                    print(
-                        f"❌ FAILED: {publisher_name!r} - Encountered exception during crawling "
-                        f"(URL: {incomplete_article.html.requested_url})"
-                    )
-                    traceback.print_exception(
-                        etype=type(incomplete_article.exception),
-                        value=incomplete_article.exception,
-                        tb=incomplete_article.exception.__traceback__,
-                        file=sys.stdout,
+                if complete_article is None:
+                    incomplete_article: Optional[Article] = next(
+                        crawler.crawl(
+                            max_articles=1, timeout=timeout_in_seconds, only_complete=False, error_handling="catch"
+                        ),
+                        None,
                     )
 
-                else:
-                    print(
-                        f"❌ FAILED: {publisher_name!r} - No complete articles received "
-                        f"(URL of an incomplete article: {incomplete_article.html.requested_url}) with attributes:\n"
-                        f"title: {incomplete_article.title is not None}\n"
-                        f"plaintext: {bool(incomplete_article.body)}\n"
-                        f"publishing_date: {incomplete_article.publishing_date is not None}\n"
-                        f"authors: {incomplete_article.authors is not None and not len(incomplete_article.authors) == 0}\n"
-                        f"topics: {incomplete_article.topics is not None and not len(incomplete_article.topics) == 0}\n"
-                    )
-                failed += 1
-                continue
+                    if incomplete_article is None:
+                        print(f"❌ FAILED: {publisher_name!r} - No articles received")
 
-            print(f"✔️ PASSED: {publisher_name!r}")
-        print()
+                    elif incomplete_article.exception is not None:
+                        print(
+                            f"❌ FAILED: {publisher_name!r} - Encountered exception during crawling "
+                            f"(URL: {incomplete_article.html.requested_url})"
+                        )
+                        traceback.print_exception(
+                            etype=type(incomplete_article.exception),
+                            value=incomplete_article.exception,
+                            tb=incomplete_article.exception.__traceback__,
+                            file=sys.stdout,
+                        )
+
+                    else:
+
+                        def guard(field, fnc: Callable[[Any], bool] = lambda x: x is not None) -> Union[bool, str]:
+                            """Makes a boolean evaluation of <field> based on <fnc> and guards exceptions
+
+                            Args:
+                                field: The article field to evaluate
+                                fnc:  The evaluation function
+
+                            Returns:
+                                Either True, False or Exception if isinstance(field, Exception) = True
+                            """
+                            return fnc(field) if not isinstance(field, Exception) else repr(field)
+
+                        print(
+                            f"❌ FAILED: {publisher_name!r} - No complete articles received "
+                            f"(URL of an incomplete article: {incomplete_article.html.requested_url}) with attributes:\n"
+                            f"title: {guard(incomplete_article.title)}\n"
+                            f"plaintext: {guard(incomplete_article.body, bool)}\n"
+                            f"publishing_date: {guard(incomplete_article.publishing_date)}\n"
+                            f"authors: {guard(incomplete_article.authors, bool)}\n"
+                            f"topics: {guard(incomplete_article.topics, bool)}\n"
+                            f"images: {guard(incomplete_article.images, bool)}\n"
+                        )
+                    failed += 1
+                    continue
+
+                print(f"✔️ PASSED: {publisher_name!r}")
+            print()
 
     total_publishers: int = len(PublisherCollection)
     pass_ratio: str = f"{total_publishers - failed}/{total_publishers}"

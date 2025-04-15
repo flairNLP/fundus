@@ -7,7 +7,7 @@ import lxml.html
 from colorama import Fore, Style
 
 from fundus.logging import create_logger
-from fundus.parser import ArticleBody
+from fundus.parser import ArticleBody, Image
 from fundus.scraping.html import HTML
 from fundus.utils.serialization import JSONVal, is_jsonable
 
@@ -50,7 +50,7 @@ class Article:
 
     @property
     def authors(self) -> List[str]:
-        return self.__extraction__.get("authors") or []
+        return self.__extraction__.get("authors", [])
 
     @property
     def publishing_date(self) -> Optional[datetime]:
@@ -58,11 +58,15 @@ class Article:
 
     @property
     def topics(self) -> List[str]:
-        return self.__extraction__.get("topics") or []
+        return self.__extraction__.get("topics", [])
 
     @property
     def free_access(self) -> bool:
-        return self.__extraction__.get("free_access") or False
+        return self.__extraction__.get("free_access", False)
+
+    @property
+    def images(self) -> List[Image]:
+        return self.__extraction__.get("images", [])
 
     @property
     def publisher(self) -> str:
@@ -124,20 +128,25 @@ class Article:
         if not attributes:
             attributes = tuple(set(self.__extraction__.keys()) - {"meta", "ld"})
 
-        serialization = {}
+        def serialize(v: Any) -> JSONVal:
+            if hasattr(v, "serialize"):
+                return v.serialize()  # type: ignore[no-any-return]
+            elif isinstance(v, datetime):
+                return str(v)
+            elif not is_jsonable(v):
+                raise TypeError(f"Attribute {attribute!r} of type {type(v)!r} is not JSON serializable")
+            return v  # type: ignore[no-any-return]
+
+        serialization: Dict[str, JSONVal] = {}
         for attribute in attributes:
             if not hasattr(self, attribute):
                 continue
             value = getattr(self, attribute)
 
-            if hasattr(value, "serialize"):
-                value = value.serialize()
-            elif isinstance(value, datetime):
-                value = str(value)
-            elif not is_jsonable(value):
-                raise TypeError(f"Attribute {attribute!r} of type {type(value)!r} is not JSON serializable")
-
-            serialization[attribute] = value
+            if isinstance(value, list):
+                serialization[attribute] = [serialize(item) for item in value]
+            else:
+                serialization[attribute] = serialize(value)
 
         return serialization
 
@@ -153,8 +162,12 @@ class Article:
             f"{Fore.RED}--missing plaintext--{Style.RESET_ALL}" if self.plaintext is None else self.plaintext.strip()
         )
 
+        image_text = (
+            f" including {len(self.images)} image(s)" if self.images and not isinstance(self.images, Exception) else ""
+        )
+
         text = (
-            f"Fundus-Article:"
+            f"Fundus-Article{image_text}:"
             f'\n- Title: "{wrapped_title}"'
             f'\n- Text:  "{wrapped_plaintext}"'
             f"\n- URL:    {self.html.requested_url}"
