@@ -1,7 +1,7 @@
 import pytest
 
 from fundus import PublisherCollection
-from fundus.publishers import Publisher, PublisherGroup
+from fundus.publishers import PublisherGroup
 
 
 @pytest.mark.parametrize(
