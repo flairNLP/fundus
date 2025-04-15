@@ -547,8 +547,8 @@
         </a>
       </td>
       <td>
-        <code>de</code>
         <code>en</code>
+        <code>de</code>
       </td>
       <td>
         <code>images</code>
@@ -1866,8 +1866,8 @@
         </a>
       </td>
       <td>
-        <code>kj</code>
         <code>en</code>
+        <code>kj</code>
       </td>
       <td>
         <code>topics</code>
@@ -2495,8 +2495,8 @@
         </a>
       </td>
       <td>
-        <code>es</code>
         <code>en</code>
+        <code>es</code>
       </td>
       <td>&#160;</td>
       <td>&#160;</td>
