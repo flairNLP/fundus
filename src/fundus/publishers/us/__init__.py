@@ -24,6 +24,8 @@ from .world_truth import WorldTruthParser
 
 
 class US(metaclass=PublisherGroup):
+    default_language = "en"
+
     APNews = Publisher(
         name="Associated Press News",
         domain="https://apnews.com/",
@@ -33,8 +35,9 @@ class US(metaclass=PublisherGroup):
                 "https://apnews.com/sitemap.xml",
                 sitemap_filter=regex_filter("apnews.com/hub/|apnews.com/video/"),
                 reverse=True,
+                languages={"en", "es"},
             ),
-            NewsMap("https://apnews.com/news-sitemap-content.xml"),
+            NewsMap("https://apnews.com/news-sitemap-content.xml", languages={"en", "es"}),
         ],
     )
 
@@ -42,7 +45,10 @@ class US(metaclass=PublisherGroup):
         name="CNBC",
         domain="https://www.cnbc.com/",
         parser=CNBCParser,
-        sources=[Sitemap("https://www.cnbc.com/sitemapAll.xml"), NewsMap("https://www.cnbc.com/sitemap_news.xml")],
+        sources=[
+            Sitemap("https://www.cnbc.com/sitemapAll.xml"),
+            NewsMap("https://www.cnbc.com/sitemap_news.xml"),
+        ],
     )
 
     TechCrunch = Publisher(
@@ -93,7 +99,10 @@ class US(metaclass=PublisherGroup):
         parser=FoxNewsParser,
         url_filter=regex_filter(r"\/video\/"),
         sources=[
-            Sitemap("https://www.foxnews.com/sitemap.xml", sitemap_filter=inverse(regex_filter("type=articles"))),
+            Sitemap(
+                "https://www.foxnews.com/sitemap.xml",
+                sitemap_filter=inverse(regex_filter("type=articles")),
+            ),
             NewsMap("https://www.foxnews.com/sitemap.xml?type=news"),
             RSSFeed("https://moxie.foxnews.com/google-publisher/latest.xml"),
             RSSFeed("https://moxie.foxnews.com/google-publisher/world.xml"),
@@ -201,7 +210,8 @@ class US(metaclass=PublisherGroup):
         parser=OccupyDemocratsParser,
         sources=[
             Sitemap(
-                url="https://occupydemocrats.com/sitemap.xml", sitemap_filter=inverse(regex_filter(r"post-sitemap"))
+                url="https://occupydemocrats.com/sitemap.xml",
+                sitemap_filter=inverse(regex_filter(r"post-sitemap")),
             )
         ],
         deprecated=True,
@@ -211,7 +221,10 @@ class US(metaclass=PublisherGroup):
         name="Los Angeles Times",
         domain="https://www.latimes.com/",
         parser=LATimesParser,
-        sources=[Sitemap("https://www.latimes.com/sitemap.xml"), NewsMap("https://www.latimes.com/news-sitemap.xml")],
+        sources=[
+            Sitemap("https://www.latimes.com/sitemap.xml"),
+            NewsMap("https://www.latimes.com/news-sitemap.xml"),
+        ],
     )
 
     BusinessInsider = Publisher(
@@ -244,7 +257,8 @@ class US(metaclass=PublisherGroup):
         url_filter=inverse(regex_filter(r"voanews\.com\/a\/[a-z-]+\/[0-9]+\.html")),
         sources=[
             Sitemap(
-                "https://www.voanews.com/sitemap.xml", sitemap_filter=inverse(regex_filter(r"sitemap_[\d_]*\.xml\.gz"))
+                "https://www.voanews.com/sitemap.xml",
+                sitemap_filter=inverse(regex_filter(r"sitemap_[\d_]*\.xml\.gz")),
             ),
         ],
     )

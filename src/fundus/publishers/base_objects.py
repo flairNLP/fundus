@@ -1,9 +1,12 @@
-import inspect
+from collections import defaultdict
 from textwrap import indent
-from typing import Dict, Iterator, List, Optional, Type, Union
+from typing import Dict, Iterator, List, Optional, Set, Type, Union
 from urllib.robotparser import RobotFileParser
+from warnings import warn
 
+import more_itertools
 from requests.exceptions import ConnectionError, HTTPError, ReadTimeout
+from typing_extensions import TypeAlias
 
 from fundus.logging import create_logger
 from fundus.parser.base_parser import ParserProxy
@@ -13,6 +16,8 @@ from fundus.scraping.url import NewsMap, RSSFeed, Sitemap, URLSource
 from fundus.utils.iteration import iterate_all_subclasses
 
 logger = create_logger(__name__)
+
+FilterResult: TypeAlias = Union[List["FilteredPublisher"], List["Publisher"]]
 
 
 class CustomRobotFileParser(RobotFileParser):
@@ -64,6 +69,12 @@ class Publisher:
     __name__: str
     __group__: "PublisherGroup"
 
+    __SOURCE_ORDER__: Dict[Type[URLSource], int] = {
+        RSSFeed: 1,
+        NewsMap: 2,
+        Sitemap: 3,
+    }
+
     def __init__(
         self,
         name: str,
@@ -100,11 +111,8 @@ class Publisher:
         self.robots = Robots(self.domain + "robots.txt" if self.domain.endswith("/") else self.domain + "/robots.txt")
         # we define the dict here manually instead of using default dict so that we can control
         # the order in which sources are proceeded.
-        source_mapping: Dict[Type[URLSource], List[URLSource]] = {
-            RSSFeed: [],
-            NewsMap: [],
-            Sitemap: [],
-        }
+
+        source_mapping: Dict[Type[URLSource], List[URLSource]] = defaultdict(list)
 
         for url_source in sources:
             if not isinstance(url_source, URLSource):
@@ -114,7 +122,19 @@ class Publisher:
                 )
             source_mapping[type(url_source)].append(url_source)
 
-        self.source_mapping = source_mapping
+        self._source_mapping = dict(sorted(source_mapping.items(), key=lambda item: self.__SOURCE_ORDER__[item[0]]))
+
+    @property
+    def source_mapping(self) -> Dict[Type[URLSource], List[URLSource]]:
+        return self._source_mapping
+
+    @property
+    def languages(self) -> Set[str]:
+        return set.union(*(source.languages for sources in self.source_mapping.values() for source in sources))
+
+    @property
+    def source_types(self) -> Set[Type[URLSource]]:
+        return set(self.source_mapping.keys())
 
     def __str__(self) -> str:
         return f"{self.name}"
@@ -135,16 +155,72 @@ class Publisher:
             and self.request_header == other.request_header
         )
 
-    def supports(self, source_types: List[Type[URLSource]]) -> bool:
-        if not source_types:
-            raise ValueError(f"Got empty value '{source_types}' for parameter <source_types>.")
-        for source_type in source_types:
-            if not inspect.isclass(source_type) or not issubclass(source_type, URLSource):
-                raise TypeError(
-                    f"Got unexpected type {source_type!r}. "
-                    f"Allowed are {', '.join(repr(self.__name__) for self in iterate_all_subclasses(URLSource))}"
-                )
-        return all(bool(self.source_mapping.get(source_type)) for source_type in source_types)
+    def supports(
+        self, source_types: Optional[List[Type[URLSource]]] = None, languages: Optional[List[str]] = None
+    ) -> bool:
+        # we iterate source by source instead of checking self.languages and self.source_types,
+        # because we need to know if there is a source supporting the given combination of
+        # <source_types> and <languages>
+        filtered_sources = [
+            source
+            for source in more_itertools.flatten(self.source_mapping.values())
+            if (type(source) in source_types if source_types else True)
+            and (source.languages & set(languages) if languages else True)
+        ]
+
+        return any(filtered_sources)
+
+
+class FilteredPublisher(Publisher):
+    """Publisher with prefiltered sources.
+
+    Publisher with attached source types and languages to pre-filter sources.
+    """
+
+    def __init__(
+        self, source_types: Optional[Set[Type[URLSource]]] = None, languages: Optional[Set[str]] = None, *args, **kwargs
+    ) -> None:
+        super().__init__(*args, **kwargs)
+        self.__source_types_filter__ = source_types or set()
+        self.__language_filter__ = languages or set()
+
+    @classmethod
+    def from_publisher(
+        cls,
+        publisher: Publisher,
+        source_types: Optional[Set[Type[URLSource]]] = None,
+        languages: Optional[Set[str]] = None,
+    ) -> "FilteredPublisher":
+        new = FilteredPublisher.__new__(cls)
+
+        # we create a deepcopy since the aware publisher is not included in the PublisherGroup
+        new.__dict__.update(publisher.__dict__)
+        new.__source_types_filter__ = source_types or set()
+        new.__language_filter__ = languages or set()
+        return new
+
+    @property
+    def source_mapping(self) -> Dict[Type[URLSource], List[URLSource]]:
+        filtered_mapping: Dict[Type[URLSource], List[URLSource]] = {}
+
+        # iterate over internal mapping to preserve order
+        for source_type, sources in self._source_mapping.items():
+            if self.__source_types_filter__ and source_type not in self.__source_types_filter__:
+                continue
+
+            filtered_sources = [
+                source
+                for source in sources
+                if not self.__language_filter__ or source.languages & self.__language_filter__
+            ]
+            if filtered_sources:
+                filtered_mapping[source_type] = filtered_sources
+
+        return filtered_mapping
+
+    @property
+    def language_filter(self) -> Set[str]:
+        return self.__language_filter__
 
 
 class PublisherGroup(type):
@@ -156,6 +232,10 @@ class PublisherGroup(type):
             if isinstance(value, Publisher):
                 value.__name__ = attribute
                 value.__group__ = new
+                if default_language := attributes.get("default_language"):
+                    for source in more_itertools.flatten(value.source_mapping.values()):
+                        if not source.languages:
+                            source.languages = {default_language}
 
         return new
 
@@ -206,18 +286,34 @@ class PublisherGroup(type):
         return representation
 
     def search(
-        cls, attributes: Optional[List[str]] = None, source_types: Optional[List[Type[URLSource]]] = None
-    ) -> List[Publisher]:
-        if not (attributes or source_types):
+        cls,
+        attributes: Optional[List[str]] = None,
+        source_types: Optional[List[Type[URLSource]]] = None,
+        languages: Optional[List[str]] = None,
+    ) -> Union[List[FilteredPublisher], List[Publisher]]:
+        if not (attributes or source_types or languages):
             raise ValueError("You have to define at least one search condition")
         if not attributes:
             attributes = []
-        matched = []
+        if not languages:
+            languages = []
+        if not source_types:
+            source_types = []
+
+        matched: Union[List[FilteredPublisher], List[Publisher]] = []
         unique_attributes = set(attributes)
         spec: Publisher
         for publisher in cls:
             if unique_attributes.issubset(publisher.parser().attributes().names) and (
-                publisher.supports(source_types) if source_types else True
+                publisher.supports(source_types=source_types, languages=languages)
             ):
-                matched.append(publisher)
+                matched.append(
+                    FilteredPublisher.from_publisher(
+                        publisher,
+                        source_types=set(source_types) & publisher.source_types,
+                        languages=set(languages) & publisher.languages,
+                    )
+                )
+        if not matched:
+            warn("No publisher found matching the search criteria. Returning no publishers.")
         return matched

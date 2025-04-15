@@ -51,7 +51,7 @@ from typing_extensions import ParamSpec, TypeAlias
 
 from fundus.logging import create_logger, get_current_config
 from fundus.parser.data import remove_query_parameters_from_url
-from fundus.publishers.base_objects import Publisher, PublisherGroup
+from fundus.publishers.base_objects import FilteredPublisher, Publisher, PublisherGroup
 from fundus.scraping.article import Article
 from fundus.scraping.delay import Delay
 from fundus.scraping.filter import ExtractionFilter, Requires, RequiresAll, URLFilter
@@ -207,7 +207,7 @@ def random_sleep(func: Callable[_P, _T], between: Tuple[float, float]) -> Callab
 
 class CrawlerBase(ABC):
     def __init__(self, *publishers: PublisherType):
-        self.publishers: List[Publisher] = list(set(more_itertools.collapse(publishers)))
+        self.publishers: List[Union[Publisher, FilteredPublisher]] = list(set(more_itertools.collapse(publishers)))
         if not self.publishers:
             raise ValueError("param <publishers> of <Crawler.__init__> must include at least one publisher.")
 
@@ -221,6 +221,7 @@ class CrawlerBase(ABC):
         error_handling: Literal["suppress", "catch", "raise"],
         extraction_filter: Optional[ExtractionFilter],
         url_filter: Optional[URLFilter],
+        language_filter: Optional[List[str]],
     ) -> Iterator[Article]:
         raise NotImplementedError
 
@@ -232,6 +233,7 @@ class CrawlerBase(ABC):
         error_handling: Literal["suppress", "catch", "raise"] = "suppress",
         only_complete: Union[bool, ExtractionFilter] = Requires("title", "body", "publishing_date"),
         url_filter: Optional[URLFilter] = None,
+        language_filter: Optional[List[str]] = None,
         only_unique: bool = True,
         save_to_file: Union[None, str, Path] = None,
     ) -> Iterator[Article]:
@@ -258,6 +260,9 @@ class CrawlerBase(ABC):
                 through all articles with at least title, body, and publishing_date set.
             url_filter (Optional[URLFilter]): A callable object satisfying the URLFilter protocol to skip
                 URLs before download. This filter applies on both requested and responded URL. Defaults to None.
+            language_filter (Optional[List[str]]): A set of language codes to filter the articles by. If set,
+                articles of different languages will be skipped and not counted towards the article count. Defaults
+                to None.
             only_unique (bool): If set to True, articles yielded will be unique on the responded URL.
                 Always returns the first encountered article. Defaults to True.
             save_to_file (Union[None, str, Path]): If set, the crawled articles will be collected saved to the
@@ -290,7 +295,7 @@ class CrawlerBase(ABC):
         response_cache: Set[str] = set()
 
         extraction_filter = build_extraction_filter()
-        fitting_publishers: List[Publisher] = []
+        fitting_publishers: List[Union[Publisher, FilteredPublisher]] = []
 
         if isinstance(extraction_filter, Requires):
             for publisher in self.publishers:
@@ -304,6 +309,11 @@ class CrawlerBase(ABC):
                         f"The required attribute(s) `{', '.join(missing_attributes)}` "
                         f"is(are) not supported by {publisher.name}. Skipping publisher"
                     )
+                elif language_filter and not publisher.supports(languages=language_filter):
+                    logger.warning(
+                        f"None of the required language(s) `{', '.join(language_filter)}` "
+                        f"is(are) supported by {publisher.name}. Skipping publisher"
+                    )
                 else:
                     fitting_publishers.append(publisher)
 
@@ -315,6 +325,22 @@ class CrawlerBase(ABC):
                 return
         else:
             fitting_publishers = self.publishers
+
+        # check if there are filtered publishers and if so, adopt their language restrictions
+        publisher_language_filter = set()
+        for publisher in fitting_publishers:
+            if isinstance(publisher, FilteredPublisher):
+                publisher_language_filter.update(publisher.language_filter)
+
+        if language_filter and publisher_language_filter:
+            language_filter = list(set(language_filter).union(publisher_language_filter))
+            logger.info(
+                f"Publisher language filter: {publisher_language_filter} will be added to the given language filter: "
+                f"{language_filter}. "
+            )
+        elif publisher_language_filter:
+            language_filter = list(publisher_language_filter)
+            logger.info(f"Publisher language filter: {publisher_language_filter} will be used as the language filter. ")
 
         article_count: Dict[str, int] = defaultdict(int)
         crawled_articles: Dict[str, List[Article]] = defaultdict(list)
@@ -338,7 +364,7 @@ class CrawlerBase(ABC):
         try:
             with Timeout(seconds=timeout, silent=True, callback=callback, disable=timeout <= 0) as timer:
                 for article in self._build_article_iterator(
-                    tuple(fitting_publishers), error_handling, build_extraction_filter(), url_filter
+                    tuple(fitting_publishers), error_handling, build_extraction_filter(), url_filter, language_filter
                 ):
                     if max_articles_per_publisher and article_count[article.publisher] == max_articles_per_publisher:
                         if isinstance(self, Crawler) and not __EVENTS__.is_event_set("stop", article.publisher):
@@ -438,6 +464,7 @@ class Crawler(CrawlerBase):
         error_handling: Literal["suppress", "catch", "raise"],
         extraction_filter: Optional[ExtractionFilter] = None,
         url_filter: Optional[URLFilter] = None,
+        language_filter: Optional[List[str]] = None,
     ) -> Iterator[Article]:
         def build_delay() -> Optional[Delay]:
             if isinstance(self.delay, float):
@@ -461,7 +488,7 @@ class Crawler(CrawlerBase):
             ignore_robots=self.ignore_robots,
             ignore_crawl_delay=self.ignore_crawl_delay,
         )
-        yield from scraper.scrape(error_handling, extraction_filter, url_filter)
+        yield from scraper.scrape(error_handling, extraction_filter, url_filter, language_filter)
 
     @staticmethod
     def _single_crawl(
@@ -494,12 +521,14 @@ class Crawler(CrawlerBase):
         error_handling: Literal["suppress", "catch", "raise"],
         extraction_filter: Optional[ExtractionFilter],
         url_filter: Optional[URLFilter],
+        language_filter: Optional[List[str]],
     ) -> Iterator[Article]:
         article_task = partial(
             self._fetch_articles,
             error_handling=error_handling,
             extraction_filter=extraction_filter,
             url_filter=url_filter,
+            language_filter=language_filter,
         )
 
         if self.threading:
@@ -566,6 +595,7 @@ class CCNewsCrawler(CrawlerBase):
         error_handling: Literal["suppress", "catch", "raise"],
         extraction_filter: Optional[ExtractionFilter] = None,
         url_filter: Optional[URLFilter] = None,
+        language_filter: Optional[List[str]] = None,
         bar: Optional[tqdm] = None,
     ) -> Iterator[Article]:
         retries: int = 0
@@ -573,7 +603,7 @@ class CCNewsCrawler(CrawlerBase):
             source = CCNewsSource(*publishers, warc_path=warc_path)
             scraper = CCNewsScraper(source)
             try:
-                yield from scraper.scrape(error_handling, extraction_filter, url_filter)
+                yield from scraper.scrape(error_handling, extraction_filter, url_filter, language_filter)
             except (requests.HTTPError, fastwarc.stream_io.StreamError, urllib3.exceptions.HTTPError) as exception:
                 if retries >= self.retries:
                     logger.error(f"Failed to load WARC file {warc_path!r} after {retries} retries")
@@ -699,6 +729,7 @@ class CCNewsCrawler(CrawlerBase):
         error_handling: Literal["suppress", "catch", "raise"],
         extraction_filter: Optional[ExtractionFilter],
         url_filter: Optional[URLFilter],
+        language_filter: Optional[List[str]],
         **kwargs,
     ) -> Iterator[Article]:
         warc_paths = tuple(self._get_warc_paths())
@@ -710,6 +741,7 @@ class CCNewsCrawler(CrawlerBase):
                 error_handling=error_handling,
                 extraction_filter=extraction_filter,
                 url_filter=url_filter,
+                language_filter=language_filter,
                 bar=bar,
             )
 

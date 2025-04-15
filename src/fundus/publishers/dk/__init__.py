@@ -6,6 +6,8 @@ from .jyllands_posten import JyllandsPostenParser
 
 
 class DK(metaclass=PublisherGroup):
+    default_language = "da"
+
     JyllandsPosten = Publisher(
         name="Jyllands Posten",
         domain="https://jyllands-posten.dk/",

@@ -4,6 +4,8 @@ from fundus.scraping.url import NewsMap, RSSFeed, Sitemap
 
 
 class CZ(metaclass=PublisherGroup):
+    default_language = "cs"
+
     SeznamZpravy = Publisher(
         name="SeznamZpravy",
         domain="https://seznamzpravy.cz/",

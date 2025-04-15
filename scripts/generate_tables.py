@@ -40,6 +40,7 @@ column_mapping: Dict[str, ColumnFactory] = {
     if not publisher.deprecated
     else TD(DIV(STRIKE(f"{publisher.name}"))),
     "URL": lambda publisher: TD(A(SPAN(urlparse(publisher.domain).netloc), href=publisher.domain)),
+    "Languages": lambda publisher: TD(*[CODE(lang) for lang in sorted(publisher.languages)]),
     "Missing Attributes": lambda publisher: (
         TD(*[CODE(a) for a in sorted(attributes)])
         if (

@@ -8,6 +8,7 @@
     * [Combine filters](#combine-filters)
   * [Filter sources](#filter-sources)
   * [Filter unique articles](#filter-unique-articles)
+  * [Filter articles by language](#filter-articles-by-language)
 
 # How to filter articles
 
@@ -195,5 +196,10 @@ crawler = Crawler(PublisherCollection.us, restrict_sources_to=[NewsMap])
 
 The `crawl()` method supports functionality to filter out articles with URLs previously encountered in this run.
 You can alter this behavior by setting the `only_unique` parameter.
+
+## Filter articles by language
+
+Finally, the `crawl()` method also allows you to filter articles by language.
+You can do so by passing a list of 2 letter language codes ([ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes)) to the method using the `language_filter` parameter.
 
 In the [next section](5_advanced_topics) we will guide you through advanced topics as how to search through publishers in the `PublisherCollection` and how to deal with deprecated publishers.

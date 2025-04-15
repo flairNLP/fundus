@@ -90,3 +90,36 @@ def group_with_two_valid_publisher_subgroups(parser_proxy_with_version):
         enum_sitemap = PubGroupSitemap
 
     return GroupWithTwoValidatePublisherSubGroups
+
+
+@pytest.fixture
+def publisher_group_with_languages(parser_proxy_with_version):
+    class LangPubGroup(metaclass=PublisherGroup):
+        default_language = "en"
+
+        eng = Publisher(
+            name="test_pub_eng",
+            domain="https://test.com/",
+            sources=[NewsMap("https://test.com/test_sitemap")],
+            parser=parser_proxy_with_version,
+        )
+
+        ger = Publisher(
+            name="test_pub_ger",
+            domain="https://test.com/",
+            sources=[Sitemap("https://test.com/test_sitemap", languages={"de"})],
+            parser=parser_proxy_with_version,
+        )
+
+        mixed = Publisher(
+            name="test_pub_mixed",
+            domain="https://test.com/",
+            sources=[
+                RSSFeed("https://test.com/test_feed", languages={"es", "pl"}),
+                NewsMap("https://test.com/test_newsmap", languages={"es"}),
+                Sitemap("https://test.com/test_sitemap", languages={"ind"}),
+            ],
+            parser=parser_proxy_with_version,
+        )
+
+    return LangPubGroup

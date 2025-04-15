@@ -22,6 +22,8 @@ from .the_telegraph import TheTelegraphParser
 
 
 class UK(metaclass=PublisherGroup):
+    default_language = "en"
+
     TheGuardian = Publisher(
         name="The Guardian",
         domain="https://www.theguardian.com/",
@@ -35,7 +37,8 @@ class UK(metaclass=PublisherGroup):
         parser=TheIndependentParser,
         sources=[
             Sitemap(
-                "https://www.independent.co.uk/sitemap.xml", sitemap_filter=inverse(regex_filter(f"sitemap-articles"))
+                "https://www.independent.co.uk/sitemap.xml",
+                sitemap_filter=inverse(regex_filter(f"sitemap-articles")),
             ),
             NewsMap("https://www.independent.co.uk/sitemaps/googlenews"),
         ],
@@ -70,7 +73,7 @@ class UK(metaclass=PublisherGroup):
             Sitemap("https://inews.co.uk/sitemap.xml"),
             NewsMap(
                 f"https://inews.co.uk/sitemap.xml"
-                f"?yyyy={date.today().year}&mm={str(date.today().month).zfill(2)}&dd={str(date.today().day).zfill(2)}"
+                f"?yyyy={date.today().year}&mm={str(date.today().month).zfill(2)}&dd={str(date.today().day).zfill(2)}",
             ),
         ],
     )

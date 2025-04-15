@@ -8,6 +8,7 @@ from .ntvtr import NTVTRParser
 
 
 class TR(metaclass=PublisherGroup):
+    default_language = "tr"
     Haberturk = Publisher(
         name="Haberturk",
         domain="https://www.haberturk.com/",

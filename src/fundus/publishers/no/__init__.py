@@ -9,6 +9,8 @@ from .verdensgang import VerdensGangParser
 
 
 class NO(metaclass=PublisherGroup):
+    default_language = "no"
+
     VerdensGang = Publisher(
         name="Verdens Gang",
         domain="https://www.vg.no/",

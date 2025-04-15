@@ -5,7 +5,7 @@ import lzma
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from functools import cached_property
-from typing import Callable, ClassVar, Dict, Iterable, Iterator, List, Optional
+from typing import Callable, ClassVar, Dict, Iterable, Iterator, List, Optional, Set
 
 import feedparser
 import lxml.html
@@ -93,6 +93,7 @@ class _ArchiveDecompressor:
 @dataclass
 class URLSource(Iterable[str], ABC):
     url: str
+    languages: Set[str] = field(default_factory=set)
 
     _request_header: Dict[str, str] = field(default_factory=dict)
 

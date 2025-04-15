@@ -1,9 +1,11 @@
 from fundus.publishers.base_objects import Publisher, PublisherGroup
 from fundus.publishers.be.nieuwsblad import NieuwsbladParser
-from fundus.scraping.url import RSSFeed, Sitemap
+from fundus.scraping.url import RSSFeed
 
 
 class BE(metaclass=PublisherGroup):
+    default_language = "nl"
+
     Nieuwsblad = Publisher(
         name="Nieuwsblad",
         domain="https://www.nieuwsblad.be/",

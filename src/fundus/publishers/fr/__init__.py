@@ -8,6 +8,8 @@ from .les_echos import LesEchosParser
 
 
 class FR(metaclass=PublisherGroup):
+    default_language = "fr"
+
     LeMonde = Publisher(
         name="Le Monde",
         domain="https://www.lemonde.fr/",

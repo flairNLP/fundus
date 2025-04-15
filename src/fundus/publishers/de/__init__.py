@@ -53,6 +53,8 @@ from .zdf import ZDFParser
 
 # noinspection PyPep8Naming
 class DE(metaclass=PublisherGroup):
+    default_language = "de"
+
     SportSchau = Publisher(
         name="Sportschau",
         domain="https://www.sportschau.de/",
@@ -71,7 +73,8 @@ class DE(metaclass=PublisherGroup):
         parser=NetzpolitikOrgParser,
         sources=[
             Sitemap(
-                "https://netzpolitik.org/sitemap.xml", sitemap_filter=inverse(regex_filter("sitemap-posttype-post"))
+                "https://netzpolitik.org/sitemap.xml",
+                sitemap_filter=inverse(regex_filter("sitemap-posttype-post")),
             ),
             RSSFeed("https://netzpolitik.org/feed/"),
         ],
@@ -83,7 +86,9 @@ class DE(metaclass=PublisherGroup):
         parser=FunkeParser,
         sources=[NewsMap("https://www.morgenpost.de/sitemaps/news.xml")]
         + [
-            Sitemap(f"https://www.morgenpost.de/sitemaps/archive/sitemap-{d.year}-{str(d.month).zfill(2)}-p00.xml.gz")
+            Sitemap(
+                f"https://www.morgenpost.de/sitemaps/archive/sitemap-{d.year}-{str(d.month).zfill(2)}-p00.xml.gz",
+            )
             for d in reversed(list(rrule(MONTHLY, dtstart=datetime(2003, 2, 1), until=datetime.now())))
         ],
     )
@@ -97,7 +102,9 @@ class DE(metaclass=PublisherGroup):
             NewsMap("https://www.abendblatt.de/sitemaps/news.xml"),
         ]
         + [
-            Sitemap(f"https://www.abendblatt.de/sitemaps/archive/sitemap-{d.year}-{str(d.month).zfill(2)}-p00.xml.gz")
+            Sitemap(
+                f"https://www.abendblatt.de/sitemaps/archive/sitemap-{d.year}-{str(d.month).zfill(2)}-p00.xml.gz",
+            )
             for d in reversed(list(rrule(MONTHLY, dtstart=datetime(2000, 4, 1), until=datetime.today())))
         ],
     )
@@ -186,7 +193,7 @@ class DE(metaclass=PublisherGroup):
             RSSFeed("https://newsfeed.zeit.de/news/index"),
             Sitemap("https://www.zeit.de/gsitemaps/index.xml", reverse=True),
             NewsMap(
-                f"https://www.zeit.de/gsitemaps/index.xml?date={datetime.now().strftime('%Y-%m-%d')}&unit=days&period=1"
+                f"https://www.zeit.de/gsitemaps/index.xml?date={datetime.now().strftime('%Y-%m-%d')}&unit=days&period=1",
             ),
         ],
         url_filter=regex_filter(
@@ -222,6 +229,9 @@ class DE(metaclass=PublisherGroup):
             RSSFeed("https://rss.dw.com/xml/rss-de-all"),
             Sitemap("https://www.dw.com/de/article-sitemap.xml"),
             NewsMap("https://www.dw.com/de/news-sitemap.xml"),
+            RSSFeed("https://rss.dw.com/xml/rss-en-all", languages={"en"}),
+            Sitemap("https://www.dw.com/en/article-sitemap.xml", languages={"en"}),
+            NewsMap("https://www.dw.com/en/news-sitemap.xml", languages={"en"}),
         ],
     )
     Stern = Publisher(
@@ -267,7 +277,10 @@ class DE(metaclass=PublisherGroup):
         domain="https://www.heise.de",
         sources=[
             RSSFeed("https://www.heise.de/rss/heise.rdf"),
-            Sitemap("https://www.heise.de/sitemapindex.xml", sitemap_filter=inverse(regex_filter("/news/"))),
+            Sitemap(
+                "https://www.heise.de/sitemapindex.xml",
+                sitemap_filter=inverse(regex_filter("/news/")),
+            ),
         ],
         parser=HeiseParser,
         query_parameter={"seite": "all"},
@@ -301,7 +314,7 @@ class DE(metaclass=PublisherGroup):
         ]
         + [
             Sitemap(
-                f"https://www.braunschweiger-zeitung.de/sitemaps/archive/sitemap-{d.year}-{str(d.month).zfill(2)}-p00.xml.gz"
+                f"https://www.braunschweiger-zeitung.de/sitemaps/archive/sitemap-{d.year}-{str(d.month).zfill(2)}-p00.xml.gz",
             )
             for d in list(rrule(MONTHLY, dtstart=datetime(2005, 12, 1), until=datetime.now()))
         ],
@@ -352,7 +365,10 @@ class DE(metaclass=PublisherGroup):
         sources=[
             RSSFeed("https://static.winfuture.de/feeds/WinFuture-News-rss2.0.xml"),
             NewsMap("https://winfuture.de/sitemap-latest-news.xml.gz"),
-            Sitemap("https://winfuture.de/sitemap.xml", sitemap_filter=inverse(regex_filter("sitemap-news"))),
+            Sitemap(
+                "https://winfuture.de/sitemap.xml",
+                sitemap_filter=inverse(regex_filter("sitemap-news")),
+            ),
         ],
         url_filter=regex_filter("https:////winfuture/.de//news*"),
     )
@@ -458,7 +474,8 @@ class DE(metaclass=PublisherGroup):
         sources=[
             RSSFeed("https://newsfeed.kicker.de/news/aktuell"),
             Sitemap(
-                "https://leserservice.kicker.de/sitemap_0.xml", sitemap_filter=regex_filter("leserservice.kicker.de")
+                "https://leserservice.kicker.de/sitemap_0.xml",
+                sitemap_filter=regex_filter("leserservice.kicker.de"),
             ),
             NewsMap("https://newsfeed.kicker.de/googlesitemapnews.xml"),
         ],
@@ -498,7 +515,8 @@ class DE(metaclass=PublisherGroup):
         sources=[
             NewsMap("https://www.boersen-zeitung.de/sitemap/news.xml.gz"),
             Sitemap(
-                "https://www.boersen-zeitung.de/sitemap/index.xml.gz", sitemap_filter=regex_filter("/sitemap-0.xml.gz")
+                "https://www.boersen-zeitung.de/sitemap/index.xml.gz",
+                sitemap_filter=regex_filter("/sitemap-0.xml.gz"),
             ),
         ],
     )
