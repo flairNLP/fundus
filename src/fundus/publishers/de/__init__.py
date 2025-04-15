@@ -151,7 +151,9 @@ class DE(metaclass=PublisherGroup):
         name="Focus Online",
         domain="https://www.focus.de/",
         parser=FocusParser,
-        sources=[RSSFeed("https://rss.focus.de/fol/XML/rss_folnews.xml")],
+        sources=[
+            NewsMap("https://www.focus.de/sitemap_news_ressorts.xml"),
+        ],
         request_header={"user-agent": "Fundus"},
     )
 
