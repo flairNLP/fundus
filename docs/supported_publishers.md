@@ -547,8 +547,8 @@
         </a>
       </td>
       <td>
-        <code>en</code>
         <code>de</code>
+        <code>en</code>
       </td>
       <td>
         <code>images</code>

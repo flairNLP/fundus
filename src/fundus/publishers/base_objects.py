@@ -130,9 +130,7 @@ class Publisher:
 
     @property
     def languages(self) -> Set[str]:
-        return set(
-            sorted(set.union(*(source.languages for sources in self.source_mapping.values() for source in sources)))
-        )
+        return set.union(*(source.languages for sources in self.source_mapping.values() for source in sources))
 
     @property
     def source_types(self) -> Set[Type[URLSource]]:
