@@ -4,6 +4,8 @@ from fundus.scraping.url import RSSFeed, Sitemap
 
 
 class BE(metaclass=PublisherGroup):
+    default_language = "nl"
+
     Nieuwsblad = Publisher(
         name="Nieuwsblad",
         domain="https://www.nieuwsblad.be/",

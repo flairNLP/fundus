@@ -12,6 +12,8 @@ from fundus.scraping.url import NewsMap, RSSFeed, Sitemap
 
 
 class IT(metaclass=PublisherGroup):
+    default_language = "it"
+
     LaRepubblica = Publisher(
         name="La Repubblica",
         domain="https://www.repubblica.it",

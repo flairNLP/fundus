@@ -6,6 +6,8 @@ from .daily_news_tz import DailyNewsTZParser
 
 
 class TZ(metaclass=PublisherGroup):
+    default_language = "sw"
+
     DailyNewsTZ = Publisher(
         name="Daily News (Tanzania)",
         domain="https://www.dailynews.co.tz/",
@@ -15,6 +17,7 @@ class TZ(metaclass=PublisherGroup):
                 "https://www.dailynews.co.tz/sitemap_index.xml",
                 sitemap_filter=inverse(regex_filter("post-sitemap")),
                 reverse=True,
+                languages={"en"},
             ),
         ],
     )
