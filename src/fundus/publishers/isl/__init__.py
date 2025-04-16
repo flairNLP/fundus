@@ -7,6 +7,8 @@ from .morgunbladid import MorgunbladidParser
 
 
 class ISL(metaclass=PublisherGroup):
+    default_language = "is"
+
     Morgunbladid = Publisher(
         name="Morgunbladid",
         domain="https://www.mbl.is/",
