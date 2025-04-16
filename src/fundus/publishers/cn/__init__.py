@@ -5,6 +5,8 @@ from .people import PeopleParser
 
 
 class CN(metaclass=PublisherGroup):
+    default_language = "zh"
+
     People = Publisher(
         name="People",
         domain="http://www.people.com.cn",

@@ -7,13 +7,18 @@ from .west_australian import WestAustralianParser
 
 
 class AU(metaclass=PublisherGroup):
+    default_language = "en"
+
     NineNews = Publisher(
         name="Nine News",
         domain="https://www.9news.com.au/",
         parser=NineNewsParser,
         sources=[
             RSSFeed("https://www.9news.com.au/rss"),
-            Sitemap("https://www.9news.com.au/sitemap.xml", sitemap_filter=inverse(regex_filter("sitemap-content-"))),
+            Sitemap(
+                "https://www.9news.com.au/sitemap.xml",
+                sitemap_filter=inverse(regex_filter("sitemap-content-")),
+            ),
         ],
     )
 

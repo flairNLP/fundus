@@ -4,10 +4,9 @@ from typing import List, Optional
 
 from lxml.cssselect import CSSSelector
 from lxml.etree import XPath, tostring
-from lxml.html import HtmlElement, document_fromstring
+from lxml.html import document_fromstring
 
 from fundus.parser import ArticleBody, BaseParser, Image, ParserProxy, attribute
-from fundus.parser.data import ImageVersion
 from fundus.parser.utility import (
     extract_article_body_with_selector,
     generic_author_parsing,

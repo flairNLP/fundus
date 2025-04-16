@@ -4,8 +4,10 @@ from fundus.scraping.url import NewsMap, Sitemap
 
 
 class PL(metaclass=PublisherGroup):
+    default_language = "pl"
+
     Rzeczpospolita = Publisher(
-        name="Wyborcza",
+        name="Rzeczpospolita",
         domain="https://www.rp.pl/",
         parser=RzeczpospolitaParser,
         sources=[

@@ -1,5 +1,4 @@
 import datetime
-import re
 from typing import List, Optional
 
 from lxml.cssselect import CSSSelector

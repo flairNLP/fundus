@@ -17,12 +17,14 @@ There are quite a few differences between the publishers, especially in the attr
 You can search through the collection to get only publishers fitting your use case by utilizing the `search()` method.
 
 Let's get some publishers based in the US, supporting an attribute called `topics` and `NewsMap` as a source, and use them to initialize a crawler afterward.
+The `search()` method also implements an internal language filter, allowing you to restrict your results to a specific languages.
+In this example, we are only interested in Spanish articles.
 
 ````python
 from fundus import Crawler, PublisherCollection, NewsMap
 
-fitting_publishers = PublisherCollection.us.search(attributes=["topics"], source_types=[NewsMap])
-crawler = Crawler(fitting_publishers)
+fitting_publishers = PublisherCollection.us.search(attributes=["topics"], source_types=[NewsMap], languages=["es"])
+crawler = Crawler(*fitting_publishers)
 ````
 
 ## Working with deprecated publishers

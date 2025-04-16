@@ -4,6 +4,8 @@ from fundus.scraping.url import RSSFeed, Sitemap
 
 
 class MY(metaclass=PublisherGroup):
+    default_language = "ms"
+
     MalayMail = Publisher(
         name="Malay Mail",
         domain="https://www.malaymail.com/",

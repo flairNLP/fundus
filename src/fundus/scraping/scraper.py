@@ -14,6 +14,7 @@ from fundus.scraping.filter import (
 )
 from fundus.scraping.html import CCNewsSource, HTMLSource, WebSource
 from fundus.scraping.url import URLSource
+from fundus.utils.events import __EVENTS__
 
 logger = create_logger(__name__)
 
@@ -28,6 +29,7 @@ class BaseScraper:
         error_handling: Literal["suppress", "catch", "raise"],
         extraction_filter: Optional[ExtractionFilter] = None,
         url_filter: Optional[URLFilter] = None,
+        language_filter: Optional[List[str]] = None,
     ) -> Iterator[Article]:
         for source in self.sources:
             for html in source.fetch(url_filter=url_filter):
@@ -60,7 +62,13 @@ class BaseScraper:
                             logger.debug(f"Skipped article at {html.requested_url!r} because of extraction filter")
                     else:
                         article = Article(html=html, **extraction)
-                        yield article
+                        if language_filter and article.lang not in language_filter:
+                            logger.debug(
+                                f"Skipped article at {html.requested_url!r} because article language: "
+                                f"{article.lang!r} is not in allowed languages: {language_filter!r}"
+                            )
+                        else:
+                            yield article
 
 
 class WebScraper(BaseScraper):
@@ -94,6 +102,8 @@ class WebScraper(BaseScraper):
         ]
         parser_mapping: Dict[str, ParserProxy] = {publisher.name: publisher.parser}
         super().__init__(*html_sources, parser_mapping=parser_mapping)
+
+        __EVENTS__.alias(publisher.name)
 
 
 class CCNewsScraper(BaseScraper):

@@ -1,5 +1,4 @@
 import datetime
-import re
 from typing import List, Optional
 
 from lxml.etree import XPath

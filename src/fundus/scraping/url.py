@@ -5,14 +5,14 @@ import lzma
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from functools import cached_property
-from typing import Callable, ClassVar, Dict, Iterable, Iterator, List, Optional
+from typing import Callable, ClassVar, Dict, Iterable, Iterator, List, Optional, Set
 
 import feedparser
 import lxml.html
 import validators
 from lxml.cssselect import CSSSelector
 from lxml.etree import XPath
-from requests import ConnectionError, HTTPError
+from requests import ConnectionError, HTTPError, ReadTimeout
 
 from fundus.logging import create_logger
 from fundus.parser.utility import generic_nodes_to_text
@@ -93,6 +93,7 @@ class _ArchiveDecompressor:
 @dataclass
 class URLSource(Iterable[str], ABC):
     url: str
+    languages: Set[str] = field(default_factory=set)
 
     _request_header: Dict[str, str] = field(default_factory=dict)
 
@@ -130,10 +131,16 @@ class RSSFeed(URLSource):
     def __iter__(self) -> Iterator[str]:
         session = session_handler.get_session()
         try:
-            response = session.get(self.url, headers=self._request_header)
-        except (HTTPError, ConnectionError) as err:
+            response = session.get_with_interrupt(self.url, headers=self._request_header)
+
+        except (HTTPError, ConnectionError, ReadTimeout) as err:
             logger.warning(f"Warning! Couldn't parse rss feed {self.url!r} because of {err}")
             return
+
+        except Exception as error:
+            logger.error(f"Warning! Couldn't parse rss feed {self.url!r} because of an unexpected error {error!r}")
+            return
+
         html = response.text
         rss_feed = feedparser.parse(html)
         if exception := rss_feed.get("bozo_exception"):
@@ -159,10 +166,18 @@ class Sitemap(URLSource):
             if not validators.url(sitemap_url):
                 logger.info(f"Skipped sitemap {sitemap_url!r} because the URL is malformed")
             try:
-                response = session.get(url=sitemap_url, headers=self._request_header)
-            except (HTTPError, ConnectionError) as error:
+                response = session.get_with_interrupt(url=sitemap_url, headers=self._request_header)
+
+            except (HTTPError, ConnectionError, ReadTimeout) as error:
                 logger.warning(f"Warning! Couldn't reach sitemap {sitemap_url!r} because of {error!r}")
                 return
+
+            except Exception as error:
+                logger.error(
+                    f"Warning! Couldn't reach sitemap {sitemap_url!r} because of an unexpected error {error!r}"
+                )
+                return
+
             content = response.content
             if (content_type := response.headers.get("content-type")) in self._decompressor.supported_file_formats:
                 try:
