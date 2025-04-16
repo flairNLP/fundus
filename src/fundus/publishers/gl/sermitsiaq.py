@@ -21,7 +21,7 @@ class SermitsiaqParser(ParserProxy):
             f"//div[contains(@class, 'bodytext')]//p[not(@class='offer-description' or re:test(text(), '^/.*/$'))]",
             namespaces={"re": "http://exslt.org/regular-expressions"},
         )
-        _summary_selector = XPath("//h2[@class='subtitle ']")
+        _summary_selector = XPath("//h2[@class='subtitle '] ")
         _subheadline_selector = XPath("//div[contains(@class, 'bodytext')]//h3[not(@class='offer-name')]")
 
         @attribute
