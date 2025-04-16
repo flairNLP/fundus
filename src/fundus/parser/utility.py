@@ -492,6 +492,7 @@ def preprocess_url(url: str, domain: str) -> str:
 
 def image_author_parsing(authors: Union[str, List[str]]) -> List[str]:
     credit_keywords = [
+        "fotograf",
         "credits?",
         "quellen?",
         "bild(rechte)?",
