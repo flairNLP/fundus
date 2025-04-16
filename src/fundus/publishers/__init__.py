@@ -13,6 +13,7 @@ from fundus.publishers.de import DE
 from fundus.publishers.dk import DK
 from fundus.publishers.es import ES
 from fundus.publishers.fr import FR
+from fundus.publishers.il import IL
 from fundus.publishers.ind import IND
 from fundus.publishers.it import IT
 from fundus.publishers.jp import JP
@@ -77,6 +78,7 @@ class PublisherCollection(metaclass=PublisherCollectionMeta):
     pt = PT
     pl = PL
     ind = IND
+    il = IL
     no = NO
     ca = CA
     es = ES
