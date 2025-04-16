@@ -17,7 +17,7 @@ from fundus.parser.utility import (
 
 class MexicoNewsDailyParser(ParserProxy):
     class V1(BaseParser):
-        _paragraph_selector = XPath("//div[@class='tdb-block-inner td-fix-index']/p[text()]")
+        _paragraph_selector = XPath("//div[@class='tdb-block-inner td-fix-index']/p[text()] ")
 
         _bloat_topics = ["editors_pick"]
 
