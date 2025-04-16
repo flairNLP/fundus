@@ -14,6 +14,7 @@ from fundus.publishers.dk import DK
 from fundus.publishers.es import ES
 from fundus.publishers.fr import FR
 from fundus.publishers.ind import IND
+from fundus.publishers.isl import ISL
 from fundus.publishers.it import IT
 from fundus.publishers.jp import JP
 from fundus.publishers.lt import LT
@@ -67,6 +68,7 @@ class PublisherCollection(metaclass=PublisherCollectionMeta):
     us = US
     uk = UK
     fr = FR
+    isl = ISL
     ch = CH
     lt = LT
     cn = CN

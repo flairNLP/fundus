@@ -641,7 +641,12 @@ _relative_source_selector = XPath("./ancestor::picture//source")
 
 def parse_versions(img_node: lxml.html.HtmlElement, size_pattern: Optional[Pattern[str]] = None) -> List[ImageVersion]:
     # parse img
-    if (default_width := img_node.get("width")) and (default_height := img_node.get("height")):
+    if (
+        (default_width := img_node.get("width"))
+        and not default_width == "auto"
+        and (default_height := img_node.get("height"))
+        and not default_height == "auto"
+    ):
         ratio = float(default_width) / float(default_height)
     else:
         ratio = None
