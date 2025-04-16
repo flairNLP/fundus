@@ -1363,6 +1363,24 @@
       <td>&#160;</td>
       <td>&#160;</td>
     </tr>
+    <tr>
+      <td>
+        <code>MallorcaZeitung</code>
+      </td>
+      <td>
+        <div>Mallorca Zeitung</div>
+      </td>
+      <td>
+        <a href="https://www.mallorcazeitung.es/">
+          <span>www.mallorcazeitung.es</span>
+        </a>
+      </td>
+      <td>
+        <code>de</code>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
   </tbody>
 </table>
 
