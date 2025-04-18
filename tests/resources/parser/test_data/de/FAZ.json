@@ -304,8 +304,10 @@
         ],
         "is_cover": true,
         "description": "Paketflut aus China: Versandlieferungen aus dem Reich der Mitte sind beliebt, können aber auch Risiken bergen.",
-        "caption": null,
-        "authors": [],
+        "caption": "Paketflut aus China: Versandlieferungen aus dem Reich der Mitte sind beliebt, können aber auch Risiken bergen.",
+        "authors": [
+          "dpa"
+        ],
         "position": 1858
       }
     ],

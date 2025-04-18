@@ -113,7 +113,7 @@ class FAZParser(ParserProxy):
 
     class V3(BaseParser):
         _summary_selector = CSSSelector("p[data-external-selector='header-teaser']")
-        _paragraph_selector = CSSSelector("p[data-external-selector='body-elements-paragraph']")
+        _paragraph_selector = XPath("//*[@data-selector='body-paragraph']")
         _subheadline_selector = CSSSelector("div[data-external-selector='body-elements'] > div > h3")
 
         _topic_selector = CSSSelector("nav[aria-label='Themen in diesem Artikel'] a")
@@ -153,6 +153,10 @@ class FAZParser(ParserProxy):
                 doc=self.precomputed.doc,
                 paragraph_selector=self._paragraph_selector,
                 image_selector=XPath("//figure//img|//picture//img"),
-                caption_selector=XPath("./ancestor::figure//span"),
-                author_selector=XPath("./ancestor::figure//em"),
+                caption_selector=XPath(
+                    "./ancestor::figure//span | ./ancestor::div[@data-external-selector='article-header']//span[@class='meta2 pr-[10px]']"
+                ),
+                author_selector=XPath(
+                    "./ancestor::figure//*[self::em or self::small] | ./ancestor::div[@data-external-selector='article-header']//small"
+                ),
             )
