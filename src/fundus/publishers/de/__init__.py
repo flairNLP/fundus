@@ -142,7 +142,7 @@ class DE(metaclass=PublisherGroup):
             RSSFeed("https://www.faz.net/rss/aktuell/sport"),
             RSSFeed("https://www.faz.net/rss/aktuell/wirtschaft/"),
             RSSFeed("https://www.faz.net/rss/aktuell/gesellschaft/"),
-            Sitemap("https://www.faz.net/sitemap-index.xml"),
+            Sitemap("https://www.faz.net/sitemap-index.xml", sitemap_filter=inverse(regex_filter("-artikel-"))),
             NewsMap("https://www.faz.net/sitemap-news.xml"),
         ],
     )
