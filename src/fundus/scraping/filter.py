@@ -127,7 +127,7 @@ def _guarded_bool(value: Any):
 
 
 class Requires:
-    def __init__(self, *required_attributes: str, eval_booleans: bool = True) -> None:
+    def __init__(self, *required_attributes: str, eval_booleans: bool = True, force_deprecated: bool = False) -> None:
         """Class to filter extractions based on attribute values
 
         If a required_attribute is not present in the extracted data or evaluates to bool() -> False,
@@ -148,22 +148,29 @@ class Requires:
                 pass the filter. If no attributes are given, all attributes will be evaluated
             eval_bool: If True the boolean values will also be evaluated with bool(<value>).
                 If False, all boolean values evaluate to True. Defaults to True.
+            force_deprecated: If True, deprecated attributes will be included in the evaluation. Defaults to False.
         """
         self.required_attributes = set(required_attributes)
+        self.force_deprecated = force_deprecated
         # somehow mypy does not recognize bool as callable :(
         self._eval: Callable[[Any], bool] = bool if eval_booleans else _guarded_bool  # type: ignore[assignment]
 
-    def __call__(self, extraction: Dict[str, Any]) -> FilterResultWithMissingAttributes:
+    def __call__(self, extraction: Dict[str, Dict[str, Any]]) -> FilterResultWithMissingAttributes:
+        deprecated_attributes = (
+            [k for k, v in extraction.items() if v.get("deprecated", False)] if not self.force_deprecated else []
+        )
+
         missing_attributes = [
             attribute
             for attribute in self.required_attributes or extraction.keys()
-            if not self._eval(value := extraction.get(attribute)) or isinstance(value, Exception)
+            if (not self._eval(value := extraction.get(attribute, {}).get("value")) or isinstance(value, Exception))
+            and attribute not in deprecated_attributes
         ]
         return FilterResultWithMissingAttributes(*missing_attributes)
 
 
 class RequiresAll(Requires):
-    def __init__(self, eval_booleans: bool = False) -> None:
+    def __init__(self, eval_booleans: bool = False, force_deprecated: bool = False) -> None:
         """Name wrap for Requires(eval_booleans=False)
 
         This is for readability only. By default, it requires all non-boolean attributes of the extraction
@@ -173,4 +180,4 @@ class RequiresAll(Requires):
         Args:
             eval_booleans: See Requires docstring for more information. Defaults to False.
         """
-        super().__init__(eval_booleans=eval_booleans)
+        super().__init__(eval_booleans=eval_booleans, force_deprecated=force_deprecated)

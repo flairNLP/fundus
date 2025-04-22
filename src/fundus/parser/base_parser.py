@@ -146,7 +146,8 @@ def attribute(
         priority=priority,
         validate=validate,
         deprecated=deprecated,
-        default_factory=default_factory)
+        default_factory=default_factory,
+    )
 
 
 def function(cls=None, /, *, priority: Optional[int] = None):
@@ -255,16 +256,16 @@ class BaseParser(ABC):
 
             elif isinstance(func, Attribute):
                 try:
-                    parsed_data[attribute_name] = func()
+                    parsed_data[attribute_name] = {"value": func(), "deprecated": func.deprecated}
                 except Exception as err:
                     if error_handling == "suppress":
-                        parsed_data[attribute_name] = func.__default__
+                        parsed_data[attribute_name] = {"value": func.__default__, "deprecated": func.deprecated}
                         logger.info(
                             f"Couldn't parse attribute {attribute_name!r} for "
                             f"{self.precomputed.meta.get('og:url')!r}: {err}"
                         )
                     elif error_handling == "catch":
-                        parsed_data[attribute_name] = err
+                        parsed_data[attribute_name] = {"value": err, "deprecated": func.deprecated}
                     elif error_handling == "raise":
                         raise err
                     else:
