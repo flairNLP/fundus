@@ -142,7 +142,7 @@ class DE(metaclass=PublisherGroup):
             RSSFeed("https://www.faz.net/rss/aktuell/sport"),
             RSSFeed("https://www.faz.net/rss/aktuell/wirtschaft/"),
             RSSFeed("https://www.faz.net/rss/aktuell/gesellschaft/"),
-            Sitemap("https://www.faz.net/sitemap-index.xml"),
+            Sitemap("https://www.faz.net/sitemap-index.xml", sitemap_filter=inverse(regex_filter("-artikel-"))),
             NewsMap("https://www.faz.net/sitemap-news.xml"),
         ],
     )
@@ -151,7 +151,9 @@ class DE(metaclass=PublisherGroup):
         name="Focus Online",
         domain="https://www.focus.de/",
         parser=FocusParser,
-        sources=[RSSFeed("https://rss.focus.de/fol/XML/rss_folnews.xml")],
+        sources=[
+            NewsMap("https://www.focus.de/sitemap_news_ressorts.xml"),
+        ],
         request_header={"user-agent": "Fundus"},
     )
 
