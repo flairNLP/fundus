@@ -1,10 +1,12 @@
+from typing import Any, Dict
+
 from fundus import Requires
 from fundus.scraping.filter import RequiresAll
 
 
 class TestExtractionFilter:
     def test_requires(self):
-        extraction = {
+        extraction: Dict[str, Dict[str, Any]] = {
             "a": {"value": "Some Stuff", "deprecated": False},
             "b": {"value": [], "deprecated": False},
             "c": {"value": True, "deprecated": False},
@@ -31,7 +33,7 @@ class TestExtractionFilter:
         assert not Requires("c", eval_booleans=False)(extraction)
 
     def test_requires_all(self):
-        extraction = {
+        extraction: Dict[str, Dict[str, Any]] = {
             "a": {"value": "Some Stuff", "deprecated": False},
             "b": {"value": [], "deprecated": False},
             "c": {"value": False, "deprecated": False},
@@ -40,7 +42,10 @@ class TestExtractionFilter:
         assert (result := RequiresAll()(extraction))
         assert result.missing_attributes == ("b",)
 
-        extraction = {"a": {"value": "Some Stuff", "deprecated": False}, "c": {"value": False, "deprecated": False}}
+        extraction = {
+            "a": {"value": "Some Stuff", "deprecated": False},
+            "c": {"value": False, "deprecated": False},
+        }
         assert not RequiresAll()(extraction)
 
         # test skip_boolean=False
@@ -53,11 +58,14 @@ class TestExtractionFilter:
         assert (result := RequiresAll(eval_booleans=True)(extraction))
         assert sorted(result.missing_attributes) == sorted(("b", "c"))
 
-        extraction = {"a": {"value": "Some Stuff", "deprecated": False}, "c": {"value": True, "deprecated": False}}
+        extraction = {
+            "a": {"value": "Some Stuff", "deprecated": False},
+            "c": {"value": True, "deprecated": False},
+        }
         assert not RequiresAll(eval_booleans=True)(extraction)
 
     def test_deprecation(self):
-        extraction = {
+        extraction: Dict[str, Dict[str, Any]] = {
             "a": {"value": None, "deprecated": True},
             "b": {"value": ["List", "is", "not", "empty"], "deprecated": False},
             "c": {"value": False, "deprecated": False},
