@@ -51,9 +51,7 @@ column_mapping: Dict[str, ColumnFactory] = {
     ),
     "Deprecated Attributes": lambda publisher: (
         TD(*[CODE(a) for a in sorted(attributes)])
-        if (
-            attributes := set(publisher.parser.latest_version.attributes().deprecated.names)
-        )
+        if (attributes := set(publisher.parser.latest_version.attributes().deprecated.names))
         else lxml.html.fromstring("<td>&nbsp;</td>")
     ),
     "Additional Attributes": lambda publisher: (
