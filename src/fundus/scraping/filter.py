@@ -156,13 +156,18 @@ class Requires:
         self._eval: Callable[[Any], bool] = bool if eval_booleans else _guarded_bool  # type: ignore[assignment]
 
     def __call__(self, extraction: Dict[str, Dict[str, Any]]) -> FilterResultWithMissingAttributes:
+        # List deprecated attributes, that will no be verified. If force_deprecated is set to True, then the list is
+        # empty, which causes all attributes to be evaluated.
         deprecated_attributes = (
             [k for k, v in extraction.items() if v.get("deprecated", False)] if not self.force_deprecated else []
         )
 
         missing_attributes = [
             attribute
+            # Check all required attributes if provided, otherwise check all attributes
             for attribute in self.required_attributes or extraction.keys()
+            # Set attribute as missing if the value is evaluated as False or an exception occurred
+            # and the attribute is not considered a deprecated attribute
             if (not self._eval(value := extraction.get(attribute, {}).get("value")) or isinstance(value, Exception))
             and attribute not in deprecated_attributes
         ]

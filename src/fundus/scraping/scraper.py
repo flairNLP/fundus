@@ -61,6 +61,8 @@ class BaseScraper:
                         else:
                             logger.debug(f"Skipped article at {html.requested_url!r} because of extraction filter")
                     else:
+                        # We unpack to get a dictionary containing only the values. After the extraction_filter
+                        # is evaluated, there is no need to keep the deprecation status of the attributes.
                         extraction = {
                             attribute: value.get("value") for attribute, value in annotated_extraction.items()
                         }
