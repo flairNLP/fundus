@@ -9,6 +9,7 @@ on:
 jobs:
   validate_crawlers:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
 
     steps:
       - name: Set up Git repository
