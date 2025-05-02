@@ -17,8 +17,11 @@ from fundus.parser.utility import (
 
 class MorgunbladidParser(ParserProxy):
     class V1(BaseParser):
-        _paragraph_selector = XPath("//div[@class='main-layout']/p")
-        _subheadline_selector = XPath("//div[@class='main-layout']/h3")
+        _summary_selector = XPath("//div[@class='main-layout']//div[@class='is-merking']/p")
+        _paragraph_selector = XPath(
+            "//div[@class='main-layout' or @data-element-type='body-facts']" "/p[not(a and not(text()))]"
+        )
+        _subheadline_selector = XPath("//div[@class='main-layout' or @class='et_pb_text_inner']/h3")
 
         @attribute
         def body(self) -> Optional[ArticleBody]:
