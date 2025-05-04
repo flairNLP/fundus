@@ -13,7 +13,7 @@ from .yomiuri_shimbun import YomiuriShimbunParser
 
 
 class JP(metaclass=PublisherGroup):
-    default_language = "jp"
+    default_language = "ja"
 
     TheJapanNews = Publisher(
         name="The Japan News",

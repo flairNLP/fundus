@@ -9,6 +9,7 @@ on:
 jobs:
   validate_crawlers:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
 
     steps:
       - name: Set up Git repository
@@ -29,10 +30,10 @@ jobs:
           PYTHONPATH: .
         run: |
           set -o pipefail
-          exec python scripts/publisher_coverage.py | tee publisher_coverage.txt
+          python scripts/publisher_coverage.py | tee publisher_coverage.txt
 
       - name: Upload Coverage Report
-        if: success() || failure()
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: Publisher Coverage

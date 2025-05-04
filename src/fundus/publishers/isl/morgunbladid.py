@@ -1,4 +1,5 @@
 import datetime
+import re
 from typing import List, Optional
 
 from lxml.cssselect import CSSSelector
@@ -9,28 +10,26 @@ from fundus.parser.utility import (
     extract_article_body_with_selector,
     generic_author_parsing,
     generic_date_parsing,
+    generic_topic_parsing,
     image_extraction,
 )
 
 
-class ZDFParser(ParserProxy):
+class MorgunbladidParser(ParserProxy):
     class V1(BaseParser):
-        _paragraph_selector = CSSSelector("div.r1nj4qn5")
-        _summary_selector = CSSSelector("p.c1bdz7f4")
-        _subheadlines_selector = CSSSelector("h2.hhhtovw")
+        _summary_selector = XPath("//div[@class='main-layout']//div[@class='is-merking']/p")
+        _paragraph_selector = XPath(
+            "//div[@class='main-layout' or @data-element-type='body-facts']" "/p[not(a and not(text()))]"
+        )
+        _subheadline_selector = XPath("//div[@class='main-layout' or @class='et_pb_text_inner']/h3")
 
         @attribute
         def body(self) -> Optional[ArticleBody]:
             return extract_article_body_with_selector(
                 self.precomputed.doc,
+                subheadline_selector=self._subheadline_selector,
                 paragraph_selector=self._paragraph_selector,
-                summary_selector=self._summary_selector,
-                subheadline_selector=self._subheadlines_selector,
             )
-
-        @attribute
-        def title(self) -> Optional[str]:
-            return self.precomputed.meta.get("og:title")
 
         @attribute
         def authors(self) -> List[str]:
@@ -41,13 +40,15 @@ class ZDFParser(ParserProxy):
             return generic_date_parsing(self.precomputed.ld.bf_search("datePublished"))
 
         @attribute
+        def title(self) -> Optional[str]:
+            return self.precomputed.ld.bf_search("headline")
+
+        @attribute
         def images(self) -> List[Image]:
             return image_extraction(
                 doc=self.precomputed.doc,
                 paragraph_selector=self._paragraph_selector,
-                image_selector=XPath(
-                    "//picture//img[not(contains(@class, 'error') or contains(@src, 'zdfheute-whatsapp-channel'))]"
-                ),
-                caption_selector=XPath("./ancestor::div[@class='c1owvrps c10o8fzf']//span[@class='c1pbsmr2']"),
-                lower_boundary_selector=XPath("//div[@class='s1am5zo f1uhhdhr']"),
+                image_selector=XPath("//div[@class='image']//img"),
+                caption_selector=XPath("./ancestor::div[contains(@class, 'newsitem-image')]//span[@class='caption']"),
+                author_selector=XPath("./ancestor::div[contains(@class, 'newsitem-image')]//span[@class='credit']"),
             )
