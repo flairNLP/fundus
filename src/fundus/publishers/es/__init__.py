@@ -7,6 +7,7 @@ from fundus.publishers.es.abc import ABCParser
 from fundus.publishers.es.el_mundo import ElMundoParser
 from fundus.publishers.es.el_pais import ElPaisParser
 from fundus.publishers.es.la_vanguardia import LaVanguardiaParser
+from fundus.publishers.es.mallorca_magazin import MallorcaMagazinParser
 from fundus.scraping.url import NewsMap, RSSFeed, Sitemap
 
 
@@ -32,6 +33,19 @@ class ES(metaclass=PublisherGroup):
         sources=[
             RSSFeed("https://e00-elmundo.uecdn.es/elmundo/rss/portada.xml"),
             RSSFeed("https://e00-elmundo.uecdn.es/elmundo/rss/espana.xml"),
+        ],
+    )
+    MallorcaMagazin = Publisher(
+        name="Mallorca Magazin",
+        domain="https://www.mallorcamagazin.com/",
+        parser=MallorcaMagazinParser,
+        sources=[
+            NewsMap("https://www.mallorcamagazin.com/googlenews.xml", languages={"de"}),
+            Sitemap(
+                "https://www.mallorcamagazin.com/nachrichten/sitemapIndex.xml",
+                reverse=True,
+                languages={"de"},
+            ),
         ],
     )
     ABC = Publisher(
