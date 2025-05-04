@@ -24,6 +24,7 @@ from fundus.publishers.na import NA
 from fundus.publishers.no import NO
 from fundus.publishers.pl import PL
 from fundus.publishers.pt import PT
+from fundus.publishers.py import PY
 from fundus.publishers.tr import TR
 from fundus.publishers.tw import TW
 from fundus.publishers.tz import TZ
@@ -80,6 +81,7 @@ class PublisherCollection(metaclass=PublisherCollectionMeta):
     my = MY
     pt = PT
     pl = PL
+    py = PY
     ind = IND
     no = NO
     ca = CA
