@@ -16,7 +16,9 @@ from fundus.parser.utility import (
 class WochenblattParser(ParserProxy):
     class V1(BaseParser):
         _paragraph_selector = XPath("//div[@class='entry-content']/p[position() < last() and not(b)]")
-        _subheadline_selector = XPath("//div[@class='entry-content']/p[position() < last() and b]")
+        _subheadline_selector = XPath(
+            "//div[@class='entry-content']/*[(self::p or self::h3) and position() < last() and b]"
+        )
 
         _author_selector = XPath("//div[@class='entry-content']/p[last()]")
 
