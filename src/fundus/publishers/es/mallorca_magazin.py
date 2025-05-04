@@ -17,7 +17,7 @@ from fundus.parser.utility import (
 class MallorcaMagazinParser(ParserProxy):
     class V1(BaseParser):
         _paragraph_selector = XPath("//div[@id='post-text']//p")
-        _subheadline_selector = XPath("//div[@id='post-text']//h4[not(@class)]")
+        _subheadline_selector = XPath("//div[@id='post-text']//*[(self::h4 or self::h2) and not(@class)]")
         _summary_selector = XPath("//h2[@class='post-subtitle']")
 
         _topic_selector = XPath("//div[@class='post-tags']//li")
@@ -37,7 +37,7 @@ class MallorcaMagazinParser(ParserProxy):
 
         @attribute
         def title(self) -> Optional[str]:
-            return self.precomputed.meta.get("title")
+            return self.precomputed.meta.get("og:title")
 
         @attribute
         def authors(self) -> List[str]:
@@ -51,7 +51,7 @@ class MallorcaMagazinParser(ParserProxy):
         def images(self) -> List[Image]:
             return image_extraction(
                 doc=self.precomputed.doc,
-                image_selector=XPath("//figure//img|//div[@id='post-text']//img[@class='show-modal']"),
+                image_selector=XPath("//figure//img|//div[@id='post-text']//p/img"),
                 paragraph_selector=self._paragraph_selector,
                 caption_selector=XPath(
                     "./ancestor::div[@class='col-sm-12']//p[@class='img-description'] | "
