@@ -293,7 +293,7 @@ class DE(metaclass=PublisherGroup):
         domain="https://www.bild.de/",
         parser=BildParser,
         sources=[
-            RSSFeed("http://www.bild.de/rssfeeds/rss3-20745882,feed=alles.bild.html"),
+            RSSFeed("https://www.bild.de/feed/alles.xml"),
             NewsMap("https://www.bild.de/sitemap-news.xml"),
             Sitemap("https://www.bild.de/sitemap-index.xml"),
         ],
