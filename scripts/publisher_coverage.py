@@ -15,6 +15,8 @@ from fundus.scraping.session import socket_timeout
 from fundus.logging import set_log_level
 from logging import DEBUG
 
+_blocked_publishers: List[str] = ["Associated Press News", "Kicker"]
+
 
 def main() -> None:
     set_log_level(DEBUG)
@@ -40,6 +42,9 @@ def main() -> None:
                     continue
                 if publisher.deprecated:  # type: ignore[attr-defined]
                     print(f"⏩  SKIPPED: {publisher_name!r} - Deprecated")
+                    continue
+                if publisher_name in _blocked_publishers:
+                    print(f"⏩  SKIPPED: {publisher_name!r} - Blocked")
                     continue
                 crawler: Crawler = Crawler(publisher, delay=0.4, ignore_robots=True)
 
