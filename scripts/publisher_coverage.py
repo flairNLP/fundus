@@ -15,6 +15,7 @@ from fundus.scraping.session import socket_timeout
 
 _blocked_publishers: List[str] = ["Associated Press News", "Kicker"]
 
+
 def main() -> None:
     failed: int = 0
     timeout_in_seconds: int = 30
