@@ -17,8 +17,8 @@ from fundus.parser.utility import (
 
 class MallorcaZeitungParser(ParserProxy):
     class V1(BaseParser):
-        _paragraph_selector = XPath("//div[@data-aida-text]/p[@class='ft-text']")
-        _subheadline_selector = XPath("//div[@data-aida-text]//h2")
+        _paragraph_selector = XPath("//div[@data-aida-text]//p[contains(@class,'ft-text')]")
+        _subheadline_selector = XPath("//div[@data-aida-text]//h2[not(@itemprop)]")
         _summary_selector = XPath("//header//h2")
 
         @attribute
