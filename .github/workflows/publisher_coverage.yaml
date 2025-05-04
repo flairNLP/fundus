@@ -30,7 +30,7 @@ jobs:
           PYTHONPATH: .
         run: |
           set -o pipefail
-          python scripts/publisher_coverage.py | tee publisher_coverage.txt
+          timeout 25m python -u scripts/publisher_coverage.py | tee publisher_coverage.txt
 
       - name: Upload Coverage Report
         if: always()
