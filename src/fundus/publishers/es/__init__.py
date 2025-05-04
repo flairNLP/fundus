@@ -7,8 +7,8 @@ from fundus.publishers.es.abc import ABCParser
 from fundus.publishers.es.el_mundo import ElMundoParser
 from fundus.publishers.es.el_pais import ElPaisParser
 from fundus.publishers.es.la_vanguardia import LaVanguardiaParser
-from fundus.publishers.es.mallorca_zeitung import MallorcaZeitungParser
 from fundus.publishers.es.mallorca_magazin import MallorcaMagazinParser
+from fundus.publishers.es.mallorca_zeitung import MallorcaZeitungParser
 from fundus.scraping.url import NewsMap, RSSFeed, Sitemap
 
 
