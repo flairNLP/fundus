@@ -12,9 +12,12 @@ from fundus import Crawler, PublisherCollection
 from fundus.publishers.base_objects import Publisher, PublisherGroup
 from fundus.scraping.article import Article
 from fundus.scraping.session import socket_timeout
+from fundus.logging import set_log_level
+from logging import DEBUG
 
 
 def main() -> None:
+    set_log_level(DEBUG)
     failed: int = 0
     timeout_in_seconds: int = 30
 
