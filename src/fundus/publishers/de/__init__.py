@@ -293,7 +293,7 @@ class DE(metaclass=PublisherGroup):
         domain="https://www.bild.de/",
         parser=BildParser,
         sources=[
-            RSSFeed("https://www.bild.de/rssfeeds/vw-neu/vw-neu-32001674,view=rss2.bild.xml"),
+            RSSFeed("https://www.bild.de/feed/alles.xml"),
             NewsMap("https://www.bild.de/sitemap-news.xml"),
             Sitemap("https://www.bild.de/sitemap-index.xml"),
         ],
