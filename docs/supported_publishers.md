@@ -1562,7 +1562,6 @@
       </td>
       <td>
         <code>authors</code>
-        <code>publishing_date</code>
         <code>topics</code>
       </td>
       <td>&#160;</td>
