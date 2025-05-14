@@ -21,7 +21,7 @@ class JyllandsPostenParser(ParserProxy):
             "/div[contains(@class, 'c-article-inline')]"
             "/div[contains(@class, 'c-article-inline')]"
             "/div/div/p | "
-            "//article/p[contains(@class, 'max-w-matrix-text') and text()]"
+            "//article/p[contains(@class, '-text') and text()]"
         )
         _summary_selector = XPath("//header/p")
         _subheadline_selector = XPath(
