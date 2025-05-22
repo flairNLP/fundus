@@ -185,7 +185,7 @@ class Sitemap(URLSource):
                 )
                 return
 
-            content = response.content
+            content = response.content.strip()
             if (content_type := response.headers.get("content-type")) in self._decompressor.supported_file_formats:
                 try:
                     content = self._decompressor.decompress(content, content_type)
