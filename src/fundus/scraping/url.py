@@ -6,6 +6,7 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from functools import cached_property
 from typing import Callable, ClassVar, Dict, Iterable, Iterator, List, Optional, Set
+from urllib.parse import unquote
 
 import feedparser
 import lxml.html
@@ -90,6 +91,10 @@ class _ArchiveDecompressor:
         return list(self.archive_mapping.keys())
 
 
+def clean_url(url: str) -> str:
+    return unquote(url)
+
+
 @dataclass
 class URLSource(Iterable[str], ABC):
     url: str
@@ -147,7 +152,9 @@ class RSSFeed(URLSource):
             logger.warning(f"Warning! Couldn't parse rss feed {self.url!r} because of {exception}")
             return
         else:
-            yield from filter(bool, (entry.get("link") for entry in rss_feed["entries"]))
+            urls = filter(bool, (entry.get("link") for entry in rss_feed["entries"]))
+            for url in urls:
+                yield clean_url(url)
 
 
 @dataclass
@@ -178,7 +185,7 @@ class Sitemap(URLSource):
                 )
                 return
 
-            content = response.content
+            content = response.content.strip()
             if (content_type := response.headers.get("content-type")) in self._decompressor.supported_file_formats:
                 try:
                     content = self._decompressor.decompress(content, content_type)
@@ -192,7 +199,7 @@ class Sitemap(URLSource):
             urls = generic_nodes_to_text(self._url_selector(tree), normalize=True)
             if urls:
                 for new_url in reversed(urls) if self.reverse else urls:
-                    yield new_url
+                    yield clean_url(new_url)
             elif self.recursive:
                 sitemap_locs = [node.text_content() for node in self._sitemap_selector(tree)]
                 filtered_locs = list(filter(inverse(self.sitemap_filter), sitemap_locs))

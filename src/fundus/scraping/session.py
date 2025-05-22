@@ -56,6 +56,7 @@ class InterruptableSession(requests.Session):
             except Empty:
                 if __EVENTS__.is_event_set("stop"):
                     logger.debug(f"Interrupt request for {url!r}")
+                    response_queue.task_done()
                     exit(1)
             else:
                 if isinstance(response, Exception):
