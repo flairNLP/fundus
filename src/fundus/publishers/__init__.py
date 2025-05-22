@@ -33,6 +33,8 @@ from fundus.publishers.us import US
 
 __all__ = ["Publisher", "PublisherGroup"]
 
+from fundus.publishers.za import ZA
+
 
 class PublisherCollectionMeta(PublisherGroup):
     def __new__(cls, name, bases, attributes):
@@ -91,3 +93,4 @@ class PublisherCollection(metaclass=PublisherCollectionMeta):
     tw = TW
     tz = TZ
     dk = DK
+    za = ZA
