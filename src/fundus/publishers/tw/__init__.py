@@ -1,5 +1,5 @@
 from fundus.publishers.base_objects import Publisher, PublisherGroup
-from fundus.publishers.tw.TaipeiTimes import TaipeiTimesParser
+from fundus.publishers.tw.taipei_times import TaipeiTimesParser
 from fundus.scraping.url import NewsMap, Sitemap
 
 
