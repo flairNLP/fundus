@@ -18,6 +18,7 @@ from fundus.publishers.ind import IND
 from fundus.publishers.isl import ISL
 from fundus.publishers.it import IT
 from fundus.publishers.jp import JP
+from fundus.publishers.ls import LS
 from fundus.publishers.lt import LT
 from fundus.publishers.my import MY
 from fundus.publishers.na import NA
@@ -78,6 +79,7 @@ class PublisherCollection(metaclass=PublisherCollectionMeta):
     cz = CZ
     be = BE
     tr = TR
+    ls = LS
     my = MY
     pt = PT
     pl = PL
