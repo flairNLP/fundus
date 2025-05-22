@@ -20,6 +20,7 @@ from fundus.publishers.isl import ISL
 from fundus.publishers.it import IT
 from fundus.publishers.jp import JP
 from fundus.publishers.kr import KR
+from fundus.publishers.ls import LS
 from fundus.publishers.lt import LT
 from fundus.publishers.mx import MX
 from fundus.publishers.my import MY
@@ -86,6 +87,7 @@ class PublisherCollection(metaclass=PublisherCollectionMeta):
     it = IT
     jp = JP
     kr = KR
+    ls = LS
     lt = LT
     mx = MX
     my = MY
