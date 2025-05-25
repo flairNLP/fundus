@@ -9,6 +9,8 @@ from fundus.publishers.es.el_pais import ElPaisParser
 from fundus.publishers.es.la_vanguardia import LaVanguardiaParser
 from fundus.publishers.es.mallorca_magazin import MallorcaMagazinParser
 from fundus.publishers.es.mallorca_zeitung import MallorcaZeitungParser
+from fundus.publishers.es.el_diario_es import ElDiarioParser
+from fundus.publishers.es.publico import PublicoParser
 from fundus.scraping.url import NewsMap, RSSFeed, Sitemap
 
 
@@ -86,3 +88,29 @@ class ES(metaclass=PublisherGroup):
             RSSFeed("https://www.mallorcazeitung.es/rss/section/28000", languages={"de"}),
         ],
     )
+    ElDiarioEs = Publisher(
+        name="elDiario.es",
+        domain="https://www.eldiario.es/",
+        parser=ElDiarioParser,
+        sources=[
+            RSSFeed("https://www.eldiario.es/rss/"),
+            NewsMap("https://www.eldiario.es/sitemap_google_news_25b87.xml"),
+            Sitemap("https://www.eldiario.es/sitemap_index_25b87.xml"),
+
+        ],
+    )
+    Publico = Publisher(
+        name="Publico",
+        domain="https://www.publico.es/",
+        parser=PublicoParser,
+        sources=[
+            Sitemap("https://www.publico.es/sitemap-category.xml"),
+        ]
+            + [
+            Sitemap(f"https://www.publico.es/sitemap-noticias-{d.year}{str(d.month).zfill(2)}.xml")
+            for d in reversed(
+                list(rrule(MONTHLY, dtstart=datetime.datetime(2020, 1, 1), until=datetime.datetime.now()))
+            )
+        ],
+    ) 
+
