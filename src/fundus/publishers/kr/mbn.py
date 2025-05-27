@@ -1,47 +1,37 @@
-from fundus.parser import ParserProxy, BaseParser, attribute
-from fundus.parser.utility import (
-    extract_article_body_with_selector,
-    generic_author_parsing,
-    generic_date_parsing,
-)
-from fundus.parser import ArticleBody
+from fundus.parser import ParserProxy, BaseParser, attribute, ArticleBody
 from lxml.cssselect import CSSSelector
 from lxml.etree import XPath
 from typing import Optional, List
 from datetime import datetime
+from fundus.parser.utility import (
+    extract_article_body_with_selector,
+    generic_author_parsing,
+    generic_date_parsing,
+    generic_topic_parsing,
+)
 
 class MBNParser(ParserProxy):
     class V1(BaseParser):
-        _summary_selector = XPath(
-            "//p[@class='post__excerpt'] | //h2[preceding-sibling::h1[contains(@class, 'post__title')]]"
-        )
-
-        _paragraph_selector = CSSSelector("[itemprop='articleBody'] > p")
-
-        _subheadline_selector = CSSSelector(
-            "div.entry-content > div.entry-content__content > h2"
-        )
         
+        _summary_selector = XPath("//div[@class='mid_title']//div")
+        _paragraph_selector = XPath("//div[@itemprop='articleBody']//p | //div[@class='article-body']//div[contains(@class, 'rtext') and normalize-space(text())]")
+        #_paragraph_selector = XPath("//div[@itemprop='articleBody']//p")
+
         @attribute
         def body(self) -> Optional[ArticleBody]:
             return extract_article_body_with_selector(
-                self.precomputed.doc,
-                summary_selector=self._summary_selector,
-                subheadline_selector=self._subheadline_selector,
+                self.precomputed.doc, 
                 paragraph_selector=self._paragraph_selector,
+                summary_selector=self._summary_selector,
             )
 
         @attribute
         def authors(self) -> List[str]:
-            return generic_author_parsing(
-                self.precomputed.ld.get_value_by_key_path(["NewsArticle", "author"])
-            )
+            return generic_author_parsing(self.precomputed.ld.get_value_by_key_path(["NewsArticle", "author"]))
 
         @attribute
         def publishing_date(self) -> Optional[datetime]:
-            return generic_date_parsing(
-                self.precomputed.ld.get_value_by_key_path(["NewsArticle", "datePublished"])
-            )
+            return generic_date_parsing(self.precomputed.ld.get_value_by_key_path(["NewsArticle", "datePublished"]))
 
         @attribute
         def title(self) -> Optional[str]:
@@ -49,10 +39,4 @@ class MBNParser(ParserProxy):
 
         @attribute
         def topics(self) -> List[str]:
-            keywords: Optional[List[str]] = self.precomputed.ld.get_value_by_key_path(
-                ["NewsArticle", "keywords"]
-            )
-            if not keywords:
-                return []
-            return [k[9:] for k in keywords if isinstance(k, str) and k.startswith("Subject: ")]
-
+            return generic_topic_parsing(self.precomputed.meta.get("article:section"))

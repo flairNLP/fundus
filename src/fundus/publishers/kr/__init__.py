@@ -1,6 +1,6 @@
 from fundus.publishers.base_objects import PublisherGroup, Publisher
-from fundus.scraping.url import NewsMap, RSSFeed, Sitemap
-from fundus.scraping.filter import regex_filter, inverse
+from fundus.scraping.url import RSSFeed, Sitemap
+#from fundus.scraping.filter import regex_filter, inverse
 
 #from .newsis import NewsisParser
 from .mbn import MBNParser
@@ -14,6 +14,7 @@ class KR(metaclass=PublisherGroup):
             parser=MBNParser,
             sources=[
                 RSSFeed("https://www.mk.co.kr/rss/40300001/"),
+                Sitemap("https://www.mk.co.kr/sitemap/latest-articles/"),
             ],
         )
     
