@@ -1,27 +1,38 @@
 from fundus.publishers.base_objects import PublisherGroup, Publisher
 from fundus.scraping.url import NewsMap, RSSFeed, Sitemap
+from fundus.scraping.filter import regex_filter, inverse
 
-from .jtbc import JTBCParser
+#from .newsis import NewsisParser
+from .mbn import MBNParser
 
 class KR(metaclass=PublisherGroup):
     default_language = "kr"
 
-    JTBC = Publisher(
-            name="JTBC",
-            domain="https://jtbc.co.kr/",
-            parser=JTBCParser,
+    MBN = Publisher(
+            name="MaeilBusinessNewspaper",
+            domain="https://www.mk.co.kr/",
+            parser=MBNParser,
             sources=[
-                RSSFeed(url="http://fs.jtbc.joins.com/RSS/newsflash.xml"),
-                RSSFeed(url="http://fs.jtbc.joins.com/RSS/politics.xml"),
-                RSSFeed(url="http://fs.jtbc.joins.com/RSS/economy.xml"),
-                RSSFeed(url="http://fs.jtbc.joins.com/RSS/society.xml"),
-                RSSFeed(url="http://fs.jtbc.joins.com/RSS/international.xml"),
-                RSSFeed(url="http://fs.jtbc.joins.com/RSS/culture.xml"),
-                RSSFeed(url="http://fs.jtbc.joins.com/RSS/entertainment.xml"),
-                RSSFeed(url="http://fs.jtbc.joins.com/RSS/sports.xml"),
-                RSSFeed(url="http://fs.jtbc.joins.com/RSS/newsroom.xml"),
-                RSSFeed(url="http://fs.jtbc.joins.com/RSS/ranking.xml"),
-                Sitemap("https://jtbc.co.kr/sitemap/index_sitemap.xml"),
-            ]
+                RSSFeed("https://www.mk.co.kr/rss/40300001/"),
+            ],
         )
-
+    
+    """
+    Newsis = Publisher(
+            name="Newsis",
+            domain="https://www.newsis.com/",
+            parser=NewsisParser,
+            sources=[
+                RSSFeed("https://www.newsis.com/RSS/sokbo.xml"),
+                Sitemap(
+                    url="https://www.newsis.com/sitemap.xml",
+                    recursive=True,
+                    reverse=True,
+                    sitemap_filter=inverse(regex_filter(
+                        "/photo|/video|/people|/company|/arti_corner|/intro|/section|/list|/schedule|/gralist"
+                    ))
+                ),
+                NewsMap("https://www.newsis.com/newsis_news_google.xml"),
+            ],
+        )
+    """
