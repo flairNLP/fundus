@@ -1,4 +1,5 @@
-from fundus.parser import ParserProxy, BaseParser, attribute, ArticleBody
+import re
+from fundus.parser import ParserProxy, BaseParser, attribute, ArticleBody, Image
 from lxml.cssselect import CSSSelector
 from lxml.etree import XPath
 from typing import Optional, List
@@ -8,15 +9,17 @@ from fundus.parser.utility import (
     generic_author_parsing,
     generic_date_parsing,
     generic_topic_parsing,
+    image_extraction,
 )
 
 class MBNParser(ParserProxy):
     class V1(BaseParser):
         
         _summary_selector = XPath("//div[@class='mid_title']//div")
-        _paragraph_selector = XPath("//div[@itemprop='articleBody']//p | //div[@class='article-body']//div[contains(@class, 'rtext') and normalize-space(text())]")
-        #_paragraph_selector = XPath("//div[@itemprop='articleBody']//p")
 
+        _paragraph_selector = XPath("//div[@itemprop='articleBody']//p | //div[@itemprop='articleBody']//div[normalize-space(text())]")
+        #_paragraph_selector = XPath("//div[@itemprop='articleBody']//p | //div[@itemprop='articleBody']//div")
+        
         @attribute
         def body(self) -> Optional[ArticleBody]:
             return extract_article_body_with_selector(
@@ -40,3 +43,14 @@ class MBNParser(ParserProxy):
         @attribute
         def topics(self) -> List[str]:
             return generic_topic_parsing(self.precomputed.meta.get("article:section"))
+
+        @attribute
+        def images(self) -> List[Image]:
+                 return image_extraction(
+                doc=self.precomputed.doc,
+                paragraph_selector=self._paragraph_selector,
+                upper_boundary_selector=XPath("//div[@itemprop='articleBody']"),
+                image_selector=XPath("//div[@itemprop='articleBody']//div[@class='thumb_area img']//img"),
+                caption_selector=XPath("./ancestor::div[@class='thumb_area img']//span[@class='thum_figure_txt']"),
+                author_selector=re.compile(r"(?!.*\.)(?P<credits>.*)"),
+            )
