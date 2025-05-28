@@ -1,9 +1,11 @@
 import re
-from fundus.parser import ParserProxy, BaseParser, attribute, ArticleBody, Image
+from datetime import datetime
+from typing import List, Optional
+
 from lxml.cssselect import CSSSelector
 from lxml.etree import XPath
-from typing import Optional, List
-from datetime import datetime
+
+from fundus.parser import ArticleBody, BaseParser, Image, ParserProxy, attribute
 from fundus.parser.utility import (
     extract_article_body_with_selector,
     generic_author_parsing,
@@ -12,18 +14,18 @@ from fundus.parser.utility import (
     image_extraction,
 )
 
+
 class MBNParser(ParserProxy):
     class V1(BaseParser):
-        
         _summary_selector = XPath("//div[@class='mid_title']//div")
+        _paragraph_selector = XPath(
+            "//div[@itemprop='articleBody']//p | //div[@itemprop='articleBody']//div[normalize-space(text())]"
+        )
 
-        _paragraph_selector = XPath("//div[@itemprop='articleBody']//p | //div[@itemprop='articleBody']//div[normalize-space(text())]")
-        #_paragraph_selector = XPath("//div[@itemprop='articleBody']//p | //div[@itemprop='articleBody']//div")
-        
         @attribute
         def body(self) -> Optional[ArticleBody]:
             return extract_article_body_with_selector(
-                self.precomputed.doc, 
+                self.precomputed.doc,
                 paragraph_selector=self._paragraph_selector,
                 summary_selector=self._summary_selector,
             )
@@ -46,7 +48,7 @@ class MBNParser(ParserProxy):
 
         @attribute
         def images(self) -> List[Image]:
-                 return image_extraction(
+            return image_extraction(
                 doc=self.precomputed.doc,
                 paragraph_selector=self._paragraph_selector,
                 upper_boundary_selector=XPath("//div[@itemprop='articleBody']"),
