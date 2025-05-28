@@ -2,7 +2,7 @@ name: tests
 
 on:
   push:
-    branches: [ master ]
+    branches: [ add-kr ]
   pull_request:
   workflow_call:
 
