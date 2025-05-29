@@ -6,6 +6,7 @@ Note that this script does not check the attributes' correctness, only their pre
 """
 import sys
 import traceback
+from argparse import ArgumentParser
 from typing import Any, Callable, List, Optional, Union
 
 from fundus import Crawler, PublisherCollection
@@ -19,6 +20,15 @@ _blocked_publishers: List[str] = ["Associated Press News", "Kicker"]
 def main() -> None:
     failed: int = 0
     timeout_in_seconds: int = 30
+
+    argument_parser = ArgumentParser()
+    argument_parser.add_argument(
+        "-s",
+        "--skip",
+        default=False,
+        action="store_true",
+    )
+    parsed_arguments = argument_parser.parse_args()
 
     publisher_regions: List[PublisherGroup] = sorted(
         PublisherCollection.get_subgroup_mapping().values(), key=lambda region: region.__name__
@@ -40,7 +50,7 @@ def main() -> None:
                 if publisher.deprecated:  # type: ignore[attr-defined]
                     print(f"⏩  SKIPPED: {publisher_name!r} - Deprecated")
                     continue
-                if publisher_name in _blocked_publishers:
+                if publisher_name in _blocked_publishers and parsed_arguments.skip:
                     print(f"⏩  SKIPPED: {publisher_name!r} - Blocked")
                     continue
                 crawler: Crawler = Crawler(publisher, delay=0.4, ignore_robots=True)
