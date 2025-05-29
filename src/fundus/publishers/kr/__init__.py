@@ -5,7 +5,7 @@ from .mbn import MBNParser
 
 
 class KR(metaclass=PublisherGroup):
-    default_language = "kr"
+    default_language = "ko"
 
     MBN = Publisher(
         name="MaeilBusinessNewspaper",
@@ -14,5 +14,6 @@ class KR(metaclass=PublisherGroup):
         sources=[
             RSSFeed("https://www.mk.co.kr/rss/40300001/"),
             Sitemap("https://www.mk.co.kr/sitemap/latest-articles/"),
+            Sitemap("https://www.mk.co.kr/sitemap/daily-articles/"),
         ],
     )
