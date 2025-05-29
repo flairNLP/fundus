@@ -45,7 +45,9 @@
         "is_cover": true,
         "description": "비트코인 2025에서 연설 중인 JD 밴스 미국 부통령. 사진=BTC미디어",
         "caption": "비트코인 2025에서 연설 중인 JD 밴스 미국 부통령. 사진=BTC미디어",
-        "authors": [],
+        "authors": [
+          "BTC미디어"
+        ],
         "position": 656
       },
       {
@@ -60,7 +62,9 @@
         "is_cover": false,
         "description": "비트코인 2025 세션에 참가한 데이비드 삭스 미국 백악관 크립토 차르. <이종화 기자>",
         "caption": "비트코인 2025 세션에 참가한 데이비드 삭스 미국 백악관 크립토 차르. <이종화 기자>",
-        "authors": [],
+        "authors": [
+          "이종화"
+        ],
         "position": 669
       },
       {
@@ -75,7 +79,9 @@
         "is_cover": false,
         "description": "비트코인 2025 세션에서 발언하고 있는 신시아 루미스 상원의원. <이종화 기자>",
         "caption": "비트코인 2025 세션에서 발언하고 있는 신시아 루미스 상원의원. <이종화 기자>",
-        "authors": [],
+        "authors": [
+          "이종화"
+        ],
         "position": 680
       },
       {
@@ -90,7 +96,9 @@
         "is_cover": false,
         "description": "비트코인 2025 세션에 참가 중인 도날드 트럼프 주니어(DTJ). <이종화 기자>",
         "caption": "비트코인 2025 세션에 참가 중인 도날드 트럼프 주니어(DTJ). <이종화 기자>",
-        "authors": [],
+        "authors": [
+          "이종화"
+        ],
         "position": 691
       },
       {
@@ -105,7 +113,9 @@
         "is_cover": false,
         "description": "비트코인 2025에서 발언 중인 에릭 트럼프. <이종화 기자>",
         "caption": "비트코인 2025에서 발언 중인 에릭 트럼프. <이종화 기자>",
-        "authors": [],
+        "authors": [
+          "이종화"
+        ],
         "position": 703
       },
       {
@@ -120,7 +130,9 @@
         "is_cover": false,
         "description": "비트코인 2025에서 발언하고 있는 블라디미르 테네브 로빈후드 공동창업자 겸 CEO. <이종화 기자>",
         "caption": "비트코인 2025에서 발언하고 있는 블라디미르 테네브 로빈후드 공동창업자 겸 CEO. <이종화 기자>",
-        "authors": [],
+        "authors": [
+          "이종화"
+        ],
         "position": 716
       }
     ],

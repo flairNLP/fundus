@@ -47,24 +47,28 @@ class MBNParser(ParserProxy):
 
         @attribute
         def images(self) -> List[Image]:
-            return image_extraction(
+            imgs = image_extraction(
                 doc=self.precomputed.doc,
                 paragraph_selector=self._paragraph_selector,
                 upper_boundary_selector=XPath("//div[@itemprop='articleBody']"),
                 image_selector=XPath("//div[@itemprop='articleBody']//div[@class='thumb_area img']//img"),
-                caption_selector=XPath("./ancestor::div[@class='thumb_area img']//span[@class='thum_figure_txt']"),
-                alt_selector=XPath("./@alt"),
-                author_selector = re.compile(
-                     r'^\s*(?:<(?P<credits>[^>]+)>|\[?\s*(?:사진\s*=?\s*)?(?P<credits>[^\]\r\n<>]+)\s*\]?)\s*$'
+                caption_selector=XPath(
+                    "./ancestor::div[@class='thumb_area img']"
+                    "//span[@class='thum_figure_txt']"
                 ),
-                
-#                author_selector = re.compile(
-#                    r'^\s*(?:'
-#                    r'<(?P<credits>[^>]+)>'                                     # <OOO 기자>
-#                    r'|\[?\s*(?:사진\s*=?\s*)?(?P<credits>[^\]\r\n<>]+)\?'
-#                    r'|.*?사진\s*=\s*(?P<credits>[^]\r\n<>]+)'
-#                    r')\s*$'
-#                )
-                
+                alt_selector=XPath("./@alt"),
+                author_selector = re.compile(r'^(?!.*)'),
             )
+
+            pattern = re.compile(
+                    r'\[사진\s*=\s*([^\]]+)\]'
+                    r'|<\s*([^>]+?)\s*기자\s*>'
+                    r'|사진\s*=\s*([^.\]\r\n<>]+)'
+            )
+            for img in imgs:
+                text = img.caption or img.description or ""
+                raw = [a or b or c for a, b, c in pattern.findall(text)]
+                img.authors = list(dict.fromkeys([s.strip() for s in raw if s.strip()]))
+
+            return imgs
 
