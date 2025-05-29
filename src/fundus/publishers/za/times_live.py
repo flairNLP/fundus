@@ -73,6 +73,7 @@ class TimesLiveParser(ParserProxy):
             return image_extraction(
                 doc=self.precomputed.doc,
                 paragraph_selector=self._paragraph_selector,
+                lower_boundary_selector=XPath("//div[@class='wrap']//hr"),
                 upper_boundary_selector=XPath("//h1"),
                 image_selector=XPath("//div[contains(@class, 'image-container')]//img"),
                 caption_selector=XPath(
