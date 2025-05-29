@@ -1,5 +1,6 @@
-from typing import List, Optional
 import datetime
+from typing import List, Optional
+
 from lxml.etree import XPath
 from lxml.html import HtmlElement
 
@@ -12,13 +13,17 @@ from fundus.parser.utility import (
     image_extraction,
 )
 
+
 class PublicoParser(ParserProxy):
     class V1(BaseParser):
-        
         _paragraph_selector = XPath("//div[contains(@class, 'body-modules w-full')]//p")
-        _subheadline_selector = XPath("//div[contains(@class, 'body-modules w-full')]//h2[contains(@class, 'highlighted')]")
-        _summary_selector = XPath("//div[contains(@class, 'text-base') and contains(@class, 'desktop:text-xl')]//p | "
-                                  "//p[contains(@class, 'desktop:text-lg')]")
+        _subheadline_selector = XPath(
+            "//div[contains(@class, 'body-modules w-full')]//h2[contains(@class, 'highlighted')]"
+        )
+        _summary_selector = XPath(
+            "//div[contains(@class, 'text-base') and contains(@class, 'desktop:text-xl')]//p | "
+            "//p[contains(@class, 'desktop:text-lg')]"
+        )
 
         @attribute
         def body(self) -> Optional[ArticleBody]:
@@ -28,16 +33,15 @@ class PublicoParser(ParserProxy):
                 subheadline_selector=self._subheadline_selector,
                 summary_selector=self._summary_selector,
             )
-        
+
         @attribute
         def publishing_date(self) -> Optional[datetime.datetime]:
             return generic_date_parsing(self.precomputed.ld.bf_search("datePublished"))
-             
+
         @attribute
         def title(self) -> Optional[str]:
             return self.precomputed.meta.get("og:title")
 
-        
         @attribute
         def authors(self) -> List[str]:
             return generic_author_parsing(self.precomputed.ld.bf_search("author"))

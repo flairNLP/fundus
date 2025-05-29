@@ -1,5 +1,6 @@
-from typing import List, Optional
 import datetime
+from typing import List, Optional
+
 from lxml.etree import XPath
 
 from fundus.parser import ArticleBody, BaseParser, Image, ParserProxy, attribute
@@ -14,12 +15,12 @@ from fundus.parser.utility import (
 
 class ElDiarioParser(ParserProxy):
     class V1(BaseParser):
-       
         _paragraph_selector = XPath("//div[@class='c-content']//p[@class='article-text']")
         _subheadline_selector = XPath("//div[@class='c-content']//h2[@class='article-text']")
-        _summary_selector = XPath("//div[@class='news-header']//ul[@class='footer']//li[not(contains(@class, 'subtitle--hasAnchor'))]/h2[text()]")
+        _summary_selector = XPath(
+            "//div[@class='news-header']//ul[@class='footer']//li[not(contains(@class, 'subtitle--hasAnchor'))]/h2[text()]"
+        )
 
-        
         @attribute
         def body(self) -> Optional[ArticleBody]:
             return extract_article_body_with_selector(
@@ -28,15 +29,15 @@ class ElDiarioParser(ParserProxy):
                 subheadline_selector=self._subheadline_selector,
                 summary_selector=self._summary_selector,
             )
-        
+
         @attribute
         def publishing_date(self) -> Optional[datetime.datetime]:
             return generic_date_parsing(self.precomputed.ld.bf_search("datePublished"))
-             
+
         @attribute
         def title(self) -> Optional[str]:
             return self.precomputed.ld.bf_search("headline")
-        
+
         @attribute
         def authors(self) -> List[str]:
             return generic_author_parsing(self.precomputed.ld.bf_search("author"))
@@ -57,5 +58,3 @@ class ElDiarioParser(ParserProxy):
                 author_selector=XPath("./ancestor::figure//figcaption//span[@class='title']/span"),
                 relative_urls=True,
             )
-
-
