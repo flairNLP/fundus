@@ -18,7 +18,7 @@ from fundus.parser.utility import (
 class NikkeiParser(ParserProxy):
     class V1(BaseParser):
         _summary_selector = XPath(
-            "//section[@class='container_campx13']//*[self::div and @class='container_c1tzahnc' and position()=1] "
+            "//section[@class='container_campx13']//*[self::div and @class='container_c1tzahnc' and position()=1]"
         )
         _paragraph_selector = CSSSelector("section[data-track-article-content] > p")
         _subheadline_selector = CSSSelector("section[data-track-article-content] > div > h2")
