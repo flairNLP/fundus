@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import html
 import itertools
 import json
 import re
@@ -190,6 +191,8 @@ def sanitize_json(text: str) -> Optional[str]:
     # substitute "bad" values
     sanitized = re.sub(_json_undefined, r"\g<key>:null", sanitized)
 
+    # Clean up escaped characters
+    sanitized = html.unescape(sanitized)
     return sanitized
 
 
