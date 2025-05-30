@@ -5,25 +5,41 @@ from typing import List, Optional
 from lxml.cssselect import CSSSelector
 from lxml.etree import XPath
 
-from fundus.parser import ArticleBody, BaseParser, Image, ParserProxy, attribute
+from fundus.parser import (
+    ArticleBody,
+    BaseParser,
+    Image,
+    ParserProxy,
+    attribute,
+    function,
+)
 from fundus.parser.utility import (
     extract_article_body_with_selector,
     generic_author_parsing,
     generic_date_parsing,
     generic_topic_parsing,
     image_extraction,
+    transform_breaks_to_paragraphs,
 )
 
 
 class MBNParser(ParserProxy):
     class V1(BaseParser):
         _summary_selector = XPath("//div[@class='mid_title']//div")
+        _full_text_selector = XPath("//div[@itemprop='articleBody']")
         _paragraph_selector = XPath(
-                "//div[@itemprop='articleBody']//p"
-                " | "
-                "//div[@itemprop='articleBody']//div[normalize-space(text())"
-                " and not(ancestor::div[@class='mid_title'])]"
+            "//div[@itemprop='articleBody']//p"
+            " | "
+            "//div[@itemprop='articleBody']//div[normalize-space(text())"
+            " and not(ancestor::div[@class='mid_title'])]"
         )
+
+        @function(priority=0)
+        def _transform_br_element(self):
+            if nodes := self._full_text_selector(self.precomputed.doc):
+                if len(nodes) != 1:
+                    raise ValueError("Expected exactly one node for articleBody")
+                transform_breaks_to_paragraphs(nodes[0], __class__="br-wrap")
 
         @attribute
         def body(self) -> Optional[ArticleBody]:
@@ -52,23 +68,15 @@ class MBNParser(ParserProxy):
                 paragraph_selector=self._paragraph_selector,
                 upper_boundary_selector=XPath("//div[@itemprop='articleBody']"),
                 image_selector=XPath("//div[@itemprop='articleBody']//div[@class='thumb_area img']//img"),
-                caption_selector=XPath(
-                    "./ancestor::div[@class='thumb_area img']"
-                    "//span[@class='thum_figure_txt']"
-                ),
+                caption_selector=XPath("./ancestor::div[@class='thumb_area img']" "//span[@class='thum_figure_txt']"),
                 alt_selector=XPath("./@alt"),
-                author_selector = re.compile(r'^(?!.*)'),
+                author_selector=re.compile(r"^(?!.*)"),
             )
 
-            pattern = re.compile(
-                    r'\[사진\s*=\s*([^\]]+)\]'
-                    r'|<\s*([^>]+?)\s*기자\s*>'
-                    r'|사진\s*=\s*([^.\]\r\n<>]+)'
-            )
+            pattern = re.compile(r"\[사진\s*=\s*([^\]]+)\]" r"|<\s*([^>]+?)\s*기자\s*>" r"|사진\s*=\s*([^.\]\r\n<>]+)")
             for img in imgs:
                 text = img.caption or img.description or ""
                 raw = [a or b or c for a, b, c in pattern.findall(text)]
                 img.authors = list(dict.fromkeys([s.strip() for s in raw if s.strip()]))
 
             return imgs
-
