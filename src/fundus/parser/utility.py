@@ -190,10 +190,18 @@ def sanitize_json(text: str) -> Optional[str]:
 
     # substitute "bad" values
     sanitized = re.sub(_json_undefined, r"\g<key>:null", sanitized)
-
-    # Clean up escaped characters
-    sanitized = html.unescape(sanitized)
     return sanitized
+
+
+def unescape_json_values(obj):
+    if isinstance(obj, str):
+        return html.unescape(obj)
+    elif isinstance(obj, list):
+        return [unescape_json_values(item) for item in obj]
+    elif isinstance(obj, dict):
+        return {key: unescape_json_values(value) for key, value in obj.items()}
+    else:
+        return obj
 
 
 def parse_json(text: str) -> Optional[Dict[str, JSONVal]]:
@@ -201,7 +209,8 @@ def parse_json(text: str) -> Optional[Dict[str, JSONVal]]:
         return None
 
     try:
-        return cast(Dict[str, JSONVal], json.loads(json_content))
+        parsed_json = json.loads(json_content)
+        return cast(Dict[str, JSONVal], unescape_json_values(parsed_json))
     except json.JSONDecodeError as error:
         logger.debug(f"Encountered {error!r} during JSON parsing")
         return None
