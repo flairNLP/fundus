@@ -3010,6 +3010,24 @@
   <tbody>
     <tr>
       <td>
+        <code>DailyMaverick</code>
+      </td>
+      <td>
+        <div>Daily Maverick</div>
+      </td>
+      <td>
+        <a href="https://www.dailymaverick.co.za/">
+          <span>www.dailymaverick.co.za</span>
+        </a>
+      </td>
+      <td>
+        <code>en</code>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
         <code>TimesLive</code>
       </td>
       <td>
