@@ -73,7 +73,9 @@ class MBNParser(ParserProxy):
                 author_selector=re.compile(r"^(?!.*)"),
             )
 
-            pattern = re.compile(r"\[사진\s*=\s*([^\]]+)\]" r"|<\s*([^>]+?)\s*기자\s*>" r"|사진\s*=\s*([^.\]\r\n<>]+)")
+            pattern = re.compile(
+                r"\[사진(?:\s*출처)?\s*=\s*([^\]]+)\]" r"|<\s*([^>]+?)\s*기자\s*>" r"|사진\s*=\s*([^.\]\r\n<>]+)"
+            )
             for img in imgs:
                 text = img.caption or img.description or ""
                 raw = [a or b or c for a, b, c in pattern.findall(text)]
