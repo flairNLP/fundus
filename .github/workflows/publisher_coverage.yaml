@@ -28,9 +28,11 @@ jobs:
       - name: Validate Crawlers
         env:
           PYTHONPATH: .
+        # Set up a timeout to avoid long-running tests
+        # We skip the Kicker APNews publishers, because they are IP-blocked
         run: |
           set -o pipefail
-          timeout 25m python -u scripts/publisher_coverage.py --skip | tee publisher_coverage.txt
+          timeout 25m python -u scripts/publisher_coverage.py --skip Kicker APNews | tee publisher_coverage.txt
 
       - name: Upload Coverage Report
         if: always()

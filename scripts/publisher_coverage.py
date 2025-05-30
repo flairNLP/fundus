@@ -14,7 +14,6 @@ from fundus.publishers.base_objects import Publisher, PublisherGroup
 from fundus.scraping.article import Article
 from fundus.scraping.session import socket_timeout
 
-_blocked_publishers: List[str] = ["Associated Press News", "Kicker"]
 
 
 def main() -> None:
@@ -25,8 +24,9 @@ def main() -> None:
     argument_parser.add_argument(
         "-s",
         "--skip",
-        default=False,
-        action="store_true",
+        default=[],
+        nargs="*",
+        help="List of publishers to skip. Expects Fundus attribute names.",
     )
     parsed_arguments = argument_parser.parse_args()
 
@@ -50,7 +50,7 @@ def main() -> None:
                 if publisher.deprecated:  # type: ignore[attr-defined]
                     print(f"⏩  SKIPPED: {publisher_name!r} - Deprecated")
                     continue
-                if publisher_name in _blocked_publishers and parsed_arguments.skip:
+                if publisher.__name__ in parsed_arguments.skip:
                     print(f"⏩  SKIPPED: {publisher_name!r} - Blocked")
                     continue
                 crawler: Crawler = Crawler(publisher, delay=0.4, ignore_robots=True)
