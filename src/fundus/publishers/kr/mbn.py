@@ -1,3 +1,4 @@
+import pdb
 import re
 from datetime import datetime
 from typing import List, Optional
@@ -25,33 +26,36 @@ from fundus.parser.utility import (
 
 class MBNParser(ParserProxy):
     class V1(BaseParser):
-        _summary_selector = XPath("//div[@class='mid_title']//div")
+        _paragraph_selector = XPath("//div[@itemprop='articleBody']//p[normalize-space()]")
         _full_text_selector = XPath("//div[@itemprop='articleBody']")
-        _paragraph_selector = XPath(
-            "//div[@itemprop='articleBody']//p"
-            " | "
-            "//div[@itemprop='articleBody']//div[normalize-space(text())"
-            " and not(ancestor::div[@class='mid_title'])]"
-        )
 
         @function(priority=0)
         def _transform_br_element(self):
-            if nodes := self._full_text_selector(self.precomputed.doc):
-                if len(nodes) != 1:
-                    raise ValueError("Expected exactly one node for articleBody")
-                transform_breaks_to_paragraphs(nodes[0], __class__="br-wrap")
+            nodes = self._full_text_selector(self.precomputed.doc)
+            if not nodes or len(nodes) != 1:
+                return
+            element = nodes[0]
+
+            if element.xpath(".//p[normalize-space()]"):
+                return
+
+            for ad in element.xpath(".//div[contains(@class,'ad_wrap')]"):
+                parent = ad.getparent()
+                if parent is not None:
+                    parent.remove(ad)
+
+            transform_breaks_to_paragraphs(element, __class__="br-wrap")
 
         @attribute
         def body(self) -> Optional[ArticleBody]:
             return extract_article_body_with_selector(
                 self.precomputed.doc,
                 paragraph_selector=self._paragraph_selector,
-                summary_selector=self._summary_selector,
             )
 
         @attribute
         def authors(self) -> List[str]:
-            return generic_author_parsing(self.precomputed.ld.xpath_search("NewsArticle/author", scalar=True))
+            return generic_author_parsing(self.precomputed.ld.xpath_search("NewsArticle/author", scalar=False))
 
         @attribute
         def publishing_date(self) -> Optional[datetime]:
