@@ -16,7 +16,7 @@ from fundus.parser.utility import (
 
 class PublicoParser(ParserProxy):
     class V1(BaseParser):
-        _paragraph_selector = XPath("//div[contains(@class, 'body-modules w-full')]//p")
+        _paragraph_selector = XPath("//div[contains(@class, 'body-modules w-full')]//p[not(ancestor::div[contains(@class, 'related-intext')])]")
         _subheadline_selector = XPath(
             "//div[contains(@class, 'body-modules w-full')]//h2[contains(@class, 'highlighted')]"
         )
