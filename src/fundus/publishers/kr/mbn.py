@@ -65,6 +65,7 @@ class MBNParser(ParserProxy):
         def title(self) -> Optional[str]:
             return self.precomputed.ld.xpath_search("NewsArticle/headline", scalar=True)
 
+
         @attribute
         def images(self) -> List[Image]:
             imgs = image_extraction(
