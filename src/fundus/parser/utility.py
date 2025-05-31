@@ -189,7 +189,7 @@ def sanitize_json(text: str) -> Optional[str]:
 
     # substitute "bad" values
     sanitized = re.sub(_json_undefined, r"\g<key>:null", sanitized)
-
+    sanitized = re.sub(r"[\r\n\t]+", "", sanitized)
     return sanitized
 
 

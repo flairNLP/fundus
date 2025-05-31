@@ -502,15 +502,16 @@ class Crawler(CrawlerBase):
     ) -> Iterator[Article]:
         result_queue: Queue[Union[Article, Exception]] = Queue(len(publishers))
         wrapped_article_task = queue_wrapper(result_queue, article_task)
-
+        pool = ThreadPool(processes=len(publishers) or None)
         try:
-            with ThreadPool(processes=len(publishers) or None) as pool, session_handler.context(
+            with session_handler.context(
                 POOL_CONNECTIONS=len(publishers),
             ):
                 yield from pool_queue_iter(pool.map_async(wrapped_article_task, publishers), result_queue)
         finally:
             logger.debug(f"Shutting down {type(self).__name__!r} ...")
             __EVENTS__.set_for_all("stop")
+            pool.close()
             pool.join()
             __EVENTS__.clear_for_all("stop")
             logger.debug("Shutdown done")
