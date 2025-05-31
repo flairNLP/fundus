@@ -4,11 +4,14 @@ from dateutil.rrule import MONTHLY, rrule
 
 from fundus.publishers.base_objects import Publisher, PublisherGroup
 from fundus.publishers.es.abc import ABCParser
+from fundus.publishers.es.el_diario import ElDiarioParser
 from fundus.publishers.es.el_mundo import ElMundoParser
 from fundus.publishers.es.el_pais import ElPaisParser
 from fundus.publishers.es.la_vanguardia import LaVanguardiaParser
 from fundus.publishers.es.mallorca_magazin import MallorcaMagazinParser
 from fundus.publishers.es.mallorca_zeitung import MallorcaZeitungParser
+from fundus.publishers.es.publico import PublicoParser
+from fundus.scraping.filter import inverse, regex_filter
 from fundus.scraping.url import NewsMap, RSSFeed, Sitemap
 
 
@@ -84,5 +87,29 @@ class ES(metaclass=PublisherGroup):
         sources=[
             NewsMap("https://www.mallorcazeitung.es/sitemap_google_news_8d82b.xml", languages={"de"}),
             RSSFeed("https://www.mallorcazeitung.es/rss/section/28000", languages={"de"}),
+        ],
+    )
+    ElDiario = Publisher(
+        name="elDiario.es",
+        domain="https://www.eldiario.es/",
+        parser=ElDiarioParser,
+        sources=[
+            RSSFeed("https://www.eldiario.es/rss/"),
+            NewsMap("https://www.eldiario.es/sitemap_google_news_25b87.xml"),
+            Sitemap(
+                "https://www.eldiario.es/sitemap_index_25b87.xml",
+                sitemap_filter=inverse(regex_filter("sitemap_contents")),
+            ),
+        ],
+    )
+    Publico = Publisher(
+        name="Publico",
+        domain="https://www.publico.es/",
+        parser=PublicoParser,
+        sources=[
+            Sitemap(f"https://www.publico.es/sitemap-noticias-{d.year}{str(d.month).zfill(2)}.xml")
+            for d in reversed(
+                list(rrule(MONTHLY, dtstart=datetime.datetime(2020, 1, 1), until=datetime.datetime.now()))
+            )
         ],
     )
