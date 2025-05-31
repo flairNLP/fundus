@@ -24,7 +24,7 @@ class PublicoParser(ParserProxy):
         )
         _summary_selector = XPath(
             "//div[contains(@class, 'text-base') and contains(@class, 'desktop:text-xl')]//p | "
-            "//p[contains(@class, 'desktop:text-lg')]"
+            "//div[contains(@class, 'desktop:flex')]//p[contains(@class, 'desktop:text-lg')]"
         )
 
         @attribute
