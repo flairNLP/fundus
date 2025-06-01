@@ -29,7 +29,7 @@ jobs:
         run: |
           pip install -e .[dev]
       - name: Run pytest without warnings
-        run: python -m pytest -vv -p no:warnings
+        run: python -m pytest -vv
 
   mypy:
     # Containers must run in Linux based operating systems
