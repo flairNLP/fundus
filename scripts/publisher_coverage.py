@@ -15,7 +15,6 @@ from fundus.scraping.article import Article
 from fundus.scraping.session import socket_timeout
 
 
-
 def main() -> None:
     failed: int = 0
     timeout_in_seconds: int = 30
