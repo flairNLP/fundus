@@ -28,6 +28,7 @@ class MBNParser(ParserProxy):
     class V1(BaseParser):
         _paragraph_selector = XPath("//div[@itemprop='articleBody']//p[normalize-space()]")
         _full_text_selector = XPath("//div[@itemprop='articleBody']")
+        _subheadline_selector = XPath("//div[contains(@class,'midtitle_text')]")
 
         @function(priority=0)
         def _transform_br_element(self):
@@ -51,6 +52,7 @@ class MBNParser(ParserProxy):
             return extract_article_body_with_selector(
                 self.precomputed.doc,
                 paragraph_selector=self._paragraph_selector,
+                subheadline_selector=self._subheadline_selector,
             )
 
         @attribute
@@ -72,7 +74,7 @@ class MBNParser(ParserProxy):
                 paragraph_selector=self._paragraph_selector,
                 upper_boundary_selector=XPath("//div[@itemprop='articleBody']"),
                 image_selector=XPath("//div[@itemprop='articleBody']//div[@class='thumb_area img']//img"),
-                caption_selector=XPath("./ancestor::div[@class='thumb_area img']" "//span[@class='thum_figure_txt']"),
+                caption_selector=XPath("./ancestor::div[@class='thumb_area img']//span[@class='thum_figure_txt']"),
                 alt_selector=XPath("./@alt"),
                 author_selector=re.compile(r"^(?!.*)"),
             )
@@ -82,7 +84,7 @@ class MBNParser(ParserProxy):
             )
             for img in imgs:
                 text = img.caption or img.description or ""
-                raw = [a or b or c for a, b, c in pattern.findall(text)]
-                img.authors = list(dict.fromkeys([s.strip() for s in raw if s.strip()]))
+                authors = [s.strip() for grp in pattern.findall(text) for s in grp if s and s.strip()]
+                img.authors = list(dict.fromkeys(authors))
 
             return imgs
