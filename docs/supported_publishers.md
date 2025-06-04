@@ -1929,6 +1929,24 @@
   <tbody>
     <tr>
       <td>
+        <code>HankookIlbo</code>
+      </td>
+      <td>
+        <div>Hankook Ilbo</div>
+      </td>
+      <td>
+        <a href="https://www.hankookilbo.com/">
+          <span>www.hankookilbo.com</span>
+        </a>
+      </td>
+      <td>
+        <code>ko</code>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
         <code>MBN</code>
       </td>
       <td>

@@ -11,7 +11,7 @@ from fundus.parser.utility import (
     generic_author_parsing,
     generic_date_parsing,
     generic_topic_parsing,
-    image_extraction,
+    image_extraction, transform_breaks_to_paragraphs,
 )
 
 
@@ -24,7 +24,7 @@ class HankookIlboParser(ParserProxy):
         @attribute
         def body(self) -> Optional[ArticleBody]:
             return extract_article_body_with_selector(
-                self.precomputed.doc,
+                doc=self.precomputed.doc,
                 summary_selector=self._summary_selector,
                 subheadline_selector=self._subheadline_selector,
                 paragraph_selector=self._paragraph_selector,
