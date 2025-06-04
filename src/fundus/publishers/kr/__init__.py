@@ -1,7 +1,8 @@
 from fundus.publishers.base_objects import Publisher, PublisherGroup
 from fundus.scraping.filter import inverse, regex_filter
-from fundus.scraping.url import RSSFeed, Sitemap
+from fundus.scraping.url import NewsMap, RSSFeed, Sitemap
 
+from .hankook_ilbo import HankookIlboParser
 from .mbn import MBNParser
 
 
@@ -22,5 +23,15 @@ class KR(metaclass=PublisherGroup):
                 "https://www.mk.co.kr/sitemap/daily-articles/",
                 sitemap_filter=inverse(regex_filter(r"/news/columnists/")),
             ),
+        ],
+    )
+
+    HankookIlbo = Publisher(
+        name="Hankook Ilbo",
+        domain="https://www.hankookilbo.com/",
+        parser=HankookIlboParser,
+        sources=[
+            NewsMap("https://www.hankookilbo.com/sitemap/latest-articles"),
+            Sitemap("https://www.hankookilbo.com/sitemap/daily-articles/2020"),
         ],
     )
