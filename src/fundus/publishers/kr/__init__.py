@@ -10,7 +10,7 @@ class KR(metaclass=PublisherGroup):
     default_language = "ko"
 
     MBN = Publisher(
-        name="MaeilBusinessNewspaper",
+        name="Maeil Business Newspaper",
         domain="https://www.mk.co.kr/",
         parser=MBNParser,
         sources=[
