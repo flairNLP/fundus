@@ -1,6 +1,6 @@
 from fundus.publishers.base_objects import Publisher, PublisherGroup
-from fundus.scraping.url import RSSFeed, NewsMap, Sitemap
 from fundus.scraping.filter import inverse, regex_filter
+from fundus.scraping.url import NewsMap, RSSFeed, Sitemap
 
 from .hankook_ilbo import HankookIlboParser
 from .mbn import MBNParser
