@@ -18,6 +18,7 @@ from fundus.publishers.ind import IND
 from fundus.publishers.isl import ISL
 from fundus.publishers.it import IT
 from fundus.publishers.jp import JP
+from fundus.publishers.kr import KR
 from fundus.publishers.lt import LT
 from fundus.publishers.my import MY
 from fundus.publishers.na import NA
@@ -91,3 +92,4 @@ class PublisherCollection(metaclass=PublisherCollectionMeta):
     tw = TW
     tz = TZ
     dk = DK
+    kr = KR
