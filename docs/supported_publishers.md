@@ -1399,6 +1399,42 @@
       <td>&#160;</td>
       <td>&#160;</td>
     </tr>
+    <tr>
+      <td>
+        <code>Publico</code>
+      </td>
+      <td>
+        <div>Publico</div>
+      </td>
+      <td>
+        <a href="https://www.publico.es/">
+          <span>www.publico.es</span>
+        </a>
+      </td>
+      <td>
+        <code>es</code>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
+        <code>ElDiario</code>
+      </td>
+      <td>
+        <div>elDiario.es</div>
+      </td>
+      <td>
+        <a href="https://www.eldiario.es/">
+          <span>www.eldiario.es</span>
+        </a>
+      </td>
+      <td>
+        <code>es</code>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
   </tbody>
 </table>
 
@@ -1893,20 +1929,22 @@
   <tbody>
     <tr>
       <td>
-        <code>HankookIlbo</code>
+        <code>MBN</code>
       </td>
       <td>
-        <div>Hankook Ilbo</div>
+        <div>MaeilBusinessNewspaper</div>
       </td>
       <td>
-        <a href="https://www.hankookilbo.com/">
-          <span>www.hankookilbo.com</span>
+        <a href="https://www.mk.co.kr/">
+          <span>www.mk.co.kr</span>
         </a>
       </td>
       <td>
         <code>ko</code>
       </td>
-      <td>&#160;</td>
+      <td>
+        <code>topics</code>
+      </td>
       <td>&#160;</td>
     </tr>
   </tbody>
