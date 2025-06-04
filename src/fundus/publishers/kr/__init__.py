@@ -1,6 +1,6 @@
 from fundus.publishers.base_objects import Publisher, PublisherGroup
 from fundus.scraping.filter import inverse, regex_filter
-from fundus.scraping.url import NewsMap, RSSFeed, Sitemap
+from fundus.scraping.url import NewsMap, Sitemap
 
 from .hankook_ilbo import HankookIlboParser
 from .mbn import MBNParser
@@ -10,7 +10,7 @@ class KR(metaclass=PublisherGroup):
     default_language = "ko"
 
     MBN = Publisher(
-        name="MaeilBusinessNewspaper",
+        name="Maeil Business Newspaper",
         domain="https://www.mk.co.kr/",
         parser=MBNParser,
         sources=[

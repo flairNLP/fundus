@@ -1950,7 +1950,7 @@
         <code>MBN</code>
       </td>
       <td>
-        <div>MaeilBusinessNewspaper</div>
+        <div>Maeil Business Newspaper</div>
       </td>
       <td>
         <a href="https://www.mk.co.kr/">
