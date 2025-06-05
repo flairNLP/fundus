@@ -28,7 +28,8 @@ class DailyNewsTZParser(ParserProxy):
             "//p[not(re:test(string(.), '^(SOMA|ALSO READ):') or span or @class) and text()] | "
             "//div[contains(@class, 'entry-content')]//p[not(position()=1 or @class)]//span[not(span) and text()] |"
             "//div[contains(@class, 'entry-content')]//p[not(@class)]//span/span[text()] | "
-            "//div[contains(@class, 'entry-content')]//p[position()=1 and not(@class or a)]",
+            "//div[contains(@class, 'entry-content')]//p[position()=1 and not(@class or a)] | "
+            "//div[contains(@class, 'entry-content')]//span[@data-offset-key]",
             namespaces={"re": "http://exslt.org/regular-expressions"},
         )
 
