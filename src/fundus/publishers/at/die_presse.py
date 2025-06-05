@@ -1,7 +1,6 @@
 import datetime
 from typing import List, Optional
 
-from lxml.cssselect import CSSSelector
 from lxml.etree import XPath
 
 from fundus.parser import ArticleBody, BaseParser, Image, ParserProxy, attribute
@@ -17,7 +16,7 @@ from fundus.parser.utility import (
 class DiePresseParser(ParserProxy):
     class V1(BaseParser):
         _paragraph_selector = XPath(
-            r"//div[@id='article-body']/p[not(@class or re:test(string(.), '^\s*\(.+\)\s*$')) and text()]",
+            r"//div[@id='article-body']/p[text() and not(@class or re:test(string(.), '^\s*\(.+\)\s*$'))]",
             namespaces={"re": "http://exslt.org/regular-expressions"},
         )
         _summary_selector = XPath("//p[@class='lead']")
