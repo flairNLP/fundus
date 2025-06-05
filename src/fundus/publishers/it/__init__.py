@@ -6,6 +6,7 @@ from fundus.publishers.base_objects import Publisher, PublisherGroup
 from fundus.publishers.it.corriere_della_sera import CorriereDellaSeraParser
 from fundus.publishers.it.il_giornale import IlGiornaleParser
 from fundus.publishers.it.la_repubblica import LaRepubblicaParser
+from fundus.publishers.it.tageszeitung import TageszeitungParser
 from fundus.scraping.filter import regex_filter
 from fundus.scraping.url import NewsMap, RSSFeed, Sitemap
 
@@ -96,6 +97,19 @@ class IT(metaclass=PublisherGroup):
             Sitemap(
                 "https://www.ilgiornale.it/sitemap/indice.xml",
                 sitemap_filter=regex_filter(r"\*/video/|\*/image/"),
+            ),
+        ],
+    )
+
+    Tageszeitung = Publisher(
+        name="Die Neue Südtiroler Tageszeitung",
+        domain="https://www.tageszeitung.it",
+        parser=TageszeitungParser,
+        sources=[
+            Sitemap(
+                "https://www.tageszeitung.it/sitemap.xml",
+                sitemap_filter=regex_filter(r"page|misc|\/sitemap\.xml"),
+                languages={"de"},
             ),
         ],
     )
