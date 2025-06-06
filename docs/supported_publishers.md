@@ -37,6 +37,26 @@
     </tr>
     <tr>
       <td>
+        <code>SalzburgerNachrichten</code>
+      </td>
+      <td>
+        <div>Salzburger Nachrichten</div>
+      </td>
+      <td>
+        <a href="https://www.sn.at">
+          <span>www.sn.at</span>
+        </a>
+      </td>
+      <td>
+        <code>de</code>
+      </td>
+      <td>
+        <code>topics</code>
+      </td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
         <code>ORF</code>
       </td>
       <td>
