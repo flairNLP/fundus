@@ -37,6 +37,24 @@
     </tr>
     <tr>
       <td>
+        <code>DiePresse</code>
+      </td>
+      <td>
+        <div>Die Presse</div>
+      </td>
+      <td>
+        <a href="https://diepresse.com">
+          <span>diepresse.com</span>
+        </a>
+      </td>
+      <td>
+        <code>de</code>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
         <code>ORF</code>
       </td>
       <td>
