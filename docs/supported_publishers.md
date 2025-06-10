@@ -37,22 +37,20 @@
     </tr>
     <tr>
       <td>
-        <code>SalzburgerNachrichten</code>
+        <code>DiePresse</code>
       </td>
       <td>
-        <div>Salzburger Nachrichten</div>
+        <div>Die Presse</div>
       </td>
       <td>
-        <a href="https://www.sn.at">
-          <span>www.sn.at</span>
+        <a href="https://diepresse.com">
+          <span>diepresse.com</span>
         </a>
       </td>
       <td>
         <code>de</code>
       </td>
-      <td>
-        <code>topics</code>
-      </td>
+      <td>&#160;</td>
       <td>&#160;</td>
     </tr>
     <tr>
