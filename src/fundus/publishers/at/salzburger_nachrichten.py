@@ -15,8 +15,10 @@ from fundus.parser.utility import (
 
 class SalzburgerNachrichtenParser(ParserProxy):
     class V1(BaseParser):
-        _paragraph_selector = XPath("//div[contains(@class, 'article-body-text')]/p")
-        _subheadline_selector = XPath("//div[contains(@class, 'article-body-text')]/h2")
+        _paragraph_selector = XPath("//div[contains(@class, 'article-body-text') or contains(@class,'section-text')]/p")
+        _subheadline_selector = XPath(
+            "//div[contains(@class, 'article-body-text') or contains(@class,'section-text')]//h2"
+        )
         _summary_selector = XPath("//p[@class='article-leadtext']")
 
         @attribute
