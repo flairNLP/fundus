@@ -37,6 +37,7 @@ from typing import (
     TypeVar,
     Union,
     cast,
+    overload,
 )
 
 import dill
@@ -222,6 +223,7 @@ class CrawlerBase(ABC):
         extraction_filter: Optional[ExtractionFilter],
         url_filter: Optional[URLFilter],
         language_filter: Optional[List[str]],
+        skip_publishers_disallowing_training: bool = False,
     ) -> Iterator[Article]:
         raise NotImplementedError
 
@@ -236,6 +238,7 @@ class CrawlerBase(ABC):
         language_filter: Optional[List[str]] = None,
         only_unique: bool = True,
         save_to_file: Union[None, str, Path] = None,
+        skip_publishers_disallowing_training: bool = False,
     ) -> Iterator[Article]:
         """Yields articles from initialized scrapers
 
@@ -267,6 +270,9 @@ class CrawlerBase(ABC):
                 Always returns the first encountered article. Defaults to True.
             save_to_file (Union[None, str, Path]): If set, the crawled articles will be collected saved to the
                 specified file as a JSON list.
+            skip_publishers_disallowing_training (bool): If set to True, publishers that disallow training
+                are skipped. Note that this is an indicator only and users with the intention of using Fundus to gather
+                training data should always check the publisher's terms of use beforehand.
 
         Returns:
             Iterator[Article]: An iterator yielding objects of type Article.
@@ -364,7 +370,12 @@ class CrawlerBase(ABC):
         try:
             with Timeout(seconds=timeout, silent=True, callback=callback, disable=timeout <= 0) as timer:
                 for article in self._build_article_iterator(
-                    tuple(fitting_publishers), error_handling, build_extraction_filter(), url_filter, language_filter
+                    tuple(fitting_publishers),
+                    error_handling,
+                    build_extraction_filter(),
+                    url_filter,
+                    language_filter,
+                    skip_publishers_disallowing_training,
                 ):
                     if max_articles_per_publisher and article_count[article.publisher] == max_articles_per_publisher:
                         if isinstance(self, Crawler) and not __EVENTS__.is_event_set("stop", article.publisher):
@@ -465,6 +476,7 @@ class Crawler(CrawlerBase):
         extraction_filter: Optional[ExtractionFilter] = None,
         url_filter: Optional[URLFilter] = None,
         language_filter: Optional[List[str]] = None,
+        skip_publisher_disallowing_training: bool = False,
     ) -> Iterator[Article]:
         def build_delay() -> Optional[Delay]:
             if isinstance(self.delay, float):
@@ -480,6 +492,24 @@ class Crawler(CrawlerBase):
 
             else:
                 raise TypeError("param <delay> of <Crawler.__init__>")
+
+        # register default events
+        __EVENTS__.register_event("stop")
+
+        if skip_publisher_disallowing_training and (
+            publisher.disallows_training or publisher.robots.disallows_training()
+        ):
+            logger.warning(
+                f"Skipping publisher {publisher.name!r} because it disallows training. "
+                f"Set <skip_publishers_disallowing_training> to False to include it."
+            )
+            return
+        if publisher.robots.disallow_all():
+            logger.warning(
+                f"Skipping publisher {publisher.name!r} because it disallows all crawling in robots.txt. "
+                f"Set <ignore_robots> to True to include it."
+            )
+            return
 
         scraper = WebScraper(
             publisher,
@@ -523,6 +553,7 @@ class Crawler(CrawlerBase):
         extraction_filter: Optional[ExtractionFilter],
         url_filter: Optional[URLFilter],
         language_filter: Optional[List[str]],
+        skip_publisher_disallowing_training: bool = False,
     ) -> Iterator[Article]:
         article_task = partial(
             self._fetch_articles,
@@ -530,6 +561,7 @@ class Crawler(CrawlerBase):
             extraction_filter=extraction_filter,
             url_filter=url_filter,
             language_filter=language_filter,
+            skip_publisher_disallowing_training=skip_publisher_disallowing_training,
         )
 
         if self.threading:
@@ -597,10 +629,19 @@ class CCNewsCrawler(CrawlerBase):
         extraction_filter: Optional[ExtractionFilter] = None,
         url_filter: Optional[URLFilter] = None,
         language_filter: Optional[List[str]] = None,
+        skip_publishers_disallowing_training: bool = False,
         bar: Optional[tqdm] = None,
     ) -> Iterator[Article]:
         retries: int = 0
         while True:
+            if skip_publishers_disallowing_training:
+                publishers = tuple(
+                    [
+                        publisher
+                        for publisher in publishers
+                        if not (publisher.disallows_training or publisher.robots.disallows_training())
+                    ]
+                )
             source = CCNewsSource(*publishers, warc_path=warc_path)
             scraper = CCNewsScraper(source)
             try:
@@ -731,6 +772,7 @@ class CCNewsCrawler(CrawlerBase):
         extraction_filter: Optional[ExtractionFilter],
         url_filter: Optional[URLFilter],
         language_filter: Optional[List[str]],
+        skip_publishers_disallowing_training: bool = False,
         **kwargs,
     ) -> Iterator[Article]:
         warc_paths = tuple(self._get_warc_paths())
@@ -743,6 +785,7 @@ class CCNewsCrawler(CrawlerBase):
                 extraction_filter=extraction_filter,
                 url_filter=url_filter,
                 language_filter=language_filter,
+                skip_publishers_disallowing_training=skip_publishers_disallowing_training,
                 bar=bar,
             )
 
