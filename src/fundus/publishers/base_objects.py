@@ -43,9 +43,10 @@ class CustomRobotFileParser(RobotFileParser):
     }
 
     def __init__(self, url: str, headers: Optional[Dict[str, str]] = None):
-        super().__init__(url)
         self.headers = headers
-        self.disallow_training: bool = False
+        self.disallows_training: bool = False
+        self.url = url
+        super().__init__(url)
 
     # noinspection PyAttributeOutsideInit
     def read(self) -> None:
@@ -53,18 +54,18 @@ class CustomRobotFileParser(RobotFileParser):
         try:
             # noinspection PyUnresolvedReferences
             session = session_handler.get_session()
-            response = session.get_with_interrupt(self.url, headers=self.headers)  # type: ignore[attr-defined]
+            response = session.get_with_interrupt(self.url, headers=self.headers)
         except HTTPError as err:
             if err.response.status_code in (401, 403):
                 logger.warning(
-                    f"Robots {self.url!r} disallowed access with status code {err.response.status_code}."  # type: ignore[attr-defined]
+                    f"Robots {self.url!r} disallowed access with status code {err.response.status_code}."
                     " Defaulting to disallow all."
                 )
                 self.disallow_all = True
             elif 400 <= err.response.status_code < 500:
                 self.allow_all = True
         except RequestInterruptedError as err:
-            logger.warning(f"Request for robots {self.url!r} interrupted: {err!r}. Defaulting to disallow all.")  # type: ignore[attr-defined]
+            logger.warning(f"Request for robots {self.url!r} interrupted: {err!r}. Defaulting to disallow all.")  #
             self.disallow_all = True
         else:
             self.parse(response.text.splitlines())
@@ -72,7 +73,7 @@ class CustomRobotFileParser(RobotFileParser):
     def parse(self, lines: Iterable[str]) -> None:
         for line in lines:
             if line.strip().startswith("#") and set(line.split(" ")) & self._disallow_training_keywords:
-                self.disallow_training = True
+                self.disallows_training = True
                 break
         super().parse(lines)
 
@@ -107,7 +108,7 @@ class Robots:
 
     def disallows_training(self) -> bool:
         self.ensure_ready()
-        return self.robots_file_parser.disallow_training
+        return self.robots_file_parser.disallows_training
 
     def disallow_all(self) -> bool:
         self.ensure_ready()

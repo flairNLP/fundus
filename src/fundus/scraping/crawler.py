@@ -37,7 +37,6 @@ from typing import (
     TypeVar,
     Union,
     cast,
-    overload,
 )
 
 import dill

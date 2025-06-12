@@ -68,7 +68,6 @@ class InterruptableSession(requests.Session):
             except Empty:
                 if __EVENTS__.is_event_set("stop"):
                     logger.debug(f"Interrupt request for {url!r}")
-                    # Raise an exception instead of calling exit() to avoid deadlocks
                     raise RequestInterruptedError(f"Request to {url} was interrupted by stop event")
 
 
