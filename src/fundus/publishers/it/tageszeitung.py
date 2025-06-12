@@ -1,12 +1,15 @@
 import datetime
-import locale
 import re
 from typing import List, Optional
 
 from lxml.etree import XPath
 
 from fundus.parser import ArticleBody, BaseParser, Image, ParserProxy, attribute
-from fundus.parser.utility import extract_article_body_with_selector, image_extraction
+from fundus.parser.utility import (
+    extract_article_body_with_selector,
+    generic_date_parsing,
+    image_extraction,
+)
 
 
 class TageszeitungParser(ParserProxy):
@@ -18,7 +21,6 @@ class TageszeitungParser(ParserProxy):
 
         @attribute
         def body(self) -> Optional[ArticleBody]:
-            # Extract the article body using utility function
             return extract_article_body_with_selector(
                 self.precomputed.doc,
                 summary_selector=self._summary_selector,
@@ -33,11 +35,10 @@ class TageszeitungParser(ParserProxy):
 
         @attribute
         def publishing_date(self) -> Optional[datetime.datetime]:
-            locale.setlocale(locale.LC_ALL, locale="German")
             if not (publishing_date := self._date_selector(self.precomputed.doc)):
                 return None
             else:
-                return datetime.datetime.strptime(publishing_date[0], "%d. %B %Y, %H:%M")
+                return generic_date_parsing(publishing_date[0])
 
         @attribute
         def images(self) -> List[Image]:
