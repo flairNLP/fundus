@@ -11,8 +11,8 @@ from fundus.parser.utility import extract_article_body_with_selector, image_extr
 
 class TageszeitungParser(ParserProxy):
     class V1(BaseParser):
-        _summary_selector = XPath("//div[@id='article_content']//p[not(@class='wp-caption-text')]/strong")
-        _paragraph_selector = XPath("//div[@id='article_content']//p[not(strong or @class='wp-caption-text')]")
+        _summary_selector = XPath("//div[@id='article_content']//p[not(@class='wp-caption-text' or text()) and strong]")
+        _paragraph_selector = XPath("//div[@id='article_content']//p[not(@class='wp-caption-text') and text()]")
 
         _date_selector = XPath("//span[@class='meta_date']//strong/text()")
 
