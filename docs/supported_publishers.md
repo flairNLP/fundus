@@ -2098,7 +2098,9 @@
         <code>TheNamibian</code>
       </td>
       <td>
-        <div>The Namibian</div>
+        <div>
+          <strike>The Namibian</strike>
+        </div>
       </td>
       <td>
         <a href="https://www.namibian.com.na/">
