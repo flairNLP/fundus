@@ -21,4 +21,5 @@ class NA(metaclass=PublisherGroup):
                 languages={"en", "kj"},
             ),
         ],
+        deprecated=True,
     )
