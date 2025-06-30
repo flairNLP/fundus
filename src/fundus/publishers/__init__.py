@@ -23,6 +23,7 @@ from fundus.publishers.kr import KR
 from fundus.publishers.li import LI
 from fundus.publishers.ls import LS
 from fundus.publishers.lt import LT
+from fundus.publishers.lu import LU
 from fundus.publishers.mx import MX
 from fundus.publishers.my import MY
 from fundus.publishers.na import NA
@@ -91,6 +92,7 @@ class PublisherCollection(metaclass=PublisherCollectionMeta):
     li = LI
     ls = LS
     lt = LT
+    lu = LU
     mx = MX
     my = MY
     na = NA
