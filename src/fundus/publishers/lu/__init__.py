@@ -1,6 +1,7 @@
 from fundus.publishers.base_objects import Publisher, PublisherGroup
-from fundus.scraping.url import RSSFeed, Sitemap
+from fundus.scraping.url import NewsMap, RSSFeed, Sitemap
 
+from .luxemburger_wort import LuxemburgerWortParser
 from .tageblatt import TageblattParser
 
 
@@ -22,5 +23,16 @@ class LU(metaclass=PublisherGroup):
             RSSFeed("https://www.tageblatt.lu/category/campus/feed/atom/"),
             RSSFeed("https://www.tageblatt.lu/category/magazin/feed/atom/"),
             RSSFeed("https://www.tageblatt.lu/category/auto/feed/atom/"),
+        ],
+    )
+
+    LuxemburgerWort = Publisher(
+        name="Luxemburger Wort",
+        domain="https://www.wort.lu/",
+        parser=LuxemburgerWortParser,
+        sources=[
+            RSSFeed("https://www.wort.lu/de/rss"),
+            Sitemap("https://www.wort.lu/sitemap.xml", reverse=True),
+            NewsMap("https://www.wort.lu/sitemap-news.xml"),
         ],
     )
