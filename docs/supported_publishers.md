@@ -2252,7 +2252,7 @@
         <code>Tageblatt</code>
       </td>
       <td>
-        <div>Tagebblatt</div>
+        <div>Tageblatt</div>
       </td>
       <td>
         <a href="https://www.tageblatt.lu/">
