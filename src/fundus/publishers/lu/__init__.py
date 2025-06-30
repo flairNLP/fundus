@@ -8,7 +8,7 @@ class LU(metaclass=PublisherGroup):
     default_language = "de"
 
     Tageblatt = Publisher(
-        name="Tagebblatt",
+        name="Tageblatt",
         domain="https://www.tageblatt.lu/",
         parser=TageblattParser,
         sources=[
