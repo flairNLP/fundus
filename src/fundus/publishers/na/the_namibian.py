@@ -58,7 +58,7 @@ class TheNamibianParser(ParserProxy):
     class V1_1(V1):
         VALID_UNTIL = datetime.today().date()
         _paragraph_selector = XPath("//div[contains(@class, 'entry-content')]/p[(text() or strong) and position()>1]")
-        _summary_selector = XPath("//div[contains(@class, 'entry-content')]/p[(text() or strong) and position()=1]")
+        _summary_selector = XPath("//div[contains(@class, 'entry-content')]/p[(text() or strong) and position()=1] ")
 
         @attribute
         def body(self) -> Optional[ArticleBody]:
