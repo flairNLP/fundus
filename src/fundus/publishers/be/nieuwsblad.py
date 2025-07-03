@@ -17,13 +17,13 @@ from fundus.parser.utility import (
 
 class NieuwsbladParser(ParserProxy):
     class V1(BaseParser):
-        _summary_selector = XPath("//div[@data-testid='article-intro']")
-        _paragraph_selector = XPath("//div[@data-testid='article-body']/p[text()]")
+        _summary_selector = XPath("//*[@data-testid='article-intro']")
+        _paragraph_selector = XPath("//*[@data-testid='article-body']/p[text()]")
         _subheadline_selector = XPath(
-            "//div[@data-testid='article-body']/p/span[@class='bold'] | " "//div[@data-testid='article-body']/h3"
+            "//*[@data-testid='article-body']/p/span[@class='bold'] | " "//div[@data-testid='article-body']/h3"
         )
 
-        _topic_selector = XPath("//ul[contains(@class, 'taglist')]/li")
+        _topic_selector = XPath("//ul[contains(@class, 'taglist')]/li|//div[contains(@class, 'tag-list')]/a")
 
         @attribute
         def body(self) -> Optional[ArticleBody]:
@@ -57,7 +57,11 @@ class NieuwsbladParser(ParserProxy):
         def images(self) -> List[Image]:
             return image_extraction(
                 doc=self.precomputed.doc,
+                image_selector=XPath("//figure[not(contains(@class, 'teaser'))]//img"),
                 paragraph_selector=self._paragraph_selector,
+                caption_selector=XPath(
+                    "./ancestor::figure//*[(self::div and contains(@class, 'caption')) or self::figcaption]"
+                ),
                 author_selector=re.compile(r"\s*—?\s*©\s*(?P<credits>.*)"),
                 lower_boundary_selector=XPath("//div[@class='widget partnerbox_1']"),
             )
