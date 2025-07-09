@@ -13,8 +13,8 @@ from fundus.publishers.de import DE
 from fundus.publishers.dk import DK
 from fundus.publishers.es import ES
 from fundus.publishers.fr import FR
-from fundus.publishers.il import IL
 from fundus.publishers.gl import GL
+from fundus.publishers.il import IL
 from fundus.publishers.ind import IND
 from fundus.publishers.isl import ISL
 from fundus.publishers.it import IT
