@@ -1,7 +1,7 @@
 from fundus.publishers.base_objects import Publisher, PublisherGroup
+from fundus.scraping.filter import inverse, regex_filter
 from fundus.scraping.url import Sitemap
 
-from ...scraping.filter import inverse, regex_filter
 from .israel_nachrichten import IsraelNachrichtenParser
 
 
