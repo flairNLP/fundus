@@ -190,7 +190,7 @@ def sanitize_json(text: str) -> Optional[str]:
 
     # substitute "bad" values
     sanitized = re.sub(_json_undefined, r"\g<key>:null", sanitized)
-    removed_unicode = html.unescape(re.sub(r"&quot;?", "\\&quot;", sanitized))
+    removed_unicode = html.unescape(re.sub(r"&quot;", "\\&quot;", sanitized))
 
     return removed_unicode
 
@@ -554,9 +554,9 @@ def parse_urls(node: lxml.html.HtmlElement) -> Optional[Dict[str, str]]:
         return sorted(strings, key=len)[-1]
 
     if srcset := cast(List[str], _srcset_selector(node)):
-        return parse_srcset(normalize_whitespace(get_longest_string(srcset)))
+        return parse_srcset(get_longest_string(srcset))
     elif src := cast(List[str], _src_selector(node)):
-        return {"1x": normalize_whitespace(get_longest_string(src))}
+        return {"1x": get_longest_string(src)}
     else:
         return None
 
