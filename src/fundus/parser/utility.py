@@ -190,6 +190,7 @@ def sanitize_json(text: str) -> Optional[str]:
 
     # substitute "bad" values
     sanitized = re.sub(_json_undefined, r"\g<key>:null", sanitized)
+    sanitized = re.sub(r"[\r\n\t]+", "", sanitized)
     removed_unicode = html.unescape(re.sub(r"&quot;", "\\&quot;", sanitized))
 
     return removed_unicode
@@ -467,8 +468,25 @@ def generic_topic_parsing(
 _tz_infos = {"CET": 3600, "CEST": 7200, "IST": 19800}
 
 
+class CustomParserInfo(parser.parserinfo):
+    MONTHS = [
+        ("Jan", "January", "Januar"),
+        ("Feb", "February", "Februar"),
+        ("Mar", "March", "März"),
+        ("Apr", "April"),
+        ("May", "May", "Mai"),
+        ("Jun", "June", "Juni"),
+        ("Jul", "July", "Juli"),
+        ("Aug", "August"),
+        ("Sep", "Sept", "September"),
+        ("Oct", "October", "Oktober", "Okt"),
+        ("Nov", "November"),
+        ("Dec", "December", "Dezember", "Dez"),
+    ]
+
+
 def generic_date_parsing(date_str: Optional[str]) -> Optional[datetime]:
-    return parser.parse(date_str, tzinfos=_tz_infos) if date_str else None
+    return parser.parse(date_str, tzinfos=_tz_infos, parserinfo=CustomParserInfo(), fuzzy=True) if date_str else None
 
 
 _title_selector = CSSSelector("title")
@@ -494,6 +512,7 @@ def preprocess_url(url: str, domain: str) -> str:
 
 def image_author_parsing(authors: Union[str, List[str]]) -> List[str]:
     credit_keywords = [
+        "fotograf",
         "credits?",
         "quellen?",
         "bild(rechte)?",
@@ -643,7 +662,12 @@ _relative_source_selector = XPath("./ancestor::picture//source")
 
 def parse_versions(img_node: lxml.html.HtmlElement, size_pattern: Optional[Pattern[str]] = None) -> List[ImageVersion]:
     # parse img
-    if (default_width := img_node.get("width")) and (default_height := img_node.get("height")):
+    if (
+        (default_width := img_node.get("width"))
+        and not default_width == "auto"
+        and (default_height := img_node.get("height"))
+        and not default_height == "auto"
+    ):
         ratio = float(default_width) / float(default_height)
     else:
         ratio = None

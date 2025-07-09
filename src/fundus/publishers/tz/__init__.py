@@ -14,8 +14,8 @@ class TZ(metaclass=PublisherGroup):
         parser=DailyNewsTZParser,
         sources=[
             Sitemap(
-                "https://www.dailynews.co.tz/sitemap_index.xml",
-                sitemap_filter=inverse(regex_filter("post-sitemap")),
+                "https://dailynews.co.tz/wp-sitemap.xml",
+                sitemap_filter=inverse(regex_filter("sitemap-posts-post")),
                 reverse=True,
                 languages={"en"},
             ),
@@ -27,8 +27,8 @@ class TZ(metaclass=PublisherGroup):
         parser=DailyNewsTZParser,
         sources=[
             Sitemap(
-                "https://www.habarileo.co.tz/sitemap_index.xml",
-                sitemap_filter=inverse(regex_filter("post-sitemap")),
+                "https://habarileo.co.tz/wp-sitemap.xml",
+                sitemap_filter=inverse(regex_filter("sitemap-posts-post")),
                 reverse=True,
             ),
         ],

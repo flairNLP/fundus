@@ -52,7 +52,6 @@ class BaseScraper:
                         raise ValueError(f"Unknown value {error_handling!r} for parameter <error_handling>'")
 
                 else:
-                    extraction["url"] = html.responded_url
                     if extraction_filter and (filter_result := extraction_filter(extraction)):
                         if isinstance(filter_result, FilterResultWithMissingAttributes):
                             logger.debug(
@@ -83,7 +82,11 @@ class WebScraper(BaseScraper):
     ):
         if restrict_sources_to:
             url_sources = tuple(
-                more_itertools.flatten(publisher.source_mapping[source_type] for source_type in restrict_sources_to)
+                more_itertools.flatten(
+                    publisher.source_mapping[source_type]
+                    for source_type in restrict_sources_to
+                    if source_type in publisher.source_mapping
+                )
             )
         else:
             url_sources = tuple(more_itertools.flatten(publisher.source_mapping.values()))

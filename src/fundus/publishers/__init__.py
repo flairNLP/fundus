@@ -13,9 +13,13 @@ from fundus.publishers.de import DE
 from fundus.publishers.dk import DK
 from fundus.publishers.es import ES
 from fundus.publishers.fr import FR
+from fundus.publishers.gl import GL
+from fundus.publishers.il import IL
 from fundus.publishers.ind import IND
+from fundus.publishers.isl import ISL
 from fundus.publishers.it import IT
 from fundus.publishers.jp import JP
+from fundus.publishers.kr import KR
 from fundus.publishers.lt import LT
 from fundus.publishers.mx import MX
 from fundus.publishers.my import MY
@@ -23,6 +27,7 @@ from fundus.publishers.na import NA
 from fundus.publishers.no import NO
 from fundus.publishers.pl import PL
 from fundus.publishers.pt import PT
+from fundus.publishers.py import PY
 from fundus.publishers.tr import TR
 from fundus.publishers.tw import TW
 from fundus.publishers.tz import TZ
@@ -61,29 +66,34 @@ class PublisherCollectionMeta(PublisherGroup):
 
 
 class PublisherCollection(metaclass=PublisherCollectionMeta):
-    na = NA
-    de = DE
     at = AT
     au = AU
-    us = US
-    uk = UK
-    fr = FR
+    be = BE
+    ca = CA
     ch = CH
-    lt = LT
     cn = CN
     cz = CZ
-    be = BE
-    tr = TR
-    my = MY
-    mx = MX
-    pt = PT
-    pl = PL
-    ind = IND
-    no = NO
-    ca = CA
+    de = DE
+    dk = DK
     es = ES
-    jp = JP
+    fr = FR
+    gl = GL
+    il = IL
+    ind = IND
+    isl = ISL
     it = IT
+    jp = JP
+    kr = KR
+    lt = LT
+    mx = MX
+    my = MY
+    na = NA
+    no = NO
+    pl = PL
+    pt = PT
+    py = PY
+    tr = TR
     tw = TW
     tz = TZ
-    dk = DK
+    uk = UK
+    us = US

@@ -259,5 +259,133 @@
       "Radio",
       "Fernsehen"
     ]
+  },
+  "V1_1": {
+    "authors": [
+      "ndr.de"
+    ],
+    "body": {
+      "summary": [
+        "Der Osnabrücker Leseforscher Christian Dawidowski sagt, dass bei Studierenden in den vergangen Jahren die Kompetenz des Lesens zurückgegangen sei. Ein Grund dafür: Das digitale Arbeiten."
+      ],
+      "sections": [
+        {
+          "headline": [],
+          "paragraphs": [
+            "Durch das Lesen am Bildschirm lasse offenbar die Konzentration nach, so Dawidowski. Seine Hypothese: Das Ablenkungspotenzial ist einfach zu groß. \"Es passiert immer irgendetwas anderes, was uns vom gelesenen Text abhält\", sagt der Leseforscher. Seiner Meinung nach gehen vor allem zwei Dinge verloren."
+          ]
+        },
+        {
+          "headline": [
+            "Der Bildschirm ist dem Papier oftmals unterlegen"
+          ],
+          "paragraphs": [
+            "So gehe das Merkvermögen zurück, wenn Texte digital gelesen werden. \"Wir erinnern uns an diese Texte viel schlechter. Und das andere ist die deep-reading-Fähigkeit, also die Fähigkeit, zwischen den Zeilen lesen zu können und nach der Bedeutung eines Textes zu fragen\", sagt Dawidowski. Das \"zwischen den Zeilen lesen\" falle auch der Künstlichen Intelligenz schwer. Auf die greifen laut dem Forscher mittlerweile aber viele Studierende zurück, wenn es um das Lesen und auch das Verfassen komplexer wissenschaftlicher Texte geht. Tiefergehende Gedanken entstünden so nicht mehr."
+          ]
+        },
+        {
+          "headline": [
+            "Mündliche Prüfungen statt Hausarbeit?"
+          ],
+          "paragraphs": [
+            "Hört man sich unter Studierenden um, dann merkt man, dass der Einsatz von KI mittlerweile zum Studienalltag dazu gehört. Die einen lassen sich Texte zusammenfassen, andere nutzen die Künstliche Intelligenz zur Literaturrecherche. Ob die Texte von den Studierenden selbst gelesen und verfasst wurden oder ob die KI geholfen hat, das lässt sich laut Dawidowski kaum überprüfen. Deshalb wollen die Unis die Prüfungsform \"Hausarbeit\" überdenken. Der Vizepräsident für Studium und Lehre der Universität Osnabrück, Jochen Oltmer, geht davon aus, dass die Hausarbeiten nicht komplett wegfallen werden. Allerdings könne er sich vorstellen, dass Studierende zusätzlich zu den Hausarbeiten künftig mündliche Prüfungen ablegen müssen."
+          ]
+        }
+      ]
+    },
+    "images": [
+      {
+        "versions": [
+          {
+            "url": "https://www.ndr.de/resources/assets/resources/images/placeholder.png",
+            "query_width": null,
+            "size": {
+              "width": 20,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://images.ndr.de/image/bb7ae7bf-41d0-4b61-8249-d5c48deb41ed/AAABkXLw-Wg/AAABkZLl5GA/16x9-small/alphabetisierung236.webp?width=256",
+            "query_width": null,
+            "size": {
+              "width": 256,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://images.ndr.de/image/bb7ae7bf-41d0-4b61-8249-d5c48deb41ed/AAABkXLw-Wg/AAABkZLl5GA/16x9-small/alphabetisierung236.webp?width=384",
+            "query_width": null,
+            "size": {
+              "width": 384,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://images.ndr.de/image/bb7ae7bf-41d0-4b61-8249-d5c48deb41ed/AAABkXLw-Wg/AAABkZLlo-k/16x9-big/alphabetisierung236.webp?width=576",
+            "query_width": null,
+            "size": {
+              "width": 576,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://images.ndr.de/image/bb7ae7bf-41d0-4b61-8249-d5c48deb41ed/AAABkXLw-Wg/AAABkZLlo-k/16x9-big/alphabetisierung236.webp?width=640",
+            "query_width": null,
+            "size": {
+              "width": 640,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://images.ndr.de/image/bb7ae7bf-41d0-4b61-8249-d5c48deb41ed/AAABkXLw-Wg/AAABkZLlo-k/16x9-big/alphabetisierung236.webp?width=768",
+            "query_width": null,
+            "size": {
+              "width": 768,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://images.ndr.de/image/bb7ae7bf-41d0-4b61-8249-d5c48deb41ed/AAABkXLw-Wg/AAABkZLlo-k/16x9-big/alphabetisierung236.webp?width=1088",
+            "query_width": null,
+            "size": {
+              "width": 1088,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://images.ndr.de/image/bb7ae7bf-41d0-4b61-8249-d5c48deb41ed/AAABkXLw-Wg/AAABkZLlo-k/16x9-big/alphabetisierung236.webp?width=1920",
+            "query_width": null,
+            "size": {
+              "width": 1920,
+              "height": 0
+            },
+            "type": "image/webp"
+          }
+        ],
+        "is_cover": true,
+        "description": "Junger Mann schaut in ein Buch, um ihn herum fliegen Buchstaben (Bildmontage)",
+        "caption": null,
+        "authors": [],
+        "position": 237
+      }
+    ],
+    "publishing_date": "2025-06-17 18:24:10.368000+02:00",
+    "title": "Forscher aus Osnabrück warnt: Studierende verlernen das Lesen",
+    "topics": [
+      "Osnabrück",
+      "Hochschule",
+      "Leseforscher",
+      "Studierende",
+      "verlernen",
+      "Lesen",
+      "OS"
+    ]
   }
 }
