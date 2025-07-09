@@ -142,7 +142,7 @@ class DE(metaclass=PublisherGroup):
             RSSFeed("https://www.faz.net/rss/aktuell/sport"),
             RSSFeed("https://www.faz.net/rss/aktuell/wirtschaft/"),
             RSSFeed("https://www.faz.net/rss/aktuell/gesellschaft/"),
-            Sitemap("https://www.faz.net/sitemap-index.xml"),
+            Sitemap("https://www.faz.net/sitemap-index.xml", sitemap_filter=inverse(regex_filter("-artikel-"))),
             NewsMap("https://www.faz.net/sitemap-news.xml"),
         ],
     )
@@ -258,8 +258,15 @@ class DE(metaclass=PublisherGroup):
         domain="https://www.ndr.de/",
         parser=NDRParser,
         sources=[
-            NewsMap("https://www.ndr.de/sitemap112-newssitemap.xml"),
-            Sitemap("https://www.ndr.de/sitemap112-sitemap.xml"),
+            NewsMap("https://www.ndr.de/news-102~news.xml"),
+            Sitemap("https://www.ndr.de/index~sitemap_f-sitemap--ndr--info--100.xml"),
+            Sitemap("https://www.ndr.de/index~sitemap_f-sitemap--ndr--niedersachsen--100.xml"),
+            Sitemap("https://www.ndr.de/index~sitemap_f-sitemap--ndr--schleswig--holstein--100.xml"),
+            Sitemap("https://www.ndr.de/index~sitemap_f-sitemap--ndr--mecklenburg--vorpommern--100.xml"),
+            Sitemap("https://www.ndr.de/index~sitemap_f-sitemap--ndr--hamburg--100.xml"),
+            Sitemap("https://www.ndr.de/index~sitemap_f-sitemap--ndr--sport--100.xml"),
+            Sitemap("https://www.ndr.de/index~sitemap_f-sitemap--ndr--kultur--100.xml"),
+            Sitemap("https://www.ndr.de/index~sitemap_f-sitemap--ndr--geschichte--100.xml"),
         ],
         url_filter=regex_filter("podcast[0-9]{4}|/index.html"),
     )
@@ -293,7 +300,7 @@ class DE(metaclass=PublisherGroup):
         domain="https://www.bild.de/",
         parser=BildParser,
         sources=[
-            RSSFeed("https://www.bild.de/rssfeeds/vw-neu/vw-neu-32001674,view=rss2.bild.xml"),
+            RSSFeed("https://www.bild.de/feed/alles.xml"),
             NewsMap("https://www.bild.de/sitemap-news.xml"),
             Sitemap("https://www.bild.de/sitemap-index.xml"),
         ],

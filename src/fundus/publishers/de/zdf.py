@@ -16,8 +16,8 @@ from fundus.parser.utility import (
 class ZDFParser(ParserProxy):
     class V1(BaseParser):
         _paragraph_selector = CSSSelector("div.r1nj4qn5")
-        _summary_selector = CSSSelector("p.ikh9v7p.c1bdz7f4")
-        _subheadlines_selector = CSSSelector("h2.t1rbo974.hhhtovw")
+        _summary_selector = CSSSelector("p.c1bdz7f4")
+        _subheadlines_selector = CSSSelector("h2.hhhtovw")
 
         @attribute
         def body(self) -> Optional[ArticleBody]:

@@ -1,5 +1,7 @@
 import pathlib
 
+from langdetect import DetectorFactory
+
 from fundus.publishers import PublisherCollection
 from fundus.scraping.article import Article
 from fundus.scraping.crawler import CCNewsCrawler, Crawler, CrawlerBase
@@ -20,3 +22,6 @@ __all__ = [
     "NewsMap",
     "Article",
 ]
+
+# make language detection deterministic https://pypi.org/project/langdetect/
+DetectorFactory.seed = 0

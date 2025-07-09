@@ -37,6 +37,44 @@
     </tr>
     <tr>
       <td>
+        <code>DiePresse</code>
+      </td>
+      <td>
+        <div>Die Presse</div>
+      </td>
+      <td>
+        <a href="https://diepresse.com">
+          <span>diepresse.com</span>
+        </a>
+      </td>
+      <td>
+        <code>de</code>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
+        <code>SalzburgerNachrichten</code>
+      </td>
+      <td>
+        <div>Salzburger Nachrichten</div>
+      </td>
+      <td>
+        <a href="https://www.sn.at">
+          <span>www.sn.at</span>
+        </a>
+      </td>
+      <td>
+        <code>de</code>
+      </td>
+      <td>
+        <code>topics</code>
+      </td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
         <code>ORF</code>
       </td>
       <td>
@@ -1363,6 +1401,78 @@
       <td>&#160;</td>
       <td>&#160;</td>
     </tr>
+    <tr>
+      <td>
+        <code>MallorcaMagazin</code>
+      </td>
+      <td>
+        <div>Mallorca Magazin</div>
+      </td>
+      <td>
+        <a href="https://www.mallorcamagazin.com/">
+          <span>www.mallorcamagazin.com</span>
+        </a>
+      </td>
+      <td>
+        <code>de</code>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
+        <code>MallorcaZeitung</code>
+      </td>
+      <td>
+        <div>Mallorca Zeitung</div>
+      </td>
+      <td>
+        <a href="https://www.mallorcazeitung.es/">
+          <span>www.mallorcazeitung.es</span>
+        </a>
+      </td>
+      <td>
+        <code>de</code>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
+        <code>Publico</code>
+      </td>
+      <td>
+        <div>Publico</div>
+      </td>
+      <td>
+        <a href="https://www.publico.es/">
+          <span>www.publico.es</span>
+        </a>
+      </td>
+      <td>
+        <code>es</code>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
+        <code>ElDiario</code>
+      </td>
+      <td>
+        <div>elDiario.es</div>
+      </td>
+      <td>
+        <a href="https://www.eldiario.es/">
+          <span>www.eldiario.es</span>
+        </a>
+      </td>
+      <td>
+        <code>es</code>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
   </tbody>
 </table>
 
@@ -1459,9 +1569,9 @@
 </table>
 
 
-## IL-Publishers
+## GL-Publishers
 
-<table class="publishers il">
+<table class="publishers gl">
   <thead>
     <tr>
       <th>Class&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</th>
@@ -1475,23 +1585,20 @@
   <tbody>
     <tr>
       <td>
-        <code>IsraelNachrichten</code>
+        <code>Sermitsiaq</code>
       </td>
       <td>
-        <div>Israel Nachrichten</div>
+        <div>Sermitsiaq</div>
       </td>
       <td>
-        <a href="https://www.israel-nachrichten.org/">
-          <span>www.israel-nachrichten.org</span>
+        <a href="https://www.sermitsiaq.ag/">
+          <span>www.sermitsiaq.ag</span>
         </a>
       </td>
       <td>
-        <code>de</code>
+        <code>kl</code>
       </td>
-      <td>
-        <code>images</code>
-        <code>topics</code>
-      </td>
+      <td>&#160;</td>
       <td>&#160;</td>
     </tr>
   </tbody>
@@ -1552,6 +1659,44 @@
 </table>
 
 
+## ISL-Publishers
+
+<table class="publishers isl">
+  <thead>
+    <tr>
+      <th>Class&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</th>
+      <th>Name&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</th>
+      <th>URL&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</th>
+      <th>Languages</th>
+      <th>Missing&#160;Attributes</th>
+      <th>Additional&#160;Attributes&#160;&#160;&#160;&#160;</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <code>Morgunbladid</code>
+      </td>
+      <td>
+        <div>Morgunbladid</div>
+      </td>
+      <td>
+        <a href="https://www.mbl.is/">
+          <span>www.mbl.is</span>
+        </a>
+      </td>
+      <td>
+        <code>is</code>
+      </td>
+      <td>
+        <code>topics</code>
+      </td>
+      <td>&#160;</td>
+    </tr>
+  </tbody>
+</table>
+
+
 ## IT-Publishers
 
 <table class="publishers it">
@@ -1582,6 +1727,27 @@
         <code>it</code>
       </td>
       <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
+        <code>Tageszeitung</code>
+      </td>
+      <td>
+        <div>Die Neue S&#252;dtiroler Tageszeitung</div>
+      </td>
+      <td>
+        <a href="https://www.tageszeitung.it">
+          <span>www.tageszeitung.it</span>
+        </a>
+      </td>
+      <td>
+        <code>de</code>
+      </td>
+      <td>
+        <code>authors</code>
+        <code>topics</code>
+      </td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -1651,7 +1817,7 @@
         </a>
       </td>
       <td>
-        <code>jp</code>
+        <code>ja</code>
       </td>
       <td>&#160;</td>
       <td>&#160;</td>
@@ -1669,7 +1835,7 @@
         </a>
       </td>
       <td>
-        <code>jp</code>
+        <code>ja</code>
       </td>
       <td>&#160;</td>
       <td>&#160;</td>
@@ -1687,7 +1853,7 @@
         </a>
       </td>
       <td>
-        <code>jp</code>
+        <code>ja</code>
       </td>
       <td>&#160;</td>
       <td>&#160;</td>
@@ -1705,7 +1871,7 @@
         </a>
       </td>
       <td>
-        <code>jp</code>
+        <code>ja</code>
       </td>
       <td>&#160;</td>
       <td>&#160;</td>
@@ -1723,7 +1889,7 @@
         </a>
       </td>
       <td>
-        <code>jp</code>
+        <code>ja</code>
       </td>
       <td>&#160;</td>
       <td>&#160;</td>
@@ -1759,7 +1925,7 @@
         </a>
       </td>
       <td>
-        <code>jp</code>
+        <code>ja</code>
       </td>
       <td>
         <code>authors</code>
@@ -1779,7 +1945,7 @@
         </a>
       </td>
       <td>
-        <code>jp</code>
+        <code>ja</code>
       </td>
       <td>&#160;</td>
       <td>&#160;</td>
@@ -1797,9 +1963,65 @@
         </a>
       </td>
       <td>
-        <code>jp</code>
+        <code>ja</code>
       </td>
       <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+  </tbody>
+</table>
+
+
+## KR-Publishers
+
+<table class="publishers kr">
+  <thead>
+    <tr>
+      <th>Class&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</th>
+      <th>Name&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</th>
+      <th>URL&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</th>
+      <th>Languages</th>
+      <th>Missing&#160;Attributes</th>
+      <th>Additional&#160;Attributes&#160;&#160;&#160;&#160;</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <code>HankookIlbo</code>
+      </td>
+      <td>
+        <div>Hankook Ilbo</div>
+      </td>
+      <td>
+        <a href="https://www.hankookilbo.com/">
+          <span>www.hankookilbo.com</span>
+        </a>
+      </td>
+      <td>
+        <code>ko</code>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
+        <code>MBN</code>
+      </td>
+      <td>
+        <div>Maeil Business Newspaper</div>
+      </td>
+      <td>
+        <a href="https://www.mk.co.kr/">
+          <span>www.mk.co.kr</span>
+        </a>
+      </td>
+      <td>
+        <code>ko</code>
+      </td>
+      <td>
+        <code>topics</code>
+      </td>
       <td>&#160;</td>
     </tr>
   </tbody>
@@ -1897,7 +2119,9 @@
         <code>TheNamibian</code>
       </td>
       <td>
-        <div>The Namibian</div>
+        <div>
+          <strike>The Namibian</strike>
+        </div>
       </td>
       <td>
         <a href="https://www.namibian.com.na/">
@@ -2073,6 +2297,44 @@
       </td>
       <td>
         <code>en</code>
+      </td>
+      <td>
+        <code>topics</code>
+      </td>
+      <td>&#160;</td>
+    </tr>
+  </tbody>
+</table>
+
+
+## PY-Publishers
+
+<table class="publishers py">
+  <thead>
+    <tr>
+      <th>Class&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</th>
+      <th>Name&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</th>
+      <th>URL&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</th>
+      <th>Languages</th>
+      <th>Missing&#160;Attributes</th>
+      <th>Additional&#160;Attributes&#160;&#160;&#160;&#160;</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <code>Wochenblatt</code>
+      </td>
+      <td>
+        <div>Wochenblatt</div>
+      </td>
+      <td>
+        <a href="https://wochenblatt.cc/">
+          <span>wochenblatt.cc</span>
+        </a>
+      </td>
+      <td>
+        <code>de</code>
       </td>
       <td>
         <code>topics</code>
