@@ -55,6 +55,24 @@
     </tr>
     <tr>
       <td>
+        <code>KleineZeitung</code>
+      </td>
+      <td>
+        <div>Kleine Zeitung</div>
+      </td>
+      <td>
+        <a href="https://www.kleinezeitung.at">
+          <span>www.kleinezeitung.at</span>
+        </a>
+      </td>
+      <td>
+        <code>de</code>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
         <code>SalzburgerNachrichten</code>
       </td>
       <td>
