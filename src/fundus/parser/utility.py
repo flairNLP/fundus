@@ -191,9 +191,13 @@ def sanitize_json(text: str) -> Optional[str]:
     # substitute "bad" values
     sanitized = re.sub(_json_undefined, r"\g<key>:null", sanitized)
     sanitized = re.sub(r"[\r\n\t]+", "", sanitized)
-    removed_unicode = html.unescape(re.sub(r"&quot;", "\\&quot;", sanitized))
 
-    return removed_unicode
+    # unescape HTML named and numeric character references like &quote; or &amp;
+    # we add the double slash so that the unescaped quotation marks are escaped
+    # afterward and don't break the JSON
+    unescaped = html.unescape(re.sub(r"&quot;", "\\&quot;", sanitized))
+
+    return unescaped
 
 
 def parse_json(text: str) -> Optional[Dict[str, JSONVal]]:
