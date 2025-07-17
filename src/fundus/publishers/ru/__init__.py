@@ -20,4 +20,5 @@ class RU(metaclass=PublisherGroup):
             ),
             NewsMap("https://www.kommersant.ru/sitemaps/sitemap_news.xml"),
         ],
+        suppress_robots=True,
     )
