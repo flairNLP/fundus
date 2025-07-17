@@ -17,7 +17,7 @@ from fundus.parser.utility import (
 class TimesLiveParser(ParserProxy):
     class V1(BaseParser):
         _paragraph_selector = XPath("//div[@class='wrap']//div[@class='text']/p[span or text()]")
-        _summary_selector = XPath("//h3[contains(@class, 'article-title-tertiary')]")
+        _summary_selector = XPath("//h3[contains(@class, 'article-title-tertiary')] ")
         _subheadline_selector = XPath("//div[@class='wrap']//div[@class='text']/h3")
 
         _bloat_topics = [
