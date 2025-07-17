@@ -6,6 +6,7 @@ Note that this script does not check the attributes' correctness, only their pre
 """
 import sys
 import traceback
+from argparse import ArgumentParser
 from typing import Any, Callable, List, Optional, Union
 
 from fundus import Crawler, PublisherCollection
@@ -17,6 +18,16 @@ from fundus.scraping.session import socket_timeout
 def main() -> None:
     failed: int = 0
     timeout_in_seconds: int = 30
+
+    argument_parser = ArgumentParser()
+    argument_parser.add_argument(
+        "-s",
+        "--skip",
+        default=[],
+        nargs="*",
+        help="List of publishers to skip. Expects Fundus attribute names.",
+    )
+    parsed_arguments = argument_parser.parse_args()
 
     publisher_regions: List[PublisherGroup] = sorted(
         PublisherCollection.get_subgroup_mapping().values(), key=lambda region: region.__name__
@@ -37,6 +48,9 @@ def main() -> None:
                     continue
                 if publisher.deprecated:  # type: ignore[attr-defined]
                     print(f"⏩  SKIPPED: {publisher_name!r} - Deprecated")
+                    continue
+                if publisher.__name__ in parsed_arguments.skip:
+                    print(f"⏩  SKIPPED: {publisher_name!r} - Blocked")
                     continue
                 crawler: Crawler = Crawler(publisher, delay=0.4, ignore_robots=True)
 

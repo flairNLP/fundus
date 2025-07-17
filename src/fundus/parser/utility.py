@@ -81,7 +81,7 @@ class Node:
 
         def _text_content(element: lxml.html.HtmlElement) -> str:
             if element.tag in guarded_excluded_tags:
-                return ""
+                return element.tail or ""
             text = element.text or "" if not isinstance(element, lxml.html.HtmlComment) else ""
             children = "".join([_text_content(child) for child in element.iterchildren()])
             tail = element.tail or ""
@@ -190,6 +190,7 @@ def sanitize_json(text: str) -> Optional[str]:
 
     # substitute "bad" values
     sanitized = re.sub(_json_undefined, r"\g<key>:null", sanitized)
+    sanitized = re.sub(r"[\r\n\t]+", "", sanitized)
     return sanitized
 
 
@@ -477,8 +478,25 @@ def generic_topic_parsing(
 _tz_infos = {"CET": 3600, "CEST": 7200, "IST": 19800}
 
 
+class CustomParserInfo(parser.parserinfo):
+    MONTHS = [
+        ("Jan", "January", "Januar"),
+        ("Feb", "February", "Februar"),
+        ("Mar", "March", "März"),
+        ("Apr", "April"),
+        ("May", "May", "Mai"),
+        ("Jun", "June", "Juni"),
+        ("Jul", "July", "Juli"),
+        ("Aug", "August"),
+        ("Sep", "Sept", "September"),
+        ("Oct", "October", "Oktober", "Okt"),
+        ("Nov", "November"),
+        ("Dec", "December", "Dezember", "Dez"),
+    ]
+
+
 def generic_date_parsing(date_str: Optional[str]) -> Optional[datetime]:
-    return parser.parse(date_str, tzinfos=_tz_infos) if date_str else None
+    return parser.parse(date_str, tzinfos=_tz_infos, parserinfo=CustomParserInfo(), fuzzy=True) if date_str else None
 
 
 _title_selector = CSSSelector("title")

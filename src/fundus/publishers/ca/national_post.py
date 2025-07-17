@@ -1,4 +1,5 @@
 import datetime
+import re
 from typing import List, Optional
 
 from lxml.cssselect import CSSSelector
@@ -18,6 +19,10 @@ from fundus.scraping.filter import regex_filter
 
 class NationalPostParser(ParserProxy):
     class V1(BaseParser):
+        # Note: this date is approximate. The actual date lies between 2025-04-06 and 2025-04-15. This is due to
+        # National Posts exclusion from archive.org and problems with the publisher coverage.
+        VALID_UNTIL = datetime.date(2025, 4, 15)
+
         _summary_selector = CSSSelector("article p.article-subtitle")
         _subheadline_selector = XPath(
             "//section[@class='article-content__content-group article-content__content-group--story']/p/strong | "
@@ -51,9 +56,9 @@ class NationalPostParser(ParserProxy):
         @attribute
         def topics(self) -> List[str]:
             preliminary_topics = self.precomputed.ld.bf_search("keywords")
-            filter_list = ["Curated", "News", "Newsroom daily", "story", "Canada", "World"]
+            filter_list = ["Curated", "News", "Newsroom daily", "story", "Canada", "World", "nationalpost.com"]
             topic_filter = regex_filter(
-                r"([0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}|NLP Entity Tokens|NLP Category|NP Comment)"
+                r"([0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}|NLP Entity Tokens|NLP Category|NP Comment|Category:)"
             )
             filtered_topics = [
                 topic for topic in preliminary_topics if not topic_filter(topic) and topic not in filter_list
@@ -67,4 +72,27 @@ class NationalPostParser(ParserProxy):
                 paragraph_selector=self._paragraph_selector,
                 upper_boundary_selector=XPath("//div[@class='article-header__detail']/figure"),
                 lower_boundary_selector=CSSSelector("section.article-delimiter"),
+            )
+
+    class V1_1(V1):
+        VALID_UNTIL = datetime.date.today()
+
+        _paragraph_selector = XPath(
+            "//div[@class='story-v2-content-element-inline']/"
+            "p[text() and not(@data-async) and not(text()='National Post')]"
+        )
+        _subheadline_selector = XPath(
+            "//div[@class='story-v2-content-element-inline']/h3 |"
+            "//div[@class='story-v2-content-element-inline']/p/strong"
+        )
+
+        @attribute
+        def images(self) -> List[Image]:
+            return image_extraction(
+                doc=self.precomputed.doc,
+                paragraph_selector=self._paragraph_selector,
+                upper_boundary_selector=XPath("(//div[@class='story-v2-block story-v2-article-container'])[1]"),
+                lower_boundary_selector=XPath("//section[@class='article-content__share-group']"),
+                caption_selector=XPath("./ancestor::figure/figcaption/span[@class='caption']"),
+                author_selector=XPath("./ancestor::figure/figcaption/span[@class='credit' or @class='distributor']"),
             )

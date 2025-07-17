@@ -13,7 +13,6 @@ from fundus.publishers.de import DE
 from fundus.publishers.dk import DK
 from fundus.publishers.es import ES
 from fundus.publishers.fr import FR
-from fundus.publishers.gl import GL
 from fundus.publishers.ind import IND
 from fundus.publishers.isl import ISL
 from fundus.publishers.it import IT
@@ -30,10 +29,9 @@ from fundus.publishers.tw import TW
 from fundus.publishers.tz import TZ
 from fundus.publishers.uk import UK
 from fundus.publishers.us import US
+from fundus.publishers.za import ZA
 
 __all__ = ["Publisher", "PublisherGroup"]
-
-from fundus.publishers.za import ZA
 
 
 class PublisherCollectionMeta(PublisherGroup):
@@ -65,32 +63,31 @@ class PublisherCollectionMeta(PublisherGroup):
 
 
 class PublisherCollection(metaclass=PublisherCollectionMeta):
-    na = NA
-    de = DE
     at = AT
     au = AU
-    us = US
-    uk = UK
-    fr = FR
-    isl = ISL
-    gl = GL
+    be = BE
+    ca = CA
     ch = CH
-    lt = LT
     cn = CN
     cz = CZ
-    be = BE
-    tr = TR
-    my = MY
-    pt = PT
-    pl = PL
-    py = PY
-    ind = IND
-    no = NO
-    ca = CA
+    de = DE
+    dk = DK
     es = ES
-    jp = JP
+    fr = FR
+    ind = IND
+    isl = ISL
     it = IT
+    jp = JP
+    lt = LT
+    my = MY
+    na = NA
+    no = NO
+    pl = PL
+    pt = PT
+    py = PY
+    tr = TR
     tw = TW
     tz = TZ
-    dk = DK
+    uk = UK
+    us = US
     za = ZA

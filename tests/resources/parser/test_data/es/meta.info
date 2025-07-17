@@ -3,6 +3,10 @@
     "url": "https://www.abc.es/sociedad/detenido-policia-abusar-torturar-sexualmente-cuatro-hijos-20241202105634-nt.html",
     "crawl_date": "2025-01-13 13:17:58.165742"
   },
+  "ElDiario_2025_05_29.html.gz": {
+    "url": "https://www.eldiario.es/internacional/israel-asesina-sabado-58-palestinos-madrid-gana-fuerza-solucion-estados_1_12328678.html",
+    "crawl_date": "2025-05-29 20:31:25.875220"
+  },
   "ElMundo_2024_12_02.html.gz": {
     "url": "https://www.elmundo.es/deportes/formula-1/2024/12/02/674cdc8a21efa004028b45a8.html",
     "crawl_date": "2024-12-02 12:37:07.716650"
@@ -19,8 +23,12 @@
     "url": "https://www.mallorcamagazin.com/nachrichten/spanien/2025/04/15/135777/literaturnobelpreistrager-vargas-llosa-gestorben-warum-eine-ganz-besondere-beziehung-mallorca-hatte.html",
     "crawl_date": "2025-04-16 14:55:54.574262"
   },
-    "MallorcaZeitung_2025_04_16.html.gz": {
+  "MallorcaZeitung_2025_04_16.html.gz": {
     "url": "https://www.mallorcazeitung.es/aktuelles/2025/03/12/zweite-drogenrazzia-in-palma-innerhalb-48-stunden-115221903.html",
     "crawl_date": "2025-04-16 14:59:52.343153"
+  },
+  "Publico_2025_05_29.html.gz": {
+    "url": "https://www.publico.es/sociedad/vecinos-carabanchel-exigen-cambios-proximas-ediciones-san-isidro-15-dias-son-salvajada.html?dicbo=v2-ppm5bdi",
+    "crawl_date": "2025-05-29 20:36:30.357460"
   }
 }
