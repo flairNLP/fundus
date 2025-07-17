@@ -236,7 +236,7 @@ class TestParser:
             # compare data
             extraction = versioned_parser().parse(html.content, "raise")
             for key, value in version_data.items():
-                assert value == extraction[key], f"{key!r} is not equal"
+                assert value == extraction[key].get("value"), f"{key!r} is not equal"
 
             # check if extraction is pickable
             pickle.dumps(extraction)
