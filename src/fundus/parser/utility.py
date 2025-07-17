@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import html
 import itertools
 import json
 import re
@@ -80,7 +81,7 @@ class Node:
 
         def _text_content(element: lxml.html.HtmlElement) -> str:
             if element.tag in guarded_excluded_tags:
-                return ""
+                return element.tail or ""
             text = element.text or "" if not isinstance(element, lxml.html.HtmlComment) else ""
             children = "".join([_text_content(child) for child in element.iterchildren()])
             tail = element.tail or ""
@@ -190,7 +191,13 @@ def sanitize_json(text: str) -> Optional[str]:
     # substitute "bad" values
     sanitized = re.sub(_json_undefined, r"\g<key>:null", sanitized)
     sanitized = re.sub(r"[\r\n\t]+", "", sanitized)
-    return sanitized
+
+    # unescape HTML named and numeric character references like &quote; or &amp;
+    # we add the double slash so that the unescaped quotation marks are escaped
+    # afterward and don't break the JSON
+    unescaped = html.unescape(re.sub(r"&quot;", "\\&quot;", sanitized))
+
+    return unescaped
 
 
 def parse_json(text: str) -> Optional[Dict[str, JSONVal]]:
