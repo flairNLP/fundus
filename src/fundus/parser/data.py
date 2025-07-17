@@ -540,11 +540,7 @@ class Image(DataclassSerializationMixin):
     position: int
 
     def __post_init__(self):
-        for version in self.versions:
-            url = version.url
-            if url.startswith("//"):
-                url = "https:" + url
-                version.url = url
+        for url in [version.url for version in self.versions]:
             if not validators.url(url, strict_query=False):
                 raise ValueError(f"url {url} is not a valid URL")
 

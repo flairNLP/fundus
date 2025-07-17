@@ -80,4 +80,5 @@ class TimesLiveParser(ParserProxy):
                     "./ancestor::div[contains(@class, 'image-container')]//span[@class='description']"
                 ),
                 author_selector=XPath("./ancestor::div[contains(@class, 'image-container')]//span[@class='name']"),
+                relative_urls=True,
             )
