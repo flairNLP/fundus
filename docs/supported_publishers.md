@@ -1956,7 +1956,9 @@
         <code>Nikkei</code>
       </td>
       <td>
-        <div>The Nikkei</div>
+        <div>
+          <strike>The Nikkei</strike>
+        </div>
       </td>
       <td>
         <a href="https://www.nikkei.com/">
