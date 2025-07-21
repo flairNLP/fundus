@@ -85,6 +85,7 @@ class JP(metaclass=PublisherGroup):
                 sitemap_filter=inverse(regex_filter(r"[a-z]*\.sitemap\.xml$")),
             )
         ],
+        deprecated=True,
     )
 
     SankeiShimbun = Publisher(
