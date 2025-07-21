@@ -2213,6 +2213,24 @@
   <tbody>
     <tr>
       <td>
+        <code>LuxemburgerWort</code>
+      </td>
+      <td>
+        <div>Luxemburger Wort</div>
+      </td>
+      <td>
+        <a href="https://www.wort.lu/">
+          <span>www.wort.lu</span>
+        </a>
+      </td>
+      <td>
+        <code>de</code>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
         <code>Tageblatt</code>
       </td>
       <td>
