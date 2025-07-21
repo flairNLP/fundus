@@ -1,4 +1,5 @@
 from fundus.publishers.base_objects import Publisher, PublisherGroup
+from fundus.scraping.filter import inverse, regex_filter
 from fundus.scraping.url import RSSFeed, Sitemap
 
 from .tageblatt import TageblattParser
@@ -22,5 +23,10 @@ class LU(metaclass=PublisherGroup):
             RSSFeed("https://www.tageblatt.lu/category/campus/feed/atom/"),
             RSSFeed("https://www.tageblatt.lu/category/magazin/feed/atom/"),
             RSSFeed("https://www.tageblatt.lu/category/auto/feed/atom/"),
+            Sitemap(
+                "https://www.tageblatt.lu/wp-sitemap.xml",
+                sitemap_filter=inverse(regex_filter("posts-post")),
+                reverse=True,
+            ),
         ],
     )
