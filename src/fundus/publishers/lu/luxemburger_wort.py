@@ -54,6 +54,7 @@ class LuxemburgerWortParser(ParserProxy):
             return image_extraction(
                 doc=self.precomputed.doc,
                 paragraph_selector=self._paragraph_selector,
+                image_selector=XPath("//figure[not(contains(@class, 'Teaser'))]//img"),
                 upper_boundary_selector=CSSSelector("h1"),
                 caption_selector=XPath("./ancestor::figure//div[contains(@class, 'ImageCaption')]"),
                 author_selector=re.compile(r"(?i)Foto:\s*(?P<credits>.*)"),
