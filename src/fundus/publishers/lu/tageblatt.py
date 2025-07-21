@@ -16,7 +16,7 @@ from fundus.parser.utility import (
 
 class TageblattParser(ParserProxy):
     class V1(BaseParser):
-        _paragraph_selector = XPath("//div[@class='text-content']/p[@class='text']")
+        _paragraph_selector = XPath("//div[@class='text-content']/p[@class='text' and normalize-space(text())]")
         _summary_selector = XPath("//p[contains(@class,'teaser__text')]")
         _subheadline_selector = XPath("//div[@class='text-content']//h2[contains(@class,'crosshead')]")
 
