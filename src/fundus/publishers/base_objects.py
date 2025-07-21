@@ -85,6 +85,7 @@ class Publisher:
         url_filter: Optional[URLFilter] = None,
         request_header: Optional[Dict[str, str]] = None,
         deprecated: bool = False,
+        suppress_robots: bool = False,
     ):
         """Initialization of a new Publisher object
 
@@ -109,8 +110,12 @@ class Publisher:
         self.request_header = request_header
         self.deprecated = deprecated
         self.robots = Robots(self.domain + "robots.txt" if self.domain.endswith("/") else self.domain + "/robots.txt")
-        # we define the dict here manually instead of using default dict so that we can control
-        # the order in which sources are proceeded.
+
+        # Temporary fix to compensate for a bug in the RobotsFileParser treating rule lines
+        # like /? as / disallowing the entire site. we could think about replacing the urllib
+        # implementation with https://github.com/seomoz/reppy
+        if suppress_robots:
+            self.robots.robots_file_parser.allow_all = True
 
         source_mapping: Dict[Type[URLSource], List[URLSource]] = defaultdict(list)
 
