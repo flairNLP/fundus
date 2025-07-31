@@ -3,6 +3,7 @@ from fundus.scraping.url import NewsMap, RSSFeed, Sitemap
 
 from .derstandard import DerStandardParser
 from .die_presse import DiePresseParser
+from .kleine_zeitung import KleineZeitungParser
 from .orf import OrfParser
 from .salzburger_nachrichten import SalzburgerNachrichtenParser
 
@@ -30,6 +31,16 @@ class AT(metaclass=PublisherGroup):
         parser=DiePresseParser,
         sources=[
             NewsMap("https://www.diepresse.com/news-sitemap"),
+        ],
+    )
+
+    KleineZeitung = Publisher(
+        name="Kleine Zeitung",
+        domain="https://www.kleinezeitung.at",
+        parser=KleineZeitungParser,
+        sources=[
+            NewsMap("https://www.kleinezeitung.at/news-sitemap"),
+            Sitemap("https://www.kleinezeitung.at/sitemaps/sitemap_main.xml", reverse=True),
         ],
     )
 

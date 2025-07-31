@@ -517,6 +517,12 @@ class Crawler(CrawlerBase):
             ignore_robots=self.ignore_robots,
             ignore_crawl_delay=self.ignore_crawl_delay,
         )
+        if not scraper.sources and self.restrict_sources_to:
+            logger.warning(
+                f"No sources of type {[source_type.__name__ for source_type in self.restrict_sources_to]} found for publisher {publisher.name}. "
+                f"Skipping publisher."
+            )
+            return
         yield from scraper.scrape(error_handling, extraction_filter, url_filter, language_filter)
 
     @staticmethod
