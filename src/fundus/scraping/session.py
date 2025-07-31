@@ -62,13 +62,14 @@ class InterruptableSession(requests.Session):
         while True:
             try:
                 response = response_queue.get(timeout=1)
-                if isinstance(response, Exception):
-                    raise response
-                return response
             except Empty:
                 if __EVENTS__.is_event_set("stop"):
                     logger.debug(f"Interrupt request for {url!r}")
                     raise RequestInterruptedError(f"Request to {url} was interrupted by stop event")
+            else:
+                if isinstance(response, Exception):
+                    raise response
+                return response
 
 
 @dataclass
