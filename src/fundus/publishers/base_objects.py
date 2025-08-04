@@ -11,7 +11,11 @@ from typing_extensions import TypeAlias
 from fundus.logging import create_logger
 from fundus.parser.base_parser import ParserProxy
 from fundus.scraping.filter import URLFilter
-from fundus.scraping.session import RequestInterruptedError, session_handler
+from fundus.scraping.session import (
+    RequestInterruptedError,
+    default_header,
+    session_handler,
+)
 from fundus.scraping.url import NewsMap, RSSFeed, Sitemap, URLSource
 from fundus.utils.iteration import iterate_all_subclasses
 
@@ -133,7 +137,7 @@ class Publisher:
         sources: List[URLSource],
         query_parameter: Optional[Dict[str, str]] = None,
         url_filter: Optional[URLFilter] = None,
-        request_header: Optional[Dict[str, str]] = None,
+        request_header: Optional[Dict[str, str]] = default_header,
         deprecated: bool = False,
         disallows_training: bool = False,
         suppress_robots: bool = False,

@@ -20,7 +20,7 @@ from fundus.parser.utility import generic_nodes_to_text
 from fundus.scraping.filter import URLFilter, inverse
 from fundus.scraping.session import (
     RequestInterruptedError,
-    _default_header,
+    default_header,
     session_handler,
 )
 
@@ -108,7 +108,7 @@ class URLSource(Iterable[str], ABC):
 
     def __post_init__(self):
         if not self._request_header:
-            self._request_header = _default_header
+            self._request_header = default_header
         if not validators.url(self.url, strict_query=False):
             logger.error(f"{type(self).__name__} initialized with invalid URL {self.url}")
 

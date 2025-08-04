@@ -12,7 +12,7 @@ from fundus.utils.events import __EVENTS__
 
 logger = create_logger(__name__)
 
-_default_header = {"user-agent": "Fundus"}
+default_header = {"user-agent": "Fundus"}
 
 
 class RequestInterruptedError(Exception):
