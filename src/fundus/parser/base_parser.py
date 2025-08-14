@@ -83,7 +83,7 @@ class Attribute(RegisteredFunction):
         func: Callable[[object], Any],
         priority: Optional[int],
         validate: bool,
-        deprecated: bool,
+        deprecated: Optional[date],
         default_factory: Optional[Callable[[], Any]],
     ):
         self.validate = validate
@@ -137,7 +137,7 @@ def attribute(
     *,
     priority: Optional[int] = None,
     validate: bool = True,
-    deprecated: bool = False,
+    deprecated: Optional[date] = None,
     default_factory: Optional[Callable[[], Any]] = None,
 ):
     return _register(
@@ -189,7 +189,7 @@ class AttributeCollection(RegisteredFunctionCollection[Attribute]):
 
     @property
     def deprecated(self) -> "AttributeCollection":
-        return AttributeCollection(*[attr for attr in self.functions if attr.deprecated])
+        return AttributeCollection(*[attr for attr in self.functions if attr.deprecated is not None])
 
 
 class FunctionCollection(RegisteredFunctionCollection[Function]):
@@ -209,8 +209,17 @@ class BaseParser(ABC):
     VALID_UNTIL: date = date.today()
     precomputed: Precomputed
 
-    def __init__(self):
-        predicate: Callable[[object], bool] = lambda x: isinstance(x, RegisteredFunction)
+    def __init__(self, timestamp: Optional[date] = None):
+        def predicate(x: object) -> bool:
+            if not isinstance(x, RegisteredFunction):
+                return False
+            if isinstance(x, Attribute):
+                if timestamp is None or x.deprecated is None or x.deprecated > timestamp:
+                    return True
+                else:
+                    return False
+            return True
+
         predicated_members: List[Tuple[str, RegisteredFunction]] = inspect.getmembers(self, predicate=predicate)
         bound_registered_functions: List[RegisteredFunction] = [func for _, func in predicated_members]
         self._sorted_registered_functions = sorted(bound_registered_functions, key=lambda f: (f, f.__name__))
@@ -256,16 +265,16 @@ class BaseParser(ABC):
 
             elif isinstance(func, Attribute):
                 try:
-                    parsed_data[attribute_name] = {"value": func(), "deprecated": func.deprecated}
+                    parsed_data[attribute_name] = func()
                 except Exception as err:
                     if error_handling == "suppress":
-                        parsed_data[attribute_name] = {"value": func.__default__, "deprecated": func.deprecated}
+                        parsed_data[attribute_name] = func.__default__
                         logger.info(
                             f"Couldn't parse attribute {attribute_name!r} for "
                             f"{self.precomputed.meta.get('og:url')!r}: {err}"
                         )
                     elif error_handling == "catch":
-                        parsed_data[attribute_name] = {"value": err, "deprecated": func.deprecated}
+                        parsed_data[attribute_name] = err
                     elif error_handling == "raise":
                         raise err
                     else:
@@ -302,12 +311,23 @@ class BaseParser(ABC):
 class _ParserCache:
     def __init__(self, factory: Type[BaseParser]):
         self.factory: Type[BaseParser] = factory
-        self.instance: Optional[BaseParser] = None
+        self._instances: Dict[Optional[date], BaseParser] = {}
+        deprecated_dates = sorted(
+            [attr.deprecated for attr in self.factory.attributes() if attr.deprecated is not None]
+        )
+        self._deprecation_timeframes: List[date] = deprecated_dates
 
-    def __call__(self) -> BaseParser:
-        if not self.instance:
-            self.instance = self.factory()
-        return self.instance
+    def __call__(self, timestamp: Optional[date] = None) -> BaseParser:
+        effective_timestamp: Optional[date] = None
+        if timestamp:
+            for timeframe_date in reversed(self._deprecation_timeframes):
+                if timeframe_date <= timestamp:
+                    effective_timestamp = timeframe_date
+                    break
+        if effective_timestamp not in self._instances:
+            self._instances[effective_timestamp] = self.factory(timestamp=effective_timestamp)
+
+        return self._instances[effective_timestamp]
 
 
 class ParserProxy(ABC):
@@ -348,7 +368,7 @@ class ParserProxy(ABC):
                 f"Couldn't find a fitting parser valid at date {parsed_date}. "
                 f"Last valid date is {self._get_latest_cache()().VALID_UNTIL}"
             )
-        return parser_cache()
+        return parser_cache(parsed_date)
 
     def __iter__(self) -> Iterator[Type[BaseParser]]:
         """Iterates over all included parser versions with the latest being first.

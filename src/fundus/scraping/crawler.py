@@ -236,7 +236,6 @@ class CrawlerBase(ABC):
         language_filter: Optional[List[str]] = None,
         only_unique: bool = True,
         save_to_file: Union[None, str, Path] = None,
-        force_deprecated_attributes: bool = False,
     ) -> Iterator[Article]:
         """Yields articles from initialized scrapers
 
@@ -268,9 +267,6 @@ class CrawlerBase(ABC):
                 Always returns the first encountered article. Defaults to True.
             save_to_file (Union[None, str, Path]): If set, the crawled articles will be collected saved to the
                 specified file as a JSON list.
-            force_deprecated_attributes (bool): By default, deprecated attributes will be ignored when filtering
-                incomplete articles. If wanted (e.g. when backward crawling), this can be set to True to force
-                inclusion of an attribute.
 
         Returns:
             Iterator[Article]: An iterator yielding objects of type Article.
@@ -292,7 +288,7 @@ class CrawlerBase(ABC):
 
         def build_extraction_filter() -> Optional[ExtractionFilter]:
             if isinstance(only_complete, bool):
-                return None if only_complete is False else RequiresAll(force_deprecated=force_deprecated_attributes)
+                return None if only_complete is False else RequiresAll()
             else:
                 return only_complete
 

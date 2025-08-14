@@ -36,7 +36,7 @@ class BaseScraper:
                 parser = self.parser_mapping[html.source_info.publisher]
 
                 try:
-                    annotated_extraction = parser(html.crawl_date).parse(html.content, error_handling)
+                    extraction = parser(html.crawl_date).parse(html.content, error_handling)
 
                 except Exception as error:
                     if error_handling == "raise":
@@ -52,7 +52,7 @@ class BaseScraper:
                         raise ValueError(f"Unknown value {error_handling!r} for parameter <error_handling>'")
 
                 else:
-                    if extraction_filter and (filter_result := extraction_filter(annotated_extraction)):
+                    if extraction_filter and (filter_result := extraction_filter(extraction)):
                         if isinstance(filter_result, FilterResultWithMissingAttributes):
                             logger.debug(
                                 f"Skipped article at {html.requested_url!r} because attribute(s) "
@@ -61,12 +61,6 @@ class BaseScraper:
                         else:
                             logger.debug(f"Skipped article at {html.requested_url!r} because of extraction filter")
                     else:
-                        # We unpack to get a dictionary containing only the values. After the extraction_filter
-                        # is evaluated, there is no need to keep the deprecation status of the attributes.
-                        extraction = {
-                            attribute: value.get("value") for attribute, value in annotated_extraction.items()
-                        }
-                        extraction["url"] = html.responded_url
                         article = Article(html=html, **extraction)
                         if language_filter and article.lang not in language_filter:
                             logger.debug(
