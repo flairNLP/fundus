@@ -57,7 +57,7 @@ from fundus.scraping.delay import Delay
 from fundus.scraping.filter import ExtractionFilter, Requires, RequiresAll, URLFilter
 from fundus.scraping.html import CCNewsSource
 from fundus.scraping.scraper import CCNewsScraper, WebScraper
-from fundus.scraping.session import session_handler
+from fundus.scraping.session import CrashThread, session_handler
 from fundus.scraping.url import URLSource
 from fundus.utils.events import __EVENTS__
 from fundus.utils.timeout import Timeout
@@ -183,6 +183,8 @@ def pool_queue_iter(handle: MapResult[Any], queue: Queue[Union[_T, Exception]]) 
     while True:
         try:
             if isinstance(nxt := queue.get_nowait(), Exception):
+                if isinstance(nxt, CrashThread):
+                    return
                 raise Exception("There was an exception occurring in a remote thread/process") from nxt
             yield nxt
         except Empty:
@@ -212,7 +214,6 @@ class CrawlerBase(ABC):
             raise ValueError("param <publishers> of <Crawler.__init__> must include at least one publisher.")
 
         __EVENTS__.alias("main-thread")
-        __EVENTS__.register_event("stop")
 
     @abstractmethod
     def _build_article_iterator(
@@ -491,9 +492,6 @@ class Crawler(CrawlerBase):
 
             else:
                 raise TypeError("param <delay> of <Crawler.__init__>")
-
-        # register default events
-        __EVENTS__.register_event("stop")
 
         if skip_publisher_disallowing_training and (
             publisher.disallows_training or publisher.robots.disallows_training()

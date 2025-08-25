@@ -11,11 +11,7 @@ from typing_extensions import TypeAlias
 from fundus.logging import create_logger
 from fundus.parser.base_parser import ParserProxy
 from fundus.scraping.filter import URLFilter
-from fundus.scraping.session import (
-    RequestInterruptedError,
-    default_header,
-    session_handler,
-)
+from fundus.scraping.session import default_header, session_handler
 from fundus.scraping.url import NewsMap, RSSFeed, Sitemap, URLSource
 from fundus.utils.iteration import iterate_all_subclasses
 
@@ -68,9 +64,6 @@ class CustomRobotFileParser(RobotFileParser):
                 self.disallow_all = True
             elif 400 <= err.response.status_code < 500:
                 self.allow_all = True
-        except RequestInterruptedError as err:
-            logger.warning(f"Request for robots {self.url!r} interrupted: {err!r}. Defaulting to disallow all.")  #
-            self.disallow_all = True
         else:
             self.parse(response.text.splitlines())
 

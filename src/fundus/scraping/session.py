@@ -15,8 +15,8 @@ logger = create_logger(__name__)
 default_header = {"user-agent": "Fundus"}
 
 
-class RequestInterruptedError(Exception):
-    """Raised when a request is interrupted by a stop event."""
+class CrashThread(Exception):
+    """Is raised to end a thread without relying on the thread ending naturally"""
 
     pass
 
@@ -31,7 +31,7 @@ class InterruptableSession(requests.Session):
 
         This function hands over the request to another thread and checks every second
         for an interrupt event. If there was an interrupt event, this function raises
-        a RequestInterruptedError exception.
+        a CrashThread exception.
 
         Args:
             *args: requests.Session.get(*) arguments.
@@ -41,7 +41,7 @@ class InterruptableSession(requests.Session):
             The response.
 
         Raises:
-            RequestInterruptedError: If the request is interrupted by a stop event.
+            CrashThread: If the request is interrupted by a stop event.
         """
 
         def _req():
@@ -65,7 +65,7 @@ class InterruptableSession(requests.Session):
             except Empty:
                 if __EVENTS__.is_event_set("stop"):
                     logger.debug(f"Interrupt request for {url!r}")
-                    raise RequestInterruptedError(f"Request to {url} was interrupted by stop event")
+                    raise CrashThread(f"Request to {url} was interrupted by stop event")
             else:
                 if isinstance(response, Exception):
                     raise response

@@ -18,11 +18,7 @@ from requests import ConnectionError, HTTPError, ReadTimeout
 from fundus.logging import create_logger
 from fundus.parser.utility import generic_nodes_to_text
 from fundus.scraping.filter import URLFilter, inverse
-from fundus.scraping.session import (
-    RequestInterruptedError,
-    default_header,
-    session_handler,
-)
+from fundus.scraping.session import default_header, session_handler
 
 logger = create_logger(__name__)
 
@@ -145,11 +141,6 @@ class RSSFeed(URLSource):
         except (HTTPError, ConnectionError, ReadTimeout) as err:
             logger.warning(f"Warning! Couldn't parse rss feed {self.url!r} because of {err}")
             return
-
-        except RequestInterruptedError:
-            logger.debug(f"Interrupt request for RSS feed {self.url!r} was executed")
-            return
-
         except Exception as error:
             logger.error(f"Warning! Couldn't parse rss feed {self.url!r} because of an unexpected error {error!r}")
             return
@@ -186,11 +177,6 @@ class Sitemap(URLSource):
             except (HTTPError, ConnectionError, ReadTimeout) as error:
                 logger.warning(f"Warning! Couldn't reach sitemap {sitemap_url!r} because of {error!r}")
                 return
-
-            except RequestInterruptedError:
-                logger.debug(f"Interrupt request for sitemap {sitemap_url!r} was executed")
-                return
-
             except Exception as error:
                 logger.error(
                     f"Warning! Couldn't reach sitemap {sitemap_url!r} because of an unexpected error {error!r}"

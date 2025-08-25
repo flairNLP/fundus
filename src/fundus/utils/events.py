@@ -6,6 +6,8 @@ from fundus.logging import create_logger
 
 logger = create_logger(__name__)
 
+_default_events = ["stop"]
+
 
 class EventDict:
     """A thread-safe event dictionary.
@@ -24,6 +26,8 @@ class EventDict:
         self._events: Dict[int, Dict[str, threading.Event]] = defaultdict(dict)
         self._aliases: Dict[Any, int] = {}
         self._lock = threading.Lock()
+        for event in _default_events:
+            self.register_event(event)
 
     @staticmethod
     def _get_identifier() -> int:
