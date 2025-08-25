@@ -10,6 +10,7 @@ from fundus.parser.base_parser import (
     AttributeCollection,
     BaseParser,
     ParserProxy,
+    RegisteredFunction,
     attribute,
 )
 from fundus.parser.utility import generic_author_parsing
@@ -173,6 +174,26 @@ class TestParserProxy:
 
         attrs1, attrs2 = parser_proxy.attribute_mapping.values()
         assert attrs1.names != attrs2.names
+
+    def test_deprecated(self, proxy_with_two_deprecated_attributes):
+        def get_initialized_attrs(parser: BaseParser) -> List[RegisteredFunction]:
+            return parser._sorted_registered_functions
+
+        proxy: ParserProxy = proxy_with_two_deprecated_attributes()
+
+        number_of_attributes = len(proxy.latest_version.attributes(include_all=True))
+
+        parser1 = proxy(datetime.date(2023, 1, 1))
+        assert len(parser1.registered) == number_of_attributes
+
+        parser2 = proxy(datetime.date(2024, 3, 1))
+        assert len(parser2.registered) == number_of_attributes - 1
+
+        parser3 = proxy(datetime.date(2024, 4, 1))
+        assert len(parser3.registered) == number_of_attributes - 2
+
+        assert parser3 == proxy(datetime.date(2024, 5, 1))
+        assert parser3 != parser2 != parser1
 
 
 # enforce test coverage for test parsing

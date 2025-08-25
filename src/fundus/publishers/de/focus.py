@@ -54,7 +54,7 @@ class FocusParser(ParserProxy):
         def title(self) -> Optional[str]:
             return self.precomputed.ld.bf_search("headline")
 
-        @attribute
+        @attribute(deprecated=datetime.date(2024, 6, 1))
         def topics(self) -> List[str]:
             snippet = self._snippet_selector(self.precomputed.doc)
             if not snippet:
