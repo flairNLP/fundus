@@ -6,7 +6,22 @@ from fundus.logging import create_logger
 
 logger = create_logger(__name__)
 
-_default_events = ["stop"]
+
+class ThreadEventDict(dict[str, threading.Event]):
+    """A dictionary that creates threading.Event() objects on demand for certain keys.
+    This essentially mocks the behavior of defaultdict, but only for certain keys."""
+
+    _default_events: list[str] = ["stop"]
+
+    def __getitem__(self, item: str) -> threading.Event:
+        try:
+            return super().__getitem__(item)
+        except KeyError as e:
+            if item in self._default_events:
+                event = threading.Event()
+                self[item] = event
+                return event
+            raise e
 
 
 class EventDict:
@@ -23,11 +38,9 @@ class EventDict:
     """
 
     def __init__(self):
-        self._events: Dict[int, Dict[str, threading.Event]] = defaultdict(dict)
+        self._events: Dict[int, ThreadEventDict] = defaultdict(ThreadEventDict)
         self._aliases: Dict[Any, int] = {}
         self._lock = threading.Lock()
-        for event in _default_events:
-            self.register_event(event)
 
     @staticmethod
     def _get_identifier() -> int:
