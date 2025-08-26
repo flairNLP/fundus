@@ -7,7 +7,7 @@ from fundus.logging import create_logger
 logger = create_logger(__name__)
 
 
-class ThreadEventDict(dict[str, threading.Event]):
+class ThreadEventDict(Dict[str, threading.Event]):
     """A dictionary that creates threading.Event() objects on demand for certain keys.
     This essentially mocks the behavior of defaultdict, but only for certain keys."""
 
