@@ -1,6 +1,6 @@
 import threading
 from collections import defaultdict
-from typing import Any, Dict, Optional, Union
+from typing import Any, Dict, List, Optional, Union
 
 from fundus.logging import create_logger
 
@@ -11,7 +11,7 @@ class ThreadEventDict(Dict[str, threading.Event]):
     """A dictionary that creates threading.Event() objects on demand for certain keys.
     This essentially mocks the behavior of defaultdict, but only for certain keys."""
 
-    _default_events: list[str] = ["stop"]
+    _default_events: List[str] = ["stop"]
 
     def __getitem__(self, item: str) -> threading.Event:
         try:
