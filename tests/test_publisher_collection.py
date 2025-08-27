@@ -8,12 +8,13 @@ from lxml.etree import XPath
 
 from fundus import PublisherCollection
 from fundus.publishers import Publisher, PublisherGroup
+from fundus.scraping.session import _default_header
 
 _language_code_selector = XPath("//table[contains(@class, 'wikitable') and @id='Table'] //td[@id] / @id")
 
 
 def get_two_letter_code() -> List[str]:
-    wiki_page = requests.get("https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes")
+    wiki_page = requests.get("https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes", headers=_default_header)
     two_letter_codes: List[str] = _language_code_selector(lxml.html.document_fromstring(wiki_page.content))
     return two_letter_codes
 
