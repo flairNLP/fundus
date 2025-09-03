@@ -95,7 +95,7 @@ For each article, the printout details:
 
 ## Example 2: Crawl a specific news source
 
-Maybe you want to crawl a specific news source instead. Let's crawl news articles from Washington Times only:
+Maybe you want to crawl a specific news source instead. Let's crawl news articles from The New Yorker only:
 
 ```python
 from fundus import PublisherCollection, Crawler
