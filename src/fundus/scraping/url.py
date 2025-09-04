@@ -18,7 +18,7 @@ from requests import ConnectionError, HTTPError, ReadTimeout
 from fundus.logging import create_logger
 from fundus.parser.utility import generic_nodes_to_text
 from fundus.scraping.filter import URLFilter, inverse
-from fundus.scraping.session import _default_header, session_handler
+from fundus.scraping.session import default_header, session_handler
 
 logger = create_logger(__name__)
 
@@ -104,7 +104,7 @@ class URLSource(Iterable[str], ABC):
 
     def __post_init__(self):
         if not self._request_header:
-            self._request_header = _default_header
+            self._request_header = default_header
         if not validators.url(self.url, strict_query=False):
             logger.error(f"{type(self).__name__} initialized with invalid URL {self.url}")
 
@@ -141,7 +141,6 @@ class RSSFeed(URLSource):
         except (HTTPError, ConnectionError, ReadTimeout) as err:
             logger.warning(f"Warning! Couldn't parse rss feed {self.url!r} because of {err}")
             return
-
         except Exception as error:
             logger.error(f"Warning! Couldn't parse rss feed {self.url!r} because of an unexpected error {error!r}")
             return
@@ -178,7 +177,6 @@ class Sitemap(URLSource):
             except (HTTPError, ConnectionError, ReadTimeout) as error:
                 logger.warning(f"Warning! Couldn't reach sitemap {sitemap_url!r} because of {error!r}")
                 return
-
             except Exception as error:
                 logger.error(
                     f"Warning! Couldn't reach sitemap {sitemap_url!r} because of an unexpected error {error!r}"
