@@ -11,12 +11,10 @@ from urllib.parse import unquote
 import feedparser
 import lxml.html
 import validators
-from lxml.cssselect import CSSSelector
-from lxml.etree import XPath
+from lxml.etree import XMLParser, XPath
 from requests import ConnectionError, HTTPError, ReadTimeout
 
 from fundus.logging import create_logger
-from fundus.parser.utility import generic_nodes_to_text
 from fundus.scraping.filter import URLFilter, inverse
 from fundus.scraping.session import _default_header, session_handler
 
@@ -164,8 +162,8 @@ class Sitemap(URLSource):
     sitemap_filter: URLFilter = lambda url: not bool(url)
 
     _decompressor: ClassVar[_ArchiveDecompressor] = _ArchiveDecompressor()
-    _sitemap_selector: ClassVar[XPath] = CSSSelector("sitemap > loc")
-    _url_selector: ClassVar[XPath] = CSSSelector("url > loc")
+    _sitemap_selector: ClassVar[XPath] = XPath("//*[local-name()='sitemap']/*[local-name()='loc']")
+    _url_selector: ClassVar[XPath] = XPath("//*[local-name()='url']/*[local-name()='loc']")
 
     def __iter__(self) -> Iterator[str]:
         def yield_recursive(sitemap_url: str) -> Iterator[str]:
@@ -195,13 +193,14 @@ class Sitemap(URLSource):
             if not content:
                 logger.warning(f"Warning! Empty sitemap at {sitemap_url!r}")
                 return
-            tree = lxml.html.fromstring(content)
-            urls = generic_nodes_to_text(self._url_selector(tree), normalize=True)
+            parser = XMLParser(strip_cdata=False)
+            tree = lxml.etree.fromstring(content, parser=parser)
+            urls = [node.text for node in self._url_selector(tree)]
             if urls:
                 for new_url in reversed(urls) if self.reverse else urls:
                     yield clean_url(new_url)
             elif self.recursive:
-                sitemap_locs = [node.text_content() for node in self._sitemap_selector(tree)]
+                sitemap_locs = [node.text for node in self._sitemap_selector(tree)]
                 filtered_locs = list(filter(inverse(self.sitemap_filter), sitemap_locs))
                 for loc in reversed(filtered_locs) if self.reverse else filtered_locs:
                     yield from yield_recursive(loc)
