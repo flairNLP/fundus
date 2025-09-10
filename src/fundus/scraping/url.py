@@ -164,6 +164,7 @@ class Sitemap(URLSource):
     _decompressor: ClassVar[_ArchiveDecompressor] = _ArchiveDecompressor()
     _sitemap_selector: ClassVar[XPath] = XPath("//*[local-name()='sitemap']/*[local-name()='loc']")
     _url_selector: ClassVar[XPath] = XPath("//*[local-name()='url']/*[local-name()='loc']")
+    _parser = XMLParser(strip_cdata=False)
 
     def __iter__(self) -> Iterator[str]:
         def yield_recursive(sitemap_url: str) -> Iterator[str]:
@@ -193,8 +194,7 @@ class Sitemap(URLSource):
             if not content:
                 logger.warning(f"Warning! Empty sitemap at {sitemap_url!r}")
                 return
-            parser = XMLParser(strip_cdata=False)
-            tree = lxml.etree.fromstring(content, parser=parser)
+            tree = lxml.etree.fromstring(content, parser=self._parser)
             urls = [node.text for node in self._url_selector(tree)]
             if urls:
                 for new_url in reversed(urls) if self.reverse else urls:
