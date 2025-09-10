@@ -12,7 +12,7 @@ from fundus.utils.events import __EVENTS__
 
 logger = create_logger(__name__)
 
-_default_header = {"user-agent": "Fundus"}
+_default_header = {"user-agent": "Fundus/2.0 (contact: github.com/flairnlp/fundus)"}
 
 
 class InterruptableSession(requests.Session):
