@@ -66,7 +66,6 @@ class PT(metaclass=PublisherGroup):
             Sitemap(
                 "https://www.theportugalnews.com/sitemap-news.xml",
                 sitemap_filter=inverse(regex_filter("news-pt.xml")),
-                languages={"pt"},
             ),
             Sitemap(
                 "https://www.theportugalnews.com/sitemap-news.xml",
