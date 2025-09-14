@@ -2661,7 +2661,22 @@
         </a>
       </td>
       <td>
+        <code>ar</code>
+        <code>br</code>
+        <code>de</code>
         <code>en</code>
+        <code>es</code>
+        <code>fi</code>
+        <code>fr</code>
+        <code>he</code>
+        <code>it</code>
+        <code>nl</code>
+        <code>pl</code>
+        <code>pt</code>
+        <code>ru</code>
+        <code>se</code>
+        <code>tr</code>
+        <code>zh</code>
       </td>
       <td>
         <code>topics</code>
