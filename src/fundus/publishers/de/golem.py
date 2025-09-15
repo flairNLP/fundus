@@ -6,6 +6,7 @@ from lxml.cssselect import CSSSelector
 from lxml.etree import XPath
 
 from fundus.parser import ArticleBody, BaseParser, Image, ParserProxy, attribute
+from fundus.parser.data import TextSequence
 from fundus.parser.utility import (
     extract_article_body_with_selector,
     generic_author_parsing,
@@ -20,7 +21,7 @@ class GolemParser(ParserProxy):
         VALID_UNTIL = datetime.date(2025, 8, 21)
 
         _bloat_regex = r"^Dieser Artikel enthält sogenannte Affiliate-Links"
-        _summary_selector: Union[XPath, CSSSelector] = CSSSelector("hgroup > p")
+        _summary_selector = XPath("//hgroup/p")
         _paragraph_selector = XPath(
             f"//section /p[not(@class='meta' or re:test(string(), '{_bloat_regex}'))]",
             namespaces={"re": "http://exslt.org/regular-expressions"},
@@ -29,12 +30,18 @@ class GolemParser(ParserProxy):
 
         @attribute
         def body(self) -> Optional[ArticleBody]:
-            return extract_article_body_with_selector(
+            body = extract_article_body_with_selector(
                 self.precomputed.doc,
                 summary_selector=self._summary_selector,
                 paragraph_selector=self._paragraph_selector,
                 subheadline_selector=self._subheadline_selector,
             )
+            for section in body.sections:
+                filtered_sentences: List[str] = []
+                for sentence in section.paragraphs:
+                    filtered_sentences.append(sentence.replace("(öffnet im neuen Fenster)", "").strip())
+                section.paragraphs = TextSequence(filtered_sentences)
+            return body
 
         @attribute
         def authors(self) -> List[str]:
@@ -68,5 +75,5 @@ class GolemParser(ParserProxy):
         VALID_UNTIL = datetime.date.today()
 
         _paragraph_selector = XPath("//article//p[not(ancestor::div[@class='go-info-box__content'])]")
-        _subheadline_selector = XPath("//article/h2")
+        _subheadline_selector = XPath("//article//h2[not(contains(@class, 'teaser'))]")
         _summary_selector = XPath("//div[@class='go-article-header__intro']")
