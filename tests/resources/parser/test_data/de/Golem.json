@@ -64,5 +64,91 @@
       "Wirtschaft",
       "Mobil"
     ]
+  },
+  "V1_1": {
+    "authors": [
+      "Frank Wunderlich-Pfeiffer"
+    ],
+    "body": {
+      "summary": [
+        "VW hat den Prototyp eines Quantumscape-Akkupacks für eine Ducati V21L vorgestellt. Unklar ist, ob dafür genug Akkus geliefert wurden."
+      ],
+      "sections": [
+        {
+          "headline": [],
+          "paragraphs": [
+            "Volkswagen hat den Prototyp eines Akkupacks für ein modifiziertes Ducati V21L Rennmotorad vorgestellt und dabei fast keine technischen Daten genannt. Es soll \"bis zu\" 980 QSE-5-Akkuzellen von Quantumscape enthalten können; mehr war von Volkswagen nicht zu erfahren . Auch Quantumscape äußerte sich nicht zu weiteren Daten des Akkupacks. Deren Pressemitteilung nannte lediglich die Energiedichte der Zellen von 844 Wh/l mit einer Entladerate von 10C und einer Laderate von 3,5C, verschwieg aber deren gravimetrische Dichte von 301 Wh/kg.",
+            "Zum eigentlichen Akkupack und dessen Leistung wurden keine weiteren Angaben gemacht. Die reguläre Ducati V21L nutzt die von Tesla bekannten zylindrischen Zellen im 2170-Format und erreichte damit eine Kapazität von 18 kWh. Das neue Pack würde mit 980 Zellen eine Kapazität von rund 21 kWh erreichen, bei Zimmertemperatur und ohne jede Reserve. Es gebe jedoch keinen Anlass, lediglich \"bis zu 980 Zellen\" zu schreiben, wenn sich tatsächlich 980 Akkuzellen in dem Akkupack befänden, zumal das Motorrad und das Akkupack lediglich auf einer Bühne standen.",
+            "Entweder gibt es noch ungelöste Probleme mit Mechanik und Kühlung des Akkupacks – oder es gibt noch nicht genug Akkuzellen. Aber die Ingenieure von Ducati dürften ausreichend Erfahrung im Entwurf von Akkupacks haben. Laut Quantumscape soll der Cobra-Separator-Produktionsprozess für die QSE-5-Zellen seit Juni 2025 in Betrieb sein. Die Firma erweckt nun jedoch den Eindruck, dass es ihr nicht gelang, innerhalb von 3 Monaten rund 1.000 funktionierende Zellen für Volkswagen, den Hauptkunden und größten Investor von Quantumscape, zu produzieren."
+          ]
+        },
+        {
+          "headline": [
+            "Quantumscape versprach 2020 eine Revolution"
+          ],
+          "paragraphs": [
+            "Vor fünf Jahren, im September 2020, versprach Quantumscape noch vor dem Börsengang ihren Investoren , zu denen Volkswagen auch schon gehörte, einen revolutionären Akku zu entwickeln. Er sollte eine Energiedichte von 400 bis 500 Wh/kg und 1.000 Wh/l erreichen. Nur damit sollte Elektromobilität auf dem Massenmarkt überhaupt möglich sein, wie später im Dezember vollmundig beim Börsengang behauptet wurde.",
+            "Etwa zur gleichen Zeit nutzte Tesla Akkus von Panasonic mit 271 Wh/kg und 755 Wh/l, und chinesische Firmen lieferten neue Autos mit LFP-Akkus aus, deren Zellen zwar nur rund 180 Wh/kg und 380 Wh/l hatten, aber Elektroautos nicht nur in China massentauglich machten.",
+            "Nach damaligen Aussagen war die Technik fast bereit für die Massenproduktion. Spätestens 2022 sollte die erste Fabrik mit 1 GWh Produktionskapazität gebaut werden und 2023 die Produktion aufnehmen. Für 2023 war die Produktion von 250 MWh geplant, was mehr als 10 Millionen QSE-5-Zellen entspricht. In der zweiten Jahreshälfte 2025, also heute, sollte die Fabrik auf bis zu 20 GWh Kapazität erweitert werden und 5 GWh im Jahr 2026 produzieren.",
+            "In der Realität kann im September 2025 nicht einmal mit Sicherheit gesagt werden, dass Quantumscape Akkuzellen mit insgesamt 0,000021 GWh an deren wichtigsten Kunden liefern konnte. Ihre Energiedichte ist mit 301 Wh/kg schon im Vergleich zu Akkus aus dem Jahr 2021 nur wenig beeindruckend, keineswegs revolutionär und weit entfernt von Konkurrenten, die bereits tatsächlich Zellen mit 400 bis 500 Wh/kg demonstriert haben."
+          ]
+        },
+        {
+          "headline": [
+            "Quantumscape baut keine Festkörperakkus"
+          ],
+          "paragraphs": [
+            "Zuletzt muss auch angemerkt werden, dass es sich bei den Akkus von Quantumscape – entgegen der Aufschrift auf dem Motorrad – nicht um Festkörperakkus handelt. Lediglich der Separator ist eine Keramik, nicht jedoch der Elektrolyt der Kathode. Die Kathode benutzt weiterhin einen brennbaren Elektrolyt aus Kohlenwasserstoffen, der ab einer bestimmten Temperatur ohne ausreichende Kühlung zur Selbsterhitzung und anschließender Entzündung des Akkus führen wird.",
+            "Dieser Prozess beginnt, wenn das Kathodenmaterial ab einer kritischen Temperatur beginnt, sich zu zersetzen und dabei Sauerstoff freisetzt. Die genaue Temperatur hängt vom verwendeten Kathodenmaterial und dem Ladezustand ab. Mit dem wahrscheinlich verwendeten NMC811 wird eine Selbsterwärmung im Labor bereits bei 100 Grad Celsius beobachtet, die sich ab 180 Grad Celsius stark beschleunigt."
+          ]
+        }
+      ]
+    },
+    "images": [
+      {
+        "versions": [
+          {
+            "url": "https://www.golem.de/2509/199920-532846-532845_rc.jpg",
+            "query_width": null,
+            "size": null,
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": true,
+        "description": "Ein Motorrad mit der englischen Aufschrift für \"Festkörperakku\" (Bild: VW)",
+        "caption": "Ein Motorrad mit der englischen Aufschrift für \"Festkörperakku\" VW",
+        "authors": [
+          "VW"
+        ],
+        "position": 344
+      },
+      {
+        "versions": [
+          {
+            "url": "https://video.golem.de/teaser/1/1/25365/medium-480-qscape-snap.jpg",
+            "query_width": null,
+            "size": null,
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": false,
+        "description": "Quantumscape – Präsentation",
+        "caption": "Quantumscape – Präsentation (1:24:10)",
+        "authors": [],
+        "position": 470
+      }
+    ],
+    "publishing_date": "2025-09-09 13:46:01+00:00",
+    "title": "Akkutechnik: Hat Quantumscape genug Akkus für ein Motorrad gebaut?",
+    "topics": [
+      "Wissen",
+      "Innovation & Forschung",
+      "Mobilität",
+      "Auto",
+      "Nachhaltigkeit",
+      "Akku",
+      "VW",
+      "Elektromobilität"
+    ]
   }
 }
