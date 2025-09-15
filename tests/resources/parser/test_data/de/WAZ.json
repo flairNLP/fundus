@@ -366,5 +366,250 @@
       "Duisburg",
       "Cannes"
     ]
+  },
+  "V2": {
+    "authors": [
+      "Eileen Wagner"
+    ],
+    "body": {
+      "summary": [
+        "Berlin. Die Ex-Grünen-Vorsitzende Ricarda Lang attackiert Julia Klöckner. Mit Symboldebatten, so Lang, schade die CDU-Politikerin ihrem Amt."
+      ],
+      "sections": [
+        {
+          "headline": [],
+          "paragraphs": [
+            "Die neue Bundestagspräsidentin Julia Klöckner (CDU) steht seit Wochen unter Beschuss. Erst äußerte sich ein früherer Vizekanzler ungewöhnlich deutlich, nun meldet sich auch Ricarda Lang zu Wort. Die ehemalige Grünen-Vorsitzende findet klare Worte: In einem Podcast des „Stern“ nannte sie Klöckner eine „Polarisierungsunternehmerin“. Klöckner gehe es nicht um „die realen Probleme vieler Menschen“, sondern um „Empörungs- und Symboldebatten“.",
+            "Diese Form der Politik spalte, so Lang, nicht nur Parteien, sondern die Gesellschaft insgesamt. Für das höchste Parlamentsamt sei das gefährlich."
+          ]
+        },
+        {
+          "headline": [
+            "Bundestagspräsidentin soll „über Parteipolitik stehen“"
+          ],
+          "paragraphs": [
+            "Nach Ansicht von Lang hat die Bundestagspräsidentin eine besondere Rolle: Sie müsse die Demokratie als Ganzes repräsentieren und dürfe sich nicht in parteipolitischen Scharmützeln verlieren. Der Vergleich mit Klöckners Vorgängern fällt deutlich aus. „Wolfgang Schäuble und Norbert Lammert hatten klare Positionen“, sagte Lang. „Aber sie haben sie so eingebracht, dass wir gesellschaftlich weitergekommen sind.“",
+            "Bereits zuvor hatte Robert Habeck, der frühere Vizekanzler der Grünen, Klöckner scharf attackiert. Sie habe „immer nur polarisiert, polemisiert und gespalten“, so Habeck. Darum sei für ihn von Beginn an klar gewesen: Klöckner sei als Bundestagspräsidentin eine „Fehlbesetzung“."
+          ]
+        },
+        {
+          "headline": [
+            "Julia Klöckner weist Vorwürfe zurück"
+          ],
+          "paragraphs": [
+            "Klöckner selbst reagierte mit einer Mischung aus Abwehr und Appell. Die CDU-Politikerin wies die Vorwürfe zurück und rief stattdessen zu mehr Respekt in politischen Debatten auf. Rückendeckung erhält sie von CDU-Generalsekretär Carsten Linnemann, der ihre Amtsführung verteidigte."
+          ]
+        },
+        {
+          "headline": [
+            "Kontroversen um Klöckners Entscheidungen"
+          ],
+          "paragraphs": [
+            "Tatsächlich hat Klöckner in den ersten Monaten ihrer Amtszeit mehrfach Kontroversen ausgelöst. Besonders scharf kritisiert wurde ihre Entscheidung, das Hissen der Regenbogenflagge am Bundestag zu untersagen. Auch in einer Auseinandersetzung mit Abgeordneten der Linkspartei über die Kleiderordnung im Parlament sorgte sie für Schlagzeilen.",
+            "Diese Entscheidungen nährten den Vorwurf, Klöckner nutze ihr Amt nicht zur überparteilichen Vermittlung, sondern setze politische Zeichen, die vor allem polarisieren."
+          ]
+        }
+      ]
+    },
+    "images": [
+      {
+        "versions": [
+          {
+            "url": "https://img.sparknews.funkemedien.de/409960902/409960902_1757490812_v1_1_200.jpeg",
+            "query_width": "max-width:599",
+            "size": {
+              "width": 200,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://img.sparknews.funkemedien.de/409960902/409960902_1757490812_v1_1_200.webp",
+            "query_width": "max-width:599",
+            "size": {
+              "width": 200,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://img.sparknews.funkemedien.de/409960902/409960902_1757490812_v1_1_400.jpeg",
+            "query_width": "max-width:599",
+            "size": {
+              "width": 400,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://img.sparknews.funkemedien.de/409960902/409960902_1757490812_v1_1_400.webp",
+            "query_width": "max-width:599",
+            "size": {
+              "width": 400,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://img.sparknews.funkemedien.de/409960902/409960902_1757490812_v4_3_400.jpeg",
+            "query_width": "max-width:959",
+            "size": {
+              "width": 400,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://img.sparknews.funkemedien.de/409960902/409960902_1757490812_v4_3_400.webp",
+            "query_width": "max-width:959",
+            "size": {
+              "width": 400,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://img.sparknews.funkemedien.de/409960902/409960902_1757490812_v4_3_600.jpeg",
+            "query_width": "max-width:959",
+            "size": {
+              "width": 600,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://img.sparknews.funkemedien.de/409960902/409960902_1757490812_v4_3_600.webp",
+            "query_width": "max-width:959",
+            "size": {
+              "width": 600,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://img.sparknews.funkemedien.de/409960902/409960902_1757490812_v16_9_600.jpeg",
+            "query_width": "min-width:960",
+            "size": {
+              "width": 600,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://img.sparknews.funkemedien.de/409960902/409960902_1757490812_v16_9_600.webp",
+            "query_width": "min-width:960",
+            "size": {
+              "width": 600,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://img.sparknews.funkemedien.de/409960902/409960902_1757490812_v1_1_800.jpeg",
+            "query_width": "max-width:599",
+            "size": {
+              "width": 800,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://img.sparknews.funkemedien.de/409960902/409960902_1757490812_v1_1_800.webp",
+            "query_width": "max-width:599",
+            "size": {
+              "width": 800,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://img.sparknews.funkemedien.de/409960902/409960902_1757490812_v4_3_800.jpeg",
+            "query_width": "max-width:959",
+            "size": {
+              "width": 800,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://img.sparknews.funkemedien.de/409960902/409960902_1757490812_v4_3_800.webp",
+            "query_width": "max-width:959",
+            "size": {
+              "width": 800,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://img.sparknews.funkemedien.de/409960902/409960902_1757490812_v1_1_1200.jpeg",
+            "query_width": "max-width:599",
+            "size": {
+              "width": 1200,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://img.sparknews.funkemedien.de/409960902/409960902_1757490812_v1_1_1200.webp",
+            "query_width": "max-width:599",
+            "size": {
+              "width": 1200,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://img.sparknews.funkemedien.de/409960902/409960902_1757490812_v16_9_1200.jpeg",
+            "query_width": "min-width:960",
+            "size": {
+              "width": 1200,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://img.sparknews.funkemedien.de/409960902/409960902_1757490812_v16_9_1200.webp",
+            "query_width": "min-width:960",
+            "size": {
+              "width": 1200,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://img.sparknews.funkemedien.de/409960902/409960902_1757490812_v16_9_1600.jpeg",
+            "query_width": "min-width:960",
+            "size": {
+              "width": 1600,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://img.sparknews.funkemedien.de/409960902/409960902_1757490812_v16_9_1600.webp",
+            "query_width": "min-width:960",
+            "size": {
+              "width": 1600,
+              "height": 0
+            },
+            "type": "image/webp"
+          }
+        ],
+        "is_cover": true,
+        "description": "Ricarda Lang",
+        "caption": "Ricarda Lang im Bundestag: Die frühere Grünen-Vorsitzende kritisierte Julia Klöckner scharf und sprach von einer „Polarisierungsunternehmerin“.",
+        "authors": [
+          "Niklas Treppner/dpa",
+          "Niklas Treppner"
+        ],
+        "position": 1235
+      }
+    ],
+    "publishing_date": "2025-09-10 07:53:32+00:00",
+    "title": "Grünen-Spitze gegen Klöckner: Nun attackiert auch Ricarda Lang",
+    "topics": [
+      "Julia Klöckner",
+      "Grüne"
+    ]
   }
 }
