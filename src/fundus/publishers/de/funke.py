@@ -85,7 +85,8 @@ class FunkeParser(ParserProxy):
 
         _paragraph_selector = XPath(
             "//div[contains(@class,'article-body')]"
-            "//p[contains(@class,'expressive-copy-lg-body') and not(contains(text(), '>>'))]"
+            "//p[contains(@class,'expressive-copy-lg-body') and not(contains(text(), '>>')) and string-length(text()) > 10]|"
+            "//div[contains(@class,'article-body')]//ul/li[string-length(text())>10]"
         )
         _subheadline_selector = XPath(
             "//div[contains(@class,'article-body')]//h3[not("
@@ -94,7 +95,8 @@ class FunkeParser(ParserProxy):
             " or contains(text(), 'weitere Videos')"
             " or contains(text(), 'Auch interessant')"
             " or contains(text(), 'Weitere News')"
-            " or not(contains(@class, 'expressive-heading-xl')))]"
+            " or not(contains(@class, 'expressive-heading-xl'))"
+            " or following-sibling::*[1][self::ul])]"
         )
         _summary_selector = XPath("//div[contains(@class, 'expressive-copy-lg')]")
         _image_selector = XPath(
