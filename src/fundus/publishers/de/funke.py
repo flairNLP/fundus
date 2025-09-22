@@ -85,8 +85,8 @@ class FunkeParser(ParserProxy):
 
         _paragraph_selector = XPath(
             "//div[contains(@class,'article-body')]"
-            "//p[contains(@class,'expressive-copy-lg-body') and not(contains(text(), '>>')) and string-length(text()) > 10]|"
-            "//div[contains(@class,'article-body')]//ul/li[string-length(text())>10]"
+            "/p[contains(@class,'expressive-copy-lg-body') and not(contains(text(), '>>')) and string-length(text()) > 10]|"
+            "//div[contains(@class,'article-body')]//ul/li[string-length(text())>10 and not(a or article)]"
         )
         _subheadline_selector = XPath(
             "//div[contains(@class,'article-body')]//h3[not("
