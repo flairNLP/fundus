@@ -11,9 +11,17 @@
     "url": "https://www.braunschweiger-zeitung.de/sport/mehr-sport/article242348272/Fury-und-Usyk-kaempfen-um-Schwergewichts-Krone.html",
     "crawl_date": "2024-05-16 13:25:13.687319"
   },
+  "BSZ_2025_09_09.html.gz": {
+    "url": "https://www.braunschweiger-zeitung.de/politik/article409956720/ampeln-tot-s-bahnen-stoppen-wie-sicher-ist-deutschlands-stromnetz.html",
+    "crawl_date": "2025-09-09 15:15:22.305490"
+  },
   "BerlinerMorgenpost_2024_05_03.html.gz": {
     "url": "https://www.morgenpost.de/berlin/article242242744/feuer-brand-warnung-berlin-lichterfelde-brandgase-aktuell-news.html",
     "crawl_date": "2024-05-03 17:27:55.160009"
+  },
+  "BerlinerMorgenpost_2025_09_09.html.gz": {
+    "url": "https://www.morgenpost.de/ratgeber-wissen/finanzen/article409954684/ezb-zinsentscheid-donnerstag-klare-ansage.html",
+    "crawl_date": "2025-09-09 15:23:30.089234"
   },
   "BerlinerZeitung_2023_04_28.html.gz": {
     "url": "https://www.berliner-zeitung.de/news/550-kinder-gezeugt-gericht-stoppt-uebereifrigen-samenspender-in-den-niederlanden-li.343191",
@@ -99,9 +107,17 @@
     "url": "https://www.golem.de/news/lte-patent-samsung-soll-wegen-patentklage-smartphones-zerstoeren-2404-184627.html",
     "crawl_date": "2024-04-28 20:12:24.192464"
   },
+  "Golem_2025_09_09.html.gz": {
+    "url": "https://www.golem.de/news/akkutechnik-hat-quantumscape-genug-akkus-fuer-ein-motorrad-gebaut-2509-199920.html",
+    "crawl_date": "2025-09-09 17:44:53.235821"
+  },
   "HamburgerAbendblatt_2024_04_28.html.gz": {
     "url": "https://www.abendblatt.de/hamburg/article242192802/Hamburg-Marathon-2024-Royaler-Besuch-auf-der-Laufstrecke-1.html",
     "crawl_date": "2024-04-28 17:22:58.422635"
+  },
+  "HamburgerAbendblatt_2025_09_09.html.gz": {
+    "url": "https://www.abendblatt.de/politik/article408587681/annalena-baerbock-un-job-praesidentin-posten-gehalt.html",
+    "crawl_date": "2025-09-09 15:14:41.295022"
   },
   "Heise_2024_04_19.html.gz": {
     "url": "https://www.heise.de/news/Ionos-Phishing-Masche-mit-neuen-EU-Richtlinien-soll-Opfer-ueberzeugen-9691259.html?wt_mc=rss.red.ho.ho.rdf.beitrag.beitrag&seite=all",
@@ -230,6 +246,10 @@
   "WAZ_2024_03_08.html.gz": {
     "url": "https://www.waz.de/staedte/duisburg/article241847490/Erstes-Bild-So-koennte-die-Duisburger-Seilbahn-aussehen.html",
     "crawl_date": "2024-03-08 19:08:06.071698"
+  },
+  "WAZ_2025_09_10.html.gz": {
+    "url": "https://www.waz.de/politik/article409961272/gruenen-spitze-gegen-kloeckner-nun-attackiert-auch-ricarda-lang.html",
+    "crawl_date": "2025-09-10 13:22:04.905974"
   },
   "WDR_2024_04_22.html.gz": {
     "url": "https://www1.wdr.de/nachrichten/landespolitik/feuerwehr-rentenalter-erhoehung-100.html",

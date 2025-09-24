@@ -353,6 +353,7 @@ class PublisherGroup(type):
         attributes: Optional[List[str]] = None,
         source_types: Optional[List[Type[URLSource]]] = None,
         languages: Optional[List[str]] = None,
+        include_deprecated_attributes: bool = False,
     ) -> Union[List[FilteredPublisher], List[Publisher]]:
         if not (attributes or source_types or languages):
             raise ValueError("You have to define at least one search condition")
@@ -367,9 +368,14 @@ class PublisherGroup(type):
         unique_attributes = set(attributes)
         spec: Publisher
         for publisher in cls:
-            if unique_attributes.issubset(publisher.parser().attributes().names) and (
-                publisher.supports(source_types=source_types, languages=languages)
-            ):
+            if unique_attributes.issubset(
+                set(publisher.parser().attributes().names)
+                - (
+                    set(
+                        publisher.parser().attributes().deprecated.names if not include_deprecated_attributes else set()
+                    )
+                )
+            ) and (publisher.supports(source_types=source_types, languages=languages)):
                 matched.append(
                     FilteredPublisher.from_publisher(
                         publisher,
