@@ -76,13 +76,17 @@ class Node:
     # one could replace this recursion with XPath using an expression like this:
     # //*[not(self::script) and text()]/text(), but for whatever reason, that's actually 50-150% slower
     # than simply using the implemented mixture below
-    def text_content(self, excluded_tags: Optional[List[str]] = None) -> str:
+    def text_content(self, excluded_tags: Optional[List[str]] = None, tag_filter: Optional[XPath] = None) -> str:
         guarded_excluded_tags: List[str] = excluded_tags or []
 
         def _text_content(element: lxml.html.HtmlElement) -> str:
-            if element.tag in guarded_excluded_tags:
+            if (
+                element.tag in guarded_excluded_tags
+                or isinstance(element, lxml.html.HtmlComment)
+                or (tag_filter and tag_filter(element))
+            ):
                 return element.tail or ""
-            text = element.text or "" if not isinstance(element, lxml.html.HtmlComment) else ""
+            text = element.text or ""
             children = "".join([_text_content(child) for child in element.iterchildren()])
             tail = element.tail or ""
             return text + children + tail
@@ -133,6 +137,7 @@ def extract_article_body_with_selector(
     paragraph_selector: XPath,
     summary_selector: Optional[XPath] = None,
     subheadline_selector: Optional[XPath] = None,
+    tag_filter: Optional[XPath] = None,
 ) -> ArticleBody:
     # depth first index for each element in tree
     df_idx_by_ref = {element: i for i, element in enumerate(doc.iter())}
@@ -164,14 +169,22 @@ def extract_article_body_with_selector(
         instructions = itertools.chain([first, []], instructions)
 
     summary = TextSequence(
-        map(lambda x: normalize_whitespace(x.text_content(excluded_tags=["script"])), next(instructions))
+        map(
+            lambda x: normalize_whitespace(x.text_content(excluded_tags=["script"], tag_filter=tag_filter)),
+            next(instructions),
+        )
     )
     sections: List[ArticleSection] = []
 
     for chunk in more_itertools.chunked(instructions, 2):
         if len(chunk) == 1:
             chunk.append([])
-        texts = [list(map(lambda x: normalize_whitespace(x.text_content(excluded_tags=["script"])), c)) for c in chunk]
+        texts = [
+            list(
+                map(lambda x: normalize_whitespace(x.text_content(excluded_tags=["script"], tag_filter=tag_filter)), c)
+            )
+            for c in chunk
+        ]
         sections.append(ArticleSection(*map(TextSequence, texts)))
 
     return ArticleBody(summary=summary, sections=sections)
