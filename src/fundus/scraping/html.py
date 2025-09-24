@@ -17,7 +17,7 @@ from fundus.logging import create_logger
 from fundus.publishers.base_objects import Publisher, Robots
 from fundus.scraping.delay import Delay
 from fundus.scraping.filter import URLFilter
-from fundus.scraping.session import default_header, session_handler
+from fundus.scraping.session import _default_header, session_handler
 from fundus.scraping.url import URLSource
 from fundus.utils.events import __EVENTS__
 
@@ -109,7 +109,7 @@ class WebSource:
         self.url_source = url_source
         self.publisher = publisher
         self.url_filter = url_filter
-        self.request_header = request_header or default_header
+        self.request_header = request_header or _default_header
         self.query_parameters = query_parameters or {}
         if isinstance(url_source, URLSource):
             url_source.set_header(self.request_header)
@@ -224,7 +224,7 @@ class CCNewsSource:
     def __init__(self, *publishers: Publisher, warc_path: str, headers: Optional[Dict[str, str]] = None):
         self.publishers = publishers
         self.warc_path = warc_path
-        self.headers = headers or default_header
+        self.headers = headers or _default_header
         self._publisher_mapping: Dict[str, Publisher] = {
             urlparse(publisher.domain).netloc: publisher for publisher in self.publishers
         }

@@ -12,7 +12,7 @@ from fundus.utils.events import __EVENTS__
 
 logger = create_logger(__name__)
 
-default_header = {"user-agent": "Fundus/2.0 (contact: github.com/flairnlp/fundus)"}
+_default_header = {"user-agent": "Fundus/2.0 (contact: github.com/flairnlp/fundus)"}
 
 
 class CrashThread(Exception):
