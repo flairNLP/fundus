@@ -30,18 +30,13 @@ class GolemParser(ParserProxy):
 
         @attribute
         def body(self) -> Optional[ArticleBody]:
-            body = extract_article_body_with_selector(
+            return extract_article_body_with_selector(
                 self.precomputed.doc,
                 summary_selector=self._summary_selector,
                 paragraph_selector=self._paragraph_selector,
                 subheadline_selector=self._subheadline_selector,
+                tag_filter=XPath("self::*[@class='go-vh']"),
             )
-            for section in body.sections:
-                filtered_sentences: List[str] = []
-                for sentence in section.paragraphs:
-                    filtered_sentences.append(sentence.replace("(öffnet im neuen Fenster)", "").strip())
-                section.paragraphs = TextSequence(filtered_sentences)
-            return body
 
         @attribute
         def authors(self) -> List[str]:
