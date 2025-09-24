@@ -13,6 +13,7 @@ from fundus.parser.utility import (
     generic_topic_parsing,
     image_extraction,
 )
+from fundus.publishers.de.funke import FunkeParser
 
 
 class WAZParser(ParserProxy):
@@ -67,7 +68,7 @@ class WAZParser(ParserProxy):
             )
 
     class V1_1(V1):
-        VALID_UNTIL = datetime.date.today()
+        VALID_UNTIL = datetime.date(2025, 8, 24)
 
         _paragraph_selector = XPath(
             "//div[@class='article-body'] /p[position()>1 and not(@rel='author' or re:test(string(), '^>>.*[+]{3}'))]",
@@ -75,3 +76,7 @@ class WAZParser(ParserProxy):
         )
         _summary_selector = XPath("//div[@class='article-body'] /p[position()=1]")
         _subheadline_selector = XPath("//div[@class='article-body'] / h3[not(text()='Auch interessant')]")
+
+    class V2(FunkeParser.V1_1):
+        # It seems like WAZ was bought by Funke and now uses the same layout
+        VALID_UNTIL = datetime.date.today()
