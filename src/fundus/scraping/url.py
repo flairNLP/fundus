@@ -11,7 +11,7 @@ from urllib.parse import unquote
 import feedparser
 import lxml.html
 import validators
-from lxml.etree import XMLParser, XMLSyntaxError, XPath
+from lxml.etree import XMLParser, XPath
 from requests import ConnectionError, HTTPError, ReadTimeout
 
 from fundus.logging import create_logger
@@ -194,11 +194,7 @@ class Sitemap(URLSource):
             if not content:
                 logger.warning(f"Warning! Empty sitemap at {sitemap_url!r}")
                 return
-            try:
-                tree = lxml.etree.fromstring(content, parser=self._parser)
-            except XMLSyntaxError:
-                logger.warning(f"Warning! Couldn't parse sitemap {sitemap_url!r} because of invalid XML")
-                return
+            tree = lxml.etree.fromstring(content, parser=self._parser)
             urls = [node.text for node in self._url_selector(tree)]
             if urls:
                 for new_url in reversed(urls) if self.reverse else urls:
