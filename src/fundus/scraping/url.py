@@ -164,7 +164,7 @@ class Sitemap(URLSource):
     _decompressor: ClassVar[_ArchiveDecompressor] = _ArchiveDecompressor()
     _sitemap_selector: ClassVar[XPath] = XPath("//*[local-name()='sitemap']/*[local-name()='loc']")
     _url_selector: ClassVar[XPath] = XPath("//*[local-name()='url']/*[local-name()='loc']")
-    _parser = XMLParser(strip_cdata=False)
+    _parser = XMLParser(strip_cdata=False, recover=True)
 
     def __iter__(self) -> Iterator[str]:
         def yield_recursive(sitemap_url: str) -> Iterator[str]:
