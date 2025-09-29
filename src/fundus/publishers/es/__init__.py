@@ -63,7 +63,7 @@ class ES(metaclass=PublisherGroup):
         ],
     )
     LaVanguardia = Publisher(
-        name=" La Vanguardia",
+        name="La Vanguardia",
         domain="https://www.lavanguardia.com/",
         parser=LaVanguardiaParser,
         sources=[
