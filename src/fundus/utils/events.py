@@ -1,17 +1,23 @@
 import threading
 from collections import defaultdict
-from typing import Any, Dict, List, Optional, Union
+from typing import Dict, List, Optional, Union
+
+from bidict import bidict
 
 from fundus.logging import create_logger
 
 logger = create_logger(__name__)
+
+__DEFAULT_EVENTS__: List[str] = ["stop"]
 
 
 class ThreadEventDict(Dict[str, threading.Event]):
     """A dictionary that creates threading.Event() objects on demand for certain keys.
     This essentially mocks the behavior of defaultdict, but only for certain keys."""
 
-    _default_events: List[str] = ["stop"]
+    def __init__(self, default_events: Optional[List[str]] = None):
+        super().__init__()
+        self._default_events = default_events or []
 
     def __getitem__(self, item: str) -> threading.Event:
         try:
@@ -37,10 +43,10 @@ class EventDict:
     "BR" to the thread's identifier.
     """
 
-    def __init__(self):
-        self._events: Dict[int, ThreadEventDict] = defaultdict(ThreadEventDict)
-        self._aliases: Dict[Any, int] = {}
-        self._lock = threading.Lock()
+    def __init__(self, default_events: Optional[List[str]] = None):
+        self._events: Dict[int, ThreadEventDict] = defaultdict(lambda: ThreadEventDict(default_events))
+        self._aliases: bidict[str, int] = bidict()
+        self._lock = threading.RLock()
 
     @staticmethod
     def _get_identifier() -> int:
@@ -63,8 +69,18 @@ class EventDict:
             return key
         return self._aliases[key]
 
+    def _pretty_resolve(self, key: Union[int, str, None]) -> str:
+        resolved = self._resolve(key)
+        alias = f" ({self._aliases.inv[resolved]})" if resolved in self._aliases.values() else ""
+        return f"{resolved:<6}{alias}"
+
     def _alias(self, alias: str, key: Optional[int] = None):
         self._aliases[alias] = key if key else self._get_identifier()
+        if (ident := self._resolve(alias)) not in self._events:
+            # noinspection PyStatementEffect
+            # Since defaultdict doesn't provide a direct way to create defaults,
+            # we simulate it by accessing the key.
+            self._events[ident]
         logger.debug(f"Registered alias {alias} -> {self._aliases[alias]}")
 
     def register_event(self, event: str, key: Union[int, str, None] = None):
@@ -73,17 +89,17 @@ class EventDict:
                 self._alias(key)
             if (resolved := self._resolve(key)) not in self._events:
                 self._events[resolved][event] = threading.Event()
-                logger.debug(f"Registered event {event!r} for {resolved}")
+                logger.debug(f"Registered event {event!r} for {self._pretty_resolve(key)}")
 
     def set_event(self, event: str, key: Union[int, str, None] = None):
         with self._lock:
             self._events[self._resolve(key)][event].set()
-            logger.debug(f"Set event {event!r} for {self._resolve(key)}")
+            logger.debug(f"Set event {event!r} for {self._pretty_resolve(key)}")
 
     def clear_event(self, event: str, key: Union[int, str, None] = None):
         with self._lock:
             self._events[self._resolve(key)][event].clear()
-            logger.debug(f"Cleared event {event!r} for {self._resolve(key)}")
+            logger.debug(f"Cleared event {event!r} for {self._pretty_resolve(key)}")
 
     def set_for_all(self, event: Optional[str] = None):
         """Set <event> for all registered keys
@@ -96,12 +112,13 @@ class EventDict:
             None
         """
         with self._lock:
-            for events in self._events.values():
-                if event is not None and event in events:
-                    events[event].set()
-                else:
-                    for flag in events.values():
-                        flag.set()
+            if event is None:
+                for ident, events in self._events.items():
+                    for name in events:
+                        self.set_event(name, ident)
+            else:
+                for ident in self._events:
+                    self.set_event(event, ident)
 
     def clear_for_all(self, event: Optional[str] = None):
         """Clear <event> for all registered keys
@@ -114,12 +131,13 @@ class EventDict:
             None
         """
         with self._lock:
-            for events in self._events.values():
-                if event is not None and event in events:
-                    events[event].clear()
-                else:
-                    for flag in events.values():
-                        flag.clear()
+            if event is None:
+                for ident, events in self._events.items():
+                    for name in events:
+                        self.clear_event(name, ident)
+            else:
+                for ident in self._events:
+                    self.clear_event(event, ident)
 
     def is_event_set(self, event: str, key: Union[int, str, None] = None) -> bool:
         with self._lock:
@@ -128,6 +146,9 @@ class EventDict:
     def alias(self, alias: str, key: Optional[int] = None):
         with self._lock:
             self._alias(alias, key)
+
+    def get_alias(self, ident: int) -> str:
+        return self._aliases.inv[ident]
 
     def remove_alias(self, alias: str):
         with self._lock:
@@ -138,4 +159,4 @@ class EventDict:
             return self._events[self._resolve(key)][event]
 
 
-__EVENTS__: EventDict = EventDict()
+__EVENTS__: EventDict = EventDict(default_events=__DEFAULT_EVENTS__)

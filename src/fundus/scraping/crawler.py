@@ -167,11 +167,12 @@ def queue_wrapper(
             context, ident = get_execution_context()
             queue.put(
                 RemoteException(
-                    f"There was a(n) {type(err).__name__!r} occurring in {context} with ident {ident}\n{tb_str}"
+                    f"There was a(n) {type(err).__name__!r} occurring in {context} "
+                    f"with ident {ident} ({__EVENTS__.get_alias(ident)})\n{tb_str}"
                 )
             )
 
-            logger.debug(f"Encountered remote exception: {err!r}")
+            logger.debug(f"Encountered remote exception in thread {ident} ({__EVENTS__.get_alias(ident)}): {err!r}")
             # prevents a race condition where the ThreadPool shuts down before the exception is pulled from the queue
             time.sleep(0.2)
 
@@ -195,8 +196,6 @@ def pool_queue_iter(handle: MapResult[Any], queue: Queue[Union[_T, Exception]]) 
     while True:
         try:
             if isinstance(nxt := queue.get_nowait(), Exception):
-                if isinstance(nxt, CrashThread):
-                    return
                 raise Exception("There was an exception occurring in a remote thread/process") from nxt
             yield nxt
         except Empty:
