@@ -139,12 +139,17 @@ def get_execution_context():
         return thread.name, thread.ident
 
 
-def queue_wrapper(queue: Queue[Union[_T, Exception]], target: Callable[_P, Iterator[_T]]) -> Callable[_P, None]:
+def queue_wrapper(
+    queue: Queue[Union[_T, Exception]],
+    target: Callable[_P, Iterator[_T]],
+    silenced_exceptions: Tuple[Type[BaseException], ...] = (),
+) -> Callable[_P, None]:
     """Wraps the target callable to add its results to the queue instead of returning them directly.
 
     Args:
         queue: The buffer queue.
         target: A target callable.
+        silenced_exceptions: Exception types that should be silenced
 
     Returns:
         (Callable[_P, None]) The wrapped target.
@@ -155,6 +160,8 @@ def queue_wrapper(queue: Queue[Union[_T, Exception]], target: Callable[_P, Itera
         try:
             for obj in target(*args, **kwargs):
                 queue.put(obj)
+        except silenced_exceptions:
+            pass
         except Exception as err:
             tb_str = "".join(traceback.TracebackException.from_exception(err).format())
             context, ident = get_execution_context()
@@ -562,7 +569,7 @@ class Crawler(CrawlerBase):
         self, publishers: Tuple[Publisher, ...], article_task: Callable[[Publisher], Iterator[Article]]
     ) -> Iterator[Article]:
         result_queue: Queue[Union[Article, Exception]] = Queue(len(publishers))
-        wrapped_article_task = queue_wrapper(result_queue, article_task)
+        wrapped_article_task = queue_wrapper(result_queue, article_task, silenced_exceptions=(CrashThread,))
         pool = ThreadPool(processes=len(publishers) or None)
         try:
             with session_handler.context(
