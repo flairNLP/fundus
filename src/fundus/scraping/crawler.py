@@ -429,7 +429,9 @@ class CrawlerBase(ABC):
                     skip_publishers_disallowing_training,
                 ):
                     if max_articles_per_publisher and article_count[article.publisher] == max_articles_per_publisher:
-                        if isinstance(self, Crawler) and not __EVENTS__.is_event_set("stop", article.publisher):
+                        if (isinstance(self, Crawler) and self.threading) and not __EVENTS__.is_event_set(
+                            "stop", article.publisher
+                        ):
                             __EVENTS__.set_event("stop", article.publisher)
                         if sum(article_count.values()) == len(self.publishers) * max_articles_per_publisher:
                             break
@@ -542,6 +544,11 @@ class Crawler(CrawlerBase):
 
             else:
                 raise TypeError("param <delay> of <Crawler.__init__>")
+
+        # we "register" the thread in the event dict as soon as possible to avoid that a
+        # thread crashes before
+        if self.threading:
+            __EVENTS__.alias(publisher.name)
 
         scraper = WebScraper(
             publisher,
