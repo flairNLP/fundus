@@ -12,7 +12,7 @@ import time
 import traceback
 from abc import ABC, abstractmethod
 from collections import defaultdict
-from concurrent.futures import Future, ThreadPoolExecutor
+from concurrent.futures import ThreadPoolExecutor
 from concurrent.futures import TimeoutError as FuturesTimeoutError
 from concurrent.futures import as_completed
 from datetime import datetime
@@ -71,8 +71,6 @@ _T = TypeVar("_T")
 _P = ParamSpec("_P")
 
 PublisherType: TypeAlias = Union[Publisher, PublisherGroup]
-
-_shared_executor = ThreadPoolExecutor(max_workers=10)
 
 
 class RemoteException(Exception):
@@ -210,45 +208,6 @@ def random_sleep(func: Callable[_P, _T], between: Tuple[float, float]) -> Callab
         return func(*args, **kwargs)
 
     return wrapper
-
-
-def verify_publishers(
-    publishers: Tuple["Publisher", ...],
-    max_workers: Optional[int] = None,
-) -> Tuple["Publisher", ...]:
-    publishers = tuple(publishers)
-    if not publishers:
-        return tuple()
-
-    max_workers = max_workers if max_workers is not None else min(len(publishers), 5)
-
-    verified: List["Publisher"] = []
-    with ThreadPoolExecutor(max_workers=max_workers) as executor:
-        future_to_publisher = {
-            executor.submit(publisher.robots.disallows_training): publisher for publisher in publishers
-        }
-
-        for future in as_completed(future_to_publisher.keys()):
-            publisher = future_to_publisher[future]
-            try:
-                disallows = future.result()
-                if not disallows:
-                    verified.append(publisher)
-                else:
-                    logger.warning(f"Skipping publisher {publisher.name!r} because it disallows training.")
-            except FuturesTimeoutError:
-                logger.warning(f"Robots.txt check timed out for {publisher.name!r}", exc_info=False)
-            except Exception as exc:
-                logger.warning(f"Could not verify training policy for {publisher.name!r}: {exc}", exc_info=True)
-
-    return tuple(verified)
-
-
-def _async_publisher_verification(
-    publishers: Tuple["Publisher", ...],
-    max_workers: Optional[int] = None,
-) -> Future[Tuple["Publisher", ...]]:
-    return _shared_executor.submit(verify_publishers, publishers, max_workers)
 
 
 class CrawlerBase(ABC):
@@ -520,7 +479,14 @@ class Crawler(CrawlerBase):
         extraction_filter: Optional[ExtractionFilter] = None,
         url_filter: Optional[URLFilter] = None,
         language_filter: Optional[List[str]] = None,
+        skip_publishers_disallowing_training: bool = False,
     ) -> Iterator[Article]:
+        if skip_publishers_disallowing_training and (
+            publisher.disallows_training or publisher.robots.disallows_training()
+        ):
+            logger.info(f"Skipping publisher {publisher.name} because it disallows training.")
+            return
+
         def build_delay() -> Optional[Delay]:
             if isinstance(self.delay, float):
                 delay = self.delay
@@ -586,25 +552,13 @@ class Crawler(CrawlerBase):
         language_filter: Optional[List[str]],
         skip_publishers_disallowing_training: bool = False,
     ) -> Iterator[Article]:
-        if skip_publishers_disallowing_training:
-            verified_publishers_future = _async_publisher_verification(
-                publishers, max_workers=1 if not self.threading else None
-            )
-
-            try:
-                verified_publishers = verified_publishers_future.result(timeout=30)
-            except FuturesTimeoutError:
-                logger.warning("Publisher verification timed out, proceeding with all publishers")
-                verified_publishers = publishers
-
-            publishers = verified_publishers
-        _shared_executor.shutdown(wait=False)
         article_task = partial(
             self._fetch_articles,
             error_handling=error_handling,
             extraction_filter=extraction_filter,
             url_filter=url_filter,
             language_filter=language_filter,
+            skip_publishers_disallowing_training=skip_publishers_disallowing_training,
         )
 
         if self.threading:
@@ -810,20 +764,36 @@ class CCNewsCrawler(CrawlerBase):
         **kwargs,
     ) -> Iterator[Article]:
         if skip_publishers_disallowing_training:
-            verified_publishers_future = _async_publisher_verification(publishers, max_workers=self.processes)
+            max_workers = self.processes if self.processes > 0 else min(len(publishers), 5)
+            verified_publishers: List["Publisher"] = []
 
+            with ThreadPoolExecutor(max_workers=max_workers) as executor:
+                future_to_publisher = {
+                    executor.submit(
+                        lambda: publisher.disallows_training or publisher.robots.disallows_training()
+                    ): publisher
+                    for publisher in publishers
+                }
             warc_paths = tuple(self._get_warc_paths())
 
             try:
-                verified_publishers = verified_publishers_future.result(timeout=30)
+                for future in as_completed(future_to_publisher.keys(), timeout=30):
+                    publisher = future_to_publisher[future]
+                    try:
+                        if not future.result():
+                            verified_publishers.append(publisher)
+                        else:
+                            logger.warning(f"Skipping publisher {publisher.name!r} because it disallows training.")
+                    except FuturesTimeoutError:
+                        logger.warning(f"Robots.txt check timed out for {publisher.name!r}", exc_info=False)
+                    except Exception as exc:
+                        logger.warning(f"Could not verify training policy for {publisher.name!r}: {exc}", exc_info=True)
+                publishers = tuple(verified_publishers)
             except FuturesTimeoutError:
                 logger.warning("Publisher verification timed out, proceeding with all publishers")
-                verified_publishers = publishers
 
-            publishers = verified_publishers
         else:
             warc_paths = tuple(self._get_warc_paths())
-        _shared_executor.shutdown(wait=False)
 
         with get_proxy_tqdm(total=len(warc_paths), desc="Process WARC files", disable=self.disable_tqdm) as bar:
             article_task = partial(
