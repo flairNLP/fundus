@@ -10,6 +10,7 @@ from dataclasses import dataclass, field
 from datetime import datetime
 from functools import total_ordering
 from typing import (
+    Any,
     Callable,
     ClassVar,
     Dict,
@@ -44,6 +45,7 @@ from fundus.parser.data import (
     Image,
     ImageVersion,
     LinkedDataMapping,
+    LiveTickerBody,
     TextSequence,
 )
 from fundus.utils.regex import _get_match_dict
@@ -69,7 +71,7 @@ def normalize_whitespace(text: str) -> str:
 @total_ordering
 @dataclass(eq=False)
 class Node:
-    position: int
+    position: float
     node: lxml.html.HtmlElement = field(compare=False)
     _break_selector: ClassVar[XPath] = XPath("*//br")
 
@@ -124,7 +126,24 @@ class SummaryNode(Node):
     pass
 
 
+class BoundaryNode(Node):
+    def __post_init__(self):
+        self.position -= 0.5  # in case a content node is also a boundary node, we want the boundary to come first
+
+
 class SubheadNode(Node):
+    pass
+
+
+class DateNode(Node):
+    pass
+
+
+class AuthorNode(Node):
+    pass
+
+
+class ImageNode(Node):
     pass
 
 
@@ -188,6 +207,101 @@ def extract_article_body_with_selector(
         sections.append(ArticleSection(*map(TextSequence, texts)))
 
     return ArticleBody(summary=summary, sections=sections)
+
+
+def extract_live_ticker_body_with_selector(
+    doc: lxml.html.HtmlElement,
+    paragraph_selector: XPath,
+    summary_selector: Optional[XPath] = None,
+    subheadline_selector: Optional[XPath] = None,
+    entry_boundary_selector: Optional[XPath] = None,
+    tag_filter: Optional[XPath] = None,
+    date_selector: Optional[XPath] = None,
+    author_selector: Optional[XPath] = None,
+    image_selector: Optional[XPath] = None,
+    image_selection_helper: Optional[Callable[[lxml.html.HtmlElement], List[Image]]] = None,
+) -> LiveTickerBody:
+    # depth first index for each element in tree
+    df_idx_by_ref = {element: i for i, element in enumerate(doc.iter())}
+
+    def extract_nodes(selector: XPath, node_type: Type[Node], root: lxml.html.HtmlElement = doc) -> List[Node]:
+        if not selector and node_type:
+            raise ValueError("Both a selector and node type are required")
+
+        return [node for element in selector(root) if (node := node_type(df_idx_by_ref[element], element))]
+
+    summary_nodes = extract_nodes(summary_selector, SummaryNode) if summary_selector else []
+    boundary_nodes = extract_nodes(entry_boundary_selector, BoundaryNode) if entry_boundary_selector else []
+    paragraph_nodes = extract_nodes(paragraph_selector, ParagraphNode)
+    subhead_nodes = extract_nodes(subheadline_selector, SubheadNode) if subheadline_selector else []
+    date_nodes = extract_nodes(date_selector, DateNode) if date_selector else []
+    author_nodes = extract_nodes(author_selector, AuthorNode) if author_selector else []
+    image_nodes = extract_nodes(image_selector, ImageNode) if image_selector else []
+    nodes = sorted(
+        summary_nodes + boundary_nodes + subhead_nodes + paragraph_nodes + date_nodes + author_nodes + image_nodes
+    )
+
+    if not nodes[: len(summary_nodes)] == summary_nodes:
+        raise ValueError(f"All summary nodes should be at the beginning of the article")
+
+    summary = TextSequence(
+        map(
+            lambda x: normalize_whitespace(x.text_content(excluded_tags=["script"], tag_filter=tag_filter)),
+            summary_nodes,
+        )
+    )
+
+    entries: List[ArticleBody] = []
+    entries_meta_information: List[Dict[str, Any]] = []
+    entry_nodes = more_itertools.split_at(nodes[len(summary_nodes) :], pred=lambda x: isinstance(x, BoundaryNode))
+
+    for entry in entry_nodes:
+        if not entry:
+            continue
+        content_nodes = filter(lambda x: isinstance(x, ParagraphNode) or isinstance(x, SubheadNode), entry)
+        instructions = more_itertools.split_when(content_nodes, pred=lambda x, y: type(x) != type(y))
+        subhead_nodes = []
+        paragraph_nodes = []
+        entry_date = None
+        entry_authors = []
+        entry_images: List[Image] = []
+        for node in entry:
+            if isinstance(node, SubheadNode):
+                subhead_nodes.append(node)
+            elif isinstance(node, ParagraphNode):
+                paragraph_nodes.append(node)
+            elif isinstance(node, DateNode):
+                entry_date = generic_date_parsing("".join(generic_nodes_to_text([node.node])))
+            elif isinstance(node, AuthorNode):
+                entry_authors = generic_author_parsing(generic_nodes_to_text([node.node]))
+            elif isinstance(node, ImageNode):
+                entry_images = image_selection_helper(node.node) if image_selection_helper else []
+            else:
+                raise ValueError(f"Unsupported node type: {type(node)}")
+
+        if not subhead_nodes or (paragraph_nodes and subhead_nodes[0] > paragraph_nodes[0]):
+            first = next(instructions)
+            instructions = itertools.chain([first, []], instructions)
+
+        sections: List[ArticleSection] = []
+
+        for chunk in more_itertools.chunked(instructions, 2):
+            if len(chunk) == 1:
+                chunk.append([])
+            texts = [
+                list(
+                    map(
+                        lambda x: normalize_whitespace(x.text_content(excluded_tags=["script"], tag_filter=tag_filter)),
+                        c,
+                    )
+                )
+                for c in chunk
+            ]
+            sections.append(ArticleSection(*map(TextSequence, texts)))
+
+        entries.append(ArticleBody(summary=TextSequence([]), sections=sections))
+        entries_meta_information.append({"date": entry_date, "authors": entry_authors, "images": entry_images})
+    return LiveTickerBody(summary=summary, entries=entries, entry_meta_information=entries_meta_information)
 
 
 _ld_node_selector = XPath("//script[@type='application/ld+json']")

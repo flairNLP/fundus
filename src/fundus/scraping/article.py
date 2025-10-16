@@ -1,6 +1,6 @@
 from datetime import datetime
 from textwrap import TextWrapper, dedent
-from typing import Any, Dict, List, Mapping, Optional
+from typing import Any, Dict, List, Mapping, Optional, Union
 
 import langdetect
 import lxml.html
@@ -8,6 +8,7 @@ from colorama import Fore, Style
 
 from fundus.logging import create_logger
 from fundus.parser import ArticleBody, Image
+from fundus.parser.data import LiveTickerBody
 from fundus.scraping.html import HTML
 from fundus.utils.serialization import JSONVal, is_jsonable
 
@@ -27,7 +28,7 @@ class AttributeView:
         raise AttributeError("attribute is read only")
 
 
-class Article:
+class Publication:
     __extraction__: Mapping[str, Any] = {}
 
     def __init__(self, *, html: HTML, exception: Optional[Exception] = None, **extraction: Any) -> None:
@@ -45,7 +46,7 @@ class Article:
         return self.__extraction__.get("title")
 
     @property
-    def body(self) -> Optional[ArticleBody]:
+    def body(self) -> Optional[Union[ArticleBody, LiveTickerBody]]:
         return self.__extraction__.get("body")
 
     @property
@@ -150,6 +151,8 @@ class Article:
 
         return serialization
 
+
+class Article(Publication):
     def __str__(self):
         # the subsequent indent here is a bit wacky, but textwrapper.dedent won't work with tabs, so we have to use
         # whitespaces instead.
@@ -173,6 +176,38 @@ class Article:
             f"\n- URL:    {self.html.requested_url}"
             f"\n- From:   {self.publisher}"
             f'{" (" + self.publishing_date.strftime("%Y-%m-%d %H:%M") + ")" if self.publishing_date else ""}'
+        )
+
+        return dedent(text)
+
+
+class LiveTicker(Publication):
+    def __str__(self):
+        # the subsequent indent here is a bit wacky, but textwrapper.dedent won't work with tabs, so we have to use
+        # whitespaces instead.
+        title_wrapper = TextWrapper(width=80, max_lines=1, initial_indent="")
+        text_wrapper = TextWrapper(width=80, max_lines=2, initial_indent="", subsequent_indent="          ")
+        wrapped_title = title_wrapper.fill(
+            f"{Fore.RED}--missing title--{Style.RESET_ALL}" if self.title is None else self.title.strip()
+        )
+        wrapped_plaintext = text_wrapper.fill(
+            f"{Fore.RED}--missing plaintext--{Style.RESET_ALL}" if self.plaintext is None else self.plaintext.strip()
+        )
+
+        summary_text = (
+            f" including {len(self.body.entries if hasattr(self.body, 'entries') and self.body is not None else [])} entries"
+            f" and {len(self.images)} image(s)"
+            if self.images and not isinstance(self.images, Exception)
+            else ""
+        )
+
+        text = (
+            f"Fundus-LiveTicker{summary_text}:"
+            f'\n- Title: "{wrapped_title}"'
+            f'\n- Text:  "{wrapped_plaintext}"'
+            f"\n- URL:    {self.html.requested_url}"
+            f"\n- From:   {self.publisher}"
+            f'{" (Newest Entry from: " + self.publishing_date.strftime("%Y-%m-%d %H:%M") + ")" if self.publishing_date else ""}'
         )
 
         return dedent(text)

@@ -413,6 +413,38 @@ class ArticleBody(TextSequenceTree):
         return any(bool(section) for section in self.sections)
 
 
+@dataclass
+class LiveTickerBody(TextSequenceTree):
+    summary: TextSequence
+    entries: List[ArticleBody]
+    entry_meta_information: List[Dict[str, Any]]
+
+    def serialize(self) -> Dict[str, Any]:
+        return {
+            "summary": list(self.summary),
+            "entries": [entry.serialize() for entry in self.entries],
+            "entry_metas": self.entry_meta_information,
+        }
+
+    @classmethod
+    def deserialize(cls, serialized: Dict[str, Any]) -> Self:
+        return cls(
+            summary=TextSequence(serialized["summary"]),
+            entries=[ArticleBody.deserialize(entry) for entry in serialized["entries"]],
+            entry_meta_information=serialized["entry_meta_information"],
+        )
+
+    def __bool__(self):
+        return any(bool(entry) for entry in self.entries)
+
+    def __iter__(self) -> Iterator[Any]:
+        field_values = [
+            getattr(self, f.name) for f in fields(self) if f.name not in ("entry_meta_information", "entries")
+        ]
+        field_values.extend([entry.sections for entry in self.entries])
+        yield from field_values
+
+
 @total_ordering
 @dataclass
 class Dimension(DataclassSerializationMixin):

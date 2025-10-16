@@ -1,13 +1,15 @@
 import datetime
 import re
-from typing import List, Optional
+from typing import List, Optional, Union
 
 from lxml.cssselect import CSSSelector
 from lxml.etree import XPath
 
 from fundus.parser import ArticleBody, BaseParser, Image, ParserProxy, attribute
+from fundus.parser.data import LiveTickerBody
 from fundus.parser.utility import (
     extract_article_body_with_selector,
+    extract_live_ticker_body_with_selector,
     generic_author_parsing,
     generic_date_parsing,
     image_extraction,
@@ -22,14 +24,28 @@ class TagesschauParser(ParserProxy):
         _author_selector = XPath('string(//div[contains(@class, "authorline__author")])')
         _topic_selector = CSSSelector("div.meldungsfooter .taglist a")
 
+        _live_ticker_boundary_selector = XPath("//div[contains(@class, 'liveblog--anchor')]")
+        _live_ticker_paragraph_selector = XPath("//p[contains(@class,'textabsatz ') and not(strong)]")
+        _live_ticker_subheadline_selector = XPath("//h2[@class='meldung__subhead']")
+        _live_ticker_date_selector = XPath("//div[@class='liveblog__datetime']")
+
         @attribute
-        def body(self) -> Optional[ArticleBody]:
-            return extract_article_body_with_selector(
-                self.precomputed.doc,
-                summary_selector=self._summary_selector,
-                subheadline_selector=self._subheadline_selector,
-                paragraph_selector=self._paragraph_selector,
-            )
+        def body(self) -> Optional[Union[ArticleBody, LiveTickerBody]]:
+            if not self._live_ticker_boundary_selector(self.precomputed.doc):
+                return extract_article_body_with_selector(
+                    self.precomputed.doc,
+                    summary_selector=self._summary_selector,
+                    subheadline_selector=self._subheadline_selector,
+                    paragraph_selector=self._paragraph_selector,
+                )
+            else:
+                return extract_live_ticker_body_with_selector(
+                    doc=self.precomputed.doc,
+                    entry_boundary_selector=self._live_ticker_boundary_selector,
+                    paragraph_selector=self._live_ticker_paragraph_selector,
+                    subheadline_selector=self._live_ticker_subheadline_selector,
+                    date_selector=self._live_ticker_date_selector,
+                )
 
         @attribute
         def authors(self) -> List[str]:
