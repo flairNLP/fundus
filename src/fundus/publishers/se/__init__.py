@@ -1,7 +1,8 @@
-from fundus.publishers.base_objects import PublisherGroup,Publisher
+from fundus.publishers.base_objects import Publisher, PublisherGroup
 from fundus.scraping.url import NewsMap, RSSFeed, Sitemap
 
 from .expressen import ExpressenParser
+
 
 class SE(metaclass=PublisherGroup):
     default_language = "sv"
