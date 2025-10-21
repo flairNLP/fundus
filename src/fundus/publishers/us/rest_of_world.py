@@ -17,15 +17,9 @@ class RestOfWorldParser(ParserProxy):
     class V1(BaseParser):
         VALID_UNTIL = date.today()
 
-        _summary_selector: CSSSelector = CSSSelector(
-            "div.post-subheader__summary li, p.post-header__text__dek"
-        )
-        _paragraph_selector: CSSSelector = CSSSelector(
-            "div.post-content > p"
-        )
-        _subheadline_selector: CSSSelector = CSSSelector(
-            "div.post-content > h2"
-        )
+        _summary_selector: CSSSelector = CSSSelector("div.post-subheader__summary li, p.post-header__text__dek")
+        _paragraph_selector: CSSSelector = CSSSelector("div.post-content > p")
+        _subheadline_selector: CSSSelector = CSSSelector("div.post-content > h2")
 
         @attribute
         def body(self) -> Optional[ArticleBody]:

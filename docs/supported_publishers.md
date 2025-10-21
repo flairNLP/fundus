@@ -3359,6 +3359,25 @@
     </tr>
     <tr>
       <td>
+        <code>RestOfWorld</code>
+      </td>
+      <td>
+        <div>Rest of World</div>
+      </td>
+      <td>
+        <a href="https://restofworld.org/">
+          <span>restofworld.org</span>
+        </a>
+      </td>
+      <td>
+        <code>en</code>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
         <code>Reuters</code>
       </td>
       <td>

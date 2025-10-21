@@ -9,6 +9,7 @@ from .fox_news import FoxNewsParser
 from .free_beacon import FreeBeaconParser
 from .la_times import LATimesParser
 from .occupy_democrats import OccupyDemocratsParser
+from .rest_of_world import RestOfWorldParser
 from .reuters import ReutersParser
 from .rolling_stone import RollingStoneParser
 from .techcrunch import TechCrunchParser
@@ -21,7 +22,6 @@ from .washington_post import WashingtonPostParser
 from .washington_times import WashingtonTimesParser
 from .wired import WiredParser
 from .world_truth import WorldTruthParser
-from .rest_of_world import RestOfWorldParser
 
 
 class US(metaclass=PublisherGroup):
@@ -275,7 +275,7 @@ class US(metaclass=PublisherGroup):
             Sitemap("https://www.wired.com/sitemap-archive-1.xml"),
         ],
     )
-    
+
     RestOfWorld = Publisher(
         name="Rest of World",
         domain="https://restofworld.org/",
@@ -283,6 +283,5 @@ class US(metaclass=PublisherGroup):
         sources=[
             RSSFeed("https://restofworld.org/feed/latest/"),
             Sitemap("https://restofworld.org/sitemap.xml"),
-        ]
-        
+        ],
     )
