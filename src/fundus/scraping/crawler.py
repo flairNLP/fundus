@@ -767,30 +767,33 @@ class CCNewsCrawler(CrawlerBase):
             max_workers = self.processes if self.processes > 0 else min(len(publishers), 5)
             verified_publishers: List["Publisher"] = []
 
+            def run_disallow_training(publisher: Publisher) -> bool:
+                return publisher.disallows_training or publisher.robots.disallows_training()
+
             with ThreadPoolExecutor(max_workers=max_workers) as executor:
                 future_to_publisher = {
-                    executor.submit(
-                        lambda: publisher.disallows_training or publisher.robots.disallows_training()
-                    ): publisher
-                    for publisher in publishers
+                    executor.submit(run_disallow_training, publisher=publisher): publisher for publisher in publishers
                 }
-            warc_paths = tuple(self._get_warc_paths())
 
-            try:
-                for future in as_completed(future_to_publisher.keys(), timeout=30):
-                    publisher = future_to_publisher[future]
-                    try:
-                        if not future.result():
-                            verified_publishers.append(publisher)
-                        else:
-                            logger.warning(f"Skipping publisher {publisher.name!r} because it disallows training.")
-                    except FuturesTimeoutError:
-                        logger.warning(f"Robots.txt check timed out for {publisher.name!r}", exc_info=False)
-                    except Exception as exc:
-                        logger.warning(f"Could not verify training policy for {publisher.name!r}: {exc}", exc_info=True)
-                publishers = tuple(verified_publishers)
-            except FuturesTimeoutError:
-                logger.warning("Publisher verification timed out, proceeding with all publishers")
+                warc_paths = tuple(self._get_warc_paths())
+
+                try:
+                    for future in as_completed(future_to_publisher.keys(), timeout=30):
+                        publisher = future_to_publisher[future]
+                        try:
+                            if not future.result():
+                                verified_publishers.append(publisher)
+                            else:
+                                logger.warning(f"Skipping publisher {publisher.name!r} because it disallows training.")
+                        except FuturesTimeoutError:
+                            logger.warning(f"Robots.txt check timed out for {publisher.name!r}", exc_info=False)
+                        except Exception as exc:
+                            logger.warning(
+                                f"Could not verify training policy for {publisher.name!r}: {exc}", exc_info=True
+                            )
+                    publishers = tuple(verified_publishers)
+                except FuturesTimeoutError:
+                    logger.warning("Publisher verification timed out, proceeding with all publishers")
 
         else:
             warc_paths = tuple(self._get_warc_paths())
