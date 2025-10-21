@@ -21,6 +21,7 @@ from .washington_post import WashingtonPostParser
 from .washington_times import WashingtonTimesParser
 from .wired import WiredParser
 from .world_truth import WorldTruthParser
+from .rest_of_world import RestOfWorldParser
 
 
 class US(metaclass=PublisherGroup):
@@ -273,4 +274,15 @@ class US(metaclass=PublisherGroup):
             Sitemap("https://www.wired.com/sitemap.xml"),
             Sitemap("https://www.wired.com/sitemap-archive-1.xml"),
         ],
+    )
+    
+    RestOfWorld = Publisher(
+        name="Rest of World",
+        domain="https://restofworld.org/",
+        parser=RestOfWorldParser,
+        sources=[
+            RSSFeed("https://restofworld.org/feed/latest/"),
+            Sitemap("https://restofworld.org/sitemap.xml"),
+        ]
+        
     )
