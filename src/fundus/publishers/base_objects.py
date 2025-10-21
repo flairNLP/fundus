@@ -165,7 +165,7 @@ class Publisher:
             url=self.domain + "robots.txt" if self.domain.endswith("/") else self.domain + "/robots.txt",
             headers=self.request_header,
         )
-        self.disallows_training = disallows_training
+        self._disallows_training = disallows_training
 
         # Temporary fix to compensate for a bug in the RobotsFileParser treating rule lines
         # like /? as / disallowing the entire site. we could think about replacing the urllib
@@ -186,6 +186,10 @@ class Publisher:
             source_mapping[type(url_source)].append(url_source)
 
         self._source_mapping = dict(sorted(source_mapping.items(), key=lambda item: self.__SOURCE_ORDER__[item[0]]))
+
+    @property
+    def disallows_training(self) -> bool:
+        return self._disallows_training or self.robots.disallows_training()
 
     @property
     def source_mapping(self) -> Dict[Type[URLSource], List[URLSource]]:

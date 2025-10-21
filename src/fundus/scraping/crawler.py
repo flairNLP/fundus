@@ -768,7 +768,7 @@ class CCNewsCrawler(CrawlerBase):
             verified_publishers: List["Publisher"] = []
 
             def run_disallow_training(publisher: Publisher) -> bool:
-                return publisher.disallows_training or publisher.robots.disallows_training()
+                return publisher.disallows_training
 
             with ThreadPoolExecutor(max_workers=max_workers) as executor:
                 future_to_publisher = {
