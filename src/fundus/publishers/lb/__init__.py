@@ -3,7 +3,7 @@ from fundus.publishers.lb.lbc_group import LBCGroupParser
 from fundus.scraping.url import NewsMap, RSSFeed, Sitemap
 
 class LB(metaclass=PublisherGroup):
-    default_language= "en"
+    default_language= "ar"
 
     LBCGroup=Publisher(
         name = "LBC",
