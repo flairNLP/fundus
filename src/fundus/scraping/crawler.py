@@ -137,12 +137,17 @@ def get_execution_context():
         return thread.name, thread.ident
 
 
-def queue_wrapper(queue: Queue[Union[_T, Exception]], target: Callable[_P, Iterator[_T]]) -> Callable[_P, None]:
+def queue_wrapper(
+    queue: Queue[Union[_T, Exception]],
+    target: Callable[_P, Iterator[_T]],
+    silenced_exceptions: Tuple[Type[BaseException], ...] = (),
+) -> Callable[_P, None]:
     """Wraps the target callable to add its results to the queue instead of returning them directly.
 
     Args:
         queue: The buffer queue.
         target: A target callable.
+        silenced_exceptions: Exception types that should be silenced
 
     Returns:
         (Callable[_P, None]) The wrapped target.
@@ -153,16 +158,19 @@ def queue_wrapper(queue: Queue[Union[_T, Exception]], target: Callable[_P, Itera
         try:
             for obj in target(*args, **kwargs):
                 queue.put(obj)
+        except silenced_exceptions:
+            pass
         except Exception as err:
             tb_str = "".join(traceback.TracebackException.from_exception(err).format())
             context, ident = get_execution_context()
             queue.put(
                 RemoteException(
-                    f"There was a(n) {type(err).__name__!r} occurring in {context} with ident {ident}\n{tb_str}"
+                    f"There was a(n) {type(err).__name__!r} occurring in {context} "
+                    f"with ident {ident} ({__EVENTS__.get_alias(ident)})\n{tb_str}"
                 )
             )
 
-            logger.debug(f"Encountered remote exception: {err!r}")
+            logger.debug(f"Encountered remote exception in thread {ident} ({__EVENTS__.get_alias(ident)}): {err!r}")
             # prevents a race condition where the ThreadPool shuts down before the exception is pulled from the queue
             time.sleep(0.2)
 
@@ -186,8 +194,6 @@ def pool_queue_iter(handle: MapResult[Any], queue: Queue[Union[_T, Exception]]) 
     while True:
         try:
             if isinstance(nxt := queue.get_nowait(), Exception):
-                if isinstance(nxt, CrashThread):
-                    return
                 raise Exception("There was an exception occurring in a remote thread/process") from nxt
             yield nxt
         except Empty:
@@ -381,7 +387,9 @@ class CrawlerBase(ABC):
                     skip_publishers_disallowing_training,
                 ):
                     if max_articles_per_publisher and article_count[article.publisher] == max_articles_per_publisher:
-                        if isinstance(self, Crawler) and not __EVENTS__.is_event_set("stop", article.publisher):
+                        if (isinstance(self, Crawler) and self.threading) and not __EVENTS__.is_event_set(
+                            "stop", article.publisher
+                        ):
                             __EVENTS__.set_event("stop", article.publisher)
                         if sum(article_count.values()) == len(self.publishers) * max_articles_per_publisher:
                             break
@@ -502,6 +510,11 @@ class Crawler(CrawlerBase):
             else:
                 raise TypeError("param <delay> of <Crawler.__init__>")
 
+        # we "register" the thread in the event dict as soon as possible to avoid that a
+        # thread crashes before
+        if self.threading:
+            __EVENTS__.alias(publisher.name)
+
         scraper = WebScraper(
             publisher,
             self.restrict_sources_to,
@@ -528,7 +541,7 @@ class Crawler(CrawlerBase):
         self, publishers: Tuple[Publisher, ...], article_task: Callable[[Publisher], Iterator[Article]]
     ) -> Iterator[Article]:
         result_queue: Queue[Union[Article, Exception]] = Queue(len(publishers))
-        wrapped_article_task = queue_wrapper(result_queue, article_task)
+        wrapped_article_task = queue_wrapper(result_queue, article_task, silenced_exceptions=(CrashThread,))
         pool = ThreadPool(processes=len(publishers) or None)
         try:
             with session_handler.context(

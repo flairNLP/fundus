@@ -15,7 +15,7 @@ logger = create_logger(__name__)
 _default_header = {"user-agent": "Fundus/2.0 (contact: github.com/flairnlp/fundus)"}
 
 
-class CrashThread(Exception):
+class CrashThread(BaseException):
     """Is raised to end a thread without relying on the thread ending naturally"""
 
     pass
