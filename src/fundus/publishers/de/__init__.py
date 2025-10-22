@@ -49,7 +49,7 @@ from .waz import WAZParser
 from .wdr import WDRParser
 from .winfuture import WinfutureParser
 from .zdf import ZDFParser
-
+from .t_online import TOnlineParser
 
 # noinspection PyPep8Naming
 class DE(metaclass=PublisherGroup):
@@ -593,5 +593,14 @@ class DE(metaclass=PublisherGroup):
         sources=[
             NewsMap("https://www.gamestar.de/sitemapnews.xml"),
             Sitemap("https://www.gamestar.de/artikel_archiv_index.xml"),
+        ],
+    )
+
+    TOnline = Publisher(
+        name="T-Online",
+        domain="https://www.t-online.de/",
+        parser=TOnlineParser,
+        sources=[
+            Sitemap("https://www.t-online.de/sitemap.xml"),
         ],
     )
