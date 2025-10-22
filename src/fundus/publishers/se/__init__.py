@@ -4,6 +4,7 @@ from fundus.scraping.url import Sitemap
 
 from .aftonbladet import AftonbladetParser
 
+
 class SE(metaclass=PublisherGroup):
     default_language = "se"
     
