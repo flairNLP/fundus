@@ -12,6 +12,7 @@ from fundus.parser.utility import (
     image_extraction,
 )
 
+
 class AftonbladetParser(ParserProxy):
     class V1(BaseParser):
         _summary_selector = XPath(
