@@ -37,6 +37,7 @@ from fundus.publishers.tw import TW
 from fundus.publishers.tz import TZ
 from fundus.publishers.uk import UK
 from fundus.publishers.us import US
+from fundus.publishers.vn import VN
 from fundus.publishers.za import ZA
 
 __all__ = ["Publisher", "PublisherGroup"]
@@ -107,3 +108,4 @@ class PublisherCollection(metaclass=PublisherCollectionMeta):
     uk = UK
     us = US
     za = ZA
+    vn = VN
