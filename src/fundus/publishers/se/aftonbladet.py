@@ -15,9 +15,7 @@ from fundus.parser.utility import (
 
 class AftonbladetParser(ParserProxy):
     class V1(BaseParser):
-        _summary_selector = XPath(
-            "//p[contains(@data-test-tag,'lead-text')]"
-        )
+        _summary_selector = XPath("//p[contains(@data-test-tag,'lead-text')]")
         _paragraph_selector = XPath(
             "//p[starts-with(@class,'hyperion-css-') and not(contains(@data-test-tag,'lead-text'))]"
         )
@@ -31,9 +29,9 @@ class AftonbladetParser(ParserProxy):
             return extract_article_body_with_selector(
                 self.precomputed.doc,
                 summary_selector=self._summary_selector,
-                paragraph_selector=self._paragraph_selector
+                paragraph_selector=self._paragraph_selector,
             )
-        
+
         @attribute
         def authors(self) -> List[str]:
             return generic_author_parsing(self.precomputed.ld.bf_search("author"))
@@ -41,14 +39,11 @@ class AftonbladetParser(ParserProxy):
         @attribute
         def publishing_date(self) -> Optional[datetime]:
             return generic_date_parsing(self.precomputed.meta["article:published_time"])
-        
+
         @attribute
         def topics(self) -> List[str]:
             return generic_topic_parsing(self.precomputed.ld.bf_search("keywords"))
 
         @attribute
         def images(self) -> List[Image]:
-            return image_extraction(
-                doc=self.precomputed.doc,
-                paragraph_selector=self._paragraph_selector
-            )
+            return image_extraction(doc=self.precomputed.doc, paragraph_selector=self._paragraph_selector)
