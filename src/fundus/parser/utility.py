@@ -22,7 +22,6 @@ from typing import (
     Pattern,
     Sequence,
     Set,
-    Tuple,
     Type,
     Union,
     cast,
