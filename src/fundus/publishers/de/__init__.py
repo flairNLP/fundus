@@ -24,6 +24,7 @@ from .ndr import NDRParser
 from .ntv import NTVParser
 from .rheinische_post import RheinischePostParser
 from .spon import SPONParser
+from .stuttgarter_zeitung import StuttgarterZeitungParser
 from .stern import SternParser
 from .sz import SZParser
 from .tagesschau import TagesschauParser
@@ -44,6 +45,16 @@ class DE(PublisherEnum):
             for d in reversed(list(rrule(MONTHLY, dtstart=datetime(2003, 2, 1), until=datetime.now())))
         ],
         parser=BerlinerMorgenpostParser,
+    )
+
+    StuttgarterZeitung = PublisherSpec(
+        name="Stuttgarter Zeitung",
+        domain="https://www.stuttgarter-zeitung.de/",
+        sources=[
+            NewsMap("https://www.stuttgarter-zeitung.de/docs.newsmap_stuttgarter_zeitung.xml"),
+            Sitemap("https://www.stuttgarter-zeitung.de/docs.universal_sitemap_stuttgarter_zeitung.xml"),
+        ],
+        parser=StuttgarterZeitungParser,
     )
 
     DieWelt = PublisherSpec(
