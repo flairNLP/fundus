@@ -49,4 +49,7 @@ class DerFreitagParser(ParserProxy):
             return image_extraction(
                 doc=self.precomputed.doc,
                 paragraph_selector=self._paragraph_selector,
+                upper_boundary_selector=CSSSelector("header.bc-article-intro"),
+                lower_boundary_selector=CSSSelector("span.freitag-article-end"),
+                image_selector=CSSSelector("figure img,div[role='figure'] img"),
             )
