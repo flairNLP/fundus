@@ -90,93 +90,6 @@
       {
         "versions": [
           {
-            "url": "https://www.freitag.de/autoren/der-freitag/klimakrise-auf-den-philippinen-allein-gelassen-mit-den-taifun-schaeden/@@images/image-400-fbd32e0bba31e46965cb25406aed7a5c.jpeg,",
-            "query_width": null,
-            "size": null,
-            "type": null
-          },
-          {
-            "url": "https://www.freitag.de/autoren/der-freitag/klimakrise-auf-den-philippinen-allein-gelassen-mit-den-taifun-schaeden/@@images/image-800-ab9f33d6115d20909b4729e4368f8d65.jpeg",
-            "query_width": null,
-            "size": null,
-            "type": "image/jpeg"
-          },
-          {
-            "url": "https://www.freitag.de/autoren/der-freitag/klimakrise-auf-den-philippinen-allein-gelassen-mit-den-taifun-schaeden/@@images/square_image-200-e2f2d0b04998e10671ff1c12f4d3c0da.jpeg,",
-            "query_width": "max-width:768",
-            "size": null,
-            "type": null
-          },
-          {
-            "url": "https://www.freitag.de/autoren/der-freitag/klimakrise-auf-den-philippinen-allein-gelassen-mit-den-taifun-schaeden/@@images/square_image-400-2d156788b3d96675f43573798f0f902f.jpeg",
-            "query_width": "max-width:768",
-            "size": null,
-            "type": "image/jpeg"
-          }
-        ],
-        "is_cover": true,
-        "description": null,
-        "caption": null,
-        "authors": [],
-        "position": 268
-      },
-      {
-        "versions": [
-          {
-            "url": "https://www.freitag.de/autoren/the-guardian/illegalisierte-abtreibung-auf-den-philippinen/@@images/image-400-2c2534fd8f9fd69d7c58eb19bc17e787.jpeg,",
-            "query_width": null,
-            "size": null,
-            "type": null
-          },
-          {
-            "url": "https://www.freitag.de/autoren/the-guardian/illegalisierte-abtreibung-auf-den-philippinen/@@images/image-800-747b83790b21b03ddfe3ae1c6c0fbc69.jpeg",
-            "query_width": null,
-            "size": null,
-            "type": "image/jpeg"
-          }
-        ],
-        "is_cover": true,
-        "description": "Hände berühren eine Jesuskind-Figur hinter Glas.",
-        "caption": null,
-        "authors": [],
-        "position": 283
-      },
-      {
-        "versions": [
-          {
-            "url": "https://www.freitag.de/autoren/der-freitag/miriam-lang-pluenderung-wie-zur-kolonialzeit-gilt-jetzt-als-klimaschutz/@@images/image-400-7916db89d67c4fa85dfe7687f7965ec2.jpeg,",
-            "query_width": null,
-            "size": null,
-            "type": null
-          },
-          {
-            "url": "https://www.freitag.de/autoren/der-freitag/miriam-lang-pluenderung-wie-zur-kolonialzeit-gilt-jetzt-als-klimaschutz/@@images/image-800-e490f8f06dcdbf15452ccf2e5872ade3.jpeg",
-            "query_width": null,
-            "size": null,
-            "type": "image/jpeg"
-          },
-          {
-            "url": "https://www.freitag.de/autoren/der-freitag/miriam-lang-pluenderung-wie-zur-kolonialzeit-gilt-jetzt-als-klimaschutz/@@images/square_image-200-d627d77fda8fe37b92ae7e28207d746b.jpeg,",
-            "query_width": "max-width:768",
-            "size": null,
-            "type": null
-          },
-          {
-            "url": "https://www.freitag.de/autoren/der-freitag/miriam-lang-pluenderung-wie-zur-kolonialzeit-gilt-jetzt-als-klimaschutz/@@images/square_image-400-2a9ecd7ae060e838ccf2f3044ac84d56.jpeg",
-            "query_width": "max-width:768",
-            "size": null,
-            "type": "image/jpeg"
-          }
-        ],
-        "is_cover": true,
-        "description": "Die Professorin Miriam Lang",
-        "caption": null,
-        "authors": [],
-        "position": 299
-      },
-      {
-        "versions": [
-          {
             "url": "https://www.freitag.de/autoren/lennart-laberenz/ehrengast-der-frankfurter-buchmesse-was-lesen-die-philippinen/@@images/image-400-cea5a1799eac8dfd2c511cbafd796994.jpeg",
             "query_width": null,
             "size": {
@@ -206,8 +119,10 @@
         ],
         "is_cover": true,
         "description": "Statue von José Rizal: Der wichtigste Nationalheld der Philippinen. Er war ein Schriftsteller, Arzt und ein Verfechter gewaltlosen Widerstands gegen die spanische Kolonialherrschaft",
-        "caption": "José Rizal ist der wichtigste Nationalheld der Philippinen. Er war ein Schriftsteller, Arzt und ein Verfechter gewaltlosen Widerstands gegen die spanische Kolonialherrschaft Foto: picture alliance / prisma TPX",
-        "authors": [],
+        "caption": "José Rizal ist der wichtigste Nationalheld der Philippinen. Er war ein Schriftsteller, Arzt und ein Verfechter gewaltlosen Widerstands gegen die spanische Kolonialherrschaft",
+        "authors": [
+          "picture alliance / prisma TPX"
+        ],
         "position": 333
       }
     ],
