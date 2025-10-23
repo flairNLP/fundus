@@ -1,26 +1,31 @@
 {
   "V1": {
     "authors": [
-      "stefan soxbo"
+      "viktor hedlund"
     ],
     "body": {
       "summary": [
-        "Gymnasieeleven Carson Ryan ”misstogs för en ekorre” när han var ute och jagade.17-åringen sköts i bakhuvudet och dog, skriver People.Över en halv miljon kronor har samlats in för att hjälpa familjen.Senaste nyhetsklippen från Expressen."
+        "Eleverna på privatskolan Lundsberg trängde på natten in och misshandlade flera andra elever, enligt åtalet.I sovrummen slog de skolkamraterna med skärp.Nu åtalas fem elever för misshandel och grovt hemfridsbrott."
       ],
       "sections": [
         {
           "headline": [],
           "paragraphs": [
-            "17-årige amerikanen Carson Ryan gick sista året på Washington High School och spelade i skolans fotbollslag.",
-            "– Carson var en riktig tävlingsmänniska i allt han gjorde. Han älskade fiske och att vara med sina vänner. Men viktigast av allt så var Carson en person med en otroligt stark tro, säger lagets assisterande tränare Nic Williams.",
-            "Under lördagen var Carson ute på en ekorrjakt i delstaten Iowa. Då blev han av misstag skjuten av en annan jägare, enligt Iowas naturresursmyndighet.",
-            "”Han misstogs för en ekorre av en medlem i sitt jaktlag och träffades i bakhuvudet”, skriver myndigheten.",
-            "Carson fördes till sjukhus.",
-            "”Han avled senare av sina skador”, skriver myndigheten.",
-            "Händelsen utreds.",
-            "Skolan höll en minnesstund för Carson på söndagskvällen. Elever uppmanades att bära skolans svarta och orange färger på måndagen till minne av Carson.",
-            "En insamling har startats för att hjälpa familjen och 600 000 kronor har donerats.",
-            "”Carson var en son, en vän och ett ljus för alla som hade förmånen att känna honom. Hans vänlighet, humor och genuina personlighet berörde otaliga liv. Hans död lämnar ett omätbart tomrum”, står det i insamlingens beskrivning."
+            "De fem manliga eleverna i 18-årsåldern på internatskolan i värmländska Storfors misstänks för att vid flera tillfällen i vintras ha misshandlat andra elever på skolan.",
+            "I januari ska två av eleverna delat ut slag mot andra elever på ett elevhem samt i nära anslutning till middagen på Lundsberg.",
+            "Senare på natten stormade de fem åtalade in i två sovrum på ett elevhem, enligt åtalet. De var maskerade och började slå flera personer med nävar och skärp. En person kastades ner i golvet innan han blev misshandlad.",
+            "”Brottet bör bedömas som grovt eftersom inträngandet skett nattetid av flera maskerade gärningsmän i syfte att misshandla målsägandena”, står det i åtalet."
+          ]
+        },
+        {
+          "headline": [
+            "Fem elever stängdes av"
+          ],
+          "paragraphs": [
+            "En av de misstänkta åtalas också för att redan hösten 2024 tillsammans med flera andra trängt in i ett sovrum och misshandlat en elev. Han ska också ha filmat misshandeln och spridit det till andra elever.",
+            "I en av de misstänktas telefon har polisen hittat en konversation som enligt åklagaren visar på att motivet varit att ”'dom' har förolämpat 'oss' under en längre tid”.",
+            "I januari briserade nyheten om ”en allvarlig incident” på Lundsberg som ledde till att fem personer stängdes av. Expressen kunde då berätta att det hållits någon form av uppträdande som gick ut på att göra narr varandra och där de yngre eleverna ska ha drivit hårt med de äldres föräldrar.",
+            "Eleverna förnekar brott. Totalt är fem andra elever målsägande i åtalet."
           ]
         }
       ]
@@ -29,37 +34,39 @@
       {
         "versions": [
           {
-            "url": "https://static.bonniernews.se/images/1c/25/1c258a8ea4d549588f1a6d80400f4982/16x9/640.png",
+            "url": "https://static.bonniernews.se/images/44/15/44152f97b643491cb91f2aeeac1e25f5/16x9/640@60.jpg",
             "query_width": null,
             "size": {
               "width": 640,
               "height": 0
             },
-            "type": "image/png"
+            "type": "image/jpeg"
           },
           {
-            "url": "https://static.bonniernews.se/images/1c/25/1c258a8ea4d549588f1a6d80400f4982/16x9/741.png",
+            "url": "https://static.bonniernews.se/images/44/15/44152f97b643491cb91f2aeeac1e25f5/16x9/1280@40.jpg",
             "query_width": null,
             "size": {
-              "width": 741,
+              "width": 1280,
               "height": 0
             },
-            "type": "image/png"
+            "type": "image/jpeg"
           }
         ],
         "is_cover": true,
         "description": null,
-        "caption": "Carson Ryan. Foto: Go Fund Me",
+        "caption": "Internatskolan Lundsberg.",
         "authors": [
-          "Go Fund Me"
+          "LISA MATTISSON"
         ],
         "position": 907
       }
     ],
-    "publishing_date": "2025-10-01 00:11:03.035000+00:00",
-    "title": "Därför dog 17-åringen:\n”Misstogs för ekorre”",
+    "publishing_date": "2025-10-23 08:23:39.074000+00:00",
+    "title": "Elever åtalas för misshandel på Lundsberg",
     "topics": [
-      "nyheter"
+      "sverige",
+      "lundsberg",
+      "misshandel & överfall"
     ]
   }
 }
