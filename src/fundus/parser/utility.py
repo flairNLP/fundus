@@ -22,6 +22,7 @@ from typing import (
     Pattern,
     Sequence,
     Set,
+    Tuple,
     Type,
     Union,
     cast,
@@ -505,7 +506,7 @@ class CustomParserInfo(parser.parserinfo):
         ("Oct", "October", "Oktober", "Okt"),
         ("Nov", "November"),
         ("Dec", "December", "Dezember", "Dez"),
-    ]
+    ]  # type: ignore[assignment]
 
 
 def generic_date_parsing(date_str: Optional[str]) -> Optional[datetime]:
