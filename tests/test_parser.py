@@ -1,5 +1,6 @@
 import datetime
-from typing import List
+import pickle
+from typing import Any, Dict, List, Optional, Tuple, Union
 
 import lxml.html
 import pytest
@@ -9,11 +10,12 @@ from fundus.parser.base_parser import (
     AttributeCollection,
     BaseParser,
     ParserProxy,
+    RegisteredFunction,
     attribute,
 )
 from fundus.parser.utility import generic_author_parsing
 from fundus.publishers import PublisherCollection
-from fundus.publishers.base_objects import PublisherEnum
+from fundus.publishers.base_objects import Publisher
 from tests.resources import attribute_annotations_mapping
 from tests.utility import (
     get_meta_info_file,
@@ -25,9 +27,9 @@ from tests.utility import (
 
 def test_supported_publishers_table():
     root = lxml.html.fromstring(load_supported_publishers_markdown())
-    parsed_names: List[str] = root.xpath("//table[contains(@class,'publishers')]//code/text()")
+    parsed_names: List[str] = root.xpath("//table[contains(@class,'publishers')]//td[1]/code/text()")
     for publisher in PublisherCollection:
-        assert publisher.name in parsed_names, (
+        assert publisher.__name__ in parsed_names, (
             f"Publisher {publisher.name} is not included in docs/supported_news.md. "
             f"Run 'python -m scripts.generate_tables'"
         )
@@ -74,6 +76,54 @@ class TestBaseParser:
         assert isinstance(validated, AttributeCollection)
         assert (funcs := list(unvalidated)) != [parser.unvalidated]
         assert funcs[0].__func__ == parser.unvalidated.__func__
+
+    def test_default_values_for_attributes(self):
+        class Parser(BaseParser):
+            @attribute
+            def test_optional(self) -> Optional[str]:
+                raise Exception
+
+            @attribute
+            def test_collection(self) -> Tuple[str, ...]:
+                raise Exception
+
+            @attribute
+            def test_nested_collection(self) -> List[Tuple[str, str]]:
+                raise Exception
+
+            @attribute(default_factory=lambda: "This is a default")
+            def test_default_factory(self) -> Union[str, bool]:
+                raise Exception
+
+            @attribute
+            def test_boolean(self) -> bool:
+                raise Exception
+
+        parser = Parser()
+
+        default_values = {attr.__name__: attr.__default__ for attr in parser.attributes()}
+
+        expected_values: Dict[str, Any] = {
+            "test_optional": None,
+            "test_collection": tuple(),
+            "test_nested_collection": list(),
+            "test_default_factory": "This is a default",
+            "test_boolean": False,
+            "free_access": False,
+        }
+
+        for name, value in default_values.items():
+            assert value == expected_values[name]
+
+        class ParserWithUnion(BaseParser):
+            @attribute
+            def this_should_fail(self) -> Union[str, bool]:
+                raise Exception
+
+        parser_with_union = ParserWithUnion()
+
+        with pytest.raises(NotImplementedError):
+            default_values = {attr.__name__: attr.__default__ for attr in parser_with_union.attributes()}
 
 
 class TestParserProxy:
@@ -125,19 +175,39 @@ class TestParserProxy:
         attrs1, attrs2 = parser_proxy.attribute_mapping.values()
         assert attrs1.names != attrs2.names
 
+    def test_deprecated(self, proxy_with_two_deprecated_attributes):
+        def get_initialized_attrs(parser: BaseParser) -> List[RegisteredFunction]:
+            return parser._sorted_registered_functions
+
+        proxy: ParserProxy = proxy_with_two_deprecated_attributes()
+
+        number_of_attributes = len(proxy.latest_version.attributes(include_all=True))
+
+        parser1 = proxy(datetime.date(2023, 1, 1))
+        assert len(parser1.registered) == number_of_attributes
+
+        parser2 = proxy(datetime.date(2024, 3, 1))
+        assert len(parser2.registered) == number_of_attributes - 1
+
+        parser3 = proxy(datetime.date(2024, 4, 1))
+        assert len(parser3.registered) == number_of_attributes - 2
+
+        assert parser3 == proxy(datetime.date(2024, 5, 1))
+        assert parser3 != parser2 != parser1
+
 
 # enforce test coverage for test parsing
 # because this is also used for the generate_parser_test_files script we export it here
-attributes_required_to_cover = {"title", "authors", "topics", "publishing_date", "body"}
+attributes_required_to_cover = {"title", "authors", "topics", "publishing_date", "body", "images"}
 
 attributes_parsers_are_required_to_cover = {"body"}
 
 
 @pytest.mark.parametrize(
-    "publisher", list(PublisherCollection), ids=[publisher.name for publisher in PublisherCollection]
+    "publisher", list(PublisherCollection), ids=[publisher.__name__ for publisher in PublisherCollection]
 )
 class TestParser:
-    def test_annotations(self, publisher: PublisherEnum) -> None:
+    def test_annotations(self, publisher: Publisher) -> None:
         parser_proxy = publisher.parser
         for versioned_parser in parser_proxy:
             assert attributes_parsers_are_required_to_cover.issubset(
@@ -145,13 +215,14 @@ class TestParser:
             ), f"{versioned_parser.__name__!r} should implement at least {attributes_parsers_are_required_to_cover!r}"
             for attr in versioned_parser.attributes().validated:
                 if annotation := attribute_annotations_mapping[attr.__name__]:
-                    assert (
-                        attr.__annotations__.get("return") == annotation
-                    ), f"Attribute {attr.__name__!r} for {versioned_parser.__name__!r} failed"
+                    assert attr.__annotations__.get("return") == annotation, (
+                        f"Attribute {attr.__name__!r} for {versioned_parser.__name__!r} is of wrong type. "
+                        f"{attr.__annotations__.get('return')} != {annotation}"
+                    )
                 else:
                     raise KeyError(f"Unsupported attribute {attr.__name__!r}")
 
-    def test_parsing(self, publisher: PublisherEnum) -> None:
+    def test_parsing(self, publisher: Publisher) -> None:
         comparative_data = load_test_case_data(publisher)
         html_mapping = load_html_test_file_mapping(publisher)
 
@@ -174,19 +245,24 @@ class TestParser:
             missing_attrs = attributes_required_to_cover & supported_attrs - set(version_data.keys())
             assert (
                 not missing_attrs
-            ), f"Test JSON for {version_name} does not cover the following attribute(s): {missing_attrs}"
+            ), f"Test JSON for {version_name} of publisher {publisher.name} does not cover the following attribute(s): {missing_attrs}"
 
             assert list(version_data.keys()) == sorted(
                 attributes_required_to_cover & supported_attrs
             ), f"Test JSON for {version_name} is not in alphabetical order"
 
-            assert (html := html_mapping.get(versioned_parser)), f"Missing test HTML for parser version {version_name}"
+            assert (
+                html := html_mapping.get(versioned_parser)
+            ), f"Missing test HTML for parser version {version_name} of publisher {publisher.name}"
             # compare data
             extraction = versioned_parser().parse(html.content, "raise")
             for key, value in version_data.items():
-                assert value == extraction[key]
+                assert value == extraction[key], f"{key!r} is not equal"
 
-    def test_reserved_attribute_names(self, publisher: PublisherEnum):
+            # check if extraction is pickable
+            pickle.dumps(extraction)
+
+    def test_reserved_attribute_names(self, publisher: Publisher):
         parser = publisher.parser
         for attr in attribute_annotations_mapping.keys():
             if value := getattr(parser, attr, None):
@@ -231,8 +307,8 @@ class TestUtility:
 
 class TestMetaInfo:
     def test_order(self):
-        for cc in PublisherCollection.get_publisher_enum_mapping().values():
-            meta_file = get_meta_info_file(next(iter(cc)))
+        for cc in PublisherCollection.get_subgroup_mapping().values():
+            meta_file = get_meta_info_file(cc)
             meta_info = meta_file.load()
             assert meta_info, f"Meta info file {meta_file.path} is missing"
             assert sorted(meta_info.keys()) == list(meta_info.keys()), (

@@ -1,3 +1,4 @@
+import logging
 import subprocess
 from argparse import ArgumentParser, Namespace
 from logging import WARN
@@ -6,8 +7,8 @@ from typing import List, Optional
 from tqdm import tqdm
 
 from fundus import Crawler, PublisherCollection
-from fundus.logging import create_logger
-from fundus.publishers.base_objects import PublisherEnum
+from fundus.logging import create_logger, set_log_level
+from fundus.publishers.base_objects import Publisher
 from fundus.scraping.article import Article
 from fundus.scraping.filter import RequiresAll
 from fundus.scraping.html import WebSource
@@ -18,13 +19,13 @@ from tests.utility import HTMLTestFile, get_test_case_json, load_html_test_file_
 logger = create_logger(__name__)
 
 
-def get_test_article(enum: PublisherEnum, url: Optional[str] = None) -> Optional[Article]:
+def get_test_article(publisher: Publisher, url: Optional[str] = None) -> Optional[Article]:
     if url is not None:
-        source = WebSource([url], publisher=enum.publisher_name)
-        scraper = BaseScraper(source, parser_mapping={enum.publisher_name: enum.parser})
+        source = WebSource([url], publisher=publisher)
+        scraper = BaseScraper(source, parser_mapping={publisher.name: publisher.parser})
         return next(scraper.scrape(error_handling="suppress", extraction_filter=RequiresAll()), None)
 
-    crawler = Crawler(enum)
+    crawler = Crawler(publisher)
     return next(crawler.crawl(max_articles=1, error_handling="suppress", only_complete=RequiresAll()), None)
 
 
@@ -55,6 +56,7 @@ def parse_arguments() -> Namespace:
         nargs="+",
         help="use given URL instead of searching for an article. if set the urls will be mapped to the order of -p",
     )
+    parser.add_argument("-d", "--debug", action="store_true", default=False, help="enable debug output")
     group = parser.add_mutually_exclusive_group()
     group.add_argument(
         "-o",
@@ -70,6 +72,9 @@ def parse_arguments() -> Namespace:
     )
 
     arguments = parser.parse_args()
+
+    if arguments.debug:
+        set_log_level(logging.DEBUG)
 
     if arguments.urls is not None:
         if arguments.publishers is None:
@@ -88,7 +93,7 @@ def main() -> None:
 
     logger.setLevel(WARN)
 
-    publishers: List[PublisherEnum] = (
+    publishers: List[Publisher] = (
         list(PublisherCollection)
         if arguments.publishers is None
         else [PublisherCollection[pub] for pub in arguments.publishers]
@@ -105,12 +110,16 @@ def main() -> None:
             test_data = content if not arguments.overwrite_json and (content := test_data_file.load()) else {}
 
             # load html
-            html_mapping = load_html_test_file_mapping(publisher) if not arguments.overwrite else {}
+            html_mapping = load_html_test_file_mapping(publisher)
 
             if arguments.overwrite or not html_mapping.get(publisher.parser.latest_version):
                 if not (article := get_test_article(publisher, url)):
                     logger.error(f"Couldn't get article for {publisher.name}. Skipping")
                     continue
+
+                # remove previous file
+                if previous_file := html_mapping.get(publisher.parser.latest_version):
+                    previous_file.remove()
                 html = HTMLTestFile(
                     url=article.html.responded_url,
                     content=article.html.content,
@@ -134,7 +143,11 @@ def main() -> None:
                     test_data[type(versioned_parser).__name__] = new
                 else:
                     entry.update(new)
-                    test_data[type(versioned_parser).__name__] = dict(sorted(entry.items()))
+
+                # sort entries
+                test_data[type(versioned_parser).__name__] = dict(
+                    sorted(test_data[type(versioned_parser).__name__].items())
+                )
 
             test_data_file.write(test_data)
             bar.update()

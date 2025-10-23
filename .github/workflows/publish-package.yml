@@ -7,8 +7,27 @@ on:
   release:
     types:
       - released
+  workflow_dispatch:
 
 jobs:
+
+  permission-check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Guard `workflow_dispatch`
+        if: github.event_name == 'workflow_dispatch'
+        id: check-admin
+        run: |
+          RESPONSE=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            https://api.github.com/repos/${{ github.repository }}/collaborators/${{ github.actor }}/permission)
+          
+          PERMISSION=$(echo "$RESPONSE" | jq -r '.permission')
+          
+          if [[ "$PERMISSION" != "admin" ]]; then
+            echo "User ${{ github.actor }} does not have admin rights."
+            exit 1
+          fi
 
   test:
     name: Test the latest release commit
@@ -23,6 +42,7 @@ jobs:
     needs:
       - test
       - lint
+      - permission-check
     runs-on: ubuntu-latest
 
     steps:
@@ -43,7 +63,7 @@ jobs:
         run: python3 -m build
 
       - name: Store the distribution packages
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: python-package-distributions
           path: dist/
@@ -63,7 +83,7 @@ jobs:
 
     steps:
       - name: Download all the dists
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: python-package-distributions
           path: dist/
@@ -72,6 +92,8 @@ jobs:
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           repository-url: https://test.pypi.org/legacy/
+          verbose: true
+
 
       - name: Sleep for 2 minutes
         run: sleep 2m
@@ -113,11 +135,13 @@ jobs:
 
     steps:
       - name: Download all the dists
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: python-package-distributions
           path: dist/
           
       - name: Publish distribution 📦 to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          verbose: true
 

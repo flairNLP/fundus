@@ -1,7 +1,6 @@
 import functools
 import inspect
 import itertools
-import json
 import re
 from abc import ABC
 from copy import copy
@@ -20,16 +19,19 @@ from typing import (
     Type,
     TypeVar,
     Union,
+    get_args,
+    get_origin,
 )
 
 import lxml.html
-import more_itertools
-from lxml.etree import XPath
 
+from fundus.logging import create_logger
 from fundus.parser.data import LinkedDataMapping
-from fundus.parser.utility import get_meta_content
+from fundus.parser.utility import get_ld_content, get_meta_content
 
 RegisteredFunctionT_co = TypeVar("RegisteredFunctionT_co", covariant=True, bound="RegisteredFunction")
+
+logger = create_logger(__name__)
 
 
 class RegisteredFunction(ABC):
@@ -70,15 +72,46 @@ class RegisteredFunction(ABC):
 
     def __repr__(self):
         if instance := self.__self__:
-            return f"bound {type(self).__name__} of {instance}: {self.__wrapped__} --> {self.__name__!r}"
+            return f"bound {type(self).__name__} {self.__name__!r} of {instance}"
         else:
-            return f"registered {type(self).__name__}: {self.__wrapped__} --> {self.__name__!r}"
+            return f"registered {type(self).__name__} {self.__name__!r}"
 
 
 class Attribute(RegisteredFunction):
-    def __init__(self, func: Callable[[object], Any], priority: Optional[int], validate: bool):
+    def __init__(
+        self,
+        func: Callable[[object], Any],
+        priority: Optional[int],
+        validate: bool,
+        deprecated: Optional[date],
+        default_factory: Optional[Callable[[], Any]],
+    ):
         self.validate = validate
+        self.deprecated = deprecated
+        self.default_factory = default_factory
         super(Attribute, self).__init__(func=func, priority=priority)
+
+    @functools.cached_property
+    def __default__(self):
+        if self.default_factory is not None:
+            return self.default_factory()
+
+        annotation = self.__annotations__["return"]
+        origin = get_origin(annotation)
+        args = get_args(annotation)
+
+        if not (origin or args):
+            default = annotation()
+        elif origin == Union:
+            if type(None) in args:
+                default = None
+            else:
+                raise NotImplementedError(f"Cannot determine default for {origin!r} with args {args!r}")
+        elif isinstance(origin, type):
+            default = origin()
+        else:
+            raise NotImplementedError(f"Unsupported origin {origin}")
+        return default
 
 
 class Function(RegisteredFunction):
@@ -98,8 +131,23 @@ def _register(cls, factory: Type[RegisteredFunction], **kwargs):
     return wrapper(cls)
 
 
-def attribute(cls=None, /, *, priority: Optional[int] = None, validate: bool = True):
-    return _register(cls, factory=Attribute, priority=priority, validate=validate)
+def attribute(
+    cls=None,
+    /,
+    *,
+    priority: Optional[int] = None,
+    validate: bool = True,
+    deprecated: Optional[date] = None,
+    default_factory: Optional[Callable[[], Any]] = None,
+):
+    return _register(
+        cls,
+        factory=Attribute,
+        priority=priority,
+        validate=validate,
+        deprecated=deprecated,
+        default_factory=default_factory,
+    )
 
 
 def function(cls=None, /, *, priority: Optional[int] = None):
@@ -139,6 +187,10 @@ class AttributeCollection(RegisteredFunctionCollection[Attribute]):
     def unvalidated(self) -> "AttributeCollection":
         return AttributeCollection(*[attr for attr in self.functions if not attr.validate])
 
+    @property
+    def deprecated(self) -> "AttributeCollection":
+        return AttributeCollection(*[attr for attr in self.functions if attr.deprecated is not None])
+
 
 class FunctionCollection(RegisteredFunctionCollection[Function]):
     pass
@@ -156,10 +208,18 @@ class Precomputed:
 class BaseParser(ABC):
     VALID_UNTIL: date = date.today()
     precomputed: Precomputed
-    _ld_selector: XPath = XPath("//script[@type='application/ld+json']")
 
-    def __init__(self):
-        predicate: Callable[[object], bool] = lambda x: isinstance(x, RegisteredFunction)
+    def __init__(self, timestamp: Optional[date] = None):
+        def predicate(x: object) -> bool:
+            if not isinstance(x, RegisteredFunction):
+                return False
+            if isinstance(x, Attribute):
+                if timestamp is None or x.deprecated is None or x.deprecated > timestamp:
+                    return True
+                else:
+                    return False
+            return True
+
         predicated_members: List[Tuple[str, RegisteredFunction]] = inspect.getmembers(self, predicate=predicate)
         bound_registered_functions: List[RegisteredFunction] = [func for _, func in predicated_members]
         self._sorted_registered_functions = sorted(bound_registered_functions, key=lambda f: (f, f.__name__))
@@ -170,11 +230,11 @@ class BaseParser(ABC):
         return members
 
     @classmethod
-    def attributes(cls) -> AttributeCollection:
+    def attributes(cls, include_all: bool = False) -> AttributeCollection:
         # We exclude both __ld and __meta here to hide them from the autogenerated tables. We do so, because
         # we neither want them to appear in the attribute_guidelines nor the supported_publishers tables.
         attrs: List[Attribute] = [
-            func for _, func in cls._search_members(Attribute) if func.__name__ not in ["__ld", "__meta"]
+            func for _, func in cls._search_members(Attribute) if include_all or func.__name__ not in ["__ld", "__meta"]
         ]
         return AttributeCollection(*attrs)
 
@@ -187,12 +247,13 @@ class BaseParser(ABC):
     def cache(self) -> Optional[Dict[str, Any]]:
         return self.precomputed.cache if self.precomputed else None
 
+    @property
+    def registered(self) -> List[RegisteredFunction]:
+        return self._sorted_registered_functions
+
     def _base_setup(self, html: str) -> None:
         doc = lxml.html.document_fromstring(html)
-        ld_nodes = self._ld_selector(doc)
-        lds = [json.loads(node.text_content()) for node in ld_nodes]
-        collapsed_lds = more_itertools.collapse(lds, base_type=dict)
-        self.precomputed = Precomputed(html, doc, get_meta_content(doc), LinkedDataMapping(collapsed_lds))
+        self.precomputed = Precomputed(html, doc, get_meta_content(doc), get_ld_content(doc))
 
     def parse(self, html: str, error_handling: Literal["suppress", "catch", "raise"] = "raise") -> Dict[str, Any]:
         # wipe existing precomputed
@@ -210,9 +271,15 @@ class BaseParser(ABC):
                 try:
                     parsed_data[attribute_name] = func()
                 except Exception as err:
-                    if error_handling == "catch":
+                    if error_handling == "suppress":
+                        parsed_data[attribute_name] = func.__default__
+                        logger.info(
+                            f"Couldn't parse attribute {attribute_name!r} for "
+                            f"{self.precomputed.meta.get('og:url')!r}: {err}"
+                        )
+                    elif error_handling == "catch":
                         parsed_data[attribute_name] = err
-                    elif error_handling == "suppress" or error_handling == "raise":
+                    elif error_handling == "raise":
                         raise err
                     else:
                         raise ValueError(f"Invalid value {error_handling!r} for parameter <error_handling>")
@@ -248,12 +315,23 @@ class BaseParser(ABC):
 class _ParserCache:
     def __init__(self, factory: Type[BaseParser]):
         self.factory: Type[BaseParser] = factory
-        self.instance: Optional[BaseParser] = None
+        self._instances: Dict[Optional[date], BaseParser] = {}
+        deprecated_dates = sorted(
+            [attr.deprecated for attr in self.factory.attributes() if attr.deprecated is not None]
+        )
+        self._deprecation_timeframes: List[date] = deprecated_dates
 
-    def __call__(self) -> BaseParser:
-        if not self.instance:
-            self.instance = self.factory()
-        return self.instance
+    def __call__(self, timestamp: Optional[date] = None) -> BaseParser:
+        effective_timestamp: Optional[date] = None
+        if timestamp:
+            for timeframe_date in reversed(self._deprecation_timeframes):
+                if timeframe_date <= timestamp:
+                    effective_timestamp = timeframe_date
+                    break
+        if effective_timestamp not in self._instances:
+            self._instances[effective_timestamp] = self.factory(timestamp=effective_timestamp)
+
+        return self._instances[effective_timestamp]
 
 
 class ParserProxy(ABC):
@@ -294,7 +372,7 @@ class ParserProxy(ABC):
                 f"Couldn't find a fitting parser valid at date {parsed_date}. "
                 f"Last valid date is {self._get_latest_cache()().VALID_UNTIL}"
             )
-        return parser_cache()
+        return parser_cache(parsed_date)
 
     def __iter__(self) -> Iterator[Type[BaseParser]]:
         """Iterates over all included parser versions with the latest being first.

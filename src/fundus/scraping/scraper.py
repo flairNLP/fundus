@@ -4,7 +4,7 @@ import more_itertools
 
 from fundus.logging import create_logger
 from fundus.parser import ParserProxy
-from fundus.publishers.base_objects import PublisherEnum
+from fundus.publishers.base_objects import Publisher
 from fundus.scraping.article import Article
 from fundus.scraping.delay import Delay
 from fundus.scraping.filter import (
@@ -14,6 +14,7 @@ from fundus.scraping.filter import (
 )
 from fundus.scraping.html import CCNewsSource, HTMLSource, WebSource
 from fundus.scraping.url import URLSource
+from fundus.utils.events import __EVENTS__
 
 logger = create_logger(__name__)
 
@@ -28,6 +29,7 @@ class BaseScraper:
         error_handling: Literal["suppress", "catch", "raise"],
         extraction_filter: Optional[ExtractionFilter] = None,
         url_filter: Optional[URLFilter] = None,
+        language_filter: Optional[List[str]] = None,
     ) -> Iterator[Article]:
         for source in self.sources:
             for html in source.fetch(url_filter=url_filter):
@@ -59,20 +61,32 @@ class BaseScraper:
                         else:
                             logger.debug(f"Skipped article at {html.requested_url!r} because of extraction filter")
                     else:
-                        article = Article.from_extracted(html=html, extracted=extraction)
-                        yield article
+                        article = Article(html=html, **extraction)
+                        if language_filter and article.lang not in language_filter:
+                            logger.debug(
+                                f"Skipped article at {html.requested_url!r} because article language: "
+                                f"{article.lang!r} is not in allowed languages: {language_filter!r}"
+                            )
+                        else:
+                            yield article
 
 
 class WebScraper(BaseScraper):
     def __init__(
         self,
-        publisher: PublisherEnum,
+        publisher: Publisher,
         restrict_sources_to: Optional[List[Type[URLSource]]] = None,
         delay: Optional[Delay] = None,
+        ignore_robots: bool = False,
+        ignore_crawl_delay: bool = False,
     ):
         if restrict_sources_to:
             url_sources = tuple(
-                more_itertools.flatten(publisher.source_mapping[source_type] for source_type in restrict_sources_to)
+                more_itertools.flatten(
+                    publisher.source_mapping[source_type]
+                    for source_type in restrict_sources_to
+                    if source_type in publisher.source_mapping
+                )
             )
         else:
             url_sources = tuple(more_itertools.flatten(publisher.source_mapping.values()))
@@ -80,21 +94,23 @@ class WebScraper(BaseScraper):
         html_sources = [
             WebSource(
                 url_source=url_source,
-                publisher=publisher.publisher_name,
+                publisher=publisher,
                 request_header=publisher.request_header,
                 delay=delay,
                 url_filter=publisher.url_filter,
                 query_parameters=publisher.query_parameter,
+                ignore_robots=ignore_robots,
+                ignore_crawl_delay=ignore_crawl_delay,
             )
             for url_source in url_sources
         ]
-        parser_mapping: Dict[str, ParserProxy] = {publisher.publisher_name: publisher.parser}
+        parser_mapping: Dict[str, ParserProxy] = {publisher.name: publisher.parser}
         super().__init__(*html_sources, parser_mapping=parser_mapping)
+
+        __EVENTS__.alias(publisher.name)
 
 
 class CCNewsScraper(BaseScraper):
     def __init__(self, source: CCNewsSource):
-        parser_mapping: Dict[str, ParserProxy] = {
-            publisher.publisher_name: publisher.parser for publisher in source.publishers
-        }
+        parser_mapping: Dict[str, ParserProxy] = {publisher.name: publisher.parser for publisher in source.publishers}
         super().__init__(source, parser_mapping=parser_mapping)

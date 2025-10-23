@@ -1,62 +1,125 @@
-import inspect
-from dataclasses import dataclass, field
-from enum import Enum, EnumMeta, unique
-from itertools import islice
-from typing import Any, Dict, Iterator, List, Optional, Type
+from collections import defaultdict
+from textwrap import indent
+from typing import Dict, Iterator, List, Optional, Set, Type, Union
+from urllib.robotparser import RobotFileParser
+from warnings import warn
 
+import more_itertools
+from requests.exceptions import ConnectionError, HTTPError, ReadTimeout
+from typing_extensions import TypeAlias
+
+from fundus.logging import create_logger
 from fundus.parser.base_parser import ParserProxy
 from fundus.scraping.filter import URLFilter
+from fundus.scraping.session import session_handler
 from fundus.scraping.url import NewsMap, RSSFeed, Sitemap, URLSource
 from fundus.utils.iteration import iterate_all_subclasses
 
+logger = create_logger(__name__)
 
-@dataclass(frozen=True)
-class PublisherSpec:
-    name: str
-    domain: str
-    parser: Type[ParserProxy]
-    sources: List[URLSource]
-    query_parameter: Dict[str, str] = field(default_factory=dict)
-    url_filter: Optional[URLFilter] = field(default=None)
-    request_header: Dict[str, str] = field(default_factory=dict)
+FilterResult: TypeAlias = Union[List["FilteredPublisher"], List["Publisher"]]
 
 
-class PublisherEnumMeta(EnumMeta):
-    def __str__(self) -> str:
-        representation = f"Region {self.__name__!r} containing {len(self)} publisher(s):"
-        publisher: str
-        for publisher in self.__members__.values():
-            representation += f"\n\t {publisher}"
-        return representation
+class CustomRobotFileParser(RobotFileParser):
+    """Monkey patch RobotFileParse
+
+    This class overwrites the read() methode of RobotFileParser to use the <requests> pkg instead of urllib.
+    This is in order to avoid 403 errors when fetching the robots.txt file.
+    """
+
+    # noinspection PyAttributeOutsideInit
+    def read(self, headers: Optional[Dict[str, str]] = None) -> None:
+        """Reads the robots.txt URL and feeds it to the parser."""
+        try:
+            # noinspection PyUnresolvedReferences
+            session = session_handler.get_session()
+            response = session.get_with_interrupt(self.url, headers=headers)  # type: ignore[attr-defined]
+        except HTTPError as err:
+            if err.response.status_code in (401, 403):
+                self.disallow_all = True
+            elif 400 <= err.response.status_code < 500:
+                self.allow_all = True
+        else:
+            self.parse(response.text.splitlines())
 
 
-@unique
-class PublisherEnum(Enum, metaclass=PublisherEnumMeta):
-    def __new__(cls, *args, **kwargs):
-        value = len(cls.__members__) + 1
-        obj = object.__new__(cls)
-        obj._value_ = value
-        return obj
+class Robots:
+    def __init__(self, url: str):
+        self.url = url
+        self.robots_file_parser = CustomRobotFileParser(url)
+        self.ready: bool = False
 
-    def __init__(self, spec: PublisherSpec):
-        if not isinstance(spec, PublisherSpec):
-            raise ValueError("Your only allowed to generate 'PublisherEnum's from 'PublisherSpec")
-        self.domain = spec.domain
-        self.parser = spec.parser()
-        self.publisher_name = spec.name
-        self.query_parameter = spec.query_parameter
-        self.url_filter = spec.url_filter
-        self.request_header = spec.request_header
+    def read(self, headers: Optional[Dict[str, str]] = None) -> None:
+        try:
+            self.robots_file_parser.read(headers=headers)
+        except (ConnectionError, ReadTimeout):
+            logger.warning(f"Could not load robots {self.url!r}. Ignoring robots and continuing.")
+            self.robots_file_parser.allow_all = True
+        self.ready = True
 
-        # we define the dict here manually instead of using default dict so that we can control
-        # the order in which sources are proceeded.
-        source_mapping: Dict[Type[URLSource], List[URLSource]] = {
-            RSSFeed: [],
-            NewsMap: [],
-            Sitemap: [],
-        }
+    def can_fetch(self, useragent: str, url: str) -> bool:
+        return self.robots_file_parser.can_fetch(useragent, url)
 
-        for url_source in spec.sources:
+    def crawl_delay(self, useragent: str) -> Optional[float]:
+        delay = self.robots_file_parser.crawl_delay(useragent)
+        return delay if delay is None else float(delay)
+
+
+class Publisher:
+    __name__: str
+    __group__: "PublisherGroup"
+
+    __SOURCE_ORDER__: Dict[Type[URLSource], int] = {
+        RSSFeed: 1,
+        NewsMap: 2,
+        Sitemap: 3,
+    }
+
+    def __init__(
+        self,
+        name: str,
+        domain: str,
+        parser: Type[ParserProxy],
+        sources: List[URLSource],
+        query_parameter: Optional[Dict[str, str]] = None,
+        url_filter: Optional[URLFilter] = None,
+        request_header: Optional[Dict[str, str]] = None,
+        deprecated: bool = False,
+        suppress_robots: bool = False,
+    ):
+        """Initialization of a new Publisher object
+
+        Args:
+            name (str): Name of the publisher, as it would appear on the website
+            domain (str): The domain of the publishers website
+            parser (Type[ParserProxy]): Corresponding ParserProxy Object
+            sources (List[URLSource]): List of sources for articles from the publishers
+            query_parameter (Optional[Dict[str, str]]): Dictionary of query parameter: content to be
+                appended to crawled URLs
+            url_filter (Optional[URLFilter]): Regex filter to apply determining URLs to be skipped
+            request_header (Optional[Dict[str, str]]): Request header to be used for the GET-request
+
+        """
+        if not (name and domain and parser and sources):
+            raise ValueError("Failed to create Publisher. Name, Domain, Parser and Sources are mandatory")
+        self.name = name
+        self.parser = parser()
+        self.domain = domain
+        self.query_parameter = query_parameter
+        self.url_filter = url_filter
+        self.request_header = request_header
+        self.deprecated = deprecated
+        self.robots = Robots(self.domain + "robots.txt" if self.domain.endswith("/") else self.domain + "/robots.txt")
+
+        # Temporary fix to compensate for a bug in the RobotsFileParser treating rule lines
+        # like /? as / disallowing the entire site. we could think about replacing the urllib
+        # implementation with https://github.com/seomoz/reppy
+        if suppress_robots:
+            self.robots.robots_file_parser.allow_all = True
+
+        source_mapping: Dict[Type[URLSource], List[URLSource]] = defaultdict(list)
+
+        for url_source in sources:
             if not isinstance(url_source, URLSource):
                 raise TypeError(
                     f"Unexpected type {type(url_source).__name__!r} as source for {self!r}. "
@@ -64,158 +127,204 @@ class PublisherEnum(Enum, metaclass=PublisherEnumMeta):
                 )
             source_mapping[type(url_source)].append(url_source)
 
-        self.source_mapping = source_mapping
+        self._source_mapping = dict(sorted(source_mapping.items(), key=lambda item: self.__SOURCE_ORDER__[item[0]]))
+
+    @property
+    def source_mapping(self) -> Dict[Type[URLSource], List[URLSource]]:
+        return self._source_mapping
+
+    @property
+    def languages(self) -> Set[str]:
+        return set.union(*(source.languages for sources in self.source_mapping.values() for source in sources))
+
+    @property
+    def source_types(self) -> Set[Type[URLSource]]:
+        return set(self.source_mapping.keys())
 
     def __str__(self) -> str:
-        return f"{self.publisher_name}"
+        return f"{self.name}"
 
-    def supports(self, source_types: List[Type[URLSource]]) -> bool:
-        if not source_types:
-            raise ValueError(f"Got empty value '{source_types}' for parameter <source_types>.")
-        for source_type in source_types:
-            if not inspect.isclass(source_type) or not issubclass(source_type, URLSource):
-                raise TypeError(
-                    f"Got unexpected type {source_type!r}. "
-                    f"Allowed are {', '.join(repr(cls.__name__) for cls in iterate_all_subclasses(URLSource))}"
-                )
-        return all(bool(self.source_mapping.get(source_type)) for source_type in source_types)
+    def __hash__(self) -> int:
+        return hash(self.name)
 
-    @classmethod
-    def search(
-        cls, attributes: Optional[List[str]] = None, source_types: Optional[List[Type[URLSource]]] = None
-    ) -> List["PublisherEnum"]:
-        if not (attributes or source_types):
-            raise ValueError("You have to define at least one search condition")
-        if not attributes:
-            attributes = []
-        matched = []
-        unique_attributes = set(attributes)
-        spec: PublisherEnum
-        for spec in list(cls):
-            if unique_attributes.issubset(spec.parser().attributes().names) and (
-                spec.supports(source_types) if source_types else True
-            ):
-                matched.append(spec)
-        return matched
+    def __eq__(self, other) -> bool:
+        if not isinstance(other, Publisher):
+            return False
+        return (
+            self.name == other.name
+            and self.parser == other.parser
+            and self.domain == other.domain
+            and self.source_mapping == other.source_mapping
+            and self.query_parameter == other.query_parameter
+            and self.url_filter == other.url_filter
+            and self.request_header == other.request_header
+        )
 
-    def __get__(self, instance, owner):
-        return self
+    def supports(
+        self, source_types: Optional[List[Type[URLSource]]] = None, languages: Optional[List[str]] = None
+    ) -> bool:
+        # we iterate source by source instead of checking self.languages and self.source_types,
+        # because we need to know if there is a source supporting the given combination of
+        # <source_types> and <languages>
+        filtered_sources = [
+            source
+            for source in more_itertools.flatten(self.source_mapping.values())
+            if (type(source) in source_types if source_types else True)
+            and (source.languages & set(languages) if languages else True)
+        ]
+
+        return any(filtered_sources)
 
 
-class PublisherCollectionMeta(type):
-    """This class is the meta-class for creating Publisher Collections.
+class FilteredPublisher(Publisher):
+    """Publisher with prefiltered sources.
 
-    Publishers used in the collection have to be of type PublisherEnum, e.g.
-
-    >>> class PoliticalPublisher(PublisherEnum):
-    >>>     ...
-    >>>
-    >>> class NewCollection(metaclass=PublisherCollectionMeta):
-    >>>     political = PoliticalPublisher
-
-    You can still use methods or non-PublisherEnum class attributes, e.g.
-
-    >>> class NewCollection(metaclass=PublisherCollectionMeta):
-    >>>     _id: int = 1
-    >>>     political = PoliticalPublisher
-    >>>
-    >>>     @property
-    >>>     def id(self) -> int:
-    >>>         return self._id
-
-    will work perfectly fine.
+    Publisher with attached source types and languages to pre-filter sources.
     """
 
-    @staticmethod
-    def _is_publisher_enum(obj: Any) -> bool:
-        return inspect.isclass(obj) and issubclass(obj, PublisherEnum)
+    def __init__(
+        self, source_types: Optional[Set[Type[URLSource]]] = None, languages: Optional[Set[str]] = None, *args, **kwargs
+    ) -> None:
+        super().__init__(*args, **kwargs)
+        self.__source_types_filter__ = source_types or set()
+        self.__language_filter__ = languages or set()
 
-    def __new__(mcs, name, bases, attrs):
-        included_enums: List[EnumMeta] = [value for value in attrs.values() if mcs._is_publisher_enum(value)]
-        publisher_mapping: Dict[str, PublisherEnum] = {}
-        for country_enum in included_enums:
-            for publisher_enum in country_enum:  # type: ignore
-                if existing := publisher_mapping.get(publisher_enum.name):
-                    raise AttributeError(
-                        f"Found duplicate publisher names in same collection {name!r}: "
-                        f"{type(existing).__name__} -> {existing.name} and "
-                        f"{type(publisher_enum).__name__} -> {publisher_enum.name}"
-                    )
-                publisher_mapping[publisher_enum.name] = publisher_enum
-        return super().__new__(mcs, name, bases, attrs)
+    @classmethod
+    def from_publisher(
+        cls,
+        publisher: Publisher,
+        source_types: Optional[Set[Type[URLSource]]] = None,
+        languages: Optional[Set[str]] = None,
+    ) -> "FilteredPublisher":
+        new = FilteredPublisher.__new__(cls)
 
-    def get_publisher_enum_mapping(cls) -> Dict[str, EnumMeta]:
-        """Returns all PublisherEnums included in the publisher collection as dictionary.
+        # we create a deepcopy since the aware publisher is not included in the PublisherGroup
+        new.__dict__.update(publisher.__dict__)
+        new.__source_types_filter__ = source_types or set()
+        new.__language_filter__ = languages or set()
+        return new
 
-        E.g.
+    @property
+    def source_mapping(self) -> Dict[Type[URLSource], List[URLSource]]:
+        filtered_mapping: Dict[Type[URLSource], List[URLSource]] = {}
 
-        >>> from fundus.publishers.at import AT
-        >>> from fundus.publishers.de import DE
-        >>> class PublisherCollection(metaclass=PublisherCollectionMeta):
-        >>>     de: PublisherEnum = DE
-        >>>     at: PublisherEnum = AT
-        >>>     ...
-        >>> print(PublisherCollection.get_publisher_enum_mapping())
+        # iterate over internal mapping to preserve order
+        for source_type, sources in self._source_mapping.items():
+            if self.__source_types_filter__ and source_type not in self.__source_types_filter__:
+                continue
 
-        will print the following:
+            filtered_sources = [
+                source
+                for source in sources
+                if not self.__language_filter__ or source.languages & self.__language_filter__
+            ]
+            if filtered_sources:
+                filtered_mapping[source_type] = filtered_sources
 
-        {'de': <enum 'DE'>, 'at': <enum 'AT'>, ...}
+        return filtered_mapping
+
+    @property
+    def language_filter(self) -> Set[str]:
+        return self.__language_filter__
+
+
+class PublisherGroup(type):
+    def __new__(cls, name, bases, attributes):
+        new = super().__new__(cls, name, bases, attributes)
+
+        # set __name__ and __group__
+        for attribute, value in attributes.items():
+            if isinstance(value, Publisher):
+                value.__name__ = attribute
+                value.__group__ = new
+                if default_language := attributes.get("default_language"):
+                    for source in more_itertools.flatten(value.source_mapping.values()):
+                        if not source.languages:
+                            source.languages = {default_language}
+
+        return new
+
+    @property
+    def mapping(cls) -> Dict[str, Union[Publisher, "PublisherGroup"]]:
+        return {name: value for name, value in cls.__dict__.items() if isinstance(value, (Publisher, PublisherGroup))}
+
+    def get_subgroup_mapping(cls) -> Dict[str, "PublisherGroup"]:
+        return {name: value for name, value in cls.__dict__.items() if isinstance(value, PublisherGroup)}
+
+    def __iter__(cls) -> Iterator[Publisher]:
+        """This will iterate over all publishers included in the group and its subgroups.
 
         Returns:
-            Dict[str, EnumMeta]: A dictionary mapping 'attribute_name -> enum' for all PublisherEnums
-            in the same order as they were defined in the collection.
+            Iterator[Publisher]: Iterator over publishers included in the group and its subgroups.
 
         """
-        return {name: value for name, value in cls.__dict__.items() if cls._is_publisher_enum(value)}
+        for attribute in cls.__dict__.values():
+            if isinstance(attribute, Publisher):
+                yield attribute
+            elif isinstance(attribute, PublisherGroup):
+                yield from attribute
 
-    def __contains__(cls, __x: object) -> bool:
-        return __x in cls.get_publisher_enum_mapping().values()
-
-    def __iter__(cls) -> Iterator[PublisherEnum]:
-        """This will iterate over all publishers included in the enums and not the enums itself.
-
-        Returns:
-            Iterator[PublisherEnum]: Iterator over publishers included in the enums.
-
-        """
-        for enum in cls.get_publisher_enum_mapping().values():
-            yield from enum
-
-    def __getitem__(self, name: str) -> PublisherEnum:
+    def __getitem__(cls, name: str) -> Publisher:
         """Get a publisher from the collection by name represented as string.
 
         Args:
             name: A string referencing the publisher in the corresponding enum.
 
         Returns:
-            PublisherEnum: The corresponding publisher.
+            Publisher: The corresponding publisher.
 
         """
-        for publisher_enum in self:
-            if publisher_enum.name == name:
-                return publisher_enum
-        raise KeyError(f"Publisher {name!r} not present in {self.__name__}")
+        return {publisher.__name__: publisher for publisher in cls}[name]
 
     def __len__(cls) -> int:
-        """The number of publishers included in the collection.
+        """The number of publishers included in the group.
 
         Returns:
             int: The number of publishers.
         """
-        return len(list(iter(cls)))
+        return len(list(cls.__iter__()))
 
-    def __str__(self) -> str:
-        enum_mapping = self.get_publisher_enum_mapping()
-        enum_mapping_keys = enum_mapping.keys()
-        representation = (
-            f"The {self.__name__!r} consists of {len(self)} publishers from {len(enum_mapping_keys)} , including:"
-        )
-        publisher: str
-        country: str
-        for country in enum_mapping_keys:
-            representation += f"\n\t {country}:"
-            for publisher in islice(enum_mapping[country], 0, 5):
-                representation += f"\n\t\t {publisher}"
-            if len(enum_mapping[country]) > 5:
-                representation += f"\n\t\t ..."
+    def __str__(cls) -> str:
+        representation = f"<{cls.__name__}: {len(cls)}>"
+        for name, element in cls.mapping.items():
+            representation += "\n" + indent(str(element), prefix="\t")
         return representation
+
+    def search(
+        cls,
+        attributes: Optional[List[str]] = None,
+        source_types: Optional[List[Type[URLSource]]] = None,
+        languages: Optional[List[str]] = None,
+        include_deprecated_attributes: bool = False,
+    ) -> Union[List[FilteredPublisher], List[Publisher]]:
+        if not (attributes or source_types or languages):
+            raise ValueError("You have to define at least one search condition")
+        if not attributes:
+            attributes = []
+        if not languages:
+            languages = []
+        if not source_types:
+            source_types = []
+
+        matched: Union[List[FilteredPublisher], List[Publisher]] = []
+        unique_attributes = set(attributes)
+        spec: Publisher
+        for publisher in cls:
+            if unique_attributes.issubset(
+                set(publisher.parser().attributes().names)
+                - (
+                    set(
+                        publisher.parser().attributes().deprecated.names if not include_deprecated_attributes else set()
+                    )
+                )
+            ) and (publisher.supports(source_types=source_types, languages=languages)):
+                matched.append(
+                    FilteredPublisher.from_publisher(
+                        publisher,
+                        source_types=set(source_types) & publisher.source_types,
+                        languages=set(languages) & publisher.languages,
+                    )
+                )
+        if not matched:
+            warn("No publisher found matching the search criteria. Returning no publishers.")
+        return matched

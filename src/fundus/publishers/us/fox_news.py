@@ -4,12 +4,13 @@ from typing import List, Optional
 from lxml.cssselect import CSSSelector
 from lxml.etree import XPath
 
-from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute
+from fundus.parser import ArticleBody, BaseParser, Image, ParserProxy, attribute
 from fundus.parser.utility import (
     extract_article_body_with_selector,
     generic_author_parsing,
     generic_date_parsing,
     generic_topic_parsing,
+    image_extraction,
 )
 
 
@@ -22,7 +23,7 @@ class FoxNewsParser(ParserProxy):
         )
 
         @attribute
-        def body(self) -> ArticleBody:
+        def body(self) -> Optional[ArticleBody]:
             return extract_article_body_with_selector(
                 self.precomputed.doc,
                 paragraph_selector=self._paragraph_selector,
@@ -43,3 +44,15 @@ class FoxNewsParser(ParserProxy):
         @attribute
         def topics(self) -> List[str]:
             return generic_topic_parsing(self.precomputed.meta.get("classification-tags"))
+
+        @attribute
+        def images(self) -> List[Image]:
+            return image_extraction(
+                doc=self.precomputed.doc,
+                paragraph_selector=self._paragraph_selector,
+                image_selector=XPath("//article//picture//img[not(@*[starts-with(name(), 'data-v-')])]"),
+                caption_selector=XPath("(./ancestor::div[@class='image-ct inline']//div[@class='caption']/p/span)[1]"),
+                author_selector=XPath(
+                    "(./ancestor::div[@class='image-ct inline']//div[@class='caption']/p/span)[last()]"
+                ),
+            )

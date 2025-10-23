@@ -1,18 +1,74 @@
 {
+  "BBC_2024_08_01.html.gz": {
+    "url": "https://www.bbc.com/news/explainers-63159607",
+    "crawl_date": "2024-08-01 17:53:58.019048"
+  },
+  "DailyMail_2024_04_27.html.gz": {
+    "url": "https://www.dailymail.co.uk/yourmoney/article-13357113/dollar-bill-worth-THOUSANDS-check.html",
+    "crawl_date": "2024-04-27 17:00:10.853579"
+  },
+  "DailyStar_2024_04_23.html.gz": {
+    "url": "https://www.dailystar.co.uk/travel/travel-news/i-sell-walt-disney-world-32645619",
+    "crawl_date": "2024-04-23 13:00:40.272329"
+  },
+  "EuronewsEN_2024_04_30.html.gz": {
+    "url": "https://www.euronews.com/2024/04/30/swedish-police-to-investigate-reports-of-information-leaks-to-violent-gangs",
+    "crawl_date": "2024-04-30 16:52:48.230575"
+  },
+  "EveningStandard_2024_05_02.html.gz": {
+    "url": "https://www.standard.co.uk/sport/football/chelsea-fc-vs-tottenham-analysis-premier-league-2024-b1155186.html",
+    "crawl_date": "2024-05-02 22:57:24.734563"
+  },
+  "EveningStandard_2024_10_24.html.gz": {
+    "url": "https://www.standard.co.uk/news/politics/tony-blair-interview-london-standard-dylan-jones-ukraine-war-labour-keir-starmer-b1189828.html",
+    "crawl_date": "2024-10-24 20:39:21.015787"
+  },
+  "Express_2024_07_18.html.gz": {
+    "url": "https://www.express.co.uk/news/royal/1924698/prince-harry-meghan-markle-live-grifters",
+    "crawl_date": "2024-07-18 13:09:04.711191"
+  },
+  "Metro_2024_07_17.html.gz": {
+    "url": "https://metro.co.uk/2024/07/17/king-charles-arrives-parliament-first-kings-speech-new-labour-government-21244172/?ico=mosaic_politics",
+    "crawl_date": "2024-07-17 20:00:15.017735"
+  },
+  "Metro_2024_11_29.html.gz": {
+    "url": "https://metro.co.uk/2024/11/18/sweden-tells-5-000-000-households-how-survive-wwiii-new-war-pamphlet-22018356/",
+    "crawl_date": "2024-11-29 22:59:41.366944"
+  },
   "TheGuardian_2024_02_24.html.gz": {
     "url": "https://www.theguardian.com/world/2024/feb/24/death-toll-in-valencia-fire-rises-to-10-as-remains-of-last-missing-person-found",
     "crawl_date": "2024-02-24 12:51:15.854319"
   },
-  "TheIndependent_2023_08_14.html.gz": {
-    "url": "https://www.independent.co.uk/sport/football/womens-world-cup-england-news-latest-australia-b2392480.html",
-    "crawl_date": "2023-08-14 11:24:44.038631"
+  "TheIndependent_2024_11_22.html.gz": {
+    "url": "https://www.independent.co.uk/news/world/laos-methanol-poisoning-holly-bowles-death-b2651790.html",
+    "crawl_date": "2024-11-22 09:53:20.835389"
+  },
+  "TheMirror_2024_04_28.html.gz": {
+    "url": "https://www.mirror.co.uk/lifestyle/gardening/gorgeous-houseplants-can-rid-unwanted-32676317",
+    "crawl_date": "2024-04-28 15:00:25.779100"
+  },
+  "TheMirror_2024_08_05.html.gz": {
+    "url": "https://www.mirror.co.uk/news/uk-news/uk-riots-live-hotel-rotherham-33386398",
+    "crawl_date": "2024-08-05 22:00:28.259674"
+  },
+  "TheSun_2024_04_22.html.gz": {
+    "url": "https://www.thesun.co.uk/sport/12603994/phil-foden-girlfriend-rebecca-cooke/",
+    "crawl_date": "2024-04-22 23:07:31.381326"
   },
   "TheTelegraph_2023_08_30.html.gz": {
     "url": "https://www.telegraph.co.uk/recommended/home/best-heated-clothes-airer/",
     "crawl_date": "2023-08-30 17:51:33.803288"
   },
+  "TheTelegraph_2024_09_17.html.gz": {
+    "url": "https://www.telegraph.co.uk/politics/2024/09/16/keir-victoria-starmer-clothes-row-lord-alli/",
+    "crawl_date": "2024-09-17 08:57:08.041442"
+  },
   "iNews_2023_08_30.html.gz": {
     "url": "https://inews.co.uk/sport/tennis/us-open-2023-british-players-results-andy-murray-katie-boulter-cam-norrie-evans-burrage-draper-2580837",
     "crawl_date": "2023-08-30 18:39:34.320432"
+  },
+  "iNews_2025_01_28.html.gz": {
+    "url": "https://inews.co.uk/news/environment/just-stop-oil-activists-disrupt-west-end-play-as-sigourney-weaver-performs-3504901",
+    "crawl_date": "2025-01-28 15:40:34.688064"
   }
 }

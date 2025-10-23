@@ -1,13 +1,15 @@
+import re
 from datetime import datetime
 from typing import List, Optional
 
 from lxml.cssselect import CSSSelector
 
-from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute
+from fundus.parser import ArticleBody, BaseParser, Image, ParserProxy, attribute
 from fundus.parser.utility import (
     extract_article_body_with_selector,
     generic_author_parsing,
     generic_date_parsing,
+    image_extraction,
 )
 
 
@@ -17,7 +19,7 @@ class FreeBeaconParser(ParserProxy):
         _paragraph_selector = CSSSelector(".article-content > p")
 
         @attribute
-        def body(self) -> ArticleBody:
+        def body(self) -> Optional[ArticleBody]:
             return extract_article_body_with_selector(
                 self.precomputed.doc,
                 summary_selector=self._summary_selector,
@@ -40,3 +42,11 @@ class FreeBeaconParser(ParserProxy):
         def topics(self) -> List[str]:
             topics: Optional[List[str]] = self.precomputed.ld.bf_search("keywords")
             return topics if topics else []
+
+        @attribute
+        def images(self) -> List[Image]:
+            return image_extraction(
+                doc=self.precomputed.doc,
+                paragraph_selector=self._paragraph_selector,
+                author_selector=re.compile(r"\((?P<credits>.+)\)$"),
+            )

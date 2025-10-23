@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "fundus"
-version = "0.3.0"
+version = "0.5.2"
 authors = [
     { name = "Max Dallabetta", email = "max.dallabetta@googlemail.com" },
 ]
@@ -24,7 +24,7 @@ keywords = ["web scraping, web crawling"]
 license = { text = "MIT" }
 dependencies = [
     "python-dateutil>=2.8, <3",
-    "lxml>=4.9, <5",
+    "lxml>=4.9, <6",
     "more-itertools>=9.1, <10",
     "cssselect>=1.1, <2",
     "feedparser>=6.0, <7",
@@ -36,7 +36,9 @@ dependencies = [
     "tqdm>=4.66, <5",
     "fastwarc>=0.14, <1",
     "chardet>=5.2, <6",
-    "dill>=0.3, <1"
+    "dill>=0.3, <1",
+    "dict2xml>=1.7.6, <2",
+    "xmltodict>=0.13.0, <1",
 ]
 
 [project.urls]
@@ -74,3 +76,9 @@ target-version = ['py38']
 
 [tool.isort]
 profile = "black"
+
+[tool.pytest.ini_options]
+filterwarnings = [
+    "error"
+]
+

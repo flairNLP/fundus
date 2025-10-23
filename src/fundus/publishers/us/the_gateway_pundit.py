@@ -3,11 +3,12 @@ from typing import List, Optional
 
 from lxml.etree import XPath
 
-from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute
+from fundus.parser import ArticleBody, BaseParser, Image, ParserProxy, attribute
 from fundus.parser.utility import (
     extract_article_body_with_selector,
     generic_author_parsing,
     generic_date_parsing,
+    image_extraction,
 )
 
 
@@ -21,7 +22,7 @@ class TheGatewayPunditParser(ParserProxy):
         )
 
         @attribute
-        def body(self) -> ArticleBody:
+        def body(self) -> Optional[ArticleBody]:
             return extract_article_body_with_selector(
                 self.precomputed.doc,
                 paragraph_selector=self._paragraph_selector,
@@ -29,7 +30,7 @@ class TheGatewayPunditParser(ParserProxy):
 
         @attribute
         def authors(self) -> List[str]:
-            return generic_author_parsing(self.precomputed.ld.get_value_by_key_path(["Article", "author"]))
+            return generic_author_parsing(self.precomputed.ld.xpath_search("Article/author"))
 
         @attribute
         def publishing_date(self) -> Optional[datetime]:
@@ -40,3 +41,12 @@ class TheGatewayPunditParser(ParserProxy):
             if (title := self.precomputed.meta.get("og:title")) is not None:
                 title = title.split("|")[0].strip()
             return title
+
+        @attribute
+        def images(self) -> List[Image]:
+            return image_extraction(
+                doc=self.precomputed.doc,
+                paragraph_selector=self._paragraph_selector,
+                image_selector=XPath("//div[@class='entry-content']//img"),
+                author_selector=XPath("./ancestor::figure//figcaption"),
+            )

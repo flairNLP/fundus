@@ -1,39 +1,64 @@
 import itertools
 from pathlib import Path
-from typing import Dict, Iterable, List, Protocol, Sequence, cast
+from typing import Dict, Iterable, List, Protocol, Sequence
 from urllib.parse import urlparse
 
 import lxml.etree
 import lxml.html
 import more_itertools
-from lxml.html.builder import CLASS, CODE, DIV, SPAN, TABLE, TBODY, TD, TH, THEAD, TR, A
+from lxml.html.builder import (
+    CLASS,
+    CODE,
+    DIV,
+    SPAN,
+    STRIKE,
+    TABLE,
+    TBODY,
+    TD,
+    TH,
+    THEAD,
+    TR,
+    A,
+)
 
 from fundus import PublisherCollection
 from fundus import __development_base_path__ as root_path
-from fundus.publishers.base_objects import PublisherEnum
+from fundus.publishers.base_objects import Publisher
 from tests.resources import attribute_annotations_mapping
 
 supported_publishers_markdown_path: Path = root_path / "docs" / "supported_publishers.md"
 
 
 class ColumnFactory(Protocol):
-    def __call__(self, spec: PublisherEnum) -> lxml.html.HtmlElement:
+    def __call__(self, publisher: Publisher) -> lxml.html.HtmlElement:
         ...
 
 
 column_mapping: Dict[str, ColumnFactory] = {
-    "Class": lambda spec: TD(CODE(spec.name)),
-    "Source": lambda spec: TD(DIV(f"{spec.publisher_name}")),
-    "URL": lambda spec: TD(A(SPAN(urlparse(spec.domain).netloc), href=spec.domain)),
-    "Missing Attributes": lambda spec: TD(*[CODE(a) for a in sorted(attributes)])
-    if (
-        attributes := set(attribute_annotations_mapping.keys())
-        - set(spec.parser.latest_version.attributes().validated.names)
-    )
-    else lxml.html.fromstring("<td>&nbsp;</td>"),
-    "Additional Attributes": lambda spec: TD(*[CODE(a) for a in sorted(attributes)])
-    if (attributes := spec.parser.latest_version.attributes().unvalidated.names)
-    else lxml.html.fromstring("<td>&nbsp;</td>"),
+    "Class": lambda publisher: TD(CODE(publisher.__name__)),
+    "Name": lambda publisher: TD(DIV(f"{publisher.name}"))
+    if not publisher.deprecated
+    else TD(DIV(STRIKE(f"{publisher.name}"))),
+    "URL": lambda publisher: TD(A(SPAN(urlparse(publisher.domain).netloc), href=publisher.domain)),
+    "Languages": lambda publisher: TD(*[CODE(lang) for lang in sorted(publisher.languages)]),
+    "Missing Attributes": lambda publisher: (
+        TD(*[CODE(a) for a in sorted(attributes)])
+        if (
+            attributes := set(attribute_annotations_mapping.keys())
+            - set(publisher.parser.latest_version.attributes().validated.names)
+        )
+        else lxml.html.fromstring("<td>&nbsp;</td>")
+    ),
+    "Deprecated Attributes": lambda publisher: (
+        TD(*[CODE(a) for a in sorted(attributes)])
+        if (attributes := set(publisher.parser.latest_version.attributes().deprecated.names))
+        else lxml.html.fromstring("<td>&nbsp;</td>")
+    ),
+    "Additional Attributes": lambda publisher: (
+        TD(*[CODE(a) for a in sorted(attributes)])
+        if (attributes := publisher.parser.latest_version.attributes().unvalidated.names)
+        else lxml.html.fromstring("<td>&nbsp;</td>")
+    ),
 }
 
 
@@ -44,10 +69,10 @@ def generate_thead() -> lxml.html.HtmlElement:
     return thead
 
 
-def generate_tbody(country: Iterable[PublisherEnum]) -> lxml.html.HtmlElement:
+def generate_tbody(country: Iterable[Publisher]) -> lxml.html.HtmlElement:
     content: List[lxml.html.HtmlElement] = []
-    for spec in sorted(country, key=lambda enum: enum.publisher_name):
-        tds = [column(spec) for column in column_mapping.values()]
+    for publisher in sorted(country, key=lambda enum: enum.name):
+        tds = [column(publisher) for column in column_mapping.values()]
         tr = TR(*tds)
         content.append(tr)
     return TBODY(*content)
@@ -83,7 +108,7 @@ def align_tables(tables: Sequence[lxml.html.HtmlElement]) -> None:
 def build_publisher_tables() -> Dict[str, lxml.html.HtmlElement]:
     tables: Dict[str, lxml.html.HtmlElement] = {
         country_code: TABLE(generate_thead(), generate_tbody(enum), CLASS(f"publishers {country_code}"))
-        for country_code, enum in sorted(PublisherCollection.get_publisher_enum_mapping().items())
+        for country_code, enum in sorted(PublisherCollection.get_subgroup_mapping().items())
     }
     align_tables(tuple(tables.values()))
     return tables

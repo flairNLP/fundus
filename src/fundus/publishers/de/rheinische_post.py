@@ -2,13 +2,15 @@ import datetime
 from typing import List, Optional
 
 from lxml.cssselect import CSSSelector
+from lxml.etree import XPath
 
-from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute
+from fundus.parser import ArticleBody, BaseParser, Image, ParserProxy, attribute
 from fundus.parser.utility import (
     extract_article_body_with_selector,
     generic_author_parsing,
     generic_date_parsing,
     generic_topic_parsing,
+    image_extraction,
 )
 
 
@@ -19,7 +21,7 @@ class RheinischePostParser(ParserProxy):
         _subheadline_selector = CSSSelector("div[data-cy='article-content'] h2")
 
         @attribute
-        def body(self) -> ArticleBody:
+        def body(self) -> Optional[ArticleBody]:
             return extract_article_body_with_selector(
                 self.precomputed.doc,
                 summary_selector=self._summary_selector,
@@ -42,3 +44,13 @@ class RheinischePostParser(ParserProxy):
         @attribute
         def topics(self) -> List[str]:
             return generic_topic_parsing(self.precomputed.meta.get("keywords"))
+
+        @attribute
+        def images(self) -> List[Image]:
+            return image_extraction(
+                doc=self.precomputed.doc,
+                paragraph_selector=self._paragraph_selector,
+                image_selector=XPath("//figure[@id]//img[not(@alt='Platzhalter Drittanbieter-Inhalt')]"),
+                caption_selector=XPath("./ancestor::figure//figcaption/p"),
+                relative_urls=True,
+            )

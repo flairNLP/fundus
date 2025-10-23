@@ -1,6 +1,22 @@
 {
+  "NZZ_2024_07_18.html.gz": {
+    "url": "https://www.nzz.ch/international/israel-und-gaza-news-und-entwicklungen-im-nahostkonflikt-ld.1759794",
+    "crawl_date": "2024-07-18 12:34:22.996791"
+  },
   "SRF_2024_04_15.html.gz": {
     "url": "https://www.srf.ch/news/international/eskalation-im-nahen-osten-die-israelische-zurueckhaltung-hat-viel-mit-den-usa-zu-tun",
     "crawl_date": "2024-04-15 14:04:11.735825"
+  },
+  "SRF_2025_01_05.html.gz": {
+    "url": "https://www.srf.ch/news/international/nahost/minderheit-in-syrien-drusen-fordern-teilhabe-statt-schutzgarantien-von-neuer-regierung",
+    "crawl_date": "2025-01-05 23:29:12.840186"
+  },
+  "TagesAnzeiger_2024_09_04.html.gz": {
+    "url": "https://www.tagesanzeiger.ch/chiesa-ruft-zum-politischen-widerstand-gegen-asylpolitik-auf-150193073111",
+    "crawl_date": "2024-09-04 15:17:02.716793"
+  },
+  "ZwanzigMinuten_2024_12_17.html.gz": {
+    "url": "https://www.20min.ch/story/europaeische-kommission-verfahren-bruessel-prueft-einfluss-von-tiktok-auf-wahlen-103241818",
+    "crawl_date": "2024-12-17 15:30:01.640676"
   }
 }

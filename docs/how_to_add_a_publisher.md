@@ -1,33 +1,36 @@
 # Table of Contents
 
-* [1. Creating a Parser Stub](#1-creating-a-parser-stub)
-* [2. Creating a Publisher Specification](#2-creating-a-publisher-specification)
-  * [Adding Sources](#adding-sources)
-    * [Different `URLSource` types](#different-urlsource-types)
-    * [How to specify a `URLSource`](#how-to-specify-a-urlsource)
-      * [RSS feeds](#rss-feeds)
-      * [Sitemaps](#sitemaps)
-    * [How to differentiate between `Sitemap` and `NewsMap`](#how-to-differentiate-between-sitemap-and-newsmap)
-  * [Finishing the Publisher Specification](#finishing-the-publisher-specification)
-* [4. Validating the Current Implementation Progress](#4-validating-the-current-implementation-progress)
-* [5. Implementing the Parser](#5-implementing-the-parser)
-  * [Extracting Attributes from Precomputed](#extracting-attributes-from-precomputed)
-  * [Extracting Attributes with XPath and CSS-Select](#extracting-attributes-with-xpath-and-css-select)
-    * [Working with `lxml`](#working-with-lxml)
-    * [CSS-Select](#css-select)
-    * [XPath](#xpath)
-  * [Checking the free_access attribute](#checking-the-free_access-attribute)
-  * [Finishing the Parser](#finishing-the-parser)
-* [6. Generate unit tests and update tables](#6-generate-unit-tests-and-update-tables)
-  * [Add unit test](#add-unit-tests)
-  * [Update tables](#update-tables)
-* [7. Opening a Pull Request](#7-opening-a-pull-request)
+* [How to add a Publisher](#how-to-add-a-publisher)
+  * [1. Creating a Parser Stub](#1-creating-a-parser-stub)
+  * [2. Creating a Publisher Specification](#2-creating-a-publisher-specification)
+    * [Adding Sources](#adding-sources)
+      * [Different `URLSource` types](#different-urlsource-types)
+      * [How to specify a `URLSource`](#how-to-specify-a-urlsource)
+        * [RSS feeds](#rss-feeds)
+        * [Sitemaps](#sitemaps)
+      * [How to differentiate between `Sitemap` and `NewsMap`](#how-to-differentiate-between-sitemap-and-newsmap)
+    * [Finishing the Publisher Specification](#finishing-the-publisher-specification)
+  * [4. Validating the Current Implementation Progress](#4-validating-the-current-implementation-progress)
+  * [5. Implementing the Parser](#5-implementing-the-parser)
+    * [Extracting Attributes from Precomputed](#extracting-attributes-from-precomputed)
+    * [Extracting Attributes with XPath and CSS-Select](#extracting-attributes-with-xpath-and-css-select)
+      * [Working with `lxml`](#working-with-lxml)
+      * [CSS-Select](#css-select)
+      * [XPath](#xpath)
+    * [Extracting the ArticleBody](#extracting-the-articlebody)
+    * [Extracting the Images](#extracting-the-images)
+    * [Checking the free_access attribute](#checking-the-free_access-attribute)
+    * [Finishing the Parser](#finishing-the-parser)
+  * [6. Generate unit tests and update tables](#6-generate-unit-tests-and-update-tables)
+    * [Add unit tests](#add-unit-tests)
+    * [Update tables](#update-tables)
+  * [7. Opening a Pull Request](#7-opening-a-pull-request)
 
 # How to add a Publisher
 
 Before contributing a publisher make sure you set up Fundus correctly alongside [these](how_to_contribute.md#setup-fundus) steps.
 Then check the [**supported publishers**](supported_publishers.md) table if there is already support for your desired publisher.
-In the following, we will walk you through an example implementation of the [*Los Angeles Times*](https://www.latimes.com/) covering the best practices for adding a new publisher.
+In the following, we will walk you through an example implementation of the [*The Intercept*](https://www.theintercept.com/) covering the best practices for adding a new publisher.
 
 **_NOTE:_**: Before proceeding, it's essential to ensure that the publisher you intend to add is crawl-able.
 Fundus keeps track of those who aren't in [this issue](https://github.com/flairNLP/fundus/issues/309).
@@ -37,8 +40,10 @@ import urllib.request
 
 url = ...
 
-with urllib.request.urlopen(url) as response:
-    pass
+request = urllib.request.Request(url, headers={'User-Agent': 'FundusBot'})
+
+with urllib.request.urlopen(request) as response:
+    content = response.read()
 ````
 If you encounter an error like `urllib.error.HTTPError: HTTP Error 403: Forbidden`, it indicates that the publisher uses bot protection, preventing crawling.
 In such cases, please comment on the issue mentioned above, mentioning the publisher you attempted to crawl, preferably with its domain name.
@@ -56,20 +61,21 @@ For example:
 - ...
 
 In case you don't see a directory labelled with the corresponding country code, feel free to create one. 
-Within this directory add a file called `__init__.py` and create a class inheriting the PublisherEnum behaviour.
+Within this directory add a file called `__init__.py` and create a class inheriting the PublisherGroup behaviour.
 As an example, if you were to add the US, it should look something like this:
 
 ```python
-from fundus.publishers.base_objects import PublisherEnum
+from fundus.publishers.base_objects import PublisherGroup
 
-class US(PublisherEnum):
-    pass
+class US(metaclass=PublisherGroup):
+    default_language = "en"
 ```
+
+The `default_language` attribute specifies the most common language of the area.
 
 Next, you should open the file `fundus/publishers/__init__.py` and make sure that the class PublisherCollection has an attribute corresponding to your newly added country:
 
 ```python
-from fundus.publishers.base_objects import PublisherCollectionMeta
 from fundus.publishers.us import US
 
 class PublisherCollection(metaclass=PublisherCollectionMeta):
@@ -77,15 +83,15 @@ class PublisherCollection(metaclass=PublisherCollectionMeta):
 ```
 
 Now create an empty file in the corresponding country section using the publishers' name or some abbreviation as the file name.
-For the Los Angeles Times, the correct country section is `fundus/publishers/us/`, since they are a newspaper based in the United States, with a filename like `la_times.py` or `los_angeles_times.py`.
-We will continue here with `la_times.py`.
+For The Intercept, the correct country section is `fundus/publishers/us/`, since they are a newspaper based in the United States, with a filename like `the_intercept.py` or `intercept.py`.
+We will continue here with `the_intercept.py`.
 In the newly created file, add an empty parser class inheriting from `ParserProxy` and a parser version `V1` subclassing `BaseParser`.
 
 ``` python
 from fundus.parser import ParserProxy, BaseParser
 
 
-class LATimesParser(ParserProxy):
+class TheInterceptParser(ParserProxy):
     class V1(BaseParser):
         pass
 ```
@@ -98,29 +104,29 @@ Since Fundus' parsers are handcrafted and usually tied to specific layouts, this
 Next, add a new publisher specification for the publisher you want to cover.
 The publisher specification links information about the publisher, sources from where to get the HTML to parse, and the corresponding parser used by Fundus' `Crawler`.
 
-You can add a new entry to the country-specific `PublisherEnum` in the `__init__.py` of the country section you want to contribute to, i.e. `fundus/publishers/<country_code>/__init__.py`.
+You can add a new entry to the country-specific `PublisherGroup` in the `__init__.py` of the country section you want to contribute to, i.e. `fundus/publishers/<country_code>/__init__.py`.
 For now, we only specify the publisher's name, domain, and parser.
 We will cover sources in the next step.
 
-For the Los Angeles Times (LA Times), we add the following entry to `fundus/publishers/us/__init__.py`.
+For The Intercept, we add the following entry to `fundus/publishers/us/__init__.py`.
 
 ``` python
-class US(PublisherEnum):
-    LATimes = PublisherSpec(
-        name="Los Angeles Times",
-        domain="https://www.latimes.com/",
-        parser=LATimesParser,
+class US(PublisherGroup):
+    TheIntercept = Publisher(
+        name="The Intercept",
+        domain="https://theintercept.com/",
+        parser=TheInterceptParser,
     )
 ```
 
-If the country section for your publisher did not exist before step 1, please add the `PublisherEnum` to the `PublisherCollection` in `fundus/publishers/__init__.py'`.
+If the country section for your publisher did not exist before step 1, please add the `PublisherGroup` to the `PublisherCollection` in `fundus/publishers/__init__.py'`.
 
 ### Adding Sources
 
 For your newly added publisher to work you first need to specify where to find articles - in the form of HTML - to parse.
 Fundus adopts a unique approach by utilizing access points provided by the publishers, rather than resorting to generic web spiders.
 Publishers offer various methods to access their articles, with the most common being RSS feeds, APIs, or sitemaps. 
-Presently, Fundus supports RSS feeds and sitemaps by adding them as corresponding `URLSource` using the `source` parameter of `PublisherSpec`.
+Presently, Fundus supports RSS feeds and sitemaps by adding them as corresponding `URLSource` using the `source` parameter of `Publisher`.
 
 #### Different `URLSource` types
 
@@ -140,6 +146,11 @@ If your publisher provides a `NewsFeed`, there is no need to specify an `RSSFeed
 #### How to specify a `URLSource`
 
 To instantiate an object inheriting from URLSource like `RSSFeed` or `Sitemap`, you first need to find a link to the corresponding feed or sitemap and then set it as the entry point using the `url` parameter of `URLSource`.
+If the publisher offers multilingual content or articles, in a language different from the default language of the `PublisherGroup` as specified in the `default_language` attribute, please set the `languages` parameter of `URLSource` to a set containing the corresponding two letter language code(s) ([ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes)).
+For the German publisher `DW` one of the sources is initialized like this:
+```python
+Sitemap("https://www.dw.com/en/article-sitemap.xml", languages={"en"}),
+```
 
 ##### RSS feeds
 
@@ -148,10 +159,9 @@ Most of the time, you can find them through a quick browser search.
 Building an `RSSFeed` looks like this:
 
 ````python
-
 from fundus import RSSFeed
 
-RSSFeed("https://theintercept.com/feed/?rss")
+RSSFeed("https://theintercept.com/feed/?lang=en")
 ````
 
 ##### Sitemaps
@@ -173,41 +183,47 @@ You can find a plugin to resolve this issue [here](https://addons.mozilla.org/de
 
 Links to sitemaps are typically found within the `robots.txt` file provided by the publisher, often located at the end of it.
 To access this file, append `robots.txt` at the end of the publisher's domain.
-For example, to access the LA Times' `robots.txt`, use https://www.latimes.com/robots.txt in your preferred browser.
- This will give you the following two sitemap links:
+For example, to access The Intercepts' `robots.txt`, use https://theintercept.com/robots.txt in your preferred browser.
+This will give you one sitemap link:
 
 ```console
-Sitemap: https://www.latimes.com/sitemap.xml
-Sitemap: https://www.latimes.com/news-sitemap.xml
+Sitemap: https://theintercept.com/sitemap_index.xml
 ````
 
-The former refers to a regular sitemap, and the latter points to a NewsMap, which is a special kind of sitemap.
-To have a look at how to differentiate between those two, refer to [this](#how-to-differentiate-between-sitemap-and-newsmap) section.
-
 Most `Sitemaps`, and sometimes `NewsMaps` as well, will be index maps.
-E.g. accessing `https://www.latimes.com/news-sitemap.xml` will give you something like this:
+In most cases, the URL will give you an idea of whether or not you are dealing with an index map.
+If the sitemap is shown to you in raw XML, as it is with this one from Reuters `https://www.reuters.com/arc/outboundfeeds/news-sitemap-index/?outputType=xml`, you will get something like this:
 ```
 <sitemapindex ... >
    <sitemap>
-      <loc>https://www.latimes.com/news-sitemap-content.xml</loc>
-      <lastmod>2023-08-02T07:10-04:00</lastmod>
+      <loc>https://www.reuters.com/arc/outboundfeeds/news-sitemap/?outputType=xml</loc>
+      <lastmod>2024-06-06T09:45:15.030Z</lastmod>
    </sitemap>
    ...
 </sitemapindex>
 ```
+
 The `<sitemap>`, and especially the `<sitemapindex>` tag, indicates that this is, in fact, an index map pointing to other sitemaps rather than articles.
 To address this, `Sitemap` and `NewsMap` will step through the given sitemap recursively by default.
 You can alter this behavior or reverse the order in which sitemaps are processed with the `recursive` respectively `reverse` parameters.
 
+Now returning to The Intercept, if you visit the Sitemap Index above you will find one more special Sitemap listed within it:
+
+```console
+Sitemap: https://theintercept.com/news-sitemap.xml
+````
+
+This link points to a NewsMap, which is a special kind of Sitemap.
+To have a look at how to differentiate between those two, refer to [this](#how-to-differentiate-between-sitemap-and-newsmap) section.
+
 **_NOTE:_** If you wonder why you should reverse your sources from time to time, `URLSource`'s should, if possible, yield URLs in descending order by publishing date.
 
-Now building a new `URLSource` for a `NewsMap` covering the LA Times looks like this:
+Now building a new `URLSource` for a `NewsMap` covering The Intercept looks like this:
 
 ````python
-
 from fundus import NewsMap
 
-NewsMap("https://www.latimes.com/news-sitemap.xml", reverse=True)
+NewsMap("https://theintercept.com/news-sitemap.xml")
 ````
 
 #### How to differentiate between `Sitemap` and `NewsMap`
@@ -234,33 +250,40 @@ You can check if a sitemap is a news map by:
    Will filter out all URLs encountered within the processing of the `Sitemap` object including either the string `apnews.com/hub/` or `apnews.com/video/`.  
 2. If your publisher requires to use custom request headers to work properly you can alter it by using the `request_header` parameter of `PublisherSpec`.
    The default is: `{"user_agent": "Fundus"}`.
-3. If you want to block URLs for the entire publisher use the `url_filter` parameter of `PublisherSpec`.
+3. If you want to block URLs for the entire publisher use the `url_filter` parameter of `Publisher`.
 4. In some cases it can be necessary to append query parameters to the end of the URL, e.g. to load the article as one page. This can be achieved by adding the `query_parameter` attribute of `PublisherSpec` and assigning it a dictionary object containing the key - value pairs: e.g. `{"page": "all"}`. These key  - value pairs will be appended to all crawled URLs.
 
-Now, let's put it all together to specify the LA Times as a new publisher in Fundus:
+Now, let's put it all together to specify The Intercept as a new publisher in Fundus:
 
 ``` python
-class US(PublisherEnum):
-    LATimes = PublisherSpec(
-        name="Los Angeles Times",
-        domain="https://www.latimes.com/",
-        sources=[Sitemap("https://www.latimes.com/sitemap.xml"), 
-                 NewsMap("https://www.latimes.com/news-sitemap.xml")],
-        parser=LATimesParser,
+class US(PublisherGroup):
+    TheIntercept = Publisher(
+        name="The Intercept",
+        domain="https://theintercept.com/",
+        parser=TheInterceptParser,
+        sources=[
+            RSSFeed("https://theintercept.com/feed/?lang=en"),
+            Sitemap(
+                "https://theintercept.com/sitemap_index.xml",
+                reverse=True,
+                sitemap_filter=inverse(regex_filter("post-sitemap")),
+            ),
+            NewsMap("https://theintercept.com/news-sitemap.xml"),
+        ],
     )
 ```
 
 ## 4. Validating the Current Implementation Progress
 
 Now validate your implementation progress by crawling some example articles from your publisher.
-The following script fits the Los Angeles Times and is adaptable by changing the publisher variable accordingly.
+The following script fits The Intercept and is adaptable by changing the publisher variable accordingly.
 
 ``` python
 from fundus import PublisherCollection, Crawler
 
 # Change to:
 # PublisherCollection.<country_section>.<publisher_specification>
-publisher = PublisherCollection.us.LosAngelesTimes
+publisher = PublisherCollection.us.TheIntercept
 
 crawler = Crawler(publisher)
 
@@ -274,13 +297,13 @@ If everything has been implemented correctly, the script should output text arti
 Fundus-Article:
 - Title: "--missing title--"
 - Text:  "--missing plaintext--"
-- URL:    https://www.latimes.com/sports/story/2023-06-26/100-years-los-angeles-coliseum-historical-events
-- From:   Los Angeles Times
+- URL:    https://theintercept.com/2024/06/06/judge-ryan-nelson-israel-trip-gaza-recuse/
+- From:   The Intercept
 Fundus-Article:
 - Title: "--missing title--"
 - Text:  "--missing plaintext--"
-- URL:    https://www.latimes.com/sports/sparks/story/2023-06-25/los-angeles-sparks-dallas-wings-wnba-game-analysis
-- From:   Los Angeles Times
+- URL:    https://theintercept.com/2024/06/06/government-federal-employees-biden-gaza-war/
+- From:   The Intercept
 ```
 
 Since we didn't add any specific implementation to the parser yet, most entries are empty.
@@ -317,7 +340,7 @@ Attributes marked with `validate=False` will not be validated through unit tests
 Now, once we have identified the attribute we want to extract, we add it to the parser by defining a method using the associated name, in our case `title`, and marking it as an attribute using the `@attribute` decorator.
 
 ``` python
-class LATimesParser(ParserProxy):
+class TheInterceptParser(ParserProxy):
     class V1(BaseParser):
 
         @attribute
@@ -370,14 +393,16 @@ Here is a brief description of the fields of `Precomputed`.
 | ld                    | The linked data extracted from the HTML's [`ld+json`](https://json-ld.org/)                                                                             |
 | cache                 | A cache specific to the currently parsed site, which can be used to share objects between attributes. Share objects with the `BaseParser.share` method. |
 
-For instance, to extract the title for an article in the Los Angeles Times, we can access the `og:title` through the attribute `meta` of `Precomputed`.
+For instance, to extract the title for an article in The Intercept, we can access the `headline` within the `NewsArticle` element through the attribute `ld` of `Precomputed`.
 
 ``` python
 @attribute
-def title(self) -> Optional[str]:
-   # Use the `get` function to retrieve data from the `meta` precomputed attribute
-   return self.precomputed.meta.get("og:title")
+    def title(self) -> Optional[str]:
+        return self.precomputed.ld.get_value_by_key_path(["NewsArticle", "headline"])
 ```
+
+**_NOTE:_** In case a `class` is present in the HTML `meta` tag, it will be appended as a namespace to avoid collisions.
+I.e. the content of the following meta tag `<meta class="swiftype" name="author" ...` can be accessed with the key `swiftype:author`.
 
 ### Extracting Attributes with XPath and CSS-Select
 
@@ -516,6 +541,53 @@ Instead, we recommend referring to [this](https://devhints.io/xpath) documentati
 Make sure to examine other parsers and consult the [attribute guidelines](attribute_guidelines.md) for specifics on attribute implementation. 
 We strongly encourage utilizing these utility functions, especially when parsing the `ArticleBody`.
 
+### Extracting the ArticleBody
+
+In the context of Fundus, an article's body typically includes multiple paragraphs, and optionally, a summary and several subheadings.
+It's important to note that article layouts can vary significantly between publishers, with the most common layouts being:
+1. **Wall of text**: Commonly used by US-based publishers, this layout consists of a list of paragraphs without a summary or subheadings.
+2. **The Complete**: This layout includes a brief summary following the title and multiple paragraphs grouped into sections separated by subheadings (`ArticleSections`).
+
+<img alt="The complete: ArticleBody attribute structure of an example article" src="images/newspaper_labels_bold.png" width="400" height="auto">
+
+To accurately extract the body of an article, use the `extract_article_body_with_selector` function from the parser utilities.
+This function accepts selectors for the different body parts as input and returns a parsed `ArticleBody`.
+For practical examples, refer to existing parser implementations to understand how everything integrates.
+
+### Extracting the images
+
+Fundus offers a utility function `image_extraction` to extract images from the article.
+This function only requires the `doc` element of the article and the `_paragraph_selector` of the parser with further optional attributes that can be used if necessary.
+The skeleton of the function looks like this:
+
+```python
+from fundus.parser.utility import image_extraction
+from fundus.parser import Image
+
+@attribute
+def images(self) -> List[Image]:
+    return image_extraction(
+        doc=self.precomputed.doc,
+        paragraph_selector=self._paragraph_selector,
+    )
+```
+
+Once you have implemented this, you can try to extract your first images from the article body!
+What can happen now, is that you get an IndexError.
+This is caused by the `upper_boundary_selector` not selecting an element.
+You have to adjust it to select an element above the cover image, all images that lie before this upper boundary are discarded.
+Once you get your first images, you can further fine-tune your results:
+
+- `image_selector`: This selector is used to filter which image elements are selected.
+- `lower_boundary_selector`: By default, all images after the last paragraph are discarded. With this selector, you can define your custom boundary.
+- `caption_selector`: This selector is used to extract the caption of the image and should usually be of the form `XPath("./ancestor::...")`
+- `alt_selector`: This selector selects the alt text (description) of the image.
+- `author_selector`: You have two options, when selecting the author of the image:
+    - Preferably, the credits are within their own HTML element and can be directly addressed using a XPath selector.
+    - Alternatively, a `re.Pattern` object can be passed to select the authors from the caption. In this case, a selection group named `credits` is saved as the author, while the entire `Match` will be removed from the caption.
+- `relative_urls`: If set, an attempt will be made to complete relative URLs.
+- `size_pattern`: A `re.Pattern` object that can be used to extract the image sizes.
+
 ### Checking the free_access attribute
 
 In case your new publisher does not have a subscription model, you can go ahead and skip this step.
@@ -535,13 +607,14 @@ the element asking to purchase a subscription to view the article.
 
 ### Finishing the Parser
 
-Bringing all the above together, the Los Angeles Times now looks like this.
+Bringing all the above together, the The Intercept Parser now looks like this.
 
 ```python
-import datetime
+from datetime import date, datetime
 from typing import List, Optional
 
 from lxml.cssselect import CSSSelector
+from lxml.etree import XPath
 
 from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute
 from fundus.parser.utility import (
@@ -551,28 +624,47 @@ from fundus.parser.utility import (
 )
 
 
-class LATimesParser(ParserProxy):
+class TheInterceptParser(ParserProxy):
     class V1(BaseParser):
-        _paragraph_selector = CSSSelector("div[data-element*=story-body] > p")
+        _summary_selector = XPath(
+            "//p[@class='post__excerpt'] | //h2[preceding-sibling::h1[contains(@class, 'post__title')]]"
+        )
+        _paragraph_selector = CSSSelector("div.entry-content > div.entry-content__content > p, blockquote > p")
+        _subheadline_selector = CSSSelector("div.entry-content > div.entry-content__content > h2")
 
         @attribute
-        def body(self) -> ArticleBody:
+        def body(self) -> Optional[ArticleBody]:
             return extract_article_body_with_selector(
                 self.precomputed.doc,
+                summary_selector=self._summary_selector,
+                subheadline_selector=self._subheadline_selector,
                 paragraph_selector=self._paragraph_selector,
             )
 
         @attribute
-        def publishing_date(self) -> Optional[datetime.datetime]:
-            return generic_date_parsing(self.precomputed.ld.bf_search("datePublished"))
+        def authors(self) -> List[str]:
+            return generic_author_parsing(self.precomputed.ld.get_value_by_key_path(["NewsArticle", "author"]))
 
         @attribute
-        def authors(self) -> List[str]:
-            return generic_author_parsing(self.precomputed.ld.bf_search("author"))
+        def publishing_date(self) -> Optional[datetime]:
+            return generic_date_parsing(self.precomputed.ld.get_value_by_key_path(["NewsArticle", "datePublished"]))
 
         @attribute
         def title(self) -> Optional[str]:
-            return self.precomputed.meta.get("og:title")
+            return self.precomputed.ld.get_value_by_key_path(["NewsArticle", "headline"])
+
+        @attribute
+        def topics(self) -> List[str]:
+            # The Intercept specifies the article's topics, including other metadata,
+            # inside the "keywords" linked data indicated by a "Subject: " prefix.
+            # Example keywords: ["Day: Saturday", ..., "Subject: World", ...]
+            keywords: Optional[List[str]] = self.precomputed.ld.get_value_by_key_path(["NewsArticle", "keywords"])
+            if keywords is None:
+                return []
+
+            return [keyword[9:] for keyword in keywords if keyword.startswith("Subject: ")]
+
+
 ```
 
 Now, execute the example script from step 4 to validate your implementation.
@@ -580,17 +672,17 @@ If the attributes are implemented correctly, they appear in the printout accordi
 
 ```console
 Fundus-Article:
-- Title: "One hundred years at the Coliseum: Much more than a sports venue"
-- Text:  "Construction for the Los Angeles Coliseum was completed on May 1, 1923. Capacity
-          at the time: 75,000. The stadium was designed by architects John [...]"
-- URL:    https://www.latimes.com/sports/story/2023-06-26/100-years-los-angeles-coliseum-historical-events
-- From:   Los Angeles Times (2023-06-26 12:00)
+- Title: "Judge Who Went on Israel Junket Recuses Himself From Gaza Case"
+- Text:  "The federal judge hearing a human rights case disputed allegations he might be
+          impartial but recused himself out of an “abundance of caution.” [...]"
+- URL:    https://theintercept.com/2024/06/06/judge-ryan-nelson-israel-trip-gaza-recuse/
+- From:   The Intercept (2024-06-06 19:14)
 Fundus-Article:
-- Title: "Sparks back at .500: Five things to know about the team after win Sunday"
-- Text:  "Finally, the home crowd at Crypto.com Arena had something to cheer about.  After
-          dropping the first three games of their longest homestand of the [...]"
-- URL:    https://www.latimes.com/sports/sparks/story/2023-06-25/los-angeles-sparks-dallas-wings-wnba-game-analysis
-- From:   Los Angeles Times (2023-06-25 21:30)
+- Title: "“Not the Career in Public Service I Signed Up For”: Federal Workers Protest War"
+- Text:  "Government employees are using their official badges to demonstrate against U.S.
+          support for Israel’s war on Gaza.  “My employer is murdering [...]"
+- URL:    https://theintercept.com/2024/06/06/government-federal-employees-biden-gaza-war/
+- From:   The Intercept (2024-06-06 17:16)
 ```
 
 ## 6. Generate unit tests and update tables
@@ -612,12 +704,12 @@ Then in most cases it should be enough to simply run
 python -m scripts.generate_parser_test_files -p <your_publisher_class>
 ````
 
-with <your_publisher_class> being the class name of the `PublisherEnum` your working on.
+with <your_publisher_class> being the class name of the `Publisher` your working on.
 
 In our case, we would run:
 
 ````shell
-python -m scripts.generate_parser_test_files -p LATimes
+python -m scripts.generate_parser_test_files -p TheIntercept
 ````
 
 to generate a unit test for our parser.
@@ -628,7 +720,7 @@ You can simply run the script with the `-oj` flag.
 In our scenario, the command would be:
 
 ````shell
-python -m scripts.generate_parser_test_files -p LATimes -oj
+python -m scripts.generate_parser_test_files -p TheIntercept -oj
 ````
 
 This command will overwrite the existing `.json` file for your test case while retaining the HTML file.
