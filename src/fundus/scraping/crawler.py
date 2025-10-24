@@ -489,9 +489,7 @@ class Crawler(CrawlerBase):
         language_filter: Optional[List[str]] = None,
         skip_publishers_disallowing_training: bool = False,
     ) -> Iterator[Article]:
-        if skip_publishers_disallowing_training and (
-            publisher.disallows_training or publisher.robots.disallows_training()
-        ):
+        if skip_publishers_disallowing_training and publisher.disallows_training:
             logger.info(f"Skipping publisher {publisher.name} because it disallows training.")
             return
 
@@ -510,8 +508,8 @@ class Crawler(CrawlerBase):
             else:
                 raise TypeError("param <delay> of <Crawler.__init__>")
 
-        # we "register" the thread in the event dict as soon as possible to avoid that a
-        # thread crashes before
+        # we "register" the thread in the event dict as soon as possible to avoid that a thread is registered
+        # after the pool already is shutting down
         if self.threading:
             __EVENTS__.alias(publisher.name)
 
