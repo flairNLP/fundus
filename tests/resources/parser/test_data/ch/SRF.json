@@ -25,7 +25,172 @@
         }
       ]
     },
+    "images": [
+      {
+        "versions": [
+          {
+            "url": "https://www.srf.ch/static/cms/images/160w/d09eab.jpg",
+            "query_width": null,
+            "size": {
+              "width": 160,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.srf.ch/static/cms/images/160w/d09eab.webp",
+            "query_width": null,
+            "size": {
+              "width": 160,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://www.srf.ch/static/cms/images/320w/d09eab.jpg",
+            "query_width": null,
+            "size": {
+              "width": 320,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.srf.ch/static/cms/images/320w/d09eab.webp",
+            "query_width": null,
+            "size": {
+              "width": 320,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://www.srf.ch/static/cms/images/480w/d09eab.jpg",
+            "query_width": null,
+            "size": {
+              "width": 480,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.srf.ch/static/cms/images/480w/d09eab.webp",
+            "query_width": null,
+            "size": {
+              "width": 480,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://www.srf.ch/static/cms/images/640w/d09eab.jpg",
+            "query_width": null,
+            "size": {
+              "width": 640,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.srf.ch/static/cms/images/640w/d09eab.webp",
+            "query_width": null,
+            "size": {
+              "width": 640,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://www.srf.ch/static/cms/images/960w/d09eab.jpg",
+            "query_width": null,
+            "size": {
+              "width": 960,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.srf.ch/static/cms/images/960w/d09eab.webp",
+            "query_width": null,
+            "size": {
+              "width": 960,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://www.srf.ch/static/cms/images/1280w/d09eab.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1280,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.srf.ch/static/cms/images/1280w/d09eab.webp",
+            "query_width": null,
+            "size": {
+              "width": 1280,
+              "height": 0
+            },
+            "type": "image/webp"
+          }
+        ],
+        "is_cover": false,
+        "description": "Menschen in Raum.",
+        "caption": "Biden traf sich am Samstagabend im Weissen Haus mit seinen wichtigsten Sicherheitsberatern, um über den iranischen Angriff auf Israel zu diskutieren.",
+        "authors": [
+          "Keystone/The White House via AP/Adam Schultz"
+        ],
+        "position": 340
+      }
+    ],
     "publishing_date": "2024-04-15 13:38:00+02:00",
     "title": "«Die israelische Zurückhaltung hat viel mit den USA zu tun»"
+  },
+  "V2": {
+    "authors": [
+      "Monika Bolliger",
+      "Anna Trechsel",
+      "Sweidah"
+    ],
+    "body": {
+      "summary": [
+        "Angehörige der drusischen Minderheit in Syrien haben beim Sturz von Assad mitgeholfen. Nun fordern sie Gleichberechtigung."
+      ],
+      "sections": [
+        {
+          "headline": [],
+          "paragraphs": [
+            "Mitte Dezember auf dem Karama-Platz in Sweidah, südlich von Damaskus: Hier wird, wie an vielen Orten in Syrien, der Sturz des Regimes gefeiert. In Sweidah leben viele Angehörige der drusischen Minderheit, einer Abspaltung vom schiitischen Islam. Sie machen drei bis vier Prozent der Bevölkerung Syriens aus.",
+            "Unter den Feiernden ist Siham Zein ad-Din. Ihre Freude ist gross, doch sie wünscht sich, dass ihr Sohn diesen Tag erlebt hätte. Der Oberstleutnant Khaldun Zein ad-Din war 2011 wegen der Gewalt des Regimes gegen friedliche Demonstranten desertiert – und kam zwei Jahre später im Kampf gegen das Regime ums Leben. «Sie nannten ihn einen Terroristen, dabei hat er nur sich selbst und andere verteidigt», sagt die Mutter."
+          ]
+        },
+        {
+          "headline": [
+            "Ein Zentrum der Proteste"
+          ],
+          "paragraphs": [
+            "Das Bild ihres Sohnes hängt jetzt über der Tribüne am Platz, wo festliche Musik gespielt wird. Vor über einem Jahr schon hatte hier eine neue Protestbewegung gegen das Regime begonnen – und Syrern an anderen Orten Hoffnung gemacht.",
+            "Dass Proteste hier möglich waren, lag an der besonderen Situation von Sweidah während des Bürgerkriegs. Viele Drusen weigerten sich, für Assad in den Krieg zu ziehen und andere Syrer zu bekämpfen. Assad behauptete von sich, nur er könne die syrischen Minderheiten schützen. Deswegen konnte er die Drusen nicht offen bekämpfen. So kam es zum Deal: Die Drusen blieben im Krieg neutral, und das Regime nahm in Sweidah keine Verhaftungen vor.",
+            "Noch vor zwei bis drei Jahren sei bei vielen Drusen die Angst vor den Islamisten stärker als der Hass auf das Regime gewesen. Aber am Ende hätten sie es nur noch loswerden wollen, sagt der Anwalt und Dissident Ayman Sheib ad-Din. Die Grundversorgung war zusammengebrochen – und die Menschen wurden vom Regime gnadenlos ausgepresst und drangsaliert."
+          ]
+        },
+        {
+          "headline": [
+            "Befreier mit Blut an den Händen"
+          ],
+          "paragraphs": [
+            "«Jetzt wird ausgerechnet einer als Befreier gefeiert, der selber syrisches Blut an den Händen hat», sagt Sheib ad-Din über HTS-Chef Achmed al-Scharaa. Er kritisiert, dass Scharaa bisher alle Schlüsselstellen der Macht mit eigenen Leuten besetzt hat. Und er sieht die Schutzgarantien des Islamisten gegenüber Minderheiten kritisch. «Wir brauchen keine Schutzgarantien. Wir brauchen gleichberechtigte Teilhabe bei der Gestaltung unserer Zukunft», sagt der Anwalt.",
+            "Teilhabe fordert auch der erst 29-jährige drusische Anführer Laith al-Balaous. Er trat in die Fussstapfen seines Vaters, der 2015 ermordet wurde, vermutlich vom Regime – nachdem er in Sweidah eine regimekritische Bewegung und Miliz zur «Verteidigung der Würde» gegründet hatte. Mit dieser Miliz half sein Sohn Anfang Dezember bei der Eroberung von Damaskus mit.",
+            "Inzwischen hat HTS-Chef Achmed al-Scharaa, der bisher unter seinem Kampfnamen Abu Mohammed al-Golani bekannt war, eine nationale Konferenz angekündigt, bei der alle Teile der Gesellschaft vertreten sein sollen.",
+            "Das Ziel, sagt Balaous, müsse eine demokratische Verfassung sein. «Wir haben nicht einen Tyrannen gestürzt, damit nun ein anderer kommt. Nur über unsere Leichen werden wir das akzeptieren», sagt der Drusenführer kämpferisch."
+          ]
+        }
+      ]
+    },
+    "publishing_date": "2025-01-05 15:23:59+01:00",
+    "title": "Drusen fordern Teilhabe statt Schutzgarantien von neuer Regierung"
   }
 }

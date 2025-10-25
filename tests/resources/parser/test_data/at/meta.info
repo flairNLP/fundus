@@ -1,6 +1,22 @@
 {
-  "ORF_2023_04_28.html.gz": {
-    "url": "https://orf.at/stories/3314356/",
-    "crawl_date": "2023-04-28 20:32:19.743384"
+  "DerStandard_2024_05_03.html.gz": {
+    "url": "https://www.derstandard.at/story/3000000218734/nach-kalifat-rufen-in-hamburg-sind-wir-zu-sanft-zu-islamisten?ref=rss",
+    "crawl_date": "2024-05-03 18:19:08.721370"
+  },
+  "DiePresse_2025_06_05.html.gz": {
+    "url": "https://www.diepresse.com/19765800/nennen-wir-ihn-doch-golf-von-nordamerika",
+    "crawl_date": "2025-06-05 19:01:58.349241"
+  },
+  "KleineZeitung_2025_06_30.html.gz": {
+    "url": "https://www.kleinezeitung.at/kaernten/osttirol/19852382/osttiroler-kinder-und-senioren-erlebten-ruhigen-aber-heissen-montag",
+    "crawl_date": "2025-06-30 22:11:36.902973"
+  },
+  "ORF_2024_11_22.html.gz": {
+    "url": "https://orf.at/stories/3376705/",
+    "crawl_date": "2024-11-22 09:47:48.512552"
+  },
+  "SalzburgerNachrichten_2025_06_05.html.gz": {
+    "url": "https://www.sn.at/politik/innenpolitik/ex-ministerin-raab-chefin-migrations-thinktank-179519341",
+    "crawl_date": "2025-06-05 18:25:55.962530"
   }
 }

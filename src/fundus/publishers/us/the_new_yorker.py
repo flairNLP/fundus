@@ -4,12 +4,13 @@ from typing import List, Optional
 from lxml.cssselect import CSSSelector
 from lxml.etree import XPath
 
-from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute
+from fundus.parser import ArticleBody, BaseParser, Image, ParserProxy, attribute
 from fundus.parser.utility import (
     extract_article_body_with_selector,
     generic_author_parsing,
     generic_date_parsing,
     generic_topic_parsing,
+    image_extraction,
 )
 
 
@@ -19,7 +20,7 @@ class TheNewYorkerParser(ParserProxy):
         _paragraph_selector = CSSSelector("div.body__inner-container > p")
 
         @attribute
-        def body(self) -> ArticleBody:
+        def body(self) -> Optional[ArticleBody]:
             return extract_article_body_with_selector(
                 self.precomputed.doc,
                 summary_selector=self._summary_selector,
@@ -32,23 +33,23 @@ class TheNewYorkerParser(ParserProxy):
 
         @attribute(validate=False)
         def alternative_description(self) -> Optional[str]:
-            return self.precomputed.ld.get_value_by_key_path(["NewsArticle", "description"])
+            return self.precomputed.ld.xpath_search("NewsArticle/description", scalar=True)
 
         @attribute
         def authors(self) -> List[str]:
-            return generic_author_parsing(self.precomputed.ld.get_value_by_key_path(["NewsArticle", "author"]))
+            return generic_author_parsing(self.precomputed.ld.xpath_search("NewsArticle/author"))
 
         @attribute
         def publishing_date(self) -> Optional[datetime]:
-            return generic_date_parsing(self.precomputed.ld.get_value_by_key_path(["NewsArticle", "datePublished"]))
+            return generic_date_parsing(self.precomputed.ld.xpath_search("NewsArticle/datePublished", scalar=True))
 
         @attribute
         def title(self) -> Optional[str]:
-            return self.precomputed.ld.get_value_by_key_path(["NewsArticle", "headline"])
+            return self.precomputed.ld.xpath_search("NewsArticle/headline", scalar=True)
 
         @attribute(validate=False)
         def alternative_title(self) -> Optional[str]:
-            return self.precomputed.ld.get_value_by_key_path(["NewsArticle", "alternativeHeadline"])
+            return self.precomputed.ld.xpath_search("NewsArticle/alternativeHeadline", scalar=True)
 
         @attribute
         def topics(self) -> List[str]:
@@ -61,4 +62,18 @@ class TheNewYorkerParser(ParserProxy):
 
         @attribute(validate=False)
         def section(self) -> Optional[str]:
-            return self.precomputed.ld.get_value_by_key_path(["NewsArticle", "articleSection"])
+            return self.precomputed.ld.xpath_search("NewsArticle/articleSection", scalar=True)
+
+        @attribute
+        def images(self) -> List[Image]:
+            return image_extraction(
+                doc=self.precomputed.doc,
+                paragraph_selector=self._paragraph_selector,
+                image_selector=XPath("//picture//img"),
+                caption_selector=XPath(
+                    "./ancestor::*[self::figure or self::header]//*[(self::span and contains(@class, 'caption__text')) or (self::div and contains(@class, '__caption'))]"
+                ),
+                author_selector=XPath(
+                    "(./ancestor::*[self::figure or self::header]//*[(self::span and contains(@class, 'caption__credit')) or (self::div and contains(@class, '__credit'))])[last()]"
+                ),
+            )

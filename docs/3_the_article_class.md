@@ -4,7 +4,9 @@
   * [What is an `Article`](#what-is-an-article)
   * [The articles' body](#the-articles-body)
   * [HTML](#html)
+  * [Images](#images)
   * [Language detection](#language-detection)
+  * [Saving an Article](#saving-an-article)
 
 # The Article class
 
@@ -45,7 +47,7 @@ You can find those attributes under the [**supported publisher**](supported_publ
 
 Sometimes an attribute listed in the attribute guidelines isn't supported at all by a specific parser.
 You can find this information under the `Missing Attributes` tab within the supported publisher tables.
-There is also a built-in search mechanic you can learn about [here](5_how_to_search_for_publishers)
+There is also a built-in search mechanic you can learn about [here](5_advanced_topics)
 
 ## The articles' body
 
@@ -116,6 +118,22 @@ Here you have access to the following information:
 4. `crawl_date: datetime`: The exact timestamp the article was crawled.
 5. `source_info: SourceInfo`: Some information about the HTML's origins, mostly for debugging purpose.
 
+## Images
+
+Some publishers provide images with their articles.
+To encompass all necessary information, the articles `images` attribute returns a list of custom `Image` objects.
+Each `Image` object contains the following attributes:
+- `url`: the URL of the image with the largest dimensions.
+- `versions`: a list of custom `ImageVersion` objects, each containing the following attributes:
+  - `url`: the URL of the image with the specific dimensions.
+  - `size`: a `Dimension` object with attributes `width` and `height`.
+  - `type`: the image format (e.g. `jpeg`, `png`).
+- `is_cover`: a boolean indicating whether the image is the cover image of the article.
+- `description`: a string describing the image (usually the alt-text).
+- `caption`: the image caption as used in the article.
+- `authors`: a list of strings representing the authors of the image.
+- `position`: an integer describing the position of the image in the DOM-tree.
+
 ## Language detection
 
 Sometimes publishers support articles in different languages.
@@ -136,5 +154,22 @@ Should print this:
 ```console
 en
 ```
+
+## Serialization
+
+In case you want to save an article in JSON format, the `Article` class provides a `to_json` method, returning a JSON serializable dictionary.
+The function accepts string values to specify which attributes should be serialized.
+Per default, all extracted attributes and the `plaintext` attribute of `Article` are included in the serialization.
+
+````python
+for article in crawler.crawl(max_articles=10):
+    
+    # use the default serialization
+    article_json = article.to_json()
+    # or only serialize specific attributes
+    article_json = article.to_json("title", "plaintext", "lang")
+````
+
+To save all articles at once, using the default serialization and only specifying a location, refer to [this section](5_advanced_topics.md#saving-the-crawled-articles).
 
 In the [**next section**](4_how_to_filter_articles.md) we will show you how to filter articles.

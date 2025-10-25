@@ -1,0 +1,125 @@
+{
+  "V1": {
+    "authors": [
+      "Diana Resnik"
+    ],
+    "body": {
+      "summary": [
+        "Tausende sind am Montag in Tiflis auf die Straße gegangen, um ihre Unterstützung für das umstrittene \"russische Agentengesetz\" zu bekunden. Befürworter halten Transparenz für wichtig. Die EU warnte vor der endgültigen Gesetzesverabschiedung."
+      ],
+      "sections": [
+        {
+          "headline": [],
+          "paragraphs": [
+            "Tausende haben am Montag in Tiflis an einer regierungsfreundlichen Kundgebung teilgenommen. Anhänger der Regierungspartei \"Georgischer Traum\" unterstützten deren Initiative zur Verabschiedung des umstrittenen Gesetzes über ausländische Einflussnahme.",
+            "Der Gesetzesentwurf sieht vor, dass sich Medien und nichtkommerzielle Organisationen als \"ausländisch beeinflusst\" registrieren lassen müssen, wenn sie zu mehr als 20 Prozent aus dem Ausland finanziert werden. Kritiker befürchten, das Gesetz könne die Demokratie untergraben und Georgiens Beitritt zur EU behindern."
+          ]
+        },
+        {
+          "headline": [
+            "Gesetz könnte EU-Beitritt behindern"
+          ],
+          "paragraphs": [
+            "Bidzina Ivanishvili, Gründer und Vorsitzender der Partei \"Georgischer Traum\" beteuerte: \"Ich verspreche Ihnen, dass wir alle Widrigkeiten überwinden, unsere Souveränität stärken, den Frieden erhalten, die georgische Wirtschaft ankurbeln und im Jahr 2030 der EU beitreten werden.\"",
+            "Auch der georgische Ministerpräsident Irakli Kobachidse forderte die EU auf, die Beitrittsverhandlungen mit Georgien bis Ende des Jahres aufzunehmen.",
+            "\"Wir fordern die EU auf, der georgischen Gesellschaft den gebührenden Respekt zu erweisen und, anders als im Juni 2022, die Gerechtigkeit wiederherzustellen und die Beitrittsverhandlungen noch in diesem Jahr zu eröffnen. Das ist die Forderung der georgischen Gesellschaft, das ist das, was das Volk und der Staat verdienen.\""
+          ]
+        },
+        {
+          "headline": [
+            "EU warnte vor der endgültigen Verabschiedung des Gesetzes"
+          ],
+          "paragraphs": [
+            "Befürworter des umstrittenen Vorhabens sehen darin kein Hindernis zum EU-Beitritt. Transparenz sei für die Bewahrung einer nationalen Identität Georgiens von entscheidender Bedeutung.",
+            "Die EU hat den Gesetzesentwurf scharf kritisiert. Georgien werde im Dezember 2023 der Status eines Beitrittskandidaten verliehen. Das Gesetz stimme nicht mit Werten der EU überein, so die Warnung.",
+            "Die georgische Präsidentin Salome Surabitschwili sagte, sie wolle ihr Veto einlegen, wenn das Gesetz vom Parlament verabschiedet wird."
+          ]
+        }
+      ]
+    },
+    "images": [
+      {
+        "versions": [
+          {
+            "url": "https://static.euronews.com/articles/stories/08/40/63/40/384x216_cmsv2_13a842da-f8da-5ed8-87ef-65a56dd57f18-8406340.jpg",
+            "query_width": null,
+            "size": {
+              "width": 384,
+              "height": 216
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://static.euronews.com/articles/stories/08/40/63/40/640x360_cmsv2_13a842da-f8da-5ed8-87ef-65a56dd57f18-8406340.jpg",
+            "query_width": null,
+            "size": {
+              "width": 640,
+              "height": 360
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://static.euronews.com/articles/stories/08/40/63/40/750x422_cmsv2_13a842da-f8da-5ed8-87ef-65a56dd57f18-8406340.jpg",
+            "query_width": null,
+            "size": {
+              "width": 750,
+              "height": 422
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://static.euronews.com/articles/stories/08/40/63/40/828x466_cmsv2_13a842da-f8da-5ed8-87ef-65a56dd57f18-8406340.jpg",
+            "query_width": null,
+            "size": {
+              "width": 828,
+              "height": 466
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://static.euronews.com/articles/stories/08/40/63/40/1080x608_cmsv2_13a842da-f8da-5ed8-87ef-65a56dd57f18-8406340.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1080,
+              "height": 608
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://static.euronews.com/articles/stories/08/40/63/40/1200x675_cmsv2_13a842da-f8da-5ed8-87ef-65a56dd57f18-8406340.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1200,
+              "height": 675
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://static.euronews.com/articles/stories/08/40/63/40/1920x1080_cmsv2_13a842da-f8da-5ed8-87ef-65a56dd57f18-8406340.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1920,
+              "height": 1080
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": true,
+        "description": "Tausende haben am Montag in Tiflis an einer regierungsfreundlichen Kundgebung teilgenommen.",
+        "caption": null,
+        "authors": [
+          "Shakh Aivazov"
+        ],
+        "position": 472
+      }
+    ],
+    "publishing_date": "2024-04-30 16:17:29+02:00",
+    "title": "Georgien: Tausende unterstützen das \"russische Agentengesetz\"",
+    "topics": [
+      "Parlament",
+      "Politik in Georgien",
+      "Protest",
+      "Georgien"
+    ]
+  }
+}

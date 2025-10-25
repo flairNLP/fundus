@@ -1,6 +1,7 @@
 import datetime
 import gzip
 import json
+import os
 import subprocess
 from dataclasses import dataclass
 from pathlib import Path
@@ -10,8 +11,8 @@ from typing_extensions import Self
 
 from fundus import PublisherCollection
 from fundus.parser import ArticleBody, BaseParser
-from fundus.parser.data import TextSequenceTree
-from fundus.publishers.base_objects import PublisherEnum
+from fundus.parser.data import Image, TextSequenceTree
+from fundus.publishers.base_objects import Publisher, PublisherGroup
 from fundus.scraping.article import Article
 from fundus.scraping.html import HTML, SourceInfo
 from scripts.generate_tables import supported_publishers_markdown_path
@@ -20,7 +21,7 @@ from tests.resources.parser.test_data import __module_path__ as test_resource_pa
 _T = TypeVar("_T")
 
 
-def get_test_articles(publisher: PublisherEnum) -> List[Article]:
+def get_test_articles(publisher: Publisher) -> List[Article]:
     articles = []
     html_mapping = load_html_test_file_mapping(publisher)
     for html_test_file in html_mapping.values():
@@ -30,9 +31,9 @@ def get_test_articles(publisher: PublisherEnum) -> List[Article]:
             crawl_date=html_test_file.crawl_date,
             requested_url=html_test_file.url,
             responded_url=html_test_file.url,
-            source_info=SourceInfo(publisher.publisher_name),
+            source_info=SourceInfo(publisher.name),
         )
-        article = Article.from_extracted(extracted=extraction, html=html)
+        article = Article(**extraction, html=html)
         articles.append(article)
     return articles
 
@@ -111,9 +112,12 @@ class ExtractionEncoder(json.JSONEncoder):
     def default(self, obj: object):
         if isinstance(obj, datetime.datetime):
             return str(obj)
-        if isinstance(obj, TextSequenceTree):
+        elif isinstance(obj, TextSequenceTree):
             return obj.serialize()
-        return json.JSONEncoder.default(self, obj)
+        elif isinstance(obj, Image):
+            return obj.serialize()
+        else:
+            return json.JSONEncoder.default(self, obj)
 
 
 class ExtractionDecoder(json.JSONDecoder):
@@ -121,6 +125,7 @@ class ExtractionDecoder(json.JSONDecoder):
         "crawl_date": datetime.datetime.fromisoformat,
         "publishing_date": datetime.datetime.fromisoformat,
         "body": ArticleBody.deserialize,
+        "images": lambda images: [Image.deserialize(image) for image in images],
     }
 
     def __init__(self, *args, **kwargs):
@@ -156,24 +161,24 @@ class HTMLTestFile:
     url: str
     content: str
     crawl_date: datetime.datetime
-    publisher: PublisherEnum
+    publisher: Publisher
     encoding: str = "utf-8"
 
     @property
     def path(self) -> Path:
         return (
-            generate_absolute_section_path(self.publisher)
-            / f"{self.publisher.name}_{self.crawl_date.strftime('%Y_%m_%d')}.html.gz"
+            generate_absolute_section_path(self.publisher.__group__)
+            / f"{self.publisher.__name__}_{self.crawl_date.strftime('%Y_%m_%d')}.html.gz"
         )
 
     @property
     def meta_info(self) -> Optional[Dict[str, Any]]:
-        if meta_info := get_meta_info_file(self.publisher).load():
+        if meta_info := get_meta_info_file(self.publisher.__group__).load():
             return meta_info[self.path.name]
         return None
 
     @staticmethod
-    def _parse_path(path: Path) -> PublisherEnum:
+    def _parse_path(path: Path) -> Publisher:
         assert path.name.endswith(".html.gz")
         file_name: str = path.name.rsplit(".html.gz")[0]
         publisher_name, date = file_name.split("_", maxsplit=1)
@@ -198,9 +203,18 @@ class HTMLTestFile:
         decompressed_content = gzip.decompress(compressed_file)
         content = decompressed_content.decode(encoding=encoding)
         publisher = cls._parse_path(path)
-        if not (meta_info := get_meta_info_file(publisher).load()):
+        if not (meta_info := get_meta_info_file(publisher.__group__).load()):
             raise ValueError(f"Missing meta info for file {path.name!r}")
         return cls(content=content, publisher=publisher, encoding=encoding, **meta_info[path.name])
+
+    def remove(self) -> None:
+        if meta_info_file := get_meta_info_file(self.publisher.__group__):
+            meta_info = meta_info_file.load() or {}
+            meta_info.pop(self.path.name)
+            meta_info_file.write(meta_info)
+
+        if self.path.exists():
+            os.remove(self.path)
 
     def _register_at_meta_info(self) -> None:
         """Writes meta information about the file to the corresponding meta.info file.
@@ -208,7 +222,7 @@ class HTMLTestFile:
         Returns:
             None
         """
-        meta_info_file = get_meta_info_file(self.publisher)
+        meta_info_file = get_meta_info_file(self.publisher.__group__)
         meta_info = meta_info_file.load() or {}
         meta_info[self.path.name] = {"url": self.url, "crawl_date": self.crawl_date}
         meta_info = dict(sorted(meta_info.items()))
@@ -246,8 +260,10 @@ class HTMLTestFile:
         self._register_at_meta_info()
 
 
-def load_html_test_file_mapping(publisher: PublisherEnum) -> Dict[Type[BaseParser], HTMLTestFile]:
-    html_paths = (test_resource_path / Path(f"{type(publisher).__name__.lower()}")).glob(f"{publisher.name}*.html.gz")
+def load_html_test_file_mapping(publisher: Publisher) -> Dict[Type[BaseParser], HTMLTestFile]:
+    html_paths = (test_resource_path / Path(f"{publisher.__group__.__name__.lower()}")).glob(
+        f"{publisher.__name__}*.html.gz"
+    )
     html_files = [HTMLTestFile.load(path) for path in html_paths]
     html_mapping: Dict[Type[BaseParser], HTMLTestFile] = {}
     for html_file in html_files:
@@ -258,27 +274,27 @@ def load_html_test_file_mapping(publisher: PublisherEnum) -> Dict[Type[BaseParse
     return html_mapping
 
 
-def generate_absolute_section_path(publisher: PublisherEnum) -> Path:
-    return test_resource_path / type(publisher).__name__.lower()
+def generate_absolute_section_path(group: PublisherGroup) -> Path:
+    return test_resource_path / group.__name__.lower()
 
 
-def generate_meta_info_path(publisher: PublisherEnum) -> Path:
-    return generate_absolute_section_path(publisher) / "meta.info"
+def generate_meta_info_path(group: PublisherGroup) -> Path:
+    return generate_absolute_section_path(group) / "meta.info"
 
 
-def get_meta_info_file(publisher: PublisherEnum) -> JSONFile[Dict[str, Dict[str, Any]]]:
-    return JSONFileWithExtractionDecoderEncoder(generate_meta_info_path(publisher))
+def get_meta_info_file(group: PublisherGroup) -> JSONFile[Dict[str, Dict[str, Any]]]:
+    return JSONFileWithExtractionDecoderEncoder(generate_meta_info_path(group))
 
 
-def generate_parser_test_case_json_path(publisher: PublisherEnum) -> Path:
-    return generate_absolute_section_path(publisher) / f"{publisher.name}.json"
+def generate_parser_test_case_json_path(publisher: Publisher) -> Path:
+    return generate_absolute_section_path(publisher.__group__) / f"{publisher.__name__}.json"
 
 
-def get_test_case_json(publisher: PublisherEnum) -> JSONFile[Dict[str, Dict[str, Any]]]:
+def get_test_case_json(publisher: Publisher) -> JSONFile[Dict[str, Dict[str, Any]]]:
     return JSONFileWithExtractionDecoderEncoder(generate_parser_test_case_json_path(publisher))
 
 
-def load_test_case_data(publisher: PublisherEnum) -> Dict[str, Dict[str, Any]]:
+def load_test_case_data(publisher: Publisher) -> Dict[str, Dict[str, Any]]:
     test_case_file = get_test_case_json(publisher)
 
     if not (test_data := test_case_file.load()):

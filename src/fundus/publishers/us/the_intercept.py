@@ -4,11 +4,12 @@ from typing import List, Optional
 from lxml.cssselect import CSSSelector
 from lxml.etree import XPath
 
-from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute
+from fundus.parser import ArticleBody, BaseParser, Image, ParserProxy, attribute
 from fundus.parser.utility import (
     extract_article_body_with_selector,
     generic_author_parsing,
     generic_date_parsing,
+    image_extraction,
 )
 
 
@@ -24,7 +25,7 @@ class TheInterceptParser(ParserProxy):
         _subheadline_selector: XPath = CSSSelector("div.PostContent > div > h2")
 
         @attribute
-        def body(self) -> ArticleBody:
+        def body(self) -> Optional[ArticleBody]:
             return extract_article_body_with_selector(
                 self.precomputed.doc,
                 summary_selector=self._summary_selector,
@@ -38,25 +39,22 @@ class TheInterceptParser(ParserProxy):
 
         @attribute
         def authors(self) -> List[str]:
-            return generic_author_parsing(self.precomputed.ld.get_value_by_key_path(["NewsArticle", "author"]))
+            return generic_author_parsing(self.precomputed.ld.xpath_search("NewsArticle/author"))
 
         @attribute
         def publishing_date(self) -> Optional[datetime]:
-            return generic_date_parsing(self.precomputed.ld.get_value_by_key_path(["NewsArticle", "datePublished"]))
+            return generic_date_parsing(self.precomputed.ld.xpath_search("NewsArticle/datePublished", scalar=True))
 
         @attribute
         def title(self) -> Optional[str]:
-            return self.precomputed.ld.get_value_by_key_path(["NewsArticle", "headline"])
+            return self.precomputed.ld.xpath_search("NewsArticle/headline", scalar=True)
 
         @attribute
         def topics(self) -> List[str]:
             # The Intercept specifies the article's topics, including other metadata,
             # inside the "keywords" linked data indicated by a "Subject: " prefix.
             # Example keywords: ["Day: Saturday", ..., "Subject: World", ...]
-            keywords: Optional[List[str]] = self.precomputed.ld.get_value_by_key_path(["NewsArticle", "keywords"])
-            if keywords is None:
-                return []
-
+            keywords: List[str] = self.precomputed.ld.xpath_search("NewsArticle/keywords")
             return [keyword[9:] for keyword in keywords if keyword.startswith("Subject: ")]
 
     class V1_1(V1):
@@ -66,3 +64,21 @@ class TheInterceptParser(ParserProxy):
         )
         _paragraph_selector = CSSSelector("div.entry-content > div.entry-content__content > p, blockquote > p")
         _subheadline_selector = CSSSelector("div.entry-content > div.entry-content__content > h2")
+
+        @attribute
+        def images(self) -> List[Image]:
+            return image_extraction(
+                doc=self.precomputed.doc,
+                paragraph_selector=self._paragraph_selector,
+                image_selector=XPath(
+                    "//img[(string-length(@alt) > 0 and not(contains(@class, 'attachment') or contains(@class, ':hidden'))) or @loading='eager']|//figure//img"
+                ),
+                caption_selector=XPath(
+                    "(./parent::article//div[contains(@class, 'image__caption')]/span[not(@class)])[1]|"
+                    "./ancestor::figure//figcaption/span[@class='photo__caption']"
+                ),
+                author_selector=XPath(
+                    "(./parent::article//div[contains(@class, 'image__caption')]/span)[last()]|"
+                    "./ancestor::figure//figcaption/span[@class='photo__credit']"
+                ),
+            )

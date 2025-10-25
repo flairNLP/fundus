@@ -1,5 +1,5 @@
 import re
-from typing import Any, Callable, Dict, Protocol, cast
+from typing import Any, Callable, Dict, Protocol
 
 from typing_extensions import ParamSpec
 
@@ -137,16 +137,16 @@ class Requires:
 
             Requires("free_access")({"free_access": False}) -> will be filtered out
 
-        You can alter this behaviour by setting `skip_bool=True`
+        You can alter this behaviour by setting `eval_bool=False`
 
         I.e.,
 
-           Requires("free_access", skip_bool=True)({"free_access": False}) -> will pass
+           Requires("free_access", eval_bool=False)({"free_access": False}) -> will pass
 
         Args:
             *required_attributes: Attributes required to evaluate to True in order to
                 pass the filter. If no attributes are given, all attributes will be evaluated
-            eval_booleans: If True the boolean values will also be evaluated with bool(<value>).
+            eval_bool: If True the boolean values will also be evaluated with bool(<value>).
                 If False, all boolean values evaluate to True. Defaults to True.
         """
         self.required_attributes = set(required_attributes)
@@ -164,10 +164,10 @@ class Requires:
 
 class RequiresAll(Requires):
     def __init__(self, eval_booleans: bool = False) -> None:
-        """Name wrap for Requires()
+        """Name wrap for Requires(eval_booleans=False)
 
         This is for readability only. By default, it requires all non-boolean attributes of the extraction
-        to evaluate to True. Set `skip_boolean=False` to alter this behaviour.
+        to evaluate to True. Set `eval_booleans=True` to include boolean values in the evaluation as well.
         See class:Requires docstring for more information.
 
         Args:

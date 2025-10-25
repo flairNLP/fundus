@@ -28,7 +28,6 @@ jobs:
         if: steps.cache.outputs.cache-hit != 'true'
         run: |
           pip install -e .[dev]
-
       - name: Run pytest
         run: python -m pytest -vv
 
