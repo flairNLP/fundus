@@ -1190,6 +1190,27 @@
     </tr>
     <tr>
       <td>
+        <code>StuttgarterZeitung</code>
+      </td>
+      <td>
+        <div>Stuttgarter Zeitung</div>
+      </td>
+      <td>
+        <a href="https://www.stuttgarter-zeitung.de/">
+          <span>www.stuttgarter-zeitung.de</span>
+        </a>
+      </td>
+      <td>
+        <code>de</code>
+      </td>
+      <td>
+        <code>images</code>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
         <code>SZ</code>
       </td>
       <td>
