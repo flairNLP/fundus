@@ -1,16 +1,16 @@
 import datetime
 from typing import List, Optional
 
-from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute
-from fundus.parser.data import ArticleSection, TextSequence
+from fundus.parser import ArticleBody, BaseParser, Image, ParserProxy, attribute
 from fundus.parser.utility import (
     extract_article_body_with_selector,
     generic_author_parsing,
     generic_date_parsing,
     generic_topic_parsing,
-    normalize_whitespace,
+    image_extraction,
 )
 from lxml.cssselect import CSSSelector
+from lxml.etree import XPath
 
 
 class StuttgarterZeitungParser(ParserProxy):
@@ -20,17 +20,11 @@ class StuttgarterZeitungParser(ParserProxy):
 
         @attribute
         def body(self) -> ArticleBody:
-            summary_text = self.precomputed.ld.bf_search("description")
-            summary = TextSequence([summary_text]) if summary_text else TextSequence([])
-                    
-            paragraph_elements = self._paragraph_selector(self.precomputed.doc)
-            paragraph_texts = [normalize_whitespace(elem.text_content()) for elem in paragraph_elements]
-
-            subheadline_elements = self._subheadline_selector(self.precomputed.doc)
-
-            sections = [ArticleSection(headline=TextSequence([]), paragraphs=TextSequence(paragraph_texts))]
-
-            return ArticleBody(summary=summary, sections=sections)
+            return extract_article_body_with_selector(
+                self.precomputed.doc,
+                paragraph_selector=self._paragraph_selector,
+                subheadline_selector=self._subheadline_selector,
+            )
 
         @attribute
         def publishing_date(self) -> Optional[datetime.datetime]:
@@ -47,3 +41,13 @@ class StuttgarterZeitungParser(ParserProxy):
         @attribute
         def topics(self) -> List[str]:
             return generic_topic_parsing(self.precomputed.ld.bf_search("keywords"))
+
+        @attribute
+        def images(self) -> List[Image]:
+            return image_extraction(
+                doc=self.precomputed.doc,
+                paragraph_selector=self._paragraph_selector,
+                image_selector=XPath("//figure//img"),
+                caption_selector=XPath("./ancestor::figure//figcaption"),
+                relative_urls=True,
+            )
