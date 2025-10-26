@@ -28,6 +28,7 @@ class TagesschauParser(ParserProxy):
         _live_ticker_paragraph_selector = XPath("//p[contains(@class,'textabsatz ') and not(strong)]")
         _live_ticker_subheadline_selector = XPath("//h2[@class='meldung__subhead']")
         _live_ticker_date_selector = XPath("//div[@class='liveblog__datetime']")
+        _live_ticker_summary_selector = XPath("//article/p[strong]|//article/div/ul/li[not(@class)]")
 
         @attribute
         def body(self) -> Optional[Union[ArticleBody, LiveTickerBody]]:
@@ -42,6 +43,7 @@ class TagesschauParser(ParserProxy):
                 return extract_live_ticker_body_with_selector(
                     doc=self.precomputed.doc,
                     entry_boundary_selector=self._live_ticker_boundary_selector,
+                    summary_selector=self._live_ticker_summary_selector,
                     paragraph_selector=self._live_ticker_paragraph_selector,
                     subheadline_selector=self._live_ticker_subheadline_selector,
                     date_selector=self._live_ticker_date_selector,

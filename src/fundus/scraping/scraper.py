@@ -4,8 +4,9 @@ import more_itertools
 
 from fundus.logging import create_logger
 from fundus.parser import ParserProxy
+from fundus.parser.data import LiveTickerBody
 from fundus.publishers.base_objects import Publisher
-from fundus.scraping.article import Article
+from fundus.scraping.article import Article, LiveTicker
 from fundus.scraping.delay import Delay
 from fundus.scraping.filter import (
     ExtractionFilter,
@@ -61,7 +62,10 @@ class BaseScraper:
                         else:
                             logger.debug(f"Skipped article at {html.requested_url!r} because of extraction filter")
                     else:
-                        article = Article(html=html, **extraction)
+                        if "body" in extraction.keys() and isinstance(extraction["body"], LiveTickerBody):
+                            article = LiveTicker(html=html, **extraction)
+                        else:
+                            article = Article(html=html, **extraction)
                         if language_filter and article.lang not in language_filter:
                             logger.debug(
                                 f"Skipped article at {html.requested_url!r} because article language: "
