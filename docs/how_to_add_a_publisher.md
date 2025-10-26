@@ -239,19 +239,27 @@ You can check if a sitemap is a news map by:
    E.g. `<urlset ... xmlns:news="http://www.google.com/schemas/sitemap-news/0.9" ... >`<br>
    **_NOTE:_** This can only be found within the actual sitemap and not the index map.
 
+#### Filter noisy sitemaps
+
+Sometimes sitemaps can include a lot of noise like maps pointing to a collection of tags or authors, etc.
+You can use the `sitemap_filter` parameter of `Sitemap` or `NewsMap` to prefilter these based on a regular expression.
+E.g. 
+```` python
+Sitemap("https://apnews.com/sitemap.xml", sitemap_filter=regex_filter("apnews.com/hub/|apnews.com/video/"))
+````
+Will filter out all URLs encountered within the processing of the `Sitemap` object including either the string `apnews.com/hub/` or `apnews.com/video/`. 
+Alternatively:
+````python
+sitemap_filter=inverse(regex_filter("sitemap-content-"))
+````
+will exclude all sitemap URLs not containing the substring `sitemap-content-`.
+
 ### Finishing the Publisher Specification
 
-1. Sometimes sitemaps can include a lot of noise like maps pointing to a collection of tags or authors, etc.
-   You can use the `sitemap_filter` parameter of `Sitemap` or `NewsMap` to prefilter these based on a regular expression.
-   E.g. 
-   ```` python
-   Sitemap("https://apnews.com/sitemap.xml", sitemap_filter=regex_filter("apnews.com/hub/|apnews.com/video/"))
-   ````
-   Will filter out all URLs encountered within the processing of the `Sitemap` object including either the string `apnews.com/hub/` or `apnews.com/video/`.  
-2. If your publisher requires to use custom request headers to work properly you can alter it by using the `request_header` parameter of `PublisherSpec`.
+1. If your publisher requires to use custom request headers to work properly you can alter it by using the `request_header` parameter of `PublisherSpec`.
    The default is: `{"user_agent": "Fundus"}`.
-3. If you want to block URLs for the entire publisher use the `url_filter` parameter of `Publisher`.
-4. In some cases it can be necessary to append query parameters to the end of the URL, e.g. to load the article as one page. This can be achieved by adding the `query_parameter` attribute of `PublisherSpec` and assigning it a dictionary object containing the key - value pairs: e.g. `{"page": "all"}`. These key  - value pairs will be appended to all crawled URLs.
+2. If you want to block URLs for the entire publisher use the `url_filter` parameter of `Publisher`.
+3. In some cases it can be necessary to append query parameters to the end of the URL, e.g. to load the article as one page. This can be achieved by adding the `query_parameter` attribute of `PublisherSpec` and assigning it a dictionary object containing the key - value pairs: e.g. `{"page": "all"}`. These key  - value pairs will be appended to all crawled URLs.
 
 Now, let's put it all together to specify The Intercept as a new publisher in Fundus:
 
@@ -553,6 +561,10 @@ It's important to note that article layouts can vary significantly between publi
 To accurately extract the body of an article, use the `extract_article_body_with_selector` function from the parser utilities.
 This function accepts selectors for the different body parts as input and returns a parsed `ArticleBody`.
 For practical examples, refer to existing parser implementations to understand how everything integrates.
+
+> [!IMPORTANT]  
+> Regardless of the article's layout, the extracted `ArticleBody` should closely mirror the actual body/text of the article and must not include any additional content.  
+> This ensures that the text can be accurately mapped back to the HTML for annotation purposes.
 
 ### Extracting the images
 
