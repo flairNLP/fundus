@@ -3,9 +3,10 @@ import threading
 from contextlib import contextmanager
 from dataclasses import dataclass
 from queue import Empty, Queue
-from typing import Optional, Union
+from typing import Iterator, Optional, Union
 
 import requests.adapters
+from typing_extensions import Self
 
 from fundus.logging import create_logger
 from fundus.utils.events import __EVENTS__
@@ -170,11 +171,26 @@ class SessionHandler:
             self._session = None
 
     @contextmanager
-    def context(self, **kwargs):
-        """Context manager to temporarily overwrite session parameters.
+    def context(self, **kwargs) -> Iterator[Self]:
+        """Thread-safe context manager for temporarily overriding session configuration.
+
+        This context manager temporarily replaces the current `CONFIG` instance with a new one
+        constructed from the provided keyword arguments and clears the current session.
+        Subsequent calls to `get_session()` will use the new configuration, while existing
+        sessions remain unchanged. Internally we use a reentrant lock (RLock) to allow nested
+        contexts within the same thread.
+
+        To prevent deadlocks, attempting to open a new context in another thread while already in
+        a context raises an `AssertionError`.`
+
+        Args:
+            **kwargs: Keyword arguments corresponding to `CONFIG` parameters.
 
         Returns:
-            SessionHandler: The session handler instance.
+            SessionHandler: The current session handler instance with the temporary configuration.
+
+        Raises:
+            AssertionError: If a context is already active in another thread.
         """
 
         if self._context_lock.acquire(blocking=False):
