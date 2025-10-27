@@ -139,7 +139,6 @@ class RSSFeed(URLSource):
         except (HTTPError, ConnectionError, ReadTimeout) as err:
             logger.warning(f"Warning! Couldn't parse rss feed {self.url!r} because of {err}")
             return
-
         except Exception as error:
             logger.error(f"Warning! Couldn't parse rss feed {self.url!r} because of an unexpected error {error!r}")
             return
@@ -177,7 +176,6 @@ class Sitemap(URLSource):
             except (HTTPError, ConnectionError, ReadTimeout) as error:
                 logger.warning(f"Warning! Couldn't reach sitemap {sitemap_url!r} because of {error!r}")
                 return
-
             except Exception as error:
                 logger.error(
                     f"Warning! Couldn't reach sitemap {sitemap_url!r} because of an unexpected error {error!r}"

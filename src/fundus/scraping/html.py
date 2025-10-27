@@ -116,15 +116,10 @@ class WebSource:
 
         self.delay = delay
 
-        # register default events
-        __EVENTS__.register_event("stop")
-
         # parse robots:
         self.robots: Optional[Robots] = None
         if not ignore_robots:
             self.robots = self.publisher.robots
-            if not self.robots.ready:
-                self.publisher.robots.read(headers=self.request_header)
 
             if not ignore_crawl_delay:
                 if robots_delay := self.robots.crawl_delay(self.request_header.get("user-agent") or "*"):
@@ -191,7 +186,6 @@ class WebSource:
                 if isinstance(error, HTTPError) and error.response.status_code >= 500:
                     logger.warning(f"Skipped {self.publisher.name!r} due to server errors: {error!r}")
                 continue
-
             except Exception as error:
                 logger.error(f"Warning! Skipped requested URL {url!r} because of an unexpected error {error!r}")
                 continue

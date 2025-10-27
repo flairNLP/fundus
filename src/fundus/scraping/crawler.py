@@ -12,6 +12,7 @@ import time
 import traceback
 from abc import ABC, abstractmethod
 from collections import defaultdict
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime
 from functools import lru_cache, partial, wraps
 from multiprocessing import Manager
@@ -57,7 +58,7 @@ from fundus.scraping.delay import Delay
 from fundus.scraping.filter import ExtractionFilter, Requires, RequiresAll, URLFilter
 from fundus.scraping.html import CCNewsSource
 from fundus.scraping.scraper import CCNewsScraper, WebScraper
-from fundus.scraping.session import session_handler
+from fundus.scraping.session import CrashThread, session_handler
 from fundus.scraping.url import URLSource
 from fundus.utils.events import __EVENTS__
 from fundus.utils.timeout import Timeout
@@ -134,12 +135,17 @@ def get_execution_context():
         return thread.name, thread.ident
 
 
-def queue_wrapper(queue: Queue[Union[_T, Exception]], target: Callable[_P, Iterator[_T]]) -> Callable[_P, None]:
+def queue_wrapper(
+    queue: Queue[Union[_T, Exception]],
+    target: Callable[_P, Iterator[_T]],
+    silenced_exceptions: Tuple[Type[BaseException], ...] = (),
+) -> Callable[_P, None]:
     """Wraps the target callable to add its results to the queue instead of returning them directly.
 
     Args:
         queue: The buffer queue.
         target: A target callable.
+        silenced_exceptions: Exception types that should be silenced
 
     Returns:
         (Callable[_P, None]) The wrapped target.
@@ -150,16 +156,19 @@ def queue_wrapper(queue: Queue[Union[_T, Exception]], target: Callable[_P, Itera
         try:
             for obj in target(*args, **kwargs):
                 queue.put(obj)
+        except silenced_exceptions:
+            pass
         except Exception as err:
             tb_str = "".join(traceback.TracebackException.from_exception(err).format())
             context, ident = get_execution_context()
             queue.put(
                 RemoteException(
-                    f"There was a(n) {type(err).__name__!r} occurring in {context} with ident {ident}\n{tb_str}"
+                    f"There was a(n) {type(err).__name__!r} occurring in {context} "
+                    f"with ident {ident} ({__EVENTS__.get_alias(ident)})\n{tb_str}"
                 )
             )
 
-            logger.debug(f"Encountered remote exception: {err!r}")
+            logger.debug(f"Encountered remote exception in thread {ident} ({__EVENTS__.get_alias(ident)}): {err!r}")
             # prevents a race condition where the ThreadPool shuts down before the exception is pulled from the queue
             time.sleep(0.2)
 
@@ -212,7 +221,6 @@ class CrawlerBase(ABC):
             raise ValueError("param <publishers> of <Crawler.__init__> must include at least one publisher.")
 
         __EVENTS__.alias("main-thread")
-        __EVENTS__.register_event("stop")
 
     @abstractmethod
     def _build_article_iterator(
@@ -222,6 +230,7 @@ class CrawlerBase(ABC):
         extraction_filter: Optional[ExtractionFilter],
         url_filter: Optional[URLFilter],
         language_filter: Optional[List[str]],
+        skip_publishers_disallowing_training: bool = False,
     ) -> Iterator[Article]:
         raise NotImplementedError
 
@@ -236,6 +245,7 @@ class CrawlerBase(ABC):
         language_filter: Optional[List[str]] = None,
         only_unique: bool = True,
         save_to_file: Union[None, str, Path] = None,
+        skip_publishers_disallowing_training: bool = False,
     ) -> Iterator[Article]:
         """Yields articles from initialized scrapers
 
@@ -267,6 +277,9 @@ class CrawlerBase(ABC):
                 Always returns the first encountered article. Defaults to True.
             save_to_file (Union[None, str, Path]): If set, the crawled articles will be collected saved to the
                 specified file as a JSON list.
+            skip_publishers_disallowing_training (bool): If set to True, publishers that disallow training
+                are skipped. Note that this is an indicator only and users with the intention of using Fundus to gather
+                training data should always check the publisher's terms of use beforehand.
 
         Returns:
             Iterator[Article]: An iterator yielding objects of type Article.
@@ -364,10 +377,17 @@ class CrawlerBase(ABC):
         try:
             with Timeout(seconds=timeout, silent=True, callback=callback, disable=timeout <= 0) as timer:
                 for article in self._build_article_iterator(
-                    tuple(fitting_publishers), error_handling, build_extraction_filter(), url_filter, language_filter
+                    tuple(fitting_publishers),
+                    error_handling,
+                    build_extraction_filter(),
+                    url_filter,
+                    language_filter,
+                    skip_publishers_disallowing_training,
                 ):
                     if max_articles_per_publisher and article_count[article.publisher] == max_articles_per_publisher:
-                        if isinstance(self, Crawler) and not __EVENTS__.is_event_set("stop", article.publisher):
+                        if (isinstance(self, Crawler) and self.threading) and not __EVENTS__.is_event_set(
+                            "stop", article.publisher
+                        ):
                             __EVENTS__.set_event("stop", article.publisher)
                         if sum(article_count.values()) == len(self.publishers) * max_articles_per_publisher:
                             break
@@ -465,7 +485,12 @@ class Crawler(CrawlerBase):
         extraction_filter: Optional[ExtractionFilter] = None,
         url_filter: Optional[URLFilter] = None,
         language_filter: Optional[List[str]] = None,
+        skip_publishers_disallowing_training: bool = False,
     ) -> Iterator[Article]:
+        if skip_publishers_disallowing_training and publisher.disallows_training:
+            logger.info(f"Skipping publisher {publisher.name} because it disallows training.")
+            return
+
         def build_delay() -> Optional[Delay]:
             if isinstance(self.delay, float):
                 delay = self.delay
@@ -480,6 +505,11 @@ class Crawler(CrawlerBase):
 
             else:
                 raise TypeError("param <delay> of <Crawler.__init__>")
+
+        # we "register" the thread in the event dict as soon as possible to avoid that a thread is registered
+        # after the pool already is shutting down
+        if self.threading:
+            __EVENTS__.alias(publisher.name)
 
         scraper = WebScraper(
             publisher,
@@ -507,7 +537,7 @@ class Crawler(CrawlerBase):
         self, publishers: Tuple[Publisher, ...], article_task: Callable[[Publisher], Iterator[Article]]
     ) -> Iterator[Article]:
         result_queue: Queue[Union[Article, Exception]] = Queue(len(publishers))
-        wrapped_article_task = queue_wrapper(result_queue, article_task)
+        wrapped_article_task = queue_wrapper(result_queue, article_task, silenced_exceptions=(CrashThread,))
         pool = ThreadPool(processes=len(publishers) or None)
         try:
             with session_handler.context(
@@ -529,6 +559,7 @@ class Crawler(CrawlerBase):
         extraction_filter: Optional[ExtractionFilter],
         url_filter: Optional[URLFilter],
         language_filter: Optional[List[str]],
+        skip_publishers_disallowing_training: bool = False,
     ) -> Iterator[Article]:
         article_task = partial(
             self._fetch_articles,
@@ -536,6 +567,7 @@ class Crawler(CrawlerBase):
             extraction_filter=extraction_filter,
             url_filter=url_filter,
             language_filter=language_filter,
+            skip_publishers_disallowing_training=skip_publishers_disallowing_training,
         )
 
         if self.threading:
@@ -737,9 +769,36 @@ class CCNewsCrawler(CrawlerBase):
         extraction_filter: Optional[ExtractionFilter],
         url_filter: Optional[URLFilter],
         language_filter: Optional[List[str]],
+        skip_publishers_disallowing_training: bool = False,
         **kwargs,
     ) -> Iterator[Article]:
-        warc_paths = tuple(self._get_warc_paths())
+        if skip_publishers_disallowing_training:
+            max_workers = self.processes if self.processes > 0 else min(len(publishers), 5)
+            verified_publishers: List["Publisher"] = []
+
+            def run_disallow_training(publisher: Publisher) -> bool:
+                return publisher.disallows_training
+
+            with ThreadPoolExecutor(max_workers=max_workers) as executor, session_handler.context(TIMEOUT=10):
+                future_to_publisher = {
+                    executor.submit(run_disallow_training, publisher=publisher): publisher for publisher in publishers
+                }
+
+                warc_paths = tuple(self._get_warc_paths())
+
+                for future in as_completed(future_to_publisher.keys()):
+                    publisher = future_to_publisher[future]
+                    try:
+                        if not future.result():
+                            verified_publishers.append(publisher)
+                        else:
+                            logger.warning(f"Skipping publisher {publisher.name!r} because it disallows training.")
+                    except Exception as exc:
+                        logger.warning(f"Could not verify training policy for {publisher.name!r}: {exc}", exc_info=True)
+                publishers = tuple(verified_publishers)
+
+        else:
+            warc_paths = tuple(self._get_warc_paths())
 
         with get_proxy_tqdm(total=len(warc_paths), desc="Process WARC files", disable=self.disable_tqdm) as bar:
             article_task = partial(

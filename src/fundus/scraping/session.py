@@ -3,9 +3,10 @@ import threading
 from contextlib import contextmanager
 from dataclasses import dataclass
 from queue import Empty, Queue
-from typing import Optional, Union
+from typing import Iterator, Optional, Union
 
 import requests.adapters
+from typing_extensions import Self
 
 from fundus.logging import create_logger
 from fundus.utils.events import __EVENTS__
@@ -13,6 +14,12 @@ from fundus.utils.events import __EVENTS__
 logger = create_logger(__name__)
 
 _default_header = {"user-agent": "Fundus/2.0 (contact: github.com/flairnlp/fundus)"}
+
+
+class CrashThread(BaseException):
+    """Is raised to end a thread without relying on the thread ending naturally"""
+
+    pass
 
 
 class InterruptableSession(requests.Session):
@@ -25,7 +32,7 @@ class InterruptableSession(requests.Session):
 
         This function hands over the request to another thread and checks every second
         for an interrupt event. If there was an interrupt event, this function raises
-        a requests.exceptions.Timeout error.
+        a CrashThread exception.
 
         Args:
             *args: requests.Session.get(*) arguments.
@@ -33,6 +40,9 @@ class InterruptableSession(requests.Session):
 
         Returns:
             The response.
+
+        Raises:
+            CrashThread: If the request is interrupted by a stop event.
         """
 
         def _req():
@@ -56,8 +66,7 @@ class InterruptableSession(requests.Session):
             except Empty:
                 if __EVENTS__.is_event_set("stop"):
                     logger.debug(f"Interrupt request for {url!r}")
-                    response_queue.task_done()
-                    exit(1)
+                    raise CrashThread(f"Request to {url} was interrupted by stop event")
             else:
                 if isinstance(response, Exception):
                     raise response
@@ -83,11 +92,11 @@ class SessionHandler:
     tear-downed and the next call to get_session() will build a new session.
     """
 
-    CONFIG: CONFIG = CONFIG()
-
     def __init__(self):
-        self.session: Optional[InterruptableSession] = None
-        self.lock = threading.Lock()
+        self.CONFIG = CONFIG()
+        self._session: Optional[InterruptableSession] = None
+        self._session_lock = threading.Lock()
+        self._context_lock = threading.RLock()
 
     def _session_factory(self) -> InterruptableSession:
         """Builds a new Session
@@ -144,10 +153,10 @@ class SessionHandler:
             requests.Session: The current build session
         """
 
-        with self.lock:
-            if not self.session:
-                self.session = self._session_factory()
-            return self.session
+        with self._session_lock:
+            if not self._session:
+                self._session = self._session_factory()
+            return self._session
 
     def close_current_session(self) -> None:
         """Tears down the current build session
@@ -155,27 +164,51 @@ class SessionHandler:
         Returns:
             None
         """
-        if self.session is not None:
+        if self._session is not None:
             session = self.get_session()
             logger.debug(f"Close session {session}")
             session.close()
-            self.session = None
+            self._session = None
 
-    @classmethod
     @contextmanager
-    def context(cls, **kwargs):
-        """Context manager to temporarily overwrite session parameters.
+    def context(self, **kwargs) -> Iterator[Self]:
+        """Thread-safe context manager for temporarily overriding session configuration.
+
+        This context manager temporarily replaces the current `CONFIG` instance with a new one
+        constructed from the provided keyword arguments and clears the current session.
+        Subsequent calls to `get_session()` will use the new configuration, while existing
+        sessions remain unchanged. Internally we use a reentrant lock (RLock) to allow nested
+        contexts within the same thread.
+
+        To prevent deadlocks, attempting to open a new context in another thread while already in
+        a context raises an `AssertionError`.`
+
+        Args:
+            **kwargs: Keyword arguments corresponding to `CONFIG` parameters.
 
         Returns:
-            SessionHandler: The session handler instance.
+            SessionHandler: The current session handler instance with the temporary configuration.
+
+        Raises:
+            AssertionError: If a context is already active in another thread.
         """
 
-        cls.CONFIG = CONFIG(**kwargs)
+        if self._context_lock.acquire(blocking=False):
+            prev = self.CONFIG, self._session
+            self.CONFIG = CONFIG(**kwargs)
+            self._session = None
 
-        try:
-            yield cls
-        finally:
-            cls.CONFIG = CONFIG()
+            try:
+                yield self
+            finally:
+                self._context_lock.release()
+                self.CONFIG, self._session = prev
+
+        else:
+            raise AssertionError(
+                f"Tried to open a session context within another thread. "
+                f"Exit the existing context before opening a new one."
+            )
 
 
 @contextmanager
