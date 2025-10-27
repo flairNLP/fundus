@@ -91,11 +91,11 @@ class SessionHandler:
     tear-downed and the next call to get_session() will build a new session.
     """
 
-    CONFIG: CONFIG = CONFIG()
-
     def __init__(self):
-        self.session: Optional[InterruptableSession] = None
-        self.lock = threading.Lock()
+        self.CONFIG = CONFIG()
+        self._session: Optional[InterruptableSession] = None
+        self._session_lock = threading.Lock()
+        self._context_lock = threading.RLock()
 
     def _session_factory(self) -> InterruptableSession:
         """Builds a new Session
@@ -152,10 +152,10 @@ class SessionHandler:
             requests.Session: The current build session
         """
 
-        with self.lock:
-            if not self.session:
-                self.session = self._session_factory()
-            return self.session
+        with self._session_lock:
+            if not self._session:
+                self._session = self._session_factory()
+            return self._session
 
     def close_current_session(self) -> None:
         """Tears down the current build session
@@ -163,27 +163,36 @@ class SessionHandler:
         Returns:
             None
         """
-        if self.session is not None:
+        if self._session is not None:
             session = self.get_session()
             logger.debug(f"Close session {session}")
             session.close()
-            self.session = None
+            self._session = None
 
-    @classmethod
     @contextmanager
-    def context(cls, **kwargs):
+    def context(self, **kwargs):
         """Context manager to temporarily overwrite session parameters.
 
         Returns:
             SessionHandler: The session handler instance.
         """
 
-        cls.CONFIG = CONFIG(**kwargs)
+        if self._context_lock.acquire(blocking=False):
+            prev = self.CONFIG, self._session
+            self.CONFIG = CONFIG(**kwargs)
+            self._session = None
 
-        try:
-            yield cls
-        finally:
-            cls.CONFIG = CONFIG()
+            try:
+                yield self
+            finally:
+                self._context_lock.release()
+                self.CONFIG, self._session = prev
+
+        else:
+            raise AssertionError(
+                f"Tried to open a session context within another thread. "
+                f"Exit the existing context before opening a new one."
+            )
 
 
 @contextmanager
