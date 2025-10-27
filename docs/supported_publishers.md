@@ -3114,6 +3114,28 @@
     </tr>
     <tr>
       <td>
+        <code>Nature</code>
+      </td>
+      <td>
+        <div>Nature</div>
+      </td>
+      <td>
+        <a href="https://www.nature.com/">
+          <span>www.nature.com</span>
+        </a>
+      </td>
+      <td>
+        <code>en</code>
+      </td>
+      <td>
+        <code>images</code>
+        <code>topics</code>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
         <code>BBC</code>
       </td>
       <td>

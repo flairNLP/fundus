@@ -13,6 +13,7 @@ from .evening_standard import EveningStandardParser
 from .express import ExpressParser
 from .i_news import INewsParser
 from .metro import MetroParser
+from .nature import NatureParser
 from .the_bbc import TheBBCParser
 from .the_guardian import TheGuardianParser
 from .the_independent import TheIndependentParser
@@ -142,6 +143,17 @@ class UK(metaclass=PublisherGroup):
         sources=[
             NewsMap("https://metro.co.uk/news-sitemap.xml"),
             Sitemap("https://metro.co.uk/sitemap.xml"),
+        ],
+    )
+
+    Nature = Publisher(
+        name="Nature",
+        domain="https://www.nature.com/",
+        parser=NatureParser,
+        sources=[
+            RSSFeed("https://www.nature.com/nature.rss"),
+            NewsMap("https://www.nature.com/latest-news/sitemap.xml"),
+            Sitemap("https://www.nature.com/sitemap.xml"),
         ],
     )
 
