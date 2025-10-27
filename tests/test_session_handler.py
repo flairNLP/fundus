@@ -3,6 +3,7 @@ from threading import Thread
 import pytest
 
 from fundus.scraping.session import CONFIG, SessionHandler
+from tests.exceptions import Success
 
 
 class TestContext:
@@ -41,14 +42,10 @@ class TestContext:
         session_handler = SessionHandler()
 
         def set_context(timeout: int = 100):
-            with pytest.raises(ZeroDivisionError):
+            with pytest.raises(Success):
                 with session_handler.context(TIMEOUT=timeout):
                     assert session_handler.get_session().timeout == timeout
-
-                    # We intentionally trigger a ZeroDivisionError to ensure the context
-                    # is executed in the thread. Using a precise exception type
-                    # (ZeroDivisionError) prevents masking other potential errors.
-                    return 1 / 0
+                    raise Success
 
         def set_context_fail():
             with pytest.raises(AssertionError):
