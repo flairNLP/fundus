@@ -44,6 +44,10 @@ class TestContext:
             with pytest.raises(ZeroDivisionError):
                 with session_handler.context(TIMEOUT=timeout):
                     assert session_handler.get_session().timeout == timeout
+
+                    # We intentionally trigger a ZeroDivisionError to ensure the context
+                    # is executed in the thread. Using a precise exception type
+                    # (ZeroDivisionError) prevents masking other potential errors.
                     return 1 / 0
 
         def set_context_fail():
