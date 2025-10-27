@@ -13,12 +13,11 @@ import traceback
 from abc import ABC, abstractmethod
 from collections import defaultdict
 from concurrent.futures import ThreadPoolExecutor
-from concurrent.futures import TimeoutError as FuturesTimeoutError
 from concurrent.futures import as_completed
 from datetime import datetime
 from functools import lru_cache, partial, wraps
 from multiprocessing import Manager
-from multiprocessing.context import TimeoutError as MPTimeoutError
+from multiprocessing.context import TimeoutError
 from multiprocessing.managers import BaseManager
 from multiprocessing.pool import MapResult, Pool, ThreadPool
 from pathlib import Path
@@ -199,7 +198,7 @@ def pool_queue_iter(handle: MapResult[Any], queue: Queue[Union[_T, Exception]]) 
         except Empty:
             try:
                 handle.get(timeout=0.1)
-            except MPTimeoutError:
+            except TimeoutError:
                 if __EVENTS__.is_event_set("stop"):
                     __EVENTS__.clear_event("stop")
                     break
