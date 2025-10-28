@@ -27,6 +27,7 @@ from .hessenschau import HessenschauParser
 from .junge_welt import JungeWeltParser
 from .kicker import KickerParser
 from .krautreporter import KrautreporterParser
+from .lto import LTOParser
 from .mdr import MDRParser
 from .merkur import MerkurParser
 from .motorsport_magazin import MotorSportMagazinParser
@@ -54,6 +55,17 @@ from .zdf import ZDFParser
 # noinspection PyPep8Naming
 class DE(metaclass=PublisherGroup):
     default_language = "de"
+
+    LTO = Publisher(
+        name="Legal Tribune Online",
+        domain="https://www.lto.de/",
+        parser=LTOParser,
+        sources=[
+            RSSFeed("https://www.lto.de/rss/feed.xml"),
+            NewsMap("https://www.lto.de/googlenews-sitemap.xml"),
+            Sitemap("https://www.lto.de/sitemap.xml"),
+        ],
+    )
 
     SportSchau = Publisher(
         name="Sportschau",
