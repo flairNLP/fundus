@@ -616,10 +616,10 @@ class CustomParserInfo(parser.parserinfo):
         ("Jul", "July", "Juli"),
         ("Aug", "August"),
         ("Sep", "Sept", "September"),
-        ("Oct", "October", "Oktober", "Okt"),
+        ("Oct", "October", "Oktober", "Okt"),  # type: ignore[list-item]
         ("Nov", "November"),
-        ("Dec", "December", "Dezember", "Dez"),
-    ]
+        ("Dec", "December", "Dezember", "Dez"),  # type: ignore[list-item]
+    ]  # type ignore due to types-python-dateutil==2.9.0.20251008, see https://github.com/flairNLP/fundus/issues/806
 
 
 def generic_date_parsing(date_str: Optional[str]) -> Optional[datetime]:

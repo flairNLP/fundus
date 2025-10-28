@@ -423,7 +423,7 @@ class LiveTickerBody(TextSequenceTree):
         return {
             "summary": list(self.summary),
             "entries": [entry.serialize() for entry in self.entries],
-            "entry_metas": self.entry_meta_information,
+            "entry_meta_information": self.entry_meta_information,
         }
 
     @classmethod

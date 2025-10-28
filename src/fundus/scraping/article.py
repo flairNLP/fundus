@@ -8,7 +8,7 @@ from colorama import Fore, Style
 
 from fundus.logging import create_logger
 from fundus.parser import ArticleBody, Image
-from fundus.parser.data import LiveTickerBody
+from fundus.parser.data import LiveTickerBody, TextSequenceTree
 from fundus.scraping.html import HTML
 from fundus.utils.serialization import JSONVal, is_jsonable
 
@@ -46,8 +46,8 @@ class Publication:
         return self.__extraction__.get("title")
 
     @property
-    def body(self) -> Optional[Union[ArticleBody, LiveTickerBody]]:
-        return self.__extraction__.get("body")
+    def body(self) -> Optional[TextSequenceTree]:
+        raise NotImplementedError
 
     @property
     def authors(self) -> List[str]:
@@ -180,6 +180,10 @@ class Article(Publication):
 
         return dedent(text)
 
+    @property
+    def body(self) -> Optional[ArticleBody]:
+        return self.__extraction__.get("body")
+
 
 class LiveTicker(Publication):
     def __str__(self):
@@ -211,3 +215,16 @@ class LiveTicker(Publication):
         )
 
         return dedent(text)
+
+    @property
+    def body(self) -> Optional[LiveTickerBody]:
+        return self.__extraction__.get("body")
+
+    @property
+    def images(self) -> List[Image]:
+        images: List[Image] = self.__extraction__.get("images", [])
+        if self.body is None:
+            return images
+        for entry_meta in self.body.entry_meta_information:
+            images.extend(entry_meta.get("images", []))
+        return images

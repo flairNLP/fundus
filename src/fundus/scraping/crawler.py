@@ -52,7 +52,7 @@ from typing_extensions import ParamSpec, TypeAlias
 from fundus.logging import create_logger, get_current_config
 from fundus.parser.data import remove_query_parameters_from_url
 from fundus.publishers.base_objects import FilteredPublisher, Publisher, PublisherGroup
-from fundus.scraping.article import Article
+from fundus.scraping.article import Article, Publication
 from fundus.scraping.delay import Delay
 from fundus.scraping.filter import ExtractionFilter, Requires, RequiresAll, URLFilter
 from fundus.scraping.html import CCNewsSource
@@ -222,7 +222,7 @@ class CrawlerBase(ABC):
         extraction_filter: Optional[ExtractionFilter],
         url_filter: Optional[URLFilter],
         language_filter: Optional[List[str]],
-    ) -> Iterator[Article]:
+    ) -> Iterator[Publication]:
         raise NotImplementedError
 
     def crawl(
@@ -236,7 +236,7 @@ class CrawlerBase(ABC):
         language_filter: Optional[List[str]] = None,
         only_unique: bool = True,
         save_to_file: Union[None, str, Path] = None,
-    ) -> Iterator[Article]:
+    ) -> Iterator[Publication]:
         """Yields articles from initialized scrapers
 
         Args:
@@ -269,7 +269,7 @@ class CrawlerBase(ABC):
                 specified file as a JSON list.
 
         Returns:
-            Iterator[Article]: An iterator yielding objects of type Article.
+            Iterator[Publication]: An iterator yielding objects of type Article.
         """
 
         if max_articles == 0:
@@ -343,7 +343,7 @@ class CrawlerBase(ABC):
             logger.info(f"Publisher language filter: {publisher_language_filter} will be used as the language filter. ")
 
         article_count: Dict[str, int] = defaultdict(int)
-        crawled_articles: Dict[str, List[Article]] = defaultdict(list)
+        crawled_articles: Dict[str, List[Publication]] = defaultdict(list)
 
         # Unfortunately we relly on this little workaround here to terminate the 'Pool' used within
         # the 'CCNewsCrawler'. The 'Timeout' contextmanager utilizes '_thread.interrupt_main',
@@ -465,7 +465,7 @@ class Crawler(CrawlerBase):
         extraction_filter: Optional[ExtractionFilter] = None,
         url_filter: Optional[URLFilter] = None,
         language_filter: Optional[List[str]] = None,
-    ) -> Iterator[Article]:
+    ) -> Iterator[Publication]:
         def build_delay() -> Optional[Delay]:
             if isinstance(self.delay, float):
                 delay = self.delay
@@ -498,15 +498,15 @@ class Crawler(CrawlerBase):
 
     @staticmethod
     def _single_crawl(
-        publishers: Tuple[Publisher, ...], article_task: Callable[[Publisher], Iterator[Article]]
-    ) -> Iterator[Article]:
+        publishers: Tuple[Publisher, ...], article_task: Callable[[Publisher], Iterator[Publication]]
+    ) -> Iterator[Publication]:
         article_iterators = [article_task(publisher) for publisher in publishers]
         yield from roundrobin(*article_iterators)
 
     def _threaded_crawl(
-        self, publishers: Tuple[Publisher, ...], article_task: Callable[[Publisher], Iterator[Article]]
-    ) -> Iterator[Article]:
-        result_queue: Queue[Union[Article, Exception]] = Queue(len(publishers))
+        self, publishers: Tuple[Publisher, ...], article_task: Callable[[Publisher], Iterator[Publication]]
+    ) -> Iterator[Publication]:
+        result_queue: Queue[Union[Publication, Exception]] = Queue(len(publishers))
         wrapped_article_task = queue_wrapper(result_queue, article_task)
         pool = ThreadPool(processes=len(publishers) or None)
         try:
@@ -529,7 +529,7 @@ class Crawler(CrawlerBase):
         extraction_filter: Optional[ExtractionFilter],
         url_filter: Optional[URLFilter],
         language_filter: Optional[List[str]],
-    ) -> Iterator[Article]:
+    ) -> Iterator[Publication]:
         article_task = partial(
             self._fetch_articles,
             error_handling=error_handling,
@@ -604,7 +604,7 @@ class CCNewsCrawler(CrawlerBase):
         url_filter: Optional[URLFilter] = None,
         language_filter: Optional[List[str]] = None,
         bar: Optional[tqdm] = None,
-    ) -> Iterator[Article]:
+    ) -> Iterator[Publication]:
         retries: int = 0
         while True:
             source = CCNewsSource(*publishers, warc_path=warc_path)
@@ -630,14 +630,14 @@ class CCNewsCrawler(CrawlerBase):
 
     @staticmethod
     def _single_crawl(
-        warc_paths: Tuple[str, ...], article_task: Callable[[str], Iterator[Article]]
-    ) -> Iterator[Article]:
+        warc_paths: Tuple[str, ...], article_task: Callable[[str], Iterator[Publication]]
+    ) -> Iterator[Publication]:
         for warc_path in warc_paths:
             yield from article_task(warc_path)
 
     def _parallel_crawl(
-        self, warc_paths: Tuple[str, ...], article_task: Callable[[str], Iterator[Article]]
-    ) -> Iterator[Article]:
+        self, warc_paths: Tuple[str, ...], article_task: Callable[[str], Iterator[Publication]]
+    ) -> Iterator[Publication]:
         # because logging configurations are overwritten when using 'spawn' as start method,
         # we have to get current logging configurations and initialize them in the new process
         if multiprocessing.get_start_method() == "spawn":
@@ -654,7 +654,7 @@ class CCNewsCrawler(CrawlerBase):
                 processes=min(self.processes, len(warc_paths)),
                 initializer=initializer,
             ) as pool:
-                result_queue: Queue[Union[Article, Exception]] = manager.Queue(maxsize=1000)
+                result_queue: Queue[Union[Publication, Exception]] = manager.Queue(maxsize=1000)
 
                 # Because multiprocessing.Pool does not support iterators as targets,
                 # we wrap the article_task to write the articles to a queue instead of returning them directly.
@@ -738,7 +738,7 @@ class CCNewsCrawler(CrawlerBase):
         url_filter: Optional[URLFilter],
         language_filter: Optional[List[str]],
         **kwargs,
-    ) -> Iterator[Article]:
+    ) -> Iterator[Publication]:
         warc_paths = tuple(self._get_warc_paths())
 
         with get_proxy_tqdm(total=len(warc_paths), desc="Process WARC files", disable=self.disable_tqdm) as bar:
