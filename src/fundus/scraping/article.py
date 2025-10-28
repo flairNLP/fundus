@@ -221,8 +221,17 @@ class LiveTicker(Publication):
         return self.__extraction__.get("body")
 
     @property
+    def authors(self) -> List[str]:
+        authors: List[str] = super().authors
+        if self.body is None:
+            return authors
+        for entry_meta in self.body.entry_meta_information:
+            authors.extend(entry_meta.get("authors", []))
+        return list(set(authors))
+
+    @property
     def images(self) -> List[Image]:
-        images: List[Image] = self.__extraction__.get("images", [])
+        images: List[Image] = super().images
         if self.body is None:
             return images
         for entry_meta in self.body.entry_meta_information:

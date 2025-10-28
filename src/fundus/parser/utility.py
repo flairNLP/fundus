@@ -126,6 +126,7 @@ class SummaryNode(Node):
     pass
 
 
+@dataclass(eq=False)
 class BoundaryNode(Node):
     def __post_init__(self):
         self.position -= 0.5  # in case a content node is also a boundary node, we want the boundary to come first
@@ -135,8 +136,17 @@ class SubheadNode(Node):
     pass
 
 
+@dataclass(eq=False)
 class DateNode(Node):
-    pass
+    _datetime_selector = XPath("./@datetime")
+    _timestamp: Optional[str] = None
+
+    def __post_init__(self):
+        if (timestamp := self._datetime_selector(self.node)) is not None:
+            self._timestamp = " ".join(generic_nodes_to_text(timestamp))
+
+    def text_content(self, excluded_tags: Optional[List[str]] = None, tag_filter: Optional[XPath] = None) -> str:
+        return self._timestamp if self._timestamp else super().text_content(excluded_tags, tag_filter)
 
 
 class AuthorNode(Node):
@@ -271,9 +281,9 @@ def extract_live_ticker_body_with_selector(
             elif isinstance(node, ParagraphNode):
                 paragraph_nodes.append(node)
             elif isinstance(node, DateNode):
-                entry_date = generic_date_parsing("".join(generic_nodes_to_text([node.node])))
+                entry_date = generic_date_parsing("".join(node.text_content()))
             elif isinstance(node, AuthorNode):
-                entry_authors = generic_author_parsing(generic_nodes_to_text([node.node]))
+                entry_authors = generic_author_parsing(node.text_content())
             elif isinstance(node, ImageNode):
                 entry_images = image_selection_helper(node.node) if image_selection_helper else []
             else:
