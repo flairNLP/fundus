@@ -39,6 +39,7 @@ from .rheinische_post import RheinischePostParser
 from .rn import RuhrNachrichtenParser
 from .spon import SPONParser
 from .sportschau import SportSchauParser
+from .stuttgarter_zeitung import StuttgarterZeitungParser
 from .stern import SternParser
 from .sz import SZParser
 from .tagesschau import TagesschauParser
@@ -90,6 +91,15 @@ class DE(metaclass=PublisherGroup):
                 f"https://www.morgenpost.de/sitemaps/archive/sitemap-{d.year}-{str(d.month).zfill(2)}-p00.xml.gz",
             )
             for d in reversed(list(rrule(MONTHLY, dtstart=datetime(2003, 2, 1), until=datetime.now())))
+        ],
+    )
+
+    StuttgarterZeitung = Publisher(
+        name="Stuttgarter Zeitung",
+        domain="https://www.stuttgarter-zeitung.de/",
+        parser=StuttgarterZeitungParser,
+        sources=[
+            NewsMap("https://www.stuttgarter-zeitung.de/docs.newsmap_stuttgarter_zeitung.xml"),
         ],
     )
 
