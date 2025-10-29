@@ -214,6 +214,27 @@
       <td>&#160;</td>
       <td>&#160;</td>
     </tr>
+    <tr>
+      <td>
+        <code>PoliticoEu</code>
+      </td>
+      <td>
+        <div>Politico EU</div>
+      </td>
+      <td>
+        <a href="https://www.politico.eu/">
+          <span>www.politico.eu</span>
+        </a>
+      </td>
+      <td>
+        <code>en</code>
+      </td>
+      <td>
+        <code>images</code>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
   </tbody>
 </table>
 
