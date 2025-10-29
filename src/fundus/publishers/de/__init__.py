@@ -26,6 +26,7 @@ from .heise import HeiseParser
 from .hessenschau import HessenschauParser
 from .junge_welt import JungeWeltParser
 from .kicker import KickerParser
+from .klassegegenklasse import KlasseGegenKlasseParser
 from .krautreporter import KrautreporterParser
 from .mdr import MDRParser
 from .merkur import MerkurParser
@@ -594,4 +595,17 @@ class DE(metaclass=PublisherGroup):
             NewsMap("https://www.gamestar.de/sitemapnews.xml"),
             Sitemap("https://www.gamestar.de/artikel_archiv_index.xml"),
         ],
+    )
+
+    KlasseGegenKlasse = Publisher(
+        name="Klasse Gegen Klasse",
+        domain="https://www.klassegegenklasse.org/",
+        parser=KlasseGegenKlasseParser,
+        sources=[
+            RSSFeed("https://www.klassegegenklasse.org/feed/"),
+            Sitemap(
+                "https://www.klassegegenklasse.org/wp-sitemap.xml",
+            ),
+        ],
+        request_header={"user-agent": "Fundus"},
     )
