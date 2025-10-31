@@ -245,7 +245,7 @@
         ],
         "is_cover": true,
         "description": "A large, industrial construction site in an arid landscape, featuring a tall, metallic structure resembling a crane with two triangular frames. Various construction vehicles, including blue lift machines and a yellow truck, are scattered around a gray concrete block structure on the sandy ground, with a hazy sky and fencing in the background.",
-        "caption": "Etlaq Etlaq",
+        "caption": null,
         "authors": [
           "Etlaq"
         ],
@@ -346,7 +346,7 @@
         ],
         "is_cover": false,
         "description": "A dimly lit building in a barren landscape during dusk, with open doors revealing light inside and a few figures standing outside; two vehicles parked nearby and a clear sky transitioning from blue to black.",
-        "caption": "Etlaq’s current launch site. Etlaq Etlaq’s current launch site. Etlaq",
+        "caption": "Etlaq’s current launch site.",
         "authors": [
           "Etlaq"
         ],
@@ -447,7 +447,7 @@
         ],
         "is_cover": false,
         "description": "A sign directing towards the entrance of Etlaq Spaceport, standing on a sandy desert landscape with a clear sky in the background.",
-        "caption": "A sign for the Etlaq spaceport along a desert road south of Duqm. Tara Atkinson for Rest of World A sign for the Etlaq spaceport along a desert road south of Duqm. Tara Atkinson for Rest of World",
+        "caption": "A sign for the Etlaq spaceport along a desert road south of Duqm.",
         "authors": [
           "Tara Atkinson for Rest of World"
         ],
@@ -548,7 +548,7 @@
         ],
         "is_cover": false,
         "description": "A hazy desert landscape at sunset, featuring low-rise buildings in the foreground and a distant horizon, with a cell tower visible among the structures.",
-        "caption": "Duqm has seen a burst of construction as part of a drive to attract new tech-focused industries. Duqm has seen a burst of construction as part of a drive to attract new tech-focused industries.",
+        "caption": "Duqm has seen a burst of construction as part of a drive to attract new tech-focused industries.",
         "authors": [],
         "position": 400
       },
@@ -647,7 +647,7 @@
         ],
         "is_cover": false,
         "description": "A modern two-story commercial building with large glass windows and decorative elements, featuring a prominent sign stating 'FOR RENT RETAIL / OFFICES.' The image is taken during twilight, with streetlights illuminating the area and a clear sky in the background.",
-        "caption": "Office buildings await future tenants in Duqm’s special economic zone. Tara Atkinson for Rest of World Office buildings await future tenants in Duqm’s special economic zone. Tara Atkinson for Rest of World",
+        "caption": "Office buildings await future tenants in Duqm’s special economic zone.",
         "authors": [
           "Tara Atkinson for Rest of World"
         ],
@@ -748,7 +748,7 @@
         ],
         "is_cover": false,
         "description": null,
-        "caption": "Seaside resorts are part of the area’s investment in business and tourism. Seaside resorts are part of the area’s investment in business and tourism.",
+        "caption": "Seaside resorts are part of the area’s investment in business and tourism.",
         "authors": [],
         "position": 421
       },
@@ -847,7 +847,7 @@
         ],
         "is_cover": false,
         "description": "A camel crossing a desolate highway in a desert landscape, with sparse vegetation and power lines visible along the roadside.",
-        "caption": "The road to the Etlaq spaceport from Duqm. Tara Atkinson for Rest of World The road to the Etlaq spaceport from Duqm. Tara Atkinson for Rest of World",
+        "caption": "The road to the Etlaq spaceport from Duqm.",
         "authors": [
           "Tara Atkinson for Rest of World"
         ],
@@ -921,9 +921,9 @@
         ],
         "is_cover": false,
         "description": "A white modular building labeled 'MISSION CONTROL' in English and Arabic, situated on a sandy surface with several windows and steps leading to the entrance, alongside a red and white traffic cone.",
-        "caption": "Etlaq’s current mission control with the spaceport still under construction. Etlaq Etlaq’s current mission control with the spaceport still under construction. Etlaq The SatMena offices in Muscat. Eman Ali for Rest of World The SatMena offices in Muscat. Eman Ali for Rest of World",
+        "caption": "Etlaq’s current mission control with the spaceport still under construction.",
         "authors": [
-          "Eman Ali for Rest of World"
+          "Etlaq"
         ],
         "position": 447
       },
@@ -995,7 +995,7 @@
         ],
         "is_cover": false,
         "description": "A frosted glass office door with the logo of 'SatMENA' prominently displayed, accompanied by the tagline 'stay connected, globally.' A man dressed in traditional Omani attire stands near the door, partially visible.",
-        "caption": "Etlaq’s current mission control with the spaceport still under construction. Etlaq Etlaq’s current mission control with the spaceport still under construction. Etlaq The SatMena offices in Muscat. Eman Ali for Rest of World The SatMena offices in Muscat. Eman Ali for Rest of World",
+        "caption": "The SatMena offices in Muscat.",
         "authors": [
           "Eman Ali for Rest of World"
         ],
@@ -1096,7 +1096,7 @@
         ],
         "is_cover": false,
         "description": null,
-        "caption": "A rocket stands on an Etlaq launchpad. Etlaq A rocket stands on an Etlaq launchpad. Etlaq",
+        "caption": "A rocket stands on an Etlaq launchpad.",
         "authors": [
           "Etlaq"
         ],
@@ -1197,7 +1197,7 @@
         ],
         "is_cover": false,
         "description": "Three individuals, wearing matching black shirts with logos, stand together smiling in a room with a white interior. They are positioned next to a small model rocket labeled 'HORUS 4'. A table nearby displays various tools and rocket components, with folding chairs seen in the background.",
-        "caption": "The ART team and their Horus 4 rocket. Advanced Rocket Technologies The ART team and their Horus 4 rocket. Advanced Rocket Technologies",
+        "caption": "The ART team and their Horus 4 rocket.",
         "authors": [
           "Advanced Rocket Technologies"
         ],
@@ -1298,7 +1298,7 @@
         ],
         "is_cover": false,
         "description": "A nighttime landscape featuring large rock formations under a starry sky, with a prominent mushroom-shaped rock in the foreground and hints of light from a distant horizon.",
-        "caption": "A natural rock formation on the outskirts of Duqm in October. Tara Atkinson for Rest of World A natural rock formation on the outskirts of Duqm in October. Tara Atkinson for Rest of World",
+        "caption": "A natural rock formation on the outskirts of Duqm in October.",
         "authors": [
           "Tara Atkinson for Rest of World"
         ],

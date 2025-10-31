@@ -15,8 +15,6 @@ from fundus.parser.utility import (
 
 class RestOfWorldParser(ParserProxy):
     class V1(BaseParser):
-        VALID_UNTIL = date.today()
-
         _summary_selector: CSSSelector = CSSSelector("div.post-subheader__summary li, p.post-header__text__dek")
         _paragraph_selector: CSSSelector = CSSSelector("div.post-content > p")
         _subheadline_selector: CSSSelector = CSSSelector("div.post-content > h2")
@@ -53,9 +51,10 @@ class RestOfWorldParser(ParserProxy):
                 doc=self.precomputed.doc,
                 paragraph_selector=self._paragraph_selector,
                 image_selector=XPath("//figure//img | //img[@src or @data-src]"),
-                caption_selector=XPath("./ancestor::figure//*[self::figcaption or contains(@class, 'caption')]"),
+                caption_selector=XPath("./ancestor::figure[1]//*[contains(@class,'figcaption__caption')][1]"),
                 author_selector=XPath(
-                    "(./ancestor::figure//*[contains(@class, 'credit') or contains(@class, 'byline')])[last()]"
+                    "(./ancestor::figure[1]//*[(contains(@class,'figcaption__credit') "
+                    "or contains(@class,'credit') or contains(@class,'byline'))])[last()]"
                 ),
                 relative_urls=True,
             )
