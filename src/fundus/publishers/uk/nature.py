@@ -4,43 +4,135 @@ from typing import List, Optional
 from lxml.cssselect import CSSSelector
 from lxml.etree import XPath
 
-from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute
+from fundus.parser import ArticleBody, BaseParser, Image, ParserProxy, attribute
 from fundus.parser.utility import (
     extract_article_body_with_selector,
     generic_author_parsing,
     generic_date_parsing,
-    parse_title_from_root,
+    generic_topic_parsing,
+    image_extraction,
 )
 
 
 class NatureParser(ParserProxy):
     class V1(BaseParser):
-        _paragraph_selector = XPath(
-            "//div[contains(@class,'c-article-body')]//p | //div[contains(@class,'c-article-section__content')]//p"
-        )
-        _subheadline_selector = XPath("//h2[contains(@class,'c-article-section__heading')]")
-        _author_selector = XPath("//li[contains(@class,'c-article-author')]//a")
+        _summary_selector = CSSSelector("div.c-article-abstract p, p.c-article-abstract")
 
-        @attribute
-        def title(self) -> Optional[str]:
-            return self.precomputed.meta.get("dc.title") or parse_title_from_root(self.precomputed.doc)
+        #_paragraph_selector = CSSSelector("div.article__teaser[data-test='access-teaser'] > p")
+        _paragraph_selector = XPath(
+            "//div[@data-test='access-teaser']//p"
+            "["
+            "  not(ancestor::*[@data-label='Related' or contains(@class, 'recommended')])"
+            "  and not(contains(@class, 'recommended__title'))"
+            "  and not(ancestor::figure)"
+            "  and not(ancestor::figcaption)"
+            "  and not(ancestor::a)"
+            "]"
+        )
+
+        #_subheadline_selector = CSSSelector("div.article__teaser[data-test='access-teaser'] > h2")
+        _subheadline_selector = XPath(
+            "//div[@data-test='access-teaser']//h2"
+            "[not(ancestor::article[contains(@class, 'recommended')])]"
+        )
+
+        _lower_boundary_selector = XPath(
+            "(//*[(@class='app-access-wall') or "
+            "contains(@class, 'c-related-articles') or "
+            "(self::article and contains(@class, 'related'))])[1]"
+        )
+
+        _image_selector = XPath("//div[contains(@class, 'article__teaser')]//figure//img")
+        
+        _caption_selector = XPath("./ancestor::figure//figcaption")
+        _author_selector = XPath("./ancestor::figure//span[contains(@class, 'copyright')]")
+
 
         @attribute
         def body(self) -> Optional[ArticleBody]:
             return extract_article_body_with_selector(
                 self.precomputed.doc,
-                paragraph_selector=self._paragraph_selector,
+                summary_selector=self._summary_selector,
                 subheadline_selector=self._subheadline_selector,
-            )
-
-        @attribute
-        def authors(self) -> List[str]:
-            return generic_author_parsing(
-                [node.text_content() for node in self._author_selector(self.precomputed.doc) or []]
+                paragraph_selector=self._paragraph_selector,
             )
 
         @attribute
         def publishing_date(self) -> Optional[datetime.datetime]:
-            return generic_date_parsing(
-                self.precomputed.meta.get("article:published_time") or self.precomputed.meta.get("dc.date")
-            )
+            return generic_date_parsing(self.precomputed.ld.bf_search("datePublished"))
+
+        @attribute
+        def authors(self) -> List[str]:
+            return generic_author_parsing(self.precomputed.ld.bf_search("author"))
+
+        @attribute
+        def title(self) -> Optional[str]:
+            return self.precomputed.ld.bf_search("headline")
+
+        @attribute
+        def topics(self) -> List[str]:
+            return generic_topic_parsing(self.precomputed.meta.get("article:tag"))
+        
+        @attribute
+        def free_access(self) -> bool:
+            access = self.precomputed.ld.bf_search("isAccessibleForFree")
+            if isinstance(access, bool):
+                return access
+            if isinstance(access, str):
+                return access.lower() == "true"
+
+        @attribute
+        def images(self) -> List[Image]:
+            all_img_nodes = self.precomputed.doc.xpath("//img")
+            for node in all_img_nodes:
+                for attr in ["src", "data-src", "srcset", "data-srcset"]:
+                    attr_val = node.get(attr)
+                    if not attr_val:
+                        continue
+                    
+                    #Nature uses nasty URLs for their Images, missing https:
+                    if "srcset" in attr:
+                        fixed_parts = []
+                        for part in attr_val.split(","):
+                            part = part.strip()
+                            if part.startswith("//"):
+                                fixed_parts.append("https:" + part)
+                            else:
+                                fixed_parts.append(part)
+                        node.set(attr, ", ".join(fixed_parts))
+                    elif attr_val.strip().startswith("//"):
+                        node.set(attr, "https:" + attr_val.strip())
+
+            all_source_nodes = self.precomputed.doc.xpath("//source")
+            for node in all_source_nodes:
+                for attr in ["srcset", "data-srcset"]:
+                    attr_val = node.get(attr)
+                    if not attr_val:
+                        continue
+                    
+                    #Nature uses nasty URLs for their Images, missing https:
+                    fixed_parts = []
+                    for part in attr_val.split(","):
+                        part = part.strip()
+                        if part.startswith("//"):
+                            fixed_parts.append("https:" + part)
+                        else:
+                            fixed_parts.append(part)
+                    node.set(attr, ", ".join(fixed_parts))
+            
+            #Try-Catch for Bounds Error if PayWall
+            try:
+                return image_extraction(
+                    doc=self.precomputed.doc,
+                    paragraph_selector=self._paragraph_selector,
+                    image_selector=self._image_selector,
+                    caption_selector=self._caption_selector,
+                    author_selector=self._author_selector,
+                    lower_boundary_selector=self._lower_boundary_selector,
+                )
+            except ValueError as e:
+                if "Bounds could not be determined" in str(e):
+                    #This is a paywalled article with no paragraphs.
+                    return []
+                else:
+                    raise e
