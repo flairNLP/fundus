@@ -1,4 +1,5 @@
 import datetime
+import re
 from typing import List, Optional
 
 from lxml.cssselect import CSSSelector
@@ -18,7 +19,6 @@ class NatureParser(ParserProxy):
     class V1(BaseParser):
         _summary_selector = CSSSelector("div.c-article-abstract p, p.c-article-abstract")
 
-        #_paragraph_selector = CSSSelector("div.article__teaser[data-test='access-teaser'] > p")
         _paragraph_selector = XPath(
             "//div[@data-test='access-teaser']//p"
             "["
@@ -30,10 +30,8 @@ class NatureParser(ParserProxy):
             "]"
         )
 
-        #_subheadline_selector = CSSSelector("div.article__teaser[data-test='access-teaser'] > h2")
         _subheadline_selector = XPath(
-            "//div[@data-test='access-teaser']//h2"
-            "[not(ancestor::article[contains(@class, 'recommended')])]"
+            "//div[@data-test='access-teaser']//h2" "[not(ancestor::article[contains(@class, 'recommended')])]"
         )
 
         _lower_boundary_selector = XPath(
@@ -41,12 +39,12 @@ class NatureParser(ParserProxy):
             "contains(@class, 'c-related-articles') or "
             "(self::article and contains(@class, 'related'))])[1]"
         )
-
-        _image_selector = XPath("//div[contains(@class, 'article__teaser')]//figure//img")
-        
         _caption_selector = XPath("./ancestor::figure//figcaption")
-        _author_selector = XPath("./ancestor::figure//span[contains(@class, 'copyright')]")
+        _author_pattern = re.compile(r"(?i)\s*(credit|source|illustration|analysis by):?\s+(?P<credits>.*)")
 
+        _bloat_topics = ["multidisciplinary", "Science", "Humanities and Social Sciences"]
+
+        _paywall_selector = XPath("//div[@class='app-access-wall__container']")
 
         @attribute
         def body(self) -> Optional[ArticleBody]:
@@ -71,68 +69,23 @@ class NatureParser(ParserProxy):
 
         @attribute
         def topics(self) -> List[str]:
-            return generic_topic_parsing(self.precomputed.meta.get("article:tag"))
-        
+            return [
+                topic
+                for topic in generic_topic_parsing(self.precomputed.ld.bf_search("keywords"))
+                if topic not in self._bloat_topics
+            ]
+
         @attribute
         def free_access(self) -> bool:
-            access = self.precomputed.ld.bf_search("isAccessibleForFree")
-            if isinstance(access, bool):
-                return access
-            if isinstance(access, str):
-                return access.lower() == "true"
+            return not bool(self._paywall_selector(self.precomputed.doc))
 
         @attribute
         def images(self) -> List[Image]:
-            all_img_nodes = self.precomputed.doc.xpath("//img")
-            for node in all_img_nodes:
-                for attr in ["src", "data-src", "srcset", "data-srcset"]:
-                    attr_val = node.get(attr)
-                    if not attr_val:
-                        continue
-                    
-                    #Nature uses nasty URLs for their Images, missing https:
-                    if "srcset" in attr:
-                        fixed_parts = []
-                        for part in attr_val.split(","):
-                            part = part.strip()
-                            if part.startswith("//"):
-                                fixed_parts.append("https:" + part)
-                            else:
-                                fixed_parts.append(part)
-                        node.set(attr, ", ".join(fixed_parts))
-                    elif attr_val.strip().startswith("//"):
-                        node.set(attr, "https:" + attr_val.strip())
-
-            all_source_nodes = self.precomputed.doc.xpath("//source")
-            for node in all_source_nodes:
-                for attr in ["srcset", "data-srcset"]:
-                    attr_val = node.get(attr)
-                    if not attr_val:
-                        continue
-                    
-                    #Nature uses nasty URLs for their Images, missing https:
-                    fixed_parts = []
-                    for part in attr_val.split(","):
-                        part = part.strip()
-                        if part.startswith("//"):
-                            fixed_parts.append("https:" + part)
-                        else:
-                            fixed_parts.append(part)
-                    node.set(attr, ", ".join(fixed_parts))
-            
-            #Try-Catch for Bounds Error if PayWall
-            try:
-                return image_extraction(
-                    doc=self.precomputed.doc,
-                    paragraph_selector=self._paragraph_selector,
-                    image_selector=self._image_selector,
-                    caption_selector=self._caption_selector,
-                    author_selector=self._author_selector,
-                    lower_boundary_selector=self._lower_boundary_selector,
-                )
-            except ValueError as e:
-                if "Bounds could not be determined" in str(e):
-                    #This is a paywalled article with no paragraphs.
-                    return []
-                else:
-                    raise e
+            return image_extraction(
+                doc=self.precomputed.doc,
+                paragraph_selector=self._paragraph_selector,
+                relative_urls=True,
+                caption_selector=self._caption_selector,
+                author_selector=self._author_pattern,
+                lower_boundary_selector=self._lower_boundary_selector,
+            )
