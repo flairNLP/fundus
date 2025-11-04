@@ -39,8 +39,8 @@ from .rheinische_post import RheinischePostParser
 from .rn import RuhrNachrichtenParser
 from .spon import SPONParser
 from .sportschau import SportSchauParser
-from .stuttgarter_zeitung import StuttgarterZeitungParser
 from .stern import SternParser
+from .stuttgarter_zeitung import StuttgarterZeitungParser
 from .sz import SZParser
 from .tagesschau import TagesschauParser
 from .tagesspiegel import TagesspiegelParser

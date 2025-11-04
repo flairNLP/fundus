@@ -1,6 +1,9 @@
 import datetime
 from typing import List, Optional
 
+from lxml.cssselect import CSSSelector
+from lxml.etree import XPath
+
 from fundus.parser import ArticleBody, BaseParser, Image, ParserProxy, attribute
 from fundus.parser.utility import (
     extract_article_body_with_selector,
@@ -9,8 +12,6 @@ from fundus.parser.utility import (
     generic_topic_parsing,
     image_extraction,
 )
-from lxml.cssselect import CSSSelector
-from lxml.etree import XPath
 
 
 class StuttgarterZeitungParser(ParserProxy):
@@ -19,7 +20,7 @@ class StuttgarterZeitungParser(ParserProxy):
         _subheadline_selector = CSSSelector("div.article-body h2")
 
         @attribute
-        def body(self) -> ArticleBody:
+        def body(self) -> Optional[ArticleBody]:
             return extract_article_body_with_selector(
                 self.precomputed.doc,
                 paragraph_selector=self._paragraph_selector,
@@ -47,7 +48,7 @@ class StuttgarterZeitungParser(ParserProxy):
             return image_extraction(
                 doc=self.precomputed.doc,
                 paragraph_selector=self._paragraph_selector,
-                image_selector=XPath("//figure//img"),
+                image_selector=XPath("//figure//picture//img"),
                 caption_selector=XPath("./ancestor::figure//figcaption"),
                 relative_urls=True,
             )
