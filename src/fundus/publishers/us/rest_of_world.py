@@ -9,6 +9,7 @@ from fundus.parser.utility import (
     extract_article_body_with_selector,
     generic_author_parsing,
     generic_date_parsing,
+    generic_topic_parsing,
     image_extraction,
 )
 
@@ -42,8 +43,7 @@ class RestOfWorldParser(ParserProxy):
 
         @attribute
         def topics(self) -> List[str]:
-            keywords: List[str] = self.precomputed.ld.xpath_search("NewsArticle/keywords")
-            return [keyword for keyword in keywords if not keyword.startswith("Subject: ")]
+            return generic_topic_parsing(self.precomputed.ld.xpath_search("NewsArticle/keywords", scalar=True))
 
         @attribute
         def images(self) -> List[Image]:
