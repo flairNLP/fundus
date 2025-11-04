@@ -280,7 +280,7 @@ class US(metaclass=PublisherGroup):
         name="Rest of World",
         domain="https://restofworld.org/",
         parser=RestOfWorldParser,
-        url_filter=regex_filter(r"restofworld\.org\/20\d{2}\/"),
+        url_filter=inverse(regex_filter(r"restofworld\.org\/20\d{2}\/")),
         sources=[
             RSSFeed("https://restofworld.org/feed/latest/"),
             Sitemap("https://restofworld.org/sitemap.xml"),
