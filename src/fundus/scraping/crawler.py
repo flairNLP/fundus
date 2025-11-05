@@ -52,7 +52,7 @@ from typing_extensions import ParamSpec, TypeAlias
 from fundus.logging import create_logger, get_current_config
 from fundus.parser.data import remove_query_parameters_from_url
 from fundus.publishers.base_objects import FilteredPublisher, Publisher, PublisherGroup
-from fundus.scraping.article import Article, Publication
+from fundus.scraping.publication import Article, Publication
 from fundus.scraping.delay import Delay
 from fundus.scraping.filter import ExtractionFilter, Requires, RequiresAll, URLFilter
 from fundus.scraping.html import CCNewsSource

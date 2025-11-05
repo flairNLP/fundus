@@ -6,7 +6,7 @@ from fundus.logging import create_logger
 from fundus.parser import ParserProxy
 from fundus.parser.data import LiveTickerBody
 from fundus.publishers.base_objects import Publisher
-from fundus.scraping.article import Article, LiveTicker, Publication
+from fundus.scraping.publication import Article, LiveTicker, Publication
 from fundus.scraping.delay import Delay
 from fundus.scraping.filter import (
     ExtractionFilter,

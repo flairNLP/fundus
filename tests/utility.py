@@ -13,7 +13,7 @@ from fundus import PublisherCollection
 from fundus.parser import ArticleBody, BaseParser
 from fundus.parser.data import Image, TextSequenceTree
 from fundus.publishers.base_objects import Publisher, PublisherGroup
-from fundus.scraping.article import Article
+from fundus.scraping.publication import Article
 from fundus.scraping.html import HTML, SourceInfo
 from scripts.generate_tables import supported_publishers_markdown_path
 from tests.resources.parser.test_data import __module_path__ as test_resource_path

@@ -9,7 +9,7 @@ from tqdm import tqdm
 from fundus import Crawler, PublisherCollection
 from fundus.logging import create_logger, set_log_level
 from fundus.publishers.base_objects import Publisher
-from fundus.scraping.article import Article
+from fundus.scraping.publication import Article
 from fundus.scraping.filter import RequiresAll
 from fundus.scraping.html import WebSource
 from fundus.scraping.scraper import BaseScraper
