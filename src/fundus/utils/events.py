@@ -2,7 +2,7 @@ import threading
 from collections import defaultdict
 from typing import Dict, List, Optional, Union
 
-from bidict import bidict
+from bidict import ON_DUP_DROP_OLD, bidict
 
 from fundus.logging import create_logger
 
@@ -142,7 +142,7 @@ class EventDict:
             key: The thread identifier to associate with this alias.
                 If None, the current thread's identifier is used.
         """
-        self._aliases[alias] = key if key else self._get_identifier()
+        self._aliases.put(alias, key if key else self._get_identifier(), ON_DUP_DROP_OLD)
         if (ident := self._resolve(alias)) not in self._events:
             # noinspection PyStatementEffect
             # Since defaultdict doesn't provide a direct way to create defaults,
