@@ -332,14 +332,14 @@ class TextSequence(Sequence[str]):
 class TextSequenceTree(ABC):
     """Base class to traverse and build trees of TextSequence."""
 
-    def as_text_sequence(self) -> TextSequence:
-        texts = [text for tl in self.df_traversal() for text in tl]
+    def as_text_sequence(self, iterator: Optional[Iterator[Any]] = None) -> TextSequence:
+        texts = [text for tl in self.df_traversal(iterator=iterator) for text in tl]
         return TextSequence(texts)
 
-    def text(self, join_on: str = "\n\n") -> str:
-        return join_on.join(self.as_text_sequence())
+    def text(self, join_on: str = "\n\n", iterator: Optional[Iterator[Any]] = None) -> str:
+        return join_on.join(self.as_text_sequence(iterator=iterator))
 
-    def df_traversal(self) -> Iterable[TextSequence]:
+    def df_traversal(self, iterator: Optional[Iterator[Any]] = None) -> Iterable[TextSequence]:
         def recursion(o: object):
             if isinstance(o, TextSequence):
                 yield o
@@ -349,7 +349,7 @@ class TextSequenceTree(ABC):
             else:
                 yield o
 
-        for value in self:
+        for value in iter(self) if not iterator else iterator:
             yield from recursion(value)
 
     @abstractmethod
@@ -443,6 +443,20 @@ class LiveTickerBody(TextSequenceTree):
         ]
         field_values.extend([entry.sections for entry in self.entries])
         yield from field_values
+
+    def __meta_iter__(self) -> Iterator[Any]:
+        field_values = [
+            getattr(self, f.name) for f in fields(self) if f.name not in ("entry_meta_information", "entries")
+        ]
+        for entry, meta in zip(self.entries, self.entry_meta_information):
+            field_values.append(
+                TextSequence([f"LiveTicker entry from {meta.get('date')} by {', '.join(meta.get('authors', []))}"])
+            )
+            field_values.extend([entry.sections])
+        yield from field_values
+
+    def pretty_print(self):
+        return self.text(iterator=self.__meta_iter__())
 
 
 @total_ordering

@@ -3,9 +3,9 @@ import pathlib
 from langdetect import DetectorFactory
 
 from fundus.publishers import PublisherCollection
-from fundus.scraping.publication import Article
 from fundus.scraping.crawler import CCNewsCrawler, Crawler, CrawlerBase
 from fundus.scraping.filter import Requires
+from fundus.scraping.publication import Article
 from fundus.scraping.url import NewsMap, RSSFeed, Sitemap
 
 __module_path__ = pathlib.Path(__file__).parent
