@@ -450,7 +450,9 @@ class LiveTickerBody(TextSequenceTree):
         ]
         for entry, meta in zip(self.entries, self.entry_meta_information):
             field_values.append(
-                TextSequence([f"LiveTicker entry from {meta.get('date')} by {', '.join(meta.get('authors', []))}"])
+                TextSequence(
+                    [f"LiveTicker entry from {meta.get('publishing_date')} by {', '.join(meta.get('authors', []))}"]
+                )
             )
             field_values.extend([entry.sections])
         yield from field_values

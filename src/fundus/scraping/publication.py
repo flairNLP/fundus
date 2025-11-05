@@ -1,6 +1,6 @@
 from datetime import datetime
 from textwrap import TextWrapper, dedent
-from typing import Any, Dict, List, Mapping, Optional, Union
+from typing import Any, Dict, Iterator, List, Mapping, Optional, Union
 
 import langdetect
 import lxml.html
@@ -215,6 +215,28 @@ class LiveTicker(Publication):
         )
 
         return dedent(text)
+
+    def __iter__(self) -> Iterator[Article]:
+        if not self.body:
+            return
+        for idx, (entry, metas) in enumerate(zip(self.body.entries, self.body.entry_meta_information)):
+            html_entry = HTML(
+                requested_url=self.html.requested_url,
+                responded_url=self.html.responded_url,
+                content=metas.get("html", ""),
+                crawl_date=self.html.crawl_date,
+                source_info=self.html.source_info,
+            )
+            if not (title := str(entry.sections[0].headline)).strip():
+                title = f"LiveTicker Entry #{idx + 1}"
+            yield Article(
+                html=html_entry,
+                body=entry,
+                title=title,
+                authors=metas.get("authors", []),
+                images=metas.get("images", []),
+                publishing_date=metas.get("publishing_date", None),
+            )
 
     @property
     def body(self) -> Optional[LiveTickerBody]:

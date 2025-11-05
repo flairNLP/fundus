@@ -35,6 +35,7 @@ import validators
 from dateutil import parser
 from lxml.cssselect import CSSSelector
 from lxml.etree import XPath
+from lxml.html import HtmlElement
 
 from fundus.logging import create_logger
 from fundus.parser.data import (
@@ -275,7 +276,9 @@ def extract_live_ticker_body_with_selector(
         entry_date = None
         entry_authors = []
         entry_images: List[Image] = []
+        wrapper = HtmlElement("div")
         for node in entry:
+            wrapper.append(node.node)
             if isinstance(node, SubheadNode):
                 subhead_nodes.append(node)
             elif isinstance(node, ParagraphNode):
@@ -310,7 +313,9 @@ def extract_live_ticker_body_with_selector(
             sections.append(ArticleSection(*map(TextSequence, texts)))
 
         entries.append(ArticleBody(summary=TextSequence([]), sections=sections))
-        entries_meta_information.append({"date": entry_date, "authors": entry_authors, "images": entry_images})
+        entries_meta_information.append(
+            {"publishing_date": entry_date, "authors": entry_authors, "images": entry_images, "html": str(wrapper)}
+        )
     return LiveTickerBody(summary=summary, entries=entries, entry_meta_information=entries_meta_information)
 
 
