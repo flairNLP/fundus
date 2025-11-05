@@ -12,6 +12,7 @@ from .bild import BildParser
 from .boersenzeitung import BoersenZeitungParser
 from .br import BRParser
 from .business_insider_de import BusinessInsiderDEParser
+from .der_freitag import DerFreitagParser
 from .die_welt import DieWeltParser
 from .die_zeit import DieZeitParser
 from .dw import DWParser
@@ -603,5 +604,15 @@ class DE(metaclass=PublisherGroup):
         sources=[
             NewsMap("https://www.gamestar.de/sitemapnews.xml"),
             Sitemap("https://www.gamestar.de/artikel_archiv_index.xml"),
+        ],
+    )
+
+    DerFreitag = Publisher(
+        name="der Freitag",
+        domain="https://www.freitag.de/",
+        parser=DerFreitagParser,
+        sources=[
+            RSSFeed("https://www.freitag.de/@@RSS"),
+            Sitemap("https://www.freitag.de/sitemap.xml", sitemap_filter=inverse(regex_filter("sitemap-articles"))),
         ],
     )

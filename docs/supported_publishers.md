@@ -1363,6 +1363,25 @@
     </tr>
     <tr>
       <td>
+        <code>DerFreitag</code>
+      </td>
+      <td>
+        <div>der Freitag</div>
+      </td>
+      <td>
+        <a href="https://www.freitag.de/">
+          <span>www.freitag.de</span>
+        </a>
+      </td>
+      <td>
+        <code>de</code>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
         <code>NetzpolitikOrg</code>
       </td>
       <td>
