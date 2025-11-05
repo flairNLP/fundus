@@ -34,8 +34,8 @@ import more_itertools
 import validators
 from dateutil import parser
 from lxml.cssselect import CSSSelector
-from lxml.etree import XPath
-from lxml.html import HtmlElement
+from lxml.etree import XPath, tostring
+from lxml.html import Element
 
 from fundus.logging import create_logger
 from fundus.parser.data import (
@@ -276,7 +276,7 @@ def extract_live_ticker_body_with_selector(
         entry_date = None
         entry_authors = []
         entry_images: List[Image] = []
-        wrapper = HtmlElement("div")
+        wrapper = Element("div")
         for node in entry:
             wrapper.append(node.node)
             if isinstance(node, SubheadNode):
@@ -314,7 +314,7 @@ def extract_live_ticker_body_with_selector(
 
         entries.append(ArticleBody(summary=TextSequence([]), sections=sections))
         entries_meta_information.append(
-            {"publishing_date": entry_date, "authors": entry_authors, "images": entry_images, "html": str(wrapper)}
+            {"publishing_date": entry_date, "authors": entry_authors, "images": entry_images, "html": tostring(wrapper)}
         )
     return LiveTickerBody(summary=summary, entries=entries, entry_meta_information=entries_meta_information)
 
