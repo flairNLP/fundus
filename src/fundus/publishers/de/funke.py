@@ -102,3 +102,8 @@ class FunkeParser(ParserProxy):
         _image_selector = XPath(
             "//img[contains(@class, 'lg:aspect-[16/9]') or not(contains(@class, 'aspect-[1/1]'))] | //figure/picture"
         )
+
+        @attribute(deprecated=datetime.date(2025, 10, 22))
+        def topics(self) -> List[str]:
+            topics: List[str] = super().topics()
+            return topics
