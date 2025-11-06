@@ -59,6 +59,6 @@ class NZZParser(ParserProxy):
                 paragraph_selector=self._paragraph_selector,
                 caption_selector=XPath("./ancestor::figure//h2"),
                 author_selector=XPath("./ancestor::figure//div[@class='image-description__author']"),
-                upper_boundary_selector=CSSSelector("div#page"),
+                upper_boundary_selector=XPath("//section[@data-nzz-tid]"),
                 lower_boundary_selector=XPath("//div[@class='sharebox']"),
             )
