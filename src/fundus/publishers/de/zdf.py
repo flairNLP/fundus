@@ -9,13 +9,17 @@ from fundus.parser.utility import (
     extract_article_body_with_selector,
     generic_author_parsing,
     generic_date_parsing,
+    generic_topic_parsing,
     image_extraction,
+    strip_nodes_to_text,
 )
 
 
 class ZDFParser(ParserProxy):
     class V1(BaseParser):
-        _paragraph_selector = CSSSelector("div.r1nj4qn5")
+        VALID_UNTIL = datetime.date(2025, 8, 1)  # This date could not be verified exactly
+
+        _paragraph_selector = XPath("//div[contains(@class,'r1nj4qn5')]")
         _summary_selector = CSSSelector("p.c1bdz7f4")
         _subheadlines_selector = CSSSelector("h2.hhhtovw")
 
@@ -51,3 +55,19 @@ class ZDFParser(ParserProxy):
                 caption_selector=XPath("./ancestor::div[@class='c1owvrps c10o8fzf']//span[@class='c1pbsmr2']"),
                 lower_boundary_selector=XPath("//div[@class='s1am5zo f1uhhdhr']"),
             )
+
+    class V1_1(V1):
+        VALID_UNTIL = datetime.date.today()
+
+        _paragraph_selector = XPath(
+            "//main/div[@data-testid='text-module']/div[@class='c10o8fzf']/p[@class='r1nj4qn5 rvqyqzi']|"
+            "//figure/blockquote"
+        )
+        _topic_selector = XPath("//div[@class='t130q2hl']//a")
+
+        @attribute
+        def topics(self) -> List[str]:
+            topic_string = strip_nodes_to_text(self._topic_selector(self.precomputed.doc), join_on=",")
+            if topic_string is not None:
+                return generic_topic_parsing(topic_string, delimiter=",")
+            return []

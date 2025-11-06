@@ -274,5 +274,9 @@
   "ZDF_2024_04_22.html.gz": {
     "url": "https://www.zdf.de/nachrichten/wirtschaft/deutschland-iran-handel-sanktionen-100.html",
     "crawl_date": "2024-04-22 17:22:43.812721"
+  },
+  "ZDF_2025_11_07.html.gz": {
+    "url": "https://www.zdfheute.de/politik/ausland/putin-warnung-dekolonisierung-russland-100.html",
+    "crawl_date": "2025-11-07 00:28:51.330920"
   }
 }
