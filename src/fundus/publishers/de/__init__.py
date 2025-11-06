@@ -194,6 +194,7 @@ class DE(metaclass=PublisherGroup):
             Sitemap("https://www.spiegel.de/sitemap.xml"),
             NewsMap("https://www.spiegel.de/sitemaps/news-de.xml"),
         ],
+        request_header={"User-Agent": "Googlebot"},
     )
 
     DieZeit = Publisher(
