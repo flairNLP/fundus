@@ -471,7 +471,7 @@ def generic_author_parsing(
 
         authors = list(more_itertools.flatten([split(author) for author in authors]))
         normalized_authors = [normalize_whitespace(author) for author in authors]
-        return normalized_authors
+        authors = normalized_authors
     if substitution_pattern:
         authors = apply_substitution_pattern_over_list(authors, substitution_pattern)
     return apply_result_filter(authors, result_filter)
