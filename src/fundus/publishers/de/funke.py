@@ -106,4 +106,4 @@ class FunkeParser(ParserProxy):
     class V1_2(V1_1):
         VALID_UNTIL = datetime.date.today()
 
-        _topics_selector = XPath("//a[@data-track-v2-parentlabel='Mehr lesen über']")
+        _topics_selector = XPath("//a[@data-track-v2-parentlabel='Mehr lesen über'] ")
