@@ -81,7 +81,7 @@ class FunkeParser(ParserProxy):
             )
 
     class V1_1(V1):
-        VALID_UNTIL = datetime.date.today()
+        VALID_UNTIL = datetime.date(2025, 10, 22)
 
         _paragraph_selector = XPath(
             "//div[contains(@class,'article-body')]"
@@ -103,7 +103,7 @@ class FunkeParser(ParserProxy):
             "//img[contains(@class, 'lg:aspect-[16/9]') or not(contains(@class, 'aspect-[1/1]'))] | //figure/picture"
         )
 
-        @attribute(deprecated=datetime.date(2025, 10, 22))
-        def topics(self) -> List[str]:
-            topics: List[str] = super().topics()
-            return topics
+    class V1_2(V1_1):
+        VALID_UNTIL = datetime.date.today()
+
+        _topics_selector = XPath("//a[@data-track-v2-parentlabel='Mehr lesen über']")
