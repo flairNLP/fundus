@@ -163,7 +163,7 @@ class EventDict:
         with self._lock:
             if isinstance(key, str) and key not in self._aliases:
                 self._alias(key)
-            if (resolved := self._resolve(key)) not in self._events:
+            if event not in self._events[(resolved := self._resolve(key))]:
                 self._events[resolved][event] = threading.Event()
                 logger.debug(f"Registered event {event!r} for {self._pretty_resolve(key)}")
 
