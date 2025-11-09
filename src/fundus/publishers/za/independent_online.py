@@ -10,16 +10,14 @@ from fundus.parser.utility import (
     generic_author_parsing,
     generic_date_parsing,
     generic_topic_parsing,
-    image_extraction, strip_nodes_to_text,
+    image_extraction,
+    strip_nodes_to_text,
 )
 
 
 class IndependentOnlineParser(ParserProxy):
     class V1(BaseParser):
-
-        _paragraph_selector = XPath(
-            "//div[@class='article_content__Ag4R_']//div[@class='text_text__oJhZK']/p"
-        )
+        _paragraph_selector = XPath("//div[@class='article_content__Ag4R_']//div[@class='text_text__oJhZK']/p")
 
         _topics_selector = XPath("//div[@class='tags_tags__zi1sf']/a")
 
@@ -57,8 +55,6 @@ class IndependentOnlineParser(ParserProxy):
                 upper_boundary_selector=XPath("//h1"),
                 lower_boundary_selector=XPath("//aside[@class='article_sidebar__qgf5d']"),
                 image_selector=XPath("//div[contains(@class, 'image')]//img"),
-                caption_selector=XPath(
-                    "./ancestor::div[@class='image_image-widget__LYZT4']//p"
-                ),
+                caption_selector=XPath("./ancestor::div[@class='image_image-widget__LYZT4']//p"),
                 author_selector=re.compile(r"(?i)image:(?P<credits>.+)"),
             )

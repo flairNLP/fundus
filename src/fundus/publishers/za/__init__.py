@@ -51,7 +51,9 @@ class ZA(metaclass=PublisherGroup):
         domain="https://www.isolezwe.co.za/",
         parser=IndependentOnlineParser,
         sources=[
-            Sitemap("https://isolezwe.co.za/sitemap/", sitemap_filter=inverse(regex_filter("/isolezwe/")), languages={"zu"}),
+            Sitemap(
+                "https://isolezwe.co.za/sitemap/", sitemap_filter=inverse(regex_filter("/isolezwe/")), languages={"zu"}
+            ),
         ],
     )
 
@@ -64,6 +66,6 @@ class ZA(metaclass=PublisherGroup):
             Sitemap("https://isolezwelesixhosa.co.za/sitemap/isolezwe-lesixhosa/ezemidlalo/", languages={"xh"}),
             Sitemap("https://isolezwelesixhosa.co.za/sitemap/isolezwe-lesixhosa/ezoyolo/", languages={"xh"}),
             Sitemap("https://isolezwelesixhosa.co.za/sitemap/isolezwe-lesixhosa/izimvo/", languages={"xh"}),
-            Sitemap("https://isolezwelesixhosa.co.za/sitemap/isolezwe-lesixhosa/entsimini/", languages={"xh"})
+            Sitemap("https://isolezwelesixhosa.co.za/sitemap/isolezwe-lesixhosa/entsimini/", languages={"xh"}),
         ],
     )
