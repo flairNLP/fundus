@@ -27,6 +27,7 @@ class TR(metaclass=PublisherGroup):
         name="NTVTR",
         domain="https://www.ntv.com.tr/",
         parser=NTVTRParser,
+        url_filter=regex_filter("/galeri/"),  # Exclude galleries
         sources=[
             RSSFeed("https://www.ntv.com.tr/gundem.rss"),
             NewsMap("https://www.ntv.com.tr/sitemaps/news-sitemap.xml"),
