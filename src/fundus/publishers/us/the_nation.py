@@ -106,7 +106,7 @@ class TheNationParser(ParserProxy):
         # use the old layout for main content, so we concatenate XPath from V1 onto V1_1.
 
         _summary_selector = XPath(
-            "//div[@class='article-header-content'] /h2 | //div[contains(@class, 'article-title')] /p"
+            "//div[@class='article-header-content'] /h2 | //article//div[contains(@class, 'article-title')] /p"
         )
         _paragraph_selector = XPath("(//article | //div[@class='article-body-inner']) / p")
 
