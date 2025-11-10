@@ -38,7 +38,7 @@ class NTVTRParser(ParserProxy):
         @attribute
         def title(self) -> Optional[str]:
             if title := self.precomputed.meta.get("og:title"):
-                return title.removesuffix("| NTV Haber").strip()
+                return title.replace("| NTV Haber", "").strip()
             return None
 
         @attribute
