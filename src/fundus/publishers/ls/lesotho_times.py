@@ -15,14 +15,14 @@ from fundus.parser.utility import (
 
 class LesothoTimesParser(ParserProxy):
     class V1(BaseParser):
-        _paragraph_selector = XPath("//div[@class='entry-content']/p[text() or span]")
+        _paragraph_selector = XPath("//div[contains(@class,'entry-content')]/p[text() or span]")
         _subheadline_selector = XPath(
-            "//div[@class='entry-content']/p[not(text() or em) and strong[not(em)] and position()>4]"
+            "//div[contains(@class,'entry-content')]/p[not(text() or em) and strong[not(em)] and position()>4]"
         )
-        _summary_selector = XPath("//div[@class='entry-content']/p[not(text()) and (strong[em] or em)]")
+        _summary_selector = XPath("//div[contains(@class,'entry-content')]/p[not(text()) and (strong[em] or em)]")
 
         _author_selector = XPath(
-            "//div[@class='entry-content']/p[not(text() or em) and strong[not(em)] and position()<5]"
+            "//div[contains(@class,'entry-content')]/p[not(text() or em) and strong[not(em)] and position()<5]"
         )
 
         @attribute
@@ -51,6 +51,7 @@ class LesothoTimesParser(ParserProxy):
             return image_extraction(
                 doc=self.precomputed.doc,
                 paragraph_selector=self._paragraph_selector,
-                image_selector=XPath("//div[@class='feature-postimg']/img"),
+                image_selector=XPath("//div[@class='feature-postimg' or contains(@class, 'post-image')]/img"),
+                caption_selector=XPath("./ancestor::div[contains(@class,'media')]//figcaption"),
                 upper_boundary_selector=XPath("//header"),
             )
