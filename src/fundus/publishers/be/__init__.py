@@ -1,6 +1,7 @@
 from fundus.publishers.base_objects import Publisher, PublisherGroup
 from fundus.publishers.be.nieuwsblad import NieuwsbladParser
 from fundus.publishers.be.politico_eu import PoliticoEuParser
+from fundus.scraping.filter import regex_filter
 from fundus.scraping.url import NewsMap, RSSFeed, Sitemap
 
 
@@ -28,4 +29,5 @@ class BE(metaclass=PublisherGroup):
             Sitemap("https://www.politico.eu/sitemap.xml", languages={"en"}),
             NewsMap("https://www.politico.eu/news-sitemap.xml", languages={"en"}),
         ],
+        url_filter=regex_filter("/podcast/"),
     )
