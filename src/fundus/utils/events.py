@@ -1,8 +1,9 @@
+import json
 import threading
 from collections import defaultdict
 from typing import Dict, List, Optional, Union
 
-from bidict import ON_DUP_DROP_OLD, bidict
+from bidict import bidict
 
 from fundus.logging import create_logger
 
@@ -84,7 +85,8 @@ class EventDict:
             default_events: A list of event names that are automatically available
                 for all threads (e.g., ["stop"]).
         """
-        self._events: Dict[int, ThreadEventDict] = defaultdict(lambda: ThreadEventDict(default_events))
+        self.default_events = default_events
+        self._events: Dict[int, ThreadEventDict] = defaultdict(lambda: ThreadEventDict(self.default_events))
         self._aliases: bidict[str, int] = bidict()
         self._lock = threading.RLock()
 
@@ -142,7 +144,7 @@ class EventDict:
             key: The thread identifier to associate with this alias.
                 If None, the current thread's identifier is used.
         """
-        self._aliases.put(alias, key if key else self._get_identifier(), ON_DUP_DROP_OLD)
+        self._aliases[alias] = key if key else self._get_identifier()
         if (ident := self._resolve(alias)) not in self._events:
             # noinspection PyStatementEffect
             # Since defaultdict doesn't provide a direct way to create defaults,
@@ -286,6 +288,20 @@ class EventDict:
         """
         with self._lock:
             return self._events[self._resolve(key)][event]
+
+    def reset(self):
+        with self._lock:
+            self._events = defaultdict(lambda: ThreadEventDict(self.default_events))
+            self._aliases = bidict()
+
+    def __str__(self):
+        def _entry(thread: int) -> str:
+            alias = self._aliases.inv.get(thread, None)
+            serialized = json.dumps(self._events[thread], indent=2, ensure_ascii=False, default=lambda o: o.set())
+            return f"{alias if alias else 'None'} --> {thread}: \n" + serialized
+
+        events = [_entry(ident) for ident in self._events]
+        return "\n".join(events) if events else "Empty Event Dictionary"
 
 
 __EVENTS__: EventDict = EventDict(default_events=__DEFAULT_EVENTS__)

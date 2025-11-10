@@ -404,6 +404,7 @@ class CrawlerBase(ABC):
                         break
         finally:
             session_handler.close_current_session()
+            __EVENTS__.reset()
             if save_to_file is not None:
                 if isinstance(save_to_file, str):
                     save_to_file = Path(save_to_file)

@@ -1,3 +1,4 @@
+import bidict
 import pytest
 
 from fundus.utils.events import EventDict
@@ -77,4 +78,9 @@ class TestEvents:
 
         events.alias("main-thread", 1)
 
-        events.alias("main-thread", 1)
+        with pytest.raises(bidict.ValueDuplicationError):
+            events.alias("new-thread", 1)
+
+        events.alias("main-thread", 2)
+
+        events.alias("new-thread", 1)
