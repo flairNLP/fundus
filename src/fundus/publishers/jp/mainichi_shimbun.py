@@ -7,7 +7,6 @@ from lxml.etree import XPath
 
 from fundus.parser import ArticleBody, BaseParser, Image, ParserProxy, attribute
 from fundus.parser.utility import (
-    apply_substitution_pattern_over_list,
     extract_article_body_with_selector,
     generic_author_parsing,
     generic_date_parsing,
@@ -22,7 +21,7 @@ class MainichiShimbunParser(ParserProxy):
         _paragraph_selector = CSSSelector("#articledetail-body > p")
         _subheadline_selector = CSSSelector("#articledetail-body > h2")
 
-        _topic_bloat_pattern = re.compile("速報")
+        _bloat_topic = {"速報"}
 
         @attribute
         def body(self) -> Optional[ArticleBody]:
@@ -48,9 +47,8 @@ class MainichiShimbunParser(ParserProxy):
 
         @attribute
         def topics(self) -> List[str]:
-            return apply_substitution_pattern_over_list(
-                generic_topic_parsing(self.precomputed.meta.get("keywords"), delimiter=[",", "・"]),
-                self._topic_bloat_pattern,
+            return generic_topic_parsing(
+                self.precomputed.meta.get("keywords"), delimiter=[",", "・"], result_filter=self._bloat_topic
             )
 
         @attribute
