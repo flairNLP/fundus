@@ -56,7 +56,6 @@ class BoersenZeitungParser(ParserProxy):
 
         @attribute
         def free_access(self) -> bool:
-            # print(self._paywall_selector(self.precomputed.doc).text_content().strip())
             return not [node.text_content().strip() for node in self._paywall_selector(self.precomputed.doc)]
 
         @attribute
