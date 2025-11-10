@@ -44,7 +44,9 @@ class LesothoTimesParser(ParserProxy):
 
         @attribute
         def title(self) -> Optional[str]:
-            return self.precomputed.meta.get("og:title")
+            if title := self.precomputed.meta.get("og:title"):
+                return title.removesuffix("- Lesotho Times").strip()
+            return None
 
         @attribute
         def images(self) -> List[Image]:
