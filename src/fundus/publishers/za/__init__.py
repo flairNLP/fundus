@@ -2,7 +2,7 @@ from fundus.publishers.base_objects import Publisher, PublisherGroup
 from fundus.publishers.za.daily_maverick import DailyMaverickParser
 from fundus.publishers.za.independent_online import IndependentOnlineParser
 from fundus.publishers.za.times_live import TimesLiveParser
-from fundus.scraping.filter import inverse, regex_filter
+from fundus.scraping.filter import inverse, lor, regex_filter
 from fundus.scraping.url import NewsMap, Sitemap
 
 
@@ -62,10 +62,10 @@ class ZA(metaclass=PublisherGroup):
         domain="https://www.isolezwelesixhosa.co.za/",
         parser=IndependentOnlineParser,
         sources=[
-            Sitemap("https://isolezwelesixhosa.co.za/sitemap/isolezwe-lesixhosa/iindaba/", languages={"xh"}),
-            Sitemap("https://isolezwelesixhosa.co.za/sitemap/isolezwe-lesixhosa/ezemidlalo/", languages={"xh"}),
-            Sitemap("https://isolezwelesixhosa.co.za/sitemap/isolezwe-lesixhosa/ezoyolo/", languages={"xh"}),
-            Sitemap("https://isolezwelesixhosa.co.za/sitemap/isolezwe-lesixhosa/izimvo/", languages={"xh"}),
-            Sitemap("https://isolezwelesixhosa.co.za/sitemap/isolezwe-lesixhosa/entsimini/", languages={"xh"}),
+            Sitemap(
+                "https://isolezwelesixhosa.co.za/sitemap/",
+                sitemap_filter=lor(inverse(regex_filter("/isolezwe-lesixhosa/")), regex_filter("english")),
+                languages={"xh"},
+            ),
         ],
     )
