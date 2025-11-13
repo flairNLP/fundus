@@ -1,7 +1,8 @@
 from fundus.publishers.base_objects import Publisher, PublisherGroup
 from fundus.publishers.za.daily_maverick import DailyMaverickParser
+from fundus.publishers.za.independent_online import IndependentOnlineParser
 from fundus.publishers.za.times_live import TimesLiveParser
-from fundus.scraping.filter import inverse, regex_filter
+from fundus.scraping.filter import inverse, lor, regex_filter
 from fundus.scraping.url import NewsMap, Sitemap
 
 
@@ -33,5 +34,38 @@ class ZA(metaclass=PublisherGroup):
             NewsMap("https://www.timeslive.co.za/sitemap/google-news/sunday-times/news/"),
             NewsMap("https://www.timeslive.co.za/sitemap/google-news/sunday-times/business/"),
             NewsMap("https://www.timeslive.co.za/sitemap/google-news/sunday-times-daily/news/"),
+        ],
+    )
+
+    DurbanLocal = Publisher(
+        name="Durban Local",
+        domain="https://www.durbanlocal.co.za/",
+        parser=IndependentOnlineParser,
+        sources=[
+            Sitemap("https://durbanlocal.co.za/sitemap/", sitemap_filter=inverse(regex_filter("/your-ethekwini/"))),
+        ],
+    )
+
+    Isolezwe = Publisher(
+        name="Isolezwe",
+        domain="https://www.isolezwe.co.za/",
+        parser=IndependentOnlineParser,
+        sources=[
+            Sitemap(
+                "https://isolezwe.co.za/sitemap/", sitemap_filter=inverse(regex_filter("/isolezwe/")), languages={"zu"}
+            ),
+        ],
+    )
+
+    IsolezweLesiXhosa = Publisher(
+        name="Isolezwe LesiXhosa",
+        domain="https://www.isolezwelesixhosa.co.za/",
+        parser=IndependentOnlineParser,
+        sources=[
+            Sitemap(
+                "https://isolezwelesixhosa.co.za/sitemap/",
+                sitemap_filter=lor(inverse(regex_filter("/isolezwe-lesixhosa/")), regex_filter("english")),
+                languages={"xh"},
+            ),
         ],
     )
