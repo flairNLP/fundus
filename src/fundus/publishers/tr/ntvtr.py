@@ -37,9 +37,7 @@ class NTVTRParser(ParserProxy):
 
         @attribute
         def title(self) -> Optional[str]:
-            if title := self.precomputed.meta.get("og:title"):
-                return title.replace("| NTV Haber", "").strip()
-            return None
+            return self.precomputed.meta.get("og:title")
 
         @attribute
         def topics(self) -> List[str]:
@@ -59,7 +57,7 @@ class NTVTRParser(ParserProxy):
                 image_selector=XPath("//div[contains(@class, 'img-wrapper')]//img | //picture /img"),
             )
 
-    class V1_1(V1):
+    class V2(BaseParser):
         VALID_UNTIL = datetime.date.today()
 
         _paragraph_selector = XPath("//div[contains(@class, 'content')]/p[text()]")
@@ -78,12 +76,26 @@ class NTVTRParser(ParserProxy):
             )
 
         @attribute
+        def publishing_date(self) -> Optional[datetime.datetime]:
+            return generic_date_parsing(self.precomputed.meta.get("datePublished"))
+
+        @attribute
+        def title(self) -> Optional[str]:
+            if title := self.precomputed.meta.get("og:title"):
+                return title.replace("| NTV Haber", "").strip()
+            return None
+
+        @attribute
         def topics(self) -> List[str]:
             return generic_topic_parsing(
                 strip_nodes_to_text(self._topics_selector(self.precomputed.doc), join_on=","),
                 substitution_pattern=re.compile(r"-\s*$"),
                 delimiter=",",
             )
+
+        @attribute
+        def authors(self) -> List[str]:
+            return generic_author_parsing(self.precomputed.meta.get("articleAuthor"))
 
         @attribute
         def images(self) -> List[Image]:
