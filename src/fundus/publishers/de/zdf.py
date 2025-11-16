@@ -50,9 +50,15 @@ class ZDFParser(ParserProxy):
                 doc=self.precomputed.doc,
                 paragraph_selector=self._paragraph_selector,
                 image_selector=XPath(
-                    "//picture//img[not(contains(@class, 'error') or contains(@src, 'zdfheute-whatsapp-channel'))]"
+                    "//picture//img[not(contains(@class, 'error') or contains(@src, 'zdfheute-whatsapp-channel'))"
+                    " or contains(@alt, 'Autorenfoto')]"
                 ),
-                caption_selector=XPath("./ancestor::div[@class='c1owvrps c10o8fzf']//span[@class='c1pbsmr2']"),
+                caption_selector=XPath(
+                    "./ancestor::*[(self::div and @class='c1owvrps c10o8fzf') or self::figure]//*[contains(@class,'c1pbsmr2')]"
+                ),
+                author_selector=XPath(
+                    "./ancestor::*[(self::div and @class='c1owvrps c10o8fzf') or self::figure]//small[contains(@class, 'tsdggcs')]"
+                ),
                 lower_boundary_selector=XPath("//div[@class='s1am5zo f1uhhdhr']"),
             )
 

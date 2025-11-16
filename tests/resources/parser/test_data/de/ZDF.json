@@ -510,8 +510,10 @@
         ],
         "is_cover": true,
         "description": "Russlands Präsident Putin",
-        "caption": null,
-        "authors": [],
+        "caption": "Russlands Präsident Wladimir Putin hat Behörden dazu angewiesen, schnell auf jeden Fall ethnischer Konflikte zu reagieren.",
+        "authors": [
+          "dpa"
+        ],
         "position": 401
       },
       {
@@ -573,7 +575,7 @@
         ],
         "is_cover": false,
         "description": "Gerichtsverhandlung gegen die Sängerin Diana Loginova, Künstlername Noako, in Sankt Petersburg – 16. Oktober 2025 Diana Loginova, Sängerin der Band Stoptime, die unter dem Künstlernamen Noako auftritt und nach der öffentlichen Aufführung von Liedern ausländischer Agenten sowie eines Liedes von Noize MC, dessen Verbreitung verboten ist, festgenommen wurde, nimmt an einer Gerichtsverhandlung teil.",
-        "caption": null,
+        "caption": "In Russland gehen junge Menschen für Demokratie und eine friedliche Zukunft auf die Straße. Trotz drohender Strafen fordern sie Freiheit - und ein Russland ohne Putin.",
         "authors": [],
         "position": 426
       },
@@ -628,7 +630,9 @@
         "is_cover": false,
         "description": "Nico Lange",
         "caption": null,
-        "authors": [],
+        "authors": [
+          "Tobias Koch"
+        ],
         "position": 465
       },
       {
@@ -645,7 +649,7 @@
         ],
         "is_cover": false,
         "description": "Ein jugendlicher Gefangener steht hinter Gittern.",
-        "caption": null,
+        "caption": "Sie sind mutig: Jugendliche, die in Russland gegen den Krieg in der Ukraine protestieren, erwarten hohe Strafen. Sie dienen der Abschreckung für Nachahmer.",
         "authors": [],
         "position": 483
       }
