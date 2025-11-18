@@ -3777,6 +3777,27 @@
     </tr>
     <tr>
       <td>
+        <code>Dizindaba</code>
+      </td>
+      <td>
+        <div>Dizindaba</div>
+      </td>
+      <td>
+        <a href="https://www.dizindaba.co.za/">
+          <span>www.dizindaba.co.za</span>
+        </a>
+      </td>
+      <td>
+        <code>xh</code>
+      </td>
+      <td>
+        <code>topics</code>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
         <code>TimesLive</code>
       </td>
       <td>

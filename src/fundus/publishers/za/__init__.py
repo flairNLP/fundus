@@ -1,5 +1,6 @@
 from fundus.publishers.base_objects import Publisher, PublisherGroup
 from fundus.publishers.za.daily_maverick import DailyMaverickParser
+from fundus.publishers.za.dizindaba import DizindabaParser
 from fundus.publishers.za.times_live import TimesLiveParser
 from fundus.scraping.filter import inverse, regex_filter
 from fundus.scraping.url import NewsMap, Sitemap
@@ -33,5 +34,19 @@ class ZA(metaclass=PublisherGroup):
             NewsMap("https://www.timeslive.co.za/sitemap/google-news/sunday-times/news/"),
             NewsMap("https://www.timeslive.co.za/sitemap/google-news/sunday-times/business/"),
             NewsMap("https://www.timeslive.co.za/sitemap/google-news/sunday-times-daily/news/"),
+        ],
+    )
+
+    Dizindaba = Publisher(
+        name="Dizindaba",
+        domain="https://www.dizindaba.co.za/",
+        parser=DizindabaParser,
+        sources=[
+            Sitemap(
+                "https://dizindaba.co.za/sitemap_index.xml",
+                sitemap_filter=inverse(regex_filter("post-sitemap")),
+                languages={"xh"},
+                reverse=True,
+            )
         ],
     )
