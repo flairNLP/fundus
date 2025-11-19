@@ -3798,6 +3798,63 @@
     </tr>
     <tr>
       <td>
+        <code>DurbanLocal</code>
+      </td>
+      <td>
+        <div>Durban Local</div>
+      </td>
+      <td>
+        <a href="https://www.durbanlocal.co.za/">
+          <span>www.durbanlocal.co.za</span>
+        </a>
+      </td>
+      <td>
+        <code>en</code>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
+        <code>Isolezwe</code>
+      </td>
+      <td>
+        <div>Isolezwe</div>
+      </td>
+      <td>
+        <a href="https://www.isolezwe.co.za/">
+          <span>www.isolezwe.co.za</span>
+        </a>
+      </td>
+      <td>
+        <code>zu</code>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
+        <code>IsolezweLesiXhosa</code>
+      </td>
+      <td>
+        <div>Isolezwe LesiXhosa</div>
+      </td>
+      <td>
+        <a href="https://www.isolezwelesixhosa.co.za/">
+          <span>www.isolezwelesixhosa.co.za</span>
+        </a>
+      </td>
+      <td>
+        <code>xh</code>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
         <code>TimesLive</code>
       </td>
       <td>
