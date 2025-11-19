@@ -17,7 +17,7 @@ from fundus.parser.utility import (
 
 class IndependentOnlineParser(ParserProxy):
     class V1(BaseParser):
-        _paragraph_selector = XPath("//div[@class='article_content__Ag4R_']//div[@class='text_text__oJhZK']/p")
+        _paragraph_selector = XPath("//div[@class='article_content__Ag4R_']//div[@class='text_text__oJhZK']/p ")
 
         _topics_selector = XPath("//div[@class='tags_tags__zi1sf']/a")
 
