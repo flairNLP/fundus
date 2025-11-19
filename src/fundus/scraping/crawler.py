@@ -20,7 +20,7 @@ from multiprocessing.context import TimeoutError
 from multiprocessing.managers import BaseManager
 from multiprocessing.pool import MapResult, Pool, ThreadPool
 from pathlib import Path
-from queue import Empty, Queue
+from queue import Empty, Full, Queue
 from threading import current_thread
 from typing import (
     Any,
@@ -153,9 +153,28 @@ def queue_wrapper(
 
     @wraps(target)
     def wrapper(*args: _P.args, **kwargs: _P.kwargs) -> None:
-        try:
+        def _guarded_put(obj: _T) -> bool:
+            """Safely putting results on the queue avoiding deadlocks"""
+            while True:
+                try:
+                    # We use nowait here to avoid a deadlock on the put when the pool is already shutting down
+                    # and therefore the queue never will never be free.
+                    queue.put_nowait(obj)
+                except Full:
+                    if __EVENTS__.is_event_set("stop"):
+                        return False
+                    time.sleep(0.05)
+                else:
+                    return True
+
+        def _process_target():
+            """Iterate over <target> and put results into <queue>"""
             for obj in target(*args, **kwargs):
-                queue.put(obj)
+                if not _guarded_put(obj):
+                    return
+
+        try:
+            _process_target()
         except silenced_exceptions:
             pass
         except Exception as err:
