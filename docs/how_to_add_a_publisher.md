@@ -257,7 +257,7 @@ will exclude all sitemap URLs not containing the substring `sitemap-content-`.
 ### Finishing the Publisher Specification
 
 1. If your publisher requires to use custom request headers to work properly you can alter it by using the `request_header` parameter of `PublisherSpec`.
-   The default is: `{"user_agent": "Fundus"}`.
+   The default is: `{"user-agent": "Fundus/2.0 (contact: github.com/flairnlp/fundus)"}`.
 2. If you want to block URLs for the entire publisher use the `url_filter` parameter of `Publisher`.
 3. In some cases it can be necessary to append query parameters to the end of the URL, e.g. to load the article as one page. This can be achieved by adding the `query_parameter` attribute of `PublisherSpec` and assigning it a dictionary object containing the key - value pairs: e.g. `{"page": "all"}`. These key  - value pairs will be appended to all crawled URLs.
 

@@ -165,7 +165,6 @@ class DE(metaclass=PublisherGroup):
         sources=[
             NewsMap("https://www.focus.de/sitemap_news_ressorts.xml"),
         ],
-        request_header={"user-agent": "Fundus"},
     )
 
     Merkur = Publisher(
@@ -212,7 +211,6 @@ class DE(metaclass=PublisherGroup):
         url_filter=regex_filter(
             "/zett/|/angebote/|/kaenguru-comics/|/administratives/|/index(?!.)|/elbvertiefung-[0-9]{2}-[0-9]{2}"
         ),
-        request_header={"user-agent": "Googlebot"},
     )
 
     BerlinerZeitung = Publisher(
