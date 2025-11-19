@@ -42,7 +42,7 @@ class NatureParser(ParserProxy):
         _caption_selector = XPath("./ancestor::figure//figcaption")
         _author_pattern = re.compile(r"(?i)\s*(credit|source|illustration|analysis by):?\s+(?P<credits>.*)")
 
-        _bloat_topics = ["multidisciplinary", "Science", "Humanities and Social Sciences"]
+        _bloat_topics = {"multidisciplinary", "Science", "Humanities and Social Sciences"}
 
         _paywall_selector = XPath("//div[@class='app-access-wall__container']")
 
@@ -69,11 +69,7 @@ class NatureParser(ParserProxy):
 
         @attribute
         def topics(self) -> List[str]:
-            return [
-                topic
-                for topic in generic_topic_parsing(self.precomputed.ld.bf_search("keywords"))
-                if topic not in self._bloat_topics
-            ]
+            return generic_topic_parsing(self.precomputed.ld.bf_search("keywords"), result_filter=self._bloat_topics)
 
         @attribute
         def free_access(self) -> bool:
