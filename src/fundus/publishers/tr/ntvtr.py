@@ -61,8 +61,10 @@ class NTVTRParser(ParserProxy):
         VALID_UNTIL = datetime.date.today()
 
         _paragraph_selector = XPath("//div[contains(@class, 'content')]/p[text()]")
-        _summary_selector = XPath("//h2")
-        _subheadline_selector = XPath("//div[contains(@class, 'content')]/p[not(text()) and strong]")
+        _summary_selector = XPath("//div[contains(@class, 'info-text-card')]//h2")
+        _subheadline_selector = XPath(
+            "//div[contains(@class, 'content')]/p[not(text()) and strong] |" "//div[@data-imageindex]//h2"
+        )
 
         _topics_selector = XPath("(//ul[contains(@class, 'text-[#3D619B]')])[1]/li")
 
@@ -104,6 +106,9 @@ class NTVTRParser(ParserProxy):
                 paragraph_selector=self._paragraph_selector,
                 upper_boundary_selector=CSSSelector("h1"),
                 lower_boundary_selector=XPath("(//img[@alt='Google Play'])[1]"),
-                image_selector=XPath("//div[@property='articleBody']//img[not(@fetchpriority='auto')]"),
+                image_selector=XPath(
+                    "//div[@property='articleBody']//img[not(@fetchpriority='auto') or @height > 300]"
+                ),
+                caption_selector=XPath("./ancestor::div[contains(@class,'relative') and p]/p"),
                 author_selector=XPath("./ancestor::div[contains(@class,'relative') and (picture or img)]/div"),
             )
