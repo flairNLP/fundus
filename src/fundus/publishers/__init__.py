@@ -36,6 +36,7 @@ from fundus.publishers.se import SE
 from fundus.publishers.tr import TR
 from fundus.publishers.tw import TW
 from fundus.publishers.tz import TZ
+from fundus.publishers.ua import UA
 from fundus.publishers.uk import UK
 from fundus.publishers.us import US
 from fundus.publishers.za import ZA
@@ -106,6 +107,7 @@ class PublisherCollection(metaclass=PublisherCollectionMeta):
     tr = TR
     tw = TW
     tz = TZ
+    ua = UA
     uk = UK
     us = US
     za = ZA
