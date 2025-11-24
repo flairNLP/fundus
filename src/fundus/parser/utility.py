@@ -410,8 +410,8 @@ def generic_author_parsing(
 
     with common delimiters := [",", ";", " und ", " and ", " & ", " | "]
 
-    If specified, a filter is applied and matched authors are removed and a substitution pattern is applied and
-     partial matches are removed from the element.
+    If a result filter is provided, authors matching the pattern or included in the set will be removed.
+    If a substitution pattern is provided, any substring matching that pattern will be removed from each author name.
 
     All values are stripped with default strip() method before returned.
 
@@ -495,8 +495,8 @@ def generic_topic_parsing(
         value (str):        re.split(delimiters) with delimiters := delimiter or ',' \n
         value (list[str]):  value\n
 
-    If specified, a filter is applied and matched topics are removed and a substitution pattern is applied and
-     partial matches are removed from the element.
+    If a result filter is provided, topics matching the pattern or included in the set will be removed.
+    If a substitution pattern is provided, any substring matching that pattern will be removed from each topic.
 
     All values are stripped with default strip() method before returned.
 
