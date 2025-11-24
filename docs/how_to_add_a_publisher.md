@@ -25,6 +25,7 @@
     * [Add unit tests](#add-unit-tests)
     * [Update tables](#update-tables)
   * [7. Opening a Pull Request](#7-opening-a-pull-request)
+  * [8. Maintaining publishers](#8-maintaining-publishers)
 
 # How to add a Publisher
 
@@ -758,3 +759,15 @@ pytest
 2. Run `black src`, `isort src`, and `mypy src` with no errors.
 3. Push and open a new PR
 4. Congratulation and thank you very much.
+
+## 8. Maintaining publishers
+
+If you notice a problem with a publisher, feel free to fix it and open a PR.
+We do ask you to follow the following rule of thumb when doing so.
+If the parser can no longer extract articles correctly, create a new parser version for the fix.
+This can be a minor version update (e.g. from `V1` to `V1_1(V1)`) if you just need to update the selectors.
+If additionally new attributes are added or multiple existing ones are modified, please consider upgrading to a new major version (e.g. from `V1` to `V2`).
+
+Note that now you will have to set the `VALID_UNTIL` attribute.
+The new version needs to specify `VALID_UNTIL = datetime.date.today()`, where as the old version requires a `datetime.date` object referencing the day before the layout change.
+The date can be estimated using the logs of our [Publisher Coverage](https://github.com/flairNLP/fundus/actions/workflows/publisher_coverage.yaml) or the [Wayback Machine](https://archive.org/web/).
