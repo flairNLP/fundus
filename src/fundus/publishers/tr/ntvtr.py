@@ -63,7 +63,7 @@ class NTVTRParser(ParserProxy):
         _paragraph_selector = XPath("//div[contains(@class, 'content')]/p[text()]")
         _summary_selector = XPath("//div[contains(@class, 'info-text-card')]//h2")
         _subheadline_selector = XPath(
-            "//div[contains(@class, 'content')]/p[not(text()) and strong] |" "//div[@data-imageindex]//h2"
+            "//div[contains(@class, 'content')]/p[not(text()) and strong] | //div[@data-imageindex]//h2"
         )
 
         _topics_selector = XPath("(//ul[contains(@class, 'text-[#3D619B]')])[1]/li")
