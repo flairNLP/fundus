@@ -1,5 +1,6 @@
 from fundus.publishers.base_objects import Publisher, PublisherGroup
 from fundus.publishers.za.daily_maverick import DailyMaverickParser
+from fundus.publishers.za.eyethu_news import EyethuNewsParser
 from fundus.publishers.za.times_live import TimesLiveParser
 from fundus.scraping.filter import inverse, regex_filter
 from fundus.scraping.url import NewsMap, Sitemap
@@ -17,6 +18,20 @@ class ZA(metaclass=PublisherGroup):
             Sitemap(
                 "https://www.dailymaverick.co.za/sitemap_index.xml",
                 sitemap_filter=inverse(regex_filter("article-sitemap")),
+            ),
+        ],
+    )
+
+    EyethuNews = Publisher(
+        name="Eyethu News",
+        domain="https://www.eyethunews.co.za/",
+        parser=EyethuNewsParser,
+        sources=[
+            Sitemap(
+                "https://eyethunews.co.za/sitemap.xml",
+                sitemap_filter=inverse(regex_filter("/post-sitemap")),
+                languages={"zu"},
+                reverse=True,
             ),
         ],
     )
