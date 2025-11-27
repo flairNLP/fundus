@@ -564,7 +564,7 @@ This function accepts selectors for the different body parts as input and return
 For practical examples, refer to existing parser implementations to understand how everything integrates.
 
 > [!IMPORTANT]  
-> Regardless of the article's layout, the extracted `ArticleBody` should closely mirror the actual body/text of the article and must not include any additional content.  
+> Regardless of the article's layout, the extracted `ArticleBody` should closely mirror the actual body/text of the article and must not include any additional content.
 > This ensures that the text can be accurately mapped back to the HTML for annotation purposes.
 
 ### Extracting the images
@@ -762,12 +762,14 @@ pytest
 
 ## 8. Maintaining publishers
 
-If you notice a problem with a publisher, feel free to fix it and open a PR.
-We do ask you to follow the following rule of thumb when doing so.
-If the parser can no longer extract articles correctly, create a new parser version for the fix.
-This can be a minor version update (e.g. from `V1` to `V1_1(V1)`) if you just need to update the selectors.
-If additionally new attributes are added or multiple existing ones are modified, please consider upgrading to a new major version (e.g. from `V1` to `V2`).
+If you encounter an issue with a publisher, feel free to correct it and submit a PR.  
+Please follow this general guideline when making such changes.  
 
-Note that now you will have to set the `VALID_UNTIL` attribute.
-The new version needs to specify `VALID_UNTIL = datetime.date.today()`, where as the old version requires a `datetime.date` object referencing the day before the layout change.
-The date can be estimated using the logs of our [Publisher Coverage](https://github.com/flairNLP/fundus/actions/workflows/publisher_coverage.yaml) or the [Wayback Machine](https://archive.org/web/).
+- If the parser can no longer extract articles properly, create a new parser version to implement the fix.  
+- Use a minor version bump (e.g., from `V1` to `V1_1(V1)`) if the update only involves adjusting selectors.  
+- If the change introduces new attributes or substantially modifies several existing ones, consider moving to a new major version (e.g., from `V1` to `V2`).  
+
+> [!NOTE]
+> You will now need to set the `VALID_UNTIL` attribute.
+> The new version should define `VALID_UNTIL = datetime.date.today()`, while the previous version must use a `datetime.date` pointing to the day before the layout change.
+> You can estimate this date using the logs or the Wayback Machine.
