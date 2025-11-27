@@ -21,7 +21,7 @@ class TimesLiveParser(ParserProxy):
         _summary_selector = XPath("//h3[contains(@class, 'article-title-tertiary')] ")
         _subheadline_selector = XPath("//div[@class='wrap']//div[@class='text']/h3")
 
-        _bloat_topics = [
+        _bloat_topics = {
             "reuters",
             "timeslive",
             "Breaking news",
@@ -40,7 +40,7 @@ class TimesLiveParser(ParserProxy):
             "the times",
             "business times",
             "tshisa live",
-        ]
+        }
 
         @attribute
         def body(self) -> Optional[ArticleBody]:
@@ -65,9 +65,7 @@ class TimesLiveParser(ParserProxy):
 
         @attribute
         def topics(self) -> List[str]:
-            return [
-                t for t in generic_topic_parsing(self.precomputed.meta.get("keywords")) if t not in self._bloat_topics
-            ]
+            return generic_topic_parsing(self.precomputed.meta.get("keywords"), result_filter=self._bloat_topics)
 
         @attribute
         def images(self) -> List[Image]:

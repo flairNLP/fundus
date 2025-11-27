@@ -380,6 +380,13 @@ def apply_substitution_pattern_over_list(
     return [subbed for text in input_list if (subbed := re.sub(pattern, replacement, text).strip())]
 
 
+def apply_result_filter(input_list: List[str], result_filter: Optional[Union[Pattern[str], Set[str]]]) -> List[str]:
+    if isinstance(result_filter, Pattern):
+        return [topic for topic in dict.fromkeys(input_list) if not re.search(result_filter, topic)]
+    else:
+        return [topic for topic in dict.fromkeys(input_list) if result_filter is None or topic not in result_filter]
+
+
 def generic_author_parsing(
     value: Union[
         Optional[str],
@@ -389,6 +396,8 @@ def generic_author_parsing(
     ],
     split_on: Optional[List[str]] = None,
     normalize: bool = True,
+    substitution_pattern: Optional[Pattern[str]] = None,
+    result_filter: Optional[Union[Pattern[str], Set[str]]] = None,
 ) -> List[str]:
     """This function tries to parse the given <value> to a list of authors (List[str]) based on the type of value.
 
@@ -401,6 +410,9 @@ def generic_author_parsing(
 
     with common delimiters := [",", ";", " und ", " and ", " & ", " | "]
 
+    If a result filter is provided, authors matching the pattern or included in the set will be removed.
+    If a substitution pattern is provided, any substring matching that pattern will be removed from each author name.
+
     All values are stripped with default strip() method before returned.
 
     Args:
@@ -408,6 +420,9 @@ def generic_author_parsing(
         split_on: Only relevant for type(<value>) = str. If set, split <value> on <split_on>,
             else (default) split <value> on common delimiters.
         normalize: If True, normalize every author with normalize_whitespace(). Defaults to True
+        substitution_pattern: If specified, partial matches are removed from each author
+        result_filter: Can be of type Pattern[str] or Set[str]. If specified, all authors matching the pattern or
+            contained in the set will be removed. Defaults to None.
 
     Returns:
         A parsed and striped list of authors
@@ -456,9 +471,10 @@ def generic_author_parsing(
 
         authors = list(more_itertools.flatten([split(author) for author in authors]))
         normalized_authors = [normalize_whitespace(author) for author in authors]
-        return normalized_authors
-
-    return authors
+        authors = normalized_authors
+    if substitution_pattern:
+        authors = apply_substitution_pattern_over_list(authors, substitution_pattern)
+    return apply_result_filter(authors, result_filter)
 
 
 def generic_text_extraction_with_css(doc, selector: XPath) -> Optional[str]:
@@ -467,8 +483,34 @@ def generic_text_extraction_with_css(doc, selector: XPath) -> Optional[str]:
 
 
 def generic_topic_parsing(
-    keywords: Optional[Union[str, List[str]]], delimiter: Union[str, List[str]] = ","
+    keywords: Optional[Union[str, List[str]]],
+    delimiter: Union[str, List[str]] = ",",
+    substitution_pattern: Optional[Pattern[str]] = None,
+    result_filter: Optional[Union[Pattern[str], Set[str]]] = None,
 ) -> List[str]:
+    """This function tries to parse the given <value> to a list of topics (List[str]) based on the type of value.
+
+    Parses based on type of <value> as following:
+        value (None):       Empty list \n
+        value (str):        re.split(delimiters) with delimiters := delimiter or ',' \n
+        value (list[str]):  value\n
+
+    If a result filter is provided, topics matching the pattern or included in the set will be removed.
+    If a substitution pattern is provided, any substring matching that pattern will be removed from each topic.
+
+    All values are stripped with default strip() method before returned.
+
+    Args:
+        keywords: An input value representing author(s) which get parsed based on type.
+        delimiter: Only relevant for type(<value>) = str. If set, split <value> on <delimiter>,
+            else (default) split <value> on ','.
+        substitution_pattern: If specified, partial matches are removed from each topic
+        result_filter: Can be of type Pattern[str] or Set[str]. If specified, all topics matching the pattern or
+            contained in the set will be removed. Defaults to None.
+
+    Returns:
+        A parsed and striped list of topics
+    """
     if isinstance(delimiter, str):
         delimiter = [delimiter]
 
@@ -484,8 +526,9 @@ def generic_topic_parsing(
         topics = keywords
     else:
         raise TypeError(f"Encountered unexpected type {type(keywords)} as keyword parameter")
-
-    return list(dict.fromkeys(topics))
+    if substitution_pattern:
+        topics = apply_substitution_pattern_over_list(topics, substitution_pattern)
+    return apply_result_filter(topics, result_filter=result_filter)
 
 
 _tz_infos = {"CET": 3600, "CEST": 7200, "IST": 19800}

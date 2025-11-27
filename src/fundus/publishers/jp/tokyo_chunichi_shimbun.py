@@ -42,14 +42,14 @@ class TokyoChunichiShimbunParser(ParserProxy):
 
         @attribute
         def authors(self) -> List[str]:
-            return apply_substitution_pattern_over_list(
-                generic_author_parsing(self.precomputed.ld.bf_search("author")), self._author_bloat_pattern
+            return generic_author_parsing(
+                self.precomputed.ld.bf_search("author"), result_filter=self._author_bloat_pattern
             )
 
         @attribute
         def topics(self) -> List[str]:
-            if topics := apply_substitution_pattern_over_list(
-                generic_topic_parsing(self.precomputed.ld.bf_search("articleSection")), self._topic_bloat_pattern
+            if topics := generic_topic_parsing(
+                self.precomputed.ld.bf_search("articleSection"), result_filter=self._topic_bloat_pattern
             ):
                 return [topic for topic in topics if "ニュース" not in topic]
             return []
