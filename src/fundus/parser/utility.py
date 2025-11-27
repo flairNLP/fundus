@@ -734,6 +734,7 @@ def parse_versions(img_node: lxml.html.HtmlElement, size_pattern: Optional[Patte
         and not default_width == "auto"
         and (default_height := img_node.get("height"))
         and not default_height == "auto"
+        and not float(default_height) == 0.0
     ):
         ratio = float(default_width) / float(default_height)
     else:
