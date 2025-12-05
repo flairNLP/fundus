@@ -37,7 +37,7 @@ def parse_arguments() -> Namespace:
         "--limit",
         default=100,
         type=int,
-        help=("the maximal number of artifacts to scan in descending order. (default 100)"),
+        help="the maximal number of artifacts to scan in descending order. (default 100)",
     )
 
     arguments = parser.parse_args()
@@ -131,7 +131,7 @@ def determine_timestamp(publisher: List[str], runs: List[WorkflowRun]) -> Dict[s
         return publisher_history
 
 
-if __name__ == "__main__":
+def main() -> None:
     arguments = parse_arguments()
 
     if __TOKEN__ is None:
@@ -174,7 +174,7 @@ if __name__ == "__main__":
     if (parsed := parse_coverage_file(txt)) is None:
         raise RuntimeError(f"Couldn't parse latest coverage file for run {latest_run.id}")
 
-    failed_publisher = [publisher for publisher, status in parse_coverage_file(txt).items() if not status]  # type: ignore[union-attr]
+    failed_publisher = [publisher for publisher, status in parsed.items() if not status]  # type: ignore[union-attr]
 
     print(f"Latest run on '{run_time}' with {len(failed_publisher)} failed publishers.")
     print(failed_publisher)
@@ -191,3 +191,7 @@ if __name__ == "__main__":
 
     for pub in set(failed_publisher) - set(publisher_history):
         print(f"{pub:{max_length}} UNKNOWN")
+
+
+if __name__ == "__main__":
+    main()
