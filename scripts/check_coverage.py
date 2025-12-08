@@ -1,15 +1,19 @@
 import os
 import re
 import tempfile
+import zipfile
 from argparse import ArgumentParser, Namespace
 from datetime import datetime
-from typing import Dict, List, Optional
+from pathlib import Path
+from typing import IO, Dict, List, Optional, Union
 
 import requests
 from dotenv import load_dotenv
 from github import Auth, Github
 from github.WorkflowRun import WorkflowRun
 from tqdm import tqdm
+
+from fundus import __development_base_path__ as __root__
 
 load_dotenv()
 
@@ -18,6 +22,7 @@ __REPO__ = "flairNLP/fundus"
 __WORKFLOW_NAME__ = "Publisher Coverage"
 __ARTIFACT_NAME__ = "Publisher Coverage"
 __TOKEN__ = os.getenv("GITHUB_TOKEN")  # needs to be a fine-grained token
+__CACHE_DIR__ = __root__ / ".cache" / "run_artifacts"  # cache directory for artifact downloads
 
 
 # ----------------------------
@@ -44,6 +49,20 @@ def parse_arguments() -> Namespace:
         default=100,
         type=int,
         help="the maximal number of artifacts to scan in descending order. (default 100)",
+    )
+
+    parser.add_argument(
+        "--nocache",
+        action="store_true",
+        help="do not use cached artifacts",
+    )
+
+    parser.add_argument(
+        "-p",
+        "--cachedir",
+        default=None,
+        type=Path,
+        help="the directory to use for caching artifacts",
     )
 
     arguments = parser.parse_args()
@@ -80,16 +99,32 @@ def parse_coverage_file(text: str) -> Optional[Dict[str, bool]]:
     return results
 
 
-def download_artifact_zip(run: WorkflowRun) -> Optional[str]:
+def download_artifact_zip(run: WorkflowRun, use_cache: bool = True) -> Optional[str]:
     """
     Download artifact ZIP for a workflow run and extract 'publisher_coverage.txt'.
+    Uses local cache to avoid re-downloading artifacts if use_cache is True.
 
     Args:
         run (WorkflowRun): GitHub workflow run object.
+        use_cache (bool): If False, ignore the cache and always download fresh.
 
     Returns:
         Optional[str]: Content of the coverage text file or None if download failed.
     """
+    cache_path = os.path.join(__CACHE_DIR__, f"{run.id}.zip")
+
+    def unzip(file: Union[str, IO[bytes]]) -> Optional[str]:
+        with zipfile.ZipFile(file) as z:
+            for fname in z.namelist():
+                if fname.endswith(".txt"):
+                    return z.read(fname).decode("utf-8")
+        return None
+
+    # Use cached file if it exists and caching is enabled
+    if use_cache and os.path.exists(cache_path):
+        return unzip(cache_path)
+
+    # Download artifact
     artifacts = run.get_artifacts()
     for a in artifacts:
         if a.name == __ARTIFACT_NAME__:
@@ -98,16 +133,20 @@ def download_artifact_zip(run: WorkflowRun) -> Optional[str]:
             if r.status_code != 200:
                 return None
 
-            tmp = tempfile.NamedTemporaryFile(delete=False)
-            tmp.write(r.content)
-            tmp.close()
+            # Save to cache if enabled
+            if use_cache:
+                with open(cache_path, "wb") as f:
+                    f.write(r.content)
+                zip_source = cache_path
+            else:
+                # Write to a temporary file if not caching
+                tmp = tempfile.NamedTemporaryFile(delete=False)
+                tmp.write(r.content)
+                tmp.close()
+                zip_source = tmp.name
 
-            import zipfile
+            return unzip(zip_source)
 
-            with zipfile.ZipFile(tmp.name) as z:
-                for fname in z.namelist():
-                    if fname.endswith(".txt"):
-                        return z.read(fname).decode("utf-8")
     return None
 
 
@@ -124,13 +163,14 @@ def parse_run_time(run: WorkflowRun) -> datetime:
     return datetime.strptime(run.created_at.isoformat(), "%Y-%m-%dT%H:%M:%S%z")
 
 
-def determine_timestamp(publishers: List[str], runs: List[WorkflowRun]) -> Dict[str, datetime]:
+def determine_timestamp(publishers: List[str], runs: List[WorkflowRun], use_cache: bool = True) -> Dict[str, datetime]:
     """
     Determine the last successful run timestamp for each publisher.
 
     Args:
         publishers (List[str]): List of currently failing publishers.
         runs (List[WorkflowRun]): Workflow runs to scan in descending order.
+        use_cache (bool): If False, ignore the cache and always download fresh.
 
     Returns:
         Dict[str, datetime]: Mapping of publisher name to datetime of last success.
@@ -145,7 +185,7 @@ def determine_timestamp(publishers: List[str], runs: List[WorkflowRun]) -> Dict[
             run_time = parse_run_time(run)
             pbar.set_description(f"Scanning run {run.id} from {run_time.date()}")
 
-            txt = download_artifact_zip(run)
+            txt = download_artifact_zip(run, use_cache=use_cache)
             pbar.update()
 
             if not txt:
@@ -173,7 +213,16 @@ def main() -> None:
     Main entry point: parse arguments, fetch workflow runs, analyze artifacts,
     and print a timeline of last successful runs for failing publishers.
     """
+    global __CACHE_DIR__
+
     arguments = parse_arguments()
+
+    if arguments.cachedir is not None:
+        __CACHE_DIR__ = arguments.cachedir
+
+    # Ensure cache directory exists
+    if not arguments.nocache:
+        __CACHE_DIR__.mkdir(parents=True, exist_ok=True)
 
     if __TOKEN__ is None:
         raise RuntimeError("Set GITHUB_TOKEN environment variable.")
@@ -208,7 +257,7 @@ def main() -> None:
         runs[1 + shift : min(arguments.limit + 1, runs.totalCount - 1) + shift]
     )
     run_time = parse_run_time(latest_run)
-    txt = download_artifact_zip(latest_run)
+    txt = download_artifact_zip(latest_run, use_cache=not arguments.nocache)
     if not txt:
         raise RuntimeError(f"Failed to download artifact '{__ARTIFACT_NAME__}' for latest run '{workflow_id}'.")
 
@@ -220,7 +269,7 @@ def main() -> None:
     print(f"Latest run on '{run_time}' with {len(failed_publishers)} failed publishers.")
     print(failed_publishers)
 
-    publisher_history = determine_timestamp(failed_publishers, sliced_runs)
+    publisher_history = determine_timestamp(failed_publishers, sliced_runs, use_cache=not arguments.nocache)
 
     max_length = max(len(key) for key in failed_publishers) if failed_publishers else 0
     print("\n====== Publisher Failure Timeline ======\n")
