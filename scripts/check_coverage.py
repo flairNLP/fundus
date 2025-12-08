@@ -7,7 +7,7 @@ from typing import Dict, List, Optional
 
 import requests
 from dotenv import load_dotenv
-from github import Github
+from github import Github, Auth
 from github.WorkflowRun import WorkflowRun
 from tqdm import tqdm
 
@@ -137,7 +137,7 @@ def main() -> None:
     if __TOKEN__ is None:
         raise RuntimeError("Set GITHUB_TOKEN environment variable.")
 
-    gh = Github(__TOKEN__)
+    gh = Github(auth=Auth.Token(__TOKEN__))
     repo = gh.get_repo(__REPO__)
 
     # 1. Find workflow ID
