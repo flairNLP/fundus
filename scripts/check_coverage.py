@@ -7,7 +7,7 @@ from typing import Dict, List, Optional
 
 import requests
 from dotenv import load_dotenv
-from github import Github, Auth
+from github import Auth, Github
 from github.WorkflowRun import WorkflowRun
 from tqdm import tqdm
 
@@ -24,6 +24,12 @@ __TOKEN__ = os.getenv("GITHUB_TOKEN")  # needs to be a fine-grained token
 
 
 def parse_arguments() -> Namespace:
+    """
+    Parse command-line arguments.
+
+    Returns:
+        Namespace: Parsed arguments containing 'limit'.
+    """
     parser = ArgumentParser(
         prog="check_coverage",
         description=(
@@ -46,12 +52,21 @@ def parse_arguments() -> Namespace:
 
 
 def parse_coverage_file(text: str) -> Optional[Dict[str, bool]]:
-    """Extract lines like:
-       ✔️ PASSED: 'NYTimes'
-       ❌ FAILED: 'Guardian'
-    Returns dict {publisher: True/False}
     """
-    results = {}
+    Extract publisher test results from the workflow artifact content.
+
+    Lines should be in the format:
+        ✔️ PASSED: 'NYTimes'
+        ❌ FAILED: 'Guardian'
+
+    Args:
+        text (str): Content of the coverage file.
+
+    Returns:
+        Optional[Dict[str, bool]]: Mapping of publisher to success status, or None if file
+        is malformed/unparsable.
+    """
+    results: Dict[str, bool] = {}
     for line in text.splitlines():
         m = re.search(r"(PASSED|FAILED): '([^']+)'", line)
         if m:
@@ -59,16 +74,22 @@ def parse_coverage_file(text: str) -> Optional[Dict[str, bool]]:
             name = m.group(2)
             results[name] = status
 
-    # unfortunately we have to fall back to this really badly hard coded check to see if an action run through
-    # the problem is that were only now (04.12.25) have a unique exit code, that's distinguishable from the
-    # action just crashing. In the future we can replace this check and purely checking on the exit code
     if "Some publishers finished in a 'FAILED' state" not in text and "All publishers passed the tests" not in text:
         return None
+
     return results
 
 
-def download_artifact_zip(run) -> Optional[str]:
-    """Download the artifact ZIP and return text content of publisher_coverage.txt."""
+def download_artifact_zip(run: WorkflowRun) -> Optional[str]:
+    """
+    Download artifact ZIP for a workflow run and extract 'publisher_coverage.txt'.
+
+    Args:
+        run (WorkflowRun): GitHub workflow run object.
+
+    Returns:
+        Optional[str]: Content of the coverage text file or None if download failed.
+    """
     artifacts = run.get_artifacts()
     for a in artifacts:
         if a.name == __ARTIFACT_NAME__:
@@ -91,24 +112,40 @@ def download_artifact_zip(run) -> Optional[str]:
 
 
 def parse_run_time(run: WorkflowRun) -> datetime:
+    """
+    Convert GitHub workflow run creation time to a datetime object.
+
+    Args:
+        run (WorkflowRun): GitHub workflow run object.
+
+    Returns:
+        datetime: Datetime of run creation.
+    """
     return datetime.strptime(run.created_at.isoformat(), "%Y-%m-%dT%H:%M:%S%z")
 
 
-def determine_timestamp(publisher: List[str], runs: List[WorkflowRun]) -> Dict[str, datetime]:
-    publisher_history = {}  # {publisher_name: last_success}
+def determine_timestamp(publishers: List[str], runs: List[WorkflowRun]) -> Dict[str, datetime]:
+    """
+    Determine the last successful run timestamp for each publisher.
 
+    Args:
+        publishers (List[str]): List of currently failing publishers.
+        runs (List[WorkflowRun]): Workflow runs to scan in descending order.
+
+    Returns:
+        Dict[str, datetime]: Mapping of publisher name to datetime of last success.
+    """
+    publisher_history: Dict[str, datetime] = {}
     print("Scanning runs in descending date order...")
 
-    current = set(publisher)
+    current = set(publishers)
 
     with tqdm(total=len(runs)) as pbar:
         for run in runs:
             run_time = parse_run_time(run)
-
             pbar.set_description(f"Scanning run {run.id} from {run_time.date()}")
 
             txt = download_artifact_zip(run)
-
             pbar.update()
 
             if not txt:
@@ -117,7 +154,7 @@ def determine_timestamp(publisher: List[str], runs: List[WorkflowRun]) -> Dict[s
             if not (parsed := parse_coverage_file(txt)):
                 continue
 
-            failed = {publisher for publisher, state in parsed.items() if state is False}
+            failed = {publisher for publisher, state in parsed.items() if not state}
 
             if succeeded := (current - failed):
                 for p in succeeded:
@@ -128,10 +165,14 @@ def determine_timestamp(publisher: List[str], runs: List[WorkflowRun]) -> Dict[s
             if not current:
                 break
 
-        return publisher_history
+    return publisher_history
 
 
 def main() -> None:
+    """
+    Main entry point: parse arguments, fetch workflow runs, analyze artifacts,
+    and print a timeline of last successful runs for failing publishers.
+    """
     arguments = parse_arguments()
 
     if __TOKEN__ is None:
@@ -142,7 +183,7 @@ def main() -> None:
 
     # 1. Find workflow ID
     workflows = repo.get_workflows()
-    workflow_id = None
+    workflow_id: Optional[int] = None
     for w in workflows:
         if w.name == __WORKFLOW_NAME__:
             workflow_id = w.id
@@ -153,7 +194,7 @@ def main() -> None:
 
     print(f"Found workflow ID: {workflow_id}")
 
-    # 2. Retrieve workflow runs properly
+    # 2. Retrieve workflow runs
     workflow = repo.get_workflow(workflow_id)
     runs = workflow.get_runs()
 
@@ -174,14 +215,14 @@ def main() -> None:
     if (parsed := parse_coverage_file(txt)) is None:
         raise RuntimeError(f"Couldn't parse latest coverage file for run {latest_run.id}")
 
-    failed_publisher = [publisher for publisher, status in parsed.items() if not status]  # type: ignore[union-attr]
+    failed_publishers = [publisher for publisher, status in parsed.items() if not status]  # type: ignore[union-attr]
 
-    print(f"Latest run on '{run_time}' with {len(failed_publisher)} failed publishers.")
-    print(failed_publisher)
+    print(f"Latest run on '{run_time}' with {len(failed_publishers)} failed publishers.")
+    print(failed_publishers)
 
-    publisher_history = determine_timestamp(failed_publisher, sliced_runs)
+    publisher_history = determine_timestamp(failed_publishers, sliced_runs)
 
-    max_length = max(len(key) for key in failed_publisher)
+    max_length = max(len(key) for key in failed_publishers) if failed_publishers else 0
     print("\n====== Publisher Failure Timeline ======\n")
     print(f"{'Publisher':{max_length}} 'Last Success'")
     print("-" * 85)
@@ -189,7 +230,7 @@ def main() -> None:
     for pub, time in sorted(publisher_history.items(), key=lambda x: x[1], reverse=True):
         print(f"{pub:{max_length}} {time.date()}")
 
-    for pub in set(failed_publisher) - set(publisher_history):
+    for pub in set(failed_publishers) - set(publisher_history):
         print(f"{pub:{max_length}} UNKNOWN")
 
 
