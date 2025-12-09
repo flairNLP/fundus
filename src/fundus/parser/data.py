@@ -69,7 +69,7 @@ class LinkedDataMapping:
                     self.add_ld(nested)
             else:
                 self.add_ld(ld)
-        self.__xml: Optional[lxml.etree._Element] = None
+        self.__xml: Optional[lxml.etree.Element] = None
 
     def __getstate__(self):
         state = self.__dict__.copy()
@@ -127,7 +127,7 @@ class LinkedDataMapping:
             tmp = nxt
         return tmp
 
-    def __as_xml__(self) -> lxml.etree._Element:
+    def __as_xml__(self) -> lxml.etree.Element:
         pattern = re.compile("|".join(map(re.escape, self.__xml_transformation_table__.keys())))
 
         def to_unicode_characters(text: str) -> str:
@@ -190,7 +190,7 @@ class LinkedDataMapping:
 
         pattern = re.compile("|".join(map(re.escape, self.__xml_transformation_table__.values())))
 
-        def node2string(n: lxml.etree._Element) -> str:
+        def node2string(n: lxml.etree.Element) -> str:
             node_value = lxml.etree.tostring(n, encoding="unicode").strip()
             if match := self.__value_regex__.match(node_value):
                 return match.group("value")
