@@ -4,7 +4,6 @@ import re
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, fields
 from functools import total_ordering
-from itertools import chain
 from typing import (
     Any,
     ClassVar,
@@ -139,6 +138,8 @@ class LinkedDataMapping:
             self.__xml = lxml.etree.fromstring(xml)
         return self.__xml
 
+    __value_regex__ = re.compile("^<[^<]*>(?P<value>.*)<[^<]*>$", flags=re.DOTALL)
+
     @overload
     def xpath_search(self, query: Union[XPath, str], scalar: Literal[False] = False) -> List[Any]:
         ...
@@ -190,14 +191,10 @@ class LinkedDataMapping:
         pattern = re.compile("|".join(map(re.escape, self.__xml_transformation_table__.values())))
 
         def node2string(n: lxml.etree._Element) -> str:
-            return "".join(
-                chunk
-                for chunk in chain(
-                    (n.text,),
-                    chain(*((tostring(child, with_tail=False, encoding=str), child.tail) for child in n.getchildren())),
-                )
-                if chunk
-            )
+            node_value = lxml.etree.tostring(n, encoding="unicode").strip()
+            if match := self.__value_regex__.match(node_value):
+                return match.group("value")
+            raise ValueError("XML malformed. Could not determine value.")
 
         reversed_table = {v: k for k, v in self.__xml_transformation_table__.items()}
 
