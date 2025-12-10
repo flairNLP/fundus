@@ -73,10 +73,16 @@ class SeznamZpravyParser(ParserProxy):
             )
 
     class V1_1(V1):
-        VALID_UNTIL = datetime.date.today()
+        VALID_UNTIL = datetime.date(2025, 11, 24)
 
         _paragraph_selector = XPath("//div[@class='h_f7 h_bZ h_bZ']/div/p/span[@class='atm-text-decorator' and text()]")
         _subheadline_selector = XPath(
             "//div[@class='h_f7 h_bZ h_bZ']/div/p/span[@class='atm-text-decorator']/span | "
             "//div[@class='h_f7 h_bZ h_bZ']/h2"
         )
+
+    class V1_2(V1_1):
+        VALID_UNTIL = datetime.date.today()
+
+        _paragraph_selector = XPath("//article[@role='article'] //div[contains(@class, 'speakable')] //p")
+        _subheadline_selector = XPath("//article[@role='article'] //h2[contains(@class, 'speakable')]")
