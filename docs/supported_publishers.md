@@ -2736,7 +2736,9 @@
       <td>
         <code>topics</code>
       </td>
-      <td>&#160;</td>
+      <td>
+        <code>authors</code>
+      </td>
       <td>&#160;</td>
     </tr>
   </tbody>
