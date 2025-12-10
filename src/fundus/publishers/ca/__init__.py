@@ -20,6 +20,7 @@ class CA(metaclass=PublisherGroup):
             RSSFeed("https://www.cbc.ca/webfeed/rss/rss-canada"),
         ],
         request_header={"User-Agent": "Googlebot"},
+        deprecated=True,
     )
     TheGlobeAndMail = Publisher(
         name="The Globe and Mail",
