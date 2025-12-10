@@ -38,18 +38,19 @@ _content_type_selector = CSSSelector("meta[http-equiv='Content-Type'], meta[http
 _charset_selector = XPath("//meta[@charset]/@charset | //meta[@charSet]/@charSet")
 
 
-def _detect_charset_from_response(response: requests.Response) -> str:
+def _detect_charset_from_response(response: requests.Response) -> Optional[str]:
     """Detects HTML encoding based on meta tag <http-equiv='Content-Type'>
 
     Args:
         response: Response to detect encoding for
 
     Returns:
-        str: detected encoding or response.apparent_encoding
+        str: detected encoding or response.apparent_encoding or None
     """
     # see https://github.com/flairNLP/fundus/issues/446
     # use response fallback to decode HTML in a first guess
-    guessed_text = response.content.decode(response.encoding or "utf-8", errors="replace")
+    if not (guessed_text := response.content.decode(response.encoding or "utf-8", errors="replace")):
+        return None
     document = lxml.html.document_fromstring(guessed_text)
     if (content_type_nodes := _content_type_selector(document)) and len(content_type_nodes) == 1:
         content_type_node = content_type_nodes.pop()
@@ -150,34 +151,42 @@ class WebSource:
         url_iterator = iter(self.url_source)
 
         while not self._is_stopped:
+            # check iterator
             if (url := next(url_iterator, None)) is None:
                 return
 
+            # check if URL is malformed
             if not validators.url(url):
                 logger.debug(f"Skipped requested URL {url!r} because the URL is malformed")
                 continue
 
+            # apply URL filter to requested URL
             if filter_url(url):
                 logger.debug(f"Skipped requested URL {url!r} because of URL filter")
                 continue
 
+            # check robots
             if not (self.robots is None or self.robots.can_fetch(self.request_header.get("user-agent") or "*", url)):
                 logger.debug(f"Skipped requested URL {url!r} because of robots.txt")
                 continue
 
             session = session_handler.get_session()
+
+            # prepare query parameters
             for key, value in self.query_parameters.items():
                 if "?" in url:
                     url += "&" + key + "=" + value
                 else:
                     url += "?" + key + "=" + value
 
+            # apply crawl-delay
             if self.delay:
                 # Instead of using time.sleep, we use a custom sleep function that waits
                 # for the "stop" event. This ensures that sleep does not block the shutdown process.
                 self.sleep(max(0.0, self.delay() - time.time() + timestamp))
                 timestamp = time.time()
 
+            # fetch html
             try:
                 response = session.get_with_interrupt(url, headers=self.request_header)
 
@@ -190,34 +199,41 @@ class WebSource:
                 logger.error(f"Warning! Skipped requested URL {url!r} because of an unexpected error {error!r}")
                 continue
 
-            else:
-                if "charset" not in response.headers["content-type"]:
-                    # That's actually the only place requests checks to detect encoding, so if charset
-                    # is not set, requests falls back to default encodings (latin-1/utf-8)
-                    logger.debug(f"Detect encoding from response for URL {str(response.url)!r}")
-                    response.encoding = _detect_charset_from_response(response)
+            # apply URL filter to responded URL
+            if filter_url(str(response.url)):
+                logger.debug(f"Skipped responded URL {str(response.url)!r} because of URL filter")
+                continue
 
-                if filter_url(str(response.url)):
-                    logger.debug(f"Skipped responded URL {str(response.url)!r} because of URL filter")
+            # decode response
+            if "charset" not in response.headers["content-type"]:
+                # That's actually the only place requests checks to detect encoding, so if charset
+                # is not set, requests falls back to default encodings (latin-1/utf-8)
+                logger.debug(f"Detect encoding from response for URL {str(response.url)!r}")
+                if not (encoding := _detect_charset_from_response(response)):
+                    logger.warning(f"Could not detect encoding from response for URL {str(response.url)!r}")
                     continue
-                html = response.text
+                response.encoding = encoding
+            html = response.text
 
-                if response.history:
-                    logger.info(f"Got redirected {len(response.history)} time(s) from {url!r} -> {response.url!r}")
+            # check for redirects
+            if response.history:
+                logger.info(f"Got redirected {len(response.history)} time(s) from {url!r} -> {response.url!r}")
 
-                source_info = (
-                    WebSourceInfo(self.publisher.name, type(self.url_source).__name__, self.url_source.url)
-                    if isinstance(self.url_source, URLSource)
-                    else SourceInfo(self.publisher.name)
-                )
+            # create WebSourceInfo
+            source_info = (
+                WebSourceInfo(self.publisher.name, type(self.url_source).__name__, self.url_source.url)
+                if isinstance(self.url_source, URLSource)
+                else SourceInfo(self.publisher.name)
+            )
 
-                yield HTML(
-                    requested_url=url,
-                    responded_url=str(response.url),
-                    content=html,
-                    crawl_date=datetime.now(),
-                    source_info=source_info,
-                )
+            # create HTML
+            yield HTML(
+                requested_url=url,
+                responded_url=str(response.url),
+                content=html,
+                crawl_date=datetime.now(),
+                source_info=source_info,
+            )
 
 
 class CCNewsSource:
