@@ -1069,7 +1069,9 @@
         <code>de</code>
       </td>
       <td>&#160;</td>
-      <td>&#160;</td>
+      <td>
+        <code>authors</code>
+      </td>
       <td>&#160;</td>
     </tr>
     <tr>
