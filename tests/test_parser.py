@@ -233,6 +233,14 @@ class TestParser:
                 version_data := comparative_data.get(version_name)
             ), f"Missing test data for parser version {version_name!r}"
 
+            # validate test HTML
+            assert (
+                html := html_mapping.get(versioned_parser)
+            ), f"Missing test HTML for parser version {version_name} of publisher {publisher.name}"
+
+            # re-instantiate parser to address deprecated attributes
+            timestamp_instantiated_parser = publisher.parser(html.crawl_date)
+
             for key, value in version_data.items():
                 if not value:
                     raise ValueError(
@@ -241,7 +249,7 @@ class TestParser:
                     )
 
             # test coverage
-            supported_attrs = set(versioned_parser.attributes().names)
+            supported_attrs = set(timestamp_instantiated_parser.registered_attributes.names)
             missing_attrs = attributes_required_to_cover & supported_attrs - set(version_data.keys())
             assert (
                 not missing_attrs
@@ -251,11 +259,8 @@ class TestParser:
                 attributes_required_to_cover & supported_attrs
             ), f"Test JSON for {version_name} is not in alphabetical order"
 
-            assert (
-                html := html_mapping.get(versioned_parser)
-            ), f"Missing test HTML for parser version {version_name} of publisher {publisher.name}"
             # compare data
-            extraction = versioned_parser().parse(html.content, "raise")
+            extraction = timestamp_instantiated_parser.parse(html.content, "raise")
             for key, value in version_data.items():
                 assert value == extraction[key], f"{key!r} is not equal"
 
