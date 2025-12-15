@@ -64,14 +64,16 @@ class LesothoTimesParser(ParserProxy):
     class V1_1(V1):
         VALID_UNTIL = datetime.date.today()
 
-        _paragraph_selector = XPath("//div[contains(@class,'entry-content')]/p[text() or span]")
+        _paragraph_selector = XPath(
+            "//div[contains(@class,'entry-content')]/p[(text() or span) and not(i or b[span[@data-contrast='auto']])]"
+        )
         _subheadline_selector = XPath(
-            "//div[contains(@class,'entry-content')]/p[not(text() or em) and strong[not(em)] and position()>4]"
+            "//div[contains(@class,'entry-content')]/p[i or (not(text() or em) and strong[not(em)] and position()>4)]"
         )
         _summary_selector = XPath("//div[contains(@class,'entry-content')]/p[not(text()) and (strong[em] or em)]")
 
         _author_selector = XPath(
-            "//div[contains(@class,'entry-content')]/p[not(text() or em) and strong[not(em)] and position()<5]"
+            "//div[contains(@class,'entry-content')]/p[not(text() or em or i) and position()<5]//*[self::strong[not(em)] or (self::b[span[@data-contrast='auto']])]"
         )
 
         @attribute
