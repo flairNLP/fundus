@@ -3817,6 +3817,27 @@
     </tr>
     <tr>
       <td>
+        <code>Ilanga</code>
+      </td>
+      <td>
+        <div>Ilanga</div>
+      </td>
+      <td>
+        <a href="https://www.ilanganews.co.za/">
+          <span>www.ilanganews.co.za</span>
+        </a>
+      </td>
+      <td>
+        <code>zu</code>
+      </td>
+      <td>
+        <code>topics</code>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
         <code>Isolezwe</code>
       </td>
       <td>
