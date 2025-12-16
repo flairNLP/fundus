@@ -455,7 +455,7 @@ def generic_author_parsing(
             return filter(bool, re.split(r"|".join(split_on or common_delimiters), text))
 
         authors = list(more_itertools.flatten([split(author) for author in authors]))
-        normalized_authors = [normalize_whitespace(author) for author in authors]
+        normalized_authors = [normalize_whitespace(author) for author in authors if author.strip()]
         return normalized_authors
 
     return authors
