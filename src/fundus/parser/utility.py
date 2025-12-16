@@ -782,6 +782,9 @@ def parse_image_nodes(
         return " ".join(generic_nodes_to_text(nodes, normalize=True)) or None
 
     for position, node, is_cover in image_nodes:
+        if node.attrib.get("loading") == "lazy":
+            logger.error(f"Skipping lazy loading image")
+
         # parse URLs
         if not (versions := parse_versions(node, size_pattern)):
             continue
