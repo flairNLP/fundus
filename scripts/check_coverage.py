@@ -3,26 +3,31 @@ import re
 import tempfile
 import zipfile
 from argparse import ArgumentParser, Namespace
-from datetime import datetime
+from datetime import date, datetime
 from pathlib import Path
-from typing import IO, Dict, List, Optional, Union
+from typing import IO, Dict, Iterator, List, Optional, Union
 
 import requests
 from dotenv import load_dotenv
 from github import Auth, Github
+from github.PaginatedList import PaginatedList
 from github.WorkflowRun import WorkflowRun
 from tqdm import tqdm
 
 from fundus import __development_base_path__ as __root__
+from fundus.logging import create_logger
 
 load_dotenv()
+
+logger = create_logger(__name__)
 
 # ---------- CONFIG ----------
 __REPO__ = "flairNLP/fundus"
 __WORKFLOW_NAME__ = "Publisher Coverage"
 __ARTIFACT_NAME__ = "Publisher Coverage"
-__TOKEN__ = os.getenv("GITHUB_TOKEN")  # needs to be a fine-grained token
+__TOKEN__ = os.getenv("GITHUB_TOKEN")  # needs to be a fine-grained token, doesn't have to have permissions
 __CACHE_DIR__ = __root__ / ".cache" / "run_artifacts"  # cache directory for artifact downloads
+__VERBOSE__ = False
 
 
 # ----------------------------
@@ -35,6 +40,7 @@ def parse_arguments() -> Namespace:
     Returns:
         Namespace: Parsed arguments containing 'limit'.
     """
+
     parser = ArgumentParser(
         prog="check_coverage",
         description=(
@@ -48,7 +54,7 @@ def parse_arguments() -> Namespace:
         "--limit",
         default=100,
         type=int,
-        help="the maximal number of artifacts to scan in descending order. (default 100)",
+        help="the maximal number of artifacts to scan in descending order. (default 90)",
     )
 
     parser.add_argument(
@@ -63,6 +69,13 @@ def parse_arguments() -> Namespace:
         default=None,
         type=Path,
         help="the directory to use for caching artifacts",
+    )
+
+    parser.add_argument(
+        "-v",
+        "--verbose",
+        action="store_true",
+        help="set verbosity",
     )
 
     arguments = parser.parse_args()
@@ -128,9 +141,15 @@ def download_artifact_zip(run: WorkflowRun, use_cache: bool = True) -> Optional[
     artifacts = run.get_artifacts()
     for a in artifacts:
         if a.name == __ARTIFACT_NAME__:
+            if a.expired:
+                if __VERBOSE__:
+                    tqdm.write(f"Artifact has expired")
+                return None
             zip_url = a.archive_download_url
             r = requests.get(zip_url, headers={"Authorization": f"token {__TOKEN__}"})
             if r.status_code != 200:
+                if __VERBOSE__:
+                    tqdm.write(f"Couldn't download {zip_url!r}: {r.text}")
                 return None
 
             # Save to cache if enabled
@@ -189,9 +208,13 @@ def determine_timestamp(publishers: List[str], runs: List[WorkflowRun], use_cach
             pbar.update()
 
             if not txt:
+                if __VERBOSE__:
+                    tqdm.write(f"Couldn't download artifact for {run.id!r}, created at {run.created_at.date()}")
                 continue
 
             if not (parsed := parse_coverage_file(txt)):
+                if __VERBOSE__:
+                    tqdm.write(f"Couldn't parse artifact for {run.id!r}, created at {run.created_at.date()}")
                 continue
 
             failed = {publisher for publisher, state in parsed.items() if not state}
@@ -208,14 +231,34 @@ def determine_timestamp(publishers: List[str], runs: List[WorkflowRun], use_cach
     return publisher_history
 
 
+def get_latest_runs_per_day(runs: PaginatedList[WorkflowRun]) -> Iterator[WorkflowRun]:
+    """Get latest run per day given a paginated list of workflow runs.
+
+    Args:
+        runs: workflow runs to filter.
+
+    Returns:
+        Latest run per day.
+    """
+    current_date: Optional[date] = None
+    for run in runs:
+        if current_date and run.created_at.date() == current_date:
+            continue
+        current_date = run.created_at.date()
+        yield run
+
+
 def main() -> None:
     """
     Main entry point: parse arguments, fetch workflow runs, analyze artifacts,
     and print a timeline of last successful runs for failing publishers.
     """
-    global __CACHE_DIR__
+    global __CACHE_DIR__, __VERBOSE__
 
     arguments = parse_arguments()
+
+    if arguments.verbose:
+        __VERBOSE__ = arguments.verbose
 
     if arguments.cachedir is not None:
         __CACHE_DIR__ = arguments.cachedir
@@ -243,19 +286,20 @@ def main() -> None:
 
     print(f"Found workflow ID: {workflow_id}")
 
-    # 2. Retrieve workflow runs
+    # 2. Retrieve workflow runs; in order to address reruns, we filter for the latest run per day
     workflow = repo.get_workflow(workflow_id)
-    runs = workflow.get_runs()
+    runs = []
+    for run in get_latest_runs_per_day(workflow.get_runs()):
+        if run.status not in {"queued", "in_progress"}:
+            runs.append(run)
+            if len(runs) == arguments.limit:
+                break
 
     if not runs:
         raise RuntimeError(f"No runs found for workflow '{__WORKFLOW_NAME__}'.")
 
-    shift = 1 if runs[0].status in {"queued", "in_progress"} else 0
+    latest_run, sliced_runs = runs[0], runs[1:]
 
-    sliced_runs: List[WorkflowRun]
-    latest_run, sliced_runs = runs[0 + shift], list(
-        runs[1 + shift : min(arguments.limit + 1, runs.totalCount - 1) + shift]
-    )
     run_time = parse_run_time(latest_run)
     txt = download_artifact_zip(latest_run, use_cache=not arguments.nocache)
     if not txt:
