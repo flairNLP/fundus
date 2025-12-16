@@ -14,7 +14,6 @@ from fundus.scraping.filter import (
 )
 from fundus.scraping.html import CCNewsSource, HTMLSource, WebSource
 from fundus.scraping.url import URLSource
-from fundus.utils.events import __EVENTS__
 
 logger = create_logger(__name__)
 

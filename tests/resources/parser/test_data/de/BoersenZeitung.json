@@ -193,5 +193,94 @@
       "VR Payment",
       "Wero"
     ]
+  },
+  "V1_2": {
+    "authors": [
+      "Reuters",
+      "Thorsten Kramer"
+    ],
+    "body": {
+      "summary": [
+        "Alexander Wynaendts soll weitere vier Jahre den Aufsichtsrat der Deutschen Bank anführen. Das Gremium nominierte den ehemaligen CEO von Aegon für eine weitere Amtszeit."
+      ],
+      "sections": [
+        {
+          "headline": [],
+          "paragraphs": [
+            "Der Aufsichtsrat der Deutschen Bank hat Alexander Wynaendts für eine weitere vierjährige Amtszeit nominiert. Das Gremium habe dies einstimmig beschlossen, teilte das Geldhaus mit. Wynaendts werde sich bei der Hauptversammlung 2026 zur Wiederwahl stellen. Er leitet den Aufsichtsrat der Bank seit Mai 2022, seine erste Amtszeit läuft damit im kommenden Jahr aus. Aktuell ist er zudem Mitglied im Verwaltungsrat von Air France-KLM und Uber Technologies."
+          ]
+        },
+        {
+          "headline": [
+            "Seit Mai 2022 Chefkontrolleur"
+          ],
+          "paragraphs": [
+            "Wynaendts war im Mai 2022 zum Nachfolger von Paul Achleitner zum Aufsichtsratschef gewählt worden. Er erhielt damals auf der digitalen Hauptversammlung der Bank eine Zustimmung von 97,84%. „Die Leitung des Aufsichtsrats der Deutschen Bank ist ein großes Privileg, und ich danke meinen Kolleginnen und Kollegen für das Vertrauen“, ließ sich Wynaendts in einer Pressemitteilung der Bank zitieren.",
+            "Der Vorstandsvorsitzende Christian Sewing freut sich auf die Fortsetzung der Zusammenarbeit. „Alex Wynaendts hat mit seiner umfassenden Erfahrung, seiner Expertise und seinem Netzwerk maßgeblich zur erfolgreichen Entwicklung der Deutschen Bank in den vergangenen Jahren beigetragen. Wir haben ihn als starken Aufsichtsratsvorsitzenden kennengelernt, der uns im Vorstand stets auf konstruktive Weise fördert und fordert.“"
+          ]
+        },
+        {
+          "headline": [
+            "Einst bei ABN Amro und Aegon"
+          ],
+          "paragraphs": [
+            "Wynaendts war von 2008 bis 2020 Vorstandschef des Versicherungskonzerns Aegon. Begonnen hatte er seine Laufbahn bei ABN Amro, bei der er 13 Jahre im Private Banking und Investmentbanking in Amsterdam und London tätig war. Wynaendts wechselte 1997 zu Aegon und bekleidete dort verschiedene Führungspositionen, bevor er 2008 CEO wurde."
+          ]
+        }
+      ]
+    },
+    "images": [
+      {
+        "versions": [
+          {
+            "url": "https://c02.purpledshub.com/uploads/sites/35/2025/11/000-Wynaendts-scaled.jpg?w=300&webp=1",
+            "query_width": null,
+            "size": {
+              "width": 300,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://c02.purpledshub.com/uploads/sites/35/2025/11/000-Wynaendts-scaled.jpg?w=600&webp=1",
+            "query_width": null,
+            "size": {
+              "width": 600,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://c02.purpledshub.com/uploads/sites/35/2025/11/000-Wynaendts-scaled.jpg?w=900&webp=1",
+            "query_width": null,
+            "size": {
+              "width": 900,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://c02.purpledshub.com/uploads/sites/35/2025/11/000-Wynaendts-scaled.jpg?w=1200&webp=1",
+            "query_width": null,
+            "size": {
+              "width": 1200,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": true,
+        "description": "Alexander Wynaendts soll weitere vier Jahre Chefaufseher der Deutschen Bank bleiben.",
+        "caption": "Alexander Wynaendts soll weitere vier Jahre Chefaufseher der Deutschen Bank bleiben.",
+        "authors": [],
+        "position": 974
+      }
+    ],
+    "publishing_date": "2025-11-05 17:09:17+00:00",
+    "title": "Deutsche Bank nominiert Aufsichtsratschef für zweite Amtszeit",
+    "topics": [
+      "Aufsichtsrat",
+      "Deutsche Bank"
+    ]
   }
 }

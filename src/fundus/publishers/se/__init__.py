@@ -1,6 +1,6 @@
 from fundus.publishers.base_objects import Publisher, PublisherGroup
 from fundus.scraping.filter import regex_filter
-from fundus.scraping.url import NewsMap, RSSFeed, Sitemap
+from fundus.scraping.url import RSSFeed, Sitemap
 
 from .expressen import ExpressenParser
 

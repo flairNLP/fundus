@@ -18,11 +18,11 @@ class BoersenZeitungParser(ParserProxy):
     class V1(BaseParser):
         VALID_UNTIL = datetime.date(2024, 12, 9)
 
-        _paragraph_selector = CSSSelector("storefront-content-body .no-tts p")
+        _paragraph_selector = CSSSelector(".no-tts p")
         _subheadline_selector = XPath("//p[contains(@class, 'interline')]")
-        _summary_selector = CSSSelector("storefront-html.excerpt > div")
+        _summary_selector = XPath("//storefront-html[@class='excerpt']/div")
 
-        _topic_selector = CSSSelector("a[href^='/thema'] > span")
+        _topic_selector = XPath("//a[contains(@href, '/thema')]/span")
         _paywall_selector = CSSSelector("storefront-html.paywall-headline > div")
 
         _title_bloat_pattern = re.compile(r"\|.*")
@@ -56,7 +56,6 @@ class BoersenZeitungParser(ParserProxy):
 
         @attribute
         def free_access(self) -> bool:
-            # print(self._paywall_selector(self.precomputed.doc).text_content().strip())
             return not [node.text_content().strip() for node in self._paywall_selector(self.precomputed.doc)]
 
         @attribute
@@ -70,7 +69,7 @@ class BoersenZeitungParser(ParserProxy):
             )
 
     class V1_1(V1):
-        VALID_UNTIL = datetime.date.today()
+        VALID_UNTIL = datetime.date(2025, 10, 1)
 
         @attribute
         def authors(self) -> List[str]:
@@ -79,3 +78,14 @@ class BoersenZeitungParser(ParserProxy):
         @attribute
         def publishing_date(self) -> Optional[datetime.datetime]:
             return generic_date_parsing(self.precomputed.meta.get("article:published_time"))
+
+    class V1_2(V1_1):
+        VALID_UNTIL = datetime.date.today()
+
+        _summary_selector = XPath("//div[@class='pxp-html excerpt']")
+
+        _topic_selector = XPath("//div[contains(@class,'taglist')]//button")
+
+        @attribute
+        def authors(self) -> List[str]:
+            return generic_author_parsing(self.precomputed.ld.bf_search("author"))

@@ -1,3 +1,4 @@
+import json
 import threading
 from collections import defaultdict
 from typing import Dict, List, Optional, Union
@@ -84,7 +85,8 @@ class EventDict:
             default_events: A list of event names that are automatically available
                 for all threads (e.g., ["stop"]).
         """
-        self._events: Dict[int, ThreadEventDict] = defaultdict(lambda: ThreadEventDict(default_events))
+        self.default_events = default_events
+        self._events: Dict[int, ThreadEventDict] = defaultdict(lambda: ThreadEventDict(self.default_events))
         self._aliases: bidict[str, int] = bidict()
         self._lock = threading.RLock()
 
@@ -163,7 +165,7 @@ class EventDict:
         with self._lock:
             if isinstance(key, str) and key not in self._aliases:
                 self._alias(key)
-            if (resolved := self._resolve(key)) not in self._events:
+            if event not in self._events[(resolved := self._resolve(key))]:
                 self._events[resolved][event] = threading.Event()
                 logger.debug(f"Registered event {event!r} for {self._pretty_resolve(key)}")
 
@@ -286,6 +288,20 @@ class EventDict:
         """
         with self._lock:
             return self._events[self._resolve(key)][event]
+
+    def reset(self):
+        with self._lock:
+            self._events = defaultdict(lambda: ThreadEventDict(self.default_events))
+            self._aliases = bidict()
+
+    def __str__(self):
+        def _entry(thread: int) -> str:
+            alias = self._aliases.inv.get(thread, None)
+            serialized = json.dumps(self._events[thread], indent=2, ensure_ascii=False, default=lambda o: o.set())
+            return f"{alias if alias else 'None'} --> {thread}: \n" + serialized
+
+        events = [_entry(ident) for ident in self._events]
+        return "\n".join(events) if events else "Empty Event Dictionary"
 
 
 __EVENTS__: EventDict = EventDict(default_events=__DEFAULT_EVENTS__)
