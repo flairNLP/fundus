@@ -80,11 +80,14 @@ class FreiePresseParser(ParserProxy):
                 doc=self.precomputed.doc,
                 paragraph_selector=self._paragraph_selector,
                 image_selector=XPath(
-                    "//div[@class='detail-img__image-wrapper detail-img__image-wrapper--gradient']//img"
+                    "//div[contains(@class, 'detail-img')]//img"
                 ),
                 lower_boundary_selector=CSSSelector("a.article__copyright"),
                 caption_selector=XPath(
-                    "./ancestor::div[@class='detail-img']//div[@class='detail-img__description no-transition']/div/text()"
+                    "./ancestor::div[contains(@class, 'detail-img')]"
+                    "//div[contains(@class, 'detail-img__description')]"
+                    "/div"
+                    "/text()"
                 ),
                 author_selector=re.compile(r"(?i)bild:(?P<credits>.*)"),
                 relative_urls=True,
