@@ -805,7 +805,9 @@
         <code>FreiePresse</code>
       </td>
       <td>
-        <div>FreiePresse</div>
+        <div>
+          <strike>FreiePresse</strike>
+        </div>
       </td>
       <td>
         <a href="https://www.freiepresse.de/">
