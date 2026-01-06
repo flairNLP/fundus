@@ -1886,7 +1886,9 @@
         <code>Morgunbladid</code>
       </td>
       <td>
-        <div>Morgunbladid</div>
+        <div>
+          <strike>Morgunbladid</strike>
+        </div>
       </td>
       <td>
         <a href="https://www.mbl.is/">
