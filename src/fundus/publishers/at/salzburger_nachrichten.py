@@ -59,7 +59,7 @@ class SalzburgerNachrichtenParser(ParserProxy):
 
         _summary_selector = CSSSelector("div.articleContent > p.vorspann")
         _paragraph_selector = XPath(
-            r"//div[contains(@class, 'articleText')]" "/p[not(re:test(string(.), '^\(Quelle:.*\)$'))]",
+            r"//div[contains(@class, 'articleText')] /p[not(re:test(string(.), '^\(Quelle:.*\)$'))]",
             namespaces={"re": "http://exslt.org/regular-expressions"},
         )
         _subheadline_selector = CSSSelector("div.articleText > h2")
