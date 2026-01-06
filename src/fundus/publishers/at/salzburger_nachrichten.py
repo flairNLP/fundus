@@ -1,6 +1,7 @@
 import datetime
 from typing import List, Optional
 
+from lxml.cssselect import CSSSelector
 from lxml.etree import XPath
 
 from fundus.parser import ArticleBody, BaseParser, Image, ParserProxy, attribute
@@ -14,6 +15,8 @@ from fundus.parser.utility import (
 
 class SalzburgerNachrichtenParser(ParserProxy):
     class V1(BaseParser):
+        VALID_UNTIL = datetime.date(2025, 12, 10)
+
         _paragraph_selector = XPath("//div[contains(@class, 'article-body-text') or contains(@class,'section-text')]/p")
         _subheadline_selector = XPath(
             "//div[contains(@class, 'article-body-text') or contains(@class,'section-text')]//h2"
@@ -49,4 +52,29 @@ class SalzburgerNachrichtenParser(ParserProxy):
                 upper_boundary_selector=XPath("//h1"),
                 caption_selector=XPath("./ancestor::figure//div[contains(@class, 'description')]"),
                 author_selector=XPath("./ancestor::figure//div[contains(@class, 'copyright')]"),
+            )
+
+    class V1_1(V1):
+        VALID_UNTIL = datetime.date.today()
+
+        _summary_selector = CSSSelector("div.articleContent > p.vorspann")
+        _paragraph_selector = XPath(
+            "//div[contains(@class, 'articleText')]" "/p[not(re:test(string(.), '^\(Quelle:.*\)$'))]",
+            namespaces={"re": "http://exslt.org/regular-expressions"},
+        )
+        _subheadline_selector = CSSSelector("div.articleText > h2")
+
+        @attribute
+        def images(self) -> List[Image]:
+            return image_extraction(
+                doc=self.precomputed.doc,
+                paragraph_selector=self._paragraph_selector,
+                upper_boundary_selector=XPath("//article"),
+                caption_selector=XPath(
+                    "./ancestor::figure//figcaption[not(child::div[@class='bildunterschrift'])]/text() |"
+                    "./ancestor::figure//figcaption/div[@class='bildunterschrift']"
+                ),
+                author_selector=XPath("./ancestor::figure//div[@class='bildautor']"),
+                lower_boundary_selector=CSSSelector("div.commentOuter"),
+                relative_urls=True,
             )

@@ -1,3 +1,5 @@
+import re
+
 from fundus.publishers.base_objects import Publisher, PublisherGroup
 from fundus.scraping.url import NewsMap, RSSFeed, Sitemap
 
@@ -56,7 +58,9 @@ class AT(metaclass=PublisherGroup):
         domain="https://www.sn.at",
         parser=SalzburgerNachrichtenParser,  # Placeholder for future parser
         sources=[
-            NewsMap("https://www.sn.at/sitemap/2/0001.xml"),
-            Sitemap("https://www.sn.at/sitemapindex.xml", reverse=True),
+            NewsMap("https://www.sn.at/news-artikel.sitemap.xml"),
+            Sitemap(
+                "https://www.sn.at/portal-artikel.sitemap.xml", sort_predicate=re.compile("(article-)\d{4}_\d{2}-\d(.)")
+            ),
         ],
     )
