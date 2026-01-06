@@ -138,7 +138,7 @@ class LinkedDataMapping:
             self.__xml = lxml.etree.fromstring(xml)
         return self.__xml
 
-    __value_regex__ = re.compile("^<[^<]*>(?P<value>.*)<[^<]*>$", flags=re.DOTALL)
+    __value_regex__ = re.compile("^<[^<]*>(?P<value>.*)</[^<]*>$", flags=re.DOTALL)
 
     @overload
     def xpath_search(self, query: Union[XPath, str], scalar: Literal[False] = False) -> List[Any]:
