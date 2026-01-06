@@ -16,6 +16,7 @@ from fundus.parser.utility import (
 
 class DailyMaverickParser(ParserProxy):
     class V1(BaseParser):
+        VALID_UNTIL = datetime.date(2025, 11, 19)
         _paragraph_selector = XPath(
             "//div[contains(@class,' mode-content article-content ')]"
             "//p[(span or a and not(b)) or (text() and not(re:test(string(.), '^([A-Z ]+|Read more:.*)$')))]",
@@ -69,4 +70,33 @@ class DailyMaverickParser(ParserProxy):
                     "./ancestor::div[contains(@class, 'wp-caption')]//p[@class='wp-caption-text']"
                 ),
                 author_selector=re.compile(r"(?i)\(photo:(?P<credits>.+)\)"),
+            )
+
+    class V1_1(V1):
+        VALID_UNTIL = datetime.date.today()
+
+        _summary_selector = XPath("//div[contains(@class,'top-summary')] /p")
+        _paragraph_selector = XPath(
+            "//div[contains(@class,'article-content')]"
+            "//p[text() and not(re:test(string(.), '^([A-Z ]+|Read more:.*)$'))] |"
+            "//div[contains(@class,'article-content')] //ul /li",
+            namespaces={"re": "http://exslt.org/regular-expressions"},
+        )
+        _subheadline_selector = XPath("//div[contains(@class,'article-content')] //h3")
+
+        @attribute
+        def images(self) -> List[Image]:
+            return image_extraction(
+                doc=self.precomputed.doc,
+                paragraph_selector=self._paragraph_selector,
+                upper_boundary_selector=XPath("//h1"),
+                image_selector=XPath("(//figure | //div[contains(@class, 'main-image')])//img"),
+                caption_selector=XPath(
+                    "./ancestor::figure//figcaption |"
+                    "./ancestor::div[contains(@class, 'main-image')]//em[@class='image-caption']"
+                ),
+                author_selector=[
+                    re.compile(r"(?i)\(photo:(?P<credits>[^)]+)\)"),
+                    re.compile(r"(?P<credits>[A-Z /]+$)"),
+                ],
             )
