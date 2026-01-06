@@ -60,7 +60,8 @@ class AT(metaclass=PublisherGroup):
         sources=[
             NewsMap("https://www.sn.at/news-artikel.sitemap.xml"),
             Sitemap(
-                "https://www.sn.at/portal-artikel.sitemap.xml", sort_predicate=re.compile("(article-)\d{4}_\d{2}-\d(.)")
+                "https://www.sn.at/portal-artikel.sitemap.xml",
+                sort_predicate=re.compile(r"(article-)\d{4}_\d{2}-\d(.)"),
             ),
         ],
     )
