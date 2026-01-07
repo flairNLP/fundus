@@ -620,8 +620,7 @@ class DE(metaclass=PublisherGroup):
         ],
         request_header={"user-agent": "Fundus"},
     )
-    
-    
+
     DerFreitag = Publisher(
         name="der Freitag",
         domain="https://www.freitag.de/",
