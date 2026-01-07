@@ -80,9 +80,15 @@ class TheMirrorParser(ParserProxy):
     class V1_2(V1_1):
         VALID_UNTIL = datetime.date.today()
 
+        _bloat_regex: str = "^Like this story?|^Join our new WhatsApp"
+
         _summary_selector = XPath("//article[@id='article-body'] /h2[contains(@class, 'lead-text')]")
-        _paragraph_selector = XPath("//article[@id='article-body'] /p[contains(@class, 'paragraph-text')]")
-        _subheadline_selector = XPath("//article[@id='article-body'] /h3")
+        _paragraph_selector = XPath(
+            f"//article[@id='article-body']"
+            f"/p[contains(@class, 'paragraph-text') and not(re:test(string(.), '{_bloat_regex}'))]",
+            namespaces={"re": "http://exslt.org/regular-expressions"},
+        )
+        _subheadline_selector = XPath("//article[@id='article-body'] /h3 | //article[@id='article-body'] /h4")
 
         @attribute
         def publishing_date(self) -> Optional[datetime.datetime]:
