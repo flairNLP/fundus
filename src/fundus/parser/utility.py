@@ -42,6 +42,7 @@ from fundus.parser.data import (
     ArticleSection,
     Dimension,
     Image,
+    ImageURLError,
     ImageVersion,
     LinkedDataMapping,
     TextSequence,
@@ -782,9 +783,6 @@ def parse_image_nodes(
         return " ".join(generic_nodes_to_text(nodes, normalize=True)) or None
 
     for position, node, is_cover in image_nodes:
-        if node.attrib.get("loading") == "lazy":
-            logger.error(f"Skipping lazy loading image")
-
         # parse URLs
         if not (versions := parse_versions(node, size_pattern)):
             continue
@@ -822,14 +820,19 @@ def parse_image_nodes(
                 authors = generic_nodes_to_text(author_nodes, normalize=True)
         authors = image_author_parsing(authors)
 
-        yield Image(
-            versions=versions,
-            caption=caption,
-            authors=authors,
-            description=description,
-            is_cover=is_cover,
-            position=position,
-        )
+        try:
+            image = Image(
+                versions=versions,
+                caption=caption,
+                authors=authors,
+                description=description,
+                is_cover=is_cover,
+                position=position,
+            )
+        except ImageURLError:
+            logger.debug(f"Skipping lazy loading image")
+        else:
+            yield image
 
 
 class Bounds(NamedTuple):
