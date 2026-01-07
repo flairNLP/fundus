@@ -758,7 +758,7 @@ def parse_image_nodes(
     image_nodes: List[IndexedImageNode],
     caption_selector: XPath,
     alt_selector: XPath,
-    author_selector: Union[XPath, Pattern[str]],
+    author_selector: Union[XPath, Pattern[str], List[Pattern[str]]],
     domain: Optional[str] = None,
     size_pattern: Optional[Pattern[str]] = None,
 ) -> Iterator[Image]:
@@ -801,14 +801,21 @@ def parse_image_nodes(
         description = nodes_to_text(alt_selector(node))
 
         # parse authors
+
         authors = []
         if isinstance(author_selector, Pattern):
-            # author is part of the caption
-            if caption and (match := re.search(author_selector, caption)):
-                authors = [match.group("credits")]
-                caption = re.sub(author_selector, "", caption).strip() or None
-            elif description and (match := re.search(author_selector, description)):
-                authors = [match.group("credits")]
+            author_selector = [author_selector]
+
+        if isinstance(author_selector, list):
+            for pattern in author_selector:
+                # author is part of the caption
+                if caption and (match := re.search(pattern, caption)):
+                    authors = [match.group("credits")]
+                    caption = re.sub(pattern, "", caption).strip() or None
+                elif description and (match := re.search(pattern, description)):
+                    authors = [match.group("credits")]
+                if authors:
+                    break
         else:
             # author is selectable as node
             if author_nodes := author_selector(node):
@@ -866,7 +873,7 @@ def image_extraction(
     lower_boundary_selector: Optional[XPath] = None,
     caption_selector: XPath = XPath("./ancestor::figure//figcaption"),
     alt_selector: XPath = XPath("./@alt"),
-    author_selector: Union[XPath, Pattern[str]] = XPath(
+    author_selector: Union[XPath, Pattern[str], List[Pattern[str]]] = XPath(
         "(./ancestor::figure//*[(contains(@class, 'copyright') or contains(@class, 'credit')) and text()])[1]"
     ),
     relative_urls: Union[bool, XPath] = False,
