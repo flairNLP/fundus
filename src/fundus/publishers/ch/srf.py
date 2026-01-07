@@ -86,7 +86,9 @@ class SRFParser(ParserProxy):
 
         _title_selector = XPath("//span[@class='article-title__text']")
         _author_selector = XPath("//span[@itemprop='author']")
-        _summary_selector = XPath("//p[@class='article-lead']|//ul[@class='article-list']/li")
+        _summary_selector = XPath(
+            "//p[@class='article-lead']|//ul[@class='article-list' and not(preceding-sibling::*)]/li"
+        )
         _paragraph_selector = XPath("//p[@class='article-paragraph']")
         _subheadline_selector = XPath("//h2[@class='article-heading']|//h3[@class='article-subheading']")
 
