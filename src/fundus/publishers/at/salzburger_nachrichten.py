@@ -9,6 +9,8 @@ from fundus.parser.utility import (
     extract_article_body_with_selector,
     generic_author_parsing,
     generic_date_parsing,
+    generic_nodes_to_text,
+    generic_topic_parsing,
     image_extraction,
 )
 
@@ -63,6 +65,14 @@ class SalzburgerNachrichtenParser(ParserProxy):
             namespaces={"re": "http://exslt.org/regular-expressions"},
         )
         _subheadline_selector = CSSSelector("div.articleText > h2")
+
+        _topic_selector = XPath("//div[@class='articleTags']")
+
+        @attribute
+        def topics(self) -> List[str]:
+            return generic_topic_parsing(
+                generic_nodes_to_text(self._topic_selector(self.precomputed.doc), normalize=True)
+            )
 
         @attribute
         def images(self) -> List[Image]:
