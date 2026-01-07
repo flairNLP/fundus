@@ -74,6 +74,8 @@ class EuronewsParser(ParserProxy):
     class V1_1(V1):
         VALID_UNTIL = date.today()
 
+        _summary_selector = CSSSelector("h2.c-article-summary")
+
         @attribute
         def authors(self) -> List[str]:
             return utility.generic_author_parsing(self.precomputed.meta.get("article:author"))
