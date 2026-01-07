@@ -526,6 +526,8 @@ class ImageVersion(DataclassSerializationMixin):
             return self.url < other.url
         raise NotImplementedError(f"'<' is not defined between {type(self).__name__!r} and {type(other).__name__!r}")
 
+class ImageURLError(Exception): ...
+
 
 @dataclass(frozen=False)
 class Image(DataclassSerializationMixin):
@@ -539,7 +541,7 @@ class Image(DataclassSerializationMixin):
     def __post_init__(self):
         for url in [version.url for version in self.versions]:
             if not validators.url(url, strict_query=False):
-                raise ValueError(f"url {url} is not a valid URL")
+                raise ImageURLError(f"url {url} is not a valid URL")
 
     @property
     def url(self) -> str:
