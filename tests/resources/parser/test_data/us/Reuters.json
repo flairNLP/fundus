@@ -1,4 +1,36 @@
 {
+  "V1": {
+    "authors": [
+      "Gopal Sharma"
+    ],
+    "body": {
+      "summary": [
+        "KATHMANDU, April 25 (Reuters) - Nepal's civil aviation authority disputed on Tuesday whether a flydubai plane had been hit by a bird strike in Nepali airspace, calling the United Arab Emirates carrier's account of the incident \"misleading\"."
+      ],
+      "sections": [
+        {
+          "headline": [],
+          "paragraphs": [
+            "The airline had said a flight carrying 167 passengers from the Nepali capital Kathmandu to Dubai experienced a bird strike during take-off late on Monday.",
+            "The plane continued on its journey after determining that the engine was within normal operation parameters, a spokesperson for flydubai said, and the aircraft landed normally in Dubai just after midnight local time.",
+            "But the Civil Aviation Authority of Nepal (CAAN) said on Twitter on Tuesday that the airline's country manager and airport manager had been barred from entering Kathmandu airport for spreading \"misleading\" news about a bird strike.",
+            "Flydubai said it would respond shortly to a request for comment on the tweet. The UAE's General Civil Aviation Authority did not immediately respond to a request for comment.",
+            "\"How did the company say it was a case of bird strike. The pilot has not reported that and there is no evidence of it so far. There is no proof or basis for this,\" Jagannath Niroula, a CAAN spokesperson, said.",
+            "Niroula said that one of the plane's engines had caught fire shortly after take-off from Kathmandu, and the CAAN had set up a technical committee to investigate.",
+            "Mountainous Nepal has a history of deadly air crashes and suffered its worst plane crash in 30 years in January this year, killing all 72 people aboard an ATR 72 aircraft operated by Yeti Airlines."
+          ]
+        }
+      ]
+    },
+    "publishing_date": "2023-04-25 12:26:15+00:00",
+    "title": "Nepal says 'no proof' flydubai plane suffered bird strike",
+    "topics": [
+      "Aerospace & Defense",
+      "Business",
+      "Asia Pacific",
+      "World"
+    ]
+  },
   "V1_1": {
     "authors": [
       "Maya Gebeily",
@@ -67,38 +99,6 @@
       "Media & Telecom",
       "Aerospace & Defense",
       "Europe"
-    ]
-  },
-  "V1": {
-    "authors": [
-      "Gopal Sharma"
-    ],
-    "body": {
-      "summary": [
-        "KATHMANDU, April 25 (Reuters) - Nepal's civil aviation authority disputed on Tuesday whether a flydubai plane had been hit by a bird strike in Nepali airspace, calling the United Arab Emirates carrier's account of the incident \"misleading\"."
-      ],
-      "sections": [
-        {
-          "headline": [],
-          "paragraphs": [
-            "The airline had said a flight carrying 167 passengers from the Nepali capital Kathmandu to Dubai experienced a bird strike during take-off late on Monday.",
-            "The plane continued on its journey after determining that the engine was within normal operation parameters, a spokesperson for flydubai said, and the aircraft landed normally in Dubai just after midnight local time.",
-            "But the Civil Aviation Authority of Nepal (CAAN) said on Twitter on Tuesday that the airline's country manager and airport manager had been barred from entering Kathmandu airport for spreading \"misleading\" news about a bird strike.",
-            "Flydubai said it would respond shortly to a request for comment on the tweet. The UAE's General Civil Aviation Authority did not immediately respond to a request for comment.",
-            "\"How did the company say it was a case of bird strike. The pilot has not reported that and there is no evidence of it so far. There is no proof or basis for this,\" Jagannath Niroula, a CAAN spokesperson, said.",
-            "Niroula said that one of the plane's engines had caught fire shortly after take-off from Kathmandu, and the CAAN had set up a technical committee to investigate.",
-            "Mountainous Nepal has a history of deadly air crashes and suffered its worst plane crash in 30 years in January this year, killing all 72 people aboard an ATR 72 aircraft operated by Yeti Airlines."
-          ]
-        }
-      ]
-    },
-    "publishing_date": "2023-04-25 12:26:15+00:00",
-    "title": "Nepal says 'no proof' flydubai plane suffered bird strike",
-    "topics": [
-      "Aerospace & Defense",
-      "Business",
-      "Asia Pacific",
-      "World"
     ]
   }
 }
