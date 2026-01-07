@@ -67,7 +67,7 @@ class TheMirrorParser(ParserProxy):
             )
 
     class V1_1(V1):
-        VALID_UNTIL = datetime.date.today()
+        VALID_UNTIL = datetime.date(2025, 11, 19)
 
         _datetime_selector = CSSSelector("div.article-information[itemprop='datePublished']")
 
@@ -76,3 +76,34 @@ class TheMirrorParser(ParserProxy):
             if date_nodes := self._datetime_selector(self.precomputed.doc):
                 return generic_date_parsing(date_nodes[0].attrib.get("content"))
             return None
+
+    class V1_2(V1_1):
+        VALID_UNTIL = datetime.date.today()
+
+        _bloat_regex: str = "^Like this story?|^Join our new WhatsApp"
+
+        _summary_selector = XPath("//article[@id='article-body'] /h2[contains(@class, 'lead-text')]")
+        _paragraph_selector = XPath(
+            f"//article[@id='article-body']"
+            f"/p[contains(@class, 'paragraph-text') and not(re:test(string(.), '{_bloat_regex}'))]",
+            namespaces={"re": "http://exslt.org/regular-expressions"},
+        )
+        _subheadline_selector = XPath("//article[@id='article-body'] /h3 | //article[@id='article-body'] /h4")
+
+        @attribute
+        def publishing_date(self) -> Optional[datetime.datetime]:
+            return generic_date_parsing(self.precomputed.ld.bf_search("datePublished"))
+
+        @attribute
+        def images(self) -> List[Image]:
+            return image_extraction(
+                doc=self.precomputed.doc,
+                paragraph_selector=self._paragraph_selector,
+                lower_boundary_selector=CSSSelector("reach-recirculation"),
+                caption_selector=XPath(
+                    "./ancestor::div[contains(@class, 'ImageEmbed')]//figcaption//span[contains(@class, 'caption-title')]"
+                ),
+                author_selector=XPath(
+                    "./ancestor::div[contains(@class, 'ImageEmbed')]//figcaption//span[contains(@class, 'caption-credit')]"
+                ),
+            )
