@@ -578,6 +578,7 @@ class DE(metaclass=PublisherGroup):
             RSSFeed("https://www.freiepresse.de/rss/rss_regional.php"),
             Sitemap("https://www.freiepresse.de/sitemaps/articles_last2years.xml", reverse=True),
         ],
+        deprecated=True,
     )
 
     RuhrNachrichten = Publisher(
