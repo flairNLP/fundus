@@ -17,12 +17,17 @@ from fundus.parser.utility import (
 
 class SeznamZpravyParser(ParserProxy):
     class V1(BaseParser):
+        VALID_UNTIL = datetime.date(2025, 8, 1)  # This date is an estimate, since our logs don't date
+        # back far enough to accurately determine and it is unclear from archives.
+
         _paragraph_selector = XPath(
             "//div[contains(@class,'mol-rich-content--for-article')]/div[contains(@class,'speakable')]/p"
         )
         _summary_selector = XPath("//div/p[contains(@class, 'speakable') and @*[contains(., 'ogm-article-perex')]]")
         _subheadline_selector = XPath("//div[contains(@class,'mol-rich-content--for-article')]/h2")
         _author_substitution_pattern: Pattern[str] = re.compile(r"Seznam Zprávy")
+
+        _bloat_topics = ["BLUE", "RED"]
 
         @attribute
         def body(self) -> Optional[ArticleBody]:
@@ -39,7 +44,11 @@ class SeznamZpravyParser(ParserProxy):
 
         @attribute
         def topics(self) -> List[str]:
-            return generic_topic_parsing(self.precomputed.ld.bf_search("keywords"))
+            return [
+                topic
+                for topic in generic_topic_parsing(self.precomputed.ld.bf_search("keywords"))
+                if topic not in self._bloat_topics
+            ]
 
         @attribute
         def title(self) -> Optional[str]:
@@ -62,3 +71,18 @@ class SeznamZpravyParser(ParserProxy):
                 author_selector=XPath("./ancestor::figure//span[@*[contains(., 'atm-media-item-image-caption')]]"),
                 relative_urls=True,
             )
+
+    class V1_1(V1):
+        VALID_UNTIL = datetime.date(2025, 11, 24)
+
+        _paragraph_selector = XPath("//div[@class='h_f7 h_bZ h_bZ']/div/p/span[@class='atm-text-decorator' and text()]")
+        _subheadline_selector = XPath(
+            "//div[@class='h_f7 h_bZ h_bZ']/div/p/span[@class='atm-text-decorator']/span | "
+            "//div[@class='h_f7 h_bZ h_bZ']/h2"
+        )
+
+    class V1_2(V1_1):
+        VALID_UNTIL = datetime.date.today()
+
+        _paragraph_selector = XPath("//article[@role='article'] //div[contains(@class, 'speakable')] //p")
+        _subheadline_selector = XPath("//article[@role='article'] //h2[contains(@class, 'speakable')]")

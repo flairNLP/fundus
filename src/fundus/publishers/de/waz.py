@@ -78,5 +78,7 @@ class WAZParser(ParserProxy):
         _subheadline_selector = XPath("//div[@class='article-body'] / h3[not(text()='Auch interessant')]")
 
     class V2(FunkeParser.V1_1):
-        # It seems like WAZ was bought by Funke and now uses the same layout
-        VALID_UNTIL = datetime.date.today()
+        pass
+
+    class V2_1(FunkeParser.V1_2):
+        pass

@@ -14,7 +14,6 @@ from fundus.scraping.filter import (
 )
 from fundus.scraping.html import CCNewsSource, HTMLSource, WebSource
 from fundus.scraping.url import URLSource
-from fundus.utils.events import __EVENTS__
 
 logger = create_logger(__name__)
 
@@ -106,8 +105,6 @@ class WebScraper(BaseScraper):
         ]
         parser_mapping: Dict[str, ParserProxy] = {publisher.name: publisher.parser}
         super().__init__(*html_sources, parser_mapping=parser_mapping)
-
-        __EVENTS__.alias(publisher.name)
 
 
 class CCNewsScraper(BaseScraper):
