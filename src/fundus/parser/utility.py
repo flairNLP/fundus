@@ -152,6 +152,20 @@ def extract_article_body_with_selector(
     summary_nodes = extract_nodes(summary_selector, SummaryNode) if summary_selector else []
     subhead_nodes = extract_nodes(subheadline_selector, SubheadNode) if subheadline_selector else []
     paragraph_nodes = extract_nodes(paragraph_selector, ParagraphNode)
+
+    # data-cleaning:
+    def _cond(node: lxml.html.HtmlElement) -> bool:
+        def has_normalized_text():
+            return bool(node.xpath("normalize-space(text())"))
+
+        def has_em_child():
+            return bool(node.xpath("./em"))
+
+        return not has_normalized_text() and has_em_child()
+
+    while paragraph_nodes and _cond(paragraph_nodes[-1].node):
+        paragraph_nodes.pop()
+
     nodes = sorted(summary_nodes + subhead_nodes + paragraph_nodes)
 
     if not nodes:
