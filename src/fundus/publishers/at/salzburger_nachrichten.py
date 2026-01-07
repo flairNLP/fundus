@@ -56,9 +56,7 @@ class SalzburgerNachrichtenParser(ParserProxy):
                 author_selector=XPath("./ancestor::figure//div[contains(@class, 'copyright')]"),
             )
 
-    class V1_1(V1):
-        VALID_UNTIL = datetime.date.today()
-
+    class V2(BaseParser):
         _summary_selector = CSSSelector("div.articleContent > p.vorspann")
         _paragraph_selector = XPath(
             r"//div[contains(@class, 'articleText')] /p[not(re:test(string(.), '^\(Quelle:.*\)$'))]",
@@ -67,6 +65,27 @@ class SalzburgerNachrichtenParser(ParserProxy):
         _subheadline_selector = CSSSelector("div.articleText > h2")
 
         _topic_selector = XPath("//div[@class='articleTags']")
+
+        @attribute
+        def body(self) -> Optional[ArticleBody]:
+            return extract_article_body_with_selector(
+                self.precomputed.doc,
+                summary_selector=self._summary_selector,
+                subheadline_selector=self._subheadline_selector,
+                paragraph_selector=self._paragraph_selector,
+            )
+
+        @attribute
+        def authors(self) -> List[str]:
+            return generic_author_parsing(self.precomputed.ld.bf_search("author"))
+
+        @attribute
+        def publishing_date(self) -> Optional[datetime.datetime]:
+            return generic_date_parsing(self.precomputed.ld.bf_search("datePublished"))
+
+        @attribute
+        def title(self) -> Optional[str]:
+            return self.precomputed.ld.xpath_search("NewsArticle/headline", scalar=True)
 
         @attribute
         def topics(self) -> List[str]:
