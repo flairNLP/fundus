@@ -43,6 +43,7 @@ from .sportschau import SportSchauParser
 from .stern import SternParser
 from .stuttgarter_zeitung import StuttgarterZeitungParser
 from .sz import SZParser
+from .t_online import TOnlineParser
 from .tagesschau import TagesschauParser
 from .tagesspiegel import TagesspiegelParser
 from .taz import TazParser
@@ -613,5 +614,27 @@ class DE(metaclass=PublisherGroup):
         sources=[
             RSSFeed("https://www.freitag.de/@@RSS"),
             Sitemap("https://www.freitag.de/sitemap.xml", sitemap_filter=inverse(regex_filter("sitemap-articles"))),
+        ],
+    )
+
+    TOnline = Publisher(
+        name="T-Online",
+        domain="https://www.t-online.de/",
+        parser=TOnlineParser,
+        sources=[
+            RSSFeed("https://www.t-online.de/nachrichten/feed.rss"),
+            RSSFeed("https://www.t-online.de/nachrichten/ukraine/feed.rss"),
+            RSSFeed("https://www.t-online.de/themen/corona/feed.rss"),
+            RSSFeed("https://www.t-online.de/nachrichten/panorama/feed.rss"),
+            RSSFeed("https://www.t-online.de/sport/feed.rss"),
+            RSSFeed("https://www.t-online.de/sport/fussball/feed.rss"),
+            RSSFeed("https://www.t-online.de/unterhaltung/feed.rss"),
+            RSSFeed("https://www.t-online.de/digital/feed.rss"),
+            RSSFeed("https://www.t-online.de/finanzen/feed.rss"),
+            RSSFeed("https://www.t-online.de/mobilitaet/feed.rss"),
+            RSSFeed("https://www.t-online.de/gesundheit/feed.rss"),
+            RSSFeed("https://www.t-online.de/leben/feed.rss"),
+            RSSFeed("https://www.t-online.de/heim-garten/feed.rss"),
+            RSSFeed("https://www.t-online.de/klima/feed.rss"),
         ],
     )

@@ -1249,6 +1249,25 @@
     </tr>
     <tr>
       <td>
+        <code>TOnline</code>
+      </td>
+      <td>
+        <div>T-Online</div>
+      </td>
+      <td>
+        <a href="https://www.t-online.de/">
+          <span>www.t-online.de</span>
+        </a>
+      </td>
+      <td>
+        <code>de</code>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
         <code>Tagesschau</code>
       </td>
       <td>
