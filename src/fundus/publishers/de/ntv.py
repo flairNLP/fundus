@@ -24,7 +24,7 @@ class NTVParser(ParserProxy):
         _paragraph_selector = XPath(
             "//div[@class='article__text']" "/p[not(strong) or (strong and (position() > 1 or last()))]"
         )
-        _subheadline_selector = CSSSelector(".article__text > h2")
+        _subheadline_selector: XPath = CSSSelector(".article__text > h2")
 
         @attribute
         def body(self) -> Optional[ArticleBody]:
@@ -64,10 +64,29 @@ class NTVParser(ParserProxy):
             )
 
     class V1_1(V1):
-        VALID_UNTIL = datetime.date.today()
+        VALID_UNTIL = datetime.date(2025, 11, 5)
         _author_selector = XPath("string(//span[@class='article__author'])")
 
-        @attribute
+        @attribute(deprecated=VALID_UNTIL + datetime.timedelta(days=1))
         def authors(self) -> List[str]:
             author_text: str = self._author_selector(self.precomputed.doc)
             return generic_author_parsing(author_text.replace("Von", ""))
+
+    class V1_2(V1_1):
+        VALID_UNTIL = datetime.date.today()
+
+        _summary_selector = XPath("//div[@class='wrapper-article'] //p[contains(@class, 'leadtext')]")
+        _paragraph_selector = XPath("//div[@class='wrapper-article'] //p[contains(@class, 'paragraph')]")
+        _subheadline_selector = XPath("//div[@class='wrapper-article'] //h2[contains(@class, 'subheadline')]")
+
+        _image_author_pattern: Pattern[str] = re.compile("")
+
+        @attribute
+        def images(self) -> List[Image]:
+            return image_extraction(
+                doc=self.precomputed.doc,
+                paragraph_selector=self._paragraph_selector,
+                upper_boundary_selector=XPath("//article"),
+                caption_selector=XPath("./ancestor::figure//figcaption"),
+                author_selector=re.compile(r"(?P<credits>\([^(^)]*\))$"),
+            )

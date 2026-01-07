@@ -285,5 +285,69 @@
       "Berlin",
       "KunstKultur"
     ]
+  },
+  "V1_2": {
+    "body": {
+      "summary": [
+        "Die Beschlagnahmung eines Tankers ist die jüngste Operation des US-Militärs vor der Küste Venezuelas. Präsident Trump macht Andeutungen, dass es bald auch Landeinsätze geben könnte."
+      ],
+      "sections": [
+        {
+          "headline": [],
+          "paragraphs": [
+            "Nach der Beschlagnahme eines Öltankers vor der Küste Venezuelas durch das US-Militär hat US-Präsident Donald Trump erneut über baldige Bodeneinsätze gesprochen, ohne dabei konkret zu werden. \"Es wird bald auch an Land beginnen\", sagte er im Weißen Haus. Er nannte allerdings weder Venezuela noch andere Länder beim Namen. Auch zur Art der möglichen US-Einsätze äußerte er sich nicht genauer. Unmittelbar davor hatte er indirekt über die seit Wochen andauernden tödlichen US-Angriffe auf Boote mit angeblichen Drogenschmugglern in der Karibik gesprochen.",
+            "Zuletzt hatte Trump im Interview des Nachrichtenportals \"Politico\" auf die Frage nach einer möglichen amerikanischen Bodeninvasion in Venezuela geantwortet, er wolle weder etwas bestätigen noch ausschließen. Vor einiger Zeit hatte Trump bereits öffentlich bestätigt, dass er auch verdeckte Einsätze des Auslandsgeheimdienstes CIA in Venezuela genehmigt habe."
+          ]
+        },
+        {
+          "headline": [
+            "Leavitt stellt Zusammenhang zu Revolutionsgarden her"
+          ],
+          "paragraphs": [
+            "Die US-Küstenwache und andere Einheiten hatten am Mittwoch vor der Küste Venezuelas einen Öltanker unter ihre Kontrolle gebracht, was in Caracas als \"Akt der internationalen Piraterie\" verurteilt wurde. Das Weiße Haus rechtfertigte die Beschlagnahmung damit, dass der Tanker als Teil einer Schattenflotte Schwarzmarkt-Öl an die Revolutionsgarden im Iran liefere. Das Schiff stehe auf einer Sanktionsliste und das Justizministerium habe die Beschlagnahme des Schiffes beantragt, sagte die Sprecherin des Weißen Hauses, Karoline Leavitt.",
+            "Unklar blieb in der Erklärung, warum Venezuela Öl an die Revolutionsgarden liefern soll. Der Iran produziert selbst Öl und verfügt über erhebliche eigene Ölreserven. Auf die Frage, ob es US-Präsident Trump bei den Einsätzen in der Karibik um den Kampf gegen Drogen oder um Öl gehe, sagte Leavitt: \"Der Präsident hat einen neuen Ansatz gewählt, den seit geraumer Zeit keine Regierung mehr verfolgt hat, nämlich sich tatsächlich auf das zu konzentrieren, was in unserem eigenen Hinterhof vor sich geht.\" Die USA hatten Lateinamerika jahrzehntelang als ihren Hinterhof betrachtet."
+          ]
+        },
+        {
+          "headline": [
+            "Trump: \"Es geht um viele Dinge\""
+          ],
+          "paragraphs": [
+            "Trump selbst sagte auf die Frage eines Journalisten, ob der Hintergrund der Öltanker-Beschlagnahme Drogen oder Öl sei: \"Es geht um viele Dinge.\" Er warf Venezuela erneut vor, \"Millionen\" Menschen von Gefängnissen, Gangs, dem Drogendealer-Milieu und psychischen Einrichtungen in die USA gelassen zu haben.",
+            "Leavitt schloss nicht aus, dass es weitere Aktionen gegen Öltanker gibt. Die USA würden nicht tatenlos zusehen, wie sanktionierte Schiffe mit Schwarzmarkt-Öl auf den Meeren unterwegs seien und aus den Erlösen \"der Drogenterrorismus von Schurkenstaaten und illegitimen Regimes auf der ganzen Welt finanziert werden\".",
+            "Venezuela hat riesige Ölvorkommen, ist stark von den Exporteinnahmen abhängig und liefert sein Öl vor allem an den US-Rivalen China. Der autoritär regierende Präsident des südamerikanischen Landes, Nicolás Maduro, wirft den USA vor, es bei der Eskalation des Konflikts vor allem auf dieses Öl abgesehen zu haben und einen Machtwechsel in Caracas erzwingen zu wollen."
+          ]
+        }
+      ]
+    },
+    "images": [
+      {
+        "versions": [
+          {
+            "url": "https://www.n-tv.de/img/30134167/1765515671/Img_16_9/1024/U-S-President-Donald-Trump-looks-on-as-he-signs-an-executive-order-on-AI-in-the-Oval-Office-at-the-White-House-in-Washington-D-C-U-S-December-11-2025.webp",
+            "query_width": null,
+            "size": null,
+            "type": "image/webp"
+          }
+        ],
+        "is_cover": true,
+        "description": "U-S-President-Donald-Trump-looks-on-as-he-signs-an-executive-order-on-AI-in-the-Oval-Office-at-the-White-House-in-Washington-D-C-U-S-December-11-2025",
+        "caption": "Donald Trump bleibt vage.",
+        "authors": [
+          "REUTERS"
+        ],
+        "position": 812
+      }
+    ],
+    "publishing_date": "2025-12-12 05:07:47+01:00",
+    "title": "Trump spricht nach Tanker-Stürmung über Bodeneinsätze",
+    "topics": [
+      "Politik",
+      "US-Militär",
+      "Donald Trump",
+      "Venezuela",
+      "USA",
+      "Iran"
+    ]
   }
 }
