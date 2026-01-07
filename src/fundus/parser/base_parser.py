@@ -225,6 +225,10 @@ class BaseParser(ABC):
         self._sorted_registered_functions = sorted(bound_registered_functions, key=lambda f: (f, f.__name__))
 
     @classmethod
+    def version(cls) -> str:
+        return cls.__name__
+
+    @classmethod
     def _search_members(cls, obj_type: type) -> List[Tuple[str, Any]]:
         members = inspect.getmembers(cls, predicate=lambda x: isinstance(x, obj_type)) if obj_type else []
         return members
@@ -248,8 +252,22 @@ class BaseParser(ABC):
         return self.precomputed.cache if self.precomputed else None
 
     @property
-    def registered(self) -> List[RegisteredFunction]:
-        return self._sorted_registered_functions
+    def registered(self) -> RegisteredFunctionCollection[RegisteredFunction]:
+        return RegisteredFunctionCollection(*self._sorted_registered_functions)
+
+    @property
+    def registered_attributes(self) -> AttributeCollection:
+        return AttributeCollection(
+            *[
+                func
+                for func in self._sorted_registered_functions
+                if isinstance(func, Attribute) and func.__name__ not in ["__ld", "__meta"]
+            ]
+        )
+
+    @property
+    def registered_functions(self) -> FunctionCollection:
+        return FunctionCollection(*[func for func in self._sorted_registered_functions if isinstance(func, Function)])
 
     def _base_setup(self, html: str) -> None:
         doc = lxml.html.document_fromstring(html)

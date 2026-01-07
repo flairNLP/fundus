@@ -38,7 +38,7 @@ class ThePortugalNewsParser(ParserProxy):
         def title(self) -> Optional[str]:
             return self.precomputed.ld.bf_search("headline")
 
-        @attribute
+        @attribute(deprecated=datetime.date(2025, 10, 21))
         def authors(self) -> List[str]:
             author_objects = self._author_selector(self.precomputed.doc)
             if author_objects and (author := re.search(r"(?i)by\s*(?P<authors>.*),[\r\sr\n]*in", author_objects[0])):

@@ -90,9 +90,7 @@
       <td>
         <code>de</code>
       </td>
-      <td>
-        <code>topics</code>
-      </td>
+      <td>&#160;</td>
       <td>&#160;</td>
       <td>&#160;</td>
     </tr>
@@ -209,6 +207,25 @@
       </td>
       <td>
         <code>nl</code>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
+        <code>PoliticoEu</code>
+      </td>
+      <td>
+        <div>Politico EU</div>
+      </td>
+      <td>
+        <a href="https://www.politico.eu/">
+          <span>www.politico.eu</span>
+        </a>
+      </td>
+      <td>
+        <code>en</code>
       </td>
       <td>&#160;</td>
       <td>&#160;</td>
@@ -786,7 +803,9 @@
         <code>FreiePresse</code>
       </td>
       <td>
-        <div>FreiePresse</div>
+        <div>
+          <strike>FreiePresse</strike>
+        </div>
       </td>
       <td>
         <a href="https://www.freiepresse.de/">
@@ -1069,7 +1088,9 @@
         <code>de</code>
       </td>
       <td>&#160;</td>
-      <td>&#160;</td>
+      <td>
+        <code>authors</code>
+      </td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -1198,6 +1219,25 @@
       <td>
         <a href="https://www.stern.de/">
           <span>www.stern.de</span>
+        </a>
+      </td>
+      <td>
+        <code>de</code>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
+        <code>StuttgarterZeitung</code>
+      </td>
+      <td>
+        <div>Stuttgarter Zeitung</div>
+      </td>
+      <td>
+        <a href="https://www.stuttgarter-zeitung.de/">
+          <span>www.stuttgarter-zeitung.de</span>
         </a>
       </td>
       <td>
@@ -1355,9 +1395,26 @@
       <td>
         <code>de</code>
       </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
       <td>
-        <code>topics</code>
+        <code>DerFreitag</code>
       </td>
+      <td>
+        <div>der Freitag</div>
+      </td>
+      <td>
+        <a href="https://www.freitag.de/">
+          <span>www.freitag.de</span>
+        </a>
+      </td>
+      <td>
+        <code>de</code>
+      </td>
+      <td>&#160;</td>
       <td>&#160;</td>
       <td>&#160;</td>
     </tr>
@@ -1850,7 +1907,9 @@
         <code>Morgunbladid</code>
       </td>
       <td>
-        <div>Morgunbladid</div>
+        <div>
+          <strike>Morgunbladid</strike>
+        </div>
       </td>
       <td>
         <a href="https://www.mbl.is/">
@@ -2700,7 +2759,9 @@
       <td>
         <code>topics</code>
       </td>
-      <td>&#160;</td>
+      <td>
+        <code>authors</code>
+      </td>
       <td>&#160;</td>
     </tr>
   </tbody>
@@ -2776,6 +2837,44 @@
       </td>
       <td>
         <code>ru</code>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+  </tbody>
+</table>
+
+
+## SE-Publishers
+
+<table class="publishers se">
+  <thead>
+    <tr>
+      <th>Class&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</th>
+      <th>Name&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</th>
+      <th>URL&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</th>
+      <th>Languages</th>
+      <th>Missing&#160;Attributes</th>
+      <th>Deprecated&#160;Attributes</th>
+      <th>Additional&#160;Attributes&#160;&#160;&#160;&#160;</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <code>Expressen</code>
+      </td>
+      <td>
+        <div>Expressen</div>
+      </td>
+      <td>
+        <a href="https://www.expressen.se/">
+          <span>www.expressen.se</span>
+        </a>
+      </td>
+      <td>
+        <code>sv</code>
       </td>
       <td>&#160;</td>
       <td>&#160;</td>
@@ -3095,6 +3194,25 @@
     </tr>
     <tr>
       <td>
+        <code>Nature</code>
+      </td>
+      <td>
+        <div>Nature</div>
+      </td>
+      <td>
+        <a href="https://www.nature.com/">
+          <span>www.nature.com</span>
+        </a>
+      </td>
+      <td>
+        <code>en</code>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
         <code>BBC</code>
       </td>
       <td>
@@ -3378,6 +3496,25 @@
     </tr>
     <tr>
       <td>
+        <code>RestOfWorld</code>
+      </td>
+      <td>
+        <div>Rest of World</div>
+      </td>
+      <td>
+        <a href="https://restofworld.org/">
+          <span>restofworld.org</span>
+        </a>
+      </td>
+      <td>
+        <code>en</code>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
         <code>Reuters</code>
       </td>
       <td>
@@ -3658,6 +3795,84 @@
       </td>
       <td>
         <code>en</code>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
+        <code>Dizindaba</code>
+      </td>
+      <td>
+        <div>Dizindaba</div>
+      </td>
+      <td>
+        <a href="https://www.dizindaba.co.za/">
+          <span>www.dizindaba.co.za</span>
+        </a>
+      </td>
+      <td>
+        <code>xh</code>
+      </td>
+      <td>
+        <code>topics</code>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
+        <code>DurbanLocal</code>
+      </td>
+      <td>
+        <div>Durban Local</div>
+      </td>
+      <td>
+        <a href="https://www.durbanlocal.co.za/">
+          <span>www.durbanlocal.co.za</span>
+        </a>
+      </td>
+      <td>
+        <code>en</code>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
+        <code>Isolezwe</code>
+      </td>
+      <td>
+        <div>Isolezwe</div>
+      </td>
+      <td>
+        <a href="https://www.isolezwe.co.za/">
+          <span>www.isolezwe.co.za</span>
+        </a>
+      </td>
+      <td>
+        <code>zu</code>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
+        <code>IsolezweLesiXhosa</code>
+      </td>
+      <td>
+        <div>Isolezwe LesiXhosa</div>
+      </td>
+      <td>
+        <a href="https://www.isolezwelesixhosa.co.za/">
+          <span>www.isolezwelesixhosa.co.za</span>
+        </a>
+      </td>
+      <td>
+        <code>xh</code>
       </td>
       <td>&#160;</td>
       <td>&#160;</td>

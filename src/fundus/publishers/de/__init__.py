@@ -12,6 +12,7 @@ from .bild import BildParser
 from .boersenzeitung import BoersenZeitungParser
 from .br import BRParser
 from .business_insider_de import BusinessInsiderDEParser
+from .der_freitag import DerFreitagParser
 from .die_welt import DieWeltParser
 from .die_zeit import DieZeitParser
 from .dw import DWParser
@@ -41,6 +42,7 @@ from .rn import RuhrNachrichtenParser
 from .spon import SPONParser
 from .sportschau import SportSchauParser
 from .stern import SternParser
+from .stuttgarter_zeitung import StuttgarterZeitungParser
 from .sz import SZParser
 from .tagesschau import TagesschauParser
 from .tagesspiegel import TagesspiegelParser
@@ -91,6 +93,15 @@ class DE(metaclass=PublisherGroup):
                 f"https://www.morgenpost.de/sitemaps/archive/sitemap-{d.year}-{str(d.month).zfill(2)}-p00.xml.gz",
             )
             for d in reversed(list(rrule(MONTHLY, dtstart=datetime(2003, 2, 1), until=datetime.now())))
+        ],
+    )
+
+    StuttgarterZeitung = Publisher(
+        name="Stuttgarter Zeitung",
+        domain="https://www.stuttgarter-zeitung.de/",
+        parser=StuttgarterZeitungParser,
+        sources=[
+            NewsMap("https://www.stuttgarter-zeitung.de/docs.newsmap_stuttgarter_zeitung.xml"),
         ],
     )
 
@@ -155,7 +166,6 @@ class DE(metaclass=PublisherGroup):
         sources=[
             NewsMap("https://www.focus.de/sitemap_news_ressorts.xml"),
         ],
-        request_header={"user-agent": "Fundus"},
     )
 
     Merkur = Publisher(
@@ -202,7 +212,6 @@ class DE(metaclass=PublisherGroup):
         url_filter=regex_filter(
             "/zett/|/angebote/|/kaenguru-comics/|/administratives/|/index(?!.)|/elbvertiefung-[0-9]{2}-[0-9]{2}"
         ),
-        request_header={"user-agent": "Googlebot"},
     )
 
     BerlinerZeitung = Publisher(
@@ -570,6 +579,7 @@ class DE(metaclass=PublisherGroup):
             RSSFeed("https://www.freiepresse.de/rss/rss_regional.php"),
             Sitemap("https://www.freiepresse.de/sitemaps/articles_last2years.xml", reverse=True),
         ],
+        deprecated=True,
     )
 
     RuhrNachrichten = Publisher(
@@ -609,4 +619,15 @@ class DE(metaclass=PublisherGroup):
             ),
         ],
         request_header={"user-agent": "Fundus"},
+    )
+    
+    
+    DerFreitag = Publisher(
+        name="der Freitag",
+        domain="https://www.freitag.de/",
+        parser=DerFreitagParser,
+        sources=[
+            RSSFeed("https://www.freitag.de/@@RSS"),
+            Sitemap("https://www.freitag.de/sitemap.xml", sitemap_filter=inverse(regex_filter("sitemap-articles"))),
+        ],
     )

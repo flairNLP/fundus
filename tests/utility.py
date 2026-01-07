@@ -262,7 +262,7 @@ class HTMLTestFile:
 
 def load_html_test_file_mapping(publisher: Publisher) -> Dict[Type[BaseParser], HTMLTestFile]:
     html_paths = (test_resource_path / Path(f"{publisher.__group__.__name__.lower()}")).glob(
-        f"{publisher.__name__}*.html.gz"
+        f"{publisher.__name__}_*.html.gz"
     )
     html_files = [HTMLTestFile.load(path) for path in html_paths]
     html_mapping: Dict[Type[BaseParser], HTMLTestFile] = {}
