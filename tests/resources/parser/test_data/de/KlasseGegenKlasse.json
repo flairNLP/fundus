@@ -4,12 +4,13 @@
       "Joschua Klein"
     ],
     "body": {
-      "summary": [],
+      "summary": [
+        "Der Angriff auf palästinasolidarische Menschen ist ein Angriff auf die demokratischen Freiheiten in diesem Land. Und das geht uns alle etwas an."
+      ],
       "sections": [
         {
           "headline": [],
           "paragraphs": [
-            "Der Angriff auf palästinasolidarische Menschen ist ein Angriff auf die demokratischen Freiheiten in diesem Land. Und das geht uns alle etwas an.",
             "Die Palästina-Solidaritätsbewegung erfährt besonders in Berlin seit dem 7. Oktober 2025 noch gesteigerte Repression durch den deutschen Staat. Diese Ausweitung von massiver Polizeigewalt, willkürlichen Festnahmen, fadenscheinigen Versammlungsverboten und rassistischer Diskriminierung sind nicht nur direkte Angriffe auf die Pro-Palästina-Bewegung, sondern stellen auch drastische Einschnitte der allgemeinen Meinungs- und Versammlungsfreiheit und Rechtsstaatlichkeit dar – vermeintliche Grundpfeiler unserer Demokratie.",
             "Dies wird auch längst international bestätigt, zuletzt durch die UN. Diese ruft Deutschland dazu auf, die Kriminalisierung und Polizeigewalt gegen palästinasolidarische Menschen einzustellen. Neben den schon lange anhaltenden Beschränkungen und Verboten von Pro-Palästina Versammlungen, der Kriminalisierung der Verteidigung von Menschenrechten und palästinischer Identität, und unverhältnismäßiger Polizeigewalt wurden insbesondere die Großeinkesslung, die gewaltsamen Festnahmen, und das willkürliche Versammlungsverbot des 7. Oktober in Berlin benannt. Seitdem wurden sogar ausgewiesene parlamentarische Beobachter von der Links-Partei durch die Polizei grundlos angegriffen und gewaltsam festgenommen.",
             "Meinungsfreiheit, Versammlungsfreiheit und Rechtsstaatlichkeit werden von der Regierung konsequent untergraben. Deutschland ist in Europa ein trauriger Vorreiter in der Normalisierung von Grundrechtsverletzungen und dem Rückbau von demokratischen Freiheiten.",
@@ -21,7 +22,102 @@
         }
       ]
     },
+    "images": [
+      {
+        "versions": [
+          {
+            "url": "https://www.klassegegenklasse.org/wp-content/uploads/archive/berlin-polizei-repression-2-184x123.jpg",
+            "query_width": null,
+            "size": {
+              "width": 184,
+              "height": 123
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.klassegegenklasse.org/wp-content/uploads/archive/berlin-polizei-repression-2-300x200.jpg",
+            "query_width": null,
+            "size": {
+              "width": 300,
+              "height": 200
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.klassegegenklasse.org/wp-content/uploads/archive/berlin-polizei-repression-2-369x246.jpg",
+            "query_width": null,
+            "size": {
+              "width": 369,
+              "height": 246
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.klassegegenklasse.org/wp-content/uploads/archive/berlin-polizei-repression-2-592x395.jpg",
+            "query_width": null,
+            "size": {
+              "width": 592,
+              "height": 395
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.klassegegenklasse.org/wp-content/uploads/archive/berlin-polizei-repression-2-739x493.jpg",
+            "query_width": null,
+            "size": {
+              "width": 739,
+              "height": 493
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.klassegegenklasse.org/wp-content/uploads/archive/berlin-polizei-repression-2-1024x683.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1024,
+              "height": 683
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.klassegegenklasse.org/wp-content/uploads/archive/berlin-polizei-repression-2-1110x740.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1110,
+              "height": 740
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.klassegegenklasse.org/wp-content/uploads/archive/berlin-polizei-repression-2-1536x1024.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1536,
+              "height": 1024
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.klassegegenklasse.org/wp-content/uploads/archive/berlin-polizei-repression-2.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1600,
+              "height": 1067
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": true,
+        "description": "1",
+        "caption": null,
+        "authors": [
+          "Simon Zamora Martin"
+        ],
+        "position": 70
+      }
+    ],
     "publishing_date": "2025-10-22 00:00:00",
+    "title": "Ausufernde Repression als Spiegel unserer Demokratie",
     "topics": [
       "Palästina",
       "Polizeigewalt",

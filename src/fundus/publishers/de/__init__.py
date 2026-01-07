@@ -605,6 +605,7 @@ class DE(metaclass=PublisherGroup):
             RSSFeed("https://www.klassegegenklasse.org/feed/"),
             Sitemap(
                 "https://www.klassegegenklasse.org/wp-sitemap.xml",
+                sitemap_filter=inverse(regex_filter("wp-sitemap-posts-post")),
             ),
         ],
         request_header={"user-agent": "Fundus"},
