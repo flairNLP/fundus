@@ -9,6 +9,7 @@ from fundus.parser.utility import (
     extract_article_body_with_selector,
     generic_author_parsing,
     generic_date_parsing,
+    generic_nodes_to_text,
     generic_topic_parsing,
     image_extraction,
 )
@@ -38,7 +39,7 @@ class DailyMaverickParser(ParserProxy):
                 subheadline_selector=self._subheadline_selector,
             )
 
-        @attribute
+        @attribute(priority=1)
         def authors(self) -> List[str]:
             return generic_author_parsing(self.precomputed.ld.bf_search("author"))
 
@@ -53,7 +54,9 @@ class DailyMaverickParser(ParserProxy):
         @attribute
         def topics(self) -> List[str]:
             return [
-                t for t in generic_topic_parsing(self.precomputed.ld.bf_search("keywords")) if t not in self.authors()
+                t
+                for t in generic_topic_parsing(self.precomputed.ld.bf_search("keywords"))
+                if t.lower() not in [a.lower() for a in self.authors()]
             ]
 
         @attribute
@@ -77,12 +80,25 @@ class DailyMaverickParser(ParserProxy):
 
         _summary_selector = XPath("//div[contains(@class,'top-summary')] /p")
         _paragraph_selector = XPath(
-            "//div[contains(@class,'article-content')]"
-            "//p[text() and not(re:test(string(.), '^([A-Z ]+|Read more:.*)$'))] |"
-            "//div[contains(@class,'article-content')] //ul /li",
+            r"//div[contains(@class,'article-content')]"
+            r"//p[text() and not(re:test(string(.), '^(By ([A-z-.]+\s*){1,4}|Read more:.*)$'))] |"
+            r"//div[contains(@class,'article-content')] //ul /li",
             namespaces={"re": "http://exslt.org/regular-expressions"},
         )
         _subheadline_selector = XPath("//div[contains(@class,'article-content')] //h3")
+
+        _author_selector = XPath(
+            r"//div[contains(@class,'article-content')]//p[re:test(string(.), '^By ([A-z-]+\s*){1,4}$')]",
+            namespaces={"re": "http://exslt.org/regular-expressions"},
+        )
+
+        @attribute(priority=1)
+        def authors(self) -> List[str]:
+            if authors := self._author_selector(self.precomputed.doc):
+                return generic_author_parsing(
+                    generic_nodes_to_text(authors), substitution_pattern=re.compile(r"(?i)^by\s*")
+                )
+            return generic_author_parsing(self.precomputed.ld.bf_search("author"))
 
         @attribute
         def images(self) -> List[Image]:
