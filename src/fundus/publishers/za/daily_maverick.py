@@ -39,7 +39,7 @@ class DailyMaverickParser(ParserProxy):
                 subheadline_selector=self._subheadline_selector,
             )
 
-        @attribute(priority=1)
+        @attribute
         def authors(self) -> List[str]:
             return generic_author_parsing(self.precomputed.ld.bf_search("author"))
 
