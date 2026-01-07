@@ -526,7 +526,9 @@ class ImageVersion(DataclassSerializationMixin):
             return self.url < other.url
         raise NotImplementedError(f"'<' is not defined between {type(self).__name__!r} and {type(other).__name__!r}")
 
-class ImageURLError(Exception): ...
+
+class ImageURLError(Exception):
+    ...
 
 
 @dataclass(frozen=False)

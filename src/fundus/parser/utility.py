@@ -42,9 +42,10 @@ from fundus.parser.data import (
     ArticleSection,
     Dimension,
     Image,
+    ImageURLError,
     ImageVersion,
     LinkedDataMapping,
-    TextSequence, ImageURLError,
+    TextSequence,
 )
 from fundus.utils.regex import _get_match_dict
 from fundus.utils.serialization import JSONVal
@@ -782,7 +783,6 @@ def parse_image_nodes(
         return " ".join(generic_nodes_to_text(nodes, normalize=True)) or None
 
     for position, node, is_cover in image_nodes:
-
         # parse URLs
         if not (versions := parse_versions(node, size_pattern)):
             continue
