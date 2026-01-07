@@ -958,6 +958,25 @@
     </tr>
     <tr>
       <td>
+        <code>KlasseGegenKlasse</code>
+      </td>
+      <td>
+        <div>Klasse Gegen Klasse</div>
+      </td>
+      <td>
+        <a href="https://www.klassegegenklasse.org/">
+          <span>www.klassegegenklasse.org</span>
+        </a>
+      </td>
+      <td>
+        <code>de</code>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
         <code>Krautreporter</code>
       </td>
       <td>
