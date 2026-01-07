@@ -92,7 +92,7 @@ class DailyMaverickParser(ParserProxy):
             namespaces={"re": "http://exslt.org/regular-expressions"},
         )
 
-        @attribute(priority=1)
+        @attribute
         def authors(self) -> List[str]:
             if authors := self._author_selector(self.precomputed.doc):
                 return generic_author_parsing(
