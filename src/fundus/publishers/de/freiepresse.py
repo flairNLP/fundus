@@ -79,9 +79,7 @@ class FreiePresseParser(ParserProxy):
             return image_extraction(
                 doc=self.precomputed.doc,
                 paragraph_selector=self._paragraph_selector,
-                image_selector=XPath(
-                    "//div[contains(@class, 'detail-img')]//img"
-                ),
+                image_selector=XPath("//div[contains(@class, 'detail-img')]//img"),
                 lower_boundary_selector=CSSSelector("a.article__copyright"),
                 caption_selector=XPath(
                     "./ancestor::div[contains(@class, 'detail-img')]"

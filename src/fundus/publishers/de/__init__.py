@@ -5,6 +5,8 @@ from dateutil.rrule import MONTHLY, YEARLY, rrule
 from fundus.publishers.base_objects import Publisher, PublisherGroup
 from fundus.scraping.filter import inverse, regex_filter
 from fundus.scraping.url import NewsMap, RSSFeed, Sitemap
+
+from ..shared import EuronewsParser
 from .berliner_zeitung import BerlinerZeitungParser
 from .bild import BildParser
 from .boersenzeitung import BoersenZeitungParser
@@ -49,7 +51,6 @@ from .waz import WAZParser
 from .wdr import WDRParser
 from .winfuture import WinfutureParser
 from .zdf import ZDFParser
-from ..shared import EuronewsParser
 
 
 # noinspection PyPep8Naming
@@ -86,12 +87,12 @@ class DE(metaclass=PublisherGroup):
         domain="https://www.morgenpost.de/",
         parser=FunkeParser,
         sources=[NewsMap("https://www.morgenpost.de/sitemaps/news.xml")]
-                + [
-                    Sitemap(
-                        f"https://www.morgenpost.de/sitemaps/archive/sitemap-{d.year}-{str(d.month).zfill(2)}-p00.xml.gz",
-                    )
-                    for d in reversed(list(rrule(MONTHLY, dtstart=datetime(2003, 2, 1), until=datetime.now())))
-                ],
+        + [
+            Sitemap(
+                f"https://www.morgenpost.de/sitemaps/archive/sitemap-{d.year}-{str(d.month).zfill(2)}-p00.xml.gz",
+            )
+            for d in reversed(list(rrule(MONTHLY, dtstart=datetime(2003, 2, 1), until=datetime.now())))
+        ],
     )
 
     StuttgarterZeitung = Publisher(
@@ -108,15 +109,15 @@ class DE(metaclass=PublisherGroup):
         domain="https://www.abendblatt.de/",
         parser=FunkeParser,
         sources=[
-                    RSSFeed("https://www.abendblatt.de/rss"),
-                    NewsMap("https://www.abendblatt.de/sitemaps/news.xml"),
-                ]
-                + [
-                    Sitemap(
-                        f"https://www.abendblatt.de/sitemaps/archive/sitemap-{d.year}-{str(d.month).zfill(2)}-p00.xml.gz",
-                    )
-                    for d in reversed(list(rrule(MONTHLY, dtstart=datetime(2000, 4, 1), until=datetime.today())))
-                ],
+            RSSFeed("https://www.abendblatt.de/rss"),
+            NewsMap("https://www.abendblatt.de/sitemaps/news.xml"),
+        ]
+        + [
+            Sitemap(
+                f"https://www.abendblatt.de/sitemaps/archive/sitemap-{d.year}-{str(d.month).zfill(2)}-p00.xml.gz",
+            )
+            for d in reversed(list(rrule(MONTHLY, dtstart=datetime(2000, 4, 1), until=datetime.today())))
+        ],
     )
 
     DieWelt = Publisher(
@@ -326,15 +327,15 @@ class DE(metaclass=PublisherGroup):
         domain="https://www.braunschweiger-zeitung.de/",
         parser=FunkeParser,
         sources=[
-                    RSSFeed("https://www.braunschweiger-zeitung.de/rss"),
-                    NewsMap("https://www.braunschweiger-zeitung.de/sitemaps/news.xml"),
-                ]
-                + [
-                    Sitemap(
-                        f"https://www.braunschweiger-zeitung.de/sitemaps/archive/sitemap-{d.year}-{str(d.month).zfill(2)}-p00.xml.gz",
-                    )
-                    for d in list(rrule(MONTHLY, dtstart=datetime(2005, 12, 1), until=datetime.now()))
-                ],
+            RSSFeed("https://www.braunschweiger-zeitung.de/rss"),
+            NewsMap("https://www.braunschweiger-zeitung.de/sitemaps/news.xml"),
+        ]
+        + [
+            Sitemap(
+                f"https://www.braunschweiger-zeitung.de/sitemaps/archive/sitemap-{d.year}-{str(d.month).zfill(2)}-p00.xml.gz",
+            )
+            for d in list(rrule(MONTHLY, dtstart=datetime(2005, 12, 1), until=datetime.now()))
+        ],
     )
 
     BusinessInsiderDE = Publisher(
@@ -404,12 +405,12 @@ class DE(metaclass=PublisherGroup):
         domain="https://www.tagesspiegel.de/",
         parser=TagesspiegelParser,
         sources=[
-                    NewsMap("https://www.tagesspiegel.de/news.xml"),
-                ]
-                + [
-                    Sitemap(f"https://www.tagesspiegel.de/contentexport/static/sitemap-index_{date.year}.xml")
-                    for date in reversed(list(rrule(YEARLY, dtstart=datetime(1996, 1, 1), until=datetime.today())))
-                ],
+            NewsMap("https://www.tagesspiegel.de/news.xml"),
+        ]
+        + [
+            Sitemap(f"https://www.tagesspiegel.de/contentexport/static/sitemap-index_{date.year}.xml")
+            for date in reversed(list(rrule(YEARLY, dtstart=datetime(1996, 1, 1), until=datetime.today())))
+        ],
     )
 
     EuronewsDE = Publisher(
