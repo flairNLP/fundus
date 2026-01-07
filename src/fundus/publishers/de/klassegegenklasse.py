@@ -20,7 +20,8 @@ from fundus.parser.utility import (
 class KlasseGegenKlasseParser(ParserProxy):
     class V1(BaseParser):
         _paragraph_selector = XPath(
-            "//div[@class='singleContent ']/p[not((not(text()) and em) or re:test(string(.), '^Zum Weiterlesen:'))]",
+            "//div[@class='singleContent ']/p[not((not(text()) and em) or re:test(string(.), '^Zum Weiterlesen:'))]"
+            " | //ol[@class='footnotesList']/li",
             namespaces={"re": "http://exslt.org/regular-expressions"},
         )
         _summary_selector = XPath("//p[@class='singleHeader-excerpt']")
