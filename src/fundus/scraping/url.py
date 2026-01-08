@@ -206,7 +206,7 @@ class Sitemap(URLSource):
             tree = lxml.etree.fromstring(content, parser=self._parser)
             if tree is None:
                 # in case we somehow end up with non xml content
-                logger.warning(f"Warning! Couldn't parse sitemap {sitemap_url!r}")  #type: ignore[unreachable]
+                logger.warning(f"Warning! Couldn't parse sitemap {sitemap_url!r}")  # type: ignore[unreachable]
                 return
             urls = [node.text for node in self._url_selector(tree)]
             if urls:
