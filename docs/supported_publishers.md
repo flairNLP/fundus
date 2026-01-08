@@ -1743,10 +1743,7 @@
       <td>
         <code>id</code>
       </td>
-      <td>
-        <code>images</code>
-        <code>topics</code>
-      </td>
+      <td>&#160;</td>
       <td>&#160;</td>
       <td>&#160;</td>
     </tr>

@@ -1,6 +1,5 @@
 from fundus.publishers.base_objects import Publisher, PublisherGroup
 from fundus.publishers.id.media_indonesia import MediaIndonesiaParser
-from fundus.scraping.filter import inverse, regex_filter
 from fundus.scraping.url import Sitemap
 
 
