@@ -2231,8 +2231,10 @@
       </td>
       <td>
         <code>ar</code>
+        <code>en</code>
       </td>
       <td>
+        <code>authors</code>
         <code>topics</code>
       </td>
       <td>&#160;</td>
