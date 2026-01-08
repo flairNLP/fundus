@@ -450,9 +450,10 @@ class DE(metaclass=PublisherGroup):
         domain="https://www.br.de/",
         parser=BRParser,
         sources=[
-            Sitemap("https://www.br.de/sitemapIndex.xml"),
+            Sitemap("https://web.master.br24-web.br-master.de/nachrichten/sitemaps/article-recent.xml"),
             NewsMap("https://www.br.de/nachrichten/sitemaps/news.xml"),
         ],
+        url_filter=regex_filter("br-fernsehen/sendungen|index.html$"),
     )
 
     ZDF = Publisher(
