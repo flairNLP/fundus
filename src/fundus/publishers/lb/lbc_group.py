@@ -1,5 +1,4 @@
 import datetime
-import re
 from typing import List, Optional
 
 from lxml.etree import XPath
@@ -7,7 +6,6 @@ from lxml.etree import XPath
 from fundus.parser import ArticleBody, BaseParser, Image, ParserProxy, attribute
 from fundus.parser.utility import (
     extract_article_body_with_selector,
-    generic_author_parsing,
     generic_date_parsing,
     image_extraction,
     transform_breaks_to_paragraphs,
