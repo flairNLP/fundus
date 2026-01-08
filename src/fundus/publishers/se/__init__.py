@@ -1,6 +1,6 @@
 from fundus.publishers.base_objects import Publisher, PublisherGroup
 from fundus.scraping.filter import inverse, regex_filter
-from fundus.scraping.url import Sitemap, NewsMap, RSSFeed
+from fundus.scraping.url import NewsMap, RSSFeed, Sitemap
 
 from .aftonbladet import AftonbladetParser
 from .expressen import ExpressenParser
@@ -8,7 +8,7 @@ from .expressen import ExpressenParser
 
 class SE(metaclass=PublisherGroup):
     default_language = "sv"
-    
+
     Aftonbladet = Publisher(
         name="Aftonbladet",
         domain="https://www.aftonbladet.se/",
@@ -20,7 +20,7 @@ class SE(metaclass=PublisherGroup):
                 reverse=True,
             ),
             NewsMap("https://www.aftonbladet.se/sitemaps/files/articles-48hrs.xml"),
-            RSSFeed("https://rss.aftonbladet.se/rss2/small/pages/sections/senastenytt/")
+            RSSFeed("https://rss.aftonbladet.se/rss2/small/pages/sections/senastenytt/"),
         ],
     )
 
