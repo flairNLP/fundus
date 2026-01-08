@@ -16,5 +16,5 @@ class UA(metaclass=PublisherGroup):
             Sitemap("https://www.pravda.com.ua/sitemap/sitemap-archive.xml", languages={"uk", "en", "ru"}),
             NewsMap("https://www.pravda.com.ua/sitemap/sitemap-news.xml", languages={"uk", "en", "ru"}),
         ],
-        url_filter=inverse(regex_filter("[^e]pravda.com.ua.*/news/")),
+        url_filter=inverse(regex_filter("[^e]pravda.com.ua.")),
     )
