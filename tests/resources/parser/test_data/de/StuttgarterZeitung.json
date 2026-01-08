@@ -1,0 +1,68 @@
+{
+  "V1": {
+    "authors": [
+      "dpa"
+    ],
+    "body": {
+      "summary": [],
+      "sections": [
+        {
+          "headline": [],
+          "paragraphs": [
+            "Die Sprengung der 160 Meter hohen Kühltürme des ehemaligen Kernkraftwerks markiert das Ende einer Ära – und macht Platz für neue Energieprojekte am Standort Gundremmingen.",
+            "Gundremmingen - Die beiden jeweils 160 Meter hohen Kühltürme des früheren Kernkraftwerks Gundremmingen in Schwaben sind knapp vier Jahre nach der Stilllegung des Atommeilers gesprengt worden. Pünktlich um 12.00 Uhr fielen die aus insgesamt 56.000 Tonnen Stahlbeton bestehenden Kolosse in sich zusammen.",
+            "Etwa 30.000 Schaulustige, insbesondere aus Bayern und dem nahen Baden-Württemberg, verfolgten nach Angaben der Polizei die spektakuläre Zerstörung eines Symbols des Atomzeitalters.",
+            "Die Sprengung verlief genau so, wie die mit dem Abriss beauftragte Thüringer Sprenggesellschaft geplant hatte. Zwischen den beiden Zündungen des für die Zerstörung der zwei Türme benötigten Sprengstoffs gab es etwa 15 Sekunden Zeitunterschied. Die Kühltürme neigten sich jeweils leicht zur Seite und fielen dann senkrecht nach unten in sich zusammen.",
+            "Der Betreiber RWE und das Spezialunternehmen, das bereits mehrfach Kühltürme und Hochhäuser abgerissen hatte, hatten die Aktion mehr als ein Jahr lang vorbereitet. Mehr als 1.000 Löcher für den Sprengstoff wurden dafür in die Bauwerke gebohrt."
+          ]
+        },
+        {
+          "headline": [
+            "Behörden überwachen Sperrzone und weisen Parkplätze aus"
+          ],
+          "paragraphs": [
+            "Das Kernkraftwerk war Ende 2021 mit der Abschaltung des dritten Blocks endgültig vom Netz gegangen. Seitdem wird die Atomanlage zurückgebaut. Dies wird noch bis in die 2030er Jahre dauern. Die Kühltürme wurden einst gebraucht, um das bei der Stromproduktion erhitzte Kühlwasser herunterzukühlen, ehe es wieder zurück in die Donau geleitet wurde.",
+            "Für die Sprengung hatte das Landratsamt Günzburg eine große Sperrzone festgelegt. Zahlreiche Polizeibeamte überwachten, dass sich tatsächlich niemand dort aufhielt."
+          ]
+        },
+        {
+          "headline": [
+            "Größter Batteriespeicher Deutschlands in den Startblöcken"
+          ],
+          "paragraphs": [
+            "Obwohl der Rückbau des Atomkraftwerks noch lange läuft, bereitet der Energiekonzern RWE die Folgenutzung des Standorts vor. Seit den 1960er Jahren wurde das Areal für die Kernkraft genutzt. Schon am Mittwoch soll dort der Spatenstich für einen Batteriespeicher gesetzt werden.",
+            "Laut RWE wird der Speicher mit einer Kapazität von rund 700 Megawattstunden der aktuell größte in Deutschland. Solche Anlagen werden benötigt, um beispielsweise tagsüber bei Sonnenschein gewonnenen Solarstrom zu speichern und dann nachts abgeben zu können. Zudem sind eine Photovoltaik-Anlage und ein neues Gaskraftwerk in Gundremmingen in Planung."
+          ]
+        }
+      ]
+    },
+    "images": [
+      {
+        "versions": [
+          {
+            "url": "https://www.stuttgarter-zeitung.de/media.media.be7b8bf8-9051-4c0a-bd8f-8f800bc5471a.16x9_700.jpg",
+            "query_width": null,
+            "size": {
+              "width": 16,
+              "height": 9
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": true,
+        "description": "Rückbau von Atomkraftwerk: Kühltürme von AKW Gundremmingen gesprengt",
+        "caption": "Erst fiel der linke Kühlturm, dann der rechte. Foto: Peter Kneffel/dpa",
+        "authors": [],
+        "position": 826
+      }
+    ],
+    "publishing_date": "2025-10-25 12:10:35+02:00",
+    "title": "Rückbau von Atomkraftwerk: Kühltürme von AKW Gundremmingen gesprengt",
+    "topics": [
+      "Atomenergie",
+      "Bayern",
+      "Baden-Württemberg",
+      "Deutschland"
+    ]
+  }
+}

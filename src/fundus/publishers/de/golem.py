@@ -6,7 +6,6 @@ from lxml.cssselect import CSSSelector
 from lxml.etree import XPath
 
 from fundus.parser import ArticleBody, BaseParser, Image, ParserProxy, attribute
-from fundus.parser.data import TextSequence
 from fundus.parser.utility import (
     extract_article_body_with_selector,
     generic_author_parsing,

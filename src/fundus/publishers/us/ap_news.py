@@ -57,11 +57,7 @@ class APNewsParser(ParserProxy):
 
         @attribute
         def topics(self) -> List[str]:
-            return [
-                topic
-                for topic in generic_topic_parsing(self.precomputed.meta.get("keywords"))
-                if not re.search(self._topic_bloat_pattern, topic)
-            ]
+            return generic_topic_parsing(self.precomputed.meta.get("keywords"), result_filter=self._topic_bloat_pattern)
 
         # unfortunately we would need to render the site first before parsing images for this version
 

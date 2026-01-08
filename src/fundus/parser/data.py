@@ -4,7 +4,6 @@ import re
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, fields
 from functools import total_ordering
-from itertools import chain
 from typing import (
     Any,
     ClassVar,
@@ -70,7 +69,7 @@ class LinkedDataMapping:
                     self.add_ld(nested)
             else:
                 self.add_ld(ld)
-        self.__xml: Optional[lxml.etree._Element] = None
+        self.__xml: Optional[lxml.etree.Element] = None
 
     def __getstate__(self):
         state = self.__dict__.copy()
@@ -128,7 +127,7 @@ class LinkedDataMapping:
             tmp = nxt
         return tmp
 
-    def __as_xml__(self) -> lxml.etree._Element:
+    def __as_xml__(self) -> lxml.etree.Element:
         pattern = re.compile("|".join(map(re.escape, self.__xml_transformation_table__.keys())))
 
         def to_unicode_characters(text: str) -> str:
@@ -138,6 +137,8 @@ class LinkedDataMapping:
             xml = dict2xml(replace_keys_in_nested_dict({"linkedData": self.serialize()}, to_unicode_characters))
             self.__xml = lxml.etree.fromstring(xml)
         return self.__xml
+
+    __value_regex__ = re.compile("^<[^<]*>(?P<value>.*)</[^<]*>$", flags=re.DOTALL)
 
     @overload
     def xpath_search(self, query: Union[XPath, str], scalar: Literal[False] = False) -> List[Any]: ...
@@ -187,15 +188,11 @@ class LinkedDataMapping:
 
         pattern = re.compile("|".join(map(re.escape, self.__xml_transformation_table__.values())))
 
-        def node2string(n: lxml.etree._Element) -> str:
-            return "".join(
-                chunk
-                for chunk in chain(
-                    (n.text,),
-                    chain(*((tostring(child, with_tail=False, encoding=str), child.tail) for child in n.getchildren())),
-                )
-                if chunk
-            )
+        def node2string(n: lxml.etree.Element) -> str:
+            node_value = lxml.etree.tostring(n, encoding="unicode").strip()
+            if match := self.__value_regex__.match(node_value):
+                return match.group("value")
+            raise ValueError("XML malformed. Could not determine value.")
 
         reversed_table = {v: k for k, v in self.__xml_transformation_table__.items()}
 
@@ -526,6 +523,10 @@ class ImageVersion(DataclassSerializationMixin):
         raise NotImplementedError(f"'<' is not defined between {type(self).__name__!r} and {type(other).__name__!r}")
 
 
+class ImageURLError(Exception):
+    ...
+
+
 @dataclass(frozen=False)
 class Image(DataclassSerializationMixin):
     versions: List[ImageVersion]
@@ -538,7 +539,7 @@ class Image(DataclassSerializationMixin):
     def __post_init__(self):
         for url in [version.url for version in self.versions]:
             if not validators.url(url, strict_query=False):
-                raise ValueError(f"url {url} is not a valid URL")
+                raise ImageURLError(f"url {url} is not a valid URL")
 
     @property
     def url(self) -> str:

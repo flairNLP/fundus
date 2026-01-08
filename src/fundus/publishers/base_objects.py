@@ -1,6 +1,6 @@
 from collections import defaultdict
 from textwrap import indent
-from typing import Dict, Iterator, List, Optional, Set, Type, Union
+from typing import Dict, Iterable, Iterator, List, Optional, Set, Type, Union
 from urllib.robotparser import RobotFileParser
 from warnings import warn
 
@@ -11,7 +11,7 @@ from typing_extensions import TypeAlias
 from fundus.logging import create_logger
 from fundus.parser.base_parser import ParserProxy
 from fundus.scraping.filter import URLFilter
-from fundus.scraping.session import session_handler
+from fundus.scraping.session import _default_header, session_handler
 from fundus.scraping.url import NewsMap, RSSFeed, Sitemap, URLSource
 from fundus.utils.iteration import iterate_all_subclasses
 
@@ -27,42 +27,89 @@ class CustomRobotFileParser(RobotFileParser):
     This is in order to avoid 403 errors when fetching the robots.txt file.
     """
 
+    _disallow_training_keywords: Set[str] = {
+        "machine",
+        "learning",
+        "training",
+        "train",
+        "model",
+        "models",
+        "artificial",
+        "intelligence",
+        "large",
+        "language",
+        "llm",
+        "llms",
+    }
+
+    def __init__(self, url: str, headers: Optional[Dict[str, str]] = None):
+        self.headers = headers
+        self.disallows_training: bool = False
+        self.url = url
+        super().__init__(url)
+
     # noinspection PyAttributeOutsideInit
-    def read(self, headers: Optional[Dict[str, str]] = None) -> None:
+    def read(self) -> None:
         """Reads the robots.txt URL and feeds it to the parser."""
         try:
             # noinspection PyUnresolvedReferences
             session = session_handler.get_session()
-            response = session.get_with_interrupt(self.url, headers=headers)  # type: ignore[attr-defined]
+            response = session.get_with_interrupt(self.url, headers=self.headers)
         except HTTPError as err:
             if err.response.status_code in (401, 403):
+                logger.warning(
+                    f"Robots {self.url!r} disallowed access with status code {err.response.status_code}."
+                    " Defaulting to disallow all."
+                )
                 self.disallow_all = True
             elif 400 <= err.response.status_code < 500:
                 self.allow_all = True
         else:
             self.parse(response.text.splitlines())
 
+    def parse(self, lines: Iterable[str]) -> None:
+        for line in lines:
+            if line.strip().startswith("#") and set(line.split(" ")) & self._disallow_training_keywords:
+                self.disallows_training = True
+                break
+        super().parse(lines)
+
 
 class Robots:
-    def __init__(self, url: str):
+    def __init__(self, url: str, headers: Optional[Dict[str, str]] = None):
         self.url = url
-        self.robots_file_parser = CustomRobotFileParser(url)
+        self.robots_file_parser = CustomRobotFileParser(url, headers=headers)
         self.ready: bool = False
 
-    def read(self, headers: Optional[Dict[str, str]] = None) -> None:
+    def _read(self) -> None:
         try:
-            self.robots_file_parser.read(headers=headers)
+            self.robots_file_parser.read()
         except (ConnectionError, ReadTimeout):
             logger.warning(f"Could not load robots {self.url!r}. Ignoring robots and continuing.")
             self.robots_file_parser.allow_all = True
         self.ready = True
 
+    def ensure_ready(self) -> None:
+        """Ensure that the robots.txt file is read and parsed."""
+        if not self.ready:
+            self._read()
+
     def can_fetch(self, useragent: str, url: str) -> bool:
+        self.ensure_ready()
         return self.robots_file_parser.can_fetch(useragent, url)
 
     def crawl_delay(self, useragent: str) -> Optional[float]:
+        self.ensure_ready()
         delay = self.robots_file_parser.crawl_delay(useragent)
         return delay if delay is None else float(delay)
+
+    def disallows_training(self) -> bool:
+        self.ensure_ready()
+        return self.robots_file_parser.disallows_training
+
+    def disallow_all(self) -> bool:
+        self.ensure_ready()
+        return self.robots_file_parser.disallow_all
 
 
 class Publisher:
@@ -83,8 +130,9 @@ class Publisher:
         sources: List[URLSource],
         query_parameter: Optional[Dict[str, str]] = None,
         url_filter: Optional[URLFilter] = None,
-        request_header: Optional[Dict[str, str]] = None,
+        request_header: Optional[Dict[str, str]] = _default_header,
         deprecated: bool = False,
+        disallows_training: bool = False,
         suppress_robots: bool = False,
     ):
         """Initialization of a new Publisher object
@@ -98,6 +146,10 @@ class Publisher:
                 appended to crawled URLs
             url_filter (Optional[URLFilter]): Regex filter to apply determining URLs to be skipped
             request_header (Optional[Dict[str, str]]): Request header to be used for the GET-request
+            deprecated (bool): If True, the publisher is deprecated and skipped by default
+            disallows_training (bool): If True, the publisher disallows training on its articles in it's robots.txt file.
+                Note that this is only an indicator and users should verify the terms of use of the publisher before
+                using the articles for training purposes.
 
         """
         if not (name and domain and parser and sources):
@@ -109,7 +161,11 @@ class Publisher:
         self.url_filter = url_filter
         self.request_header = request_header
         self.deprecated = deprecated
-        self.robots = Robots(self.domain + "robots.txt" if self.domain.endswith("/") else self.domain + "/robots.txt")
+        self.robots = Robots(
+            url=self.domain + "robots.txt" if self.domain.endswith("/") else self.domain + "/robots.txt",
+            headers=self.request_header,
+        )
+        self._disallows_training = disallows_training
 
         # Temporary fix to compensate for a bug in the RobotsFileParser treating rule lines
         # like /? as / disallowing the entire site. we could think about replacing the urllib
@@ -117,6 +173,8 @@ class Publisher:
         if suppress_robots:
             self.robots.robots_file_parser.allow_all = True
 
+        # we define the dict here manually instead of using default dict so that we can control
+        # the order in which sources are proceeded.
         source_mapping: Dict[Type[URLSource], List[URLSource]] = defaultdict(list)
 
         for url_source in sources:
@@ -128,6 +186,10 @@ class Publisher:
             source_mapping[type(url_source)].append(url_source)
 
         self._source_mapping = dict(sorted(source_mapping.items(), key=lambda item: self.__SOURCE_ORDER__[item[0]]))
+
+    @property
+    def disallows_training(self) -> bool:
+        return self._disallows_training or self.robots.disallows_training()
 
     @property
     def source_mapping(self) -> Dict[Type[URLSource], List[URLSource]]:

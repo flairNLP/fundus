@@ -34,3 +34,10 @@ class TestLinkedDataMapping:
         assert tostring(ld_pickled.__getattribute__("_LinkedDataMapping__xml")) == tostring(
             ld.__getattribute__("_LinkedDataMapping__xml")
         )
+
+    def test_special_characters_in_value(self):
+        data = [{"@type": "test", "special": '&<>"'}]
+
+        ld = LinkedDataMapping(data)
+
+        assert ld.xpath_search(XPath("//test/special"), scalar=True) == '&<>"'
