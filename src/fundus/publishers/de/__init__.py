@@ -60,10 +60,11 @@ class DE(metaclass=PublisherGroup):
         name="Legal Tribune Online",
         domain="https://www.lto.de/",
         parser=LTOParser,
+        url_filter=regex_filter("/podcast/"),
         sources=[
             RSSFeed("https://www.lto.de/rss/feed.xml"),
             NewsMap("https://www.lto.de/googlenews-sitemap.xml"),
-            Sitemap("https://www.lto.de/sitemap.xml"),
+            Sitemap("https://www.lto.de/sitemap.xml", sitemap_filter=inverse(regex_filter("/article/"))),
         ],
     )
 

@@ -1,7 +1,7 @@
 {
   "V1": {
     "authors": [
-      "LTO"
+      "Dr. Max Kolter"
     ],
     "body": {
       "summary": [
@@ -60,16 +60,39 @@
         }
       ]
     },
+    "images": [
+      {
+        "versions": [
+          {
+            "url": "https://www.lto.de/fileadmin/_processed_/7/e/csm_gaza-ecchr-vb_93268333ee.jpg",
+            "query_width": null,
+            "size": {
+              "width": 2048,
+              "height": 1153
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": true,
+        "description": "Die IDF Militärbasis Black Arrow, mit zahlreichen Panzern und anderen Fahrzeugen vor dem zerstörtem Gazastreifen.",
+        "caption": "Bei dem Verfahren in Karlsruhe geht es um Getriebeteile für Merkava-Panzer, die beim Gaza-Krieg zum Einsatz kamen.",
+        "authors": [
+          "picture alliance / SZ Photo",
+          "Friedrich Bungert"
+        ],
+        "position": 503
+      }
+    ],
     "publishing_date": "2025-10-20 00:00:00",
     "title": "Waffenlieferungen an Israel: Verfassungsbeschwerde eingelegt",
     "topics": [
-      "Hintergründe",
-      "Hintergrundinformationen",
-      "Analysen",
-      "Experten",
-      "Rechtsexperten",
-      "Rechtsthemen",
-      "Rechtsfragen"
+      "Europa- und Völkerrecht",
+      "Verwaltungsrecht",
+      "Grundrechte",
+      "Israel",
+      "Krieg",
+      "Kriegsverbrechen",
+      "Völkerrecht"
     ]
   }
 }
