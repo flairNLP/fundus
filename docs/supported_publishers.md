@@ -996,6 +996,25 @@
     </tr>
     <tr>
       <td>
+        <code>LTO</code>
+      </td>
+      <td>
+        <div>Legal Tribune Online</div>
+      </td>
+      <td>
+        <a href="https://www.lto.de/">
+          <span>www.lto.de</span>
+        </a>
+      </td>
+      <td>
+        <code>de</code>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
         <code>MitteldeutscheZeitung</code>
       </td>
       <td>
