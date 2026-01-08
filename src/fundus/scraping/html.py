@@ -51,7 +51,10 @@ def _detect_charset_from_response(response: requests.Response) -> Optional[str]:
     # use response fallback to decode HTML in a first guess
     if not (guessed_text := response.content.decode(response.encoding or "utf-8", errors="replace")):
         return None
-    document = lxml.html.document_fromstring(guessed_text)
+    try:
+        document = lxml.html.document_fromstring(guessed_text)
+    except lxml.etree.XMLSyntaxError:
+        return None
     if (content_type_nodes := _content_type_selector(document)) and len(content_type_nodes) == 1:
         content_type_node = content_type_nodes.pop()
         for field in content_type_node.attrib.get("content", "").split(";"):
