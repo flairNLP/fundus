@@ -5,21 +5,25 @@ _T = TypeVar("_T")
 
 
 @overload
-def _get_match_dict(pattern: Pattern[str], string: str, conversion: Callable[[str], _T]) -> Dict[str, _T]: ...
+def _get_match_dict(pattern: Pattern[str], string: str, conversion: Callable[[str], _T]) -> Dict[str, _T]:
+    ...
 
 
 @overload
 def _get_match_dict(
     pattern: Pattern[str], string: str, conversion: Callable[[str], _T], keep_none: Literal[True]
-) -> Dict[str, Optional[_T]]: ...
+) -> Dict[str, Optional[_T]]:
+    ...
 
 
 @overload
-def _get_match_dict(pattern: Pattern[str], string: str) -> Dict[str, str]: ...
+def _get_match_dict(pattern: Pattern[str], string: str) -> Dict[str, str]:
+    ...
 
 
 @overload
-def _get_match_dict(pattern: Pattern[str], string: str, keep_none: Literal[True]) -> Dict[str, Optional[str]]: ...
+def _get_match_dict(pattern: Pattern[str], string: str, keep_none: Literal[True]) -> Dict[str, Optional[str]]:
+    ...
 
 
 def _get_match_dict(  # type: ignore[misc]

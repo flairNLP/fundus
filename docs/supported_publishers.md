@@ -3815,9 +3815,7 @@
       <td>
         <code>vi</code>
       </td>
-      <td>
-        <code>images</code>
-      </td>
+      <td>&#160;</td>
       <td>&#160;</td>
       <td>&#160;</td>
     </tr>
