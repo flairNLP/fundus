@@ -19,6 +19,9 @@ class AftonbladetParser(ParserProxy):
         _paragraph_selector = XPath(
             "//p[starts-with(@class,'hyperion-css-') and not(contains(@data-test-tag,'lead-text'))]"
         )
+        _subheadline_selector = XPath("//h2[@data-test-tag='paragraph-header']")
+
+        _paywall_selector = XPath("//main/vev")
 
         @attribute
         def title(self) -> Optional[str]:
@@ -30,7 +33,12 @@ class AftonbladetParser(ParserProxy):
                 self.precomputed.doc,
                 summary_selector=self._summary_selector,
                 paragraph_selector=self._paragraph_selector,
+                subheadline_selector=self._subheadline_selector,
             )
+
+        @attribute
+        def free_access(self) -> bool:
+            return not bool(self._paywall_selector(self.precomputed.doc))
 
         @attribute
         def authors(self) -> List[str]:
@@ -38,7 +46,7 @@ class AftonbladetParser(ParserProxy):
 
         @attribute
         def publishing_date(self) -> Optional[datetime]:
-            return generic_date_parsing(self.precomputed.meta["article:published_time"])
+            return generic_date_parsing(self.precomputed.meta.get("article:published_time"))
 
         @attribute
         def topics(self) -> List[str]:
@@ -46,4 +54,9 @@ class AftonbladetParser(ParserProxy):
 
         @attribute
         def images(self) -> List[Image]:
-            return image_extraction(doc=self.precomputed.doc, paragraph_selector=self._paragraph_selector)
+            return image_extraction(
+                doc=self.precomputed.doc,
+                paragraph_selector=self._paragraph_selector,
+                caption_selector=XPath("./ancestor::figure//figcaption/span[@class='image-caption']"),
+                author_selector=XPath("./ancestor::figure//figcaption/span[contains(@class,'image-byline')]"),
+            )
