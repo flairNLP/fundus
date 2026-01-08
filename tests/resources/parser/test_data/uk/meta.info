@@ -15,6 +15,10 @@
     "url": "https://www.euronews.com/2024/04/30/swedish-police-to-investigate-reports-of-information-leaks-to-violent-gangs",
     "crawl_date": "2024-04-30 16:52:48.230575"
   },
+  "EuronewsEN_2026_01_06.html.gz": {
+    "url": "https://www.euronews.com/2026/01/06/as-trump-pitches-venezuelan-oil-dream-for-us-companies-experts-warn-it-wont-be-cheap-or-ea",
+    "crawl_date": "2026-01-06 14:37:29.756150"
+  },
   "EveningStandard_2024_05_02.html.gz": {
     "url": "https://www.standard.co.uk/sport/football/chelsea-fc-vs-tottenham-analysis-premier-league-2024-b1155186.html",
     "crawl_date": "2024-05-02 22:57:24.734563"
@@ -35,6 +39,10 @@
     "url": "https://metro.co.uk/2024/11/18/sweden-tells-5-000-000-households-how-survive-wwiii-new-war-pamphlet-22018356/",
     "crawl_date": "2024-11-29 22:59:41.366944"
   },
+  "Nature_2025_11_04.html.gz": {
+    "url": "https://www.nature.com/articles/d41586-025-03571-x",
+    "crawl_date": "2025-11-04 23:39:32.088596"
+  },
   "TheGuardian_2024_02_24.html.gz": {
     "url": "https://www.theguardian.com/world/2024/feb/24/death-toll-in-valencia-fire-rises-to-10-as-remains-of-last-missing-person-found",
     "crawl_date": "2024-02-24 12:51:15.854319"
@@ -50,6 +58,10 @@
   "TheMirror_2024_08_05.html.gz": {
     "url": "https://www.mirror.co.uk/news/uk-news/uk-riots-live-hotel-rotherham-33386398",
     "crawl_date": "2024-08-05 22:00:28.259674"
+  },
+  "TheMirror_2026_01_06.html.gz": {
+    "url": "https://www.mirror.co.uk/news/us-news/man-kept-six-women-chained-36501522",
+    "crawl_date": "2026-01-06 11:58:23.366979"
   },
   "TheSun_2024_04_22.html.gz": {
     "url": "https://www.thesun.co.uk/sport/12603994/phil-foden-girlfriend-rebecca-cooke/",

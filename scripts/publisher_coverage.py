@@ -121,7 +121,7 @@ def main() -> None:
     else:
         print(f"✨ {pass_ratio} - All publishers passed the tests")
 
-    exit(failed)
+    exit(-1 if failed else 0)
 
 
 if __name__ == "__main__":
