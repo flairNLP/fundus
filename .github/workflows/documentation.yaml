@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+      - documentation-action-add-draft
     paths:
       # For the current generated documentation, these trigger paths are sufficient.
       # Long-term, job-level triggers are more appropriate.
