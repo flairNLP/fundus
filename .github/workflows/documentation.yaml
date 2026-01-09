@@ -34,6 +34,7 @@ jobs:
     
     permissions:
       contents: write
+      pull-requests: write
 
     steps:
       - name: Set up Git repository
@@ -60,6 +61,14 @@ jobs:
 
       - name: Generate 'supported_publishers.md'
         run: python scripts/generate_tables.py
+
+      - name: Convert PR to draft
+        if: github.event_name == 'pull_request_target'
+        env:
+          GH_TOKEN: ${{ github. token }}
+        run: |
+          gh pr ready --undo ${{ github.event.pull_request.number }} \
+            --repo ${{ github. repository }}
 
       - name: Commit changes
         uses: stefanzweifel/git-auto-commit-action@v5
