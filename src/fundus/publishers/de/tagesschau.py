@@ -48,6 +48,11 @@ class TagesschauParser(ParserProxy):
             return self.precomputed.meta.get("og:title")
 
         @attribute
+        def topics(self) -> List[str]:
+            topic_nodes = self._topic_selector(self.precomputed.doc)
+            return [node.text_content() for node in topic_nodes]
+
+        @attribute
         def images(self) -> List[Image]:
             return image_extraction(
                 doc=self.precomputed.doc,
