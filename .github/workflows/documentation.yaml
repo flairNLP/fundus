@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+      - documentation-action-add-draft
     paths:
       # For the current generated documentation, these trigger paths are sufficient.
       # Long-term, job-level triggers are more appropriate.
@@ -63,7 +64,6 @@ jobs:
         run: python scripts/generate_tables.py
 
       - name: Convert PR to draft
-        if: github.event_name == 'pull_request_target'
         env:
           GH_TOKEN: ${{ github. token }}
         run: |
