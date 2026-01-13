@@ -43,6 +43,10 @@ class PeopleParser(ParserProxy):
             return generic_date_parsing(self.precomputed.meta.get("publishdate"))
 
         @attribute
+        def topics(self) -> List[str]:
+            return generic_topic_parsing(self.precomputed.meta.get("keywords"), delimiter=" ")
+
+        @attribute
         def images(self) -> List[Image]:
             return image_extraction(
                 doc=self.precomputed.doc,
