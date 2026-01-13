@@ -844,7 +844,7 @@ def parse_image_nodes(
                 position=position,
             )
         except ImageURLError:
-            logger.debug(f"Skipping lazy loading image")
+            logger.debug(f"Skipping lazy loading image. Does publisher use relative URLs?")
         else:
             yield image
 
