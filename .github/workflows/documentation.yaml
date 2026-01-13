@@ -67,8 +67,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github. token }}
         run: |
-          gh pr ready --undo ${{ github.event.pull_request.number }} \
-            --repo ${{ github. repository }}
+          gh pr ready ${{ github.event.pull_request.number }} --undo 
 
       - name: Commit changes
         uses: stefanzweifel/git-auto-commit-action@v5
