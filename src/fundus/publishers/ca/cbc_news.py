@@ -53,21 +53,6 @@ class CBCNewsParser(ParserProxy):
             return self.precomputed.ld.bf_search("headline")
 
         @attribute
-        def topics(self) -> List[str]:
-            if not (topic_dict := self.precomputed.ld.bf_search("keywords")):
-                return []
-
-            # add locations
-            topic_list = [topic for location in topic_dict.get("tags") if (topic := location.get("name")) is not None]
-
-            # add subjects
-            for subject in topic_dict.get("concepts"):
-                if (path := subject.get("path")) is not None:
-                    topic_list.append(re.sub(r".*/", "", path))
-
-            return topic_list
-
-        @attribute
         def images(self) -> List[Image]:
             return image_extraction(
                 doc=self.precomputed.doc,
