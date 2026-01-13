@@ -51,10 +51,6 @@ class SeznamZpravyParser(ParserProxy):
             ]
 
         @attribute
-        def title(self) -> Optional[str]:
-            return self.precomputed.ld.bf_search("headline")
-
-        @attribute
         def authors(self) -> List[str]:
             return apply_substitution_pattern_over_list(
                 generic_author_parsing(self.precomputed.ld.bf_search("author")),
