@@ -17,7 +17,7 @@ from fundus.parser.utility import (
 
 class TageblattParser(ParserProxy):
     class V1(BaseParser):
-        VALID_UNTIL = datetime.date(2025, 1, 6)
+        VALID_UNTIL = datetime.date(2026, 1, 6)
 
         _paragraph_selector = XPath("//div[@class='text-content']/p[@class='text' and normalize-space(text())]")
         _summary_selector = XPath("//p[contains(@class,'teaser__text')]")
