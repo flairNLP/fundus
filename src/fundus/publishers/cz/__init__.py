@@ -1,5 +1,5 @@
 from fundus.publishers.base_objects import Publisher, PublisherGroup
-from fundus.publishers.cz.seznamzpravy import SeznamZpravyParser
+from fundus.publishers.cz.seznam_zpravy import SeznamZpravyParser
 from fundus.scraping.url import NewsMap, RSSFeed, Sitemap
 
 
