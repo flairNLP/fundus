@@ -2123,7 +2123,9 @@
         <code>NikkanGeadai</code>
       </td>
       <td>
-        <div>Nikkan Geadai</div>
+        <div>
+          <strike>Nikkan Geadai</strike>
+        </div>
       </td>
       <td>
         <a href="https://www.nikkan-gendai.com/">
