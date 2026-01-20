@@ -1,7 +1,8 @@
-import re
 from datetime import datetime
 from typing import List, Optional
 
+import dateparser
+from lxml.cssselect import CSSSelector
 from lxml.etree import XPath
 
 from fundus.parser import ArticleBody, BaseParser, Image, ParserProxy, attribute
@@ -19,12 +20,14 @@ from fundus.parser.utility import (
 class PravdaParser(ParserProxy):
     class V1(BaseParser):
         _paragraph_selector = XPath(
-            "//article[contains(@class,'post')]//p[(text() or span[not(strong)]) and not(strong[em])]"
+            "//div[@class='post_news_text']//p[not(.//em) or .//text()[normalize-space() and not(ancestor::em)]] |"
+            "//article[contains(@class,'post')] //ul /li"
         )
         _subheadline_selector = XPath("//article[contains(@class,'post')]//h2")
 
         _author_selector = XPath("//span[@class='post_news_author']|//p/strong/em")
         _topic_selector = XPath("//div[@class='post_news_tags']/a")
+        _date_selector = CSSSelector("div.post_article_author")
 
         @attribute
         def body(self) -> Optional[ArticleBody]:
@@ -36,7 +39,7 @@ class PravdaParser(ParserProxy):
 
         @attribute
         def title(self) -> Optional[str]:
-            return self.precomputed.ld.xpath_search("//headline", scalar=True)
+            return self.precomputed.ld.xpath_search("//headline", scalar=True) or self.precomputed.meta.get("og:title")
 
         @attribute
         def authors(self) -> List[str]:
@@ -44,7 +47,13 @@ class PravdaParser(ParserProxy):
 
         @attribute
         def publishing_date(self) -> Optional[datetime]:
-            return generic_date_parsing(self.precomputed.ld.xpath_search("//datePublished", scalar=True))
+            if pub_date := generic_date_parsing(self.precomputed.ld.xpath_search("//datePublished", scalar=True)):
+                return pub_date
+            elif nodes := self._date_selector(self.precomputed.doc):
+                pub_string = generic_nodes_to_text(nodes)[0]
+                return dateparser.parse(pub_string)
+            else:
+                return None
 
         @attribute
         def topics(self) -> List[str]:
