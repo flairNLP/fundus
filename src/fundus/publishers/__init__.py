@@ -21,6 +21,7 @@ from fundus.publishers.isl import ISL
 from fundus.publishers.it import IT
 from fundus.publishers.jp import JP
 from fundus.publishers.kr import KR
+from fundus.publishers.lb import LB
 from fundus.publishers.li import LI
 from fundus.publishers.ls import LS
 from fundus.publishers.lt import LT
@@ -94,6 +95,7 @@ class PublisherCollection(metaclass=PublisherCollectionMeta):
     it = IT
     jp = JP
     kr = KR
+    lb = LB
     li = LI
     ls = LS
     lt = LT
