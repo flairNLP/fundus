@@ -212,5 +212,159 @@
       "some",
       "nyheter"
     ]
+  },
+  "V1_1": {
+    "authors": [
+      "Martin Gramnæs"
+    ],
+    "body": {
+      "summary": [
+        "USAs angrep på Venezuela skaper spenning i Nord-Korea, mener ekspert, men tror et liknende angrep på Kim-regimet er usannsynlig.",
+        "Sammendraget er laget av ChatGPT og godkjent av Dagbladet."
+      ],
+      "sections": [
+        {
+          "headline": [],
+          "paragraphs": [
+            "Søndag gikk Nord-Korea ut og fordømte USAs angrep på Venezuela, der president Nicolas Maduro og kona Cilia Flores ble tatt til fange og brakt til New York.",
+            "- Hendelsen er eksempel som nok en gang tydelig bekrefter den skurkaktige og brutale oppføreselen til USA som det internasjonale samfunnet har vært vitne til over lang tid, sier en ikke-navngitt talsperson for det nordkoreanske utenriksdepartementet til det statskontrollerte nyhetsbyrået KCNA.",
+            "Forholdet mellom stormakten USA og det lille landet nord på Korea-halvøya er alt annet en godt, men ifølge Park Won-gon, professor i Nord-Korea-studier og internasjonal politikk ved Ewha Women’s University, er det usannsynlig at Donald Trump vil finne på en liknende manøver der.",
+            "Det skriver det anerkjente, Seoul-baserte nyhetsnettstedet, NK News.",
+            "Han påpekte på en konferanse på East Asia Institute i Seoul mandag at Venezuela og Nord-Korea er svært forskjellige land, men at lørdagens angrep vil øke sikkerhetsangsten i landet, og heve terskelen for forhandlinger om landets atomvåpen.",
+            "Ifølge Park vil Nord-Korea trolig tolke Maduros arrestasjon som bekreftelse på at atomvåpen er avgjørende for regimets overlevelse. Han påpekte at Pyongyang lenge har vist til Iraks Saddam Hussein og Libyas Moammar Gadhafi – begge ledere i land uten atomvåpen – for å rettferdiggjøre sitt atomprogram.",
+            "- Dette kan ytterligere forsterke Nord-Koreas besettelse med atomvåpen og heve terskelen for atomforhandlinger med USA, sa Park.",
+            "Samtidig kan selve omfanget av angrepet legge press på Pyongyang, og gi flere intensiver for diplomatisk dialog med USA.",
+            "Nord-Koreas fordømmelse av angrepet på Venezuela kom samme dag som landet testet hypersoniske missiler, søndag. Formålet skal ha vært å teste landets militære evne til krigsavskrekking, ifølge Reutes.",
+            "Nord-Koreas leder Kim Jong-un viste tilsynelatende til angrepet på Venezuela, da han forklarte bakgrunnen for testen.",
+            "- Det er en svært viktig å opprettholde eller utvide den sterke og pålitelige atomavskrekkingen, på grunn av den nylige geopolitiske krisen og diverse internasjonale omstendigheter, sa han ifølge Reuters.",
+            "Hypersoniske missiler kan, på samme måte som ballistiske missiler, bære kjernefysiske stridshoder og fly i hastigheter på over fem ganger lydens hastighet.",
+            "I motsetning til tradisjonelle ballistiske missiler, som følger en høy bane opp i verdensrommet, beveger hypersoniske missiler seg lavt i atmosfæren. Det gjør at de kan nå målet raskere. Samtidig er de manøvrerbare underveis, noe som gjør dem langt vanskeligere å oppdage og avskjære."
+          ]
+        }
+      ]
+    },
+    "images": [
+      {
+        "versions": [
+          {
+            "url": "https://www.dagbladet.no/images/84057994.webp?imageId=84057994&width=760&height=434&format=jpg",
+            "query_width": "max-width:767",
+            "size": {
+              "width": 760,
+              "height": 434
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.dagbladet.no/images/84057994.webp?imageId=84057994&width=760&height=434&format=webp",
+            "query_width": "max-width:767",
+            "size": {
+              "width": 760,
+              "height": 434
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://www.dagbladet.no/images/84057994.webp?imageId=84057994&width=1960&height=1118",
+            "query_width": null,
+            "size": {
+              "width": 1960,
+              "height": 1118
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://www.dagbladet.no/images/84057994.webp?imageId=84057994&width=1960&height=1118&format=jpg",
+            "query_width": "min-width:768",
+            "size": {
+              "width": 1960,
+              "height": 1118
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.dagbladet.no/images/84057994.webp?imageId=84057994&width=1960&height=1118&format=webp",
+            "query_width": "min-width:768",
+            "size": {
+              "width": 1960,
+              "height": 1118
+            },
+            "type": "image/webp"
+          }
+        ],
+        "is_cover": true,
+        "description": null,
+        "caption": "STRESS: Sørkoreansk ekspert tror USAs angrep på Venzuela stresser Nord-Koreas leder, Kim Jong-un.",
+        "authors": [
+          "KCNA/Reuters"
+        ],
+        "position": 323
+      },
+      {
+        "versions": [
+          {
+            "url": "https://www.dagbladet.no/images/84058151.webp?imageId=84058151&width=760&height=434&format=jpg",
+            "query_width": "max-width:767",
+            "size": {
+              "width": 760,
+              "height": 434
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.dagbladet.no/images/84058151.webp?imageId=84058151&width=760&height=434&format=webp",
+            "query_width": "max-width:767",
+            "size": {
+              "width": 760,
+              "height": 434
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://www.dagbladet.no/images/84058151.webp?imageId=84058151&width=1960&height=1118",
+            "query_width": null,
+            "size": {
+              "width": 1960,
+              "height": 1118
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://www.dagbladet.no/images/84058151.webp?imageId=84058151&width=1960&height=1118&format=jpg",
+            "query_width": "min-width:768",
+            "size": {
+              "width": 1960,
+              "height": 1118
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.dagbladet.no/images/84058151.webp?imageId=84058151&width=1960&height=1118&format=webp",
+            "query_width": "min-width:768",
+            "size": {
+              "width": 1960,
+              "height": 1118
+            },
+            "type": "image/webp"
+          }
+        ],
+        "is_cover": false,
+        "description": null,
+        "caption": "IKKE GI SLIPP: Nord-Korea har ikke villet gi slipp på sitt atomvåpenprogram. Nå blir de vanskeligere å overtale, mener ekspert. Bildet er fra i januar i fjor.",
+        "authors": [
+          "KCNA/AFP"
+        ],
+        "position": 411
+      }
+    ],
+    "publishing_date": "2026-01-06 16:29:31+00:00",
+    "title": "- Angsten vil øke",
+    "topics": [
+      "venezuela",
+      "nord-korea",
+      "usa",
+      "utenriks",
+      "nyheter"
+    ]
   }
 }

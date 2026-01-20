@@ -1,25 +1,15 @@
-import pdb
 import re
 from datetime import datetime
 from typing import List, Optional
 
-from lxml.cssselect import CSSSelector
 from lxml.etree import XPath
 
-from fundus.parser import (
-    ArticleBody,
-    BaseParser,
-    Image,
-    ParserProxy,
-    attribute,
-    function,
-)
+from fundus.parser import ArticleBody, BaseParser, Image, ParserProxy, attribute
 from fundus.parser.utility import (
     extract_article_body_with_selector,
     generic_author_parsing,
     generic_date_parsing,
     generic_nodes_to_text,
-    generic_topic_parsing,
     image_extraction,
     transform_breaks_to_paragraphs,
 )

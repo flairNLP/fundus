@@ -42,6 +42,7 @@ from fundus.parser.data import (
     ArticleSection,
     Dimension,
     Image,
+    ImageURLError,
     ImageVersion,
     LinkedDataMapping,
     TextSequence,
@@ -151,6 +152,20 @@ def extract_article_body_with_selector(
     summary_nodes = extract_nodes(summary_selector, SummaryNode) if summary_selector else []
     subhead_nodes = extract_nodes(subheadline_selector, SubheadNode) if subheadline_selector else []
     paragraph_nodes = extract_nodes(paragraph_selector, ParagraphNode)
+
+    # data-cleaning:
+    def _cond(node: lxml.html.HtmlElement) -> bool:
+        def has_normalized_text():
+            return bool(node.xpath("normalize-space(text())"))
+
+        def has_em_child():
+            return bool(node.xpath("./em"))
+
+        return not has_normalized_text() and has_em_child()
+
+    while paragraph_nodes and _cond(paragraph_nodes[-1].node):
+        paragraph_nodes.pop()
+
     nodes = sorted(summary_nodes + subhead_nodes + paragraph_nodes)
 
     if not nodes:
@@ -380,6 +395,13 @@ def apply_substitution_pattern_over_list(
     return [subbed for text in input_list if (subbed := re.sub(pattern, replacement, text).strip())]
 
 
+def apply_result_filter(input_list: List[str], result_filter: Optional[Union[Pattern[str], Set[str]]]) -> List[str]:
+    if isinstance(result_filter, Pattern):
+        return [topic for topic in dict.fromkeys(input_list) if not re.search(result_filter, topic)]
+    else:
+        return [topic for topic in dict.fromkeys(input_list) if result_filter is None or topic not in result_filter]
+
+
 def generic_author_parsing(
     value: Union[
         Optional[str],
@@ -389,6 +411,8 @@ def generic_author_parsing(
     ],
     split_on: Optional[List[str]] = None,
     normalize: bool = True,
+    substitution_pattern: Optional[Pattern[str]] = None,
+    result_filter: Optional[Union[Pattern[str], Set[str]]] = None,
 ) -> List[str]:
     """This function tries to parse the given <value> to a list of authors (List[str]) based on the type of value.
 
@@ -401,6 +425,9 @@ def generic_author_parsing(
 
     with common delimiters := [",", ";", " und ", " and ", " & ", " | "]
 
+    If a result filter is provided, authors matching the pattern or included in the set will be removed.
+    If a substitution pattern is provided, any substring matching that pattern will be removed from each author name.
+
     All values are stripped with default strip() method before returned.
 
     Args:
@@ -408,6 +435,9 @@ def generic_author_parsing(
         split_on: Only relevant for type(<value>) = str. If set, split <value> on <split_on>,
             else (default) split <value> on common delimiters.
         normalize: If True, normalize every author with normalize_whitespace(). Defaults to True
+        substitution_pattern: If specified, partial matches are removed from each author
+        result_filter: Can be of type Pattern[str] or Set[str]. If specified, all authors matching the pattern or
+            contained in the set will be removed. Defaults to None.
 
     Returns:
         A parsed and striped list of authors
@@ -455,10 +485,11 @@ def generic_author_parsing(
             return filter(bool, re.split(r"|".join(split_on or common_delimiters), text))
 
         authors = list(more_itertools.flatten([split(author) for author in authors]))
-        normalized_authors = [normalize_whitespace(author) for author in authors]
-        return normalized_authors
-
-    return authors
+        normalized_authors = [normalize_whitespace(author) for author in authors if author.strip()]
+        authors = normalized_authors
+    if substitution_pattern:
+        authors = apply_substitution_pattern_over_list(authors, substitution_pattern)
+    return apply_result_filter(authors, result_filter)
 
 
 def generic_text_extraction_with_css(doc, selector: XPath) -> Optional[str]:
@@ -467,8 +498,34 @@ def generic_text_extraction_with_css(doc, selector: XPath) -> Optional[str]:
 
 
 def generic_topic_parsing(
-    keywords: Optional[Union[str, List[str]]], delimiter: Union[str, List[str]] = ","
+    keywords: Optional[Union[str, List[str]]],
+    delimiter: Union[str, List[str]] = ",",
+    substitution_pattern: Optional[Pattern[str]] = None,
+    result_filter: Optional[Union[Pattern[str], Set[str]]] = None,
 ) -> List[str]:
+    """This function tries to parse the given <value> to a list of topics (List[str]) based on the type of value.
+
+    Parses based on type of <value> as following:
+        value (None):       Empty list \n
+        value (str):        re.split(delimiters) with delimiters := delimiter or ',' \n
+        value (list[str]):  value\n
+
+    If a result filter is provided, topics matching the pattern or included in the set will be removed.
+    If a substitution pattern is provided, any substring matching that pattern will be removed from each topic.
+
+    All values are stripped with default strip() method before returned.
+
+    Args:
+        keywords: An input value representing author(s) which get parsed based on type.
+        delimiter: Only relevant for type(<value>) = str. If set, split <value> on <delimiter>,
+            else (default) split <value> on ','.
+        substitution_pattern: If specified, partial matches are removed from each topic
+        result_filter: Can be of type Pattern[str] or Set[str]. If specified, all topics matching the pattern or
+            contained in the set will be removed. Defaults to None.
+
+    Returns:
+        A parsed and striped list of topics
+    """
     if isinstance(delimiter, str):
         delimiter = [delimiter]
 
@@ -484,8 +541,9 @@ def generic_topic_parsing(
         topics = keywords
     else:
         raise TypeError(f"Encountered unexpected type {type(keywords)} as keyword parameter")
-
-    return list(dict.fromkeys(topics))
+    if substitution_pattern:
+        topics = apply_substitution_pattern_over_list(topics, substitution_pattern)
+    return apply_result_filter(topics, result_filter=result_filter)
 
 
 _tz_infos = {"CET": 3600, "CEST": 7200, "IST": 19800}
@@ -505,7 +563,8 @@ class CustomParserInfo(parser.parserinfo):
         ("Oct", "October", "Oktober", "Okt"),
         ("Nov", "November"),
         ("Dec", "December", "Dezember", "Dez"),
-    ]
+    ]  # type: ignore[assignment]
+    # type ignore due to types-python-dateutil==2.9.0.20251008, see https://github.com/flairNLP/fundus/issues/806
 
 
 def generic_date_parsing(date_str: Optional[str]) -> Optional[datetime]:
@@ -695,6 +754,7 @@ def parse_versions(img_node: lxml.html.HtmlElement, size_pattern: Optional[Patte
         and not default_width == "auto"
         and (default_height := img_node.get("height"))
         and not default_height == "auto"
+        and not float(default_height) == 0.0
     ):
         ratio = float(default_width) / float(default_height)
     else:
@@ -718,7 +778,7 @@ def parse_image_nodes(
     image_nodes: List[IndexedImageNode],
     caption_selector: XPath,
     alt_selector: XPath,
-    author_selector: Union[XPath, Pattern[str]],
+    author_selector: Union[XPath, Pattern[str], List[Pattern[str]]],
     domain: Optional[str] = None,
     size_pattern: Optional[Pattern[str]] = None,
 ) -> Iterator[Image]:
@@ -758,28 +818,40 @@ def parse_image_nodes(
         description = nodes_to_text(alt_selector(node))
 
         # parse authors
+
         authors = []
         if isinstance(author_selector, Pattern):
-            # author is part of the caption
-            if caption and (match := re.search(author_selector, caption)):
-                authors = [match.group("credits")]
-                caption = re.sub(author_selector, "", caption).strip() or None
-            elif description and (match := re.search(author_selector, description)):
-                authors = [match.group("credits")]
+            author_selector = [author_selector]
+
+        if isinstance(author_selector, list):
+            for pattern in author_selector:
+                # author is part of the caption
+                if caption and (match := re.search(pattern, caption)):
+                    authors = [match.group("credits")]
+                    caption = re.sub(pattern, "", caption).strip() or None
+                elif description and (match := re.search(pattern, description)):
+                    authors = [match.group("credits")]
+                if authors:
+                    break
         else:
             # author is selectable as node
             if author_nodes := author_selector(node):
                 authors = generic_nodes_to_text(author_nodes, normalize=True)
         authors = image_author_parsing(authors)
 
-        yield Image(
-            versions=versions,
-            caption=caption,
-            authors=authors,
-            description=description,
-            is_cover=is_cover,
-            position=position,
-        )
+        try:
+            image = Image(
+                versions=versions,
+                caption=caption,
+                authors=authors,
+                description=description,
+                is_cover=is_cover,
+                position=position,
+            )
+        except ImageURLError:
+            logger.debug(f"Skipping lazy loading image")
+        else:
+            yield image
 
 
 class Bounds(NamedTuple):
@@ -823,7 +895,7 @@ def image_extraction(
     lower_boundary_selector: Optional[XPath] = None,
     caption_selector: XPath = XPath("./ancestor::figure//figcaption"),
     alt_selector: XPath = XPath("./@alt"),
-    author_selector: Union[XPath, Pattern[str]] = XPath(
+    author_selector: Union[XPath, Pattern[str], List[Pattern[str]]] = XPath(
         "(./ancestor::figure//*[(contains(@class, 'copyright') or contains(@class, 'credit')) and text()])[1]"
     ),
     relative_urls: Union[bool, XPath] = False,

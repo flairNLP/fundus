@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import date, datetime
 from typing import List, Optional
 
 from lxml.cssselect import CSSSelector
@@ -17,6 +17,7 @@ from fundus.parser.utility import image_extraction
 
 class EuronewsParser(ParserProxy):
     class V1(BaseParser):
+        VALID_UNTIL = date(2025, 11, 24)
         _summary_selector = CSSSelector("p.c-article-summary")
         _subheadline_selector = CSSSelector("div.c-article-content > h2")
         _paragraph_selector = CSSSelector("div.c-article-content > p")
@@ -69,3 +70,12 @@ class EuronewsParser(ParserProxy):
                     "./ancestor::figure//span[@class='widget__captionCredit']"
                 ),
             )
+
+    class V1_1(V1):
+        VALID_UNTIL = date.today()
+
+        _summary_selector = CSSSelector("h2.c-article-summary")
+
+        @attribute
+        def authors(self) -> List[str]:
+            return utility.generic_author_parsing(self.precomputed.meta.get("article:author"))
