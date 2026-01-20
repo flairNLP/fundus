@@ -2901,6 +2901,25 @@
   <tbody>
     <tr>
       <td>
+        <code>Aftonbladet</code>
+      </td>
+      <td>
+        <div>Aftonbladet</div>
+      </td>
+      <td>
+        <a href="https://www.aftonbladet.se/">
+          <span>www.aftonbladet.se</span>
+        </a>
+      </td>
+      <td>
+        <code>sv</code>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
         <code>Expressen</code>
       </td>
       <td>
