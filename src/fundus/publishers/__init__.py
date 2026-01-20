@@ -14,6 +14,7 @@ from fundus.publishers.dk import DK
 from fundus.publishers.es import ES
 from fundus.publishers.fr import FR
 from fundus.publishers.gl import GL
+from fundus.publishers.id import ID
 from fundus.publishers.il import IL
 from fundus.publishers.ind import IND
 from fundus.publishers.isl import ISL
@@ -85,6 +86,7 @@ class PublisherCollection(metaclass=PublisherCollectionMeta):
     es = ES
     fr = FR
     gl = GL
+    id = ID
     il = IL
     ind = IND
     isl = ISL
