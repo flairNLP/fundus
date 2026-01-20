@@ -7,6 +7,7 @@ from lxml.etree import XPath
 
 from fundus.parser import ArticleBody, BaseParser, Image, ParserProxy, attribute
 from fundus.parser.utility import (
+    apply_substitution_pattern_over_list,
     extract_article_body_with_selector,
     generic_author_parsing,
     generic_date_parsing,
@@ -19,12 +20,14 @@ from fundus.parser.utility import (
 
 class LTOParser(ParserProxy):
     class V1(BaseParser):
-        _paragraph_selector = XPath("//div[@class='article-text-wrapper']/p[text()]")
+        _paragraph_selector = XPath(
+            "//div[@class='article-text-wrapper']/p[text() or child::span[@class='block-align-center']]"
+        )
         _summary_selector = CSSSelector("div.reader__intro")
         _subheadline_selector = CSSSelector("div.article-text-wrapper > h2, div.article-text-wrapper > h3")
 
         _topic_selector = XPath("//ul[@id='articleTags']//li")
-        _author_selector = XPath("//p[@class='reader__meta-info']/a")
+        _author_selector = XPath("//p[@class='reader__meta-info'][1]")
 
         @attribute
         def body(self) -> Optional[ArticleBody]:
@@ -41,7 +44,11 @@ class LTOParser(ParserProxy):
 
         @attribute
         def authors(self) -> List[str]:
-            return generic_author_parsing(strip_nodes_to_text(self._author_selector(self.precomputed.doc)))
+            return apply_substitution_pattern_over_list(
+                generic_author_parsing(strip_nodes_to_text(self._author_selector(self.precomputed.doc))),
+                pattern=re.compile("^Gastbeitrag von |^von "),
+                replacement="",
+            )
 
         @attribute
         def publishing_date(self) -> Optional[datetime.datetime]:
