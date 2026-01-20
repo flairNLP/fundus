@@ -50,7 +50,7 @@ class VnExpressIntlParser(ParserProxy):
             return image_extraction(
                 doc=self.precomputed.doc,
                 paragraph_selector=self._paragraph_selector,
-                author_selector=re.compile(r"(?i)Ảnh:\s*(?P<credits>.+)$"),
+                author_selector=re.compile(r"(?i)(Ảnh:|Video:)\s*(?P<credits>.+)$"),
                 upper_boundary_selector=XPath("//h1"),
             )
 
