@@ -9,9 +9,11 @@ from fundus.parser import BaseParser, Image, ParserProxy
 from fundus.parser.base_parser import attribute
 from fundus.parser.data import ArticleBody
 from fundus.parser.utility import (
+    apply_substitution_pattern_over_list,
     extract_article_body_with_selector,
     generic_author_parsing,
     generic_date_parsing,
+    generic_nodes_to_text,
     generic_topic_parsing,
     image_extraction,
 )
@@ -23,6 +25,8 @@ class MediaIndonesiaParser(ParserProxy):
         _subheadline_selector = XPath(
             "//div[@class='article']/*[(self::p and (not(text() or @class) and strong)) or self::h2]"
         )
+
+        _author_selector = CSSSelector("div.info > div.author-2")
 
         @attribute
         def title(self) -> Optional[str]:
@@ -38,7 +42,11 @@ class MediaIndonesiaParser(ParserProxy):
 
         @attribute
         def authors(self) -> List[str]:
-            return generic_author_parsing(self.precomputed.ld.bf_search("author"))
+            return apply_substitution_pattern_over_list(
+                generic_author_parsing(generic_nodes_to_text(self._author_selector(self.precomputed.doc))),
+                pattern=re.compile(r"^Media Indonesia$"),
+                replacement="",
+            )
 
         @attribute
         def publishing_date(self) -> Optional[datetime.datetime]:
