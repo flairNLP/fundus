@@ -19,9 +19,17 @@ from fundus.parser.utility import (
 
 class PravdaParser(ParserProxy):
     class V1(BaseParser):
+        _boilerplate_pattern = (
+            r"^Читайте також на цю тему:|"
+            r"^Читайте также на эту тему:|"
+            r"^Читайте більше у статті:|"
+            r"^Читайте больше в статье:"
+        )
         _paragraph_selector = XPath(
-            "//div[@class='post_news_text']//p[not(.//em) or .//text()[normalize-space() and not(ancestor::em)]] |"
-            "//article[contains(@class,'post')] //ul /li"
+            "//article[contains(@class,'post')]"
+            f"//p[.//text()[normalize-space() and not(ancestor::em)] and not(re:test(normalize-space(string(.)), '{_boilerplate_pattern}'))] |"
+            "//article[contains(@class,'post')] //ul /li",
+            namespaces={"re": "http://exslt.org/regular-expressions"},
         )
         _subheadline_selector = XPath("//article[contains(@class,'post')]//h2")
 
