@@ -14,8 +14,13 @@ from fundus.parser.utility import (
 
 class LBCGroupParser(ParserProxy):
     class V1(BaseParser):
-        _content_container_selector = XPath("//div[@class='LongDesc']")
-        _paragraph_selector = XPath("//p[@class='br-wrap' and string-length(text()) > 10]")
+        _boilerplate = r"^Reuters$|^AFP$"
+
+        _content_container_selector = XPath("//div[@class='LongDesc']//div[br]")
+        _paragraph_selector = XPath(
+            f"//p[@class='br-wrap' and not(re:test(normalize-space(string(.)), '{_boilerplate}')) and text()]",
+            namespaces={"re": "http://exslt.org/regular-expressions"},
+        )
 
         @attribute
         def body(self) -> Optional[ArticleBody]:
