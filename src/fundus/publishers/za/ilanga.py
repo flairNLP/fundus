@@ -18,12 +18,12 @@ from fundus.parser.utility import (
 class IlangaParser(ParserProxy):
     class V1(BaseParser):
         _paragraph_selector = XPath(
-            "(//div[contains(@class,'post_content')]//p["
-            "string() and "  # sometimes strong paragraphs are used for emphasis, hence filter by position
-            "not(position()<4 and strong and not(text())) and "  # Exclude author option 1
-            "not(position()<4 and string-length(text()) - string-length(translate(text(), ' ', '')) < 3) and"  # Exclude author option 2
-            "not(re:test(text(), '^\s*[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z.]{2,}\s*$'))"  # Exclude emails
-            "])[not(strong and not(text()) and preceding-sibling::*[position()=1 and self::figure])]",  # Exclude image captions
+            r"(//div[contains(@class,'post_content')]//p["
+            r"string() and "  # sometimes strong paragraphs are used for emphasis, hence filter by position
+            r"not(position()<4 and strong and not(text())) and "  # Exclude author option 1
+            r"not(position()<4 and string-length(text()) - string-length(translate(text(), ' ', '')) < 3) and"  # Exclude author option 2
+            r"not(re:test(text(), '^\s*[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z.]{2,}\s*$'))"  # Exclude emails
+            r"])[not(strong and not(text()) and preceding-sibling::*[position()=1 and self::figure])]",  # Exclude image captions
             namespaces={"re": "http://exslt.org/regular-expressions"},
         )
 
