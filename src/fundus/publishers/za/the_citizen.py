@@ -72,5 +72,5 @@ class TheCitizenParser(ParserProxy):
                     "./ancestor::div[contains(@class, 'featured-image')]//div[contains(@class, 'image-caption')]//p |"
                     "./ancestor::figure//figcaption"
                 ),
-                author_selector=re.compile(r"(?i)(image courtesy( of)?\s*|image|picture):?(?P<credits>.+)"),
+                author_selector=re.compile(r"(?i)(image courtesy( of)?\s*|image|picture|photo):?(?P<credits>.+)"),
             )
