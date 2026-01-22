@@ -29,6 +29,7 @@ from .junge_welt import JungeWeltParser
 from .kicker import KickerParser
 from .klassegegenklasse import KlasseGegenKlasseParser
 from .krautreporter import KrautreporterParser
+from .lto import LTOParser
 from .mdr import MDRParser
 from .merkur import MerkurParser
 from .motorsport_magazin import MotorSportMagazinParser
@@ -58,6 +59,18 @@ from .zdf import ZDFParser
 # noinspection PyPep8Naming
 class DE(metaclass=PublisherGroup):
     default_language = "de"
+
+    LTO = Publisher(
+        name="Legal Tribune Online",
+        domain="https://www.lto.de/",
+        parser=LTOParser,
+        url_filter=regex_filter("/podcast/"),
+        sources=[
+            RSSFeed("https://www.lto.de/rss/feed.xml"),
+            NewsMap("https://www.lto.de/googlenews-sitemap.xml"),
+            Sitemap("https://www.lto.de/sitemap.xml", sitemap_filter=inverse(regex_filter("/article/"))),
+        ],
+    )
 
     SportSchau = Publisher(
         name="Sportschau",
