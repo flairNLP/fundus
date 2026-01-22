@@ -4,21 +4,38 @@ from typing import List, Optional
 
 from lxml.etree import XPath
 
-from fundus.parser import ArticleBody, BaseParser, Image, ParserProxy, attribute
+from fundus.parser import (
+    ArticleBody,
+    BaseParser,
+    Image,
+    ParserProxy,
+    attribute,
+    function,
+)
 from fundus.parser.utility import (
     extract_article_body_with_selector,
     generic_author_parsing,
     generic_date_parsing,
     generic_topic_parsing,
     image_extraction,
+    transform_breaks_to_paragraphs,
 )
 
 
 class TheCitizenParser(ParserProxy):
     class V1(BaseParser):
+        _malformed_content_selector = XPath("//div[@class='single-content']//p[br]")
+
         _paragraph_selector = XPath("//div[@class='single-content']//p[string-length(text())>2]")
         _summary_selector = XPath("//div[@class='single-excerpt']/h2")
-        _subheadline_selector = XPath("//div[@class='single-content']/h2")
+        _subheadline_selector = XPath("//div[@class='single-content']/h2 | //div[@class='single-content']/h3")
+
+        @function(priority=1)
+        def _preprocess(self) -> None:
+            # In some rare occasions the articles paragraphs are seperated by breaks. See:
+            # https://www.citizen.co.za/sport/soccer/local-soccer/pirates-targeting-maximum-points-against-sekhukhune/
+            for node in self._malformed_content_selector(self.precomputed.doc):
+                transform_breaks_to_paragraphs(node, replace=True)
 
         @attribute
         def body(self) -> Optional[ArticleBody]:

@@ -297,11 +297,17 @@ def get_meta_content(root: lxml.html.HtmlElement) -> Dict[str, str]:
     return metadata
 
 
-def transform_breaks_to_paragraphs(element: lxml.html.HtmlElement, **attribs: str) -> lxml.html.HtmlElement:
+def transform_breaks_to_paragraphs(
+    element: lxml.html.HtmlElement, replace: bool = False, **attribs: str
+) -> lxml.html.HtmlElement:
     """Splits the content of <element> on <br> tags into paragraphs and transform them in <p> elements.
+
+    If <element> is replaced, the previous attributes are attached to the new paragraphs.
+    If <element> is not replaced, the wrapped paragraphs are attached to the cleared element.
 
     Args:
         element: The element on which to perform the transformation
+        replace: If True, replace <element> with wrapped paragraphs, else adds them to <element>
         **attribs: The attributes of the wrapped paragraphs as keyword arguments. I.e. the
             default {"class": "br-wrap"} wil produce the following elements: <p class='br-wrap'>.
             To use python keywords wrap them dunder scores. __class__ for class.
@@ -310,9 +316,7 @@ def transform_breaks_to_paragraphs(element: lxml.html.HtmlElement, **attribs: st
         The transformed element
     """
 
-    if not attribs:
-        attribs = {"class": "br-wrap"}
-    else:
+    if attribs:
         attribs = {re.sub(r"^__(.*?)__$", r"\1", key): value for key, value in attribs.items()}
 
     def get_paragraphs() -> List[str]:
@@ -335,13 +339,27 @@ def transform_breaks_to_paragraphs(element: lxml.html.HtmlElement, **attribs: st
     if not (paragraphs := get_paragraphs()):
         return element
 
-    # remove children, tail and text from element
-    clear_element()
+    wrapped_paragraphs = [f"<p{' ' + generate_attrs()}>{paragraph}</p>" for paragraph in paragraphs]
 
-    # add paragraphs to cleared element
-    for paragraph in paragraphs:
-        wrapped = f"<p{' ' + generate_attrs()}>{paragraph}</p>"
-        element.append(lxml.html.fromstring(wrapped))
+    if replace:
+        if (parent := element.getparent()) is None:
+            raise NotImplementedError("Cannot replace elements without parent element")
+
+        previous_attrs = element.attrib
+        previous_index = parent.index(element)
+        parent.remove(element)
+        for new_index, paragraph in enumerate(wrapped_paragraphs, previous_index):
+            new_paragraph = lxml.html.fromstring(paragraph)
+            new_paragraph.attrib.update(previous_attrs)
+            parent.insert(new_index, new_paragraph)
+    else:
+        # remove children, tail and text from element
+        clear_element()
+
+        # add paragraphs to cleared element
+        for paragraph in paragraphs:
+            wrapped = f"<p{' ' + generate_attrs()}>{paragraph}</p>"
+            element.append(lxml.html.fromstring(wrapped))
 
     return element
 
