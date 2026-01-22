@@ -866,8 +866,11 @@ def parse_image_nodes(
                 is_cover=is_cover,
                 position=position,
             )
-        except ImageURLError:
-            logger.debug(f"Skipping lazy loading image")
+        except ImageURLError as error:
+            if node.attrib.get("loading") == "lazy":
+                logger.debug(f"Skipping lazy loading image")
+            else:
+                logger.debug(error)
         else:
             yield image
 
