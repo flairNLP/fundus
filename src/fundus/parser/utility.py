@@ -42,6 +42,7 @@ from fundus.parser.data import (
     ArticleSection,
     Dimension,
     Image,
+    ImageURLError,
     ImageVersion,
     LinkedDataMapping,
     TextSequence,
@@ -151,6 +152,20 @@ def extract_article_body_with_selector(
     summary_nodes = extract_nodes(summary_selector, SummaryNode) if summary_selector else []
     subhead_nodes = extract_nodes(subheadline_selector, SubheadNode) if subheadline_selector else []
     paragraph_nodes = extract_nodes(paragraph_selector, ParagraphNode)
+
+    # data-cleaning:
+    def _cond(node: lxml.html.HtmlElement) -> bool:
+        def has_normalized_text():
+            return bool(node.xpath("normalize-space(text())"))
+
+        def has_em_child():
+            return bool(node.xpath("./em"))
+
+        return not has_normalized_text() and has_em_child()
+
+    while paragraph_nodes and _cond(paragraph_nodes[-1].node):
+        paragraph_nodes.pop()
+
     nodes = sorted(summary_nodes + subhead_nodes + paragraph_nodes)
 
     if not nodes:
@@ -297,11 +312,17 @@ def get_meta_content(root: lxml.html.HtmlElement) -> Dict[str, str]:
     return metadata
 
 
-def transform_breaks_to_paragraphs(element: lxml.html.HtmlElement, **attribs: str) -> lxml.html.HtmlElement:
+def transform_breaks_to_paragraphs(
+    element: lxml.html.HtmlElement, replace: bool = False, **attribs: str
+) -> lxml.html.HtmlElement:
     """Splits the content of <element> on <br> tags into paragraphs and transform them in <p> elements.
+
+    If <element> is replaced, the previous attributes are attached to the new paragraphs.
+    If <element> is not replaced, the wrapped paragraphs are attached to the cleared element.
 
     Args:
         element: The element on which to perform the transformation
+        replace: If True, replace <element> with wrapped paragraphs, else adds them to <element>
         **attribs: The attributes of the wrapped paragraphs as keyword arguments. I.e. the
             default {"class": "br-wrap"} wil produce the following elements: <p class='br-wrap'>.
             To use python keywords wrap them dunder scores. __class__ for class.
@@ -310,9 +331,7 @@ def transform_breaks_to_paragraphs(element: lxml.html.HtmlElement, **attribs: st
         The transformed element
     """
 
-    if not attribs:
-        attribs = {"class": "br-wrap"}
-    else:
+    if attribs:
         attribs = {re.sub(r"^__(.*?)__$", r"\1", key): value for key, value in attribs.items()}
 
     def get_paragraphs() -> List[str]:
@@ -335,13 +354,27 @@ def transform_breaks_to_paragraphs(element: lxml.html.HtmlElement, **attribs: st
     if not (paragraphs := get_paragraphs()):
         return element
 
-    # remove children, tail and text from element
-    clear_element()
+    wrapped_paragraphs = [f"<p{' ' + generate_attrs()}>{paragraph}</p>" for paragraph in paragraphs]
 
-    # add paragraphs to cleared element
-    for paragraph in paragraphs:
-        wrapped = f"<p{' ' + generate_attrs()}>{paragraph}</p>"
-        element.append(lxml.html.fromstring(wrapped))
+    if replace:
+        if (parent := element.getparent()) is None:
+            raise NotImplementedError("Cannot replace elements without parent element")
+
+        previous_attrs = element.attrib
+        previous_index = parent.index(element)
+        parent.remove(element)
+        for new_index, paragraph in enumerate(wrapped_paragraphs, previous_index):
+            new_paragraph = lxml.html.fromstring(paragraph)
+            new_paragraph.attrib.update(previous_attrs)
+            parent.insert(new_index, new_paragraph)
+    else:
+        # remove children, tail and text from element
+        clear_element()
+
+        # add paragraphs to cleared element
+        for paragraph in paragraphs:
+            wrapped = f"<p{' ' + generate_attrs()}>{paragraph}</p>"
+            element.append(lxml.html.fromstring(wrapped))
 
     return element
 
@@ -470,7 +503,7 @@ def generic_author_parsing(
             return filter(bool, re.split(r"|".join(split_on or common_delimiters), text))
 
         authors = list(more_itertools.flatten([split(author) for author in authors]))
-        normalized_authors = [normalize_whitespace(author) for author in authors]
+        normalized_authors = [normalize_whitespace(author) for author in authors if author.strip()]
         authors = normalized_authors
     if substitution_pattern:
         authors = apply_substitution_pattern_over_list(authors, substitution_pattern)
@@ -579,6 +612,11 @@ def preprocess_url(url: str, domain: str) -> str:
 
 def image_author_parsing(authors: Union[str, List[str]]) -> List[str]:
     credit_keywords = [
+        "Источник",
+        "коллаж",
+        "Джерело",
+        "Фото",
+        "колаж",
         "fotograf",
         "credits?",
         "quellen?",
@@ -734,6 +772,7 @@ def parse_versions(img_node: lxml.html.HtmlElement, size_pattern: Optional[Patte
         and not default_width == "auto"
         and (default_height := img_node.get("height"))
         and not default_height == "auto"
+        and not float(default_height) == 0.0
     ):
         ratio = float(default_width) / float(default_height)
     else:
@@ -757,7 +796,7 @@ def parse_image_nodes(
     image_nodes: List[IndexedImageNode],
     caption_selector: XPath,
     alt_selector: XPath,
-    author_selector: Union[XPath, Pattern[str]],
+    author_selector: Union[XPath, Pattern[str], List[Pattern[str]]],
     domain: Optional[str] = None,
     size_pattern: Optional[Pattern[str]] = None,
 ) -> Iterator[Image]:
@@ -797,28 +836,43 @@ def parse_image_nodes(
         description = nodes_to_text(alt_selector(node))
 
         # parse authors
+
         authors = []
         if isinstance(author_selector, Pattern):
-            # author is part of the caption
-            if caption and (match := re.search(author_selector, caption)):
-                authors = [match.group("credits")]
-                caption = re.sub(author_selector, "", caption).strip() or None
-            elif description and (match := re.search(author_selector, description)):
-                authors = [match.group("credits")]
+            author_selector = [author_selector]
+
+        if isinstance(author_selector, list):
+            for pattern in author_selector:
+                # author is part of the caption
+                if caption and (match := re.search(pattern, caption)):
+                    authors = [match.group("credits")]
+                    caption = re.sub(pattern, "", caption).strip() or None
+                elif description and (match := re.search(pattern, description)):
+                    authors = [match.group("credits")]
+                if authors:
+                    break
         else:
             # author is selectable as node
             if author_nodes := author_selector(node):
                 authors = generic_nodes_to_text(author_nodes, normalize=True)
         authors = image_author_parsing(authors)
 
-        yield Image(
-            versions=versions,
-            caption=caption,
-            authors=authors,
-            description=description,
-            is_cover=is_cover,
-            position=position,
-        )
+        try:
+            image = Image(
+                versions=versions,
+                caption=caption,
+                authors=authors,
+                description=description,
+                is_cover=is_cover,
+                position=position,
+            )
+        except ImageURLError as error:
+            if node.attrib.get("loading") == "lazy":
+                logger.debug(f"Skipping lazy loading image")
+            else:
+                logger.debug(error)
+        else:
+            yield image
 
 
 class Bounds(NamedTuple):
@@ -862,7 +916,7 @@ def image_extraction(
     lower_boundary_selector: Optional[XPath] = None,
     caption_selector: XPath = XPath("./ancestor::figure//figcaption"),
     alt_selector: XPath = XPath("./@alt"),
-    author_selector: Union[XPath, Pattern[str]] = XPath(
+    author_selector: Union[XPath, Pattern[str], List[Pattern[str]]] = XPath(
         "(./ancestor::figure//*[(contains(@class, 'copyright') or contains(@class, 'credit')) and text()])[1]"
     ),
     relative_urls: Union[bool, XPath] = False,

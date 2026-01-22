@@ -14,11 +14,16 @@ from fundus.parser.utility import (
 
 class ZwanzigMinutenParser(ParserProxy):
     class V1(BaseParser):
+        VALID_UNTIL = datetime.date(2025, 10, 5)
+
         _summary_selector = XPath(
             "//div[@class='Article_elementLead__N3pGr']/p | (//div[@type='typeInfoboxSummary'])[1]//li"
         )
         _subheadline_selector = XPath("//section[@class='Article_body__60Liu']//h2[contains(@class, 'crosshead')]")
         _paragraph_selector = XPath("//div[@class='Article_elementTextblockarray__WNyan']/p")
+
+        _caption_selector = XPath("./ancestor::figure//figcaption/span[@class='sc-d47814d6-2 bDLFoO']/p")
+        _author_selector = XPath("./ancestor::figure//figcaption/span[@class='sc-d47814d6-3 bmEwwn']")
 
         @attribute
         def body(self) -> Optional[ArticleBody]:
@@ -47,6 +52,16 @@ class ZwanzigMinutenParser(ParserProxy):
                 doc=self.precomputed.doc,
                 paragraph_selector=self._paragraph_selector,
                 upper_boundary_selector=XPath("//article"),
-                caption_selector=XPath("./ancestor::figure//figcaption/span[@class='sc-d47814d6-2 bDLFoO']/p"),
-                author_selector=XPath("./ancestor::figure//figcaption/span[@class='sc-d47814d6-3 bmEwwn']"),
+                caption_selector=self._caption_selector,
+                author_selector=self._author_selector,
             )
+
+    class V1_1(V1):
+        VALID_UNTIL = datetime.date.today()
+
+        _summary_selector = XPath("//div[@type='lead']/p | //div[@type='infobox'][1]//li")
+        _paragraph_selector = XPath("//section//p[@type='textBlockArray']")
+        _subheadline_selector = XPath("//section//h2[@data-testid='Crosshead']")
+
+        _caption_selector = XPath("./ancestor::figure//figcaption/span[@class='sc-b3c65b9d-2 drRlrY']")
+        _author_selector = XPath("./ancestor::figure//figcaption/span[@class='sc-b3c65b9d-3 eEeXhh']")

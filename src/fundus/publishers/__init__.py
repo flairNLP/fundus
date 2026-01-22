@@ -14,12 +14,14 @@ from fundus.publishers.dk import DK
 from fundus.publishers.es import ES
 from fundus.publishers.fr import FR
 from fundus.publishers.gl import GL
+from fundus.publishers.id import ID
 from fundus.publishers.il import IL
 from fundus.publishers.ind import IND
 from fundus.publishers.isl import ISL
 from fundus.publishers.it import IT
 from fundus.publishers.jp import JP
 from fundus.publishers.kr import KR
+from fundus.publishers.lb import LB
 from fundus.publishers.li import LI
 from fundus.publishers.ls import LS
 from fundus.publishers.lt import LT
@@ -36,8 +38,10 @@ from fundus.publishers.se import SE
 from fundus.publishers.tr import TR
 from fundus.publishers.tw import TW
 from fundus.publishers.tz import TZ
+from fundus.publishers.ua import UA
 from fundus.publishers.uk import UK
 from fundus.publishers.us import US
+from fundus.publishers.vn import VN
 from fundus.publishers.za import ZA
 
 __all__ = ["Publisher", "PublisherGroup"]
@@ -84,12 +88,14 @@ class PublisherCollection(metaclass=PublisherCollectionMeta):
     es = ES
     fr = FR
     gl = GL
+    id = ID
     il = IL
     ind = IND
     isl = ISL
     it = IT
     jp = JP
     kr = KR
+    lb = LB
     li = LI
     ls = LS
     lt = LT
@@ -106,6 +112,8 @@ class PublisherCollection(metaclass=PublisherCollectionMeta):
     tr = TR
     tw = TW
     tz = TZ
+    ua = UA
     uk = UK
     us = US
     za = ZA
+    vn = VN

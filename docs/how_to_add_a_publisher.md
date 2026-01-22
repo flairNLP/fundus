@@ -25,6 +25,7 @@
     * [Add unit tests](#add-unit-tests)
     * [Update tables](#update-tables)
   * [7. Opening a Pull Request](#7-opening-a-pull-request)
+  * [8. Maintaining publishers](#8-maintaining-publishers)
 
 # How to add a Publisher
 
@@ -257,7 +258,7 @@ will exclude all sitemap URLs not containing the substring `sitemap-content-`.
 ### Finishing the Publisher Specification
 
 1. If your publisher requires to use custom request headers to work properly you can alter it by using the `request_header` parameter of `PublisherSpec`.
-   The default is: `{"user_agent": "Fundus"}`.
+   The default is: `{"user-agent": "Fundus/2.0 (contact: github.com/flairnlp/fundus)"}`.
 2. If you want to block URLs for the entire publisher use the `url_filter` parameter of `Publisher`.
 3. In some cases it can be necessary to append query parameters to the end of the URL, e.g. to load the article as one page. This can be achieved by adding the `query_parameter` attribute of `PublisherSpec` and assigning it a dictionary object containing the key - value pairs: e.g. `{"page": "all"}`. These key  - value pairs will be appended to all crawled URLs.
 
@@ -563,7 +564,7 @@ This function accepts selectors for the different body parts as input and return
 For practical examples, refer to existing parser implementations to understand how everything integrates.
 
 > [!IMPORTANT]  
-> Regardless of the article's layout, the extracted `ArticleBody` should closely mirror the actual body/text of the article and must not include any additional content.  
+> Regardless of the article's layout, the extracted `ArticleBody` should closely mirror the actual body/text of the article and must not include any additional content.
 > This ensures that the text can be accurately mapped back to the HTML for annotation purposes.
 
 ### Extracting the images
@@ -758,3 +759,17 @@ pytest
 2. Run `black src`, `isort src`, and `mypy src` with no errors.
 3. Push and open a new PR
 4. Congratulation and thank you very much.
+
+## 8. Maintaining publishers
+
+If you encounter an issue with a publisher, feel free to correct it and submit a PR.  
+Please follow this general guideline when making such changes.  
+
+- If the parser can no longer extract articles properly, create a new parser version to implement the fix.  
+- Use a minor version bump (e.g., from `V1` to `V1_1(V1)`) if the update only involves adjusting selectors.  
+- If the change introduces new attributes or substantially modifies several existing ones, consider moving to a new major version (e.g., from `V1` to `V2`).  
+
+> [!NOTE]
+> You will now need to set the `VALID_UNTIL` attribute.
+> The new version should define `VALID_UNTIL = datetime.date.today()`, while the previous version must use a `datetime.date` pointing to the day before the layout change.
+> You can estimate this date using the logs or the Wayback Machine.

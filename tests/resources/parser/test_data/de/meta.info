@@ -15,6 +15,10 @@
     "url": "https://www.braunschweiger-zeitung.de/politik/article409956720/ampeln-tot-s-bahnen-stoppen-wie-sicher-ist-deutschlands-stromnetz.html",
     "crawl_date": "2025-09-09 15:15:22.305490"
   },
+  "BSZ_2025_11_06.html.gz": {
+    "url": "https://www.braunschweiger-zeitung.de/politik/article410390514/streeck-lobt-haftbefehl-doku-und-warnt-vor-kokain-verherrlichung-im-rap.html",
+    "crawl_date": "2025-11-06 23:30:55.766859"
+  },
   "BerlinerMorgenpost_2024_05_03.html.gz": {
     "url": "https://www.morgenpost.de/berlin/article242242744/feuer-brand-warnung-berlin-lichterfelde-brandgase-aktuell-news.html",
     "crawl_date": "2024-05-03 17:27:55.160009"
@@ -22,6 +26,10 @@
   "BerlinerMorgenpost_2025_09_09.html.gz": {
     "url": "https://www.morgenpost.de/ratgeber-wissen/finanzen/article409954684/ezb-zinsentscheid-donnerstag-klare-ansage.html",
     "crawl_date": "2025-09-09 15:23:30.089234"
+  },
+  "BerlinerMorgenpost_2025_11_06.html.gz": {
+    "url": "https://www.morgenpost.de/sport/fuechse/article410396860/fuechse-berlin-mit-machtdemonstration-und-erleichterung-um-andersson.html",
+    "crawl_date": "2025-11-06 23:29:11.580652"
   },
   "BerlinerZeitung_2023_04_28.html.gz": {
     "url": "https://www.berliner-zeitung.de/news/550-kinder-gezeugt-gericht-stoppt-uebereifrigen-samenspender-in-den-niederlanden-li.343191",
@@ -38,6 +46,10 @@
   "BoersenZeitung_2024_12_16.html.gz": {
     "url": "https://www.boersen-zeitung.de/banken-finanzen/wero-besteht-praxistest-im-digitalen-handel",
     "crawl_date": "2024-12-16 14:21:36.405815"
+  },
+  "BoersenZeitung_2025_11_06.html.gz": {
+    "url": "https://www.boersen-zeitung.de/personen/deutsche-bank-nominiert-aufsichtsratschef-fuer-zweite-amtszeit",
+    "crawl_date": "2025-11-06 23:58:40.309266"
   },
   "BusinessInsiderDE_2024_01_29.html.gz": {
     "url": "https://www.businessinsider.de/wirtschaft/international-business/wie-gross-ist-evergrande-chinas-sterbender-immobilienriese/",
@@ -74,6 +86,10 @@
   "EuronewsDE_2024_04_30.html.gz": {
     "url": "https://de.euronews.com/my-europe/2024/04/30/georgien-tausende-unterstutzen-das-russische-agentengesetz",
     "crawl_date": "2024-04-30 16:52:27.324714"
+  },
+  "EuronewsDE_2026_01_06.html.gz": {
+    "url": "https://de.euronews.com/2026/01/06/russland-china-militareinsatz-venezuela",
+    "crawl_date": "2026-01-06 14:37:18.924273"
   },
   "FAZ_2023_04_28.html.gz": {
     "url": "https://www.faz.net/aktuell/rhein-main/frankfurt/49-euro-ticket-pendler-zahlen-60-prozent-weniger-18857107.html",
@@ -123,6 +139,10 @@
     "url": "https://www.abendblatt.de/politik/article408587681/annalena-baerbock-un-job-praesidentin-posten-gehalt.html",
     "crawl_date": "2025-09-09 15:14:41.295022"
   },
+  "HamburgerAbendblatt_2025_11_06.html.gz": {
+    "url": "https://www.abendblatt.de/politik/article410396303/dem-teufel-begegnet-deutsche-hamas-geisel-erlebte-sexuellen-missbrauch.html",
+    "crawl_date": "2025-11-06 23:30:01.627493"
+  },
   "Heise_2024_04_19.html.gz": {
     "url": "https://www.heise.de/news/Ionos-Phishing-Masche-mit-neuen-EU-Richtlinien-soll-Opfer-ueberzeugen-9691259.html?wt_mc=rss.red.ho.ho.rdf.beitrag.beitrag&seite=all",
     "crawl_date": "2024-04-19 13:53:52.691555"
@@ -139,9 +159,17 @@
     "url": "https://www.kicker.de/interimstrainer-schubert-nicht-mehr-viel-zu-verlieren-1019241/artikel#omrss",
     "crawl_date": "2024-04-26 15:37:39.609270"
   },
+  "KlasseGegenKlasse_2026_01_07.html.gz": {
+    "url": "https://www.klassegegenklasse.org/venezuela-nach-maduros-entfuehrung-interview-mit-venezolanischen-sozialisten/",
+    "crawl_date": "2026-01-07 22:16:00.930260"
+  },
   "Krautreporter_2024_08_22.html.gz": {
     "url": "https://krautreporter.de/politik-und-macht/5481-ich-wollte-dass-sie-mich-mogen-so-uberlebt-man",
     "crawl_date": "2024-08-22 18:41:33.860723"
+  },
+  "LTO_2025_10_20.html.gz": {
+    "url": "https://www.lto.de/recht/hintergruende/h/gaza-waffen-waffenlieferungen-exporte-israel-ecchr-verfassungsbeschwerde?r=rss",
+    "crawl_date": "2025-10-20 19:31:07.875441"
   },
   "MDR_2023_04_28.html.gz": {
     "url": "https://www.mdr.de/nachrichten/thueringen/sued-thueringen/schmalkalden-meiningen/schlachtung-fleisch-schwein-wirtschaft-landstolz-100.html",
@@ -174,6 +202,10 @@
   "NTV_2024_08_05.html.gz": {
     "url": "https://www.n-tv.de/sport/olympia/Olympische-Spiele-Deutscher-Basketball-Aggressor-beeindruckt-Frankreich-zerfetzt-sich-article25136526.html",
     "crawl_date": "2024-08-05 21:38:11.468194"
+  },
+  "NTV_2025_12_12.html.gz": {
+    "url": "https://www.n-tv.de/politik/Trump-spricht-nach-Tanker-Stuermung-ueber-Bodeneinsaetze-id30134161.html",
+    "crawl_date": "2025-12-12 13:00:03.102877"
   },
   "NetzpolitikOrg_2024_04_28.html.gz": {
     "url": "https://netzpolitik.org/2024/breakpoint-hilfe-die-fundis-kommen/",
@@ -227,6 +259,10 @@
     "url": "https://www.stuttgarter-zeitung.de/inhalt.rueckbau-von-atomkraftwerk-kuehltuerme-von-akw-gundremmingen-gesprengt.e4f07910-3c72-4551-a37d-96207f2c9b02.html",
     "crawl_date": "2025-10-25 15:42:38.178648"
   },
+  "TOnline_2026_01_07.html.gz": {
+    "url": "https://www.t-online.de/nachrichten/ausland/id_101072480/russlands-schattenflotte-usa-stoppen-sanktioniertes-geisterschiff.html",
+    "crawl_date": "2026-01-07 22:07:24.813245"
+  },
   "Tagesschau_2023_04_28.html.gz": {
     "url": "https://www.tagesschau.de/inland/innenpolitik/ahrtal-flut-bilanz-100.html",
     "crawl_date": "2023-04-28 20:25:17.117496"
@@ -259,6 +295,10 @@
     "url": "https://www.waz.de/politik/article409961272/gruenen-spitze-gegen-kloeckner-nun-attackiert-auch-ricarda-lang.html",
     "crawl_date": "2025-09-10 13:22:04.905974"
   },
+  "WAZ_2025_11_06.html.gz": {
+    "url": "https://www.waz.de/panorama/article409182690/unbekannte-maya-staedte-werfen-neues-licht-auf-die-fruehzeit.html",
+    "crawl_date": "2025-11-06 23:34:26.389482"
+  },
   "WDR_2024_04_22.html.gz": {
     "url": "https://www1.wdr.de/nachrichten/landespolitik/feuerwehr-rentenalter-erhoehung-100.html",
     "crawl_date": "2024-04-22 14:41:05.704325"
@@ -274,5 +314,9 @@
   "ZDF_2024_04_22.html.gz": {
     "url": "https://www.zdf.de/nachrichten/wirtschaft/deutschland-iran-handel-sanktionen-100.html",
     "crawl_date": "2024-04-22 17:22:43.812721"
+  },
+  "ZDF_2025_11_07.html.gz": {
+    "url": "https://www.zdfheute.de/politik/ausland/putin-warnung-dekolonisierung-russland-100.html",
+    "crawl_date": "2025-11-07 00:28:51.330920"
   }
 }
