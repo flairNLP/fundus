@@ -50,9 +50,10 @@ class TheCitizenParser(ParserProxy):
             return image_extraction(
                 doc=self.precomputed.doc,
                 paragraph_selector=self._paragraph_selector,
-                image_selector=XPath("//div[contains(@class, 'featured-image')]/img"),
+                image_selector=XPath("//div[contains(@class, 'featured-image')]/img | //figure/img"),
                 caption_selector=XPath(
-                    "./ancestor::div[contains(@class, 'featured-image')]//div[contains(@class, 'image-caption')]//p"
+                    "./ancestor::div[contains(@class, 'featured-image')]//div[contains(@class, 'image-caption')]//p |"
+                    "./ancestor::figure//figcaption"
                 ),
                 author_selector=re.compile(r"(?i)(image courtesy( of)?\s*|image|picture):?(?P<credits>.+)"),
             )
