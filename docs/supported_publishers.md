@@ -4095,6 +4095,25 @@
     </tr>
     <tr>
       <td>
+        <code>TheCitizen</code>
+      </td>
+      <td>
+        <div>The Citizen</div>
+      </td>
+      <td>
+        <a href="https://www.citizen.co.za/">
+          <span>www.citizen.co.za</span>
+        </a>
+      </td>
+      <td>
+        <code>en</code>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
         <code>TimesLive</code>
       </td>
       <td>

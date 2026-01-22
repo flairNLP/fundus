@@ -2,6 +2,7 @@ from fundus.publishers.base_objects import Publisher, PublisherGroup
 from fundus.publishers.za.daily_maverick import DailyMaverickParser
 from fundus.publishers.za.dizindaba import DizindabaParser
 from fundus.publishers.za.independent_online import IndependentOnlineParser
+from fundus.publishers.za.the_citizen import TheCitizenParser
 from fundus.publishers.za.times_live import TimesLiveParser
 from fundus.scraping.filter import inverse, lor, regex_filter
 from fundus.scraping.url import NewsMap, RSSFeed, Sitemap
@@ -78,6 +79,19 @@ class ZA(metaclass=PublisherGroup):
                 "https://isolezwelesixhosa.co.za/sitemap/",
                 sitemap_filter=lor(inverse(regex_filter("/isolezwe-lesixhosa/")), regex_filter("english")),
                 languages={"xh"},
+            ),
+        ],
+    )
+
+    TheCitizen = Publisher(
+        name="The Citizen",
+        domain="https://www.citizen.co.za/",
+        parser=TheCitizenParser,
+        sources=[
+            Sitemap(
+                "https://www.citizen.co.za/sitemap_index.xml",
+                reverse=True,
+                sitemap_filter=inverse(regex_filter("/post-sitemap")),
             ),
         ],
     )
