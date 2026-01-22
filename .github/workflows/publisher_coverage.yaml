@@ -32,7 +32,7 @@ jobs:
         # We skip the Kicker APNews publishers, because they are IP-blocked
         run: |
           set -o pipefail
-          timeout 25m python -u scripts/publisher_coverage.py --skip Kicker APNews | tee publisher_coverage.txt
+          timeout 25m python -u scripts/publisher_coverage.py --skip Kicker APNews Tageszeitung | tee publisher_coverage.txt
 
       - name: Upload Coverage Report
         if: always()
