@@ -12,7 +12,6 @@ from fundus.parser.utility import (
     generic_nodes_to_text,
     generic_topic_parsing,
     image_extraction,
-    strip_nodes_to_text,
 )
 
 
@@ -59,5 +58,5 @@ class EyethuNewsParser(ParserProxy):
                 paragraph_selector=self._paragraph_selector,
                 image_selector=XPath("//article//img[@alt]"),
                 upper_boundary_selector=XPath("//h1"),
-                author_selector=re.compile(r"(?i)IZITHOMBE:(?P<credits>.+)"),
+                author_selector=re.compile(r"((?i)ISITHOMBE:|(?i)PHOTO:|(?i)IMAGE:)(?P<credits>.+)"),
             )

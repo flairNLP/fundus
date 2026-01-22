@@ -44,8 +44,10 @@
         ],
         "is_cover": true,
         "description": null,
-        "caption": "Rejoice Ndlovu. Isithombe: Sithunyelwe",
-        "authors": [],
+        "caption": "Rejoice Ndlovu.",
+        "authors": [
+          "Sithunyelwe"
+        ],
         "position": 322
       }
     ],
