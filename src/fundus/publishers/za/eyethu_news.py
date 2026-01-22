@@ -3,7 +3,6 @@ import re
 from typing import List, Optional
 
 from lxml.etree import XPath
-from lxml.html import tostring
 
 from fundus.parser import ArticleBody, BaseParser, Image, ParserProxy, attribute
 from fundus.parser.utility import (
@@ -19,7 +18,7 @@ from fundus.parser.utility import (
 
 class EyethuNewsParser(ParserProxy):
     class V1(BaseParser):
-        _paragraph_selector = XPath("/html/p[text() and not(a)] | /html/div//p[text() and not(a)] | //blockquote")
+        _paragraph_selector = XPath("/html/p[text() and not(a)] | /html/div//p[text() and not(a)]")
         _summary_selector = XPath("//h2[@class='entry-sub-title']")
         _subheadline_selector = XPath("//div[contains(@class, 'entry-content')]/p[not(text() or a)]/strong[not(a)]")
 
