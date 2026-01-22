@@ -4065,6 +4065,14 @@
       <td>
         <a href="https://www.eyethunews.co.za/">
           <span>www.eyethunews.co.za</span>
+        </a>
+      </td>
+      <td>
+        <code>zu</code>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+      <td>&#160;</td>
     </tr>
     <tr>
       <td>
@@ -4076,16 +4084,6 @@
       <td>
         <a href="https://www.isolezwe.co.za/">
           <span>www.isolezwe.co.za</span>
-        </a>
-      </td>
-      <td>
-        <code>xh</code>
-      </td>
-      <td>
-        <code>topics</code>
-      </td>
-      <td>&#160;</td>
-      <td>&#160;</td>
         </a>
       </td>
       <td>
