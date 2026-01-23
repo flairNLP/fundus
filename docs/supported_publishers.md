@@ -4057,6 +4057,25 @@
     </tr>
     <tr>
       <td>
+        <code>EyethuNews</code>
+      </td>
+      <td>
+        <div>Eyethu News</div>
+      </td>
+      <td>
+        <a href="https://www.eyethunews.co.za/">
+          <span>www.eyethunews.co.za</span>
+        </a>
+      </td>
+      <td>
+        <code>zu</code>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
         <code>Isolezwe</code>
       </td>
       <td>
