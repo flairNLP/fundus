@@ -4,7 +4,14 @@ from typing import List, Optional
 
 from lxml.etree import XPath
 
-from fundus.parser import ArticleBody, BaseParser, Image, ParserProxy, attribute
+from fundus.parser import (
+    ArticleBody,
+    BaseParser,
+    Image,
+    ParserProxy,
+    attribute,
+    function,
+)
 from fundus.parser.utility import (
     extract_article_body_with_selector,
     generic_author_parsing,
@@ -18,15 +25,21 @@ from fundus.parser.utility import (
 
 class EyethuNewsParser(ParserProxy):
     class V1(BaseParser):
-        _paragraph_selector = XPath("/html/p[text() and not(a)] | /html/div//p[text() and not(a)]")
+        _malformed_paragraph_selector = XPath("//div[contains(@class, 'entry-content')]/p[br]")
+
+        _paragraph_selector = XPath("//div[contains(@class, 'entry-content')]/p[text() and not(a)] | //blockquote")
         _summary_selector = XPath("//h2[@class='entry-sub-title']")
         _subheadline_selector = XPath("//div[contains(@class, 'entry-content')]/p[not(text() or a)]/strong[not(a)]")
 
         _author_selector = XPath("//header//span[@class='meta-author']")
 
-        @attribute(priority=1)
+        @function(priority=1)
+        def _break_malformed_paragraphs(self) -> None:
+            for node in self._malformed_paragraph_selector(self.precomputed.doc):
+                transform_breaks_to_paragraphs(node, replace=True)
+
+        @attribute
         def body(self) -> Optional[ArticleBody]:
-            transform_breaks_to_paragraphs(self.precomputed.doc)
             return extract_article_body_with_selector(
                 self.precomputed.doc,
                 paragraph_selector=self._paragraph_selector,
