@@ -75,8 +75,6 @@ class DagbladetParser(ParserProxy):
             )
 
     class V1_1(V1):
-        VALID_UNTIL = datetime.date.today()
-
         @attribute
         def authors(self) -> List[str]:
             return generic_author_parsing(self.precomputed.meta.get("article:author"))

@@ -206,7 +206,7 @@ class Precomputed:
 
 
 class BaseParser(ABC):
-    VALID_UNTIL: date = date.today()
+    VALID_UNTIL: date
     precomputed: Precomputed
 
     def __init__(self, timestamp: Optional[date] = None):
@@ -223,6 +223,11 @@ class BaseParser(ABC):
         predicated_members: List[Tuple[str, RegisteredFunction]] = inspect.getmembers(self, predicate=predicate)
         bound_registered_functions: List[RegisteredFunction] = [func for _, func in predicated_members]
         self._sorted_registered_functions = sorted(bound_registered_functions, key=lambda f: (f, f.__name__))
+
+    def __init_subclass__(cls, **kwargs):
+        super().__init_subclass__(**kwargs)
+        if "VALID_UNTIL" not in cls.__dict__:
+            cls.VALID_UNTIL = date.max
 
     @classmethod
     def version(cls) -> str:

@@ -58,7 +58,6 @@ class TheInterceptParser(ParserProxy):
             return [keyword[9:] for keyword in keywords if keyword.startswith("Subject: ")]
 
     class V1_1(V1):
-        VALID_UNTIL = date.today()
         _summary_selector = XPath(
             "//p[@class='post__excerpt'] | //h2[preceding-sibling::h1[contains(@class, 'post__title')]]"
         )

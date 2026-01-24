@@ -63,7 +63,6 @@ class EveningStandardParser(ParserProxy):
             )
 
     class V1_1(V1):
-        VALID_UNTIL = datetime.date.today()
         _summary_selector = CSSSelector("div.sc-jgyXzG")
         _subheadline_selector = CSSSelector("div#main div.sc-dFfFtc > h3")
         _paragraph_selector = CSSSelector("div#main > div.sc-gEvEer p")

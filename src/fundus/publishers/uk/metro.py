@@ -77,7 +77,6 @@ class MetroParser(ParserProxy):
             )
 
     class V1_1(V1):
-        VALID_UNTIL = datetime.date.today()
         _summary_selector = XPath("//article//div[@class='article__content__inner']/p[1]")
         _paragraph_selector = XPath("//article//div[@class='article__content__inner']/p[not(@class) and position()>1]")
         _subheadline_selector = XPath("//article//div[@class='article__content__inner']/h2")

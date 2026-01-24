@@ -83,8 +83,6 @@ class TimesLiveParser(ParserProxy):
             )
 
     class V1_1(V1):
-        VALID_UNTIL = datetime.date.today()
-
         _paragraph_selector = XPath("//article/p[not(string()='TimesLIVE')]")  # There are no subheadlines/summaries
 
         @attribute

@@ -78,7 +78,7 @@ class WAZParser(ParserProxy):
         _subheadline_selector = XPath("//div[@class='article-body'] / h3[not(text()='Auch interessant')]")
 
     class V2(FunkeParser.V1_1):
-        pass
+        VALID_UNTIL = FunkeParser.V1_1.VALID_UNTIL
 
     class V2_1(FunkeParser.V1_2):
         pass

@@ -60,8 +60,6 @@ class TageblattParser(ParserProxy):
             )
 
     class V2(BaseParser):
-        VALID_UNTIL = datetime.date.today()
-
         _paragraph_selector = XPath("//div[@class='StoryShowBaseTextBox']/p")
         _subheadline_selector = XPath("//div[@class='StoryShowBaseTextBox']/h3")
         _summary_selector = XPath("//p[@class='intro']")

@@ -82,8 +82,6 @@ class SRFParser(ParserProxy):
             )
 
     class V2(BaseParser):
-        VALID_UNTIL = datetime.date.today()
-
         _title_selector = XPath("//span[@class='article-title__text']")
         _author_selector = XPath("//span[@itemprop='author']")
         _summary_selector = XPath(

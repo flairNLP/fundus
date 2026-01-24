@@ -64,8 +64,6 @@ class DWParser(ParserProxy):
         # dynamically with URLs like 'https://static.dw.com/image/65166768_${formatId}.jpg'
 
     class V2_1(V2):
-        VALID_UNTIL = datetime.date.today()
-
         _topic_selector = CSSSelector("header > div.kicker > span")
 
         @attribute

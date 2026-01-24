@@ -62,8 +62,6 @@ class APNewsParser(ParserProxy):
         # unfortunately we would need to render the site first before parsing images for this version
 
     class V1_1(V1):
-        VALID_UNTIL = datetime.date.today()
-
         _author_selector = CSSSelector("div.Page-authors")
         _subheadline_selector = XPath("//div[contains(@class, 'RichTextStoryBody')] /h2[not(text()='___')]")
         _paragraph_selector = XPath(

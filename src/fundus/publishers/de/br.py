@@ -68,8 +68,6 @@ class BRParser(ParserProxy):
             )
 
     class V1_1(V1):
-        VALID_UNTIL = datetime.date.today()
-
         _bloat_pattern = "Das ist die Europäische Perspektive bei BR24."
         _summary_selector = XPath("//header //p[@class='body3 ArticleItemTeaserText_text__H_RS_']")
         _subheadline_selector = XPath("//section[@id='articlebody'] //h2[text()]")
