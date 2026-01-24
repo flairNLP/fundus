@@ -772,3 +772,4 @@ Please follow this general guideline when making such changes.
 > [!NOTE]
 > You will now need to set the `VALID_UNTIL` attribute for the previous version to a `datetime.date` pointing to the day before the layout change.
 > You can estimate this date using the logs or the Wayback Machine.
+> The Attribute is not inherited from previous versions. Every subclass of `BaseParser` by default has `VALID_UNTIL` set to `date.max`.
