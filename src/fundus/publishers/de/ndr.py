@@ -66,8 +66,6 @@ class NDRParser(ParserProxy):
             )
 
     class V1_1(V1):
-        VALID_UNTIL = datetime.date.today()
-
         _paragraph_selector = XPath("//article/p[not(@class='textauthor')] | //article/ul/li | //article/blockquote")
         _subheadline_selector = XPath("//article/h2")
         _summary_selector = XPath("//header/p[@class='preface']")

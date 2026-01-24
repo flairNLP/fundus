@@ -82,8 +82,6 @@ class SeznamZpravyParser(ParserProxy):
         )
 
     class V1_2(V1_1):
-        VALID_UNTIL = datetime.date.today()
-
         _paragraph_selector = XPath(
             "//article[@aria-labelledby='accessibility-article'] //div[contains(@class, 'speakable')] //p"
         )

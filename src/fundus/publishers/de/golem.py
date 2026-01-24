@@ -66,8 +66,6 @@ class GolemParser(ParserProxy):
             )
 
     class V1_1(V1):
-        VALID_UNTIL = datetime.date.today()
-
         _paragraph_selector = XPath("//article//p[not(ancestor::div[@class='go-info-box__content'])]")
         _subheadline_selector = XPath("//article//h2[not(contains(@class, 'teaser'))]")
         _summary_selector = XPath("//div[@class='go-article-header__intro']")

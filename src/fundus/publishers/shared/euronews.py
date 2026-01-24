@@ -72,8 +72,6 @@ class EuronewsParser(ParserProxy):
             )
 
     class V1_1(V1):
-        VALID_UNTIL = date.today()
-
         _summary_selector = CSSSelector("h2.c-article-summary")
 
         @attribute

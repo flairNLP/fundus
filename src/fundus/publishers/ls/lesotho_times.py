@@ -62,8 +62,6 @@ class LesothoTimesParser(ParserProxy):
             )
 
     class V1_1(V1):
-        VALID_UNTIL = datetime.date.today()
-
         _paragraph_selector = XPath(
             "//div[contains(@class,'entry-content')]/p["
             "(text() or span) and "

@@ -100,8 +100,6 @@ class TheNationParser(ParserProxy):
             )
 
     class V2(V1):
-        VALID_UNTIL = date.today()
-
         # oh boy, TheNation is really a mess. they changed the layout 2023|7|22 but somehow the old articles still
         # use the old layout for main content, so we concatenate XPath from V1 onto V1_1.
 

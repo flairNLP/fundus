@@ -73,8 +73,6 @@ class NTVParser(ParserProxy):
             return generic_author_parsing(author_text.replace("Von", ""))
 
     class V1_2(V1_1):
-        VALID_UNTIL = datetime.date.today()
-
         _summary_selector = XPath("//div[@class='wrapper-article'] //p[contains(@class, 'leadtext')]")
         _paragraph_selector = XPath("//div[@class='wrapper-article'] //p[contains(@class, 'paragraph')]")
         _subheadline_selector = XPath("//div[@class='wrapper-article'] //h2[contains(@class, 'subheadline')]")

@@ -18,7 +18,6 @@ from fundus.parser.utility import image_extraction
 
 class DailyNewsTZParser(ParserProxy):
     class V1(BaseParser):
-        # VALID_UNTIL = date(2025, 5, 3)
         _summary_selector = CSSSelector("div.cs-entry__subtitle")
         _subheadline_selector = XPath(
             "//div[contains(@class,'entry-content')]//p[not(text() or position()=1)]//span//strong"

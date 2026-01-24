@@ -78,8 +78,6 @@ class TheMirrorParser(ParserProxy):
             return None
 
     class V1_2(V1_1):
-        VALID_UNTIL = datetime.date.today()
-
         _bloat_regex: str = "^Like this story?|^Join our new WhatsApp"
 
         _summary_selector = XPath("//article[@id='article-body'] /h2[contains(@class, 'lead-text')]")

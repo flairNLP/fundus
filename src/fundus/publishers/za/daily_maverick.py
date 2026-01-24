@@ -76,8 +76,6 @@ class DailyMaverickParser(ParserProxy):
             )
 
     class V1_1(V1):
-        VALID_UNTIL = datetime.date.today()
-
         _summary_selector = XPath("//div[contains(@class,'top-summary')] /p")
         _paragraph_selector = XPath(
             r"//div[contains(@class,'article-content')]"
