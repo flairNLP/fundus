@@ -16,6 +16,7 @@ from fundus.parser.utility import (
 class LandesspiegelParser(ParserProxy):
     class V1(BaseParser):
         VALID_UNTIL = datetime.date(2025, 9, 9)
+        _summary_selector = XPath("//div[contains(@class, 'entry-content')]/p[not(text()) and strong]")
         _paragraph_selector = XPath("//div[contains(@class, 'entry-content')]/p[text()]|//blockquote")
         _subheadline_selector = XPath("//div[contains(@class, 'entry-content')]/h2")
 
@@ -23,6 +24,7 @@ class LandesspiegelParser(ParserProxy):
         def body(self) -> Optional[ArticleBody]:
             return extract_article_body_with_selector(
                 self.precomputed.doc,
+                summary_selector=self._summary_selector,
                 paragraph_selector=self._paragraph_selector,
                 subheadline_selector=self._subheadline_selector,
             )
@@ -50,22 +52,9 @@ class LandesspiegelParser(ParserProxy):
                 author_selector=re.compile(r"(?i)\|\s*(Foto|Bild(quelle)?):\s*(?P<credits>.*)$"),
             )
 
-    class V2(BaseParser):
-        _summary_selector = XPath("//div[contains(@class, 'entry-content')]/p[not(text()) and strong]")
-        _paragraph_selector = XPath("//div[contains(@class, 'entry-content')]/p[text()]|//blockquote")
-        _subheadline_selector = XPath("//div[contains(@class, 'entry-content')]/h2")
-
+    class V1_1(V1):
         _date_selector = XPath("string(//header //time /@datetime)")
         _title_bloat_pattern = re.compile(r"\s*-\s*Landesspiegel$", flags=re.IGNORECASE)
-
-        @attribute
-        def body(self) -> Optional[ArticleBody]:
-            return extract_article_body_with_selector(
-                self.precomputed.doc,
-                summary_selector=self._summary_selector,
-                paragraph_selector=self._paragraph_selector,
-                subheadline_selector=self._subheadline_selector,
-            )
 
         @attribute
         def publishing_date(self) -> Optional[datetime.datetime]:
