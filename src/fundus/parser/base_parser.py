@@ -298,7 +298,7 @@ class BaseParser(ABC):
                         parsed_data[attribute_name] = func.__default__
                         logger.info(
                             f"Couldn't parse attribute {attribute_name!r} for "
-                            f"{self.precomputed.meta.get('og:url')!r}: {err}"
+                            f"{self.precomputed.meta.get('og:url')!r}: {err!r}"
                         )
                     elif error_handling == "catch":
                         parsed_data[attribute_name] = err
