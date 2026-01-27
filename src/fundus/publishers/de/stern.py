@@ -66,7 +66,7 @@ class SternParser(ParserProxy):
             )
 
     class V2(BaseParser):
-        _paragraph_selector = CSSSelector(".article__body > .text-element > p.is-initial")
+        _paragraph_selector = CSSSelector(".article__body > .text-element > p")
         _summary_selector = CSSSelector(".article__body > .intro")
         _subheadline_selector = CSSSelector(".article__body > .subheadline-element")
 
