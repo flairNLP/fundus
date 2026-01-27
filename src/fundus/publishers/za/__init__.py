@@ -2,6 +2,7 @@ from fundus.publishers.base_objects import Publisher, PublisherGroup
 from fundus.publishers.za.daily_maverick import DailyMaverickParser
 from fundus.publishers.za.dizindaba import DizindabaParser
 from fundus.publishers.za.eyethu_news import EyethuNewsParser
+from fundus.publishers.za.ilanga import IlangaParser
 from fundus.publishers.za.independent_online import IndependentOnlineParser
 from fundus.publishers.za.the_citizen import TheCitizenParser
 from fundus.publishers.za.times_live import TimesLiveParser
@@ -71,6 +72,19 @@ class ZA(metaclass=PublisherGroup):
         parser=IndependentOnlineParser,
         sources=[
             Sitemap("https://durbanlocal.co.za/sitemap/", sitemap_filter=inverse(regex_filter("/your-ethekwini/"))),
+        ],
+    )
+
+    Ilanga = Publisher(
+        name="Ilanga",
+        domain="https://www.ilanganews.co.za/",
+        parser=IlangaParser,
+        sources=[
+            Sitemap(
+                "https://ilanganews.co.za/wp-sitemap.xml",
+                sitemap_filter=inverse(regex_filter("-posts-post-")),
+                languages={"zu"},
+            ),
         ],
     )
 
