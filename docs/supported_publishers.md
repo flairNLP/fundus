@@ -90,9 +90,7 @@
       <td>
         <code>de</code>
       </td>
-      <td>
-        <code>topics</code>
-      </td>
+      <td>&#160;</td>
       <td>&#160;</td>
       <td>&#160;</td>
     </tr>
@@ -805,7 +803,9 @@
         <code>FreiePresse</code>
       </td>
       <td>
-        <div>FreiePresse</div>
+        <div>
+          <strike>FreiePresse</strike>
+        </div>
       </td>
       <td>
         <a href="https://www.freiepresse.de/">
@@ -958,6 +958,25 @@
     </tr>
     <tr>
       <td>
+        <code>KlasseGegenKlasse</code>
+      </td>
+      <td>
+        <div>Klasse Gegen Klasse</div>
+      </td>
+      <td>
+        <a href="https://www.klassegegenklasse.org/">
+          <span>www.klassegegenklasse.org</span>
+        </a>
+      </td>
+      <td>
+        <code>de</code>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
         <code>Krautreporter</code>
       </td>
       <td>
@@ -966,6 +985,25 @@
       <td>
         <a href="https://krautreporter.de/">
           <span>krautreporter.de</span>
+        </a>
+      </td>
+      <td>
+        <code>de</code>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
+        <code>LTO</code>
+      </td>
+      <td>
+        <div>Legal Tribune Online</div>
+      </td>
+      <td>
+        <a href="https://www.lto.de/">
+          <span>www.lto.de</span>
         </a>
       </td>
       <td>
@@ -1069,7 +1107,9 @@
         <code>de</code>
       </td>
       <td>&#160;</td>
-      <td>&#160;</td>
+      <td>
+        <code>authors</code>
+      </td>
       <td>&#160;</td>
     </tr>
     <tr>
@@ -1236,6 +1276,25 @@
       <td>
         <a href="https://www.sueddeutsche.de/">
           <span>www.sueddeutsche.de</span>
+        </a>
+      </td>
+      <td>
+        <code>de</code>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
+        <code>TOnline</code>
+      </td>
+      <td>
+        <div>T-Online</div>
+      </td>
+      <td>
+        <a href="https://www.t-online.de/">
+          <span>www.t-online.de</span>
         </a>
       </td>
       <td>
@@ -1768,6 +1827,44 @@
 </table>
 
 
+## ID-Publishers
+
+<table class="publishers id">
+  <thead>
+    <tr>
+      <th>Class&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</th>
+      <th>Name&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</th>
+      <th>URL&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</th>
+      <th>Languages</th>
+      <th>Missing&#160;Attributes</th>
+      <th>Deprecated&#160;Attributes</th>
+      <th>Additional&#160;Attributes&#160;&#160;&#160;&#160;</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <code>MediaIndonesia</code>
+      </td>
+      <td>
+        <div>Media Indonesia</div>
+      </td>
+      <td>
+        <a href="https://www.mediaindonesia.com/">
+          <span>www.mediaindonesia.com</span>
+        </a>
+      </td>
+      <td>
+        <code>id</code>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+  </tbody>
+</table>
+
+
 ## IL-Publishers
 
 <table class="publishers il">
@@ -1886,7 +1983,9 @@
         <code>Morgunbladid</code>
       </td>
       <td>
-        <div>Morgunbladid</div>
+        <div>
+          <strike>Morgunbladid</strike>
+        </div>
       </td>
       <td>
         <a href="https://www.mbl.is/">
@@ -2081,7 +2180,9 @@
         <code>NikkanGeadai</code>
       </td>
       <td>
-        <div>Nikkan Geadai</div>
+        <div>
+          <strike>Nikkan Geadai</strike>
+        </div>
       </td>
       <td>
         <a href="https://www.nikkan-gendai.com/">
@@ -2248,6 +2349,48 @@
         <code>ko</code>
       </td>
       <td>
+        <code>topics</code>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+  </tbody>
+</table>
+
+
+## LB-Publishers
+
+<table class="publishers lb">
+  <thead>
+    <tr>
+      <th>Class&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</th>
+      <th>Name&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</th>
+      <th>URL&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</th>
+      <th>Languages</th>
+      <th>Missing&#160;Attributes</th>
+      <th>Deprecated&#160;Attributes</th>
+      <th>Additional&#160;Attributes&#160;&#160;&#160;&#160;</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <code>LBCGroup</code>
+      </td>
+      <td>
+        <div>LBC</div>
+      </td>
+      <td>
+        <a href="https://www.lbcgroup.tv">
+          <span>www.lbcgroup.tv</span>
+        </a>
+      </td>
+      <td>
+        <code>ar</code>
+        <code>en</code>
+      </td>
+      <td>
+        <code>authors</code>
         <code>topics</code>
       </td>
       <td>&#160;</td>
@@ -2424,9 +2567,7 @@
       <td>
         <code>de</code>
       </td>
-      <td>
-        <code>topics</code>
-      </td>
+      <td>&#160;</td>
       <td>&#160;</td>
       <td>&#160;</td>
     </tr>
@@ -2736,7 +2877,9 @@
       <td>
         <code>topics</code>
       </td>
-      <td>&#160;</td>
+      <td>
+        <code>authors</code>
+      </td>
       <td>&#160;</td>
     </tr>
   </tbody>
@@ -2836,6 +2979,25 @@
     </tr>
   </thead>
   <tbody>
+    <tr>
+      <td>
+        <code>Aftonbladet</code>
+      </td>
+      <td>
+        <div>Aftonbladet</div>
+      </td>
+      <td>
+        <a href="https://www.aftonbladet.se/">
+          <span>www.aftonbladet.se</span>
+        </a>
+      </td>
+      <td>
+        <code>sv</code>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
     <tr>
       <td>
         <code>Expressen</code>
@@ -3031,6 +3193,46 @@
       <td>
         <code>topics</code>
       </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+  </tbody>
+</table>
+
+
+## UA-Publishers
+
+<table class="publishers ua">
+  <thead>
+    <tr>
+      <th>Class&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</th>
+      <th>Name&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</th>
+      <th>URL&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</th>
+      <th>Languages</th>
+      <th>Missing&#160;Attributes</th>
+      <th>Deprecated&#160;Attributes</th>
+      <th>Additional&#160;Attributes&#160;&#160;&#160;&#160;</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <code>Pravda</code>
+      </td>
+      <td>
+        <div>Ukrainska Pravda</div>
+      </td>
+      <td>
+        <a href="https://www.pravda.com.ua">
+          <span>www.pravda.com.ua</span>
+        </a>
+      </td>
+      <td>
+        <code>en</code>
+        <code>ru</code>
+        <code>uk</code>
+      </td>
+      <td>&#160;</td>
       <td>&#160;</td>
       <td>&#160;</td>
     </tr>
@@ -3741,6 +3943,44 @@
 </table>
 
 
+## VN-Publishers
+
+<table class="publishers vn">
+  <thead>
+    <tr>
+      <th>Class&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</th>
+      <th>Name&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</th>
+      <th>URL&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</th>
+      <th>Languages</th>
+      <th>Missing&#160;Attributes</th>
+      <th>Deprecated&#160;Attributes</th>
+      <th>Additional&#160;Attributes&#160;&#160;&#160;&#160;</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <code>VnExpress</code>
+      </td>
+      <td>
+        <div>VnExpress</div>
+      </td>
+      <td>
+        <a href="https://vnexpress.net/">
+          <span>vnexpress.net</span>
+        </a>
+      </td>
+      <td>
+        <code>vi</code>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+  </tbody>
+</table>
+
+
 ## ZA-Publishers
 
 <table class="publishers za">
@@ -3810,6 +4050,25 @@
       </td>
       <td>
         <code>en</code>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
+        <code>EyethuNews</code>
+      </td>
+      <td>
+        <div>Eyethu News</div>
+      </td>
+      <td>
+        <a href="https://www.eyethunews.co.za/">
+          <span>www.eyethunews.co.za</span>
+        </a>
+      </td>
+      <td>
+        <code>zu</code>
       </td>
       <td>&#160;</td>
       <td>&#160;</td>

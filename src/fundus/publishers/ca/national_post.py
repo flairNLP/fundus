@@ -74,8 +74,6 @@ class NationalPostParser(ParserProxy):
             )
 
     class V1_1(V1):
-        VALID_UNTIL = datetime.date.today()
-
         _paragraph_selector = XPath(
             "//div[@class='story-v2-content-element-inline']/"
             "p[text() and not(@data-async) and not(text()='National Post')]"

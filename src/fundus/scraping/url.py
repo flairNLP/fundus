@@ -4,8 +4,18 @@ import itertools
 import lzma
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
-from functools import cached_property
-from typing import Callable, ClassVar, Dict, Iterable, Iterator, List, Optional, Set
+from functools import cached_property, partial
+from typing import (
+    Callable,
+    ClassVar,
+    Dict,
+    Iterable,
+    Iterator,
+    List,
+    Optional,
+    Pattern,
+    Set,
+)
 from urllib.parse import unquote
 
 import feedparser
@@ -159,6 +169,7 @@ class Sitemap(URLSource):
     recursive: bool = True
     reverse: bool = False
     sitemap_filter: URLFilter = lambda url: not bool(url)
+    sort_predicate: Optional[Pattern[str]] = None
 
     _decompressor: ClassVar[_ArchiveDecompressor] = _ArchiveDecompressor()
     _sitemap_selector: ClassVar[XPath] = XPath("//*[local-name()='sitemap']/*[local-name()='loc']")
@@ -193,12 +204,30 @@ class Sitemap(URLSource):
                 logger.warning(f"Warning! Empty sitemap at {sitemap_url!r}")
                 return
             tree = lxml.etree.fromstring(content, parser=self._parser)
+            if tree is None:
+                # in case we somehow end up with non xml content
+                logger.warning(f"Warning! Couldn't parse sitemap {sitemap_url!r}")  # type: ignore[unreachable]
+                return
             urls = [node.text for node in self._url_selector(tree)]
             if urls:
                 for new_url in reversed(urls) if self.reverse else urls:
                     yield clean_url(new_url)
             elif self.recursive:
                 sitemap_locs = [node.text for node in self._sitemap_selector(tree)]
+
+                if self.sort_predicate is not None:
+
+                    def _extract_predicate(text: str, pattern: Pattern[str]) -> str:
+                        if match := pattern.search(text):
+                            return match.group()
+                        raise NotImplementedError("<sort_predicate> must match in all sitemap URLs")
+
+                    sitemap_locs = sorted(
+                        sitemap_locs,
+                        key=partial(_extract_predicate, pattern=self.sort_predicate),
+                        reverse=True,
+                    )
+
                 filtered_locs = list(filter(inverse(self.sitemap_filter), sitemap_locs))
                 for loc in reversed(filtered_locs) if self.reverse else filtered_locs:
                     yield from yield_recursive(loc)

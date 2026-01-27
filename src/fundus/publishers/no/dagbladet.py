@@ -9,6 +9,7 @@ from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute
 from fundus.parser.data import Image
 from fundus.parser.utility import (
     extract_article_body_with_selector,
+    generic_author_parsing,
     generic_date_parsing,
     generic_nodes_to_text,
     generic_topic_parsing,
@@ -18,6 +19,7 @@ from fundus.parser.utility import (
 
 class DagbladetParser(ParserProxy):
     class V1(BaseParser):
+        VALID_UNTIL = datetime.date(2025, 9, 1)
         _summary_selector = XPath(
             "//main/article/div[@class='article-top expand']//header/h3 | "
             "//main/article/div[contains(@class, 'articleHeader')]/h2 | "
@@ -71,3 +73,8 @@ class DagbladetParser(ParserProxy):
                     "./ancestor::*[self::figure or (self::div and contains(@class,'articleHeader'))]//figcaption"
                 ),
             )
+
+    class V1_1(V1):
+        @attribute
+        def authors(self) -> List[str]:
+            return generic_author_parsing(self.precomputed.meta.get("article:author"))

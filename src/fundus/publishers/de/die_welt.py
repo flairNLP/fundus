@@ -65,8 +65,6 @@ class DieWeltParser(ParserProxy):
             )
 
     class V1_1(V1):
-        VALID_UNTIL = datetime.date.today()
-
         _summary_selector = CSSSelector("div.c-article-page__intro")
         _subheadline_selector = CSSSelector(".c-rich-text-renderer--article > h3")
         _paragraph_selector = XPath("//div[contains(@class, 'c-rich-text-renderer--article')] /p[text()]")

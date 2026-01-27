@@ -56,7 +56,6 @@ class BoersenZeitungParser(ParserProxy):
 
         @attribute
         def free_access(self) -> bool:
-            # print(self._paywall_selector(self.precomputed.doc).text_content().strip())
             return not [node.text_content().strip() for node in self._paywall_selector(self.precomputed.doc)]
 
         @attribute
@@ -81,8 +80,6 @@ class BoersenZeitungParser(ParserProxy):
             return generic_date_parsing(self.precomputed.meta.get("article:published_time"))
 
     class V1_2(V1_1):
-        VALID_UNTIL = datetime.date.today()
-
         _summary_selector = XPath("//div[@class='pxp-html excerpt']")
 
         _topic_selector = XPath("//div[contains(@class,'taglist')]//button")

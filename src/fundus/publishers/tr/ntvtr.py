@@ -58,8 +58,6 @@ class NTVTRParser(ParserProxy):
             )
 
     class V2(BaseParser):
-        VALID_UNTIL = datetime.date.today()
-
         _paragraph_selector = XPath("//div[contains(@class, 'content')]/p[text()]")
         _summary_selector = XPath("//div[contains(@class, 'info-text-card')]//h2")
         _subheadline_selector = XPath(

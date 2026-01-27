@@ -770,6 +770,6 @@ Please follow this general guideline when making such changes.
 - If the change introduces new attributes or substantially modifies several existing ones, consider moving to a new major version (e.g., from `V1` to `V2`).  
 
 > [!NOTE]
-> You will now need to set the `VALID_UNTIL` attribute.
-> The new version should define `VALID_UNTIL = datetime.date.today()`, while the previous version must use a `datetime.date` pointing to the day before the layout change.
+> You will now need to set the `VALID_UNTIL` attribute for the previous version to a `datetime.date` pointing to the day before the layout change.
 > You can estimate this date using the logs or the Wayback Machine.
+> The Attribute is not inherited from previous versions. Every subclass of `BaseParser` by default has `VALID_UNTIL` set to `date.max`.

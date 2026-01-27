@@ -57,9 +57,7 @@ class ZwanzigMinutenParser(ParserProxy):
             )
 
     class V1_1(V1):
-        VALID_UNTIL = datetime.date.today()
-
-        _summary_selector = XPath("//div[@type='lead']/p | //div[@type='infobox']//li")
+        _summary_selector = XPath("//div[@type='lead']/p | //div[@type='infobox'][1]//li")
         _paragraph_selector = XPath("//section//p[@type='textBlockArray']")
         _subheadline_selector = XPath("//section//h2[@data-testid='Crosshead']")
 

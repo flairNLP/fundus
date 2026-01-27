@@ -63,8 +63,6 @@ class ZDFParser(ParserProxy):
             )
 
     class V1_1(V1):
-        VALID_UNTIL = datetime.date.today()
-
         _paragraph_selector = XPath(
             "//main/div[@data-testid='text-module']/div[@class='c10o8fzf']/p[@class='r1nj4qn5 rvqyqzi']|"
             "//figure/blockquote"
