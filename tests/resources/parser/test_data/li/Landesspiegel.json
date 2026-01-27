@@ -42,5 +42,71 @@
     ],
     "publishing_date": "2025-06-30 00:00:00",
     "title": "Rotary Club Liechtenstein-Eschnerberg: Präsidiumswechsel und besondere Ehrung"
+  },
+  "V2": {
+    "authors": [
+      "Gregor Meier"
+    ],
+    "body": {
+      "summary": [],
+      "sections": [
+        {
+          "headline": [],
+          "paragraphs": [
+            "Die EU und Indien haben in Neu-Delhi ein umfassendes Freihandelsabkommen abgeschlossen. Beide Seiten beenden damit jahrelange Verhandlungen. Das Abkommen gilt als das bislang grösste seiner Art für beide Partner. Es soll Handel und politische Zusammenarbeit in einer angespannten Weltlage stärken.",
+            "Brüssel und Neu-Delhi verbinden bereits enge Wirtschaftsbeziehungen. Jährlich tauschen beide Seiten Waren und Dienstleistungen im Wert von über 180 Milliarden Euro aus. Rund 800.000 Arbeitsplätze in der EU hängen davon ab. Das neue Abkommen soll diesen Austausch deutlich ausweiten. Bis 2032 könnten sich die EU-Exporte nach Indien verdoppeln.",
+            "Kern des Vertrags bildet der Abbau von Zöllen. Indien senkt oder streicht Abgaben auf 96,6 Prozent der EU-Warenausfuhren. Europäische Unternehmen sparen dadurch jedes Jahr rund vier Milliarden Euro. Besonders stark profitieren Industrie und Lebensmittelwirtschaft.",
+            "Indien öffnet seinen Markt weiter als je zuvor. Kein anderer Handelspartner erhält vergleichbare Zugeständnisse. Zölle auf Autos sinken schrittweise von 110 auf 10 Prozent. Autoteile werden nach einer Übergangsfrist ganz zollfrei. Auch Maschinen, Chemikalien und Arzneimittel gelangen künftig günstiger ins Land.",
+            "Kleine und mittlere Betriebe sollen leichter profitieren. Beide Seiten richten dafür Anlaufstellen ein. Sie liefern Informationen und helfen bei konkreten Fragen zum Abkommen. Weniger Bürokratie und klare Regeln sollen den Markteintritt erleichtern.",
+            "Auch Landwirtschaft und Lebensmittel stehen im Fokus. Hohe indische Zölle von durchschnittlich über 36 Prozent fallen weg oder sinken deutlich. Wein verteuert sich künftig weniger stark. Olivenöl wird nach fünf Jahren zollfrei. Verarbeitete Produkte wie Brot oder Süsswaren werden ebenfalls günstiger. Empfindliche EU-Sektoren bleiben geschützt. Rindfleisch, Geflügel, Reis und Zucker nimmt das Abkommen aus. Alle Importe müssen weiterhin EU-Standards für Gesundheit und Lebensmittelsicherheit erfüllen.",
+            "Parallel verhandeln beide Seiten über den Schutz geografischer Angaben. Ziel bleibt, europäische Herkunftsprodukte besser vor Nachahmungen zu schützen. Gespräche dazu laufen weiter.",
+            "Dienstleister erhalten ebenfalls besseren Zugang. Finanzdienste und Seeverkehr profitieren von neuen Regeln. Indien geht hier weiter als in früheren Abkommen. Zudem stärkt der Vertrag den Schutz geistigen Eigentums. Marken, Patente und Geschäftsgeheimnisse erhalten klarere Regeln und bessere Durchsetzung.",
+            "Ein eigenes Kapitel widmet sich der Nachhaltigkeit. Das Abkommen stärkt Umwelt- und Klimaschutz, Arbeitnehmerrechte und die Rolle der Frau. Dialog und Zusammenarbeit sollen diese Ziele absichern. Ergänzend starten EU und Indien 2026 eine gemeinsame Klimaplattform. Die EU stellt dafür bis zu 500 Millionen Euro an Unterstützung in Aussicht.",
+            "Nun folgen die formellen Schritte. Die EU veröffentlicht die Vertragstexte und prüft sie rechtlich. Rat und Parlament müssen zustimmen. Erst nach der Ratifizierung durch Indien tritt das Abkommen in Kraft.",
+            "Begonnen hatten die Gespräche bereits 2007. 2013 legten beide Seiten sie auf Eis. Seit 2022 verhandelten sie erneut. Mit dem Abschluss endet ein langer Anlauf – und beginnt eine neue Phase der Partnerschaft."
+          ]
+        }
+      ]
+    },
+    "images": [
+      {
+        "versions": [
+          {
+            "url": "https://landesspiegel.li/wp-content/uploads/2026/01/P-068711_00-01_02-HIGH-983149-300x217.jpg",
+            "query_width": null,
+            "size": {
+              "width": 300,
+              "height": 217
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://landesspiegel.li/wp-content/uploads/2026/01/P-068711_00-01_02-HIGH-983149-768x555.jpg",
+            "query_width": null,
+            "size": {
+              "width": 768,
+              "height": 555
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://landesspiegel.li/wp-content/uploads/2026/01/P-068711_00-01_02-HIGH-983149.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1199,
+              "height": 867
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": true,
+        "description": "EU-Aussenbeauftragte Kaja Kallas und Indiens Aussenminister Subrahmanyam Jaishankar",
+        "caption": null,
+        "authors": [],
+        "position": 194
+      }
+    ],
+    "publishing_date": "2026-01-27 12:13:17+01:00",
+    "title": "EU und Indien besiegeln grösstes Freihandelsabkommen ihrer Geschichte"
   }
 }

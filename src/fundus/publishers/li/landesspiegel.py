@@ -15,7 +15,7 @@ from fundus.parser.utility import (
 
 class LandesspiegelParser(ParserProxy):
     class V1(BaseParser):
-        _summary_selector = XPath("//div[contains(@class, 'entry-content')]/p[not(text()) and strong]")
+        VALID_UNTIL = datetime.date(2025, 9, 9)
         _paragraph_selector = XPath("//div[contains(@class, 'entry-content')]/p[text()]|//blockquote")
         _subheadline_selector = XPath("//div[contains(@class, 'entry-content')]/h2")
 
@@ -23,7 +23,6 @@ class LandesspiegelParser(ParserProxy):
         def body(self) -> Optional[ArticleBody]:
             return extract_article_body_with_selector(
                 self.precomputed.doc,
-                summary_selector=self._summary_selector,
                 paragraph_selector=self._paragraph_selector,
                 subheadline_selector=self._subheadline_selector,
             )
@@ -48,5 +47,49 @@ class LandesspiegelParser(ParserProxy):
                 upper_boundary_selector=XPath("//h1"),
                 image_selector=XPath("//div[@class='post-image']//img"),
                 caption_selector=XPath("./ancestor::div[@class='post-image']//div[contains(@class,'caption')]"),
+                author_selector=re.compile(r"(?i)\|\s*(Foto|Bild(quelle)?):\s*(?P<credits>.*)$"),
+            )
+
+    class V2(BaseParser):
+        _summary_selector = XPath("//div[contains(@class, 'entry-content')]/p[not(text()) and strong]")
+        _paragraph_selector = XPath("//div[contains(@class, 'entry-content')]/p[text()]|//blockquote")
+        _subheadline_selector = XPath("//div[contains(@class, 'entry-content')]/h2")
+
+        _date_selector = XPath("string(//header //time /@datetime)")
+        _title_bloat_pattern = re.compile("\s*-\s*Landesspiegel$", flags=re.IGNORECASE)
+
+        @attribute
+        def body(self) -> Optional[ArticleBody]:
+            return extract_article_body_with_selector(
+                self.precomputed.doc,
+                summary_selector=self._summary_selector,
+                paragraph_selector=self._paragraph_selector,
+                subheadline_selector=self._subheadline_selector,
+            )
+
+        @attribute
+        def publishing_date(self) -> Optional[datetime.datetime]:
+            if pub_date := self._date_selector(self.precomputed.doc):
+                return generic_date_parsing(pub_date)
+            return None
+
+        @attribute
+        def title(self) -> Optional[str]:
+            if title_string := self.precomputed.meta.get("og:title"):
+                return re.sub(self._title_bloat_pattern, "", title_string)
+            return None
+
+        @attribute
+        def authors(self) -> List[str]:
+            return generic_author_parsing(self.precomputed.meta.get("twitter:data1"))
+
+        @attribute
+        def images(self) -> List[Image]:
+            return image_extraction(
+                doc=self.precomputed.doc,
+                paragraph_selector=self._paragraph_selector,
+                upper_boundary_selector=XPath("//h1"),
+                image_selector=XPath("//div[@class='post-thumbnail']//img"),
+                caption_selector=XPath("./ancestor::div[@class='post-thumbnail']//div[contains(@class,'caption')]"),
                 author_selector=re.compile(r"(?i)\|\s*(Foto|Bild(quelle)?):\s*(?P<credits>.*)$"),
             )
