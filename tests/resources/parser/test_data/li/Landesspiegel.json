@@ -101,8 +101,10 @@
         ],
         "is_cover": true,
         "description": "EU-Aussenbeauftragte Kaja Kallas und Indiens Aussenminister Subrahmanyam Jaishankar",
-        "caption": null,
-        "authors": [],
+        "caption": "EU-Aussenbeauftragte Kaja Kallas und Indiens Aussenminister Subrahmanyam Jaishankar",
+        "authors": [
+          "EU-Kommission"
+        ],
         "position": 194
       }
     ],

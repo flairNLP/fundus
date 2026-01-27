@@ -79,6 +79,6 @@ class LandesspiegelParser(ParserProxy):
                 paragraph_selector=self._paragraph_selector,
                 upper_boundary_selector=XPath("//h1"),
                 image_selector=XPath("//div[@class='post-thumbnail']//img"),
-                caption_selector=XPath("./ancestor::div[@class='post-thumbnail']//div[contains(@class,'caption')]"),
+                caption_selector=XPath("./ancestor::div[@class='post-thumbnail']//p[contains(@class,'caption')]"),
                 author_selector=re.compile(r"(?i)\|\s*(Foto|Bild(quelle)?):\s*(?P<credits>.*)$"),
             )
