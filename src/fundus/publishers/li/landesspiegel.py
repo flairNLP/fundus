@@ -56,7 +56,7 @@ class LandesspiegelParser(ParserProxy):
         _subheadline_selector = XPath("//div[contains(@class, 'entry-content')]/h2")
 
         _date_selector = XPath("string(//header //time /@datetime)")
-        _title_bloat_pattern = re.compile("\s*-\s*Landesspiegel$", flags=re.IGNORECASE)
+        _title_bloat_pattern = re.compile(r"\s*-\s*Landesspiegel$", flags=re.IGNORECASE)
 
         @attribute
         def body(self) -> Optional[ArticleBody]:
