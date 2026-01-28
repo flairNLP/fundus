@@ -2460,7 +2460,9 @@
         <code>LesothoTimes</code>
       </td>
       <td>
-        <div>Lesotho Times</div>
+        <div>
+          <strike>Lesotho Times</strike>
+        </div>
       </td>
       <td>
         <a href="https://lestimes.com/">
