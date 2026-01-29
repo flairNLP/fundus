@@ -980,8 +980,6 @@ def image_extraction(
     else:
         domain = None
 
-    test = [(dom.get_index(node), node) for node in image_selector(doc)]
-
     image_nodes = [
         IndexedImageNode(position=position, content=node, is_cover=position < (bounds.first_paragraph or 0))
         for node in image_selector(doc)
