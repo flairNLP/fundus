@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "fundus"
-version = "0.5.4"
+version = "0.5.5"
 authors = [
     { name = "Max Dallabetta", email = "max.dallabetta@googlemail.com" },
 ]
