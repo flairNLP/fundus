@@ -11,7 +11,7 @@ from fundus.parser.utility import (
     generic_date_parsing,
     generic_nodes_to_text,
     image_extraction,
-    transform_breaks_to_paragraphs,
+    transform_breaks_to_tag,
 )
 
 
@@ -45,9 +45,9 @@ class MBNParser(ParserProxy):
                             parent.remove(ad)
                 if element.xpath("./self::div[@class='article_body']"):
                     # In case this uses the economy section layout, we need to transform <br> tags to paragraphs
-                    doc = transform_breaks_to_paragraphs(element)
+                    doc = transform_breaks_to_tag(element)
                 else:
-                    doc = transform_breaks_to_paragraphs(element, __class__="summary_line")
+                    doc = transform_breaks_to_tag(element, __class__="summary_line")
             return extract_article_body_with_selector(
                 doc=doc if doc is not None else self.precomputed.doc,
                 paragraph_selector=self._paragraph_selector,

@@ -13,7 +13,7 @@ from fundus.parser.utility import (
     generic_date_parsing,
     generic_topic_parsing,
     image_extraction,
-    transform_breaks_to_paragraphs,
+    transform_breaks_to_tag,
 )
 
 
@@ -64,7 +64,7 @@ class IlGiornaleParser(ParserProxy):
             doc = document_fromstring(html_string)
 
             # Transform br tags to paragraphs for better structure
-            doc = transform_breaks_to_paragraphs(doc)
+            doc = transform_breaks_to_tag(doc)
 
             # Extract article body using utility function
             return extract_article_body_with_selector(

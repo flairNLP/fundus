@@ -312,17 +312,18 @@ def get_meta_content(root: lxml.html.HtmlElement) -> Dict[str, str]:
     return metadata
 
 
-def transform_breaks_to_paragraphs(
-    element: lxml.html.HtmlElement, replace: bool = False, **attribs: str
+def transform_breaks_to_tag(
+    element: lxml.html.HtmlElement, tag: str = "p", replace: bool = False, **attribs: str
 ) -> lxml.html.HtmlElement:
-    """Splits the content of <element> on <br> tags into paragraphs and transform them in <p> elements.
+    """Splits the content of <element> on <br> tags into paragraphs and wraps them in <tag> elements.
 
-    If <element> is replaced, the previous attributes are attached to the new paragraphs.
+    If <element> is replaced, the previous attributes are attached to the new elements.
     If <element> is not replaced, the wrapped paragraphs are attached to the cleared element.
 
     Args:
-        element: The element on which to perform the transformation
-        replace: If True, replace <element> with wrapped paragraphs, else adds them to <element>
+        element: The element on which to perform the transformation.
+        tag: The tag to wrap the paragraphs in.
+        replace: If True, replace <element> with wrapped paragraphs, else adds them to <element>.
         **attribs: The attributes of the wrapped paragraphs as keyword arguments. I.e. the
             default {"class": "br-wrap"} wil produce the following elements: <p class='br-wrap'>.
             To use python keywords wrap them dunder scores. __class__ for class.
@@ -354,7 +355,7 @@ def transform_breaks_to_paragraphs(
     if not (paragraphs := get_paragraphs()):
         return element
 
-    wrapped_paragraphs = [f"<p{' ' + generate_attrs()}>{paragraph}</p>" for paragraph in paragraphs]
+    wrapped_paragraphs = [f"<{tag}{' ' + generate_attrs()}>{paragraph}</{tag}>" for paragraph in paragraphs]
 
     if replace:
         if (parent := element.getparent()) is None:
@@ -372,9 +373,8 @@ def transform_breaks_to_paragraphs(
         clear_element()
 
         # add paragraphs to cleared element
-        for paragraph in paragraphs:
-            wrapped = f"<p{' ' + generate_attrs()}>{paragraph}</p>"
-            element.append(lxml.html.fromstring(wrapped))
+        for paragraph in wrapped_paragraphs:
+            element.append(lxml.html.fromstring(paragraph))
 
     return element
 
