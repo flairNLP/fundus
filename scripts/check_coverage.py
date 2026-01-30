@@ -199,7 +199,7 @@ def determine_timestamp(publishers: List[str], runs: List[WorkflowRun], use_cach
 
     current = set(publishers)
 
-    with tqdm(total=len(runs)) as pbar:
+    with tqdm(total=len(runs), leave=False) as pbar:
         for run in runs:
             run_time = parse_run_time(run)
             pbar.set_description(f"Scanning run {run.id} from {run_time.date()}")
