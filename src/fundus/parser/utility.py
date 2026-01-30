@@ -314,7 +314,7 @@ def get_meta_content(root: lxml.html.HtmlElement) -> Dict[str, str]:
 
 def transform_breaks_to_tag(
     element: lxml.html.HtmlElement, tag: str = "p", replace: bool = False, **attribs: str
-) -> lxml.html.HtmlElement:
+) -> None:
     """Splits the content of <element> on <br> tags into paragraphs and wraps them in <tag> elements.
 
     If <element> is replaced, the previous attributes are attached to the new elements.
@@ -327,9 +327,6 @@ def transform_breaks_to_tag(
         **attribs: The attributes of the wrapped paragraphs as keyword arguments. I.e. the
             default {"class": "br-wrap"} wil produce the following elements: <p class='br-wrap'>.
             To use python keywords wrap them dunder scores. __class__ for class.
-
-    Returns:
-        The transformed element
     """
 
     if attribs:
@@ -353,7 +350,7 @@ def transform_breaks_to_tag(
 
     # split content on <br> tags
     if not (paragraphs := get_paragraphs()):
-        return element
+        return None
 
     wrapped_paragraphs = [f"<{tag}{' ' + generate_attrs()}>{paragraph}</{tag}>" for paragraph in paragraphs]
 
@@ -376,7 +373,7 @@ def transform_breaks_to_tag(
         for paragraph in wrapped_paragraphs:
             element.append(lxml.html.fromstring(paragraph))
 
-    return element
+    return None
 
 
 def strip_nodes_to_text(text_nodes: List[lxml.html.HtmlElement], join_on: str = "\n\n") -> Optional[str]:

@@ -45,9 +45,9 @@ class MBNParser(ParserProxy):
                             parent.remove(ad)
                 if element.xpath("./self::div[@class='article_body']"):
                     # In case this uses the economy section layout, we need to transform <br> tags to paragraphs
-                    doc = transform_breaks_to_tag(element)
+                    transform_breaks_to_tag(element)
                 else:
-                    doc = transform_breaks_to_tag(element, __class__="summary_line")
+                    transform_breaks_to_tag(element, __class__="summary_line")
             return extract_article_body_with_selector(
                 doc=doc if doc is not None else self.precomputed.doc,
                 paragraph_selector=self._paragraph_selector,

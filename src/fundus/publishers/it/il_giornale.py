@@ -6,7 +6,14 @@ from lxml.cssselect import CSSSelector
 from lxml.etree import XPath, tostring
 from lxml.html import document_fromstring
 
-from fundus.parser import ArticleBody, BaseParser, Image, ParserProxy, attribute
+from fundus.parser import (
+    ArticleBody,
+    BaseParser,
+    Image,
+    ParserProxy,
+    attribute,
+    function,
+)
 from fundus.parser.utility import (
     extract_article_body_with_selector,
     generic_author_parsing,
@@ -28,6 +35,28 @@ class IlGiornaleParser(ParserProxy):
         _image_selector = XPath(
             "//div[contains(@class, 'article__media')]//img | //section[contains(@class, 'article__content')]//img"
         )
+
+        @function(priority=1)
+        def _preprocess(self) -> None:
+            # Clean up HTML by removing ads and handling em/strong/cite tags
+            html_string = tostring(self.precomputed.doc).decode("utf-8")
+            html_string = re.sub(r"</?(em|strong|cite)>", "", html_string)
+            html_string = re.sub(r"<!-- EVOLUTION ADV -->", "", html_string)
+            doc = document_fromstring(html_string)
+
+            # Transform br tags to paragraphs for better structure
+            transform_breaks_to_tag(doc)
+
+            self.precomputed.doc = doc
+
+        @attribute
+        def body(self) -> Optional[ArticleBody]:
+            return extract_article_body_with_selector(
+                self.precomputed.doc,
+                paragraph_selector=self._paragraph_selector,
+                subheadline_selector=self._subheadline_selector,
+                summary_selector=self._summary_selector,
+            )
 
         @attribute
         def title(self) -> Optional[str]:
@@ -54,25 +83,6 @@ class IlGiornaleParser(ParserProxy):
                 # Fallback to meta tags
                 date_str = self.precomputed.meta.get("article:published_time")
             return generic_date_parsing(date_str)
-
-        @attribute
-        def body(self) -> Optional[ArticleBody]:
-            # Clean up HTML by removing ads and handling em/strong/cite tags
-            html_string = tostring(self.precomputed.doc).decode("utf-8")
-            html_string = re.sub(r"</?(em|strong|cite)>", "", html_string)
-            html_string = re.sub(r"<!-- EVOLUTION ADV -->", "", html_string)
-            doc = document_fromstring(html_string)
-
-            # Transform br tags to paragraphs for better structure
-            doc = transform_breaks_to_tag(doc)
-
-            # Extract article body using utility function
-            return extract_article_body_with_selector(
-                doc,
-                paragraph_selector=self._paragraph_selector,
-                subheadline_selector=self._subheadline_selector,
-                summary_selector=self._summary_selector,
-            )
 
         @attribute
         def topics(self) -> List[str]:
