@@ -20,6 +20,7 @@ from fundus.parser.utility import (
     generic_topic_parsing,
     image_extraction,
     parse_json,
+    transform_breaks_to_paragraphs,
 )
 
 
@@ -68,7 +69,7 @@ class HankookIlboParser(ParserProxy):
 
     class V2(BaseParser):
         _paragraph_selector = XPath("//div[@class='article-view']/p[@class='editor-p']")
-        _summary_selector = XPath("//div[@class='article-view']/h2")
+        _summary_selector = XPath("//div[@class='article-view']/h2/p")
         _subheadline_selector = XPath("//div[@class='article-view']/h3")
 
         _author_selector = XPath("//div[@class='article-view']//div[@class='writer']/span[@class='name']/strong")
@@ -97,7 +98,9 @@ class HankookIlboParser(ParserProxy):
                 summary_html = (
                     f"<h2>" f"{self.precomputed.ld.xpath_search('//page-data//subTitle', scalar=True)}" f"</h2>"
                 )
-                content_node.insert(0, lxml.html.fromstring(summary_html))
+                summary__node = lxml.html.fromstring(summary_html)
+                content_node.insert(0, summary__node)
+                transform_breaks_to_paragraphs(summary__node)
 
                 # insert content node
                 self.precomputed.doc.body.insert(0, content_node)
@@ -118,7 +121,7 @@ class HankookIlboParser(ParserProxy):
         @attribute
         def publishing_date(self) -> Optional[datetime.datetime]:
             return generic_date_parsing(
-                self.precomputed.ld.xpath_search("//page-data//deployDt", scalar=True),
+                self.precomputed.ld.xpath_search("//page-data//detail/deployDt", scalar=True),
                 tz=datetime.timezone(datetime.timedelta(hours=9)),
             )
 
