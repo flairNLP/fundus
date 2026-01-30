@@ -7,7 +7,7 @@ import re
 from collections import defaultdict
 from copy import copy
 from dataclasses import dataclass, field
-from datetime import datetime
+from datetime import datetime, timezone
 from functools import total_ordering
 from typing import (
     Callable,
@@ -585,8 +585,17 @@ class CustomParserInfo(parser.parserinfo):
     # type ignore due to types-python-dateutil==2.9.0.20251008, see https://github.com/flairNLP/fundus/issues/806
 
 
-def generic_date_parsing(date_str: Optional[str]) -> Optional[datetime]:
-    return parser.parse(date_str, tzinfos=_tz_infos, parserinfo=CustomParserInfo(), fuzzy=True) if date_str else None
+def generic_date_parsing(date_str: Optional[str], tz: Optional[timezone] = None) -> Optional[datetime]:
+    if date_str is None:
+        return None
+
+    if not (parsed_date := parser.parse(date_str, tzinfos=_tz_infos, parserinfo=CustomParserInfo(), fuzzy=True)):
+        return None
+
+    if tz is not None and parsed_date.tzinfo is None:
+        parsed_date.replace(tzinfo=tz)
+
+    return parsed_date
 
 
 _title_selector = CSSSelector("title")
