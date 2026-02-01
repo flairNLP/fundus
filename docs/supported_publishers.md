@@ -641,6 +641,25 @@
     </tr>
     <tr>
       <td>
+        <code>DerFreitag</code>
+      </td>
+      <td>
+        <div>der Freitag</div>
+      </td>
+      <td>
+        <a href="https://www.freitag.de/">
+          <span>www.freitag.de</span>
+        </a>
+      </td>
+      <td>
+        <code>de</code>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
         <code>DW</code>
       </td>
       <td>
@@ -1114,6 +1133,25 @@
     </tr>
     <tr>
       <td>
+        <code>NetzpolitikOrg</code>
+      </td>
+      <td>
+        <div>netzpolitik.org</div>
+      </td>
+      <td>
+        <a href="https://netzpolitik.org/">
+          <span>netzpolitik.org</span>
+        </a>
+      </td>
+      <td>
+        <code>de</code>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
         <code>NDR</code>
       </td>
       <td>
@@ -1437,44 +1475,6 @@
       <td>&#160;</td>
       <td>&#160;</td>
     </tr>
-    <tr>
-      <td>
-        <code>DerFreitag</code>
-      </td>
-      <td>
-        <div>der Freitag</div>
-      </td>
-      <td>
-        <a href="https://www.freitag.de/">
-          <span>www.freitag.de</span>
-        </a>
-      </td>
-      <td>
-        <code>de</code>
-      </td>
-      <td>&#160;</td>
-      <td>&#160;</td>
-      <td>&#160;</td>
-    </tr>
-    <tr>
-      <td>
-        <code>NetzpolitikOrg</code>
-      </td>
-      <td>
-        <div>netzpolitik.org</div>
-      </td>
-      <td>
-        <a href="https://netzpolitik.org/">
-          <span>netzpolitik.org</span>
-        </a>
-      </td>
-      <td>
-        <code>de</code>
-      </td>
-      <td>&#160;</td>
-      <td>&#160;</td>
-      <td>&#160;</td>
-    </tr>
   </tbody>
 </table>
 
@@ -1593,6 +1593,25 @@
     </tr>
     <tr>
       <td>
+        <code>ElDiario</code>
+      </td>
+      <td>
+        <div>elDiario.es</div>
+      </td>
+      <td>
+        <a href="https://www.eldiario.es/">
+          <span>www.eldiario.es</span>
+        </a>
+      </td>
+      <td>
+        <code>es</code>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
         <code>LaVanguardia</code>
       </td>
       <td>
@@ -1660,25 +1679,6 @@
       <td>
         <a href="https://www.publico.es/">
           <span>www.publico.es</span>
-        </a>
-      </td>
-      <td>
-        <code>es</code>
-      </td>
-      <td>&#160;</td>
-      <td>&#160;</td>
-      <td>&#160;</td>
-    </tr>
-    <tr>
-      <td>
-        <code>ElDiario</code>
-      </td>
-      <td>
-        <div>elDiario.es</div>
-      </td>
-      <td>
-        <a href="https://www.eldiario.es/">
-          <span>www.eldiario.es</span>
         </a>
       </td>
       <td>
@@ -3354,6 +3354,25 @@
     </tr>
     <tr>
       <td>
+        <code>iNews</code>
+      </td>
+      <td>
+        <div>i</div>
+      </td>
+      <td>
+        <a href="https://inews.co.uk/">
+          <span>inews.co.uk</span>
+        </a>
+      </td>
+      <td>
+        <code>en</code>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
         <code>Metro</code>
       </td>
       <td>
@@ -3497,25 +3516,6 @@
       <td>
         <a href="https://www.telegraph.co.uk/">
           <span>www.telegraph.co.uk</span>
-        </a>
-      </td>
-      <td>
-        <code>en</code>
-      </td>
-      <td>&#160;</td>
-      <td>&#160;</td>
-      <td>&#160;</td>
-    </tr>
-    <tr>
-      <td>
-        <code>iNews</code>
-      </td>
-      <td>
-        <div>i</div>
-      </td>
-      <td>
-        <a href="https://inews.co.uk/">
-          <span>inews.co.uk</span>
         </a>
       </td>
       <td>
