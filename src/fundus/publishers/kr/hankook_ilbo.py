@@ -64,7 +64,8 @@ class HankookIlboParser(ParserProxy):
                 upper_boundary_selector=XPath("//div[@itemprop='articleBody']"),
                 image_selector=XPath("//div[@itemprop='articleBody']//div[@class='img-box']//img"),
                 caption_selector=XPath("./ancestor::div[@class='editor-img-box']//div[@class='caption']"),
-                author_selector=re.compile(r"(?!.*\.)(?P<credits>.*)"),
+                # https://regex101.com/r/ylpczU/1
+                author_selector=re.compile(r"(?!.+\.)(.+=|\.)?(?P<credits>.+?)( 제공| 기자)?$"),
             )
 
     class V2(BaseParser):
@@ -79,6 +80,8 @@ class HankookIlboParser(ParserProxy):
             namespaces={"re": "http://exslt.org/regular-expressions"},
         )
         _content_bloat_pattern = re.compile(r"\$\$.+?\$\$")
+
+        _image_author_bloat = re.compile(r" 제공$|")
 
         @function(priority=1)
         def _parse_page_content(self) -> None:
@@ -141,5 +144,5 @@ class HankookIlboParser(ParserProxy):
                 upper_boundary_selector=XPath("//div[@class='article-view']"),
                 image_selector=XPath("//div[@class='article-view']//img"),
                 caption_selector=XPath("./ancestor::div[@class='editor-img-box']//div[@class='caption']"),
-                author_selector=re.compile(r"(?!.*\.)(?P<credits>.*)"),
+                author_selector=re.compile(r"(?!.+\.)(.+=|\.)?(?P<credits>.+?)( 제공| 기자)?$"),
             )
