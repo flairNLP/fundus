@@ -20,7 +20,7 @@ from fundus.parser.utility import (
     generic_topic_parsing,
     image_extraction,
     parse_json,
-    transform_breaks_to_paragraphs,
+    transform_breaks_to_tag,
 )
 
 
@@ -69,7 +69,7 @@ class HankookIlboParser(ParserProxy):
 
     class V2(BaseParser):
         _paragraph_selector = XPath("//div[@class='article-view']/p[@class='editor-p']")
-        _summary_selector = XPath("//div[@class='article-view']/h2/p")
+        _summary_selector = XPath("//div[@class='article-view']/h2")
         _subheadline_selector = XPath("//div[@class='article-view']/h3")
 
         _author_selector = XPath("//div[@class='article-view']//div[@class='writer']/span[@class='name']/strong")
@@ -100,7 +100,7 @@ class HankookIlboParser(ParserProxy):
                 )
                 summary__node = lxml.html.fromstring(summary_html)
                 content_node.insert(0, summary__node)
-                transform_breaks_to_paragraphs(summary__node)
+                transform_breaks_to_tag(summary__node, tag="h2", replace=True)
 
                 # insert content node
                 self.precomputed.doc.body.insert(0, content_node)

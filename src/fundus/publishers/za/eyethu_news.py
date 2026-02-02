@@ -19,7 +19,7 @@ from fundus.parser.utility import (
     generic_nodes_to_text,
     generic_topic_parsing,
     image_extraction,
-    transform_breaks_to_paragraphs,
+    transform_breaks_to_tag,
 )
 
 
@@ -36,7 +36,7 @@ class EyethuNewsParser(ParserProxy):
         @function(priority=1)
         def _break_malformed_paragraphs(self) -> None:
             for node in self._malformed_paragraph_selector(self.precomputed.doc):
-                transform_breaks_to_paragraphs(node, replace=True)
+                transform_breaks_to_tag(node, replace=True)
 
         @attribute
         def body(self) -> Optional[ArticleBody]:
