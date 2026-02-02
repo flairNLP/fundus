@@ -18,7 +18,7 @@ from fundus.parser.utility import (
     generic_date_parsing,
     generic_topic_parsing,
     image_extraction,
-    transform_breaks_to_paragraphs,
+    transform_breaks_to_tag,
 )
 
 
@@ -35,7 +35,7 @@ class TheCitizenParser(ParserProxy):
             # In some rare occasions the articles paragraphs are seperated by breaks. See:
             # https://www.citizen.co.za/sport/soccer/local-soccer/pirates-targeting-maximum-points-against-sekhukhune/
             for node in self._malformed_content_selector(self.precomputed.doc):
-                transform_breaks_to_paragraphs(node, replace=True)
+                transform_breaks_to_tag(node, replace=True)
 
         @attribute
         def body(self) -> Optional[ArticleBody]:
