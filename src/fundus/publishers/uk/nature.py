@@ -17,6 +17,7 @@ from fundus.parser.utility import (
 
 class NatureParser(ParserProxy):
     class V1(BaseParser):
+        VALID_UNTIL = datetime.date(2026, 2, 1)
         _summary_selector = CSSSelector("div.c-article-abstract p, p.c-article-abstract")
 
         _paragraph_selector = XPath(
@@ -85,3 +86,23 @@ class NatureParser(ParserProxy):
                 author_selector=self._author_pattern,
                 lower_boundary_selector=self._lower_boundary_selector,
             )
+
+    class V1_1(V1):
+        _paragraph_selector = XPath(
+            "//div[@data-test='main-content' or @class='main-content']//p"
+            "["
+            "  not(ancestor::*[@data-label='Related' or contains(@class, 'recommended')])"
+            "  and not(contains(@class, 'recommended__title'))"
+            "  and not(ancestor::figure)"
+            "  and not(ancestor::figcaption)"
+            "  and not(ancestor::a)"
+            "]"
+        )
+        _summary_selector = XPath("//div[@class='c-article-teaser-text']")
+        _subheadline_selector = XPath(
+            "//div[@data-test='main-content' or @class='main-content']"
+            "//h2"
+            "[not(ancestor::article[contains(@class, 'recommended')])]"
+        )
+
+        _lower_boundary_selector = XPath("(//aside)[2]")
