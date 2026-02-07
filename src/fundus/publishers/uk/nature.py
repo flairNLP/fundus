@@ -106,3 +106,4 @@ class NatureParser(ParserProxy):
         )
 
         _lower_boundary_selector = XPath("(//aside)[2]")
+        _paywall_selector = XPath("//div[contains(@class, 'buybox')]")
