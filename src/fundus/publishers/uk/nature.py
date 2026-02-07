@@ -17,8 +17,8 @@ from fundus.parser.utility import (
 
 class NatureParser(ParserProxy):
     class V1(BaseParser):
-        VALID_UNTIL = datetime.date(2026, 2, 1)
-        _summary_selector = CSSSelector("div.c-article-abstract p, p.c-article-abstract")
+        VALID_UNTIL = datetime.date(2026, 2, 1)  # This date is the best guess
+        _summary_selector: XPath = CSSSelector("div.c-article-abstract p, p.c-article-abstract")
 
         _paragraph_selector = XPath(
             "//div[@data-test='access-teaser']//p"
