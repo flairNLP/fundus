@@ -16,6 +16,11 @@ on:
     paths:
       - src/fundus/publishers/**
       - scripts/generate_tables.py
+    types:
+      - ready_for_review
+      - opened
+      - reopened
+      - synchronize
 
   workflow_dispatch:
 
