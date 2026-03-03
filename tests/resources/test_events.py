@@ -118,3 +118,12 @@ class TestEvents:
         events.alias("main-thread", 2)
 
         events.alias("new-thread", 1)
+
+    def test_context_manager(self):
+        events = EventDict(default_events=["success"])
+
+        with events.context("main-thread", 1):
+            with pytest.raises(bidict.ValueDuplicationError):
+                events.alias("new-thread", 1)
+
+        events.alias("new-thread", 1)

@@ -536,23 +536,21 @@ class Crawler(CrawlerBase):
 
         # we "register" the thread in the event dict as soon as possible to avoid that a thread is registered
         # after the pool already is shutting down
-        if self.threading:
-            __EVENTS__.alias(publisher.name)
-
-        scraper = WebScraper(
-            publisher,
-            self.restrict_sources_to,
-            build_delay(),
-            ignore_robots=self.ignore_robots,
-            ignore_crawl_delay=self.ignore_crawl_delay,
-        )
-        if not scraper.sources and self.restrict_sources_to:
-            logger.warning(
-                f"No sources of type {[source_type.__name__ for source_type in self.restrict_sources_to]} found for publisher {publisher.name}. "
-                f"Skipping publisher."
+        with __EVENTS__.context(publisher.name):
+            scraper = WebScraper(
+                publisher,
+                self.restrict_sources_to,
+                build_delay(),
+                ignore_robots=self.ignore_robots,
+                ignore_crawl_delay=self.ignore_crawl_delay,
             )
-            return
-        yield from scraper.scrape(error_handling, extraction_filter, url_filter, language_filter)
+            if not scraper.sources and self.restrict_sources_to:
+                logger.warning(
+                    f"No sources of type {[source_type.__name__ for source_type in self.restrict_sources_to]} "
+                    f"found for publisher {publisher.name}. Skipping publisher."
+                )
+                return
+            yield from scraper.scrape(error_handling, extraction_filter, url_filter, language_filter)
 
     @staticmethod
     def _single_crawl(

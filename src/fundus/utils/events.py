@@ -1,3 +1,4 @@
+import contextlib
 import json
 import threading
 from collections import defaultdict
@@ -163,13 +164,13 @@ class EventDict:
             key: The thread identifier to associate with this alias.
                 If None, the current thread's identifier is used.
         """
-        self._aliases[alias] = key if key else self._get_identifier()
+        logger.debug(f"Register alias {alias} -> {(value := key or self._get_identifier())}")
+        self._aliases[alias] = value
         if (ident := self._resolve(alias)) not in self._events:
             # noinspection PyStatementEffect
             # Since defaultdict doesn't provide a direct way to create defaults,
             # we simulate it by accessing the key.
             self._events[ident]
-        logger.debug(f"Registered alias {alias} -> {self._aliases[alias]}")
 
     def register_event(self, event: str, key: Union[int, str, None] = None):
         """
@@ -269,6 +270,24 @@ class EventDict:
         """
         with self._lock:
             return self._events[self._resolve(key)][event].is_set()
+
+    @contextlib.contextmanager
+    def context(self, alias: str, key: Optional[int] = None):
+        """
+        Public wrapper to register an alias for a thread.
+
+        Args:
+            alias: The alias name to register.
+            key: Optional thread identifier to associate with the alias.
+                Defaults to the current thread if not provided.
+        """
+        try:
+            with self._lock:
+                self._alias(alias, key)
+            yield
+        finally:
+            self._events.pop(self._resolve(alias))
+            self.remove_alias(alias)
 
     def alias(self, alias: str, key: Optional[int] = None):
         """
