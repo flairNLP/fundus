@@ -89,20 +89,28 @@ class NatureParser(ParserProxy):
 
     class V1_1(V1):
         _paragraph_selector = XPath(
-            "//div[@data-test='main-content' or @class='main-content']//p"
+            "//div[@data-test='main-content' or contains(@class,'main-content')]//p"
             "["
             "  not(ancestor::*[@data-label='Related' or contains(@class, 'recommended')])"
             "  and not(contains(@class, 'recommended__title'))"
             "  and not(ancestor::figure)"
             "  and not(ancestor::figcaption)"
             "  and not(ancestor::a)"
-            "]"
+            "  and not(contains(@class, 'app-access-wall'))"
+            "  and text()"
+            "] |"
+            "//div[@class='c-article-body']/section//p"
         )
         _summary_selector = XPath("//div[@class='c-article-teaser-text']")
         _subheadline_selector = XPath(
-            "//div[@data-test='main-content' or @class='main-content']"
+            "//div[@data-test='main-content' or contains(@class,'main-content')]"
             "//h2"
-            "[not(ancestor::article[contains(@class, 'recommended')])]"
+            "["
+            "not(ancestor::article[contains(@class, 'recommended')])"
+            "  and not(contains(@class, 'app-access-wall'))"
+            "  and not(@id='access-options')"
+            "] |"
+            "//div[@class='c-article-body']/section//h2"
         )
 
         _lower_boundary_selector = XPath("(//aside)[2]")
