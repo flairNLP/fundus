@@ -4,6 +4,11 @@ on:
   push:
     branches: [ master ]
   pull_request:
+    types:
+      - ready_for_review
+      - opened
+      - reopened
+      - synchronize
   workflow_call:
 
 jobs:
