@@ -188,8 +188,6 @@ def queue_wrapper(
             )
 
             logger.debug(f"Encountered remote exception in thread {ident} ({__EVENTS__.get_alias(ident)}): {err!r}")
-            # prevents a race condition where the ThreadPool shuts down before the exception is pulled from the queue
-            time.sleep(0.2)
 
     return wrapper
 
@@ -208,19 +206,29 @@ def pool_queue_iter(handle: MapResult[Any], queue: Queue[Union[_T, Exception]]) 
     Returns:
         Iterator[_T]: The iterator over the queue as it is populated.
     """
+
+    def _exception_guard() -> _T:
+        if isinstance(nxt := queue.get_nowait(), Exception):
+            raise Exception("There was an exception occurring in a remote thread/process") from nxt
+        return nxt
+
     while True:
         try:
-            if isinstance(nxt := queue.get_nowait(), Exception):
-                raise Exception("There was an exception occurring in a remote thread/process") from nxt
-            yield nxt
+            yield _exception_guard()
         except Empty:
             try:
-                handle.get(timeout=0.1)
+                handle.get(timeout=0.01)
             except TimeoutError:
-                if __EVENTS__.is_event_set("stop"):
-                    __EVENTS__.clear_event("stop")
+                # listen for stop-event set for main-thread
+                if __EVENTS__.is_event_set("stop", "main-thread"):
+                    __EVENTS__.clear_event("stop", "main-thread")
                     break
                 continue
+
+            # empty queue and look for exception
+            while not queue.empty():
+                yield _exception_guard()
+
             return
 
 
@@ -556,21 +564,26 @@ class Crawler(CrawlerBase):
     def _threaded_crawl(
         self, publishers: Tuple[Publisher, ...], article_task: Callable[[Publisher], Iterator[Article]]
     ) -> Iterator[Article]:
+        @contextlib.contextmanager
+        def _manage_pool(*args, **kwargs) -> Iterator[ThreadPool]:
+            managed_pool = ThreadPool(*args, **kwargs)
+            try:
+                yield managed_pool
+            finally:
+                logger.debug(f"Shutting down {type(self).__name__!r} ...")
+                managed_pool.close()
+                __EVENTS__.set_for_all("stop", future=True)
+                managed_pool.join()
+                __EVENTS__.clear_for_all("stop")
+                logger.debug("Shutdown done")
+
         result_queue: Queue[Union[Article, Exception]] = Queue(len(publishers))
         wrapped_article_task = queue_wrapper(result_queue, article_task, silenced_exceptions=(CrashThread,))
-        pool = ThreadPool(processes=len(publishers) or None)
-        try:
-            with session_handler.context(
-                POOL_CONNECTIONS=len(publishers),
-            ):
-                yield from pool_queue_iter(pool.map_async(wrapped_article_task, publishers), result_queue)
-        finally:
-            logger.debug(f"Shutting down {type(self).__name__!r} ...")
-            __EVENTS__.set_for_all("stop")
-            pool.close()
-            pool.join()
-            __EVENTS__.clear_for_all("stop")
-            logger.debug("Shutdown done")
+
+        with session_handler.context(POOL_CONNECTIONS=len(publishers)), _manage_pool(
+            processes=len(publishers) or None
+        ) as pool:
+            yield from pool_queue_iter(pool.map_async(wrapped_article_task, publishers), result_queue)
 
     def _build_article_iterator(
         self,

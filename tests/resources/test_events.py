@@ -51,6 +51,40 @@ class TestEvents:
         assert events.is_event_set("success", 1) == events.is_event_set("success", 2) == False
         assert events.is_event_set("failure", 1) == events.is_event_set("failure", 2) == False
 
+    def test_new_event_after_set_for_all(self):
+        events = EventDict()
+
+        events.register_event("success", 1)
+
+        events.set_for_all("success")
+
+        events.register_event("success", 2)
+
+        assert events.is_event_set("success", 1) == True
+        assert events.is_event_set("success", 2) == False
+
+    def test_set_for_all_future_true(self):
+        events = EventDict()
+
+        events.register_event("success", 1)
+
+        events.set_for_all("success", future=True)
+
+        events.register_event("success", 2)
+
+        assert events.is_event_set("success", 1) == True
+        assert events.is_event_set("success", 2) == True
+
+    def test_clear_for_all_resets_futures(self):
+        events = EventDict()
+
+        events.set_for_all("success", future=True)
+        events.clear_for_all("success")
+
+        events.register_event("success", 1)
+
+        assert events.is_event_set("success", 1) == False
+
     def test_alias(self):
         events = EventDict(default_events=["success"])
 
@@ -74,7 +108,7 @@ class TestEvents:
         assert events.is_event_set("success", "main-thread") == False
 
     def test_duplicate(self):
-        events = EventDict(default_events=["success"])
+        events = EventDict()
 
         events.alias("main-thread", 1)
 

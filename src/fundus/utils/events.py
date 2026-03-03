@@ -1,7 +1,7 @@
 import json
 import threading
 from collections import defaultdict
-from typing import Dict, List, Optional, Union
+from typing import Callable, Dict, List, Optional, Union
 
 from bidict import bidict
 
@@ -24,7 +24,11 @@ class ThreadEventDict(Dict[str, threading.Event]):
         _default_events (List[str]): List of event names for which Events will be auto-created.
     """
 
-    def __init__(self, default_events: Optional[List[str]] = None):
+    def __init__(
+        self,
+        default_events: Optional[List[str]] = None,
+        event_factory: Optional[Callable[[str], threading.Event]] = None,
+    ):
         """
         Initialize a new ThreadEventDict.
 
@@ -34,6 +38,7 @@ class ThreadEventDict(Dict[str, threading.Event]):
         """
         super().__init__()
         self._default_events = default_events or []
+        self._event_factory = event_factory
 
     def __getitem__(self, item: str) -> threading.Event:
         """
@@ -55,7 +60,7 @@ class ThreadEventDict(Dict[str, threading.Event]):
             return super().__getitem__(item)
         except KeyError as e:
             if item in self._default_events:
-                event = threading.Event()
+                event = threading.Event() if not self._event_factory else self._event_factory(item)
                 self[item] = event
                 return event
             raise e
@@ -85,10 +90,24 @@ class EventDict:
             default_events: A list of event names that are automatically available
                 for all threads (e.g., ["stop"]).
         """
+
+        def event_factory(name: str) -> threading.Event:
+            new = threading.Event()
+            if name in self._futures:
+                new.set()
+            return new
+
         self.default_events = default_events
-        self._events: Dict[int, ThreadEventDict] = defaultdict(lambda: ThreadEventDict(self.default_events))
+        self._event_factory = event_factory
+        self._futures: List[str] = []
+        self._events: Dict[int, ThreadEventDict] = defaultdict(
+            lambda: ThreadEventDict(self.default_events, self._event_factory)
+        )
         self._aliases: bidict[str, int] = bidict()
         self._lock = threading.RLock()
+        self._global_events: Dict[str, threading.Event] = {
+            "shutdown": threading.Event(),
+        }
 
     @staticmethod
     def _get_identifier() -> int:
@@ -166,7 +185,7 @@ class EventDict:
             if isinstance(key, str) and key not in self._aliases:
                 self._alias(key)
             if event not in self._events[(resolved := self._resolve(key))]:
-                self._events[resolved][event] = threading.Event()
+                self._events[resolved][event] = self._event_factory(event)
                 logger.debug(f"Registered event {event!r} for {self._pretty_resolve(key)}")
 
     def set_event(self, event: str, key: Union[int, str, None] = None):
@@ -193,13 +212,14 @@ class EventDict:
             self._events[self._resolve(key)][event].clear()
             logger.debug(f"Cleared event {event!r} for {self._pretty_resolve(key)}")
 
-    def set_for_all(self, event: Optional[str] = None):
+    def set_for_all(self, event: Optional[str] = None, future: bool = False):
         """Set an event for all registered threads.
 
         If `event` is None, all events for every registered thread are set.
 
         Args:
             event: The event name to set. If None, all events are set.
+            future: If True, the event will be set for all future threads as well.
         """
         with self._lock:
             if event is None:
@@ -207,11 +227,17 @@ class EventDict:
                     for name in events:
                         self.set_event(name, ident)
             else:
+                if future:
+                    self._futures.append(event)
+
                 for ident in self._events:
                     self.set_event(event, ident)
 
     def clear_for_all(self, event: Optional[str] = None):
         """Clear an event for all registered threads.
+
+        If the event was previously set with set_for_all(..., future=True),
+        the event won't be set for future events anymore.
 
         If `event` is None, all events for every registered thread are cleared.
 
@@ -224,6 +250,9 @@ class EventDict:
                     for name in events:
                         self.clear_event(name, ident)
             else:
+                if event in self._futures:
+                    self._futures.remove(event)
+
                 for ident in self._events:
                     self.clear_event(event, ident)
 
@@ -291,7 +320,8 @@ class EventDict:
 
     def reset(self):
         with self._lock:
-            self._events = defaultdict(lambda: ThreadEventDict(self.default_events))
+            self._futures = []
+            self._events = defaultdict(lambda: ThreadEventDict(self.default_events, self._event_factory))
             self._aliases = bidict()
 
     def __str__(self):
