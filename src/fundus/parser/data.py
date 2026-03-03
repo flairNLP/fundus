@@ -60,7 +60,8 @@ class LinkedDataMapping:
     """
 
     __UNKNOWN_TYPE__ = "UNKNOWN_TYPE"
-    __xml_transformation_table__ = {":": "U003A", "*": "U002A", "@": "U0040"}
+    __to_transform__ = [":", "*", "@"]
+    __xml_transformation_table__ = {char: f"U{ord(char):04X}" for char in __to_transform__}
 
     def __init__(self, lds: Iterable[Dict[str, Any]] = ()):
         for ld in lds:

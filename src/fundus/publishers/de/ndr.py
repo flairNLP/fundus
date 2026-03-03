@@ -45,7 +45,7 @@ class NDRParser(ParserProxy):
 
         @attribute
         def authors(self) -> List[str]:
-            return generic_author_parsing(self.precomputed.ld.bf_search("author"))
+            return generic_author_parsing(self.precomputed.ld.xpath_search("(//Article | //NewsArticle) /author"))
 
         @attribute
         def title(self) -> Optional[str]:
@@ -70,7 +70,7 @@ class NDRParser(ParserProxy):
         _subheadline_selector = XPath("//article/h2")
         _summary_selector = XPath("//header/p[@class='preface']")
 
-        _bloat_keywords = ["hh", "regionalmeldungen", "News", "kurzmeldungen"]
+        _bloat_keywords = ["hh", "regionalmeldungen", "News", "kurzmeldungen", "Nachrichten", "aktuell"]
 
         @attribute
         def topics(self) -> List[str]:
