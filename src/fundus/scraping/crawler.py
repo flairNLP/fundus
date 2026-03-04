@@ -247,8 +247,6 @@ class CrawlerBase(ABC):
         if not self.publishers:
             raise ValueError("param <publishers> of <Crawler.__init__> must include at least one publisher.")
 
-        __EVENTS__.alias("main-thread")
-
     @abstractmethod
     def _build_article_iterator(
         self,
@@ -402,7 +400,9 @@ class CrawlerBase(ABC):
             callback = None
 
         try:
-            with Timeout(seconds=timeout, silent=True, callback=callback, disable=timeout <= 0) as timer:
+            with __EVENTS__.context("main-thread"), Timeout(
+                seconds=timeout, silent=True, callback=callback, disable=timeout <= 0
+            ) as timer:
                 for article in self._build_article_iterator(
                     tuple(fitting_publishers),
                     error_handling,
@@ -431,7 +431,6 @@ class CrawlerBase(ABC):
                         break
         finally:
             session_handler.close_current_session()
-            __EVENTS__.reset()
             if save_to_file is not None:
                 if isinstance(save_to_file, str):
                     save_to_file = Path(save_to_file)
