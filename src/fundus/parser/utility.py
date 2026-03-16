@@ -177,7 +177,7 @@ def extract_article_body_with_selector(
     if not summary_nodes:
         instructions = more_itertools.prepend([], instructions)
     elif not nodes[: len(summary_nodes)] == summary_nodes:
-        raise ValueError(f"All summary nodes should be at the beginning of the article")
+        raise ValueError("All summary nodes should be at the beginning of the article")
 
     if not subhead_nodes or (paragraph_nodes and subhead_nodes[0] > paragraph_nodes[0]):
         first = next(instructions)
@@ -874,7 +874,7 @@ def parse_image_nodes(
             )
         except ImageURLError as error:
             if node.attrib.get("loading") == "lazy":
-                logger.debug(f"Skipping lazy loading image")
+                logger.debug("Skipping lazy loading image")
             else:
                 logger.debug(error)
         else:

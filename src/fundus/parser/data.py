@@ -216,7 +216,7 @@ class LinkedDataMapping:
             elif len(values) == 1:
                 return values.pop()
             else:
-                raise ValueError(f"Got multiple values when expecting a single scalar value")
+                raise ValueError("Got multiple values when expecting a single scalar value")
         else:
             return values
 
