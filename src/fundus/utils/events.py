@@ -68,18 +68,20 @@ class ThreadEventDict(Dict[str, threading.Event]):
 
 
 class EventDict:
-    """A thread-safe event registry for managing thread-local events with optional aliases.
+    """A thread-safe event registry for managing named-entity events with optional thread association.
 
-    This class maintains per-thread event dictionaries, allowing threads to
-    register, set, and clear named `threading.Event` objects in an isolated
-    and synchronized manner.
-
-    Aliases can be assigned to thread identifiers for convenience. Each alias
-    maps uniquely to a thread ID, allowing event access via human-readable names.
+    Events are stored primarily by alias (canonical, persistent key). While a thread is running,
+    ``_aliases`` maps the alias to the active thread ID so that ``key=None`` lookups inside
+    the thread resolve to the correct event dict.  When the thread exits (via :meth:`context`),
+    only the alias→thread-ID mapping is removed; ``_events[alias]`` persists so that other
+    threads can still read/write those events after the thread has finished.
 
     Attributes:
-        _events (Dict[int, ThreadEventDict]): Mapping of thread IDs to their events.
-        _aliases (bidict[str, int]): Bidirectional mapping of aliases to thread IDs.
+        _events (Dict[Union[int, str], ThreadEventDict]): Mapping of canonical keys to their
+            events.  Named entities use their alias (str) as the key; anonymous threads use
+            their thread ID (int).
+        _aliases (bidict[str, int]): Bidirectional mapping of *active* aliases to thread IDs.
+            An alias is present here only while its associated thread is running.
         _lock (threading.RLock): A re-entrant lock to ensure thread safety.
     """
 
@@ -101,7 +103,7 @@ class EventDict:
         self.default_events = default_events
         self._event_factory = event_factory
         self._futures: List[str] = []
-        self._events: Dict[int, ThreadEventDict] = defaultdict(
+        self._events: Dict[Union[int, str], ThreadEventDict] = defaultdict(
             lambda: ThreadEventDict(self.default_events, self._event_factory)
         )
         self._aliases: bidict[str, int] = bidict()
@@ -120,8 +122,11 @@ class EventDict:
         """
         return threading.get_ident()
 
-    def _resolve(self, key: Union[int, str, None]) -> int:
-        """Resolve a key (thread ID, alias, or None) to a thread identifier.
+    def _resolve(self, key: Union[int, str, None]) -> Union[int, str]:
+        """Resolve a key (thread ID, alias, or None) to the canonical event-dict key.
+
+        The canonical key is the alias string for named entities (even after the thread
+        has exited) and the integer thread ID for anonymous threads.
 
         Should only be called while holding the internal lock.
 
@@ -129,13 +134,27 @@ class EventDict:
             key: The key to resolve. May be a thread ID, alias, or None.
 
         Returns:
-            int: The resolved thread identifier.
+            Union[int, str]: The canonical key for ``_events``.
+
+        Raises:
+            KeyError: If a string alias is not registered and has no persisted events.
         """
         if key is None:
-            return self._get_identifier()
+            ident = self._get_identifier()
+            # Named thread: resolve to alias (canonical key)
+            if ident in self._aliases.inv:
+                return self._aliases.inv[ident]
+            return ident
         if isinstance(key, int):
+            if key in self._aliases.inv:
+                return self._aliases.inv[key]
             return key
-        return self._aliases[key]
+        # String (alias) key
+        if key in self._aliases:
+            return key  # Active alias – canonical key
+        if key in self._events:
+            return key  # Thread has finished but events persist under alias key
+        raise KeyError(key)
 
     def _pretty_resolve(self, key: Union[int, str, None]) -> str:
         """
@@ -147,15 +166,27 @@ class EventDict:
             key: Thread ID, alias, or None.
 
         Returns:
-            str: A formatted string of the form "<thread_id> (alias)".
+            str: A formatted string such as ``"7740   (Sportschau)"`` or ``"(Sportschau)"``.
         """
         resolved = self._resolve(key)
-        alias = f" ({self._aliases.inv[resolved]})" if resolved in self._aliases.values() else ""
-        return f"{resolved:<6}{alias}"
+        if isinstance(resolved, str):
+            # Named entity – show thread ID if the thread is still active
+            thread_id = self._aliases.get(resolved)
+            if thread_id is not None:
+                return f"{thread_id:<6} ({resolved})"
+            return f"({resolved})"
+        else:
+            alias = self._aliases.inv.get(resolved)
+            return f"{resolved:<6}{f' ({alias})' if alias else ''}"
 
     def _alias(self, alias: str, key: Optional[int] = None):
         """
         Register an alias for a given thread identifier.
+
+        Events are stored under the alias (canonical key).  If the alias is being
+        registered for the first time, or is being re-registered after a previous
+        thread finished, a fresh :class:`ThreadEventDict` is created so that stale
+        state (e.g. a previously set ``"stop"`` event) is not inherited.
 
         Should only be called while holding the internal lock.
 
@@ -164,13 +195,14 @@ class EventDict:
             key: The thread identifier to associate with this alias.
                 If None, the current thread's identifier is used.
         """
-        logger.debug(f"Register alias {alias} -> {(value := key or self._get_identifier())}")
-        self._aliases[alias] = value
-        if (ident := self._resolve(alias)) not in self._events:
-            # noinspection PyStatementEffect
-            # Since defaultdict doesn't provide a direct way to create defaults,
-            # we simulate it by accessing the key.
-            self._events[ident]
+        ident = key or self._get_identifier()
+        logger.debug(f"Register alias {alias} -> {ident}")
+        if alias not in self._aliases:
+            # New or re-registration: create fresh events under the alias key
+            self._events[alias] = ThreadEventDict(self.default_events, self._event_factory)
+        self._aliases[alias] = ident
+        # _events[ident] is NOT created here – the canonical key is the alias string,
+        # and _resolve(None) inside the thread will return the alias via _aliases.inv.
 
     def register_event(self, event: str, key: Union[int, str, None] = None):
         """
@@ -224,15 +256,15 @@ class EventDict:
         """
         with self._lock:
             if event is None:
-                for ident, events in self._events.items():
+                for key, events in self._events.items():
                     for name in events:
-                        self.set_event(name, ident)
+                        self.set_event(name, key)
             else:
                 if future:
                     self._futures.append(event)
 
-                for ident in self._events:
-                    self.set_event(event, ident)
+                for key in self._events:
+                    self.set_event(event, key)
 
     def clear_for_all(self, event: Optional[str] = None):
         """Clear an event for all registered threads.
@@ -247,15 +279,15 @@ class EventDict:
         """
         with self._lock:
             if event is None:
-                for ident, events in self._events.items():
+                for key, events in self._events.items():
                     for name in events:
-                        self.clear_event(name, ident)
+                        self.clear_event(name, key)
             else:
                 if event in self._futures:
                     self._futures.remove(event)
 
-                for ident in self._events:
-                    self.clear_event(event, ident)
+                for key in self._events:
+                    self.clear_event(event, key)
 
     def is_event_set(self, event: str, key: Union[int, str, None] = None) -> bool:
         """
@@ -267,6 +299,9 @@ class EventDict:
 
         Returns:
             bool: True if the event is set, False otherwise.
+
+        Raises:
+            KeyError: If ``key`` is a string alias that was never registered.
         """
         with self._lock:
             return self._events[self._resolve(key)][event].is_set()
@@ -274,7 +309,14 @@ class EventDict:
     @contextlib.contextmanager
     def context(self, alias: str, key: Optional[int] = None):
         """
-        Public wrapper to register an alias for a thread.
+        Context manager that registers an alias for the duration of a block.
+
+        On entry, the alias is bound to the current (or given) thread ID so that
+        ``key=None`` lookups inside the thread resolve correctly.  On exit, only
+        the alias→thread-ID mapping is removed; ``_events[alias]`` is kept alive
+        so that other threads can still access those events after this thread
+        finishes.  Events are cleaned up on the next :meth:`reset` call or when
+        the alias is re-registered via a new ``context()`` invocation.
 
         Args:
             alias: The alias name to register.
@@ -286,8 +328,12 @@ class EventDict:
                 self._alias(alias, key)
             yield
         finally:
-            self._events.pop(self._resolve(alias))
-            self.remove_alias(alias)
+            with self._lock:
+                # Remove the active alias→thread mapping so the thread ID can be
+                # reused by other threads without interference.  The alias-keyed
+                # events in _events[alias] are intentionally kept so that other
+                # threads (e.g. the main crawl loop) can still read them.
+                self._aliases.pop(alias, None)
 
     def alias(self, alias: str, key: Optional[int] = None):
         """
@@ -344,12 +390,18 @@ class EventDict:
             self._aliases = bidict()
 
     def __str__(self):
-        def _entry(thread: int) -> str:
-            alias = self._aliases.inv.get(thread, None)
-            serialized = json.dumps(self._events[thread], indent=2, ensure_ascii=False, default=lambda o: o.set())
-            return f"{alias if alias else 'None'} --> {thread}: \n" + serialized
+        def _entry(key: Union[int, str]) -> str:
+            if isinstance(key, str):
+                alias = key
+                thread_id = self._aliases.get(key, "finished")
+                header = f"{alias} --> {thread_id}"
+            else:
+                alias = self._aliases.inv.get(key, "None")
+                header = f"{alias} --> {key}"
+            serialized = json.dumps(self._events[key], indent=2, ensure_ascii=False, default=lambda o: o.set())
+            return f"{header}: \n" + serialized
 
-        events = [_entry(ident) for ident in self._events]
+        events = [_entry(key) for key in self._events]
         return "\n".join(events) if events else "Empty Event Dictionary"
 
 

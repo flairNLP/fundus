@@ -135,6 +135,28 @@ def get_execution_context():
         return thread.name, thread.ident
 
 
+def publisher_context_wrapper(func: Callable[[Publisher], None]) -> Callable[[Publisher], None]:
+    """Wraps a callable to register an ``__EVENTS__`` alias context for the publisher argument.
+
+    The alias is entered as the very first thing the thread does and stays alive for the
+    entire call — including any exception handling in the caller — so that
+    ``__EVENTS__.get_alias`` always resolves while the thread is running.
+
+    Args:
+        func: A callable whose first positional argument is a :class:`Publisher`.
+
+    Returns:
+        The wrapped callable.
+    """
+
+    @wraps(func)
+    def wrapper(publisher: Publisher) -> None:
+        with __EVENTS__.context(publisher.name):
+            func(publisher)
+
+    return wrapper
+
+
 def queue_wrapper(
     queue: Queue[Union[_T, Exception]],
     target: Callable[_P, Iterator[_T]],
@@ -533,23 +555,20 @@ class Crawler(CrawlerBase):
             else:
                 raise TypeError("param <delay> of <Crawler.__init__>")
 
-        # we "register" the thread in the event dict as soon as possible to avoid that a thread is registered
-        # after the pool already is shutting down
-        with __EVENTS__.context(publisher.name):
-            scraper = WebScraper(
-                publisher,
-                self.restrict_sources_to,
-                build_delay(),
-                ignore_robots=self.ignore_robots,
-                ignore_crawl_delay=self.ignore_crawl_delay,
+        scraper = WebScraper(
+            publisher,
+            self.restrict_sources_to,
+            build_delay(),
+            ignore_robots=self.ignore_robots,
+            ignore_crawl_delay=self.ignore_crawl_delay,
+        )
+        if not scraper.sources and self.restrict_sources_to:
+            logger.warning(
+                f"No sources of type {[source_type.__name__ for source_type in self.restrict_sources_to]} "
+                f"found for publisher {publisher.name}. Skipping publisher."
             )
-            if not scraper.sources and self.restrict_sources_to:
-                logger.warning(
-                    f"No sources of type {[source_type.__name__ for source_type in self.restrict_sources_to]} "
-                    f"found for publisher {publisher.name}. Skipping publisher."
-                )
-                return
-            yield from scraper.scrape(error_handling, extraction_filter, url_filter, language_filter)
+            return
+        yield from scraper.scrape(error_handling, extraction_filter, url_filter, language_filter)
 
     @staticmethod
     def _single_crawl(
@@ -575,7 +594,9 @@ class Crawler(CrawlerBase):
                 logger.debug("Shutdown done")
 
         result_queue: Queue[Union[Article, Exception]] = Queue(len(publishers))
-        wrapped_article_task = queue_wrapper(result_queue, article_task, silenced_exceptions=(CrashThread,))
+        wrapped_article_task = publisher_context_wrapper(
+            queue_wrapper(result_queue, article_task, silenced_exceptions=(CrashThread,))
+        )
 
         with session_handler.context(POOL_CONNECTIONS=len(publishers)), _manage_pool(
             processes=len(publishers) or None
