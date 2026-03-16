@@ -28,6 +28,7 @@ from typing import (
 )
 from urllib.parse import urljoin
 
+import lxml.etree
 import lxml.html
 import more_itertools
 import validators

@@ -21,6 +21,7 @@ from typing import (
     Union,
     get_args,
     get_origin,
+    overload,
 )
 
 import lxml.html
@@ -131,6 +132,30 @@ def _register(cls, factory: Type[RegisteredFunction], **kwargs):
     return wrapper(cls)
 
 
+@overload
+def attribute(
+    cls: Callable[..., Any],
+    /,
+    *,
+    priority: Optional[int] = ...,
+    validate: bool = ...,
+    deprecated: Optional[date] = ...,
+    default_factory: Optional[Callable[[], Any]] = ...,
+) -> Any: ...
+
+
+@overload
+def attribute(
+    cls: None = ...,
+    /,
+    *,
+    priority: Optional[int] = ...,
+    validate: bool = ...,
+    deprecated: Optional[date] = ...,
+    default_factory: Optional[Callable[[], Any]] = ...,
+) -> Callable[[Any], Any]: ...
+
+
 def attribute(
     cls=None,
     /,
@@ -139,7 +164,7 @@ def attribute(
     validate: bool = True,
     deprecated: Optional[date] = None,
     default_factory: Optional[Callable[[], Any]] = None,
-):
+) -> Any:
     return _register(
         cls,
         factory=Attribute,
@@ -150,7 +175,15 @@ def attribute(
     )
 
 
-def function(cls=None, /, *, priority: Optional[int] = None):
+@overload
+def function(cls: Callable[..., Any], /, *, priority: Optional[int] = ...) -> Any: ...
+
+
+@overload
+def function(cls: None = ..., /, *, priority: Optional[int] = ...) -> Callable[[Any], Any]: ...
+
+
+def function(cls=None, /, *, priority: Optional[int] = None) -> Any:
     return _register(cls, factory=Function, priority=priority)
 
 

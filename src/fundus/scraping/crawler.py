@@ -85,7 +85,7 @@ class TQDMManager(BaseManager):
 
 
 @contextlib.contextmanager
-def get_proxy_tqdm(*args, **kwargs) -> tqdm:
+def get_proxy_tqdm(*args, **kwargs) -> Iterator[tqdm]:
     """
     This functions returns a proxy to a tqdm instance. Init args are the same as for any other tqdm instance.
     :param args: tqdm args
@@ -120,7 +120,7 @@ class dill_wrapper(Generic[_P, _T]):
         return self._deserialize()(*args, **kwargs)
 
 
-def get_execution_context():
+def get_execution_context() -> Tuple[str, int]:
     """
     Determines whether the current execution context is in a thread or process.
     Returns:
@@ -129,10 +129,10 @@ def get_execution_context():
     """
     if multiprocessing.current_process().name != "MainProcess":
         process = multiprocessing.current_process()
-        return process.name, process.ident
+        return process.name, process.ident or 0
     else:
         thread = current_thread()
-        return thread.name, thread.ident
+        return thread.name, thread.ident or 0
 
 
 def publisher_context_wrapper(func: Callable[[Publisher], None]) -> Callable[[Publisher], None]:
@@ -414,9 +414,10 @@ class CrawlerBase(ABC):
         callback: Optional[Callable[[], None]]
         if isinstance(self, CCNewsCrawler) and self.processes > 0:
 
-            def callback() -> None:
+            def _stop_callback() -> None:
                 __EVENTS__.set_event("stop", "main-thread")
 
+            callback = _stop_callback
         else:
             callback = None
 
@@ -579,6 +580,7 @@ class Crawler(CrawlerBase):
     def _threaded_crawl(
         self, publishers: Tuple[Publisher, ...], article_task: Callable[[Publisher], Iterator[Article]]
     ) -> Iterator[Article]:
+
         @contextlib.contextmanager
         def _manage_pool(*args, **kwargs) -> Iterator[ThreadPool]:
             managed_pool = ThreadPool(*args, **kwargs)
@@ -731,32 +733,24 @@ class CCNewsCrawler(CrawlerBase):
         # As one could think, because we're downloading a bunch of files, this task is IO-bound, but it is actually
         # process-bound. The reason is that we stream the data and process it on the fly rather than downloading all
         # files and processing them afterward. Therefore, we utilize multiprocessing here instead of multithreading.
-        try:
-            with Manager() as manager, Pool(
-                processes=min(self.processes, len(warc_paths)),
-                initializer=initializer,
-            ) as pool:
-                result_queue: Queue[Union[Article, Exception]] = manager.Queue(maxsize=1000)
+        with Manager() as manager, Pool(
+            processes=min(self.processes, len(warc_paths)),
+            initializer=initializer,
+        ) as pool:
+            result_queue: Queue[Union[Article, Exception]] = manager.Queue(maxsize=1000)
 
-                # Because multiprocessing.Pool does not support iterators as targets,
-                # we wrap the article_task to write the articles to a queue instead of returning them directly.
-                wrapped_article_task: Callable[[str], None] = queue_wrapper(result_queue, article_task)
+            # Because multiprocessing.Pool does not support iterators as targets,
+            # we wrap the article_task to write the articles to a queue instead of returning them directly.
+            wrapped_article_task: Callable[[str], None] = queue_wrapper(result_queue, article_task)
 
-                # To avoid 503 errors we spread tasks to not start all at once
-                spread_article_task = random_sleep(wrapped_article_task, (0, 3))
+            # To avoid 503 errors we spread tasks to not start all at once
+            spread_article_task = random_sleep(wrapped_article_task, (0, 3))
 
-                # To avoid restricting the article_task to use only pickleable objects, we serialize it using dill.
-                serialized_article_task = dill_wrapper(spread_article_task)
+            # To avoid restricting the article_task to use only pickleable objects, we serialize it using dill.
+            serialized_article_task = dill_wrapper(spread_article_task)
 
-                # Finally, we build an iterator around the queue, exhausting the queue until the pool is finished.
-                yield from pool_queue_iter(pool.map_async(serialized_article_task, warc_paths), result_queue)
-        finally:
-            logger.debug(f"Shutting down {type(self).__name__!r} ...")
-            logger.debug("Joining manager ...")
-            manager.join()
-            logger.debug("Joining pool ...")
-            pool.join()
-            logger.debug("Shutdown done")
+            # Finally, we build an iterator around the queue, exhausting the queue until the pool is finished.
+            yield from pool_queue_iter(pool.map_async(serialized_article_task, warc_paths), result_queue)
 
     def _get_warc_paths(self) -> List[str]:
         # Date regex examples: https://regex101.com/r/yDX3G6/1
@@ -790,11 +784,8 @@ class CCNewsCrawler(CrawlerBase):
                 # use two threads per process, default two threads per core
                 max_number_of_threads = self.processes * 2
 
-                try:
-                    with ThreadPool(processes=min(len(urls), max_number_of_threads)) as pool:
-                        nested_warc_paths = pool.map(random_sleep(load_paths, (0, 3)), urls)
-                finally:
-                    pool.join()
+                with ThreadPoolExecutor(max_workers=min(len(urls), max_number_of_threads)) as pool:
+                    nested_warc_paths = pool.map(random_sleep(load_paths, (0, 3)), urls)
 
         warc_paths: Iterator[str] = more_itertools.flatten(nested_warc_paths)
 

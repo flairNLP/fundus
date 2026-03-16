@@ -1,3 +1,4 @@
+import random
 from typing import Dict, Iterator, List, Literal, Optional, Type
 
 import more_itertools
@@ -33,6 +34,9 @@ class BaseScraper:
         for source in self.sources:
             for html in source.fetch(url_filter=url_filter):
                 parser = self.parser_mapping[html.source_info.publisher]
+
+                if random.uniform(0, 1) > 0.9:
+                    raise Exception("TEST")
 
                 try:
                     extraction = parser(html.crawl_date).parse(html.content, error_handling)
