@@ -422,7 +422,7 @@ class CrawlerBase(ABC):
             callback = None
 
         try:
-            with __EVENTS__.context("main-thread"), Timeout(
+            with __EVENTS__.main_context("main-thread"), Timeout(
                 seconds=timeout, silent=True, callback=callback, disable=timeout <= 0
             ) as timer:
                 for article in self._build_article_iterator(

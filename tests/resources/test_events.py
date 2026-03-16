@@ -150,6 +150,29 @@ class TestEvents:
         with pytest.raises(KeyError):
             events.is_event_set("stop", "NonExistent")
 
+    def test_main_context_resets_on_exit(self):
+        """__EVENTS__ state must be fully cleared once main_context exits."""
+        events = EventDict(default_events=["stop"])
+
+        with events.main_context("main-thread"):
+            events.alias("Sportschau", 1)
+            events.set_event("stop", "Sportschau")
+            events.set_for_all("stop", future=True)
+
+        # aliases, events, and futures must all be gone
+        assert not events._aliases
+        assert not events._events
+        assert not events._futures
+
+    def test_main_context_raises_when_already_active(self):
+        """Entering a second main_context while one is active must raise RuntimeError."""
+        events = EventDict()
+
+        with events.main_context("main-thread"):
+            with pytest.raises(RuntimeError):
+                with events.main_context("other"):
+                    pass
+
     def test_reregistration_creates_fresh_events(self):
         """Re-registering an alias after its thread exits must clear stale event state."""
         events = EventDict(default_events=["stop"])

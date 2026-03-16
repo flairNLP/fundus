@@ -108,6 +108,7 @@ class EventDict:
         )
         self._aliases: bidict[str, int] = bidict()
         self._lock = threading.RLock()
+        self._main_context_lock = threading.Lock()
         self._global_events: Dict[str, threading.Event] = {
             "shutdown": threading.Event(),
         }
@@ -334,6 +335,28 @@ class EventDict:
                 # events in _events[alias] are intentionally kept so that other
                 # threads (e.g. the main crawl loop) can still read them.
                 self._aliases.pop(alias, None)
+
+    @contextlib.contextmanager
+    def main_context(self, alias: str):
+        """Context manager that registers an alias for the main thread and resets all state on exit.
+
+        Only one main context may be active at a time. Attempting to enter a second one raises
+        ``RuntimeError``.
+
+        Args:
+            alias: The alias to register for the calling thread.
+
+        Raises:
+            RuntimeError: If a main context is already active.
+        """
+        if not self._main_context_lock.acquire(blocking=False):
+            raise RuntimeError("A main context is already active")
+        try:
+            with self.context(alias):
+                yield
+        finally:
+            self.reset()
+            self._main_context_lock.release()
 
     def alias(self, alias: str, key: Optional[int] = None):
         """
