@@ -1,5 +1,5 @@
 import re
-from typing import Callable, Dict, Literal, Optional, Pattern, TypeVar, Union, overload
+from typing import Any, Callable, Dict, Literal, Optional, Pattern, TypeVar, overload
 
 _T = TypeVar("_T")
 
@@ -19,12 +19,12 @@ def _get_match_dict(pattern: Pattern[str], string: str) -> Dict[str, str]: ...
 
 
 @overload
-def _get_match_dict(pattern: Pattern[str], string: str, keep_none: Literal[True]) -> Dict[str, Optional[str]]: ...
+def _get_match_dict(pattern: Pattern[str], string: str, *, keep_none: Literal[True]) -> Dict[str, Optional[str]]: ...
 
 
-def _get_match_dict(  # type: ignore[misc]
+def _get_match_dict(
     pattern: Pattern[str], string: str, conversion: Optional[Callable[[str], _T]] = None, keep_none: bool = False
-) -> Dict[str, Union[str, _T, None]]:
+) -> Any:
     matches = {}
     for match in re.finditer(pattern, string):
         match_dict = match.groupdict()

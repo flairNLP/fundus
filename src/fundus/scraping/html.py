@@ -306,8 +306,10 @@ class CCNewsSource:
             warc_body: bytes = record.reader.read()
 
             try:
-                return str(warc_body, encoding=record.http_charset)  # type: ignore[arg-type]
-            except (UnicodeDecodeError, TypeError):
+                if record.http_charset is None:
+                    raise UnicodeDecodeError("unknown", warc_body, 0, 1, "no charset")
+                return str(warc_body, encoding=record.http_charset)
+            except UnicodeDecodeError:
                 encoding: Optional[str] = chardet.detect(warc_body)["encoding"]
 
                 if encoding is not None:

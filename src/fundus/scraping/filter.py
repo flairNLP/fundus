@@ -150,7 +150,7 @@ class Requires:
         """
         self.required_attributes = set(required_attributes)
         # somehow mypy does not recognize bool as callable :(
-        self._eval: Callable[[Any], bool] = bool if eval_booleans else _guarded_bool  # type: ignore[assignment]
+        self._eval: Callable[[Any], bool] = bool if eval_booleans else _guarded_bool
 
     def __call__(self, extraction: Dict[str, Any]) -> FilterResultWithMissingAttributes:
         missing_attributes = [

@@ -308,7 +308,7 @@ def main() -> None:
     if (parsed := parse_coverage_file(txt)) is None:
         raise RuntimeError(f"Couldn't parse latest coverage file for run {latest_run.id}")
 
-    failed_publishers = [publisher for publisher, status in parsed.items() if not status]  # type: ignore[union-attr]
+    failed_publishers = [publisher for publisher, status in parsed.items() if not status]
 
     print(f"Latest run on '{run_time}' with {len(failed_publishers)} failed publishers.")
     print(failed_publishers)

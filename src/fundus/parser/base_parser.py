@@ -408,7 +408,7 @@ class ParserProxy(ABC):
         mapping: Dict[date, _ParserCache] = {}
         for versioned_parser in sorted(included_parsers, key=lambda parser: parser.VALID_UNTIL):
             validation_date: date
-            if prev := mapping.get(validation_date := versioned_parser.VALID_UNTIL):  # type: ignore
+            if prev := mapping.get(validation_date := versioned_parser.VALID_UNTIL):
                 raise ValueError(
                     f"Found versions {prev.factory.__name__!r} and {versioned_parser.__name__!r} of "
                     f"{str(self)!r} with same validation date.\nMake sure you use class attribute VALID_UNTIL "

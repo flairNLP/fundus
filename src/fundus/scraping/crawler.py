@@ -785,7 +785,7 @@ class CCNewsCrawler(CrawlerBase):
                 max_number_of_threads = self.processes * 2
 
                 with ThreadPoolExecutor(max_workers=min(len(urls), max_number_of_threads)) as pool:
-                    nested_warc_paths = pool.map(random_sleep(load_paths, (0, 3)), urls)
+                    nested_warc_paths = list(pool.map(random_sleep(load_paths, (0, 3)), urls))
 
         warc_paths: Iterator[str] = more_itertools.flatten(nested_warc_paths)
 

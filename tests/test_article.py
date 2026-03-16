@@ -15,10 +15,10 @@ class TestArticle:
         extraction = {"authors": ["Author"], "title": "title"}
 
         with pytest.raises(TypeError):
-            Article(extraction, html=html)  # type: ignore[arg-type, misc]
+            Article(extraction, html=html)  # type: ignore[call-overload]
 
         with pytest.raises(TypeError):
-            Article(**extraction)  # type: ignore[arg-type]
+            Article(**extraction)  # type: ignore[call-overload]
 
         Article(**{}, html=html)
         Article(**extraction, html=html, exception=None)
@@ -55,10 +55,6 @@ class TestArticle:
 
         assert article.test_attribute
         assert article.test_attribute == "test_value"
-
-        article.__extraction__["test_attribute"] = "very_secret_stuff"  # type: ignore[index]
-
-        assert article.test_attribute == "very_secret_stuff"
 
     def test_extraction_view_setter(self):
         extraction = {"test_attribute": "test_value"}

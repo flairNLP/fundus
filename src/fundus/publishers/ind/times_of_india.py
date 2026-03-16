@@ -41,7 +41,7 @@ class TimesOfIndiaParser(ParserProxy):
                 r"<div class=\"_s30J clearfix  \">", "<div class=\"_s30J clearfix  \"><p class='intro'>", html_as_string
             )
             return extract_article_body_with_selector(
-                fromstring(html_as_string),  # type: ignore
+                fromstring(html_as_string),
                 summary_selector=self._summary_selector,
                 paragraph_selector=self._paragraph_selector,
                 subheadline_selector=self._subheadline_selector,
