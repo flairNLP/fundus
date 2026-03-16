@@ -16,11 +16,10 @@ from typing import (
     Pattern,
     Set,
 )
-from urllib.parse import unquote
+from urllib.parse import unquote, urlparse
 
 import feedparser
 import lxml.html
-import validators
 from lxml.etree import XMLParser, XPath
 from requests import ConnectionError, HTTPError, ReadTimeout
 
@@ -99,6 +98,11 @@ class _ArchiveDecompressor:
         return list(self.archive_mapping.keys())
 
 
+def is_valid_url(url: str) -> bool:
+    parsed = urlparse(url)
+    return bool(parsed.scheme in ("http", "https") and parsed.netloc)
+
+
 def clean_url(url: str) -> str:
     return unquote(url)
 
@@ -113,7 +117,7 @@ class URLSource(Iterable[str], ABC):
     def __post_init__(self):
         if not self._request_header:
             self._request_header = _default_header
-        if not validators.url(self.url, strict_query=False):
+        if not is_valid_url(self.url):
             logger.error(f"{type(self).__name__} initialized with invalid URL {self.url}")
 
     def set_header(self, request_header: Dict[str, str]) -> None:
@@ -179,7 +183,7 @@ class Sitemap(URLSource):
     def __iter__(self) -> Iterator[str]:
         def yield_recursive(sitemap_url: str) -> Iterator[str]:
             session = session_handler.get_session()
-            if not validators.url(sitemap_url):
+            if not is_valid_url(sitemap_url):
                 logger.info(f"Skipped sitemap {sitemap_url!r} because the URL is malformed")
             try:
                 response = session.get_with_interrupt(url=sitemap_url, headers=self._request_header)
