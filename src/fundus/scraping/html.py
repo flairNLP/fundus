@@ -170,7 +170,9 @@ class WebSource:
                         f"Found crawl-delay of {robots_delay} seconds in robots.txt for {self.publisher.name}. "
                         f"Overwriting existing delay."
                     )
-                    delay = lambda: robots_delay
+
+                    def delay() -> float:
+                        return robots_delay
 
         self.clock = _Clock(delay=delay, sleep=self._sleep)
 

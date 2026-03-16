@@ -15,15 +15,15 @@ class TestArticle:
         extraction = {"authors": ["Author"], "title": "title"}
 
         with pytest.raises(TypeError):
-            article = Article(extraction, html=html)  # type: ignore[arg-type, misc]
+            Article(extraction, html=html)  # type: ignore[arg-type, misc]
 
         with pytest.raises(TypeError):
-            article = Article(**extraction)  # type: ignore[arg-type]
+            Article(**extraction)  # type: ignore[arg-type]
 
-        article = Article(**{}, html=html)
-        article = Article(**extraction, html=html, exception=None)
-        article = Article(html=html, **extraction, exception=None)
-        article = Article(**extraction, html=html, exception=TypeError())
+        Article(**{}, html=html)
+        Article(**extraction, html=html, exception=None)
+        Article(html=html, **extraction, exception=None)
+        Article(**extraction, html=html, exception=TypeError())
 
     def test_default_values(self):
         extraction: Dict[str, Any] = {}

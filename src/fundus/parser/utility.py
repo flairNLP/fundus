@@ -172,7 +172,7 @@ def extract_article_body_with_selector(
         # return empty body if no text is present
         return ArticleBody(TextSequence([]), [])
 
-    instructions = more_itertools.split_when(nodes, pred=lambda x, y: type(x) != type(y))
+    instructions = more_itertools.split_when(nodes, pred=lambda x, y: type(x) is not type(y))
 
     if not summary_nodes:
         instructions = more_itertools.prepend([], instructions)
