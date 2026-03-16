@@ -30,7 +30,6 @@ from urllib.parse import urljoin
 
 import lxml.html
 import more_itertools
-import validators
 from dateutil import parser
 from lxml.cssselect import CSSSelector
 from lxml.etree import XPath
@@ -47,6 +46,7 @@ from fundus.parser.data import (
     LinkedDataMapping,
     TextSequence,
 )
+from fundus.scraping.url import is_valid_url
 from fundus.utils.regex import _get_match_dict
 from fundus.utils.serialization import JSONVal
 
@@ -610,7 +610,7 @@ def parse_title_from_root(root: lxml.html.HtmlElement) -> Optional[str]:
 def preprocess_url(url: str, domain: str) -> str:
     url = re.sub(r"\\/", "/", url)
     # Some publishers use relative URLs
-    if not validators.url(url):
+    if not is_valid_url(url):
         publisher_domain = "https://" + domain
         url = urljoin(publisher_domain, url)
     return url

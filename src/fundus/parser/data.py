@@ -25,12 +25,12 @@ from urllib.parse import urljoin, urlparse
 import lxml.etree
 import lxml.html
 import more_itertools
-import validators
 import xmltodict
 from dict2xml import dict2xml
 from lxml.etree import XPath, fromstring, tostring
 from typing_extensions import Self, TypeAlias, deprecated
 
+from fundus.scraping.url import is_valid_url
 from fundus.utils.serialization import (
     DataclassSerializationMixin,
     JSONVal,
@@ -538,7 +538,7 @@ class Image(DataclassSerializationMixin):
 
     def __post_init__(self):
         for url in [version.url for version in self.versions]:
-            if not validators.url(url, strict_query=False):
+            if not is_valid_url(url):
                 raise ImageURLError(f"url {url} is not a valid URL")
 
     @property
