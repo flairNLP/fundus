@@ -38,7 +38,6 @@ def get_test_articles(publisher: Publisher) -> List[Article]:
     return articles
 
 
-@dataclass
 class JSONFile(Generic[_T]):
     """Generic file class representing a JSON file.
 
@@ -55,10 +54,17 @@ class JSONFile(Generic[_T]):
         >>> json_file.write(content)
     """
 
-    path: Path
-    encoder: Optional[Type[json.JSONEncoder]] = None
-    decoder: Optional[Type[json.JSONDecoder]] = None
-    encoding: str = "utf-8"
+    def __init__(
+        self,
+        path: Path,
+        encoder: Optional[Type[json.JSONEncoder]] = None,
+        decoder: Optional[Type[json.JSONDecoder]] = None,
+        encoding: str = "utf-8",
+    ):
+        self.path = path
+        self.encoder = encoder
+        self.decoder = decoder
+        self.encoding = encoding
 
     def load(self, **kwargs) -> Optional[_T]:
         """Load file content using json.load().
@@ -109,15 +115,15 @@ class JSONFile(Generic[_T]):
 
 
 class ExtractionEncoder(json.JSONEncoder):
-    def default(self, obj: object):
-        if isinstance(obj, datetime.datetime):
-            return str(obj)
-        elif isinstance(obj, TextSequenceTree):
-            return obj.serialize()
-        elif isinstance(obj, Image):
-            return obj.serialize()
+    def default(self, o: object):
+        if isinstance(o, datetime.datetime):
+            return str(o)
+        elif isinstance(o, TextSequenceTree):
+            return o.serialize()
+        elif isinstance(o, Image):
+            return o.serialize()
         else:
-            return json.JSONEncoder.default(self, obj)
+            return json.JSONEncoder.default(self, o)
 
 
 class ExtractionDecoder(json.JSONDecoder):
@@ -129,21 +135,20 @@ class ExtractionDecoder(json.JSONDecoder):
     }
 
     def __init__(self, *args, **kwargs):
-        json.JSONDecoder.__init__(self, object_hook=self.object_hook, *args, **kwargs)
+        json.JSONDecoder.__init__(self, object_hook=self._object_hook, *args, **kwargs)
 
-    def object_hook(self, obj_dict):
+    def _object_hook(self, obj_dict):
         for key, deserialization_function in self.deserialization_functions.items():
             if (serialized_value := obj_dict.get(key)) is not None:
                 obj_dict[key] = deserialization_function(serialized_value)
         return obj_dict
 
 
-@dataclass
 class JSONFileWithExtractionDecoderEncoder(JSONFile[_T]):
     """Custom JSONFile using default ExtractionEncoder/ExtractionDecoder"""
 
-    encoder: Type[json.JSONEncoder] = ExtractionEncoder
-    decoder: Type[json.JSONDecoder] = ExtractionDecoder
+    def __init__(self, path: Path, encoding: str = "utf-8"):
+        super().__init__(path, encoder=ExtractionEncoder, decoder=ExtractionDecoder, encoding=encoding)
 
 
 @dataclass

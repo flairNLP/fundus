@@ -28,6 +28,7 @@ from typing import (
 )
 from urllib.parse import urljoin
 
+import lxml.etree
 import lxml.html
 import more_itertools
 import validators
@@ -578,7 +579,7 @@ class CustomParserInfo(parser.parserinfo):
         ("Oct", "October", "Oktober", "Okt"),
         ("Nov", "November"),
         ("Dec", "December", "Dezember", "Dez"),
-    ]  # type: ignore[assignment]
+    ]
     # type ignore due to types-python-dateutil==2.9.0.20251008, see https://github.com/flairNLP/fundus/issues/806
 
 

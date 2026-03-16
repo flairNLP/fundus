@@ -27,8 +27,8 @@ class ResettableTimer(threading.Thread):
         seconds: float,
         func: Callable[P, None],
         interval: float = 0.1,
-        args: P.args = tuple(),
-        kwargs: P.kwargs = None,
+        *args: P.args,
+        **kwargs: P.kwargs,
     ) -> None:
         """Resettable timer executing <func> after <time> seconds, checking every <interval>.
 
@@ -51,8 +51,8 @@ class ResettableTimer(threading.Thread):
             time.sleep(self.interval)
             if self._canceled.is_set():
                 return
-        # noinspection PyUnresolvedReferences
-        self._target(*self._args, **self._kwargs)  # type: ignore[attr-defined]
+
+        super().run()
 
     def reset(self) -> None:
         self.watch.reset()

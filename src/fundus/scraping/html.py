@@ -1,7 +1,7 @@
 import time
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Callable, Dict, Iterable, Iterator, List, Optional, Protocol
+from typing import BinaryIO, Callable, Dict, Iterable, Iterator, List, Optional, Protocol, cast
 from urllib.parse import urlparse
 
 import chardet
@@ -171,8 +171,10 @@ class WebSource:
                         f"Overwriting existing delay."
                     )
 
-                    def delay() -> float:
+                    def _crawl_delay() -> float:
                         return robots_delay
+
+                    delay = _crawl_delay
 
         self.clock = _Clock(delay=delay, sleep=self._sleep)
 
@@ -304,8 +306,10 @@ class CCNewsSource:
             warc_body: bytes = record.reader.read()
 
             try:
-                return str(warc_body, encoding=record.http_charset)  # type: ignore[arg-type]
-            except (UnicodeDecodeError, TypeError):
+                if record.http_charset is None:
+                    raise UnicodeDecodeError("unknown", warc_body, 0, 1, "no charset")
+                return str(warc_body, encoding=record.http_charset)
+            except UnicodeDecodeError:
                 encoding: Optional[str] = chardet.detect(warc_body)["encoding"]
 
                 if encoding is not None:
@@ -333,7 +337,9 @@ class CCNewsSource:
             response = session.get(self.warc_path, stream=True, headers=self.headers)
             response.raise_for_status()
 
-            for warc_record in ArchiveIterator(response.raw, record_types=WarcRecordType.response, verify_digests=True):
+            for warc_record in ArchiveIterator(
+                cast(BinaryIO, response.raw), record_types=WarcRecordType.response, verify_digests=True
+            ):
                 if not warc_record.record_date:
                     continue
 

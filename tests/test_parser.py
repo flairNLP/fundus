@@ -305,9 +305,9 @@ class TestUtility:
 
         # type list[dict]
         assert generic_author_parsing(
-            [{"name": "Peter Funny"}, {"name": "Funny Peter"}, {"this": "is not a pipe"}, {}]  # type: ignore
+            [{"name": "Peter Funny"}, {"name": "Funny Peter"}, {"this": "is not a pipe"}, {}]
         ) == ["Peter Funny", "Funny Peter"]
-        assert generic_author_parsing([{}]) == generic_author_parsing([{}, {"wrong": "key"}]) == []  # type: ignore
+        assert generic_author_parsing([{}]) == generic_author_parsing([{}, {"wrong": "key"}]) == []
 
 
 class TestMetaInfo:

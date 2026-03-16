@@ -41,7 +41,7 @@ class WinfutureParser(ParserProxy):
             html_as_string = re.sub(r"(?<=<br>)\n(?!([<\W]))", "\n<p>", html_as_string)
             html_as_string = re.sub(r"(?<=(ipt|div)>)\n(?![\W<])", "\n<p>", html_as_string)
             html_as_string = re.sub(r"(?<![\W>])\n(?=<[a-z0-9=_'\"]*>)", "</p>\n", html_as_string)
-            doc: HtmlElement = fromstring(html_as_string)  # type: ignore
+            doc: HtmlElement = fromstring(html_as_string)
             return extract_article_body_with_selector(
                 doc=doc,
                 paragraph_selector=self._paragraph_selector,
