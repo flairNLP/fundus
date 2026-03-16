@@ -1,4 +1,4 @@
-name: lint
+name: ruff
 
 on:
   push:
@@ -7,13 +7,16 @@ on:
   workflow_call:
 
 jobs:
-  ruff:
+  ruff-lint:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
       - uses: astral-sh/ruff-action@v3
-
       - run: ruff check
 
+  ruff-format:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/ruff-action@v3
       - run: ruff format --check
