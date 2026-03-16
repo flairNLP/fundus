@@ -60,7 +60,7 @@ _space_characters = {
     "zero-width-joiner": r"\u200D",
     "zero-width-no-break_space": r"\uFEFF",
 }
-_ws_pattern: Pattern[str] = re.compile(rf'[{"".join(_space_characters.values())}]+')
+_ws_pattern: Pattern[str] = re.compile(rf"[{''.join(_space_characters.values())}]+")
 
 
 def normalize_whitespace(text: str) -> str:

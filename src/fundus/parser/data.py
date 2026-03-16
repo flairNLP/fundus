@@ -142,12 +142,10 @@ class LinkedDataMapping:
     __value_regex__ = re.compile("^<[^<]*>(?P<value>.*)</[^<]*>$", flags=re.DOTALL)
 
     @overload
-    def xpath_search(self, query: Union[XPath, str], scalar: Literal[False] = False) -> List[Any]:
-        ...
+    def xpath_search(self, query: Union[XPath, str], scalar: Literal[False] = False) -> List[Any]: ...
 
     @overload
-    def xpath_search(self, query: Union[XPath, str], scalar: Literal[True] = True) -> Optional[Any]:
-        ...
+    def xpath_search(self, query: Union[XPath, str], scalar: Literal[True] = True) -> Optional[Any]: ...
 
     def xpath_search(self, query: Union[XPath, str], scalar: bool = False):
         """Search through LD using XPath expressions
@@ -298,12 +296,10 @@ class TextSequence(Sequence[str]):
         self._data: Tuple[str, ...] = tuple(texts)
 
     @overload
-    def __getitem__(self, i: int) -> str:
-        ...
+    def __getitem__(self, i: int) -> str: ...
 
     @overload
-    def __getitem__(self, s: slice) -> "TextSequence":
-        ...
+    def __getitem__(self, s: slice) -> "TextSequence": ...
 
     def __getitem__(self, i):
         return self._data[i] if isinstance(i, int) else type(self)(self._data[i])
@@ -528,8 +524,7 @@ class ImageVersion(DataclassSerializationMixin):
         raise NotImplementedError(f"'<' is not defined between {type(self).__name__!r} and {type(other).__name__!r}")
 
 
-class ImageURLError(Exception):
-    ...
+class ImageURLError(Exception): ...
 
 
 @dataclass(frozen=False)

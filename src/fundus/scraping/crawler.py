@@ -341,8 +341,7 @@ class CrawlerBase(ABC):
         if max_articles_per_publisher:
             if timeout < 120:
                 print(
-                    "It is recommended to set a minimum <timeout> of 120 seconds when using "
-                    "max_articles_per_publisher."
+                    "It is recommended to set a minimum <timeout> of 120 seconds when using max_articles_per_publisher."
                 )
             max_articles = -1
 

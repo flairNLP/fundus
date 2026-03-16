@@ -91,8 +91,7 @@ class WebSourceInfo(SourceInfo):
 
 
 class HTMLSource(Protocol):
-    def fetch(self, url_filter: Optional[URLFilter] = None) -> Iterator[HTML]:
-        ...
+    def fetch(self, url_filter: Optional[URLFilter] = None) -> Iterator[HTML]: ...
 
 
 class _Clock:
@@ -351,8 +350,7 @@ class CCNewsSource:
 
                 if publisher.url_filter is not None and publisher.url_filter(target_url):
                     logger.debug(
-                        f"Skipped WARC record with target URI {target_url!r} because of "
-                        f"publisher specific URL filter"
+                        f"Skipped WARC record with target URI {target_url!r} because of publisher specific URL filter"
                     )
                     continue
 

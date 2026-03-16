@@ -29,7 +29,7 @@ class TheBBCParser(ParserProxy):
         )
 
         _topic_selector = CSSSelector(
-            "div[data-component='topic-list'] > div > div > ul > li ," "div[data-component='tags'] a"
+            "div[data-component='topic-list'] > div > div > ul > li ,div[data-component='tags'] a"
         )
 
         @attribute
