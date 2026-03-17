@@ -1,11 +1,11 @@
 from collections import defaultdict
 from textwrap import indent
 from typing import Dict, Iterable, Iterator, List, Optional, Set, Type, Union
-from urllib.robotparser import RobotFileParser
 from warnings import warn
 
 import more_itertools
 from requests.exceptions import ConnectionError, HTTPError, ReadTimeout
+from robots import RobotFileParser
 from typing_extensions import TypeAlias
 
 from fundus.logging import create_logger
