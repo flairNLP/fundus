@@ -65,6 +65,8 @@ from fundus.utils.timeout import Timeout
 
 logger = create_logger(__name__)
 
+__MAIN_THREAD_ALIAS__ = "main-thread"
+
 _T = TypeVar("_T")
 _P = ParamSpec("_P")
 
@@ -183,7 +185,7 @@ def queue_wrapper(
                     # and therefore the queue never will never be free.
                     queue.put_nowait(obj)
                 except Full:
-                    if __EVENTS__.is_event_set("stop"):
+                    if __EVENTS__.is_event_set("stop", __MAIN_THREAD_ALIAS__):
                         return False
                     time.sleep(0.05)
                 else:
@@ -202,14 +204,15 @@ def queue_wrapper(
         except Exception as err:
             tb_str = "".join(traceback.TracebackException.from_exception(err).format())
             context, ident = get_execution_context()
+            alias = __EVENTS__.get_alias(ident, "<unaliased>")
             queue.put(
                 RemoteException(
                     f"There was a(n) {type(err).__name__!r} occurring in {context} "
-                    f"with ident {ident} ({__EVENTS__.get_alias(ident)})\n{tb_str}"
+                    f"with ident {ident} ({alias})\n{tb_str}"
                 )
             )
 
-            logger.debug(f"Encountered remote exception in thread {ident} ({__EVENTS__.get_alias(ident)}): {err!r}")
+            logger.debug(f"Encountered remote exception in thread {ident} ({alias}): {err!r}")
 
     return wrapper
 
@@ -242,8 +245,8 @@ def pool_queue_iter(handle: MapResult[Any], queue: Queue[Union[_T, Exception]]) 
                 handle.get(timeout=0.01)
             except TimeoutError:
                 # listen for stop-event set for main-thread
-                if __EVENTS__.is_event_set("stop", "main-thread"):
-                    __EVENTS__.clear_event("stop", "main-thread")
+                if __EVENTS__.is_event_set("stop", __MAIN_THREAD_ALIAS__):
+                    __EVENTS__.clear_event("stop", __MAIN_THREAD_ALIAS__)
                     break
                 continue
 
@@ -416,13 +419,13 @@ class CrawlerBase(ABC):
         if isinstance(self, CCNewsCrawler) and self.processes > 0:
 
             def callback() -> None:
-                __EVENTS__.set_event("stop", "main-thread")
+                __EVENTS__.set_event("stop", __MAIN_THREAD_ALIAS__)
 
         else:
             callback = None
 
         try:
-            with __EVENTS__.main_context("main-thread"), Timeout(
+            with __EVENTS__.main_context(__MAIN_THREAD_ALIAS__), Timeout(
                 seconds=timeout, silent=True, callback=callback, disable=timeout <= 0
             ) as timer:
                 for article in self._build_article_iterator(

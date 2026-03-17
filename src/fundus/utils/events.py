@@ -2,15 +2,19 @@ import contextlib
 import json
 import threading
 from collections import defaultdict
-from typing import Callable, Dict, List, Optional, Union
+from typing import Callable, Dict, List, Optional, TypeVar, Union, overload
 
 from bidict import bidict
 
 from fundus.logging import create_logger
 
+_T = TypeVar("_T")
+
 logger = create_logger(__name__)
 
 __DEFAULT_EVENTS__: List[str] = ["stop"]
+
+_sentinel = object()
 
 
 class ThreadEventDict(Dict[str, threading.Event]):
@@ -370,17 +374,28 @@ class EventDict:
         with self._lock:
             self._alias(alias, key)
 
+    @overload
     def get_alias(self, ident: int) -> str:
+        ...
+
+    @overload
+    def get_alias(self, ident: int, default: _T) -> Union[str, _T]:
+        ...
+
+    def get_alias(self, ident: int, default=_sentinel):
         """
         Get the alias associated with a thread identifier.
 
         Args:
             ident: The thread identifier.
+            default: Value to return if no alias is found. If omitted, raises KeyError.
 
         Returns:
-            str: The alias associated with the identifier.
+            str: The alias associated with the identifier, or default if not found.
         """
-        return self._aliases.inv[ident]
+        if default is _sentinel:
+            return self._aliases.inv[ident]
+        return self._aliases.inv.get(ident, default)
 
     def remove_alias(self, alias: str):
         """
