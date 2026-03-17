@@ -58,7 +58,7 @@ class PublisherCollectionMeta(PublisherGroup):
                 new_publishers: Set[str] = {publisher.__name__ for publisher in value}
                 if duplicate_publishers := publishers & new_publishers:
                     raise ValueError(
-                        f"Publisher(s) {', '.join(duplicate_publishers)!r} " f"already exists in collection {name!r}."
+                        f"Publisher(s) {', '.join(duplicate_publishers)!r} already exists in collection {name!r}."
                     )
                 publishers.update(new_publishers)
             elif isinstance(value, Publisher):

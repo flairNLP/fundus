@@ -370,7 +370,6 @@ class PublisherGroup(type):
 
         matched: Union[List[FilteredPublisher], List[Publisher]] = []
         unique_attributes = set(attributes)
-        spec: Publisher
         for publisher in cls:
             if unique_attributes.issubset(
                 set(publisher.parser().attributes().names)

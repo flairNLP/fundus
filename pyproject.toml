@@ -50,8 +50,7 @@ dependencies = [
 dev = [
     "pytest~=7.2.2",
     "mypy==1.9.0",
-    "isort==5.12.0",
-    "black==23.1.0",
+    "ruff==0.15.6",
     # type stubs
     "types-lxml",
     "types-python-dateutil>=2.8, <3",
@@ -73,12 +72,16 @@ warn_unreachable = true
 warn_unused_configs = true
 no_implicit_reexport = true
 
-[tool.black]
+[tool.ruff]
 line-length = 120
-target-version = ['py38']
+target-version = "py38"
 
-[tool.isort]
-profile = "black"
+[tool.ruff.lint]
+select = ["E", "F", "I"]
+ignore = ["E501"]
+
+[tool.ruff.format]
+quote-style = "double"
 
 [tool.pytest.ini_options]
 filterwarnings = [

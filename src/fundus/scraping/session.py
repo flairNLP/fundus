@@ -206,8 +206,8 @@ class SessionHandler:
 
         else:
             raise AssertionError(
-                f"Tried to open a session context within another thread. "
-                f"Exit the existing context before opening a new one."
+                "Tried to open a session context within another thread. "
+                "Exit the existing context before opening a new one."
             )
 
 

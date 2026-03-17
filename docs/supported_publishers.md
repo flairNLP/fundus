@@ -3941,6 +3941,31 @@
       <td>&#160;</td>
       <td>&#160;</td>
     </tr>
+    <tr>
+      <td>
+        <code>WorldTruth</code>
+      </td>
+      <td>
+        <div>
+          <strike>World Truth</strike>
+        </div>
+      </td>
+      <td>
+        <a href="https://www.worldtruth.tv/">
+          <span>www.worldtruth.tv</span>
+        </a>
+      </td>
+      <td>
+        <code>en</code>
+      </td>
+      <td>
+        <code>authors</code>
+        <code>images</code>
+        <code>topics</code>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
   </tbody>
 </table>
 

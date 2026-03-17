@@ -98,9 +98,7 @@ class HankookIlboParser(ParserProxy):
                 content_node = lxml.html.fromstring(cleaned_content_html)
 
                 # parse summary node and add to content node
-                summary_html = (
-                    f"<h2>" f"{self.precomputed.ld.xpath_search('//page-data//subTitle', scalar=True)}" f"</h2>"
-                )
+                summary_html = f"<h2>{self.precomputed.ld.xpath_search('//page-data//subTitle', scalar=True)}</h2>"
                 summary__node = lxml.html.fromstring(summary_html)
                 content_node.insert(0, summary__node)
                 transform_breaks_to_tag(summary__node, tag="h2", replace=True)

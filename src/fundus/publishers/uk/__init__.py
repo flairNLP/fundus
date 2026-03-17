@@ -39,7 +39,7 @@ class UK(metaclass=PublisherGroup):
         sources=[
             Sitemap(
                 "https://www.independent.co.uk/sitemap.xml",
-                sitemap_filter=inverse(regex_filter(f"sitemap-articles")),
+                sitemap_filter=inverse(regex_filter("sitemap-articles")),
             ),
             NewsMap("https://www.independent.co.uk/sitemaps/googlenews"),
         ],

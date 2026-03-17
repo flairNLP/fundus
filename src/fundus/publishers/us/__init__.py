@@ -132,12 +132,13 @@ class US(metaclass=PublisherGroup):
         ],
     )
 
-    # WorldTruth = Publisher(
-    #     name="World Truth",
-    #     domain="https://www.worldtruth.tv/",
-    #     sources=[RSSFeed("https://feeds.feedburner.com/ConsciousnessTv")],
-    #     parser=WorldTruthParser,
-    # )
+    WorldTruth = Publisher(
+        name="World Truth",
+        domain="https://www.worldtruth.tv/",
+        sources=[RSSFeed("https://feeds.feedburner.com/ConsciousnessTv")],
+        parser=WorldTruthParser,
+        deprecated=True,
+    )
 
     FreeBeacon = Publisher(
         name="The Washington Free Beacon",

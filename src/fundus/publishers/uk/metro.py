@@ -35,9 +35,7 @@ class MetroParser(ParserProxy):
             r"^Do you have a story to share?"
         )
         _paragraph_selector = XPath(
-            f"//article "
-            f"/div[@class='article-body'] "
-            f"/p[position()>1 and not(re:test(string(), '{_bloat_regex_}'))]",
+            f"//article /div[@class='article-body'] /p[position()>1 and not(re:test(string(), '{_bloat_regex_}'))]",
             namespaces={"re": "http://exslt.org/regular-expressions"},
         )
 

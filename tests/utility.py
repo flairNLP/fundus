@@ -307,16 +307,14 @@ def load_test_case_data(publisher: Publisher) -> Dict[str, Dict[str, Any]]:
         return test_data
     else:
         raise ValueError(
-            f"Received invalid JSON format for publisher {publisher.name!r}. "
-            f"Expected a JSON with a dictionary as root."
+            f"Received invalid JSON format for publisher {publisher.name!r}. Expected a JSON with a dictionary as root."
         )
 
 
 def load_supported_publishers_markdown() -> bytes:
     if not supported_publishers_markdown_path.exists():
         raise FileNotFoundError(
-            f"The {supported_publishers_markdown_path.name!r} is missing. "
-            f"Run 'python -m fundus.utils.generate_tables'"
+            f"The {supported_publishers_markdown_path.name!r} is missing. Run 'python -m fundus.utils.generate_tables'"
         )
 
     with open(supported_publishers_markdown_path, "rb") as file:
