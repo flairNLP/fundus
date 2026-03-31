@@ -130,7 +130,7 @@ class Publisher:
         sources: List[URLSource],
         query_parameter: Optional[Dict[str, str]] = None,
         url_filter: Optional[URLFilter] = None,
-        request_header: Optional[Dict[str, str]] = _default_header,
+        request_header: Dict[str, str] = _default_header,
         deprecated: bool = False,
         disallows_training: bool = False,
         suppress_robots: bool = False,
