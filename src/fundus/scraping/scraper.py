@@ -94,7 +94,6 @@ class WebScraper(BaseScraper):
             WebSource(
                 url_source=url_source,
                 publisher=publisher,
-                request_header=publisher.request_header,
                 delay=delay,
                 url_filter=publisher.url_filter,
                 query_parameters=publisher.query_parameter,
