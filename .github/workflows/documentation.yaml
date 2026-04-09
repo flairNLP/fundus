@@ -17,7 +17,7 @@ env:
   PYTHONPATH: .
 
 jobs:
-  update:
+  supported_publishers:
     runs-on: ubuntu-latest
 
     permissions:
