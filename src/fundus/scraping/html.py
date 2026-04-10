@@ -7,7 +7,6 @@ from urllib.parse import urlparse
 import chardet
 import lxml.html
 import requests
-import validators
 from fastwarc import ArchiveIterator, WarcRecord, WarcRecordType
 from lxml.cssselect import CSSSelector
 from lxml.etree import XPath
@@ -18,7 +17,7 @@ from fundus.publishers.base_objects import Publisher, Robots
 from fundus.scraping.delay import Delay
 from fundus.scraping.filter import URLFilter
 from fundus.scraping.session import _default_header, session_handler
-from fundus.scraping.url import URLSource
+from fundus.scraping.url import URLSource, is_valid_url
 from fundus.utils.events import __EVENTS__
 
 __all__ = [
@@ -186,7 +185,7 @@ class WebSource:
 
     def _fetch_html(self, url: str, url_filter: URLFilter) -> Optional[HTML]:
         # check if URL is malformed
-        if not validators.url(url):
+        if not is_valid_url(url):
             logger.debug(f"Skipped requested URL {url!r} because the URL is malformed")
             return None
 
