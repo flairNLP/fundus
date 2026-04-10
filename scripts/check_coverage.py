@@ -143,7 +143,7 @@ def download_artifact_zip(run: WorkflowRun, use_cache: bool = True) -> Optional[
         if a.name == __ARTIFACT_NAME__:
             if a.expired:
                 if __VERBOSE__:
-                    tqdm.write(f"Artifact has expired")
+                    tqdm.write("Artifact has expired")
                 return None
             zip_url = a.archive_download_url
             r = requests.get(zip_url, headers={"Authorization": f"token {__TOKEN__}"})

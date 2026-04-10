@@ -57,7 +57,7 @@ def add_handler(handler: logging.Handler):
         handler: The new handler to add.
     """
     if handler.name is None:
-        raise ValueError(f"Handlers to add must have a name set")
+        raise ValueError("Handlers to add must have a name set")
 
     if handlers.get(handler.name) is not None:
         raise ValueError(f"Handler with name {handler.name} already exists")

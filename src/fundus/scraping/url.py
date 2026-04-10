@@ -85,7 +85,7 @@ class _ArchiveDecompressor:
 
     def _decompress_octet_stream(self, compressed_content: bytes) -> bytes:
         if (compression_format := CompressionFormats.identify(compressed_content)) is None:
-            logger.debug(f"Could not identify compression format")
+            logger.debug("Could not identify compression format")
             raise NotImplementedError
 
         return compression_format(compressed_content)
@@ -121,7 +121,7 @@ class URLSource(Iterable[str], ABC):
 
     @abstractmethod
     def __iter__(self) -> Iterator[str]:
-        raise NotImplemented
+        raise NotImplementedError
 
     def get_urls(self, max_urls: Optional[int] = None) -> Iterator[str]:
         """Returns a generator yielding up to <max_urls> URLs from <self>.

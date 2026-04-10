@@ -14,7 +14,7 @@ from fundus.parser.utility import (
 
 class OrfParser(ParserProxy):
     class V1(BaseParser):
-        _paragraph_selector = CSSSelector("div.story-story > " "p:not(.caption.tvthek.stripe-credits)")
+        _paragraph_selector = CSSSelector("div.story-story > p:not(.caption.tvthek.stripe-credits)")
         _summary_selector = CSSSelector("div.story-lead > p")
         _subheadline_selector = CSSSelector("div.story-story > h2")
 

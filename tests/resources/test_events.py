@@ -22,7 +22,7 @@ class TestEvents:
 
         events.clear_event("success")
 
-        assert events.is_event_set("success") == False
+        assert not events.is_event_set("success")
 
     def test_set_clear_all(self):
         events = EventDict()
@@ -32,24 +32,24 @@ class TestEvents:
 
         events.set_for_all("success")
 
-        assert events.is_event_set("success", 1) == events.is_event_set("success", 2) == True
+        assert events.is_event_set("success", 1) == events.is_event_set("success", 2) is True
 
         events.clear_for_all("success")
 
-        assert events.is_event_set("success", 1) == events.is_event_set("success", 2) == False
+        assert events.is_event_set("success", 1) == events.is_event_set("success", 2) is False
 
         events.register_event("failure", 1)
         events.register_event("failure", 2)
 
         events.set_for_all()
 
-        assert events.is_event_set("success", 1) == events.is_event_set("success", 2) == True
-        assert events.is_event_set("failure", 1) == events.is_event_set("failure", 2) == True
+        assert events.is_event_set("success", 1) == events.is_event_set("success", 2) is True
+        assert events.is_event_set("failure", 1) == events.is_event_set("failure", 2) is True
 
         events.clear_for_all()
 
-        assert events.is_event_set("success", 1) == events.is_event_set("success", 2) == False
-        assert events.is_event_set("failure", 1) == events.is_event_set("failure", 2) == False
+        assert events.is_event_set("success", 1) == events.is_event_set("success", 2) is False
+        assert events.is_event_set("failure", 1) == events.is_event_set("failure", 2) is False
 
     def test_new_event_after_set_for_all(self):
         events = EventDict()
@@ -60,8 +60,8 @@ class TestEvents:
 
         events.register_event("success", 2)
 
-        assert events.is_event_set("success", 1) == True
-        assert events.is_event_set("success", 2) == False
+        assert events.is_event_set("success", 1)
+        assert not events.is_event_set("success", 2)
 
     def test_set_for_all_future_true(self):
         events = EventDict()
@@ -72,8 +72,8 @@ class TestEvents:
 
         events.register_event("success", 2)
 
-        assert events.is_event_set("success", 1) == True
-        assert events.is_event_set("success", 2) == True
+        assert events.is_event_set("success", 1)
+        assert events.is_event_set("success", 2)
 
     def test_clear_for_all_resets_futures(self):
         events = EventDict()
@@ -83,7 +83,7 @@ class TestEvents:
 
         events.register_event("success", 1)
 
-        assert events.is_event_set("success", 1) == False
+        assert not events.is_event_set("success", 1)
 
     def test_alias(self):
         events = EventDict(default_events=["success"])
@@ -92,7 +92,7 @@ class TestEvents:
 
         events.set_event("success", "main-thread")
 
-        assert events.is_event_set("success", "main-thread") == True
+        assert events.is_event_set("success", "main-thread")
 
     def test_set_all_with_alias(self):
         events = EventDict(default_events=["success"])
@@ -101,11 +101,11 @@ class TestEvents:
 
         events.set_for_all("success")
 
-        assert events.is_event_set("success", "main-thread") == True
+        assert events.is_event_set("success", "main-thread")
 
         events.clear_for_all("success")
 
-        assert events.is_event_set("success", "main-thread") == False
+        assert not events.is_event_set("success", "main-thread")
 
     def test_duplicate(self):
         events = EventDict()

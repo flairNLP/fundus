@@ -57,7 +57,7 @@ class EuronewsParser(ParserProxy):
                 doc=self.precomputed.doc,
                 paragraph_selector=self._paragraph_selector,
                 image_selector=XPath(
-                    "//img[contains(@class, 'c-article-media__img')" " or contains(@class, 'widgetImage__image')]"
+                    "//img[contains(@class, 'c-article-media__img') or contains(@class, 'widgetImage__image')]"
                 ),
                 caption_selector=XPath(
                     "./ancestor::div[contains(@class, 'c-article-image-video')]"

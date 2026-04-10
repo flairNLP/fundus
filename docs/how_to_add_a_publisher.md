@@ -756,20 +756,21 @@ pytest
 ## 7. Opening a Pull Request
 
 1. Make sure you tested your parser using `pytest`.
-2. Run `black src`, `isort src`, and `mypy src` with no errors.
+2. Run `ruff format src`, `ruff check --fix src`, and `mypy src` with no errors.
 3. Push and open a new PR
 4. Congratulation and thank you very much.
 
 ## 8. Maintaining publishers
 
-If you encounter an issue with a publisher, feel free to correct it and submit a PR.  
-Please follow this general guideline when making such changes.  
+Website layouts change over time, so we may occasionally need to update a publisher's parser.
+If you run into an issue, feel free to correct it and submit a pull request (PR).
+Please follow these guidelines when making such changes:
 
-- If the parser can no longer extract articles properly, create a new parser version to implement the fix.  
-- Use a minor version bump (e.g., from `V1` to `V1_1(V1)`) if the update only involves adjusting selectors.  
-- If the change introduces new attributes or substantially modifies several existing ones, consider moving to a new major version (e.g., from `V1` to `V2`).  
+- If the layout of the publisher changes and the corresponding parser can no longer extract articles properly, create a new parser version with updated selectors.
+- Use a minor version bump (e.g., from `V1` to `V1_1(V1)`) if the update only involves adjusting selectors.
+- If the change introduces new attributes or substantially modifies several existing ones, consider moving to a new major version (e.g., from `V1` to `V2`).
 
 > [!NOTE]
-> You will now need to set the `VALID_UNTIL` attribute for the previous version to a `datetime.date` pointing to the day before the layout change.
+> Set the `VALID_UNTIL` attribute on the previous version to a `datetime.date` for the day before the layout change.
 > You can estimate this date using the logs or the Wayback Machine.
-> The Attribute is not inherited from previous versions. Every subclass of `BaseParser` by default has `VALID_UNTIL` set to `date.max`.
+> Note that `VALID_UNTIL` is not inherited from previous versions — every subclass of `BaseParser` defaults to `date.max`.

@@ -344,8 +344,7 @@ class CrawlerBase(ABC):
         if max_articles_per_publisher:
             if timeout < 120:
                 print(
-                    "It is recommended to set a minimum <timeout> of 120 seconds when using "
-                    "max_articles_per_publisher."
+                    "It is recommended to set a minimum <timeout> of 120 seconds when using max_articles_per_publisher."
                 )
             max_articles = -1
 
@@ -518,8 +517,8 @@ class Crawler(CrawlerBase):
         fitting_publishers = list(filter(filter_publishers, more_itertools.collapse(publishers)))
         if not fitting_publishers:
             raise ValueError(
-                f"All given publishers are deprecated. Either set <ignore_deprecated> to `False` or "
-                f"include at least one publisher that isn't deprecated."
+                "All given publishers are deprecated. Either set <ignore_deprecated> to `False` or "
+                "include at least one publisher that isn't deprecated."
             )
 
         super().__init__(*fitting_publishers)
