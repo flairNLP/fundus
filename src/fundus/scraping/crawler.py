@@ -711,32 +711,24 @@ class CCNewsCrawler(CrawlerBase):
         # As one could think, because we're downloading a bunch of files, this task is IO-bound, but it is actually
         # process-bound. The reason is that we stream the data and process it on the fly rather than downloading all
         # files and processing them afterward. Therefore, we utilize multiprocessing here instead of multithreading.
-        try:
-            with Manager() as manager, Pool(
-                processes=min(self.processes, len(warc_paths)),
-                initializer=initializer,
-            ) as pool:
-                result_queue: Queue[Union[Article, Exception]] = manager.Queue(maxsize=1000)
+        with Manager() as manager, Pool(
+            processes=min(self.processes, len(warc_paths)),
+            initializer=initializer,
+        ) as pool:
+            result_queue: Queue[Union[Article, Exception]] = manager.Queue(maxsize=1000)
 
-                # Because multiprocessing.Pool does not support iterators as targets,
-                # we wrap the article_task to write the articles to a queue instead of returning them directly.
-                wrapped_article_task: Callable[[str], None] = queue_wrapper(result_queue, article_task)
+            # Because multiprocessing.Pool does not support iterators as targets,
+            # we wrap the article_task to write the articles to a queue instead of returning them directly.
+            wrapped_article_task: Callable[[str], None] = queue_wrapper(result_queue, article_task)
 
-                # To avoid 503 errors we spread tasks to not start all at once
-                spread_article_task = random_sleep(wrapped_article_task, (0, 3))
+            # To avoid 503 errors we spread tasks to not start all at once
+            spread_article_task = random_sleep(wrapped_article_task, (0, 3))
 
-                # To avoid restricting the article_task to use only pickleable objects, we serialize it using dill.
-                serialized_article_task = dill_wrapper(spread_article_task)
+            # To avoid restricting the article_task to use only pickleable objects, we serialize it using dill.
+            serialized_article_task = dill_wrapper(spread_article_task)
 
-                # Finally, we build an iterator around the queue, exhausting the queue until the pool is finished.
-                yield from pool_queue_iter(pool.map_async(serialized_article_task, warc_paths), result_queue)
-        finally:
-            logger.debug(f"Shutting down {type(self).__name__!r} ...")
-            logger.debug("Joining manager ...")
-            manager.join()
-            logger.debug("Joining pool ...")
-            pool.join()
-            logger.debug("Shutdown done")
+            # Finally, we build an iterator around the queue, exhausting the queue until the pool is finished.
+            yield from pool_queue_iter(pool.map_async(serialized_article_task, warc_paths), result_queue)
 
     def _get_warc_paths(self) -> List[str]:
         # Date regex examples: https://regex101.com/r/yDX3G6/1
