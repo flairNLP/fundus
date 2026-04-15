@@ -13,11 +13,11 @@ class BE(metaclass=PublisherGroup):
         domain="https://www.nieuwsblad.be/",
         parser=NieuwsbladParser,
         sources=[
-            RSSFeed("https://www.nieuwsblad.be/rss/section/55178e67-15a8-4ddd-a3d8-bfe5708f8932"),
-            RSSFeed("https://www.nieuwsblad.be/rss/section/7f1bc231-66e7-49f0-a126-b7346eb3e2fa"),
-            RSSFeed("https://www.nieuwsblad.be/rss/section/3dfcee99-2971-4c4c-a603-8c41ae86398b"),
-            RSSFeed("https://www.nieuwsblad.be/rss/section/c0c3b215-10be-4f82-86d6-8b8584a5639d"),
+            RSSFeed("https://www.nieuwsblad.be/rss/"),
+            NewsMap("https://www.nieuwsblad.be/sitemap-news.xml"),
+            Sitemap("https://www.nieuwsblad.be/sitemap.xml"),
         ],
+        deprecated=True,
     )
 
     PoliticoEu = Publisher(
