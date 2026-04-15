@@ -77,5 +77,57 @@
       "Hijos",
       "Delitos Sexuales"
     ]
+  },
+  "V1_1": {
+    "authors": [
+      "Mercedes Benítez"
+    ],
+    "body": {
+      "summary": [
+        "José Ignacio García dice que la Iglesia y las ONGs la apoyan y que si el PP y Vox no lo hacen es «por racismo»"
+      ],
+      "sections": [
+        {
+          "headline": [],
+          "paragraphs": [
+            "El proceso de regularización de inmigrantes iniciado por el Gobierno de Pedro Sánchez es apoyado también por Adelante Andalucía, otra de las formaciones de izquierdas que se presentará a las elecciones del próximo 17 de mayo en Andalucía.",
+            "Su candidato a la Junta de Andalucía, ... el parlamentario José Ignacio García, ha asegurado que apoya el proceso de regularización ya que se trata de personas que ya están trabajando en España y en Andalucía.",
+            "A su juicio estos trabajadores ya están pagando impuestos y, por tanto, lo que a su juicio hay que hacer es «darle derechos para que puedan trabajar con todos los derechos».",
+            "A Adelante le preocupa que los saharauis queden «en el limbo» en el proceso",
+            "«Oponerse a estos es oponerse a los derechos humanos y a la propia democracia. La Iglesia Católica, sindicatos, asociaciones y todo tipo de ONGs apoyan esta regularización«, insiste el candidato de Adelante.",
+            "De hecho, a su juicio, si el PP y Vox se opone a esta medida es «simplemente por racismo».",
+            "Por otra parte García considera una «auténtica barbaridad» la situación en la que quedan las personas apátridas en este procedimiento del Gobierno de Pedro Sánchez, refiriéndose a la situación de los saharauis. «España tiene una deuda con el pueblo saharaui y dejar en el limbo a estas personas, dejándolos en situación de explotación laboral a los saharauis es un ataque a sus derechos», sostiene."
+          ]
+        }
+      ]
+    },
+    "images": [
+      {
+        "versions": [
+          {
+            "url": "https://s1.abcstatics.com/abc/www/multimedia/espana/2026/04/15/jose-ignacio-garcia-RCZ9XaFGs9sEjeg155ZrT9N-758x531@diario_abc.jpg",
+            "query_width": null,
+            "size": {
+              "width": 758,
+              "height": 531
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": true,
+        "description": "José Ignacio García, candidato de Adelante Andalucía",
+        "caption": "José Ignacio García, candidato de Adelante Andalucía.",
+        "authors": [
+          "ABC"
+        ],
+        "position": 852
+      }
+    ],
+    "publishing_date": "2026-04-15 16:59:01+02:00",
+    "title": "Adelante Andalucía: «Oponerse a la regularización de inmigrantes es oponerse a la democracia»",
+    "topics": [
+      "Junta de Andalucía",
+      "Andalucía"
+    ]
   }
 }
