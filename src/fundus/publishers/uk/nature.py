@@ -99,7 +99,8 @@ class NatureParser(ParserProxy):
             "  and not(contains(@class, 'app-access-wall'))"
             "  and text()"
             "] |"
-            "//div[@class='c-article-body']/section//p"
+            "//div[@class='c-article-body']/section//p |"
+            "//p[@class='article__teaser']"
         )
         _summary_selector = XPath("//div[@class='c-article-teaser-text']")
         _subheadline_selector = XPath(
