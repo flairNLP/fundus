@@ -198,7 +198,9 @@
         <code>Nieuwsblad</code>
       </td>
       <td>
-        <div>Nieuwsblad</div>
+        <div>
+          <strike>Nieuwsblad</strike>
+        </div>
       </td>
       <td>
         <a href="https://www.nieuwsblad.be/">
