@@ -28,6 +28,7 @@ class BRParser(ParserProxy):
         _subheadline_selector = XPath(
             "//section[starts-with(@class, 'ArticleModuleText_wrapper')]//div[starts-with(@class, 'ArticleModuleText_content')]//h2"
         )
+        _image_selector = XPath("//figure[not(parent::aside)]//img")
 
         @attribute
         def title(self) -> Optional[str]:
@@ -60,7 +61,7 @@ class BRParser(ParserProxy):
             return image_extraction(
                 doc=self.precomputed.doc,
                 paragraph_selector=self._paragraph_selector,
-                image_selector=XPath("//figure[not(parent::aside)]//img"),
+                image_selector=self._image_selector,
                 author_selector=XPath(
                     f"re:match(./@title, '{author_pattern}')",
                     namespaces={"re": "http://exslt.org/regular-expressions"},
@@ -68,6 +69,8 @@ class BRParser(ParserProxy):
             )
 
     class V1_1(V1):
+        VALID_UNTIL = datetime.date(2026, 3, 29)
+
         _bloat_pattern = "Das ist die Europäische Perspektive bei BR24."
         _summary_selector = XPath("//header //p[@class='body3 ArticleItemTeaserText_text__H_RS_']")
         _subheadline_selector = XPath("//section[@id='articlebody'] //h2[text()]")
@@ -89,3 +92,9 @@ class BRParser(ParserProxy):
                 tz_aware_date = date_string.replace("Uhr", "+02:00")
                 return generic_date_parsing(tz_aware_date)
             return generic_date_parsing(self.precomputed.ld.bf_search("datePublished"))
+
+    class V1_2(V1_1):
+        _paragraph_selector = XPath("//article//p[@class='body3'] |" "(//section[@id='articlebody']//section)[1]//p")
+        _summary_selector = XPath("//header//p[contains(@class,'ArticleItemTeaserText')]")
+        _subheadline_selector = XPath("(//section[@id='articlebody']//section)[1]//h2")
+        _image_selector = XPath("//figure[not(parent::aside) and contains(@class, 'mediaImage')]//img")
