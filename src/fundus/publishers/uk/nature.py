@@ -17,7 +17,8 @@ from fundus.parser.utility import (
 
 class NatureParser(ParserProxy):
     class V1(BaseParser):
-        _summary_selector = CSSSelector("div.c-article-abstract p, p.c-article-abstract")
+        VALID_UNTIL = datetime.date(2026, 2, 1)  # This date is the best guess
+        _summary_selector: XPath = CSSSelector("div.c-article-abstract p, p.c-article-abstract")
 
         _paragraph_selector = XPath(
             "//div[@data-test='access-teaser']//p"
@@ -85,3 +86,33 @@ class NatureParser(ParserProxy):
                 author_selector=self._author_pattern,
                 lower_boundary_selector=self._lower_boundary_selector,
             )
+
+    class V1_1(V1):
+        _paragraph_selector = XPath(
+            "//div[@data-test='main-content' or contains(@class,'main-content')]//p"
+            "["
+            "  not(ancestor::*[@data-label='Related' or contains(@class, 'recommended')])"
+            "  and not(contains(@class, 'recommended__title'))"
+            "  and not(ancestor::figure)"
+            "  and not(ancestor::figcaption)"
+            "  and not(ancestor::a)"
+            "  and not(contains(@class, 'app-access-wall'))"
+            "  and text()"
+            "] |"
+            "//div[@class='c-article-body']/section//p |"
+            "//p[@class='article__teaser']"
+        )
+        _summary_selector = XPath("//div[@class='c-article-teaser-text']")
+        _subheadline_selector = XPath(
+            "//div[@data-test='main-content' or contains(@class,'main-content')]"
+            "//h2"
+            "["
+            "not(ancestor::article[contains(@class, 'recommended')])"
+            "  and not(contains(@class, 'app-access-wall'))"
+            "  and not(@id='access-options')"
+            "] |"
+            "//div[@class='c-article-body']/section//h2"
+        )
+
+        _lower_boundary_selector = XPath("(//aside)[2]")
+        _paywall_selector = XPath("//div[contains(@class, 'buybox')]")
