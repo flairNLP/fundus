@@ -67,7 +67,7 @@ def add_handler(handler: logging.Handler):
         logger.addHandler(handler)
 
 
-def get_current_config() -> JSONVal:
+def get_current_config() -> Dict[str, JSONVal]:
     """Get the current logging configuration as JSON.
 
     Returns:

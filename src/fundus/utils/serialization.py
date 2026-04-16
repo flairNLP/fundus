@@ -58,7 +58,7 @@ class DataclassSerializationMixin:
     def serialize(self) -> Dict[str, JSONVal]:
         if not is_dataclass(self):
             raise TypeError(f"{type(self).__name__!r} is not a dataclass")
-        return asdict(self)  # type: ignore[arg-type]
+        return asdict(self)
 
     @classmethod
     def deserialize(cls: Type[_M], serialized: Dict[str, JSONVal]) -> _M:
@@ -72,7 +72,7 @@ class DataclassSerializationMixin:
         for field in fields(cls):
             serialized[field.name] = _inner_deserialize(serialized[field.name], annotations[field.name])
 
-        return cls(**serialized)  # type: ignore[return-value]
+        return cls(**serialized)
 
 
 def _inner_deserialize(data, cls):

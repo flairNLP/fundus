@@ -47,7 +47,7 @@ def main() -> None:
                     # skip publishers providing no sources for forward crawling
                     print(f"⏩  SKIPPED: {publisher_name!r} - No sources defined")
                     continue
-                if publisher.deprecated:  # type: ignore[attr-defined]
+                if publisher.deprecated:
                     print(f"⏩  SKIPPED: {publisher_name!r} - Deprecated")
                     continue
                 if publisher.__name__ in parsed_arguments.skip:

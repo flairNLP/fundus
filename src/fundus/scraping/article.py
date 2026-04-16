@@ -130,12 +130,12 @@ class Article:
 
         def serialize(v: Any) -> JSONVal:
             if hasattr(v, "serialize"):
-                return v.serialize()  # type: ignore[no-any-return]
+                return v.serialize()
             elif isinstance(v, datetime):
                 return str(v)
             elif not is_jsonable(v):
                 raise TypeError(f"Attribute {attribute!r} of type {type(v)!r} is not JSON serializable")
-            return v  # type: ignore[no-any-return]
+            return v
 
         serialization: Dict[str, JSONVal] = {}
         for attribute in attributes:

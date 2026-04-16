@@ -70,7 +70,7 @@ class LinkedDataMapping:
                     self.add_ld(nested)
             else:
                 self.add_ld(ld)
-        self.__xml: Optional[lxml.etree.Element] = None
+        self.__xml: Optional[lxml.etree._Element] = None
 
     def __getstate__(self):
         state = self.__dict__.copy()
@@ -128,7 +128,7 @@ class LinkedDataMapping:
             tmp = nxt
         return tmp
 
-    def __as_xml__(self) -> lxml.etree.Element:
+    def __as_xml__(self) -> lxml.etree._Element:
         pattern = re.compile("|".join(map(re.escape, self.__xml_transformation_table__.keys())))
 
         def to_unicode_characters(text: str) -> str:
@@ -189,7 +189,7 @@ class LinkedDataMapping:
 
         pattern = re.compile("|".join(map(re.escape, self.__xml_transformation_table__.values())))
 
-        def node2string(n: lxml.etree.Element) -> str:
+        def node2string(n: lxml.etree._Element) -> str:
             node_value = lxml.etree.tostring(n, encoding="unicode").strip()
             if match := self.__value_regex__.match(node_value):
                 return match.group("value")
@@ -299,9 +299,9 @@ class TextSequence(Sequence[str]):
     def __getitem__(self, i: int) -> str: ...
 
     @overload
-    def __getitem__(self, s: slice) -> "TextSequence": ...
+    def __getitem__(self, i: slice) -> "TextSequence": ...
 
-    def __getitem__(self, i):
+    def __getitem__(self, i: Union[int, slice]) -> Union[str, "TextSequence"]:
         return self._data[i] if isinstance(i, int) else type(self)(self._data[i])
 
     def __len__(self) -> int:
@@ -334,14 +334,14 @@ class TextSequenceTree(ABC):
         return join_on.join(self.as_text_sequence())
 
     def df_traversal(self) -> Iterable[TextSequence]:
-        def recursion(o: object):
+        def recursion(o: object) -> Iterator[TextSequence]:
             if isinstance(o, TextSequence):
                 yield o
             elif isinstance(o, Collection):
                 for el in o:
-                    yield from el
+                    yield from recursion(el)
             else:
-                yield o
+                return
 
         for value in self:
             yield from recursion(value)

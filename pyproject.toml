@@ -49,28 +49,22 @@ dependencies = [
 [project.optional-dependencies]
 dev = [
     "pytest~=7.2.2",
-    "mypy==1.9.0",
+    "pyright==1.1.408",
     "ruff==0.15.6",
     # type stubs
     "types-lxml",
     "types-python-dateutil>=2.8, <3",
     "types-requests>=2.28, <3",
     "types-colorama>=0.4, <1",
-    "types-dateparser>=1.2.0, <2"
+    "types-dateparser>=1.2.0, <2",
+    "types-xmltodict>=0.13.0, <1",
+    "types-tqdm>=4.66, <5"
 ]
 
-[tool.mypy]
-check_untyped_defs = true
-disallow_any_generics = true
-ignore_missing_imports = true
-no_implicit_optional = true
-show_error_codes = true
-strict_equality = true
-warn_redundant_casts = true
-warn_return_any = true
-warn_unreachable = true
-warn_unused_configs = true
-no_implicit_reexport = true
+[tool.pyright]
+pythonVersion = "3.8"
+typeCheckingMode = "standard"
+reportMissingImports = false
 
 [tool.ruff]
 line-length = 120

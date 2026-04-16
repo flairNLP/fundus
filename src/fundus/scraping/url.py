@@ -19,6 +19,7 @@ from typing import (
 from urllib.parse import unquote
 
 import feedparser
+import lxml.etree
 import lxml.html
 import validators
 from lxml.etree import XMLParser, XPath
@@ -159,9 +160,9 @@ class RSSFeed(URLSource):
             logger.warning(f"Warning! Couldn't parse rss feed {self.url!r} because of {exception}")
             return
         else:
-            urls = filter(bool, (entry.get("link") for entry in rss_feed["entries"]))
-            for url in urls:
-                yield clean_url(url)
+            for entry in rss_feed["entries"]:
+                if isinstance(url := entry.get("link"), str):
+                    yield clean_url(url)
 
 
 @dataclass
@@ -206,7 +207,7 @@ class Sitemap(URLSource):
             tree = lxml.etree.fromstring(content, parser=self._parser)
             if tree is None:
                 # in case we somehow end up with non xml content
-                logger.warning(f"Warning! Couldn't parse sitemap {sitemap_url!r}")  # type: ignore[unreachable]
+                logger.warning(f"Warning! Couldn't parse sitemap {sitemap_url!r}")
                 return
             urls = [node.text for node in self._url_selector(tree)]
             if urls:

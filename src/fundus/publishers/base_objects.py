@@ -1,6 +1,6 @@
 from collections import defaultdict
 from textwrap import indent
-from typing import Dict, Iterable, Iterator, List, Optional, Set, Type, Union
+from typing import Dict, Iterable, Iterator, List, Optional, Sequence, Set, Type, Union
 from urllib.robotparser import RobotFileParser
 from warnings import warn
 
@@ -127,7 +127,7 @@ class Publisher:
         name: str,
         domain: str,
         parser: Type[ParserProxy],
-        sources: List[URLSource],
+        sources: Sequence[URLSource],
         query_parameter: Optional[Dict[str, str]] = None,
         url_filter: Optional[URLFilter] = None,
         request_header: Optional[Dict[str, str]] = _default_header,

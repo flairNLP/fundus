@@ -31,7 +31,7 @@ jobs:
       - name: Run pytest
         run: python -m pytest -vv
 
-  mypy:
+  pyright:
     # Containers must run in Linux based operating systems
     runs-on: ubuntu-latest
     steps:
@@ -53,5 +53,5 @@ jobs:
         run: |
           pip install -e .[dev]
 
-      - name: Run mypy
-        run: python -m mypy .
+      - name: Run pyright
+        run: pyright
