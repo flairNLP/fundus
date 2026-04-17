@@ -127,3 +127,59 @@ class TestEvents:
                 events.alias("new-thread", 1)
 
         events.alias("new-thread", 1)
+
+    def test_events_accessible_after_context_exits(self):
+        """Events set inside a context should remain accessible after the thread exits.
+
+        Regression test for the KeyError crash where the main crawl loop tried to call
+        is_event_set("stop", publisher_name) after the publisher thread had already
+        finished and its context() cleaned up.
+        """
+        events = EventDict(default_events=["stop"])
+
+        with events.context("Sportschau", 1):
+            events.set_event("stop", "Sportschau")
+
+        # context has exited – alias is no longer active, but events must persist
+        assert events.is_event_set("stop", "Sportschau") is True
+
+    def test_unknown_alias_raises_key_error(self):
+        """Accessing a never-registered alias must still raise KeyError."""
+        events = EventDict(default_events=["stop"])
+
+        with pytest.raises(KeyError):
+            events.is_event_set("stop", "NonExistent")
+
+    def test_main_context_resets_on_exit(self):
+        """__EVENTS__ state must be fully cleared once main_context exits."""
+        events = EventDict(default_events=["stop"])
+
+        with events.main_context("main-thread"):
+            events.alias("Sportschau", 1)
+            events.set_event("stop", "Sportschau")
+            events.set_for_all("stop", future=True)
+
+        # aliases, events, and futures must all be gone
+        assert not events._aliases
+        assert not events._events
+        assert not events._futures
+
+    def test_main_context_raises_when_already_active(self):
+        """Entering a second main_context while one is active must raise RuntimeError."""
+        events = EventDict()
+
+        with events.main_context("main-thread"):
+            with pytest.raises(RuntimeError):
+                with events.main_context("other"):
+                    pass
+
+    def test_reregistration_creates_fresh_events(self):
+        """Re-registering an alias after its thread exits must clear stale event state."""
+        events = EventDict(default_events=["stop"])
+
+        with events.context("Sportschau", 1):
+            events.set_event("stop", "Sportschau")
+
+        # Re-register the same alias (simulates a second crawl)
+        with events.context("Sportschau", 2):
+            assert events.is_event_set("stop", "Sportschau") is False
