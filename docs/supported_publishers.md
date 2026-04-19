@@ -2599,7 +2599,9 @@
         <code>MexicoNewsDaily</code>
       </td>
       <td>
-        <div>Mexico News Daily</div>
+        <div>
+          <strike>Mexico News Daily</strike>
+        </div>
       </td>
       <td>
         <a href="https://mexiconewsdaily.com/">
