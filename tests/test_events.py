@@ -34,7 +34,7 @@ class TestEvents:
         assert events.is_event_set("success", "thread-1") == events.is_event_set("success", "thread-2") is True
 
         events.clear_for_all("success")
-        assert events.is_event_set("success", "thread-1") == events.is_event_set("success", "thread-2") == False
+        assert events.is_event_set("success", "thread-1") == events.is_event_set("success", "thread-2") is False
 
         events.register_event("failure", "thread-1")
         events.register_event("failure", "thread-2")

@@ -368,12 +368,10 @@ class EventDict:
             self._alias(alias, key)
 
     @overload
-    def get_alias(self, ident: int) -> str:
-        ...
+    def get_alias(self, ident: int) -> str: ...
 
     @overload
-    def get_alias(self, ident: int, default: _T) -> Union[str, _T]:
-        ...
+    def get_alias(self, ident: int, default: _T) -> Union[str, _T]: ...
 
     def get_alias(self, ident: int, default=_sentinel):
         """Return the alias associated with a thread identifier.
