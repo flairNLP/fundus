@@ -235,7 +235,7 @@ class EventDict:
             self._events[self._resolve(key)][event].clear()
             logger.debug(f"Cleared event {event!r} for {self._pretty_resolve(key)}")
 
-    def set_for_all(self, event: Optional[str] = None, future: bool = False):
+    def set_for_all(self, event: Optional[str] = None, future: bool = False, active_only: bool = False):
         """Set an event for all registered aliases.
 
         If ``event`` is ``None``, every event for every registered alias is set.
@@ -244,10 +244,15 @@ class EventDict:
             event: The event name to set. If ``None``, all events are set.
             future: If ``True``, newly registered aliases will also have this
                 event pre-set (via the event factory).
+            active_only: If ``True``, only aliases whose threads are currently
+                running are targeted; aliases whose threads have already finished
+                are skipped.
         """
         with self._lock:
             if event is None:
                 for key, events in self._events.items():
+                    if active_only and key not in self._aliases:
+                        continue
                     for name in events:
                         self.set_event(name, key)
             else:
@@ -255,6 +260,8 @@ class EventDict:
                     self._futures.append(event)
 
                 for key in self._events:
+                    if active_only and key not in self._aliases:
+                        continue
                     self.set_event(event, key)
 
     def clear_for_all(self, event: Optional[str] = None):

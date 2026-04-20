@@ -591,7 +591,7 @@ class Crawler(CrawlerBase):
             finally:
                 logger.debug(f"Shutting down {type(self).__name__!r} ...")
                 managed_pool.close()
-                __EVENTS__.set_for_all("stop", future=True)
+                __EVENTS__.set_for_all("stop", future=True, active_only=True)
                 managed_pool.join()
                 __EVENTS__.clear_for_all("stop")
                 logger.debug("Shutdown done")
