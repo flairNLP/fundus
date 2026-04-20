@@ -144,7 +144,6 @@ class WebSource:
         url_source: Iterable[str],
         publisher: Publisher,
         url_filter: Optional[URLFilter] = None,
-        request_header: Optional[Dict[str, str]] = None,
         query_parameters: Optional[Dict[str, str]] = None,
         delay: Optional[Delay] = None,
         ignore_robots: bool = False,
@@ -153,10 +152,9 @@ class WebSource:
         self.url_source = url_source
         self.publisher = publisher
         self.url_filter = url_filter
-        self.request_header = request_header or _default_header
         self.query_parameters = query_parameters or {}
         if isinstance(url_source, URLSource):
-            url_source.set_header(self.request_header)
+            url_source.set_header(self.publisher.request_header)
 
         # parse robots:
         self.robots: Optional[Robots] = None
@@ -164,7 +162,7 @@ class WebSource:
             self.robots = self.publisher.robots
 
             if not ignore_crawl_delay:
-                if robots_delay := self.robots.crawl_delay(self.request_header.get("user-agent") or "*"):
+                if robots_delay := self.robots.crawl_delay(self.publisher.request_header.get("user-agent", "*")):
                     logger.debug(
                         f"Found crawl-delay of {robots_delay} seconds in robots.txt for {self.publisher.name}. "
                         f"Overwriting existing delay."
@@ -195,7 +193,9 @@ class WebSource:
             return None
 
         # check robots
-        if not (self.robots is None or self.robots.can_fetch(self.request_header.get("user-agent") or "*", url)):
+        if not (
+            self.robots is None or self.robots.can_fetch(self.publisher.request_header.get("user-agent", "*"), url)
+        ):
             logger.debug(f"Skipped requested URL {url!r} because of robots.txt")
             return None
 
@@ -213,7 +213,7 @@ class WebSource:
 
         # fetch html
         try:
-            response = session.get_with_interrupt(url, headers=self.request_header)
+            response = session.get_with_interrupt(url, headers=self.publisher.request_header)
 
         except (HTTPError, ConnectionError, ReadTimeout) as error:
             logger.warning(f"Skipped requested URL {url!r} because of {error!r}")
