@@ -730,6 +730,8 @@ class CCNewsCrawler(CrawlerBase):
             # Finally, we build an iterator around the queue, exhausting the queue until the pool is finished.
             yield from pool_queue_iter(pool.map_async(serialized_article_task, warc_paths), result_queue)
 
+            logger.debug(f"Shutting down {type(self).__name__!r} ...")
+
     def _get_warc_paths(self) -> List[str]:
         # Date regex examples: https://regex101.com/r/yDX3G6/1
         date_pattern: Pattern[str] = re.compile(r"CC-NEWS-(?P<date>\d{14})-")
