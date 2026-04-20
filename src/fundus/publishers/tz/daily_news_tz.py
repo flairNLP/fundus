@@ -34,7 +34,7 @@ class DailyNewsTZParser(ParserProxy):
 
         @attribute
         def title(self) -> Optional[str]:
-            return self.precomputed.ld.xpath_search("//Article//headline", scalar=True) or re.sub(
+            return self.precomputed.ld.xpath_search("(//Article//headline)[1]", scalar=True) or re.sub(
                 r"(?i)\s*-\s*(daily\s*news|habari\s*leo)\s*", "", self.precomputed.meta.get("og:title") or ""
             )
 
