@@ -1,16 +1,19 @@
 import contextlib
 import json
 import threading
-from collections import defaultdict
-from typing import Callable, Dict, List, Optional, Union
+from typing import Callable, Dict, List, Optional, TypeVar, Union, overload
 
 from bidict import bidict
 
 from fundus.logging import create_logger
 
+_T = TypeVar("_T")
+
 logger = create_logger(__name__)
 
 __DEFAULT_EVENTS__: List[str] = ["stop"]
+
+_sentinel = object()
 
 
 class ThreadEventDict(Dict[str, threading.Event]):
@@ -36,6 +39,9 @@ class ThreadEventDict(Dict[str, threading.Event]):
         Args:
             default_events: A list of event names for which Event objects
                 should be automatically created when accessed.
+            event_factory: An optional callable used to create new Event objects.
+                Receives the event name and returns a threading.Event. If None,
+                a plain threading.Event() is used.
         """
         super().__init__()
         self._default_events = default_events or []
@@ -68,19 +74,29 @@ class ThreadEventDict(Dict[str, threading.Event]):
 
 
 class EventDict:
-    """A thread-safe event registry for managing thread-local events with optional aliases.
+    """A thread-safe event registry for named entities running in threads.
 
-    This class maintains per-thread event dictionaries, allowing threads to
-    register, set, and clear named `threading.Event` objects in an isolated
-    and synchronized manner.
+    Each named entity (identified by a string alias) gets its own
+    :class:`ThreadEventDict` holding its events.  While a thread is running,
+    ``_aliases`` maps the alias to the active thread ID so that ``key=None``
+    lookups inside the thread resolve correctly.  When the thread exits (via
+    :meth:`context`), only the alias→thread-ID mapping is removed;
+    ``_events[alias]`` persists so that other threads can still read or write
+    those events after the thread has finished (e.g. the main loop checking
+    whether a publisher was already told to stop).
 
-    Aliases can be assigned to thread identifiers for convenience. Each alias
-    maps uniquely to a thread ID, allowing event access via human-readable names.
+    Both broadcast and targeted communication are supported.  Because targeted
+    communication requires a stable identifier, all entities must be registered
+    under a string alias via :meth:`context` or :meth:`alias` before events
+    can be accessed.
 
     Attributes:
-        _events (Dict[int, ThreadEventDict]): Mapping of thread IDs to their events.
-        _aliases (bidict[str, int]): Bidirectional mapping of aliases to thread IDs.
-        _lock (threading.RLock): A re-entrant lock to ensure thread safety.
+        _events (Dict[str, ThreadEventDict]): Mapping of alias to its events.
+            Entries persist after the thread exits.
+        _aliases (bidict[str, int]): Bidirectional mapping of *active* aliases
+            to thread IDs.  An alias is present here only while its associated
+            thread is running.
+        _lock (threading.RLock): Re-entrant lock for thread safety.
     """
 
     def __init__(self, default_events: Optional[List[str]] = None):
@@ -88,8 +104,8 @@ class EventDict:
         Initialize a new EventDict.
 
         Args:
-            default_events: A list of event names that are automatically available
-                for all threads (e.g., ["stop"]).
+            default_events: Event names that are automatically available for
+                every registered alias (e.g. ``["stop"]``).
         """
 
         def event_factory(name: str) -> threading.Event:
@@ -101,256 +117,311 @@ class EventDict:
         self.default_events = default_events
         self._event_factory = event_factory
         self._futures: List[str] = []
-        self._events: Dict[int, ThreadEventDict] = defaultdict(
-            lambda: ThreadEventDict(self.default_events, self._event_factory)
-        )
+        self._events: Dict[str, ThreadEventDict] = {}
         self._aliases: bidict[str, int] = bidict()
         self._lock = threading.RLock()
-        self._global_events: Dict[str, threading.Event] = {
-            "shutdown": threading.Event(),
-        }
+        self._main_context_lock = threading.Lock()
 
     @staticmethod
     def _get_identifier() -> int:
-        """
-        Get the current thread's unique identifier.
-
-        Returns:
-            int: The current thread's identifier.
-        """
+        """Return the current thread's unique identifier."""
         return threading.get_ident()
 
-    def _resolve(self, key: Union[int, str, None]) -> int:
-        """Resolve a key (thread ID, alias, or None) to a thread identifier.
+    def _resolve(self, key: Optional[str]) -> str:
+        """Resolve ``None`` to the calling thread's alias, or return ``key`` unchanged.
 
         Should only be called while holding the internal lock.
 
         Args:
-            key: The key to resolve. May be a thread ID, alias, or None.
+            key: An alias string, or ``None`` to use the calling thread's alias.
 
         Returns:
-            int: The resolved thread identifier.
+            The alias string used as the key in ``_events``.
+
+        Raises:
+            RuntimeError: If ``key`` is ``None`` and the current thread has no
+                active context.
         """
         if key is None:
-            return self._get_identifier()
-        if isinstance(key, int):
-            return key
-        return self._aliases[key]
+            ident = self._get_identifier()
+            if ident in self._aliases.inv:
+                return self._aliases.inv[ident]
+            raise RuntimeError("Current thread has no active context. Pass an explicit alias key.")
+        return key
 
-    def _pretty_resolve(self, key: Union[int, str, None]) -> str:
-        """
-        Resolve a key to a human-readable identifier string, including alias if available.
+    def _pretty_resolve(self, key: Optional[str]) -> str:
+        """Resolve a key to a human-readable string for logging.
 
         Should only be called while holding the internal lock.
 
         Args:
-            key: Thread ID, alias, or None.
+            key: Alias string or ``None`` (current thread).
 
         Returns:
-            str: A formatted string of the form "<thread_id> (alias)".
+            A formatted string such as ``"7740   (Sportschau)"`` or
+            ``"(Sportschau)"`` when the thread has already finished.
+
+        Raises:
+            RuntimeError: If ``key`` is ``None`` and the current thread has no
+                active context.
         """
-        resolved = self._resolve(key)
-        alias = f" ({self._aliases.inv[resolved]})" if resolved in self._aliases.values() else ""
-        return f"{resolved:<6}{alias}"
+        alias = self._resolve(key)
+        thread_id = self._aliases.get(alias)
+        if thread_id is not None:
+            return f"{thread_id:<6} ({alias})"
+        return f"({alias})"
 
     def _alias(self, alias: str, key: Optional[int] = None):
-        """
-        Register an alias for a given thread identifier.
+        """Register an alias for a given thread identifier.
+
+        Events are stored under the alias (canonical key).  If the alias is
+        being registered for the first time, or is being re-registered after a
+        previous thread finished, a fresh :class:`ThreadEventDict` is created
+        so that stale state (e.g. a previously set ``"stop"`` event) is not
+        inherited.
 
         Should only be called while holding the internal lock.
 
         Args:
             alias: The alias to assign.
             key: The thread identifier to associate with this alias.
-                If None, the current thread's identifier is used.
+                Defaults to the current thread's identifier.
         """
-        logger.debug(f"Register alias {alias} -> {(value := key or self._get_identifier())}")
-        self._aliases[alias] = value
-        if (ident := self._resolve(alias)) not in self._events:
-            # noinspection PyStatementEffect
-            # Since defaultdict doesn't provide a direct way to create defaults,
-            # we simulate it by accessing the key.
-            self._events[ident]
+        ident = key if key is not None else self._get_identifier()
+        logger.debug(f"Register alias {alias} -> {ident}")
+        if alias not in self._aliases:
+            # New or re-registration: create fresh events under the alias key.
+            self._events[alias] = ThreadEventDict(self.default_events, self._event_factory)
+        self._aliases[alias] = ident
 
-    def register_event(self, event: str, key: Union[int, str, None] = None):
-        """
-        Register a new event for the specified thread or alias.
+    def register_event(self, event: str, key: Optional[str] = None):
+        """Register a new event for an existing alias.
 
-        If the alias does not exist, it is automatically created.
+        The alias must already be registered via :meth:`context` or
+        :meth:`alias` before calling this method.
 
         Args:
             event: The name of the event to register.
-            key: Thread ID, alias, or None (defaults to the current thread).
+            key: Alias or ``None`` (defaults to the current thread's alias).
+
+        Raises:
+            RuntimeError: If ``key`` is ``None`` and the current thread has no
+                active context.
+            KeyError: If ``key`` names an alias that has never been registered.
         """
         with self._lock:
-            if isinstance(key, str) and key not in self._aliases:
-                self._alias(key)
             if event not in self._events[(resolved := self._resolve(key))]:
                 self._events[resolved][event] = self._event_factory(event)
                 logger.debug(f"Registered event {event!r} for {self._pretty_resolve(key)}")
 
-    def set_event(self, event: str, key: Union[int, str, None] = None):
-        """
-        Set (trigger) an event for the specified thread.
+    def set_event(self, event: str, key: Optional[str] = None):
+        """Set (trigger) an event for the specified alias.
 
         Args:
             event: The name of the event to set.
-            key: Thread ID, alias, or None (defaults to the current thread).
+            key: Alias or ``None`` (defaults to the current thread's alias).
         """
         with self._lock:
             self._events[self._resolve(key)][event].set()
             logger.debug(f"Set event {event!r} for {self._pretty_resolve(key)}")
 
-    def clear_event(self, event: str, key: Union[int, str, None] = None):
-        """
-        Clear (reset) an event for the specified thread.
+    def clear_event(self, event: str, key: Optional[str] = None):
+        """Clear (reset) an event for the specified alias.
 
         Args:
             event: The name of the event to clear.
-            key: Thread ID, alias, or None (defaults to the current thread).
+            key: Alias or ``None`` (defaults to the current thread's alias).
         """
         with self._lock:
             self._events[self._resolve(key)][event].clear()
             logger.debug(f"Cleared event {event!r} for {self._pretty_resolve(key)}")
 
-    def set_for_all(self, event: Optional[str] = None, future: bool = False):
-        """Set an event for all registered threads.
+    def set_for_all(self, event: Optional[str] = None, future: bool = False, active_only: bool = False):
+        """Set an event for all registered aliases.
 
-        If `event` is None, all events for every registered thread are set.
+        If ``event`` is ``None``, every event for every registered alias is set.
 
         Args:
-            event: The event name to set. If None, all events are set.
-            future: If True, the event will be set for all future threads as well.
+            event: The event name to set. If ``None``, all events are set.
+            future: If ``True``, newly registered aliases will also have this
+                event pre-set (via the event factory).
+            active_only: If ``True``, only aliases whose threads are currently
+                running are targeted; aliases whose threads have already finished
+                are skipped.
         """
         with self._lock:
             if event is None:
-                for ident, events in self._events.items():
+                for key, events in self._events.items():
+                    if active_only and key not in self._aliases:
+                        continue
                     for name in events:
-                        self.set_event(name, ident)
+                        self.set_event(name, key)
             else:
                 if future:
                     self._futures.append(event)
 
-                for ident in self._events:
-                    self.set_event(event, ident)
+                for key in self._events:
+                    if active_only and key not in self._aliases:
+                        continue
+                    self.set_event(event, key)
 
     def clear_for_all(self, event: Optional[str] = None):
-        """Clear an event for all registered threads.
+        """Clear an event for all registered aliases.
 
-        If the event was previously set with set_for_all(..., future=True),
-        the event won't be set for future events anymore.
+        If the event was previously marked for future threads via
+        :meth:`set_for_all` with ``future=True``, that mark is also removed.
 
-        If `event` is None, all events for every registered thread are cleared.
+        If ``event`` is ``None``, every event for every registered alias is
+        cleared.
 
         Args:
-            event: The event name to clear. If None, all events are cleared.
+            event: The event name to clear. If ``None``, all events are cleared.
         """
         with self._lock:
             if event is None:
-                for ident, events in self._events.items():
+                for key, events in self._events.items():
                     for name in events:
-                        self.clear_event(name, ident)
+                        self.clear_event(name, key)
             else:
                 if event in self._futures:
                     self._futures.remove(event)
 
-                for ident in self._events:
-                    self.clear_event(event, ident)
+                for key in self._events:
+                    self.clear_event(event, key)
 
-    def is_event_set(self, event: str, key: Union[int, str, None] = None) -> bool:
-        """
-        Check if a specific event is set for a given thread.
+    def is_event_set(self, event: str, key: Optional[str] = None) -> bool:
+        """Check whether a specific event is set for the given alias.
 
         Args:
             event: The name of the event to check.
-            key: Thread ID, alias, or None (defaults to the current thread).
+            key: Alias or ``None`` (defaults to the current thread's alias).
 
         Returns:
-            bool: True if the event is set, False otherwise.
+            ``True`` if the event is set, ``False`` otherwise.
+
+        Raises:
+            RuntimeError: If ``key`` is ``None`` and the current thread has no
+                active context.
+            KeyError: If ``key`` names an alias that has never been registered.
         """
         with self._lock:
             return self._events[self._resolve(key)][event].is_set()
 
     @contextlib.contextmanager
     def context(self, alias: str, key: Optional[int] = None):
-        """
-        Public wrapper to register an alias for a thread.
+        """Context manager that registers an alias for the duration of a block.
+
+        On entry the alias is bound to the current (or given) thread ID so that
+        ``key=None`` lookups inside the thread resolve correctly.  On exit only
+        the alias→thread-ID mapping is removed; ``_events[alias]`` is kept
+        alive so that other threads can still read those events after this
+        thread finishes.  Stale state is cleared on the next :meth:`reset` or
+        when the alias is re-registered via a new ``context()`` call.
 
         Args:
             alias: The alias name to register.
-            key: Optional thread identifier to associate with the alias.
-                Defaults to the current thread if not provided.
+            key: Thread identifier to associate with the alias. Defaults to the
+                current thread's identifier.
         """
         try:
             with self._lock:
                 self._alias(alias, key)
             yield
         finally:
-            self._events.pop(self._resolve(alias))
-            self.remove_alias(alias)
+            with self._lock:
+                self._aliases.pop(alias, None)
+
+    @contextlib.contextmanager
+    def main_context(self, alias: str):
+        """Context manager for the main thread; resets all state on exit.
+
+        Only one main context may be active at a time.
+
+        Args:
+            alias: The alias to register for the calling thread.
+
+        Raises:
+            RuntimeError: If a main context is already active.
+        """
+        if not self._main_context_lock.acquire(blocking=False):
+            raise RuntimeError("A main context is already active")
+        try:
+            with self.context(alias):
+                yield
+        finally:
+            self.reset()
+            self._main_context_lock.release()
 
     def alias(self, alias: str, key: Optional[int] = None):
-        """
-        Public wrapper to register an alias for a thread.
+        """Register an alias for a thread without using a context manager.
+
+        Prefer :meth:`context` for automatic cleanup on thread exit.  Use this
+        method only when the alias lifetime cannot be expressed as a ``with``
+        block (e.g. a long-lived background thread).
 
         Args:
             alias: The alias name to register.
-            key: Optional thread identifier to associate with the alias.
-                Defaults to the current thread if not provided.
+            key: Thread identifier to associate with the alias. Defaults to the
+                current thread's identifier.
         """
         with self._lock:
             self._alias(alias, key)
 
+    @overload
     def get_alias(self, ident: int) -> str:
-        """
-        Get the alias associated with a thread identifier.
+        ...
+
+    @overload
+    def get_alias(self, ident: int, default: _T) -> Union[str, _T]:
+        ...
+
+    def get_alias(self, ident: int, default=_sentinel):
+        """Return the alias associated with a thread identifier.
 
         Args:
             ident: The thread identifier.
+            default: Value to return if no alias is found. If omitted, raises
+                ``KeyError``.
 
         Returns:
-            str: The alias associated with the identifier.
+            The alias string, or ``default`` if the thread has no alias.
         """
-        return self._aliases.inv[ident]
+        if default is _sentinel:
+            return self._aliases.inv[ident]
+        return self._aliases.inv.get(ident, default)
 
-    def remove_alias(self, alias: str):
-        """
-        Remove an alias from the alias mapping.
-
-        Args:
-            alias: The alias to remove.
-        """
-        with self._lock:
-            self._aliases.pop(alias, None)
-
-    def get(self, event: str, key: Optional[Union[int, str, None]] = None) -> threading.Event:
-        """
-        Get the event object associated with the given event name and thread.
+    def get(self, event: str, key: Optional[str] = None) -> threading.Event:
+        """Return the raw :class:`threading.Event` for the given alias and event name.
 
         Args:
             event: The name of the event to retrieve.
-            key: Thread ID, alias, or None (defaults to the current thread).
+            key: Alias or ``None`` (defaults to the current thread's alias).
 
         Returns:
-            threading.Event: The event object.
+            The :class:`threading.Event` object.
         """
         with self._lock:
             return self._events[self._resolve(key)][event]
 
     def reset(self):
+        """Clear all events, aliases, and futures.
+
+        Called automatically by :meth:`main_context` on exit.
+        """
         with self._lock:
             self._futures = []
-            self._events = defaultdict(lambda: ThreadEventDict(self.default_events, self._event_factory))
+            self._events = {}
             self._aliases = bidict()
 
     def __str__(self):
-        def _entry(thread: int) -> str:
-            alias = self._aliases.inv.get(thread, None)
-            serialized = json.dumps(self._events[thread], indent=2, ensure_ascii=False, default=lambda o: o.set())
-            return f"{alias if alias else 'None'} --> {thread}: \n" + serialized
+        def _entry(alias: str) -> str:
+            thread_id = self._aliases.get(alias, "finished")
+            header = f"{alias} --> {thread_id}"
+            serialized = json.dumps(self._events[alias], indent=2, ensure_ascii=False, default=lambda o: o.is_set())
+            return f"{header}:\n{serialized}"
 
-        events = [_entry(ident) for ident in self._events]
-        return "\n".join(events) if events else "Empty Event Dictionary"
+        entries = [_entry(alias) for alias in self._events]
+        return "\n".join(entries) if entries else "Empty Event Dictionary"
 
 
 __EVENTS__: EventDict = EventDict(default_events=__DEFAULT_EVENTS__)

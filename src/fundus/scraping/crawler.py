@@ -65,6 +65,8 @@ from fundus.utils.timeout import Timeout
 
 logger = create_logger(__name__)
 
+__MAIN_THREAD_ALIAS__ = "main-thread"
+
 _T = TypeVar("_T")
 _P = ParamSpec("_P")
 
@@ -135,6 +137,28 @@ def get_execution_context():
         return thread.name, thread.ident
 
 
+def publisher_context_wrapper(func: Callable[[Publisher], None]) -> Callable[[Publisher], None]:
+    """Wraps a callable to register an ``__EVENTS__`` alias context for the publisher argument.
+
+    The alias is entered as the very first thing the thread does and stays alive for the
+    entire call — including any exception handling in the caller — so that
+    ``__EVENTS__.get_alias`` always resolves while the thread is running.
+
+    Args:
+        func: A callable whose first positional argument is a :class:`Publisher`.
+
+    Returns:
+        The wrapped callable.
+    """
+
+    @wraps(func)
+    def wrapper(publisher: Publisher) -> None:
+        with __EVENTS__.context(publisher.name):
+            func(publisher)
+
+    return wrapper
+
+
 def queue_wrapper(
     queue: Queue[Union[_T, Exception]],
     target: Callable[_P, Iterator[_T]],
@@ -161,7 +185,7 @@ def queue_wrapper(
                     # and therefore the queue never will never be free.
                     queue.put_nowait(obj)
                 except Full:
-                    if __EVENTS__.is_event_set("stop"):
+                    if __EVENTS__.is_event_set("stop", __MAIN_THREAD_ALIAS__):
                         return False
                     time.sleep(0.05)
                 else:
@@ -180,14 +204,15 @@ def queue_wrapper(
         except Exception as err:
             tb_str = "".join(traceback.TracebackException.from_exception(err).format())
             context, ident = get_execution_context()
+            alias = __EVENTS__.get_alias(ident, "<unaliased>")
             queue.put(
                 RemoteException(
                     f"There was a(n) {type(err).__name__!r} occurring in {context} "
-                    f"with ident {ident} ({__EVENTS__.get_alias(ident)})\n{tb_str}"
+                    f"with ident {ident} ({alias})\n{tb_str}"
                 )
             )
 
-            logger.debug(f"Encountered remote exception in thread {ident} ({__EVENTS__.get_alias(ident)}): {err!r}")
+            logger.debug(f"Encountered remote exception in thread {ident} ({alias}): {err!r}")
 
     return wrapper
 
@@ -220,8 +245,8 @@ def pool_queue_iter(handle: MapResult[Any], queue: Queue[Union[_T, Exception]]) 
                 handle.get(timeout=0.01)
             except TimeoutError:
                 # listen for stop-event set for main-thread
-                if __EVENTS__.is_event_set("stop", "main-thread"):
-                    __EVENTS__.clear_event("stop", "main-thread")
+                if __EVENTS__.is_event_set("stop", __MAIN_THREAD_ALIAS__):
+                    __EVENTS__.clear_event("stop", __MAIN_THREAD_ALIAS__)
                     break
                 continue
 
@@ -394,13 +419,13 @@ class CrawlerBase(ABC):
         if isinstance(self, CCNewsCrawler) and self.processes > 0:
 
             def callback() -> None:
-                __EVENTS__.set_event("stop", "main-thread")
+                __EVENTS__.set_event("stop", __MAIN_THREAD_ALIAS__)
 
         else:
             callback = None
 
         try:
-            with __EVENTS__.context("main-thread"), Timeout(
+            with __EVENTS__.main_context(__MAIN_THREAD_ALIAS__), Timeout(
                 seconds=timeout, silent=True, callback=callback, disable=timeout <= 0
             ) as timer:
                 for article in self._build_article_iterator(
@@ -533,23 +558,20 @@ class Crawler(CrawlerBase):
             else:
                 raise TypeError("param <delay> of <Crawler.__init__>")
 
-        # we "register" the thread in the event dict as soon as possible to avoid that a thread is registered
-        # after the pool already is shutting down
-        with __EVENTS__.context(publisher.name):
-            scraper = WebScraper(
-                publisher,
-                self.restrict_sources_to,
-                build_delay(),
-                ignore_robots=self.ignore_robots,
-                ignore_crawl_delay=self.ignore_crawl_delay,
+        scraper = WebScraper(
+            publisher,
+            self.restrict_sources_to,
+            build_delay(),
+            ignore_robots=self.ignore_robots,
+            ignore_crawl_delay=self.ignore_crawl_delay,
+        )
+        if not scraper.sources and self.restrict_sources_to:
+            logger.warning(
+                f"No sources of type {[source_type.__name__ for source_type in self.restrict_sources_to]} "
+                f"found for publisher {publisher.name}. Skipping publisher."
             )
-            if not scraper.sources and self.restrict_sources_to:
-                logger.warning(
-                    f"No sources of type {[source_type.__name__ for source_type in self.restrict_sources_to]} "
-                    f"found for publisher {publisher.name}. Skipping publisher."
-                )
-                return
-            yield from scraper.scrape(error_handling, extraction_filter, url_filter, language_filter)
+            return
+        yield from scraper.scrape(error_handling, extraction_filter, url_filter, language_filter)
 
     @staticmethod
     def _single_crawl(
@@ -569,13 +591,15 @@ class Crawler(CrawlerBase):
             finally:
                 logger.debug(f"Shutting down {type(self).__name__!r} ...")
                 managed_pool.close()
-                __EVENTS__.set_for_all("stop", future=True)
+                __EVENTS__.set_for_all("stop", future=True, active_only=True)
                 managed_pool.join()
                 __EVENTS__.clear_for_all("stop")
                 logger.debug("Shutdown done")
 
         result_queue: Queue[Union[Article, Exception]] = Queue(len(publishers))
-        wrapped_article_task = queue_wrapper(result_queue, article_task, silenced_exceptions=(CrashThread,))
+        wrapped_article_task = publisher_context_wrapper(
+            queue_wrapper(result_queue, article_task, silenced_exceptions=(CrashThread,))
+        )
 
         with session_handler.context(POOL_CONNECTIONS=len(publishers)), _manage_pool(
             processes=len(publishers) or None
