@@ -160,6 +160,10 @@ class EventDict:
         Returns:
             A formatted string such as ``"7740   (Sportschau)"`` or
             ``"(Sportschau)"`` when the thread has already finished.
+
+        Raises:
+            RuntimeError: If ``key`` is ``None`` and the current thread has no
+                active context.
         """
         alias = self._resolve(key)
         thread_id = self._aliases.get(alias)
