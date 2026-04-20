@@ -1,7 +1,6 @@
 import contextlib
 import json
 import threading
-
 from typing import Callable, Dict, List, Optional, TypeVar, Union, overload
 
 from bidict import bidict
@@ -147,9 +146,7 @@ class EventDict:
             ident = self._get_identifier()
             if ident in self._aliases.inv:
                 return self._aliases.inv[ident]
-            raise RuntimeError(
-                "Current thread has no active context. Pass an explicit alias key."
-            )
+            raise RuntimeError("Current thread has no active context. Pass an explicit alias key.")
         return key
 
     def _pretty_resolve(self, key: Optional[str]) -> str:
@@ -367,10 +364,12 @@ class EventDict:
             self._alias(alias, key)
 
     @overload
-    def get_alias(self, ident: int) -> str: ...
+    def get_alias(self, ident: int) -> str:
+        ...
 
     @overload
-    def get_alias(self, ident: int, default: _T) -> Union[str, _T]: ...
+    def get_alias(self, ident: int, default: _T) -> Union[str, _T]:
+        ...
 
     def get_alias(self, ident: int, default=_sentinel):
         """Return the alias associated with a thread identifier.
