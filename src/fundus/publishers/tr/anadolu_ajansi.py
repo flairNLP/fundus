@@ -17,6 +17,8 @@ from fundus.parser.utility import (
 
 class AnadoluAjansiParser(ParserProxy):
     class V1(BaseParser):
+        VALID_UNTIL = datetime.date(2026, 4, 5)
+
         _summary_selector = CSSSelector("div.detay-bg > div > div > h4")
         _paragraph_selector = XPath(
             "//div[@class='detay-icerik']"
@@ -78,4 +80,46 @@ class AnadoluAjansiParser(ParserProxy):
                 paragraph_selector=self._paragraph_selector,
                 image_selector=CSSSelector("div.row.detay.container > div.col-md-10 > img," "div img[alt='']"),
                 relative_urls=True,
+            )
+
+    class V2(BaseParser):
+        _paragraph_selector = XPath("//div[@dir]/p")
+        _subheadline_selector = XPath("//div[@dir]/h2")
+        _summary_selector = XPath("//span[contains(@class, 'text-descriptionColor')]")
+
+        @attribute
+        def title(self) -> Optional[str]:
+            return self.precomputed.ld.xpath_search("//NewsArticle/headline", scalar=True)
+
+        @attribute
+        def body(self) -> Optional[ArticleBody]:
+            return extract_article_body_with_selector(
+                self.precomputed.doc,
+                paragraph_selector=self._paragraph_selector,
+                summary_selector=self._summary_selector,
+                subheadline_selector=self._subheadline_selector,
+            )
+
+        @attribute
+        def publishing_date(self) -> Optional[datetime.datetime]:
+            return generic_date_parsing(self.precomputed.ld.xpath_search("//NewsArticle/datePublished", scalar=True))
+
+        @attribute
+        def authors(self) -> List[str]:
+            return generic_author_parsing(self.precomputed.ld.xpath_search("//NewsArticle/author"))
+
+        @attribute
+        def topics(self) -> List[str]:
+            return generic_topic_parsing(self.precomputed.ld.xpath_search("//NewsArticle/keywords"))
+
+        @attribute
+        def images(self) -> List[Image]:
+            return image_extraction(
+                doc=self.precomputed.doc,
+                paragraph_selector=self._paragraph_selector,
+                image_selector=XPath(
+                    "//*[(self::div and @class='content-media-slider__media') or self::figure or self::p]/img"
+                ),
+                caption_selector=XPath("./ancestor::figure/figcaption"),
+                author_selector=re.compile(r"(?i)Fotoğraf\s*:(?P<credits>.*)$"),
             )
