@@ -8,6 +8,7 @@ class TestEvents:
     def test_default_events(self):
         events = EventDict(default_events=["success"])
 
+        events.alias("test")
         events.get("success")
 
         with pytest.raises(KeyError):
@@ -16,74 +17,64 @@ class TestEvents:
     def test_set_clear(self):
         events = EventDict(default_events=["success"])
 
+        events.alias("test")
         events.set_event("success")
-
         assert events.is_event_set("success")
 
         events.clear_event("success")
-
         assert not events.is_event_set("success")
 
     def test_set_clear_all(self):
-        events = EventDict()
+        events = EventDict(default_events=["success"])
 
-        events.register_event("success", 1)
-        events.register_event("success", 2)
+        events.alias("thread-1", 1)
+        events.alias("thread-2", 2)
 
         events.set_for_all("success")
-
-        assert events.is_event_set("success", 1) == events.is_event_set("success", 2) is True
+        assert events.is_event_set("success", "thread-1") == events.is_event_set("success", "thread-2") is True
 
         events.clear_for_all("success")
+        assert events.is_event_set("success", "thread-1") == events.is_event_set("success", "thread-2") == False
 
-        assert events.is_event_set("success", 1) == events.is_event_set("success", 2) is False
-
-        events.register_event("failure", 1)
-        events.register_event("failure", 2)
+        events.register_event("failure", "thread-1")
+        events.register_event("failure", "thread-2")
 
         events.set_for_all()
-
-        assert events.is_event_set("success", 1) == events.is_event_set("success", 2) is True
-        assert events.is_event_set("failure", 1) == events.is_event_set("failure", 2) is True
+        assert events.is_event_set("success", "thread-1") == events.is_event_set("success", "thread-2") is True
+        assert events.is_event_set("failure", "thread-1") == events.is_event_set("failure", "thread-2") is True
 
         events.clear_for_all()
-
-        assert events.is_event_set("success", 1) == events.is_event_set("success", 2) is False
-        assert events.is_event_set("failure", 1) == events.is_event_set("failure", 2) is False
+        assert events.is_event_set("success", "thread-1") == events.is_event_set("success", "thread-2") is False
+        assert events.is_event_set("failure", "thread-1") == events.is_event_set("failure", "thread-2") is False
 
     def test_new_event_after_set_for_all(self):
-        events = EventDict()
+        events = EventDict(default_events=["success"])
 
-        events.register_event("success", 1)
-
+        events.alias("thread-1", 1)
         events.set_for_all("success")
+        events.alias("thread-2", 2)
 
-        events.register_event("success", 2)
-
-        assert events.is_event_set("success", 1)
-        assert not events.is_event_set("success", 2)
+        assert events.is_event_set("success", "thread-1")
+        assert not events.is_event_set("success", "thread-2")
 
     def test_set_for_all_future_true(self):
-        events = EventDict()
+        events = EventDict(default_events=["success"])
 
-        events.register_event("success", 1)
-
+        events.alias("thread-1", 1)
         events.set_for_all("success", future=True)
+        events.alias("thread-2", 2)
 
-        events.register_event("success", 2)
-
-        assert events.is_event_set("success", 1)
-        assert events.is_event_set("success", 2)
+        assert events.is_event_set("success", "thread-1")
+        assert events.is_event_set("success", "thread-2")
 
     def test_clear_for_all_resets_futures(self):
-        events = EventDict()
+        events = EventDict(default_events=["success"])
 
         events.set_for_all("success", future=True)
         events.clear_for_all("success")
 
-        events.register_event("success", 1)
-
-        assert not events.is_event_set("success", 1)
+        events.alias("thread-1", 1)
+        assert not events.is_event_set("success", "thread-1")
 
     def test_alias(self):
         events = EventDict(default_events=["success"])
@@ -143,6 +134,13 @@ class TestEvents:
         # context has exited – alias is no longer active, but events must persist
         assert events.is_event_set("stop", "Sportschau") is True
 
+    def test_no_context_raises_runtime_error(self):
+        """Calling with key=None from a thread with no active context must raise RuntimeError."""
+        events = EventDict(default_events=["stop"])
+
+        with pytest.raises(RuntimeError):
+            events.is_event_set("stop")
+
     def test_unknown_alias_raises_key_error(self):
         """Accessing a never-registered alias must still raise KeyError."""
         events = EventDict(default_events=["stop"])
@@ -183,3 +181,16 @@ class TestEvents:
         # Re-register the same alias (simulates a second crawl)
         with events.context("Sportschau", 2):
             assert events.is_event_set("stop", "Sportschau") is False
+
+    def test_set_for_all_active_only(self):
+        """active_only=True must skip aliases whose threads have already finished."""
+        events = EventDict(default_events=["stop"])
+
+        with events.context("inactive", 1):
+            pass  # alias removed on exit, _events["inactive"] persists
+
+        with events.context("active", 2):
+            events.set_for_all("stop", active_only=True)
+
+            assert events.is_event_set("stop", "active") is True
+            assert events.is_event_set("stop", "inactive") is False
