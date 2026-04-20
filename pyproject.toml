@@ -39,7 +39,8 @@ dependencies = [
     "dict2xml>=1.7.6, <2",
     "xmltodict>=0.13.0, <1",
     "bidict>=0.23, <1",
-    "dateparser>=1.2.2, <2"
+    "dateparser>=1.2.2, <2",
+    "robotspy>=0.13.0, <1"
 ]
 
 [project.urls]
