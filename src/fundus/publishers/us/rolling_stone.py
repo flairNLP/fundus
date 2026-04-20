@@ -21,7 +21,7 @@ class RollingStoneParser(ParserProxy):
 
         _paragraph_selector = CSSSelector("div.a-content p.paragraph")
         _summary_selector = CSSSelector("div.article-excerpt")
-        _subheadline_selector = CSSSelector("div.a-content h2.heading," "div.a-content div#pmc-gallery-vertical h2")
+        _subheadline_selector = CSSSelector("div.a-content h2.heading,div.a-content div#pmc-gallery-vertical h2")
 
         @attribute
         def body(self) -> Optional[ArticleBody]:

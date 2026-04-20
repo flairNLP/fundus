@@ -81,11 +81,9 @@ class DWParser(ParserProxy):
         _subheadline_selector = CSSSelector("div.longText > h2")
         _title_selector = CSSSelector(".col3 h1")
         _author_selector = XPath(
-            "normalize-space(" '//ul[@class="smallList"]' '/li[strong[contains(text(), "Auto")]]' "/text()[last()]" ")"
+            'normalize-space(//ul[@class="smallList"]/li[strong[contains(text(), "Auto")]]/text()[last()])'
         )
-        _date_selector = XPath(
-            "normalize-space(" '//ul[@class="smallList"]' '/li[strong[contains(text(), "Datum")]]' "/text())"
-        )
+        _date_selector = XPath('normalize-space(//ul[@class="smallList"]/li[strong[contains(text(), "Datum")]]/text())')
 
         @attribute
         def body(self) -> Optional[ArticleBody]:

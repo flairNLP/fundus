@@ -32,9 +32,9 @@ class TestPublisherCollection:
 
         default_language = getattr(region, "default_language")
 
-        assert (
-            default_language in language_codes
-        ), f"Default language {default_language!r} isn't a ISO 639 language code"
+        assert default_language in language_codes, (
+            f"Default language {default_language!r} isn't a ISO 639 language code"
+        )
 
     @pytest.mark.parametrize(
         "publisher", [pytest.param(publisher, id=publisher.__name__) for publisher in PublisherCollection]

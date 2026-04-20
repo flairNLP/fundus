@@ -37,7 +37,7 @@ class NikkanGeadaiParser(ParserProxy):
         def _transform_br_element(self):
             if nodes := self._full_text_selector(self.precomputed.doc):
                 if len(nodes) != 1:
-                    raise ValueError(f"Expected exactly one node")
+                    raise ValueError("Expected exactly one node")
                 else:
                     transform_breaks_to_tag(nodes[0], __class__="br-wrap")
 

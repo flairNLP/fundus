@@ -359,7 +359,9 @@ class _ParserCache:
 
 class ParserProxy(ABC):
     def __init__(self):
-        predicate: Callable[[object], bool] = lambda x: inspect.isclass(x) and issubclass(x, BaseParser)
+        def predicate(x: object) -> bool:
+            return inspect.isclass(x) and issubclass(x, BaseParser)
+
         included_parsers: List[Type[BaseParser]] = [
             parser for name, parser in inspect.getmembers(type(self), predicate=predicate)
         ]

@@ -172,7 +172,7 @@ class Article:
             f'\n- Text:  "{wrapped_plaintext}"'
             f"\n- URL:    {self.html.requested_url}"
             f"\n- From:   {self.publisher}"
-            f'{" (" + self.publishing_date.strftime("%Y-%m-%d %H:%M") + ")" if self.publishing_date else ""}'
+            f"{' (' + self.publishing_date.strftime('%Y-%m-%d %H:%M') + ')' if self.publishing_date else ''}"
         )
 
         return dedent(text)
