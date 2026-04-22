@@ -32,7 +32,9 @@ class DailyStarParser(ParserProxy):
 
         @attribute
         def publishing_date(self) -> Optional[datetime.datetime]:
-            return generic_date_parsing(self.precomputed.meta.get("article:published_time"))
+            return generic_date_parsing(
+                self.precomputed.meta.get("article:published_time")
+            )
 
         @attribute
         def authors(self) -> List[str]:
@@ -52,14 +54,20 @@ class DailyStarParser(ParserProxy):
                 doc=self.precomputed.doc,
                 paragraph_selector=self._paragraph_selector,
                 image_selector=CSSSelector("figure.in-article-image img"),
-                caption_selector=XPath("./ancestor::figure//figcaption/span[@class='caption']"),
-                author_selector=XPath("./ancestor::figure//figcaption/span[@class='credit']"),
+                caption_selector=XPath(
+                    "./ancestor::figure//figcaption/span[@class='caption']"
+                ),
+                author_selector=XPath(
+                    "./ancestor::figure//figcaption/span[@class='credit']"
+                ),
             )
 
     class V1_1(V1):
         _summary_selector = XPath("//h2[@data-testid='leadtext']")
         _subheadline_selector = XPath("//h3[contains(@class, 'heading-three')]")
-        _paragraph_selector = XPath("//ul[@data-tmdatatrack='content-unit']/li | " "//article/p[text()]")
+        _paragraph_selector = XPath(
+            "//ul[@data-tmdatatrack='content-unit']/li | //article/p[text()]"
+        )
 
         @attribute
         def body(self) -> Optional[ArticleBody]:
@@ -75,10 +83,14 @@ class DailyStarParser(ParserProxy):
             return image_extraction(
                 doc=self.precomputed.doc,
                 paragraph_selector=self._paragraph_selector,
-                caption_selector=XPath("./ancestor::div[contains(@class, 'ImageEmbed_image-embed')]//figcaption/p"),
+                caption_selector=XPath(
+                    "./ancestor::div[contains(@class, 'ImageEmbed_image-embed')]//figcaption/p"
+                ),
                 author_selector=re.compile(r"(?i)\(image:(?P<credits>.*)\)$"),
             )
 
         @attribute
         def title(self) -> Optional[str]:
-            return self.precomputed.ld.xpath_search("//NewsArticle/headline", scalar=True)
+            return self.precomputed.ld.xpath_search(
+                "//NewsArticle/headline", scalar=True
+            )
