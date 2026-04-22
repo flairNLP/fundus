@@ -7,42 +7,43 @@ on:
   release:
     types:
       - released
-  workflow_dispatch:
 
 jobs:
 
-  permission-check:
+  check-version:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Guard `workflow_dispatch`
-        if: github.event_name == 'workflow_dispatch'
-        id: check-admin
+      - uses: actions/checkout@v4
+      - name: Check version matches tag
         run: |
-          RESPONSE=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-            https://api.github.com/repos/${{ github.repository }}/collaborators/${{ github.actor }}/permission)
-          
-          PERMISSION=$(echo "$RESPONSE" | jq -r '.permission')
-          
-          if [[ "$PERMISSION" != "admin" ]]; then
-            echo "User ${{ github.actor }} does not have admin rights."
+          pip install tomli
+          TAG="${{ github.event.release.tag_name }}"
+          PACKAGE_VERSION=$(python3 -c "
+          import tomli
+          with open('pyproject.toml', 'rb') as f:
+            print(tomli.load(f)['project']['version'])
+          ")
+          if [[ "$TAG" != "$PACKAGE_VERSION" ]]; then
+            echo "Tag ($TAG) does not match package version ($PACKAGE_VERSION)"
             exit 1
           fi
 
   test:
+    needs: check-version
     name: Test the latest release commit
     uses: ./.github/workflows/tests.yml
 
   lint:
+    needs: check-version
     name: Lint the latest release commit
-    uses: ./.github/workflows/lint.yml
+    uses: ./.github/workflows/ruff.yml
 
   build:
     name: Build distribution 📦
     needs:
       - test
       - lint
-      - permission-check
     runs-on: ubuntu-latest
 
     steps:
