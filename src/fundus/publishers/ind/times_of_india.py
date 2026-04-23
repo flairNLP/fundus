@@ -94,7 +94,7 @@ class TimesOfIndiaParser(ParserProxy):
 
     class V2(BaseParser):
         _paragraph_selector = XPath(
-            "(//div[contains(@class,'ihgno')])[1]/p[text()] |" "(//div[contains(@class,'ihgno')])[1]//li[text()]"
+            "(//div[contains(@class,'ihgno')])[1]/p[text()] |(//div[contains(@class,'ihgno')])[1]//li[text()]"
         )
         _subheadline_selector = XPath(
             "(//div[contains(@class,'ihgno')])[1]//*[self::h2 or self::h3 or (span[@class='strong'] and not(text()))]"
