@@ -14,7 +14,6 @@ from fundus.parser.utility import (
     generic_date_parsing,
     generic_topic_parsing,
     image_extraction,
-    transform_breaks_to_tag,
 )
 
 
