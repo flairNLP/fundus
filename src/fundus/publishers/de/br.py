@@ -94,7 +94,7 @@ class BRParser(ParserProxy):
             return generic_date_parsing(self.precomputed.ld.bf_search("datePublished"))
 
     class V1_2(V1_1):
-        _paragraph_selector = XPath("//article//p[@class='body3'] |" "(//section[@id='articlebody']//section)[1]//p")
+        _paragraph_selector = XPath("//article//p[@class='body3'] |(//section[@id='articlebody']//section)[1]//p")
         _summary_selector = XPath("//header//p[contains(@class,'ArticleItemTeaserText')]")
         _subheadline_selector = XPath("(//section[@id='articlebody']//section)[1]//h2")
         _image_selector = XPath("//figure[not(parent::aside) and contains(@class, 'mediaImage')]//img")
