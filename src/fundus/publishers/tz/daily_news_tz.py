@@ -34,9 +34,7 @@ class DailyNewsTZParser(ParserProxy):
 
         @attribute
         def title(self) -> Optional[str]:
-            return self.precomputed.ld.xpath_search(
-                "(//Article//headline)[1]", scalar=True
-            ) or re.sub(
+            return self.precomputed.ld.xpath_search("(//Article//headline)[1]", scalar=True) or re.sub(
                 r"(?i)\s*-\s*(daily\s*news|habari\s*leo)\s*",
                 "",
                 self.precomputed.meta.get("og:title") or "",
@@ -55,15 +53,12 @@ class DailyNewsTZParser(ParserProxy):
         @attribute
         def authors(self) -> List[str]:
             return utility.generic_author_parsing(
-                self.precomputed.meta.get("twitter:data1")
-                or self.precomputed.ld.xpath_search("//Article//author")
+                self.precomputed.meta.get("twitter:data1") or self.precomputed.ld.xpath_search("//Article//author")
             )
 
         @attribute
         def publishing_date(self) -> Optional[datetime]:
-            return utility.generic_date_parsing(
-                self.precomputed.ld.bf_search("datePublished")
-            )
+            return utility.generic_date_parsing(self.precomputed.ld.bf_search("datePublished"))
 
         @attribute
         def images(self) -> List[Image]:
