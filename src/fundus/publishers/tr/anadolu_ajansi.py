@@ -76,6 +76,6 @@ class AnadoluAjansiParser(ParserProxy):
             return image_extraction(
                 doc=self.precomputed.doc,
                 paragraph_selector=self._paragraph_selector,
-                image_selector=CSSSelector("div.row.detay.container > div.col-md-10 > img," "div img[alt='']"),
+                image_selector=CSSSelector("div.row.detay.container > div.col-md-10 > img,div img[alt='']"),
                 relative_urls=True,
             )
