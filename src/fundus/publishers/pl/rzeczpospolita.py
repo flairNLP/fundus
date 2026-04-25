@@ -73,6 +73,13 @@ class RzeczpospolitaParser(ParserProxy):
             )
 
     class V1_1(V1):
+        _summary_selector = XPath("//div[@class='article--lead ']")
+        _paragraph_selector = XPath(
+            "//div[contains(@class,'article--content')]//div[contains(@class,'body articleBody')]"
+            "//p[contains(@class, 'article--paragraph')] |"
+            "//div[contains(@class, 'articleBodyBlock')]//li"
+        )
+
         _image_selector = XPath("//div[contains(@class,'--image')]//img")
         _upper_boundary_selector = XPath("//h1")
         _caption_selector = XPath("./ancestor::div[contains(@class,'--image')]//p[@class='article--media--lead']")
