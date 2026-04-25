@@ -8,7 +8,6 @@ from fundus.parser.utility import (
     extract_article_body_with_selector,
     generic_author_parsing,
     generic_date_parsing,
-    generic_topic_parsing,
     image_extraction,
 )
 
@@ -70,7 +69,7 @@ class ABCParser(ParserProxy):
     class V1_1(V1):
         _summary_selector = XPath("//div[@class='v-a-inf-c ']/h2[text()]")
         _subheadline_selector = XPath("//div[@class='v-c-cmp v-n-mrg']//h3[@class='v-cmp-suh']")
-        _paragraph_selector = XPath("//p[@class='v-d-p' or @class='v-a-t']")
+        _paragraph_selector = XPath("//main//article//p[@class='v-d-p' or @class='v-a-t']")
 
         _topics_selector = XPath("//div[@class='v-d-n']//ul[@class='v-tpc__u']/li[position() > 1]")
         _image_selector = XPath("//figure/div/img[@class='v-a-img']")
