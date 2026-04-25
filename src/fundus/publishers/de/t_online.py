@@ -19,16 +19,12 @@ class TOnlineParser(ParserProxy):
     class V1(BaseParser):
         VALID_UNTIL = datetime.date(2026, 2, 19)
 
-        _paragraph_selector = XPath(
-            "//div[@data-testid='ArticleBody.StreamLayout']//p[@class='text-18 leading-17']"
-        )
+        _paragraph_selector = XPath("//div[@data-testid='ArticleBody.StreamLayout']//p[@class='text-18 leading-17']")
         _summary_selector = XPath(
             "//div[@data-testid='ArticleBody.StreamLayout']//p[@class='font-bold text-18 leading-17']"
         )
 
-        _subheadline_selector = XPath(
-            "//div[@data-testid='ArticleBody.StreamLayout']//h3"
-        )
+        _subheadline_selector = XPath("//div[@data-testid='ArticleBody.StreamLayout']//h3")
 
         @attribute
         def body(self) -> Optional[ArticleBody]:
@@ -53,11 +49,7 @@ class TOnlineParser(ParserProxy):
 
         @attribute
         def topics(self) -> List[str]:
-            return [
-                t
-                for t in generic_topic_parsing(self.precomputed.meta.get("keywords"))
-                if not t.isdigit()
-            ]
+            return [t for t in generic_topic_parsing(self.precomputed.meta.get("keywords")) if not t.isdigit()]
 
         @attribute
         def images(self) -> List[Image]:
@@ -79,6 +71,4 @@ class TOnlineParser(ParserProxy):
 
         @attribute
         def title(self) -> Optional[str]:
-            return strip_nodes_to_text(
-                XPath("//div[@data-external-article-headline]")(self.precomputed.doc)
-            )
+            return strip_nodes_to_text(XPath("//div[@data-external-article-headline]")(self.precomputed.doc))
