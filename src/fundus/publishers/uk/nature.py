@@ -32,7 +32,7 @@ class NatureParser(ParserProxy):
         )
 
         _subheadline_selector = XPath(
-            "//div[@data-test='access-teaser']//h2" "[not(ancestor::article[contains(@class, 'recommended')])]"
+            "//div[@data-test='access-teaser']//h2[not(ancestor::article[contains(@class, 'recommended')])]"
         )
 
         _lower_boundary_selector = XPath(
