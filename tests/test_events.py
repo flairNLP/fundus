@@ -134,12 +134,19 @@ class TestEvents:
         # context has exited – alias is no longer active, but events must persist
         assert events.is_event_set("stop", "Sportschau") is True
 
-    def test_no_context_raises_runtime_error(self):
-        """Calling with key=None from a thread with no active context must raise RuntimeError."""
+    def test_no_context_creates_anonymous_entry(self):
+        """Calling with key=None from a thread with no active context creates an anonymous entry with unset events."""
         events = EventDict(default_events=["stop"])
 
-        with pytest.raises(RuntimeError):
-            events.is_event_set("stop")
+        assert not events.is_event_set("stop")
+
+    def test_no_context_set_and_get(self):
+        """Setting and reading an event without a context works via the anonymous per-thread entry."""
+        events = EventDict(default_events=["stop"])
+
+        assert not events.is_event_set("stop")
+        events.set_event("stop")
+        assert events.is_event_set("stop")
 
     def test_unknown_alias_raises_key_error(self):
         """Accessing a never-registered alias must still raise KeyError."""

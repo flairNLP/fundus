@@ -130,6 +130,11 @@ class EventDict:
     def _resolve(self, key: Optional[str]) -> str:
         """Resolve ``None`` to the calling thread's alias, or return ``key`` unchanged.
 
+        When the calling thread has no registered alias, an anonymous per-thread
+        entry is created automatically so that operations like :meth:`is_event_set`
+        and :meth:`get` work safely outside of any :meth:`context` block
+        (events default to unset).
+
         Should only be called while holding the internal lock.
 
         Args:
@@ -137,16 +142,15 @@ class EventDict:
 
         Returns:
             The alias string used as the key in ``_events``.
-
-        Raises:
-            RuntimeError: If ``key`` is ``None`` and the current thread has no
-                active context.
         """
         if key is None:
             ident = self._get_identifier()
             if ident in self._aliases.inv:
                 return self._aliases.inv[ident]
-            raise RuntimeError("Current thread has no active context. Pass an explicit alias key.")
+            anon_key = f"__thread_{ident}__"
+            if anon_key not in self._events:
+                self._events[anon_key] = ThreadEventDict(self.default_events, self._event_factory)
+            return anon_key
         return key
 
     def _pretty_resolve(self, key: Optional[str]) -> str:
