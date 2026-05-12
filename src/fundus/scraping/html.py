@@ -1,16 +1,13 @@
 import time
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Callable, Dict, Iterable, Iterator, List, Optional, Protocol
+from typing import Callable, Dict, Iterable, Iterator, List, Optional, Protocol, Union
 from urllib.parse import urlparse
 
 import chardet
-import lxml.html
 import requests
+from curl_cffi.requests.exceptions import ConnectionError, HTTPError, ReadTimeout
 from fastwarc import ArchiveIterator, WarcRecord, WarcRecordType
-from lxml.cssselect import CSSSelector
-from lxml.etree import XPath
-from requests import ConnectionError, HTTPError, ReadTimeout
 
 from fundus.logging import create_logger
 from fundus.publishers.base_objects import Publisher, Robots
@@ -112,7 +109,7 @@ class _Clock:
 class WebSource:
     def __init__(
         self,
-        url_source: Iterable[str],
+        url_source: Union[URLSource, Iterable[str]],
         publisher: Publisher,
         url_filter: Optional[URLFilter] = None,
         query_parameters: Optional[Dict[str, str]] = None,
@@ -124,8 +121,6 @@ class WebSource:
         self.publisher = publisher
         self.url_filter = url_filter
         self.query_parameters = query_parameters or {}
-        if isinstance(url_source, URLSource):
-            url_source.set_header(self.publisher.request_header)
 
         # parse robots:
         self.robots: Optional[Robots] = None
@@ -170,7 +165,7 @@ class WebSource:
             logger.debug(f"Skipped requested URL {url!r} because of robots.txt")
             return None
 
-        session = session_handler.get_session()
+        session = session_handler.get_session(self.publisher.impersonate)
 
         # prepare query parameters
         for key, value in self.query_parameters.items():
@@ -230,7 +225,13 @@ class WebSource:
         return combined_url_filter
 
     def fetch(self, url_filter: Optional[URLFilter] = None) -> Iterator[HTML]:
-        url_iterator = iter(self.url_source)
+        if isinstance(self.url_source, URLSource):
+            url_iterator = self.url_source.fetch(
+                session_handler.get_session(self.publisher.impersonate),
+                self.publisher.request_header,
+            )
+        else:
+            url_iterator = iter(self.url_source)
 
         while not self._is_stopped:
             try:
