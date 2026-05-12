@@ -32,35 +32,6 @@ __all__ = [
 
 logger = create_logger(__name__)
 
-# unfortunately lxml does not support case-insensitive CSSSelectors
-_content_type_selector = CSSSelector("meta[http-equiv='Content-Type'], meta[http-equiv='content-type']")
-_charset_selector = XPath("//meta[@charset]/@charset | //meta[@charSet]/@charSet")
-
-
-def _detect_charset_from_response(response: requests.Response) -> Optional[str]:
-    """Detects HTML encoding based on meta tag <http-equiv='Content-Type'>
-
-    Args:
-        response: Response to detect encoding for
-
-    Returns:
-        str: detected encoding or response.apparent_encoding or None
-    """
-    # see https://github.com/flairNLP/fundus/issues/446
-    # use response fallback to decode HTML in a first guess
-    if not (guessed_text := response.content.decode(response.encoding or "utf-8", errors="replace")):
-        return None
-    document = lxml.html.document_fromstring(guessed_text)
-    if (content_type_nodes := _content_type_selector(document)) and len(content_type_nodes) == 1:
-        content_type_node = content_type_nodes.pop()
-        for field in content_type_node.attrib.get("content", "").split(";"):
-            if "charset" in field:
-                charset = field.replace("charset=", "").strip()
-                return charset
-    elif charset := _charset_selector(document):
-        return str(charset.pop())
-    return response.apparent_encoding
-
 
 @dataclass(frozen=True)
 class HTML:
@@ -226,15 +197,6 @@ class WebSource:
             logger.debug(f"Skipped responded URL {str(response.url)!r} because of URL filter")
             return None
 
-        # decode response
-        if "charset" not in response.headers["content-type"]:
-            # That's actually the only place requests checks to detect encoding, so if charset
-            # is not set, requests falls back to default encodings (latin-1/utf-8)
-            logger.debug(f"Detect encoding from response for URL {str(response.url)!r}")
-            if not (encoding := _detect_charset_from_response(response)):
-                logger.warning(f"Could not detect encoding from response for URL {str(response.url)!r}")
-                return None
-            response.encoding = encoding
         html = response.text
 
         # check for redirects

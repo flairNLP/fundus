@@ -600,9 +600,7 @@ class Crawler(CrawlerBase):
             queue_wrapper(result_queue, article_task, silenced_exceptions=(CrashThread,))
         )
 
-        with session_handler.context(POOL_CONNECTIONS=len(publishers)), _manage_pool(
-            processes=len(publishers) or None
-        ) as pool:
+        with _manage_pool(processes=len(publishers) or None) as pool:
             yield from pool_queue_iter(pool.map_async(wrapped_article_task, publishers), result_queue)
 
     def _build_article_iterator(
@@ -826,7 +824,7 @@ class CCNewsCrawler(CrawlerBase):
             def run_disallow_training(publisher: Publisher) -> bool:
                 return publisher.disallows_training
 
-            with ThreadPoolExecutor(max_workers=max_workers) as executor, session_handler.context(TIMEOUT=10):
+            with ThreadPoolExecutor(max_workers=max_workers) as executor, session_handler.context(timeout=10):
                 future_to_publisher = {
                     executor.submit(run_disallow_training, publisher=publisher): publisher for publisher in publishers
                 }
