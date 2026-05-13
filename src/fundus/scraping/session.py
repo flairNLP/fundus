@@ -63,12 +63,6 @@ def _detect_encoding_from_bytes(response: bytes) -> str:
     return encoding or "utf-8"
 
 
-class _LocalState(threading.local):
-    def __init__(self) -> None:
-        super().__init__()
-        self.session: Optional[InterruptableSession] = None
-
-
 class InterruptableSession(curl_cffi.requests.Session[curl_cffi.requests.Response]):
     """Extends curl_cffi Session with interruptable requests via a persistent daemon thread.
 
@@ -174,7 +168,7 @@ class InterruptableSession(curl_cffi.requests.Session[curl_cffi.requests.Respons
 
 
 class SessionHandler:
-    """Manages one thread-local InterruptableSession per thread.
+    """Manages one InterruptableSession per thread via a thread-id registry.
 
     Each thread gets its own session instance backed by a persistent daemon thread,
     enabling connection reuse within a thread. Sessions are created lazily on first use.
@@ -187,33 +181,36 @@ class SessionHandler:
     def __init__(self) -> None:
         self._session_kwargs: Dict[str, Any] = dict(self.DEFAULT_SESSION_KWARGS)
         self._context_lock = threading.RLock()
-        self._thread_local = _LocalState()
+        self._sessions: Dict[int, InterruptableSession] = {}
 
     def get_session(self, impersonate: Optional[BrowserTypeLiteral] = None) -> InterruptableSession:
-        """Return the thread-local session, creating it lazily if needed.
+        """Return the session for the current thread, creating it lazily if needed.
 
         If the existing session was created with a different impersonate profile,
         it is closed and replaced with a fresh one matching the requested profile.
         """
-        session = self._thread_local.session
+        tid = threading.get_ident()
+        session = self._sessions.get(tid)
+
         if session is not None and session.impersonate != impersonate:
-            logger.debug(f"Replacing session (impersonate={session.impersonate!r} → {impersonate!r})")
+            logger.debug(f"Replacing session in thread-{tid} (impersonate={session.impersonate!r} → {impersonate!r})")
             session.close()
-            self._thread_local.session = None
-        if self._thread_local.session is None:
-            self._thread_local.session = InterruptableSession(
+            session = None
+        if session is None:
+            session = InterruptableSession(
                 impersonate=impersonate,
                 default_encoding=_detect_encoding_from_bytes,
                 **self._session_kwargs,
             )
-        return self._thread_local.session
+            self._sessions[tid] = session
+        return session
 
-    def close_current_session(self) -> None:
-        """Tears down the session for the current thread."""
-        if self._thread_local.session is not None:
-            logger.debug(f"Close session (impersonate={self._thread_local.session.impersonate!r})")
-            self._thread_local.session.close()
-            self._thread_local.session = None
+    def close_sessions(self) -> None:
+        """Closes and removes all open sessions."""
+        sessions, self._sessions = self._sessions, {}
+        for tid, session in sessions.items():
+            logger.debug(f"Close session in thread-{tid} (impersonate={session.impersonate!r})")
+            session.close()
 
     @contextmanager
     def context(self, **kwargs: Any) -> Iterator[Self]:
@@ -235,17 +232,17 @@ class SessionHandler:
             )
 
         prev_kwargs = self._session_kwargs
-        prev_thread_local = self._thread_local
+        prev_sessions = self._sessions
         self._session_kwargs = {**self.DEFAULT_SESSION_KWARGS, **kwargs}
-        self._thread_local = _LocalState()
+        self._sessions = {}
 
         try:
             yield self
         finally:
             self._context_lock.release()
-            self.close_current_session()
+            self.close_sessions()
             self._session_kwargs = prev_kwargs
-            self._thread_local = prev_thread_local
+            self._sessions = prev_sessions
 
 
 session_handler = SessionHandler()

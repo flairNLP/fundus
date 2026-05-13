@@ -454,7 +454,7 @@ class CrawlerBase(ABC):
                     if sum(article_count.values()) == max_articles:
                         break
         finally:
-            session_handler.close_current_session()
+            session_handler.close_sessions()
             if save_to_file is not None:
                 if isinstance(save_to_file, str):
                     save_to_file = Path(save_to_file)

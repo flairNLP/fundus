@@ -416,16 +416,32 @@ class TestSessionHandlerExtra:
         session = session_handler.get_session(impersonate="chrome")
         assert session.impersonate == "chrome"
 
-    def test_close_current_session_is_noop_when_no_session(self):
+    def test_close_sessions_is_noop_when_no_sessions(self):
         session_handler = SessionHandler()
-        session_handler.close_current_session()  # must not raise
+        session_handler.close_sessions()  # must not raise
 
-    def test_close_current_session_calls_close(self):
+    def test_close_sessions_closes_all_sessions(self):
         session_handler = SessionHandler()
-        session = session_handler.get_session()
-        with patch.object(session, "close") as mock_close:
-            session_handler.close_current_session()
-        mock_close.assert_called_once()
+        results = {}
+        barrier = threading.Barrier(2)
+
+        def worker(name):
+            s = session_handler.get_session()
+            results[name] = s
+            barrier.wait()
+
+        t = threading.Thread(target=worker, args=("other",))
+        t.start()
+        worker("main")
+        t.join()
+
+        mocks = {name: patch.object(s, "close") for name, s in results.items()}
+        with mocks["main"] as m_main, mocks["other"] as m_other:
+            session_handler.close_sessions()
+
+        m_main.assert_called_once()
+        m_other.assert_called_once()
+        assert session_handler._sessions == {}
 
     def test_get_session_replaces_session_on_impersonate_mismatch(self):
         session_handler = SessionHandler()
