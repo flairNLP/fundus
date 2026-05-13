@@ -50,5 +50,6 @@ class FR(metaclass=PublisherGroup):
             Sitemap("https://sitemap.lesechos.fr/sitemap_index.xml", reverse=True),
             NewsMap("https://www.lesechos.fr/sitemap_news.xml"),
         ],
-        deprecated=True,
+        impersonate="chrome",
+        request_header={"User-agent": "Fundus"},
     )
