@@ -21,5 +21,5 @@ class ISL(metaclass=PublisherGroup):
             RSSFeed("https://www.mbl.is/feeds/english/"),
             RSSFeed("https://www.mbl.is/feeds/helst/"),
         ],
-        deprecated=True,
+        impersonate="chrome",
     )
