@@ -1847,7 +1847,9 @@
         <code>MediaIndonesia</code>
       </td>
       <td>
-        <div>Media Indonesia</div>
+        <div>
+          <strike>Media Indonesia</strike>
+        </div>
       </td>
       <td>
         <a href="https://www.mediaindonesia.com/">
