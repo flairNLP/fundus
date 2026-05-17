@@ -387,14 +387,6 @@ class CrawlerBase(ABC):
                 return
         else:
             fitting_publishers = self.publishers
-        if isinstance(self, Crawler):
-            disallowed_publishers = [publisher for publisher in fitting_publishers if publisher.robots.disallow_all()]
-            if disallowed_publishers:
-                for publisher in disallowed_publishers:
-                    fitting_publishers.remove(publisher)
-                logger.warning(
-                    f"Skipping publishers disallowed by robots.txt: {', '.join(publisher.name for publisher in disallowed_publishers)}"
-                )
 
         # check if there are filtered publishers and if so, adopt their language restrictions
         publisher_language_filter = set()
@@ -548,6 +540,9 @@ class Crawler(CrawlerBase):
     ) -> Iterator[Article]:
         if skip_publishers_disallowing_training and publisher.disallows_training:
             logger.info(f"Skipping publisher {publisher.name} because it disallows training.")
+            return
+        elif publisher.robots.disallow_all():
+            logger.info(f"Skipping publisher {publisher.name} because it disallows all URLs.")
             return
 
         def build_delay() -> Optional[Delay]:
