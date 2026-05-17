@@ -30,6 +30,7 @@ class JP(metaclass=PublisherGroup):
                 languages={"en"},
             ),
         ],
+        deprecated=True,
     )
 
     YomiuriShimbun = Publisher(
