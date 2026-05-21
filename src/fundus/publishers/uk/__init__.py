@@ -14,6 +14,7 @@ from .express import ExpressParser
 from .i_news import INewsParser
 from .metro import MetroParser
 from .nature import NatureParser
+from .techradar import TechRadarParser
 from .the_bbc import TheBBCParser
 from .the_guardian import TheGuardianParser
 from .the_independent import TheIndependentParser
@@ -155,6 +156,17 @@ class UK(metaclass=PublisherGroup):
             NewsMap("https://www.nature.com/latest-news/sitemap.xml"),
             Sitemap("https://www.nature.com/sitemap.xml"),
         ],
+    )
+
+    TechRadar = Publisher(
+        name="TechRadar",
+        domain="https://www.techradar.com/",
+        parser=TechRadarParser,
+        sources=[
+            Sitemap("https://www.techradar.com/sitemap.xml", reverse=True),
+            NewsMap("https://www.techradar.com/sitemap-news.xml"),
+        ],
+        url_filter=regex_filter(r"/deals/compare|/html/|/outlink|/infinite-scroll-"),
     )
 
     Express = Publisher(

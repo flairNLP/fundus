@@ -3411,6 +3411,25 @@
     </tr>
     <tr>
       <td>
+        <code>TechRadar</code>
+      </td>
+      <td>
+        <div>TechRadar</div>
+      </td>
+      <td>
+        <a href="https://www.techradar.com/">
+          <span>www.techradar.com</span>
+        </a>
+      </td>
+      <td>
+        <code>en</code>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
         <code>BBC</code>
       </td>
       <td>
