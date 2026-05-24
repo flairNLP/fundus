@@ -1,7 +1,9 @@
 from fundus.publishers.base_objects import Publisher, PublisherGroup
 from fundus.publishers.ca.cbc_news import CBCNewsParser
+from fundus.publishers.ca.global_news import GlobalNewsParser
 from fundus.publishers.ca.globe_and_mail import TheGlobeAndMailParser
 from fundus.publishers.ca.national_post import NationalPostParser
+from fundus.scraping.filter import regex_filter
 from fundus.scraping.url import NewsMap, RSSFeed, Sitemap
 
 # noinspection PyPep8Naming
@@ -21,6 +23,17 @@ class CA(metaclass=PublisherGroup):
         ],
         request_header={"User-Agent": "Fundus/2.0"},
     )
+
+    GlobalNews = Publisher(
+        name="Global News",
+        domain="https://www.globalnews.ca",
+        parser=GlobalNewsParser,
+        sources=[
+            NewsMap("https://globalnews.ca/news-sitemap.xml"),
+            Sitemap("https://globalnews.ca/sitemap.xml", sitemap_filter=regex_filter(r"image-sitemap"), recursive=True),
+        ],
+    )
+
     TheGlobeAndMail = Publisher(
         name="The Globe and Mail",
         domain="https://www.theglobeandmail.com",
