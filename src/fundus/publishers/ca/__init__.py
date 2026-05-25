@@ -2,7 +2,6 @@ from fundus.publishers.base_objects import Publisher, PublisherGroup
 from fundus.publishers.ca.cbc_news import CBCNewsParser
 from fundus.publishers.ca.globe_and_mail import TheGlobeAndMailParser
 from fundus.publishers.ca.national_post import NationalPostParser
-from fundus.publishers.ca.ottawa_citizen import OttawaCitizenParser
 from fundus.scraping.url import NewsMap, RSSFeed, Sitemap
 
 # noinspection PyPep8Naming
@@ -40,15 +39,5 @@ class CA(metaclass=PublisherGroup):
             NewsMap("https://nationalpost.com/sitemap-news.xml"),
             Sitemap("https://nationalpost.com/sitemap-old.xml"),
             RSSFeed("https://nationalpost.com/feed"),
-        ],
-    )
-
-    OttawaCitizen = Publisher(
-        name="Ottawa Citizen",
-        domain="https://ottawacitizen.com",
-        parser=OttawaCitizenParser,
-        sources=[
-            NewsMap("https://ottawacitizen.com/sitemap-news.xml"),
-            Sitemap("https://ottawacitizen.com/sitemap-old.xml"),
         ],
     )
