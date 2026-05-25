@@ -1,5 +1,4 @@
 import datetime
-import re
 from typing import List, Optional
 
 from lxml.cssselect import CSSSelector
@@ -14,6 +13,7 @@ from fundus.parser.utility import (
     generic_topic_parsing,
     image_extraction,
 )
+from fundus.scraping.filter import regex_filter
 
 
 class NationalPostParser(ParserProxy):
