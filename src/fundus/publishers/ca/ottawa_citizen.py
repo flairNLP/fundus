@@ -1,7 +1,7 @@
 from lxml.etree import XPath
 
 from fundus.parser import ParserProxy
-from fundus.publishers.ca import NationalPostParser
+from fundus.publishers.ca.national_post import NationalPostParser
 
 
 class OttawaCitizenParser(ParserProxy):
