@@ -42,7 +42,7 @@ class NationalPostParser(ParserProxy):
             "politics",
         }
         _topic_filter = re.compile(
-            r"([0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}|NLP Entity Tokens|NLP Category|NP Comment|Category):?\s*"
+            r"(?i)([0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}|NLP Entity Tokens|NLP Category|NP Comment|Category):?\s*"
         )
 
         @attribute

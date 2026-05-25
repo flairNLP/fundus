@@ -412,9 +412,7 @@ def apply_substitution_pattern_over_list(
 
 def apply_result_filter(input_list: List[str], result_filter: Optional[Union[Pattern[str], Set[str]]]) -> List[str]:
     if isinstance(result_filter, Pattern):
-        return [
-            topic for topic in dict.fromkeys(input_list) if not re.search(result_filter, topic, flags=re.IGNORECASE)
-        ]
+        return [topic for topic in dict.fromkeys(input_list) if not re.search(result_filter, topic)]
     else:
         normalized_result_filter = {val.lower() for val in result_filter} if result_filter else set()
         return [
