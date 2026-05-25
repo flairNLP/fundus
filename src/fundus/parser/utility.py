@@ -412,9 +412,16 @@ def apply_substitution_pattern_over_list(
 
 def apply_result_filter(input_list: List[str], result_filter: Optional[Union[Pattern[str], Set[str]]]) -> List[str]:
     if isinstance(result_filter, Pattern):
-        return [topic for topic in dict.fromkeys(input_list) if not re.search(result_filter, topic)]
+        return [
+            topic for topic in dict.fromkeys(input_list) if not re.search(result_filter, topic)
+        ]
     else:
-        return [topic for topic in dict.fromkeys(input_list) if result_filter is None or topic not in result_filter]
+        normalized_result_filter = {val.lower() for val in result_filter} if result_filter else set()
+        return [
+            topic
+            for topic in dict.fromkeys(input_list)
+            if result_filter is None or topic.lower() not in normalized_result_filter
+        ]
 
 
 def generic_author_parsing(

@@ -1,4 +1,5 @@
 import datetime
+import re
 from typing import List, Optional
 
 from lxml.cssselect import CSSSelector
@@ -13,7 +14,6 @@ from fundus.parser.utility import (
     generic_topic_parsing,
     image_extraction,
 )
-from fundus.scraping.filter import regex_filter
 
 
 class NationalPostParser(ParserProxy):
@@ -42,7 +42,7 @@ class NationalPostParser(ParserProxy):
             "politics",
         }
         _topic_filter = re.compile(
-            r"(?i)([0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}|NLP Entity Tokens|NLP Category|NP Comment|Category):?\s*"
+            r"([0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}|NLP Entity Tokens|NLP Category|NP Comment|Category):?\s*"
         )
 
         @attribute
