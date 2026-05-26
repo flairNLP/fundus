@@ -541,6 +541,9 @@ class Crawler(CrawlerBase):
         if skip_publishers_disallowing_training and publisher.disallows_training:
             logger.info(f"Skipping publisher {publisher.name} because it disallows training.")
             return
+        elif publisher.robots.disallow_all():
+            logger.info(f"Skipping publisher {publisher.name} because it disallows all URLs.")
+            return
 
         def build_delay() -> Optional[Delay]:
             if isinstance(self.delay, float):
