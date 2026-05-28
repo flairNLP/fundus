@@ -114,17 +114,17 @@ class TestContext:
             nonlocal pre_context_session, inside_context_session
             pre_context_session = session_handler.get_session()
             ready.set()
-            entered.wait()
+            assert entered.wait(5)
             inside_context_session = session_handler.get_session()
             sampled.set()
 
         t = Thread(target=worker)
         t.start()
-        ready.wait()
+        assert ready.wait(5)
 
         with session_handler.context(timeout=9999):
             entered.set()
-            sampled.wait()
+            assert sampled.wait(5)
 
         t.join()
 
@@ -144,12 +144,12 @@ class TestContext:
             nonlocal pre_context_session, post_context_session
             pre_context_session = session_handler.get_session()
             entered.set()
-            exited.wait()
+            assert exited.wait(5)
             post_context_session = session_handler.get_session()
 
         t = Thread(target=worker)
         t.start()
-        entered.wait()
+        assert entered.wait(5)
 
         with session_handler.context(timeout=9999):
             pass
@@ -181,20 +181,22 @@ class TestInterruptableSession:
         """close() returns immediately even when a request is in flight."""
         session = InterruptableSession()
         inside_request = threading.Event()
+        allow_return = threading.Event()
 
         def slow_follow_redirects(url, **kwargs):
             inside_request.set()
-            time.sleep(30)
+            allow_return.wait(timeout=5)
 
         with patch.object(session, "_follow_redirects", side_effect=slow_follow_redirects):
             result_queue: Queue[Union[curl_cffi.requests.Response, Exception]] = Queue()
             session._task_queue.put(_RequestTask("http://example.com", {}, result_queue))
-            inside_request.wait()
+            assert inside_request.wait(5)
 
             start = time.monotonic()
             session.close()
             assert time.monotonic() - start < 1.0
 
+        allow_return.set()
         session._worker_thread.join(timeout=2)
 
     def test_request_runs_on_worker_thread(self):
@@ -257,13 +259,14 @@ class TestInterruptableSession:
         """CrashThread is raised in the caller when the stop event fires while polling."""
         session = InterruptableSession()
         inside_request = threading.Event()
+        allow_return = threading.Event()
 
         def slow_follow_redirects(url, **kwargs):
             inside_request.set()
-            time.sleep(30)
+            allow_return.wait(timeout=5)
 
         def set_stop():
-            inside_request.wait()
+            assert inside_request.wait(5)
             __EVENTS__.set_event("stop", "test-stop-event")
 
         stopper = Thread(target=set_stop, daemon=True)
@@ -275,6 +278,7 @@ class TestInterruptableSession:
                     session.get_with_interrupt("http://example.com")
 
         stopper.join(timeout=2)
+        allow_return.set()
         session.close()
 
     def test_use_thread_local_curl_always_true(self):
@@ -287,6 +291,37 @@ class TestInterruptableSession:
         session = InterruptableSession(timeout=42, verify=False)
         assert session.timeout == 42
         assert session.verify is False
+        session.close()
+
+    def test_impersonate_drops_kwargs_before_dispatch(self):
+        """When impersonating, get_with_interrupt strips caller kwargs so curl_cffi's fingerprint is unmodified."""
+        session = InterruptableSession(impersonate="chrome")
+        final = _mock_response()
+        captured_kwargs = []
+
+        def capturing_follow(url, **kwargs):
+            captured_kwargs.append(kwargs)
+            return final
+
+        with patch.object(session, "_follow_redirects", side_effect=capturing_follow):
+            session.get_with_interrupt("http://example.com", headers={"x-custom": "value"})
+
+        assert captured_kwargs[0] == {}
+        session.close()
+
+    def test_no_impersonate_forwards_kwargs(self):
+        session = InterruptableSession()
+        final = _mock_response()
+        captured_kwargs = []
+
+        def capturing_follow(url, **kwargs):
+            captured_kwargs.append(kwargs)
+            return final
+
+        with patch.object(session, "_follow_redirects", side_effect=capturing_follow):
+            session.get_with_interrupt("http://example.com", headers={"x-custom": "value"})
+
+        assert captured_kwargs[0] == {"headers": {"x-custom": "value"}}
         session.close()
 
     def test_raise_for_status_propagates(self):
@@ -375,22 +410,7 @@ class TestFollowRedirects:
 
         session.close()
 
-    def test_impersonate_drops_kwargs(self):
-        session = InterruptableSession(impersonate="chrome")
-        final = _mock_response()
-        captured_kwargs = []
-
-        def capturing_get(url, **kwargs):
-            captured_kwargs.append(kwargs)
-            return final
-
-        with patch.object(session, "get", side_effect=capturing_get):
-            session._follow_redirects("http://example.com", headers={"x-custom": "value"})
-
-        assert captured_kwargs[0] == {"allow_redirects": False}
-        session.close()
-
-    def test_no_impersonate_keeps_kwargs(self):
+    def test_kwargs_passed_through(self):
         session = InterruptableSession()
         final = _mock_response()
         captured_kwargs = []

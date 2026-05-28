@@ -96,21 +96,16 @@ class InterruptableSession(curl_cffi.requests.Session[curl_cffi.requests.Respons
         logger.debug(f"{chain} ({response.elapsed}s)")
 
     def _follow_redirects(self, url: str, **kwargs: Any) -> curl_cffi.requests.Response:
-        """Follow redirects manually, building a response history.
-
-        When impersonating a browser, kwargs are dropped so curl_cffi can apply
-        the full browser fingerprint unmodified.
-        """
+        """Follow redirects manually, building a response history."""
         history: List[curl_cffi.requests.Response] = []
         current = url
-        request_kwargs = {} if self.impersonate else kwargs
 
         for _ in range(self.max_redirects):
-            response = self.get(current, **request_kwargs, allow_redirects=False)
+            response: curl_cffi.requests.Response = self.get(current, **kwargs, allow_redirects=False)
 
             if not (300 <= response.status_code <= 399):
                 object.__setattr__(response, "_history", history)
-                return response  # type: ignore[no-any-return]
+                return response
 
             location = response.headers.get("location")
             if not location:
@@ -135,12 +130,15 @@ class InterruptableSession(curl_cffi.requests.Session[curl_cffi.requests.Respons
         """Interruptable GET request.
 
         Submits the request to the persistent daemon thread and polls every second
-        for a stop event. Raises CrashThread if interrupted.
+        for a stop event. Raises CrashThread if interrupted. When impersonating a
+        browser, kwargs are dropped so curl_cffi can apply the full browser
+        fingerprint unmodified.
         """
         if self._closed:
             raise RuntimeError("Session is closed")
+        request_kwargs: Dict[str, Any] = {} if self.impersonate else kwargs
         response_queue: Queue[Union[curl_cffi.requests.Response, Exception]] = Queue()
-        self._task_queue.put(_RequestTask(url, kwargs, response_queue))
+        self._task_queue.put(_RequestTask(url, request_kwargs, response_queue))
 
         while True:
             try:
@@ -239,10 +237,10 @@ class SessionHandler:
         try:
             yield self
         finally:
-            self._context_lock.release()
             self.close_sessions()
             self._session_kwargs = prev_kwargs
             self._sessions = prev_sessions
+            self._context_lock.release()
 
 
 session_handler = SessionHandler()
