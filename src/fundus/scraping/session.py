@@ -58,7 +58,7 @@ def _detect_encoding_from_bytes(response: bytes) -> str:
     elif encoding := chardet.detect(response)["encoding"]:
         logger.debug(f"Detected encoding from chardet: {encoding!r}")
     else:
-        logger.debug("Unable to detect encoding from response")
+        logger.debug("Unable to detect encoding from response. Defaulting to <utf-8>")
     # see https://github.com/flairNLP/fundus/issues/446
     return encoding or "utf-8"
 
