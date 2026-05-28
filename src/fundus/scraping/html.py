@@ -116,11 +116,13 @@ class WebSource:
         delay: Optional[Delay] = None,
         ignore_robots: bool = False,
         ignore_crawl_delay: bool = False,
+        impersonate: bool = False,
     ):
         self.url_source = url_source
         self.publisher = publisher
         self.url_filter = url_filter
         self.query_parameters = query_parameters or {}
+        self._impersonate_profile = publisher.impersonate if impersonate else None
 
         # parse robots:
         self.robots: Optional[Robots] = None
@@ -165,7 +167,7 @@ class WebSource:
             logger.debug(f"Skipped requested URL {url!r} because of robots.txt")
             return None
 
-        session = session_handler.get_session(self.publisher.impersonate)
+        session = session_handler.get_session(self._impersonate_profile)
 
         # prepare query parameters
         for key, value in self.query_parameters.items():
@@ -227,7 +229,7 @@ class WebSource:
     def fetch(self, url_filter: Optional[URLFilter] = None) -> Iterator[HTML]:
         if isinstance(self.url_source, URLSource):
             url_iterator = self.url_source.fetch(
-                session_handler.get_session(self.publisher.impersonate),
+                session_handler.get_session(self._impersonate_profile),
                 self.publisher.request_header,
             )
         else:

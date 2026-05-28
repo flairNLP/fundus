@@ -476,6 +476,7 @@ class Crawler(CrawlerBase):
         threading: bool = True,
         ignore_robots: bool = False,
         ignore_crawl_delay: bool = False,
+        impersonate: bool = False,
     ):
         """Fundus base class for crawling articles from the web.
 
@@ -506,6 +507,10 @@ class Crawler(CrawlerBase):
             ignore_crawl_delay (bool): Determines whether to ignore a crawl delay given by a publisher.
                 If set to False, this will overwrite <delay>. If ignore_robots is set to True, the crawl delay
                 will also be ignored.
+            impersonate (bool): If True, publishers that declare an `impersonate` browser profile will use
+                curl_cffi's TLS/HTTP fingerprint impersonation. If False (default), the profile is ignored
+                and requests go out with Fundus' regular fingerprint — publishers gated by anti-bot checks
+                will likely return 4xx/5xx. Defaults to False.
         """
 
         def filter_publishers(publisher: Publisher) -> bool:
@@ -528,6 +533,7 @@ class Crawler(CrawlerBase):
         self.threading = threading
         self.ignore_robots = ignore_robots
         self.ignore_crawl_delay = ignore_crawl_delay
+        self.impersonate = impersonate
 
     def _fetch_articles(
         self,
@@ -563,6 +569,7 @@ class Crawler(CrawlerBase):
             build_delay(),
             ignore_robots=self.ignore_robots,
             ignore_crawl_delay=self.ignore_crawl_delay,
+            impersonate=self.impersonate,
         )
         if not scraper.sources and self.restrict_sources_to:
             logger.warning(
