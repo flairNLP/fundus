@@ -2,6 +2,7 @@ import datetime
 import re
 from typing import List, Optional
 
+from lxml.cssselect import CSSSelector
 from lxml.etree import XPath
 
 from fundus.parser import ArticleBody, BaseParser, Image, ParserProxy, attribute
@@ -14,8 +15,13 @@ from fundus.parser.utility import (
 
 class TageszeitungParser(ParserProxy):
     class V1(BaseParser):
-        _summary_selector = XPath("//div[@id='article_content']//p[not(@class='wp-caption-text' or text()) and strong]")
-        _paragraph_selector = XPath("//div[@id='article_content']//p[not(@class='wp-caption-text') and text()]")
+        _summary_selector = XPath(
+            "//div[@id='article_content']//p[not(@class='wp-caption-text' or text()) and strong][1]"
+        )
+        _paragraph_selector = XPath(
+            "//div[@id='article_content']//p[not(@class='wp-caption-text') and text()] |"
+            "//div[@id='article_content']//p/span"
+        )
 
         _date_selector = XPath("//span[@class='meta_date']//strong/text()")
 
@@ -49,4 +55,5 @@ class TageszeitungParser(ParserProxy):
                 image_selector=XPath("//article//img"),
                 caption_selector=XPath("./ancestor::div[@class='wp-caption alignnone']//p[@class='wp-caption-text']"),
                 author_selector=re.compile(r"(^|\()(Fotos?:|©)(?P<credits>[^)]+)\)?"),
+                lower_boundary_selector=CSSSelector("div.single_share"),
             )

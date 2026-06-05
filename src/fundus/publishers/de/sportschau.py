@@ -18,7 +18,7 @@ from fundus.parser.utility import (
 class SportSchauParser(ParserProxy):
     class V1(BaseParser):
         _summary_selector = CSSSelector(
-            "p[class='textabsatz columns twelve  m-ten  m-offset-one l-eight l-offset-two']" " > strong"
+            "p[class='textabsatz columns twelve  m-ten  m-offset-one l-eight l-offset-two'] > strong"
         )
         _paragraph_selector = CSSSelector("article >p.textabsatz:not(p.textabsatz:nth-of-type(1))")
         _subheadline_selector = CSSSelector("article >h2")

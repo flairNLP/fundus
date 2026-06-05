@@ -4,13 +4,22 @@ import itertools
 import lzma
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
-from functools import cached_property
-from typing import Callable, ClassVar, Dict, Iterable, Iterator, List, Optional, Set
-from urllib.parse import unquote
+from functools import cached_property, partial
+from typing import (
+    Callable,
+    ClassVar,
+    Dict,
+    Iterable,
+    Iterator,
+    List,
+    Optional,
+    Pattern,
+    Set,
+)
+from urllib.parse import unquote, urlparse
 
 import feedparser
 import lxml.html
-import validators
 from lxml.etree import XMLParser, XPath
 from requests import ConnectionError, HTTPError, ReadTimeout
 
@@ -75,7 +84,7 @@ class _ArchiveDecompressor:
 
     def _decompress_octet_stream(self, compressed_content: bytes) -> bytes:
         if (compression_format := CompressionFormats.identify(compressed_content)) is None:
-            logger.debug(f"Could not identify compression format")
+            logger.debug("Could not identify compression format")
             raise NotImplementedError
 
         return compression_format(compressed_content)
@@ -87,6 +96,11 @@ class _ArchiveDecompressor:
     @cached_property
     def supported_file_formats(self) -> List[str]:
         return list(self.archive_mapping.keys())
+
+
+def is_valid_url(url: str) -> bool:
+    parsed = urlparse(url)
+    return bool(parsed.scheme in ("http", "https") and parsed.netloc)
 
 
 def clean_url(url: str) -> str:
@@ -103,7 +117,7 @@ class URLSource(Iterable[str], ABC):
     def __post_init__(self):
         if not self._request_header:
             self._request_header = _default_header
-        if not validators.url(self.url, strict_query=False):
+        if not is_valid_url(self.url):
             logger.error(f"{type(self).__name__} initialized with invalid URL {self.url}")
 
     def set_header(self, request_header: Dict[str, str]) -> None:
@@ -111,7 +125,7 @@ class URLSource(Iterable[str], ABC):
 
     @abstractmethod
     def __iter__(self) -> Iterator[str]:
-        raise NotImplemented
+        raise NotImplementedError
 
     def get_urls(self, max_urls: Optional[int] = None) -> Iterator[str]:
         """Returns a generator yielding up to <max_urls> URLs from <self>.
@@ -139,7 +153,6 @@ class RSSFeed(URLSource):
         except (HTTPError, ConnectionError, ReadTimeout) as err:
             logger.warning(f"Warning! Couldn't parse rss feed {self.url!r} because of {err}")
             return
-
         except Exception as error:
             logger.error(f"Warning! Couldn't parse rss feed {self.url!r} because of an unexpected error {error!r}")
             return
@@ -160,6 +173,7 @@ class Sitemap(URLSource):
     recursive: bool = True
     reverse: bool = False
     sitemap_filter: URLFilter = lambda url: not bool(url)
+    sort_predicate: Optional[Pattern[str]] = None
 
     _decompressor: ClassVar[_ArchiveDecompressor] = _ArchiveDecompressor()
     _sitemap_selector: ClassVar[XPath] = XPath("//*[local-name()='sitemap']/*[local-name()='loc']")
@@ -169,7 +183,7 @@ class Sitemap(URLSource):
     def __iter__(self) -> Iterator[str]:
         def yield_recursive(sitemap_url: str) -> Iterator[str]:
             session = session_handler.get_session()
-            if not validators.url(sitemap_url):
+            if not is_valid_url(sitemap_url):
                 logger.info(f"Skipped sitemap {sitemap_url!r} because the URL is malformed")
             try:
                 response = session.get_with_interrupt(url=sitemap_url, headers=self._request_header)
@@ -177,7 +191,6 @@ class Sitemap(URLSource):
             except (HTTPError, ConnectionError, ReadTimeout) as error:
                 logger.warning(f"Warning! Couldn't reach sitemap {sitemap_url!r} because of {error!r}")
                 return
-
             except Exception as error:
                 logger.error(
                     f"Warning! Couldn't reach sitemap {sitemap_url!r} because of an unexpected error {error!r}"
@@ -195,12 +208,30 @@ class Sitemap(URLSource):
                 logger.warning(f"Warning! Empty sitemap at {sitemap_url!r}")
                 return
             tree = lxml.etree.fromstring(content, parser=self._parser)
+            if tree is None:
+                # in case we somehow end up with non xml content
+                logger.warning(f"Warning! Couldn't parse sitemap {sitemap_url!r}")  # type: ignore[unreachable]
+                return
             urls = [node.text for node in self._url_selector(tree)]
             if urls:
                 for new_url in reversed(urls) if self.reverse else urls:
                     yield clean_url(new_url)
             elif self.recursive:
                 sitemap_locs = [node.text for node in self._sitemap_selector(tree)]
+
+                if self.sort_predicate is not None:
+
+                    def _extract_predicate(text: str, pattern: Pattern[str]) -> str:
+                        if match := pattern.search(text):
+                            return match.group()
+                        raise NotImplementedError("<sort_predicate> must match in all sitemap URLs")
+
+                    sitemap_locs = sorted(
+                        sitemap_locs,
+                        key=partial(_extract_predicate, pattern=self.sort_predicate),
+                        reverse=True,
+                    )
+
                 filtered_locs = list(filter(inverse(self.sitemap_filter), sitemap_locs))
                 for loc in reversed(filtered_locs) if self.reverse else filtered_locs:
                     yield from yield_recursive(loc)

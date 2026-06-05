@@ -71,7 +71,6 @@ class FreiePresseParser(ParserProxy):
             )
 
     class V1_1(V1):
-        VALID_UNTIL = datetime.date.today()
         _paragraph_selector = CSSSelector("#artikel-content p:not(.bold)")
 
         @attribute
@@ -79,12 +78,13 @@ class FreiePresseParser(ParserProxy):
             return image_extraction(
                 doc=self.precomputed.doc,
                 paragraph_selector=self._paragraph_selector,
-                image_selector=XPath(
-                    "//div[@class='detail-img__image-wrapper detail-img__image-wrapper--gradient']//img"
-                ),
+                image_selector=XPath("//div[contains(@class, 'detail-img')]//img"),
                 lower_boundary_selector=CSSSelector("a.article__copyright"),
                 caption_selector=XPath(
-                    "./ancestor::div[@class='detail-img']//div[@class='detail-img__description no-transition']/div/text()"
+                    "./ancestor::div[contains(@class, 'detail-img')]"
+                    "//div[contains(@class, 'detail-img__description')]"
+                    "/div"
+                    "/text()"
                 ),
                 author_selector=re.compile(r"(?i)bild:(?P<credits>.*)"),
                 relative_urls=True,

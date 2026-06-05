@@ -14,6 +14,7 @@ from fundus.publishers.dk import DK
 from fundus.publishers.es import ES
 from fundus.publishers.fr import FR
 from fundus.publishers.gl import GL
+from fundus.publishers.id import ID
 from fundus.publishers.il import IL
 from fundus.publishers.ind import IND
 from fundus.publishers.isl import ISL
@@ -33,11 +34,14 @@ from fundus.publishers.pl import PL
 from fundus.publishers.pt import PT
 from fundus.publishers.py import PY
 from fundus.publishers.ru import RU
+from fundus.publishers.se import SE
 from fundus.publishers.tr import TR
 from fundus.publishers.tw import TW
 from fundus.publishers.tz import TZ
+from fundus.publishers.ua import UA
 from fundus.publishers.uk import UK
 from fundus.publishers.us import US
+from fundus.publishers.vn import VN
 from fundus.publishers.za import ZA
 
 __all__ = ["Publisher", "PublisherGroup"]
@@ -54,7 +58,7 @@ class PublisherCollectionMeta(PublisherGroup):
                 new_publishers: Set[str] = {publisher.__name__ for publisher in value}
                 if duplicate_publishers := publishers & new_publishers:
                     raise ValueError(
-                        f"Publisher(s) {', '.join(duplicate_publishers)!r} " f"already exists in collection {name!r}."
+                        f"Publisher(s) {', '.join(duplicate_publishers)!r} already exists in collection {name!r}."
                     )
                 publishers.update(new_publishers)
             elif isinstance(value, Publisher):
@@ -84,6 +88,7 @@ class PublisherCollection(metaclass=PublisherCollectionMeta):
     es = ES
     fr = FR
     gl = GL
+    id = ID
     il = IL
     ind = IND
     isl = ISL
@@ -103,9 +108,12 @@ class PublisherCollection(metaclass=PublisherCollectionMeta):
     pt = PT
     py = PY
     ru = RU
+    se = SE
     tr = TR
     tw = TW
     tz = TZ
+    ua = UA
     uk = UK
     us = US
     za = ZA
+    vn = VN

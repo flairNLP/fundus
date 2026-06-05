@@ -1,6 +1,8 @@
 from fundus.publishers.base_objects import Publisher, PublisherGroup
 from fundus.publishers.be.nieuwsblad import NieuwsbladParser
-from fundus.scraping.url import RSSFeed
+from fundus.publishers.be.politico_eu import PoliticoEuParser
+from fundus.scraping.filter import regex_filter
+from fundus.scraping.url import NewsMap, RSSFeed, Sitemap
 
 
 class BE(metaclass=PublisherGroup):
@@ -16,4 +18,16 @@ class BE(metaclass=PublisherGroup):
             RSSFeed("https://www.nieuwsblad.be/rss/section/3dfcee99-2971-4c4c-a603-8c41ae86398b"),
             RSSFeed("https://www.nieuwsblad.be/rss/section/c0c3b215-10be-4f82-86d6-8b8584a5639d"),
         ],
+    )
+
+    PoliticoEu = Publisher(
+        name="Politico EU",
+        domain="https://www.politico.eu/",
+        parser=PoliticoEuParser,
+        sources=[
+            RSSFeed("https://www.politico.eu/feed/", languages={"en"}),
+            Sitemap("https://www.politico.eu/sitemap.xml", languages={"en"}),
+            NewsMap("https://www.politico.eu/news-sitemap.xml", languages={"en"}),
+        ],
+        url_filter=regex_filter("/podcast/"),
     )

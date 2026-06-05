@@ -1,13 +1,12 @@
 import time
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Dict, Iterable, Iterator, List, Optional, Protocol
+from typing import Callable, Dict, Iterable, Iterator, List, Optional, Protocol
 from urllib.parse import urlparse
 
 import chardet
 import lxml.html
 import requests
-import validators
 from fastwarc import ArchiveIterator, WarcRecord, WarcRecordType
 from lxml.cssselect import CSSSelector
 from lxml.etree import XPath
@@ -18,7 +17,7 @@ from fundus.publishers.base_objects import Publisher, Robots
 from fundus.scraping.delay import Delay
 from fundus.scraping.filter import URLFilter
 from fundus.scraping.session import _default_header, session_handler
-from fundus.scraping.url import URLSource
+from fundus.scraping.url import URLSource, is_valid_url
 from fundus.utils.events import __EVENTS__
 
 __all__ = [
@@ -38,18 +37,19 @@ _content_type_selector = CSSSelector("meta[http-equiv='Content-Type'], meta[http
 _charset_selector = XPath("//meta[@charset]/@charset | //meta[@charSet]/@charSet")
 
 
-def _detect_charset_from_response(response: requests.Response) -> str:
+def _detect_charset_from_response(response: requests.Response) -> Optional[str]:
     """Detects HTML encoding based on meta tag <http-equiv='Content-Type'>
 
     Args:
         response: Response to detect encoding for
 
     Returns:
-        str: detected encoding or response.apparent_encoding
+        str: detected encoding or response.apparent_encoding or None
     """
     # see https://github.com/flairNLP/fundus/issues/446
     # use response fallback to decode HTML in a first guess
-    guessed_text = response.content.decode(response.encoding or "utf-8", errors="replace")
+    if not (guessed_text := response.content.decode(response.encoding or "utf-8", errors="replace")):
+        return None
     document = lxml.html.document_fromstring(guessed_text)
     if (content_type_nodes := _content_type_selector(document)) and len(content_type_nodes) == 1:
         content_type_node = content_type_nodes.pop()
@@ -90,8 +90,52 @@ class WebSourceInfo(SourceInfo):
 
 
 class HTMLSource(Protocol):
-    def fetch(self, url_filter: Optional[URLFilter] = None) -> Iterator[HTML]:
-        ...
+    def fetch(self, url_filter: Optional[URLFilter] = None) -> Iterator[HTML]: ...
+
+
+class _Clock:
+    def __init__(
+        self, delay: Optional[Delay], sleep: Callable[[float], None] = time.sleep, warm_start: bool = True
+    ) -> None:
+        """Utility class for time-aligned delay.
+
+        Keeps track of the time passed since last call or init and waits at most the remaining delay.
+
+        Args:
+            delay: A customized delay.
+            sleep: A customized sleep function. Defaults to <time.sleep>.
+            warm_start: If true, skips first delay.
+        """
+        self.delay = delay
+        self.timestamp = time.time()
+
+        if warm_start and self.delay is not None:
+            self.timestamp -= self.delay()
+
+        self.sleep = sleep
+
+    def __call__(self, blocking: bool = True) -> bool:
+        """Waits at most <delay> seconds since last called.
+
+        Args:
+            blocking: If True, blocks until <delay> seconds have elapsed since last call.
+            If non-blocking returns False if less time has elapsed, else returns True.
+
+        Returns: True if <delay> seconds have elapsed since last call. False otherwise.
+
+        """
+        if self.delay is None:
+            return True
+
+        if delay := max(0.0, self.delay() - time.time() + self.timestamp):
+            if not blocking:
+                return False
+            self.sleep(delay)
+        self.reset()
+        return True
+
+    def reset(self):
+        self.timestamp = time.time()
 
 
 class WebSource:
@@ -100,7 +144,6 @@ class WebSource:
         url_source: Iterable[str],
         publisher: Publisher,
         url_filter: Optional[URLFilter] = None,
-        request_header: Optional[Dict[str, str]] = None,
         query_parameters: Optional[Dict[str, str]] = None,
         delay: Optional[Delay] = None,
         ignore_robots: bool = False,
@@ -109,121 +152,141 @@ class WebSource:
         self.url_source = url_source
         self.publisher = publisher
         self.url_filter = url_filter
-        self.request_header = request_header or _default_header
         self.query_parameters = query_parameters or {}
         if isinstance(url_source, URLSource):
-            url_source.set_header(self.request_header)
-
-        self.delay = delay
-
-        # register default events
-        __EVENTS__.register_event("stop")
+            url_source.set_header(self.publisher.request_header)
 
         # parse robots:
         self.robots: Optional[Robots] = None
         if not ignore_robots:
             self.robots = self.publisher.robots
-            if not self.robots.ready:
-                self.publisher.robots.read(headers=self.request_header)
 
             if not ignore_crawl_delay:
-                if robots_delay := self.robots.crawl_delay(self.request_header.get("user-agent") or "*"):
+                if robots_delay := self.robots.crawl_delay(self.publisher.request_header.get("user-agent", "*")):
                     logger.debug(
                         f"Found crawl-delay of {robots_delay} seconds in robots.txt for {self.publisher.name}. "
                         f"Overwriting existing delay."
                     )
-                    self.delay = lambda: robots_delay
+
+                    def delay() -> float:
+                        return robots_delay
+
+        self.clock = _Clock(delay=delay, sleep=self._sleep)
 
     @property
     def _is_stopped(self):
         return __EVENTS__.is_event_set("stop")
 
     @staticmethod
-    def sleep(s: float):
+    def _sleep(s: float):
         __EVENTS__.get("stop").wait(s)
 
-    def fetch(self, url_filter: Optional[URLFilter] = None) -> Iterator[HTML]:
+    def _fetch_html(self, url: str, url_filter: URLFilter) -> Optional[HTML]:
+        # check if URL is malformed
+        if not is_valid_url(url):
+            logger.debug(f"Skipped requested URL {url!r} because the URL is malformed")
+            return None
+
+        # apply URL filter to requested URL
+        if url_filter(url):
+            logger.debug(f"Skipped requested URL {url!r} because of URL filter")
+            return None
+
+        # check robots
+        if not (
+            self.robots is None or self.robots.can_fetch(self.publisher.request_header.get("user-agent", "*"), url)
+        ):
+            logger.debug(f"Skipped requested URL {url!r} because of robots.txt")
+            return None
+
+        session = session_handler.get_session()
+
+        # prepare query parameters
+        for key, value in self.query_parameters.items():
+            if "?" in url:
+                url += "&" + key + "=" + value
+            else:
+                url += "?" + key + "=" + value
+
+        # apply crawl-delay
+        self.clock()
+
+        # fetch html
+        try:
+            response = session.get_with_interrupt(url, headers=self.publisher.request_header)
+
+        except (HTTPError, ConnectionError, ReadTimeout) as error:
+            logger.warning(f"Skipped requested URL {url!r} because of {error!r}")
+            if isinstance(error, HTTPError) and error.response.status_code >= 500:
+                logger.warning(f"Skipped {self.publisher.name!r} due to server errors: {error!r}")
+            return None
+
+        # apply URL filter to responded URL
+        if url_filter(str(response.url)):
+            logger.debug(f"Skipped responded URL {str(response.url)!r} because of URL filter")
+            return None
+
+        # decode response
+        if "charset" not in response.headers["content-type"]:
+            # That's actually the only place requests checks to detect encoding, so if charset
+            # is not set, requests falls back to default encodings (latin-1/utf-8)
+            logger.debug(f"Detect encoding from response for URL {str(response.url)!r}")
+            if not (encoding := _detect_charset_from_response(response)):
+                logger.warning(f"Could not detect encoding from response for URL {str(response.url)!r}")
+                return None
+            response.encoding = encoding
+        html = response.text
+
+        # check for redirects
+        if response.history:
+            logger.info(f"Got redirected {len(response.history)} time(s) from {url!r} -> {response.url!r}")
+
+        # create WebSourceInfo
+        source_info = (
+            WebSourceInfo(self.publisher.name, type(self.url_source).__name__, self.url_source.url)
+            if isinstance(self.url_source, URLSource)
+            else SourceInfo(self.publisher.name)
+        )
+
+        # create HTML
+        return HTML(
+            requested_url=url,
+            responded_url=str(response.url),
+            content=html,
+            crawl_date=datetime.now(),
+            source_info=source_info,
+        )
+
+    def _build_url_filter(self, url_filter: Optional[URLFilter]) -> URLFilter:
         combined_filters: List[URLFilter] = ([self.url_filter] if self.url_filter else []) + (
             [url_filter] if url_filter else []
         )
 
-        timestamp = time.time() + self.delay() if self.delay is not None else time.time()
+        def combined_url_filter(url: str) -> bool:
+            return any(f(url) for f in combined_filters)
 
-        def filter_url(u: str) -> bool:
-            return any(f(u) for f in combined_filters)
+        return combined_url_filter
 
+    def fetch(self, url_filter: Optional[URLFilter] = None) -> Iterator[HTML]:
         url_iterator = iter(self.url_source)
 
         while not self._is_stopped:
-            if (url := next(url_iterator, None)) is None:
+            try:
+                # check iterator
+                if (url := next(url_iterator, None)) is None:
+                    return
+            except Exception as error:
+                logger.error(
+                    f"Warning! URLSource {self.url_source!r} crashed because of an unexpected error: {error!r}"
+                )
                 return
 
-            if not validators.url(url):
-                logger.debug(f"Skipped requested URL {url!r} because the URL is malformed")
-                continue
-
-            if filter_url(url):
-                logger.debug(f"Skipped requested URL {url!r} because of URL filter")
-                continue
-
-            if not (self.robots is None or self.robots.can_fetch(self.request_header.get("user-agent") or "*", url)):
-                logger.debug(f"Skipped requested URL {url!r} because of robots.txt")
-                continue
-
-            session = session_handler.get_session()
-            for key, value in self.query_parameters.items():
-                if "?" in url:
-                    url += "&" + key + "=" + value
-                else:
-                    url += "?" + key + "=" + value
-
-            if self.delay:
-                # Instead of using time.sleep, we use a custom sleep function that waits
-                # for the "stop" event. This ensures that sleep does not block the shutdown process.
-                self.sleep(max(0.0, self.delay() - time.time() + timestamp))
-                timestamp = time.time()
-
             try:
-                response = session.get_with_interrupt(url, headers=self.request_header)
-
-            except (HTTPError, ConnectionError, ReadTimeout) as error:
-                logger.warning(f"Skipped requested URL {url!r} because of {error!r}")
-                if isinstance(error, HTTPError) and error.response.status_code >= 500:
-                    logger.warning(f"Skipped {self.publisher.name!r} due to server errors: {error!r}")
-                continue
-
+                if html := self._fetch_html(url, self._build_url_filter(url_filter)):
+                    yield html
             except Exception as error:
                 logger.error(f"Warning! Skipped requested URL {url!r} because of an unexpected error {error!r}")
                 continue
-
-            else:
-                if "charset" not in response.headers["content-type"]:
-                    # That's actually the only place requests checks to detect encoding, so if charset
-                    # is not set, requests falls back to default encodings (latin-1/utf-8)
-                    logger.debug(f"Detect encoding from response for URL {str(response.url)!r}")
-                    response.encoding = _detect_charset_from_response(response)
-
-                if filter_url(str(response.url)):
-                    logger.debug(f"Skipped responded URL {str(response.url)!r} because of URL filter")
-                    continue
-                html = response.text
-
-                if response.history:
-                    logger.info(f"Got redirected {len(response.history)} time(s) from {url!r} -> {response.url!r}")
-
-                source_info = (
-                    WebSourceInfo(self.publisher.name, type(self.url_source).__name__, self.url_source.url)
-                    if isinstance(self.url_source, URLSource)
-                    else SourceInfo(self.publisher.name)
-                )
-
-                yield HTML(
-                    requested_url=url,
-                    responded_url=str(response.url),
-                    content=html,
-                    crawl_date=datetime.now(),
-                    source_info=source_info,
-                )
 
 
 class CCNewsSource:
@@ -288,8 +351,7 @@ class CCNewsSource:
 
                 if publisher.url_filter is not None and publisher.url_filter(target_url):
                     logger.debug(
-                        f"Skipped WARC record with target URI {target_url!r} because of "
-                        f"publisher specific URL filter"
+                        f"Skipped WARC record with target URI {target_url!r} because of publisher specific URL filter"
                     )
                     continue
 

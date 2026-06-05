@@ -2,5 +2,13 @@
   "SeznamZpravy_2025_04_08.html.gz": {
     "url": "https://www.seznamzpravy.cz/clanek/domaci-kauzy-hlavni-akter-dozimetru-prodava-vilu-rodina-se-zbavenim-prav-neuspela-272712",
     "crawl_date": "2025-04-08 13:54:55.990399"
+  },
+  "SeznamZpravy_2025_11_06.html.gz": {
+    "url": "https://www.seznamzpravy.cz/clanek/domaci-politika-fialova-vlada-podala-demisi-jak-rychle-ted-bude-postupovat-babis-a-hrad-290947",
+    "crawl_date": "2025-11-06 13:14:02.275514"
+  },
+  "SeznamZpravy_2025_12_10.html.gz": {
+    "url": "https://www.seznamzpravy.cz/clanek/ekonomika-b2b-roky-v-duchodu-travi-cesi-po-doktorech-a-zhorsuje-se-to-ukazala-data-293637",
+    "crawl_date": "2025-12-10 16:42:47.623348"
   }
 }

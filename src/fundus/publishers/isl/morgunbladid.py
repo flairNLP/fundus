@@ -1,8 +1,6 @@
 import datetime
-import re
 from typing import List, Optional
 
-from lxml.cssselect import CSSSelector
 from lxml.etree import XPath
 
 from fundus.parser import ArticleBody, BaseParser, Image, ParserProxy, attribute
@@ -10,7 +8,6 @@ from fundus.parser.utility import (
     extract_article_body_with_selector,
     generic_author_parsing,
     generic_date_parsing,
-    generic_topic_parsing,
     image_extraction,
 )
 
@@ -19,7 +16,7 @@ class MorgunbladidParser(ParserProxy):
     class V1(BaseParser):
         _summary_selector = XPath("//div[@class='main-layout']//div[@class='is-merking']/p")
         _paragraph_selector = XPath(
-            "//div[@class='main-layout' or @data-element-type='body-facts']" "/p[not(a and not(text()))]"
+            "//div[@class='main-layout' or @data-element-type='body-facts']/p[not(a and not(text()))]"
         )
         _subheadline_selector = XPath("//div[@class='main-layout' or @class='et_pb_text_inner']/h3")
 

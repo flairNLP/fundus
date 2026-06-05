@@ -1,27 +1,17 @@
-import pdb
 import re
 from datetime import datetime
 from typing import List, Optional
 
-from lxml.cssselect import CSSSelector
 from lxml.etree import XPath
 
-from fundus.parser import (
-    ArticleBody,
-    BaseParser,
-    Image,
-    ParserProxy,
-    attribute,
-    function,
-)
+from fundus.parser import ArticleBody, BaseParser, Image, ParserProxy, attribute
 from fundus.parser.utility import (
     extract_article_body_with_selector,
     generic_author_parsing,
     generic_date_parsing,
     generic_nodes_to_text,
-    generic_topic_parsing,
     image_extraction,
-    transform_breaks_to_paragraphs,
+    transform_breaks_to_tag,
 )
 
 
@@ -55,9 +45,9 @@ class MBNParser(ParserProxy):
                             parent.remove(ad)
                 if element.xpath("./self::div[@class='article_body']"):
                     # In case this uses the economy section layout, we need to transform <br> tags to paragraphs
-                    doc = transform_breaks_to_paragraphs(element)
+                    transform_breaks_to_tag(element)
                 else:
-                    doc = transform_breaks_to_paragraphs(element, __class__="summary_line")
+                    transform_breaks_to_tag(element, __class__="summary_line")
             return extract_article_body_with_selector(
                 doc=doc if doc is not None else self.precomputed.doc,
                 paragraph_selector=self._paragraph_selector,

@@ -35,9 +35,7 @@ class MetroParser(ParserProxy):
             r"^Do you have a story to share?"
         )
         _paragraph_selector = XPath(
-            f"//article "
-            f"/div[@class='article-body'] "
-            f"/p[position()>1 and not(re:test(string(), '{_bloat_regex_}'))]",
+            f"//article /div[@class='article-body'] /p[position()>1 and not(re:test(string(), '{_bloat_regex_}'))]",
             namespaces={"re": "http://exslt.org/regular-expressions"},
         )
 
@@ -77,7 +75,6 @@ class MetroParser(ParserProxy):
             )
 
     class V1_1(V1):
-        VALID_UNTIL = datetime.date.today()
         _summary_selector = XPath("//article//div[@class='article__content__inner']/p[1]")
         _paragraph_selector = XPath("//article//div[@class='article__content__inner']/p[not(@class) and position()>1]")
         _subheadline_selector = XPath("//article//div[@class='article__content__inner']/h2")

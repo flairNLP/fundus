@@ -1123,5 +1123,245 @@
       "Bundestag",
       "Bundesregierung"
     ]
+  },
+  "V1_2": {
+    "authors": [
+      "Vivien Valentiner"
+    ],
+    "body": {
+      "summary": [
+        "Berlin. Rom Braslavski wurde von der Hamas vom Nova-Musikfestival entführt. In einem emotionalen Interview erzählt er von der Geiselhaft in Gaza."
+      ],
+      "sections": [
+        {
+          "headline": [],
+          "paragraphs": [
+            "Zwei Jahre war Rom Braslavski in Geiselhaft der Terrororganisation Hamas, zwei Jahre lang sei er gedemütigt worden, sagt der Deutsch-Israeli. In einem emotionalen Interview mit dem israelischen Sender Channel 13 hat der mittlerweile 21 Jahre alte Mann nun über die Gefangenschaft berichtet.",
+            "„Sie haben mir alle Kleider vom Leib gerissen“, sagt er. „Die Unterwäsche, alles“ habe man ihm ausgezogen, ihn gefesselt, ihn ausgepeitscht. „Ich habe zu Gott gebetet: ‚Bitte rette mich, hol mich hier endlich raus!‘“, erinnert sich der junge Mann in dem Interview. „Was zur Hölle geht hier vor sich?“, habe er sich gefragt."
+          ]
+        },
+        {
+          "headline": [
+            "Hamas-Geisel über sexuellen Missbrauch durch die Hamas: „Das Ziel war es, meine Würde zu zerstören“"
+          ],
+          "paragraphs": [
+            "Der Schmerz über die Entsetzlichkeiten seiner Peiniger ist dem Deutsch-Israeli deutlich anzusehen. Seine Augen sind glasig, er ist den Tränen nah, als die Interviewerin Roni Aviram fragt: „Wie würden Sie definieren, was Ihnen angetan wurde? War es sexueller Missbrauch?“ Braslavski antwortet unmissverständlich: „Eindeutig ja.“",
+            "Die sexuelle Gewalt, die man ihm angetan habe, habe nur einem Zweck gedient, sagt der Mann: ihn zu demütigen. „Das Ziel war es, meine Würde zu zerstören – und das ist, was sie gemacht haben.“ Er wolle nicht über die Details sprechen, sagt er in dem Interview. „Es fällt mir schwer, darüber zu sprechen.“ Ihm sei „die schrecklichste Sache“ widerfahren.",
+            "Braslavski zieht einen drastischen historischen Vergleich. Er ist überzeugt: „Nicht einmal die Nazis haben so etwas gemacht. Zu Hitlers Zeiten hätte man so etwas nicht getan.“ Immer wieder habe er zu Gott gebetet. Nach jedem Tag, nach jedem Schlag habe er sich gesagt: „Ich habe einen weiteren Tag in der Hölle überlebt.“ Doch er ahnte: „Morgen werde ich in noch einer Hölle aufwachen, und noch einer Hölle und noch einer Hölle.“"
+          ]
+        },
+        {
+          "headline": [
+            "Deutsch-Israeli wurde vom Nova-Festival entführt – „Bin dem Teufel begegnet“"
+          ],
+          "paragraphs": [
+            "Braslavski war am 7. Oktober 2023 auf dem Nova-Musikfestival von der Terrororganisation Hamas entführt worden. Er war dort als Sicherheitsmitarbeiter tätig gewesen. Bevor er verletzt und entführt worden war, war es ihm gelungen, mehrere Menschen in Sicherheit zu bringen. Im August war der 21 Jahre alte Mann in einem Propaganda-Video zu sehen gewesen, in dem er unter Tränen um seine Freiheit flehte. Nach Einschätzung von Experten war er zu dem Zeitpunkt stark untergewichtig.",
+            "Am 13. Oktober wurde er schließlich freigelassen und gemeinsam mit 19 weiteren Geiseln zurück nach Israel gebracht. Über seine Freilassung sagte er: „Ich bin zurückgekommen, nachdem ich dem Teufel begegnet bin.“ Auf Videoaufnahmen des israelischen Militärs ist zu sehen, wie er an dem Tag weint – aus Erleichterung."
+          ]
+        }
+      ]
+    },
+    "images": [
+      {
+        "versions": [
+          {
+            "url": "https://img.sparknews.funkemedien.de/410395622/410395622_1762445183_v1_1_200.jpeg",
+            "query_width": "max-width:599",
+            "size": {
+              "width": 200,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://img.sparknews.funkemedien.de/410395622/410395622_1762445183_v1_1_200.webp",
+            "query_width": "max-width:599",
+            "size": {
+              "width": 200,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://img.sparknews.funkemedien.de/410395622/410395622_1762445183_v1_1_400.jpeg",
+            "query_width": "max-width:599",
+            "size": {
+              "width": 400,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://img.sparknews.funkemedien.de/410395622/410395622_1762445183_v1_1_400.webp",
+            "query_width": "max-width:599",
+            "size": {
+              "width": 400,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://img.sparknews.funkemedien.de/410395622/410395622_1762445183_v4_3_400.jpeg",
+            "query_width": "max-width:959",
+            "size": {
+              "width": 400,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://img.sparknews.funkemedien.de/410395622/410395622_1762445183_v4_3_400.webp",
+            "query_width": "max-width:959",
+            "size": {
+              "width": 400,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://img.sparknews.funkemedien.de/410395622/410395622_1762445183_v4_3_600.jpeg",
+            "query_width": "max-width:959",
+            "size": {
+              "width": 600,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://img.sparknews.funkemedien.de/410395622/410395622_1762445183_v4_3_600.webp",
+            "query_width": "max-width:959",
+            "size": {
+              "width": 600,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://img.sparknews.funkemedien.de/410395622/410395622_1762445183_v16_9_600.jpeg",
+            "query_width": "min-width:960",
+            "size": {
+              "width": 600,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://img.sparknews.funkemedien.de/410395622/410395622_1762445183_v16_9_600.webp",
+            "query_width": "min-width:960",
+            "size": {
+              "width": 600,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://img.sparknews.funkemedien.de/410395622/410395622_1762445183_v1_1_800.jpeg",
+            "query_width": "max-width:599",
+            "size": {
+              "width": 800,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://img.sparknews.funkemedien.de/410395622/410395622_1762445183_v1_1_800.webp",
+            "query_width": "max-width:599",
+            "size": {
+              "width": 800,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://img.sparknews.funkemedien.de/410395622/410395622_1762445183_v4_3_800.jpeg",
+            "query_width": "max-width:959",
+            "size": {
+              "width": 800,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://img.sparknews.funkemedien.de/410395622/410395622_1762445183_v4_3_800.webp",
+            "query_width": "max-width:959",
+            "size": {
+              "width": 800,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://img.sparknews.funkemedien.de/410395622/410395622_1762445183_v1_1_1200.jpeg",
+            "query_width": "max-width:599",
+            "size": {
+              "width": 1200,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://img.sparknews.funkemedien.de/410395622/410395622_1762445183_v1_1_1200.webp",
+            "query_width": "max-width:599",
+            "size": {
+              "width": 1200,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://img.sparknews.funkemedien.de/410395622/410395622_1762445183_v16_9_1200.jpeg",
+            "query_width": "min-width:960",
+            "size": {
+              "width": 1200,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://img.sparknews.funkemedien.de/410395622/410395622_1762445183_v16_9_1200.webp",
+            "query_width": "min-width:960",
+            "size": {
+              "width": 1200,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://img.sparknews.funkemedien.de/410395622/410395622_1762445183_v16_9_1600.jpeg",
+            "query_width": "min-width:960",
+            "size": {
+              "width": 1600,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://img.sparknews.funkemedien.de/410395622/410395622_1762445183_v16_9_1600.webp",
+            "query_width": "min-width:960",
+            "size": {
+              "width": 1600,
+              "height": 0
+            },
+            "type": "image/webp"
+          }
+        ],
+        "is_cover": true,
+        "description": "Rom Braslavski lächelt nach seiner Freilassung, über die Schultern hat er eine Israel-Flagge geknotet",
+        "caption": "Der Deutsch-Israeli Rom Braslavski lächelt nach seiner Freilassung. Am 7. Oktober 2023 war er von der Hamas vom Nova-Musikfestival entführt worden – und zwei Jahre lang als Geisel festgehalten.",
+        "authors": [
+          "Eran Yardeni/GPO/dpa",
+          "ERAN YARDENI"
+        ],
+        "position": 1218
+      }
+    ],
+    "publishing_date": "2025-11-06 16:06:23+00:00",
+    "title": "„Dem Teufel begegnet“: Deutsche Hamas-Geisel erlebte sexuellen Missbrauch",
+    "topics": [
+      "Gazastreifen",
+      "Nahostkonflikt",
+      "Hamas",
+      "Israel"
+    ]
   }
 }

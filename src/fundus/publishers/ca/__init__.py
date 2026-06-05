@@ -19,6 +19,7 @@ class CA(metaclass=PublisherGroup):
             RSSFeed("https://www.cbc.ca/webfeed/rss/rss-world"),
             RSSFeed("https://www.cbc.ca/webfeed/rss/rss-canada"),
         ],
+        request_header={"User-Agent": "Fundus/2.0"},
     )
     TheGlobeAndMail = Publisher(
         name="The Globe and Mail",

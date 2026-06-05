@@ -2,5 +2,9 @@
   "Nieuwsblad_2025_02_02.html.gz": {
     "url": "https://www.nieuwsblad.be/cnt/dmf20250202_96887132",
     "crawl_date": "2025-02-02 23:02:23.326767"
+  },
+  "PoliticoEu_2025_10_23.html.gz": {
+    "url": "https://www.politico.eu/article/catherine-connolly-socialist-critic-nato-eu-poised-win-ireland-presidency/?utm_source=RSS_Feed&utm_medium=RSS&utm_campaign=RSS_Syndication",
+    "crawl_date": "2025-10-23 17:51:24.235341"
   }
 }

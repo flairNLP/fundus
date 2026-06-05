@@ -9,6 +9,7 @@ from .fox_news import FoxNewsParser
 from .free_beacon import FreeBeaconParser
 from .la_times import LATimesParser
 from .occupy_democrats import OccupyDemocratsParser
+from .rest_of_world import RestOfWorldParser
 from .reuters import ReutersParser
 from .rolling_stone import RollingStoneParser
 from .techcrunch import TechCrunchParser
@@ -131,12 +132,13 @@ class US(metaclass=PublisherGroup):
         ],
     )
 
-    # WorldTruth = Publisher(
-    #     name="World Truth",
-    #     domain="https://www.worldtruth.tv/",
-    #     sources=[RSSFeed("https://feeds.feedburner.com/ConsciousnessTv")],
-    #     parser=WorldTruthParser,
-    # )
+    WorldTruth = Publisher(
+        name="World Truth",
+        domain="https://www.worldtruth.tv/",
+        sources=[RSSFeed("https://feeds.feedburner.com/ConsciousnessTv")],
+        parser=WorldTruthParser,
+        deprecated=True,
+    )
 
     FreeBeacon = Publisher(
         name="The Washington Free Beacon",
@@ -272,5 +274,16 @@ class US(metaclass=PublisherGroup):
             NewsMap("https://www.wired.com/feed/google-latest-news/sitemap-google-news"),
             Sitemap("https://www.wired.com/sitemap.xml"),
             Sitemap("https://www.wired.com/sitemap-archive-1.xml"),
+        ],
+    )
+
+    RestOfWorld = Publisher(
+        name="Rest of World",
+        domain="https://restofworld.org/",
+        parser=RestOfWorldParser,
+        url_filter=inverse(regex_filter(r"restofworld\.org\/20\d{2}\/")),
+        sources=[
+            RSSFeed("https://restofworld.org/feed/latest/"),
+            Sitemap("https://restofworld.org/sitemap.xml"),
         ],
     )

@@ -66,12 +66,14 @@ class SternParser(ParserProxy):
             )
 
     class V2(BaseParser):
-        _paragraph_selector = CSSSelector(".article__body > .text-element > p.is-initial")
+        _paragraph_selector = CSSSelector(".article__body > .text-element > p")
         _summary_selector = CSSSelector(".article__body > .intro")
         _subheadline_selector = CSSSelector(".article__body > .subheadline-element")
 
         _topic_selector = CSSSelector("ul.tags > li")
-        _author_selector = CSSSelector("li.authors__list-item > a, li.authors__list-item > .typo-article-info-bold")
+        _author_selector = CSSSelector(
+            "span.authors__list-plaintext, a.authors__list-link, span.typo-article-info-bold"
+        )
 
         @attribute
         def body(self) -> Optional[ArticleBody]:

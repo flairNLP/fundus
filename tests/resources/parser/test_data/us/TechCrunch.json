@@ -1,4 +1,78 @@
 {
+  "V1": {
+    "authors": [
+      "Kyle Wiggers"
+    ],
+    "body": {
+      "summary": [
+        "What’s the next big thing in enterprise automation? If you ask the tech giants, it’s agents — driven by generative AI."
+      ],
+      "sections": [
+        {
+          "headline": [],
+          "paragraphs": [
+            "There’s no universally accepted definition of agent, but these days the term is used to describe generative AI-powered tools that can perform complex tasks through human-like interactions across software and web platforms.",
+            "For example, an agent could create an itinerary by filling in a customer’s info on airlines’ and hotel chains’ websites. Or an agent could order the least expensive ride-hailing service to a location by automatically comparing prices across apps.",
+            "Vendors sense opportunity. ChatGPT maker OpenAI is reportedly deep into developing AI agent systems. And Google demoed a slew of agent-like products at its annual Cloud Next conference in early April.",
+            "“Companies should start preparing for wide-scale adoption of autonomous agents today,” analysts at Boston Consulting Group wrote recently in a report — citing experts who estimate that autonomous agents will go mainstream in three to five years."
+          ]
+        },
+        {
+          "headline": [
+            "Old-school automation"
+          ],
+          "paragraphs": [
+            "So where does that leave RPA?",
+            "Robotic process automation (RPA) came into vogue over a decade ago as enterprises turned to the tech to bolster their digital transformation efforts while reducing costs. Like an agent, RPA drives workflow automation. But it’s a much more rigid form, based on “if-then” preset rules for processes that can be broken down into strictly defined, discretized steps.",
+            "“RPA can mimic human actions, such as clicking, typing or copying and pasting, to perform tasks faster and more accurately than humans,” Saikat Ray, VP analyst at Gartner, explained to TechCrunch in an interview. “However, RPA bots have limitations when it comes to handling complex, creative or dynamic tasks that require natural language processing or reasoning skills.”",
+            "This rigidity makes RPA expensive to build — and considerably limits its applicability.",
+            "A 2022 survey from Robocorp, an RPA vendor, finds that of the organizations that say they’ve adopted RPA, 69% experience broken automation workflows at least once a week — many of which take hours to fix. Entire businesses have been made out of helping enterprises manage their RPA installations and prevent them from breaking.",
+            "RPA vendors aren’t naive. They’re well aware of the challenges — and believe that generative AI could solve many of them without hastening their platforms’ demise. In RPA vendors’ minds, RPA and generative AI-powered agents can peacefully co-exist — and perhaps one day even grow to complement each other."
+          ]
+        },
+        {
+          "headline": [
+            "Generative AI automation"
+          ],
+          "paragraphs": [
+            "UiPath, one of the larger players in the RPA market with an estimated 10,000+ customers, including Uber, Xerox and CrowdStrike, recently announced new generative AI features focused on document and message processing, as well as taking automated actions to deliver what UiPath CEO Bob Enslin calls “one-click digital transformation.”",
+            "“These features provide customers generative AI models that are trained for their specific tasks,” Enslin told TechCrunch. “Our generative AI powers workloads such as text completion for emails, categorization, image detection, language translation, the ability to filter out personally identifiable information [and] quickly answering any people-topic-related questions based off of knowledge from internal data.”",
+            "One of UiPath’s more recent explorations in the generative AI domain is Clipboard AI, which combines UiPath’s platform with third-party models from OpenAI, Google and others to — as Enslin puts it — “bring the power of automation to anyone that has to copy/paste.” Clipboard AI lets users highlight data from a form, and — leveraging generative AI to figure out the right places for the copied data to go — point it to another form, app, spreadsheet or database.",
+            "“UiPath sees the need to bring action and AI together; this is where value is created,” Enslin said. “We believe the best performance will come from those that combine generative AI and human judgment — what we call human-in-the-loop — across end-to-end processes.”",
+            "Automation Anywhere, UiPath’s main rival, is also attempting to fold generative AI into its RPA technologies.",
+            "Last year, Automation Anywhere launched generative AI-powered tools to create workflows from natural language, summarize content, extract data from documents and — perhaps most significantly — adapt to changes in apps that would normally cause an RPA automation to fail.",
+            "“[Our generative AI models are] developed on top of [open] large language models and trained with anonymized metadata from more than 150 million automation processes across thousands of enterprise applications,” Peter White, SVP of enterprise AI and automation at Automation Anywhere, told TechCrunch. “We continue to build custom machine learning models for specific tasks within our platform and are also now building customized models on top of foundational generative AI models using our automation datasets.”"
+          ]
+        },
+        {
+          "headline": [
+            "Next-gen RPA"
+          ],
+          "paragraphs": [
+            "Ray notes it’s important to be cognizant of generative AI’s limitations — namely biases and hallucinations — as it powers a growing number of RPA capabilities. But, risks aside, he believes generative AI stands to add value to RPA by transforming the way these platforms work and “creating new possibilities for automation.”",
+            "“Generative AI is a powerful technology that can enhance the capabilities of RPA platforms enabling them to understand and generate natural language, automate content creation, improve decision-making and even generate code,” Ray said. “By integrating generative AI models, RPA platforms can offer more value to their customers, increase their productivity and efficiency and expand their use cases and applications.”",
+            "Craig Le Clair, principal analyst at Forrester, sees RPA platforms as being ripe for expansion to support autonomous agents and generative AI as their use cases grow. In fact, he anticipates RPA platforms morphing into all-around toolsets for automation — toolsets that help deploy RPA in addition to related generative AI technologies.",
+            "“RPA platforms have the architecture to manage thousands of task automations and this bodes well for central management of AI agents,” he said. “Thousands of companies are well established with RPA platforms and will be open to using them for generative AI-infused agents. RPA has grown in part thanks to its ability to integrate easily with existing work patterns, through UI integration, and this will remain valuable for more intelligent agents going forward.”",
+            "UiPath is already beginning to take steps in this direction with a new capability, Context Grounding, that entered preview earlier in the month. As Enslin explained it to me, Context Grounding is designed to improve the accuracy of generative AI models — both first- and third-party — by converting business data those models might draw on into an “optimized” format that’s easier to index and search.",
+            "“Context Grounding extracts information from company-specific datasets, like a knowledge base or internal policies and procedures, to create more accurate and insightful responses,” Enslin said.",
+            "If there’s anything holding RPA vendors back, it’s the ever-present temptation to lock customers in, Le Clair said. He stressed the need for platforms to “remain agnostic” and offer tools that can be configured to work with a range of current — and future — enterprise systems and workflows.",
+            "To that, Enslin pledged that UiPath will remain “open, flexible and responsible.”",
+            "“The future of AI will require a combination of specialized AI with generative AI,” he continued. “We want customers to be able to confidently use all kinds of AI.”",
+            "White didn’t commit to neutrality exactly. But he emphasized that Automation Anywhere’s roadmap is being heavily shaped by customer feedback.",
+            "“What we hear from every customer, across every industry, is that their ability to incorporate automation in many more use cases has increased exponentially with generative AI,” he said. “With generative AI infused into intelligent automation technologies like RPA, we see the potential for organizations to reduce operating costs and increase productivity. Companies who fail to adopt these technologies will struggle to compete against others who embrace generative AI and automation.”"
+          ]
+        }
+      ]
+    },
+    "publishing_date": "2024-04-28 13:30:00+00:00",
+    "title": "How RPA vendors aim to remain relevant in a world of AI agents",
+    "topics": [
+      "AI",
+      "Generative AI",
+      "robotic process automation",
+      "RPA"
+    ]
+  },
   "V1_1": {
     "authors": [
       "Paul Sawers"
@@ -203,80 +277,6 @@
       "Dark Mode",
       "leaderboards",
       "Strava"
-    ]
-  },
-  "V1": {
-    "authors": [
-      "Kyle Wiggers"
-    ],
-    "body": {
-      "summary": [
-        "What’s the next big thing in enterprise automation? If you ask the tech giants, it’s agents — driven by generative AI."
-      ],
-      "sections": [
-        {
-          "headline": [],
-          "paragraphs": [
-            "There’s no universally accepted definition of agent, but these days the term is used to describe generative AI-powered tools that can perform complex tasks through human-like interactions across software and web platforms.",
-            "For example, an agent could create an itinerary by filling in a customer’s info on airlines’ and hotel chains’ websites. Or an agent could order the least expensive ride-hailing service to a location by automatically comparing prices across apps.",
-            "Vendors sense opportunity. ChatGPT maker OpenAI is reportedly deep into developing AI agent systems. And Google demoed a slew of agent-like products at its annual Cloud Next conference in early April.",
-            "“Companies should start preparing for wide-scale adoption of autonomous agents today,” analysts at Boston Consulting Group wrote recently in a report — citing experts who estimate that autonomous agents will go mainstream in three to five years."
-          ]
-        },
-        {
-          "headline": [
-            "Old-school automation"
-          ],
-          "paragraphs": [
-            "So where does that leave RPA?",
-            "Robotic process automation (RPA) came into vogue over a decade ago as enterprises turned to the tech to bolster their digital transformation efforts while reducing costs. Like an agent, RPA drives workflow automation. But it’s a much more rigid form, based on “if-then” preset rules for processes that can be broken down into strictly defined, discretized steps.",
-            "“RPA can mimic human actions, such as clicking, typing or copying and pasting, to perform tasks faster and more accurately than humans,” Saikat Ray, VP analyst at Gartner, explained to TechCrunch in an interview. “However, RPA bots have limitations when it comes to handling complex, creative or dynamic tasks that require natural language processing or reasoning skills.”",
-            "This rigidity makes RPA expensive to build — and considerably limits its applicability.",
-            "A 2022 survey from Robocorp, an RPA vendor, finds that of the organizations that say they’ve adopted RPA, 69% experience broken automation workflows at least once a week — many of which take hours to fix. Entire businesses have been made out of helping enterprises manage their RPA installations and prevent them from breaking.",
-            "RPA vendors aren’t naive. They’re well aware of the challenges — and believe that generative AI could solve many of them without hastening their platforms’ demise. In RPA vendors’ minds, RPA and generative AI-powered agents can peacefully co-exist — and perhaps one day even grow to complement each other."
-          ]
-        },
-        {
-          "headline": [
-            "Generative AI automation"
-          ],
-          "paragraphs": [
-            "UiPath, one of the larger players in the RPA market with an estimated 10,000+ customers, including Uber, Xerox and CrowdStrike, recently announced new generative AI features focused on document and message processing, as well as taking automated actions to deliver what UiPath CEO Bob Enslin calls “one-click digital transformation.”",
-            "“These features provide customers generative AI models that are trained for their specific tasks,” Enslin told TechCrunch. “Our generative AI powers workloads such as text completion for emails, categorization, image detection, language translation, the ability to filter out personally identifiable information [and] quickly answering any people-topic-related questions based off of knowledge from internal data.”",
-            "One of UiPath’s more recent explorations in the generative AI domain is Clipboard AI, which combines UiPath’s platform with third-party models from OpenAI, Google and others to — as Enslin puts it — “bring the power of automation to anyone that has to copy/paste.” Clipboard AI lets users highlight data from a form, and — leveraging generative AI to figure out the right places for the copied data to go — point it to another form, app, spreadsheet or database.",
-            "“UiPath sees the need to bring action and AI together; this is where value is created,” Enslin said. “We believe the best performance will come from those that combine generative AI and human judgment — what we call human-in-the-loop — across end-to-end processes.”",
-            "Automation Anywhere, UiPath’s main rival, is also attempting to fold generative AI into its RPA technologies.",
-            "Last year, Automation Anywhere launched generative AI-powered tools to create workflows from natural language, summarize content, extract data from documents and — perhaps most significantly — adapt to changes in apps that would normally cause an RPA automation to fail.",
-            "“[Our generative AI models are] developed on top of [open] large language models and trained with anonymized metadata from more than 150 million automation processes across thousands of enterprise applications,” Peter White, SVP of enterprise AI and automation at Automation Anywhere, told TechCrunch. “We continue to build custom machine learning models for specific tasks within our platform and are also now building customized models on top of foundational generative AI models using our automation datasets.”"
-          ]
-        },
-        {
-          "headline": [
-            "Next-gen RPA"
-          ],
-          "paragraphs": [
-            "Ray notes it’s important to be cognizant of generative AI’s limitations — namely biases and hallucinations — as it powers a growing number of RPA capabilities. But, risks aside, he believes generative AI stands to add value to RPA by transforming the way these platforms work and “creating new possibilities for automation.”",
-            "“Generative AI is a powerful technology that can enhance the capabilities of RPA platforms enabling them to understand and generate natural language, automate content creation, improve decision-making and even generate code,” Ray said. “By integrating generative AI models, RPA platforms can offer more value to their customers, increase their productivity and efficiency and expand their use cases and applications.”",
-            "Craig Le Clair, principal analyst at Forrester, sees RPA platforms as being ripe for expansion to support autonomous agents and generative AI as their use cases grow. In fact, he anticipates RPA platforms morphing into all-around toolsets for automation — toolsets that help deploy RPA in addition to related generative AI technologies.",
-            "“RPA platforms have the architecture to manage thousands of task automations and this bodes well for central management of AI agents,” he said. “Thousands of companies are well established with RPA platforms and will be open to using them for generative AI-infused agents. RPA has grown in part thanks to its ability to integrate easily with existing work patterns, through UI integration, and this will remain valuable for more intelligent agents going forward.”",
-            "UiPath is already beginning to take steps in this direction with a new capability, Context Grounding, that entered preview earlier in the month. As Enslin explained it to me, Context Grounding is designed to improve the accuracy of generative AI models — both first- and third-party — by converting business data those models might draw on into an “optimized” format that’s easier to index and search.",
-            "“Context Grounding extracts information from company-specific datasets, like a knowledge base or internal policies and procedures, to create more accurate and insightful responses,” Enslin said.",
-            "If there’s anything holding RPA vendors back, it’s the ever-present temptation to lock customers in, Le Clair said. He stressed the need for platforms to “remain agnostic” and offer tools that can be configured to work with a range of current — and future — enterprise systems and workflows.",
-            "To that, Enslin pledged that UiPath will remain “open, flexible and responsible.”",
-            "“The future of AI will require a combination of specialized AI with generative AI,” he continued. “We want customers to be able to confidently use all kinds of AI.”",
-            "White didn’t commit to neutrality exactly. But he emphasized that Automation Anywhere’s roadmap is being heavily shaped by customer feedback.",
-            "“What we hear from every customer, across every industry, is that their ability to incorporate automation in many more use cases has increased exponentially with generative AI,” he said. “With generative AI infused into intelligent automation technologies like RPA, we see the potential for organizations to reduce operating costs and increase productivity. Companies who fail to adopt these technologies will struggle to compete against others who embrace generative AI and automation.”"
-          ]
-        }
-      ]
-    },
-    "publishing_date": "2024-04-28 13:30:00+00:00",
-    "title": "How RPA vendors aim to remain relevant in a world of AI agents",
-    "topics": [
-      "AI",
-      "Generative AI",
-      "robotic process automation",
-      "RPA"
     ]
   }
 }

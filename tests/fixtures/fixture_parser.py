@@ -18,7 +18,7 @@ def empty_parser_proxy():
 def parser_proxy_with_version():
     class ParserProxyWithVersion(ParserProxy):
         class Version(BaseParser):
-            VALID_UNTIL = datetime.date.today()
+            pass
 
     return ParserProxyWithVersion
 
@@ -26,8 +26,6 @@ def parser_proxy_with_version():
 @pytest.fixture
 def parser_with_static_method():
     class ParserWithStaticMethod(BaseParser):
-        VALID_UNTIL = datetime.date.today()
-
         @staticmethod
         def test():
             return "this is not an attribute"
@@ -38,8 +36,6 @@ def parser_with_static_method():
 @pytest.fixture
 def parser_with_function_test():
     class ParserWithFunctionTest(BaseParser):
-        VALID_UNTIL = datetime.date.today()
-
         @function
         def test(self):
             pass
@@ -50,8 +46,6 @@ def parser_with_function_test():
 @pytest.fixture
 def parser_with_attr_title():
     class ParserWithAttrTitle(BaseParser):
-        VALID_UNTIL = datetime.date.today()
-
         @attribute
         def title(self) -> str:
             return "This is a title"

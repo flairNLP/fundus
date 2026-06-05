@@ -6,7 +6,6 @@ from lxml.cssselect import CSSSelector
 
 from fundus.parser import ArticleBody, BaseParser, Image, ParserProxy, attribute
 from fundus.parser.utility import (
-    apply_substitution_pattern_over_list,
     extract_article_body_with_selector,
     generic_author_parsing,
     generic_date_parsing,
@@ -46,9 +45,7 @@ class AsahiShimbunParser(ParserProxy):
 
         @attribute
         def topics(self) -> List[str]:
-            return apply_substitution_pattern_over_list(
-                generic_topic_parsing(self.precomputed.meta.get("keywords")), self.topic_bloat_pattern
-            )
+            return generic_topic_parsing(self.precomputed.meta.get("keywords"), result_filter=self.topic_bloat_pattern)
 
         @attribute
         def images(self) -> List[Image]:

@@ -4,6 +4,7 @@
   * [How to search for publishers](#how-to-search-for-publishers)
     * [Using `search()`](#using-search)
   * [Working with deprecated publishers](#working-with-deprecated-publishers)
+  * [Filtering publishers for AI training](#filtering-publishers-for-ai-training)
 
 # Advanced Topics
 
@@ -32,5 +33,12 @@ crawler = Crawler(*fitting_publishers)
 When we notice that a publisher is uncrawlable for whatever reason, we will mark it with a deprecated flag.
 This mostly has internal usages, since the default value for the `Crawler` `ignore_deprecated` flag is `False`.
 You can alter this behaviour when initiating the `Crawler` and setting the `ignore_deprecated` flag.
+
+## Filtering publishers for AI training
+
+Some publishers explicitly disallow the use of their content for AI training purposes.
+We _try_ to respect these wishes by introducing the `skip_publishers_disallowing_training` parameter in the `crawl()` function.
+Users intending to use Fundus to gather training data for AI models should set this parameter to `True` to avoid collecting articles from publishers that wish for their content to not be used in this way.
+Yet, as publishers are not required to mention this in their robots.txt file, users should additionally check the terms of use of the publishers they want to crawl and set the `disallows_training` attribute of the `Publisher` class accordingly.
 
 In the [next section](6_logging.md) we introduce you to Fundus logging mechanics.

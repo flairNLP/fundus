@@ -8,7 +8,7 @@ from fundus.parser.utility import (
     extract_article_body_with_selector,
     generic_date_parsing,
     image_extraction,
-    transform_breaks_to_paragraphs,
+    transform_breaks_to_tag,
 )
 
 
@@ -25,7 +25,7 @@ class LBCGroupParser(ParserProxy):
         @attribute
         def body(self) -> Optional[ArticleBody]:
             if nodes := self._content_container_selector(self.precomputed.doc):
-                transform_breaks_to_paragraphs(nodes[0], __class__="br-wrap")
+                transform_breaks_to_tag(nodes[0], __class__="br-wrap")
                 return extract_article_body_with_selector(
                     self.precomputed.doc,
                     paragraph_selector=self._paragraph_selector,

@@ -4,7 +4,6 @@ import re
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, fields
 from functools import total_ordering
-from itertools import chain
 from typing import (
     Any,
     ClassVar,
@@ -26,12 +25,12 @@ from urllib.parse import urljoin, urlparse
 import lxml.etree
 import lxml.html
 import more_itertools
-import validators
 import xmltodict
 from dict2xml import dict2xml
 from lxml.etree import XPath, fromstring, tostring
 from typing_extensions import Self, TypeAlias, deprecated
 
+from fundus.scraping.url import is_valid_url
 from fundus.utils.serialization import (
     DataclassSerializationMixin,
     JSONVal,
@@ -61,7 +60,8 @@ class LinkedDataMapping:
     """
 
     __UNKNOWN_TYPE__ = "UNKNOWN_TYPE"
-    __xml_transformation_table__ = {":": "U003A", "*": "U002A", "@": "U0040"}
+    __to_transform__ = [":", "*", "@"]
+    __xml_transformation_table__ = {char: f"U{ord(char):04X}" for char in __to_transform__}
 
     def __init__(self, lds: Iterable[Dict[str, Any]] = ()):
         for ld in lds:
@@ -70,7 +70,7 @@ class LinkedDataMapping:
                     self.add_ld(nested)
             else:
                 self.add_ld(ld)
-        self.__xml: Optional[lxml.etree._Element] = None
+        self.__xml: Optional[lxml.etree.Element] = None
 
     def __getstate__(self):
         state = self.__dict__.copy()
@@ -128,7 +128,7 @@ class LinkedDataMapping:
             tmp = nxt
         return tmp
 
-    def __as_xml__(self) -> lxml.etree._Element:
+    def __as_xml__(self) -> lxml.etree.Element:
         pattern = re.compile("|".join(map(re.escape, self.__xml_transformation_table__.keys())))
 
         def to_unicode_characters(text: str) -> str:
@@ -139,13 +139,13 @@ class LinkedDataMapping:
             self.__xml = lxml.etree.fromstring(xml)
         return self.__xml
 
-    @overload
-    def xpath_search(self, query: Union[XPath, str], scalar: Literal[False] = False) -> List[Any]:
-        ...
+    __value_regex__ = re.compile("^<[^<]*>(?P<value>.*)</[^<]*>$", flags=re.DOTALL)
 
     @overload
-    def xpath_search(self, query: Union[XPath, str], scalar: Literal[True] = True) -> Optional[Any]:
-        ...
+    def xpath_search(self, query: Union[XPath, str], scalar: Literal[False] = False) -> List[Any]: ...
+
+    @overload
+    def xpath_search(self, query: Union[XPath, str], scalar: Literal[True] = True) -> Optional[Any]: ...
 
     def xpath_search(self, query: Union[XPath, str], scalar: bool = False):
         """Search through LD using XPath expressions
@@ -189,15 +189,11 @@ class LinkedDataMapping:
 
         pattern = re.compile("|".join(map(re.escape, self.__xml_transformation_table__.values())))
 
-        def node2string(n: lxml.etree._Element) -> str:
-            return "".join(
-                chunk
-                for chunk in chain(
-                    (n.text,),
-                    chain(*((tostring(child, with_tail=False, encoding=str), child.tail) for child in n.getchildren())),
-                )
-                if chunk
-            )
+        def node2string(n: lxml.etree.Element) -> str:
+            node_value = lxml.etree.tostring(n, encoding="unicode").strip()
+            if match := self.__value_regex__.match(node_value):
+                return match.group("value")
+            raise ValueError("XML malformed. Could not determine value.")
 
         reversed_table = {v: k for k, v in self.__xml_transformation_table__.items()}
 
@@ -220,7 +216,7 @@ class LinkedDataMapping:
             elif len(values) == 1:
                 return values.pop()
             else:
-                raise ValueError(f"Got multiple values when expecting a single scalar value")
+                raise ValueError("Got multiple values when expecting a single scalar value")
         else:
             return values
 
@@ -300,12 +296,10 @@ class TextSequence(Sequence[str]):
         self._data: Tuple[str, ...] = tuple(texts)
 
     @overload
-    def __getitem__(self, i: int) -> str:
-        ...
+    def __getitem__(self, i: int) -> str: ...
 
     @overload
-    def __getitem__(self, s: slice) -> "TextSequence":
-        ...
+    def __getitem__(self, s: slice) -> "TextSequence": ...
 
     def __getitem__(self, i):
         return self._data[i] if isinstance(i, int) else type(self)(self._data[i])
@@ -530,6 +524,9 @@ class ImageVersion(DataclassSerializationMixin):
         raise NotImplementedError(f"'<' is not defined between {type(self).__name__!r} and {type(other).__name__!r}")
 
 
+class ImageURLError(Exception): ...
+
+
 @dataclass(frozen=False)
 class Image(DataclassSerializationMixin):
     versions: List[ImageVersion]
@@ -541,8 +538,8 @@ class Image(DataclassSerializationMixin):
 
     def __post_init__(self):
         for url in [version.url for version in self.versions]:
-            if not validators.url(url, strict_query=False):
-                raise ValueError(f"url {url} is not a valid URL")
+            if not is_valid_url(url):
+                raise ImageURLError(f"url {url} is not a valid URL")
 
     @property
     def url(self) -> str:

@@ -18,4 +18,5 @@ class LS(metaclass=PublisherGroup):
                 reverse=True,
             ),
         ],
+        deprecated=True,
     )

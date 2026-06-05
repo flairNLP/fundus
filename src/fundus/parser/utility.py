@@ -7,7 +7,7 @@ import re
 from collections import defaultdict
 from copy import copy
 from dataclasses import dataclass, field
-from datetime import datetime
+from datetime import datetime, timezone
 from functools import total_ordering
 from typing import (
     Callable,
@@ -30,7 +30,6 @@ from urllib.parse import urljoin
 
 import lxml.html
 import more_itertools
-import validators
 from dateutil import parser
 from lxml.cssselect import CSSSelector
 from lxml.etree import XPath
@@ -42,10 +41,12 @@ from fundus.parser.data import (
     ArticleSection,
     Dimension,
     Image,
+    ImageURLError,
     ImageVersion,
     LinkedDataMapping,
     TextSequence,
 )
+from fundus.scraping.url import is_valid_url
 from fundus.utils.regex import _get_match_dict
 from fundus.utils.serialization import JSONVal
 
@@ -59,7 +60,7 @@ _space_characters = {
     "zero-width-joiner": r"\u200D",
     "zero-width-no-break_space": r"\uFEFF",
 }
-_ws_pattern: Pattern[str] = re.compile(rf'[{"".join(_space_characters.values())}]+')
+_ws_pattern: Pattern[str] = re.compile(rf"[{''.join(_space_characters.values())}]+")
 
 
 def normalize_whitespace(text: str) -> str:
@@ -151,18 +152,32 @@ def extract_article_body_with_selector(
     summary_nodes = extract_nodes(summary_selector, SummaryNode) if summary_selector else []
     subhead_nodes = extract_nodes(subheadline_selector, SubheadNode) if subheadline_selector else []
     paragraph_nodes = extract_nodes(paragraph_selector, ParagraphNode)
+
+    # data-cleaning:
+    def _cond(node: lxml.html.HtmlElement) -> bool:
+        def has_normalized_text():
+            return bool(node.xpath("normalize-space(text())"))
+
+        def has_em_child():
+            return bool(node.xpath("./em"))
+
+        return not has_normalized_text() and has_em_child()
+
+    while paragraph_nodes and _cond(paragraph_nodes[-1].node):
+        paragraph_nodes.pop()
+
     nodes = sorted(summary_nodes + subhead_nodes + paragraph_nodes)
 
     if not nodes:
         # return empty body if no text is present
         return ArticleBody(TextSequence([]), [])
 
-    instructions = more_itertools.split_when(nodes, pred=lambda x, y: type(x) != type(y))
+    instructions = more_itertools.split_when(nodes, pred=lambda x, y: type(x) is not type(y))
 
     if not summary_nodes:
         instructions = more_itertools.prepend([], instructions)
     elif not nodes[: len(summary_nodes)] == summary_nodes:
-        raise ValueError(f"All summary nodes should be at the beginning of the article")
+        raise ValueError("All summary nodes should be at the beginning of the article")
 
     if not subhead_nodes or (paragraph_nodes and subhead_nodes[0] > paragraph_nodes[0]):
         first = next(instructions)
@@ -297,22 +312,24 @@ def get_meta_content(root: lxml.html.HtmlElement) -> Dict[str, str]:
     return metadata
 
 
-def transform_breaks_to_paragraphs(element: lxml.html.HtmlElement, **attribs: str) -> lxml.html.HtmlElement:
-    """Splits the content of <element> on <br> tags into paragraphs and transform them in <p> elements.
+def transform_breaks_to_tag(
+    element: lxml.html.HtmlElement, tag: str = "p", replace: bool = False, **attribs: str
+) -> None:
+    """Splits the content of <element> on <br> tags into paragraphs and wraps them in <tag> elements.
+
+    If <element> is replaced, the previous attributes are attached to the new elements.
+    If <element> is not replaced, the wrapped paragraphs are attached to the cleared element.
 
     Args:
-        element: The element on which to perform the transformation
+        element: The element on which to perform the transformation.
+        tag: The tag to wrap the paragraphs in.
+        replace: If True, replace <element> with wrapped paragraphs, else adds them to <element>.
         **attribs: The attributes of the wrapped paragraphs as keyword arguments. I.e. the
             default {"class": "br-wrap"} wil produce the following elements: <p class='br-wrap'>.
             To use python keywords wrap them dunder scores. __class__ for class.
-
-    Returns:
-        The transformed element
     """
 
-    if not attribs:
-        attribs = {"class": "br-wrap"}
-    else:
+    if attribs:
         attribs = {re.sub(r"^__(.*?)__$", r"\1", key): value for key, value in attribs.items()}
 
     def get_paragraphs() -> List[str]:
@@ -333,17 +350,30 @@ def transform_breaks_to_paragraphs(element: lxml.html.HtmlElement, **attribs: st
 
     # split content on <br> tags
     if not (paragraphs := get_paragraphs()):
-        return element
+        return None
 
-    # remove children, tail and text from element
-    clear_element()
+    wrapped_paragraphs = [f"<{tag}{' ' + generate_attrs()}>{paragraph}</{tag}>" for paragraph in paragraphs]
 
-    # add paragraphs to cleared element
-    for paragraph in paragraphs:
-        wrapped = f"<p{' ' + generate_attrs()}>{paragraph}</p>"
-        element.append(lxml.html.fromstring(wrapped))
+    if replace:
+        if (parent := element.getparent()) is None:
+            raise NotImplementedError("Cannot replace elements without parent element")
 
-    return element
+        previous_attrs = element.attrib
+        previous_index = parent.index(element)
+        parent.remove(element)
+        for new_index, paragraph in enumerate(wrapped_paragraphs, previous_index):
+            new_paragraph = lxml.html.fromstring(paragraph)
+            new_paragraph.attrib.update(previous_attrs)
+            parent.insert(new_index, new_paragraph)
+    else:
+        # remove children, tail and text from element
+        clear_element()
+
+        # add paragraphs to cleared element
+        for paragraph in wrapped_paragraphs:
+            element.append(lxml.html.fromstring(paragraph))
+
+    return None
 
 
 def strip_nodes_to_text(text_nodes: List[lxml.html.HtmlElement], join_on: str = "\n\n") -> Optional[str]:
@@ -380,6 +410,13 @@ def apply_substitution_pattern_over_list(
     return [subbed for text in input_list if (subbed := re.sub(pattern, replacement, text).strip())]
 
 
+def apply_result_filter(input_list: List[str], result_filter: Optional[Union[Pattern[str], Set[str]]]) -> List[str]:
+    if isinstance(result_filter, Pattern):
+        return [topic for topic in dict.fromkeys(input_list) if not re.search(result_filter, topic)]
+    else:
+        return [topic for topic in dict.fromkeys(input_list) if result_filter is None or topic not in result_filter]
+
+
 def generic_author_parsing(
     value: Union[
         Optional[str],
@@ -389,6 +426,8 @@ def generic_author_parsing(
     ],
     split_on: Optional[List[str]] = None,
     normalize: bool = True,
+    substitution_pattern: Optional[Pattern[str]] = None,
+    result_filter: Optional[Union[Pattern[str], Set[str]]] = None,
 ) -> List[str]:
     """This function tries to parse the given <value> to a list of authors (List[str]) based on the type of value.
 
@@ -401,6 +440,9 @@ def generic_author_parsing(
 
     with common delimiters := [",", ";", " und ", " and ", " & ", " | "]
 
+    If a result filter is provided, authors matching the pattern or included in the set will be removed.
+    If a substitution pattern is provided, any substring matching that pattern will be removed from each author name.
+
     All values are stripped with default strip() method before returned.
 
     Args:
@@ -408,6 +450,9 @@ def generic_author_parsing(
         split_on: Only relevant for type(<value>) = str. If set, split <value> on <split_on>,
             else (default) split <value> on common delimiters.
         normalize: If True, normalize every author with normalize_whitespace(). Defaults to True
+        substitution_pattern: If specified, partial matches are removed from each author
+        result_filter: Can be of type Pattern[str] or Set[str]. If specified, all authors matching the pattern or
+            contained in the set will be removed. Defaults to None.
 
     Returns:
         A parsed and striped list of authors
@@ -455,10 +500,11 @@ def generic_author_parsing(
             return filter(bool, re.split(r"|".join(split_on or common_delimiters), text))
 
         authors = list(more_itertools.flatten([split(author) for author in authors]))
-        normalized_authors = [normalize_whitespace(author) for author in authors]
-        return normalized_authors
-
-    return authors
+        normalized_authors = [normalize_whitespace(author) for author in authors if author.strip()]
+        authors = normalized_authors
+    if substitution_pattern:
+        authors = apply_substitution_pattern_over_list(authors, substitution_pattern)
+    return apply_result_filter(authors, result_filter)
 
 
 def generic_text_extraction_with_css(doc, selector: XPath) -> Optional[str]:
@@ -467,8 +513,34 @@ def generic_text_extraction_with_css(doc, selector: XPath) -> Optional[str]:
 
 
 def generic_topic_parsing(
-    keywords: Optional[Union[str, List[str]]], delimiter: Union[str, List[str]] = ","
+    keywords: Optional[Union[str, List[str]]],
+    delimiter: Union[str, List[str]] = ",",
+    substitution_pattern: Optional[Pattern[str]] = None,
+    result_filter: Optional[Union[Pattern[str], Set[str]]] = None,
 ) -> List[str]:
+    """This function tries to parse the given <value> to a list of topics (List[str]) based on the type of value.
+
+    Parses based on type of <value> as following:
+        value (None):       Empty list \n
+        value (str):        re.split(delimiters) with delimiters := delimiter or ',' \n
+        value (list[str]):  value\n
+
+    If a result filter is provided, topics matching the pattern or included in the set will be removed.
+    If a substitution pattern is provided, any substring matching that pattern will be removed from each topic.
+
+    All values are stripped with default strip() method before returned.
+
+    Args:
+        keywords: An input value representing author(s) which get parsed based on type.
+        delimiter: Only relevant for type(<value>) = str. If set, split <value> on <delimiter>,
+            else (default) split <value> on ','.
+        substitution_pattern: If specified, partial matches are removed from each topic
+        result_filter: Can be of type Pattern[str] or Set[str]. If specified, all topics matching the pattern or
+            contained in the set will be removed. Defaults to None.
+
+    Returns:
+        A parsed and striped list of topics
+    """
     if isinstance(delimiter, str):
         delimiter = [delimiter]
 
@@ -484,8 +556,9 @@ def generic_topic_parsing(
         topics = keywords
     else:
         raise TypeError(f"Encountered unexpected type {type(keywords)} as keyword parameter")
-
-    return list(dict.fromkeys(topics))
+    if substitution_pattern:
+        topics = apply_substitution_pattern_over_list(topics, substitution_pattern)
+    return apply_result_filter(topics, result_filter=result_filter)
 
 
 _tz_infos = {"CET": 3600, "CEST": 7200, "IST": 19800}
@@ -505,11 +578,21 @@ class CustomParserInfo(parser.parserinfo):
         ("Oct", "October", "Oktober", "Okt"),
         ("Nov", "November"),
         ("Dec", "December", "Dezember", "Dez"),
-    ]
+    ]  # type: ignore[assignment]
+    # type ignore due to types-python-dateutil==2.9.0.20251008, see https://github.com/flairNLP/fundus/issues/806
 
 
-def generic_date_parsing(date_str: Optional[str]) -> Optional[datetime]:
-    return parser.parse(date_str, tzinfos=_tz_infos, parserinfo=CustomParserInfo(), fuzzy=True) if date_str else None
+def generic_date_parsing(date_str: Optional[str], tz: Optional[timezone] = None) -> Optional[datetime]:
+    if date_str is None:
+        return None
+
+    if not (parsed_date := parser.parse(date_str, tzinfos=_tz_infos, parserinfo=CustomParserInfo(), fuzzy=True)):
+        return None
+
+    if tz is not None and parsed_date.tzinfo is None:
+        parsed_date.replace(tzinfo=tz)
+
+    return parsed_date
 
 
 _title_selector = CSSSelector("title")
@@ -527,7 +610,7 @@ def parse_title_from_root(root: lxml.html.HtmlElement) -> Optional[str]:
 def preprocess_url(url: str, domain: str) -> str:
     url = re.sub(r"\\/", "/", url)
     # Some publishers use relative URLs
-    if not validators.url(url):
+    if not is_valid_url(url):
         publisher_domain = "https://" + domain
         url = urljoin(publisher_domain, url)
     return url
@@ -535,6 +618,11 @@ def preprocess_url(url: str, domain: str) -> str:
 
 def image_author_parsing(authors: Union[str, List[str]]) -> List[str]:
     credit_keywords = [
+        "Источник",
+        "коллаж",
+        "Джерело",
+        "Фото",
+        "колаж",
         "fotograf",
         "credits?",
         "quellen?",
@@ -690,6 +778,7 @@ def parse_versions(img_node: lxml.html.HtmlElement, size_pattern: Optional[Patte
         and not default_width == "auto"
         and (default_height := img_node.get("height"))
         and not default_height == "auto"
+        and not float(default_height) == 0.0
     ):
         ratio = float(default_width) / float(default_height)
     else:
@@ -713,7 +802,7 @@ def parse_image_nodes(
     image_nodes: List[IndexedImageNode],
     caption_selector: XPath,
     alt_selector: XPath,
-    author_selector: Union[XPath, Pattern[str]],
+    author_selector: Union[XPath, Pattern[str], List[Pattern[str]]],
     domain: Optional[str] = None,
     size_pattern: Optional[Pattern[str]] = None,
 ) -> Iterator[Image]:
@@ -753,28 +842,43 @@ def parse_image_nodes(
         description = nodes_to_text(alt_selector(node))
 
         # parse authors
+
         authors = []
         if isinstance(author_selector, Pattern):
-            # author is part of the caption
-            if caption and (match := re.search(author_selector, caption)):
-                authors = [match.group("credits")]
-                caption = re.sub(author_selector, "", caption).strip() or None
-            elif description and (match := re.search(author_selector, description)):
-                authors = [match.group("credits")]
+            author_selector = [author_selector]
+
+        if isinstance(author_selector, list):
+            for pattern in author_selector:
+                # author is part of the caption
+                if caption and (match := re.search(pattern, caption)):
+                    authors = [match.group("credits")]
+                    caption = re.sub(pattern, "", caption).strip() or None
+                elif description and (match := re.search(pattern, description)):
+                    authors = [match.group("credits")]
+                if authors:
+                    break
         else:
             # author is selectable as node
             if author_nodes := author_selector(node):
                 authors = generic_nodes_to_text(author_nodes, normalize=True)
         authors = image_author_parsing(authors)
 
-        yield Image(
-            versions=versions,
-            caption=caption,
-            authors=authors,
-            description=description,
-            is_cover=is_cover,
-            position=position,
-        )
+        try:
+            image = Image(
+                versions=versions,
+                caption=caption,
+                authors=authors,
+                description=description,
+                is_cover=is_cover,
+                position=position,
+            )
+        except ImageURLError as error:
+            if node.attrib.get("loading") == "lazy":
+                logger.debug("Skipping lazy loading image")
+            else:
+                logger.debug(error)
+        else:
+            yield image
 
 
 class Bounds(NamedTuple):
@@ -818,7 +922,7 @@ def image_extraction(
     lower_boundary_selector: Optional[XPath] = None,
     caption_selector: XPath = XPath("./ancestor::figure//figcaption"),
     alt_selector: XPath = XPath("./@alt"),
-    author_selector: Union[XPath, Pattern[str]] = XPath(
+    author_selector: Union[XPath, Pattern[str], List[Pattern[str]]] = XPath(
         "(./ancestor::figure//*[(contains(@class, 'copyright') or contains(@class, 'credit')) and text()])[1]"
     ),
     relative_urls: Union[bool, XPath] = False,

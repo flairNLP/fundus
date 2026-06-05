@@ -1,8 +1,6 @@
 import datetime
-import re
 from typing import List, Optional
 
-from lxml.cssselect import CSSSelector
 from lxml.etree import XPath
 
 from fundus.parser import ArticleBody, BaseParser, Image, ParserProxy, attribute
@@ -18,7 +16,7 @@ from fundus.parser.utility import (
 class SermitsiaqParser(ParserProxy):
     class V1(BaseParser):
         _paragraph_selector = XPath(
-            f"//div[contains(@class, 'bodytext')]//p[not(@class='offer-description' or re:test(text(), '^/.*/$'))]",
+            "//div[contains(@class, 'bodytext')]//p[not(@class='offer-description' or re:test(text(), '^/.*/$'))]",
             namespaces={"re": "http://exslt.org/regular-expressions"},
         )
         _summary_selector = XPath("//h2[@class='subtitle '] ")

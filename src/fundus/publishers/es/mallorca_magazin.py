@@ -9,7 +9,6 @@ from fundus.parser.utility import (
     extract_article_body_with_selector,
     generic_author_parsing,
     generic_date_parsing,
-    generic_topic_parsing,
     image_extraction,
 )
 
@@ -54,8 +53,7 @@ class MallorcaMagazinParser(ParserProxy):
                 image_selector=XPath("//figure//img|//div[@id='post-text']//p/img"),
                 paragraph_selector=self._paragraph_selector,
                 caption_selector=XPath(
-                    "./ancestor::div[@class='col-sm-12']//p[@class='img-description'] | "
-                    "./ancestor::figure//figcaption"
+                    "./ancestor::div[@class='col-sm-12']//p[@class='img-description'] | ./ancestor::figure//figcaption"
                 ),
                 author_selector=re.compile(r"\|(?P<credits>.+)"),
             )

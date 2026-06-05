@@ -19,7 +19,7 @@ from fundus.parser.utility import (
     generic_date_parsing,
     generic_topic_parsing,
     image_extraction,
-    transform_breaks_to_paragraphs,
+    transform_breaks_to_tag,
 )
 
 
@@ -37,9 +37,9 @@ class NikkanGeadaiParser(ParserProxy):
         def _transform_br_element(self):
             if nodes := self._full_text_selector(self.precomputed.doc):
                 if len(nodes) != 1:
-                    raise ValueError(f"Expected exactly one node")
+                    raise ValueError("Expected exactly one node")
                 else:
-                    transform_breaks_to_paragraphs(nodes[0], __class__="br-wrap")
+                    transform_breaks_to_tag(nodes[0], __class__="br-wrap")
 
         @attribute
         def body(self) -> Optional[ArticleBody]:
