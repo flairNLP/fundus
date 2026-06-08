@@ -1,7 +1,7 @@
 # Table of Contents
 
 * [Logging in Fundus](#logging-in-fundus)
-  * [Principals](#principals)
+  * [Principles](#principals)
   * [Accessing loggers](#accessing-loggers)
   * [Changing log levels](#changing-log-levels)
   * [Format and handlers](#format-and-handlers)
@@ -10,9 +10,9 @@
 
 This tutorial will introduce you to the logging mechanics used in Fundus
 
-## Principals
+## Principles
 
-Fundus uses module scoped logging with module names as logger names.
+Fundus uses module-scoped logging with module names as logger names.
 Not every module has a logger per se, but every module that logs a message has.
 All module related implementation is centralized in Fundus' logging module under `fundus.logging`.
 
@@ -25,14 +25,15 @@ Fundus uses 4 different log levels:
 
 with default log level for all Fundus loggers being `ERROR`.
 
-*__NOTE__*: Depending on the spawn method (spawn) your OS uses to spawn new processes in python (this effects mostly Windows), log messages beneath `ERROR` won't be received when using multiprocessing. 
+> [!NOTE]
+> Depending on the start method your OS uses to spawn new processes in Python (this mainly affects Windows), log messages below `ERROR` won't be received when using multiprocessing.
 
 ## Accessing loggers
 
 You can import a specific logger from the corresponding module like this:
 
 ````python
-from fundus.scraping.crawler import logger
+from fundus.scraping.crawler.web import logger
 ````
 
 Or find a collection of all existing loggers with their module names here:
@@ -58,7 +59,7 @@ from fundus.logging import set_log_level
 set_log_level(logging.DEBUG)
 ````
 
-## Format and Handlers
+## Format and handlers
 
 By default, all Fundus log messages are written to `stderr` with the following format `%(asctime)s - %(name)s - %(levelname)s - %(message)s`
 To add another handler use the `add_handler` function.
@@ -73,5 +74,6 @@ file_handler.setFormatter(logging.Formatter("%(asctime)s - %(levelname)s - %(mes
 add_handler(file_handler)
 ````
 
-*__NOTE__*: All of the above can also be done individually for every logger by [accessing loggers](#accessing-loggers) directly.
+> [!NOTE]
+> All of the above can also be done individually for every logger by [accessing loggers](#accessing-loggers) directly.
 

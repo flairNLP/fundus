@@ -3,7 +3,7 @@
 * [How to filter articles](#how-to-filter-articles)
   * [Extraction filter](#extraction-filter)
     * [Custom extraction filter](#custom-extraction-filter)
-      * [Some more extraction filter examples:](#some-more-extraction-filter-examples)
+      * [Some more extraction filter examples](#some-more-extraction-filter-examples)
   * [URL filter](#url-filter)
     * [Combine filters](#combine-filters)
   * [Filter sources](#filter-sources)
@@ -20,7 +20,7 @@ A specific article may not contain all attributes the parser is capable of extra
 By default, Fundus drops all articles without at least a title, body, and publishing date extracted to ensure data quality.
 To alter this behavior make use of the `only_complete` parameter of the `crawl()` method.
 You have three options to do so:
-- Use the build in `ExtractionFilter` `Requires`, or write a custome one.
+- Use the built-in `ExtractionFilter` `Requires`, or write a custom one.
 - Set it to `false` to disable extraction filtering entirely.
 - Set it to `true` to yield only fully extracted articles.
 
@@ -35,7 +35,8 @@ for article in crawler.crawl(max_articles=2, only_complete=Requires("title", "bo
     print(article)
 ````
 
-**_NOTE:_** We recommend thinking about what kind of data is needed first and then running Fundus with a configured extraction filter afterward.
+> [!NOTE]
+> We recommend thinking about what kind of data is needed first and then running Fundus with a configured extraction filter afterward.
 
 ### Custom extraction filter
 
@@ -64,11 +65,12 @@ for us_themed_article in crawler.crawl(only_complete=topic_filter):
     print(us_themed_article)
 ````
 
-**_NOTE:_** Fundus' filters work inversely to Python's built-in filter.
-A filter in Fundus describes what is filtered out and not what's kept.
-If a filter returns True on a specific element the element will be dropped.
+> [!NOTE]
+> Fundus' filters work inversely to Python's built-in filter.
+> A filter in Fundus describes what is filtered out and not what's kept.
+> If a filter returns True on a specific element, the element will be dropped.
 
-#### Some more extraction filter examples:
+#### Some more extraction filter examples
 
 ````python
 # only select articles from the past seven days
@@ -106,8 +108,8 @@ for article in crawler.crawl(max_articles=5, url_filter=regex_filter("advertisem
     print(article.html.requested_url)
 ````
 
-Often it's useful to select certain criteria rather than filtering them.
-To do so use the `inverse` operator from `fundus.scraping.filter.py`.
+Often it's useful to select for certain criteria rather than filtering them out.
+To do so use the `inverse` operator from `fundus.scraping.filter`.
 
 Let's crawl a bunch of articles with URLs including the string `politic`.
 
@@ -131,12 +133,13 @@ https://www.cnbc.com/2023/07/12/thai-elections-deep-generational-divides-belie-t
 https://www.reuters.com/business/autos-transportation/volkswagens-china-chief-welcomes-political-goal-germanys-beijing-strategy-2023-07-13/
 ````
 
-**_NOTE:_** As with the `ExtractionFilter` you can also write custom URL filters satisfying the `URLFilter` protocol.
+> [!NOTE]
+> As with the `ExtractionFilter` you can also write custom URL filters satisfying the `URLFilter` protocol.
 
 ### Combine filters
 
 Sometimes it is useful to combine filters of the same kind.
-You can do so by using the `lor` (logic `or`) and `land` (logic `and`) operators from `fundus.scraping.filter.py`.
+You can do so by using the `lor` (logic `or`) and `land` (logic `and`) operators from `fundus.scraping.filter`.
 
 Let's combine both URL filters from the examples above and add a new condition.
 Our goal is to get articles that include both strings 'politic' and 'trump' in their URL and don't include the strings 'podcast' or 'advertisement'.
@@ -169,8 +172,9 @@ https://www.thegatewaypundit.com/2023/06/pres-trump-defends-punching-down-politi
 https://www.thegatewaypundit.com/2023/06/breaking-poll-trump-most-popular-politician-country-rfk/
 ````
 
-**_NOTE:_** You can use the `combine`, `lor`, and `land` operators on `ExtractionFilter` as well.
-Make sure to only use them on filters of the same kind.
+> [!NOTE]
+> You can use the `lor` and `land` operators on `ExtractionFilter` as well.
+> Make sure to only use them on filters of the same kind.
 
 ## Filter sources
 
@@ -179,7 +183,8 @@ Fundus supports different sources for articles which are split into two categori
 1. Only recent articles: `RSSFeed`, `NewsMap` (recommended for continuous crawling jobs)
 2. The whole site: `Sitemap` (recommended for one-time crawling)
 
-**_NOTE:_** Sometimes the `Sitemap` provided by a specific publisher won't span the entire site.
+> [!NOTE]
+> Sometimes the `Sitemap` provided by a specific publisher won't span the entire site.
 
 You can preselect the source for your articles when initializing a new `Crawler`.
 Let's initiate a crawler who only crawls from `NewsMaps`'s.
@@ -190,7 +195,8 @@ from fundus import Crawler, PublisherCollection, NewsMap
 crawler = Crawler(PublisherCollection.us, restrict_sources_to=[NewsMap])
 ````
 
-**_NOTE:_** The `restrict_sources_to` parameter expects a list as value to specify multiple sources at once, e.g. `[RSSFeed, NewsMap]`
+> [!NOTE]
+> The `restrict_sources_to` parameter expects a list as value to specify multiple sources at once, e.g. `[RSSFeed, NewsMap]`
 
 ## Filter unique articles
 
@@ -202,4 +208,4 @@ You can alter this behavior by setting the `only_unique` parameter.
 Finally, the `crawl()` method also allows you to filter articles by language.
 You can do so by passing a list of 2 letter language codes ([ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes)) to the method using the `language_filter` parameter.
 
-In the [next section](5_advanced_topics) we will guide you through advanced topics as how to search through publishers in the `PublisherCollection` and how to deal with deprecated publishers.
+In the [next section](5_advanced_topics.md) we will guide you through advanced topics such as how to search through publishers in the `PublisherCollection` and how to deal with deprecated publishers.
