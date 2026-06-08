@@ -31,10 +31,7 @@ class AT(metaclass=PublisherGroup):
         name="Die Presse",
         domain="https://diepresse.com",
         parser=DiePresseParser,
-        sources=[
-            NewsMap("https://www.diepresse.com/news-sitemap"),
-            Sitemap("https://www.diepresse.com/sitemap")
-        ],
+        sources=[NewsMap("https://www.diepresse.com/news-sitemap"), Sitemap("https://www.diepresse.com/sitemap")],
     )
 
     KleineZeitung = Publisher(
