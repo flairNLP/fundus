@@ -33,6 +33,7 @@ class AT(metaclass=PublisherGroup):
         parser=DiePresseParser,
         sources=[
             NewsMap("https://www.diepresse.com/news-sitemap"),
+            Sitemap("https://www.diepresse.com/sitemap")
         ],
     )
 
