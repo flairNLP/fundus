@@ -1,10 +1,13 @@
 import inspect
 import json
 from dataclasses import asdict, fields, is_dataclass
+from datetime import datetime
 from typing import (
     Any,
     Callable,
     Dict,
+    Optional,
+    Protocol,
     Sequence,
     Type,
     TypeVar,
@@ -12,6 +15,7 @@ from typing import (
     get_args,
     get_origin,
     get_type_hints,
+    runtime_checkable,
 )
 
 from typing_extensions import TypeAlias
@@ -19,6 +23,43 @@ from typing_extensions import TypeAlias
 _T = TypeVar("_T")
 _M = TypeVar("_M", bound="DataclassSerializationMixin")
 JSONVal: TypeAlias = Union[None, bool, str, float, int, Sequence["JSONVal"], Dict[str, "JSONVal"]]
+
+
+@runtime_checkable
+class Serializable(Protocol):
+    """Anything that knows how to convert itself into a JSON-compatible structure.
+
+    Implementing types opt into the export path used by Article.to_json.
+    """
+
+    def serialize(self) -> JSONVal: ...
+
+
+def serialize_value(value: Any, field_name: Optional[str] = None) -> JSONVal:
+    """Recursively convert a value to JSON-compatible form.
+
+    Args:
+        value: The value to serialize.
+        field_name: Optional originating field name, used only for error messages.
+
+    Returns:
+        A JSON-serializable structure.
+
+    Raises:
+        TypeError: If the value's type has no defined serialization.
+    """
+    if value is None or isinstance(value, (str, int, float, bool)):
+        return value
+    if isinstance(value, datetime):
+        return value.isoformat()
+    if isinstance(value, (list, tuple)):
+        return [serialize_value(item, field_name) for item in value]
+    if isinstance(value, dict):
+        return {str(k): serialize_value(v, field_name) for k, v in value.items()}
+    if isinstance(value, Serializable):
+        return value.serialize()
+    location = f"field {field_name!r}" if field_name else "value"
+    raise TypeError(f"Cannot serialize {location} of type {type(value).__name__}")
 
 
 def is_jsonable(x):
