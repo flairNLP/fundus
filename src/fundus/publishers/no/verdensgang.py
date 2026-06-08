@@ -18,7 +18,7 @@ from fundus.parser.utility import (
 
 class VerdensGangParser(ParserProxy):
     class V1(BaseParser):
-        _bloat_pattern: str = "Les også:|" "Vil du lese mer"
+        _bloat_pattern: str = "Les også:|Vil du lese mer"
 
         _summary_selector = CSSSelector("header.article-intro p")
         _subheadline_selector = CSSSelector("section.article-body > h2")

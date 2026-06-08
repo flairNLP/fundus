@@ -18,12 +18,11 @@ from fundus.parser.utility import (
 class LRTParser(ParserProxy):
     class V1(BaseParser):
         _paragraph_selector = XPath(
-            "//div[@class='article-content js-text-selection']/"
-            "p[not((strong and not(text())) or @class='text-lead')]"
+            "//div[@class='article-content js-text-selection']/p[not((strong and not(text())) or @class='text-lead')]"
         )
         _summary_selector = CSSSelector("p.text-lead")
         _subheadline_selector = XPath(
-            "//div[@class='article-content js-text-selection']/" "p[strong and not(@class='text-lead') and not(text())]"
+            "//div[@class='article-content js-text-selection']/p[strong and not(@class='text-lead') and not(text())]"
         )
 
         @attribute

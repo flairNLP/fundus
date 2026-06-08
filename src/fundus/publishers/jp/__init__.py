@@ -86,6 +86,7 @@ class JP(metaclass=PublisherGroup):
             )
         ],
         deprecated=True,
+        impersonate="chrome",
     )
 
     SankeiShimbun = Publisher(
@@ -102,12 +103,11 @@ class JP(metaclass=PublisherGroup):
         name="Nikkan Geadai",
         domain="https://www.nikkan-gendai.com/",
         parser=NikkanGeadaiParser,
-        deprecated=True,
         sources=[
             Sitemap(
                 "https://www.nikkan-gendai.com/sitemap.xml",
                 reverse=True,
-                sitemap_filter=inverse(regex_filter(r"type=news")),
+                sitemap_filter=inverse(regex_filter(r"type=articles")),
             )
         ],
     )

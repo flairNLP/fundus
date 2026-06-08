@@ -20,8 +20,7 @@ class NieuwsbladParser(ParserProxy):
         _summary_selector = XPath("//*[@data-testid='article-intro']")
         _paragraph_selector = XPath("//*[@data-testid='article-body']/p[text()]")
         _subheadline_selector = XPath(
-            "//*[@data-testid='article-body']/p/span[@class='bold'] | "
-            "//*[@data-testid='article-body']/h3"
+            "//*[@data-testid='article-body']/p/span[@class='bold'] | //*[@data-testid='article-body']/h3"
         )
 
         _topic_selector = XPath(

@@ -1,11 +1,13 @@
 from collections import defaultdict
 from textwrap import indent
 from typing import Dict, Iterable, Iterator, List, Optional, Set, Type, Union
-from urllib.robotparser import RobotFileParser
 from warnings import warn
 
 import more_itertools
-from requests.exceptions import ConnectionError, HTTPError, ReadTimeout
+from curl_cffi.requests import BrowserType, BrowserTypeLiteral
+from curl_cffi.requests.exceptions import ConnectionError, HTTPError, ReadTimeout
+from curl_cffi.requests.impersonate import normalize_browser_type
+from robots import RobotFileParser
 from typing_extensions import TypeAlias
 
 from fundus.logging import create_logger
@@ -42,10 +44,13 @@ class CustomRobotFileParser(RobotFileParser):
         "llms",
     }
 
-    def __init__(self, url: str, headers: Optional[Dict[str, str]] = None):
+    def __init__(
+        self, url: str, headers: Optional[Dict[str, str]] = None, impersonate: Optional[BrowserTypeLiteral] = None
+    ):
         self.headers = headers
         self.disallows_training: bool = False
         self.url = url
+        self.impersonate = impersonate
         super().__init__(url)
 
     # noinspection PyAttributeOutsideInit
@@ -53,7 +58,7 @@ class CustomRobotFileParser(RobotFileParser):
         """Reads the robots.txt URL and feeds it to the parser."""
         try:
             # noinspection PyUnresolvedReferences
-            session = session_handler.get_session()
+            session = session_handler.get_session(self.impersonate)
             response = session.get_with_interrupt(self.url, headers=self.headers)
         except HTTPError as err:
             if err.response.status_code in (401, 403):
@@ -76,9 +81,11 @@ class CustomRobotFileParser(RobotFileParser):
 
 
 class Robots:
-    def __init__(self, url: str, headers: Optional[Dict[str, str]] = None):
+    def __init__(
+        self, url: str, headers: Optional[Dict[str, str]] = None, impersonate: Optional[BrowserTypeLiteral] = None
+    ):
         self.url = url
-        self.robots_file_parser = CustomRobotFileParser(url, headers=headers)
+        self.robots_file_parser = CustomRobotFileParser(url, headers=headers, impersonate=impersonate)
         self.ready: bool = False
 
     def _read(self) -> None:
@@ -130,10 +137,11 @@ class Publisher:
         sources: List[URLSource],
         query_parameter: Optional[Dict[str, str]] = None,
         url_filter: Optional[URLFilter] = None,
-        request_header: Optional[Dict[str, str]] = _default_header,
+        request_header: Dict[str, str] = _default_header,
         deprecated: bool = False,
         disallows_training: bool = False,
         suppress_robots: bool = False,
+        impersonate: Optional[BrowserTypeLiteral] = None,
     ):
         """Initialization of a new Publisher object
 
@@ -147,23 +155,40 @@ class Publisher:
             url_filter (Optional[URLFilter]): Regex filter to apply determining URLs to be skipped
             request_header (Optional[Dict[str, str]]): Request header to be used for the GET-request
             deprecated (bool): If True, the publisher is deprecated and skipped by default
-            disallows_training (bool): If True, the publisher disallows training on its articles in it's robots.txt file.
-                Note that this is only an indicator and users should verify the terms of use of the publisher before
-                using the articles for training purposes.
+            disallows_training (bool): If True, the publisher disallows training on its articles in
+                its robots.txt file. Note that this is only an indicator and users should verify the
+                terms of use of the publisher before using the articles for training purposes.
+            suppress_robots (bool): If True, robots.txt restrictions are ignored for this publisher
+            impersonate (Optional[str]): Browser profile to impersonate via CurlCffiAdapter, e.g.
+                "chrome" or "safari". If set, requests to this publisher use curl_cffi instead of
+                the standard urllib3 stack, which can bypass TLS fingerprint-based bot detection.
+                Check https://curl-cffi.readthedocs.io/en/latest/impersonate/targets.html for browser targets.
 
         """
         if not (name and domain and parser and sources):
             raise ValueError("Failed to create Publisher. Name, Domain, Parser and Sources are mandatory")
+
+        if (
+            impersonate is not None
+            and (impersonate := normalize_browser_type(impersonate)) not in BrowserType._value2member_map_
+        ):
+            raise ValueError(
+                f"Browser type <{impersonate}> not supported. Supported types are: "
+                f"{', '.join(BrowserType._value2member_map_.keys())}"
+            )
+
         self.name = name
         self.parser = parser()
         self.domain = domain
         self.query_parameter = query_parameter
         self.url_filter = url_filter
         self.request_header = request_header
+        self.impersonate = impersonate
         self.deprecated = deprecated
         self.robots = Robots(
             url=self.domain + "robots.txt" if self.domain.endswith("/") else self.domain + "/robots.txt",
             headers=self.request_header,
+            impersonate=impersonate,
         )
         self._disallows_training = disallows_training
 
@@ -370,7 +395,6 @@ class PublisherGroup(type):
 
         matched: Union[List[FilteredPublisher], List[Publisher]] = []
         unique_attributes = set(attributes)
-        spec: Publisher
         for publisher in cls:
             if unique_attributes.issubset(
                 set(publisher.parser().attributes().names)

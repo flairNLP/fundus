@@ -1,6 +1,6 @@
 from fundus.publishers.base_objects import Publisher, PublisherGroup
 from fundus.publishers.lb.lbc_group import LBCGroupParser
-from fundus.scraping.url import NewsMap, RSSFeed, Sitemap
+from fundus.scraping.url import NewsMap, RSSFeed
 
 
 class LB(metaclass=PublisherGroup):

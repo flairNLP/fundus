@@ -132,12 +132,13 @@ class US(metaclass=PublisherGroup):
         ],
     )
 
-    # WorldTruth = Publisher(
-    #     name="World Truth",
-    #     domain="https://www.worldtruth.tv/",
-    #     sources=[RSSFeed("https://feeds.feedburner.com/ConsciousnessTv")],
-    #     parser=WorldTruthParser,
-    # )
+    WorldTruth = Publisher(
+        name="World Truth",
+        domain="https://www.worldtruth.tv/",
+        sources=[RSSFeed("https://feeds.feedburner.com/ConsciousnessTv")],
+        parser=WorldTruthParser,
+        deprecated=True,
+    )
 
     FreeBeacon = Publisher(
         name="The Washington Free Beacon",
@@ -166,7 +167,7 @@ class US(metaclass=PublisherGroup):
             Sitemap("https://www.washingtontimes.com/sitemap-stories.xml"),
             Sitemap("https://www.washingtontimes.com/sitemap-entries.xml"),
         ],
-        deprecated=True,
+        impersonate="chrome",
     )
 
     WashingtonPost = Publisher(
@@ -181,7 +182,7 @@ class US(metaclass=PublisherGroup):
         ],
         # Adds a URL-filter to ignore incomplete URLs
         url_filter=regex_filter(r"washingtonpost.com(\/)?$"),
-        deprecated=True,
+        impersonate="chrome",
     )
 
     TheNewYorker = Publisher(
