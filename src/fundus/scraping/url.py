@@ -4,24 +4,25 @@ import itertools
 import lzma
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
-from functools import cached_property, partial
 from typing import (
+    Any,
     Callable,
     ClassVar,
     Dict,
     Iterable,
     Iterator,
     List,
+    NamedTuple,
     Optional,
     Pattern,
     Set,
+    Tuple,
 )
-from urllib.parse import unquote, urlparse
+from urllib.parse import unquote, urljoin, urlparse
 
 import feedparser
-import lxml.html
 from curl_cffi.requests.exceptions import ConnectionError, HTTPError, ReadTimeout
-from lxml.etree import XMLParser, XPath
+from lxml.etree import XMLParser, XPath, fromstring
 
 from fundus.logging import create_logger
 from fundus.scraping.filter import URLFilter, inverse
@@ -30,89 +31,43 @@ from fundus.scraping.session import InterruptableSession, _default_header, sessi
 logger = create_logger(__name__)
 
 
-class CompressionFormat:
-    def __init__(
-        self, name: str, decompression: Optional[Callable[[bytes], bytes]] = None, *, byte_mask: Optional[bytes] = None
-    ) -> None:
-        self.name = name
-        self.decompression = decompression
-        self.byte_mask = byte_mask
-
-    def match(self, compressed_content: bytes) -> bool:
-        if self.byte_mask:
-            return compressed_content.startswith(self.byte_mask)
-        return False
-
-    def __call__(self, compressed_content: bytes) -> bytes:
-        if self.decompression is None:
-            raise NotImplementedError(f"Decompression not implemented for {self.name!r}")
-        return self.decompression(compressed_content)
-
-    def __repr__(self):
-        if self.decompression is None:
-            return f"{self.name} -- Not implemented"
-        return self.name
-
-
-class CompressionFormats:
-    GZIP = CompressionFormat("gzip", gzip.decompress, byte_mask=b"\x1f\x8b")
-    BZ2 = CompressionFormat("bz2", bz2.decompress, byte_mask=b"\x42\x5a")
-    ZIP = CompressionFormat("zip", byte_mask=b"PK\x03\x04")
-    LZMA = CompressionFormat("lzma", lzma.decompress, byte_mask=b"\x28\xb5\x2f\xfd")
-
-    @classmethod
-    def iter_formats(cls) -> Iterator[CompressionFormat]:
-        for obj in cls.__dict__.values():
-            if isinstance(obj, CompressionFormat):
-                yield obj
-
-    @classmethod
-    def identify(cls, compressed_content: bytes) -> Optional[CompressionFormat]:
-        for compression_format in cls.iter_formats():
-            if compression_format.match(compressed_content):
-                return compression_format
-        return None
-
-
-class _ArchiveDecompressor:
-    def __init__(self):
-        self.archive_mapping: Dict[str, Callable[[bytes], bytes]] = {
-            "application/octet-stream": self._decompress_octet_stream,
-            "application/x-gzip": CompressionFormats.GZIP,
-            "gzip": CompressionFormats.GZIP,
-        }
-
-    def _decompress_octet_stream(self, compressed_content: bytes) -> bytes:
-        if (compression_format := CompressionFormats.identify(compressed_content)) is None:
-            logger.debug("Could not identify compression format")
-            raise NotImplementedError
-
-        return compression_format(compressed_content)
-
-    def decompress(self, content: bytes, file_format: "str") -> bytes:
-        decompress_function = self.archive_mapping[file_format]
-        return decompress_function(content)
-
-    @cached_property
-    def supported_file_formats(self) -> List[str]:
-        return list(self.archive_mapping.keys())
-
-
 def is_valid_url(url: str) -> bool:
+    """True if the URL has an http/https scheme and a non-empty network location."""
     parsed = urlparse(url)
     return bool(parsed.scheme in ("http", "https") and parsed.netloc)
 
 
-def clean_url(url: str) -> str:
-    return unquote(url)
+def strip_query_and_fragment(url: str) -> str:
+    """Return the URL with its query string and fragment removed.
+
+    Intended for *identity* use (dedup keys, equality probes), not for fetching:
+    the result may resolve to a different resource than the input on servers that
+    rely on query parameters for routing.
+    """
+    if any(indicator in url for indicator in ("?", "#")):
+        return urljoin(url, urlparse(url).path)
+    return url
 
 
 @dataclass
 class URLSource(Iterable[str], ABC):
+    """Abstract source of article URLs for a single feed/sitemap endpoint.
+
+    Concrete subclasses (RSSFeed, Sitemap, NewsMap) implement fetch() to stream URLs from
+    the endpoint at <url>. Iterating the source directly (__iter__) uses a default session
+    and headers for standalone use; production scraping calls fetch() through WebSource with
+    publisher-specific session and headers.
+
+    Attributes:
+        url (str): The feed/sitemap URL to pull article URLs from.
+        languages (Set[str]): Language codes the source is known to serve, if any.
+    """
+
     url: str
     languages: Set[str] = field(default_factory=set)
 
     def __post_init__(self):
+        """Warn (but don't fail) if the configured URL is malformed."""
         if not is_valid_url(self.url):
             logger.error(f"{type(self).__name__} initialized with invalid URL {self.url}")
 
@@ -154,6 +109,8 @@ class URLSource(Iterable[str], ABC):
 
 @dataclass
 class RSSFeed(URLSource):
+    """URLSource that yields article links from an RSS/Atom feed."""
+
     def fetch(self, session: InterruptableSession, headers: Dict[str, str]) -> Iterator[str]:
         try:
             response = session.get_with_interrupt(self.url, headers=headers)
@@ -173,79 +130,158 @@ class RSSFeed(URLSource):
         else:
             urls = filter(bool, (entry.get("link") for entry in rss_feed["entries"]))
             for url in urls:
-                yield clean_url(url)
+                # Some publishers emit URLs with percent-encoded path separators
+                # (e.g. `https://example.com%2Farticle.html`); see PR #753.
+                yield unquote(url)
+
+
+class _Codec(NamedTuple):
+    """A supported compression format: its name, leading magic bytes, and decompress function."""
+
+    name: str
+    magic: bytes
+    decompress: Callable[[bytes], bytes]
+
+
+# Identified by magic-byte sniff rather than headers: the formats we support all carry
+# unambiguous signatures, and sniffing handles misadvertised or header-less payloads alike.
+_CODECS: Tuple[_Codec, ...] = (
+    _Codec("gzip", b"\x1f\x8b", gzip.decompress),
+    _Codec("bzip2", b"BZh", bz2.decompress),
+    _Codec("xz", b"\xfd7zXZ\x00", lzma.decompress),
+)
+
+
+def decompress(content: bytes) -> bytes:
+    """Decompress content if its leading bytes match a known codec, else return unchanged."""
+    for codec in _CODECS:
+        if content.startswith(codec.magic):
+            return codec.decompress(content)
+    return content
+
+
+def _default_sitemap_filter(url: str) -> bool:
+    """Default sitemap_filter: drop empty/falsy entries, keep everything else."""
+    return not bool(url)
 
 
 @dataclass
 class Sitemap(URLSource):
+    """URLSource that yields article links from an XML sitemap, descending into sitemap indexes.
+
+    Attributes:
+        recursive (bool): If True, follow nested <sitemap> references in a sitemap index.
+            Defaults to True.
+        reverse (bool): If True, yield URLs (and descend into sub-sitemaps) in reverse order.
+            Defaults to False.
+        sitemap_filter (URLFilter): Filter applied to sub-sitemap <loc> values; a truthy result
+            drops the entry. Defaults to dropping only empty values.
+        sort_predicate (Optional[Pattern[str]]): If set, sub-sitemap URLs are sorted (descending)
+            by the matched substring of this pattern; the pattern must match every URL.
+    """
+
     recursive: bool = True
     reverse: bool = False
-    sitemap_filter: URLFilter = lambda url: not bool(url)
+    sitemap_filter: URLFilter = _default_sitemap_filter
     sort_predicate: Optional[Pattern[str]] = None
 
-    _decompressor: ClassVar[_ArchiveDecompressor] = _ArchiveDecompressor()
     _sitemap_selector: ClassVar[XPath] = XPath("//*[local-name()='sitemap']/*[local-name()='loc']")
     _url_selector: ClassVar[XPath] = XPath("//*[local-name()='url']/*[local-name()='loc']")
-    _parser = XMLParser(strip_cdata=False, recover=True)
+
+    @staticmethod
+    def _fetch_bytes(
+        sitemap_url: str,
+        session: InterruptableSession,
+        headers: Dict[str, str],
+    ) -> Optional[bytes]:
+        """Fetch sitemap bytes, decompressing if needed. Returns None on any failure.
+
+        Handles HTTP errors, decompression failures, and empty bodies. Each failure
+        mode is logged at its point of occurrence; callers just check for None.
+        """
+        if not is_valid_url(sitemap_url):
+            logger.info(f"Skipped sitemap {sitemap_url!r} because the URL is malformed")
+            return None
+        try:
+            response = session.get_with_interrupt(url=sitemap_url, headers=headers)
+        except (HTTPError, ConnectionError, ReadTimeout) as error:
+            logger.warning(f"Warning! Couldn't reach sitemap {sitemap_url!r} because of {error!r}")
+            return None
+        except Exception as error:
+            logger.error(f"Warning! Couldn't reach sitemap {sitemap_url!r} because of an unexpected error {error!r}")
+            return None
+
+        content = response.content.strip()
+        try:
+            content = decompress(content)
+        except Exception as error:
+            logger.warning(f"Decompression failed for {sitemap_url!r}: {error!r}")
+            return None
+        if not content:
+            logger.warning(f"Warning! Empty sitemap at {sitemap_url!r}")
+            return None
+        return content
+
+    def _ordered_sub_locs(self, tree: Any) -> List[str]:
+        """Extract sub-sitemap <loc> values, sorted by sort_predicate and filtered."""
+        locs = [node.text for node in self._sitemap_selector(tree)]
+
+        if self.sort_predicate is not None:
+            pattern = self.sort_predicate
+
+            def key(text: str) -> str:
+                if match := pattern.search(text):
+                    return match.group()
+                raise NotImplementedError("<sort_predicate> must match in all sitemap URLs")
+
+            locs = sorted(locs, key=key, reverse=True)
+
+        return list(filter(inverse(self.sitemap_filter), locs))
+
+    def _yield_from_sitemap(
+        self,
+        sitemap_url: str,
+        session: InterruptableSession,
+        headers: Dict[str, str],
+        parser: XMLParser,
+    ) -> Iterator[str]:
+        # Download (and decompress) the sitemap bytes.
+        content = self._fetch_bytes(sitemap_url, session, headers)
+        if content is None:
+            return
+
+        # Parse the bytes into an XML tree.
+        tree = fromstring(content, parser=parser)
+        if tree is None:
+            logger.warning(f"Warning! Couldn't parse sitemap {sitemap_url!r}")  # type: ignore[unreachable]
+            return
+
+        # Yield the article URLs contained in this sitemap, if any.
+        urls = [node.text for node in self._url_selector(tree)]
+        if urls:
+            for new_url in reversed(urls) if self.reverse else urls:
+                yield unquote(new_url)
+            return
+
+        # Otherwise descend into nested sitemap-index references.
+        if not self.recursive:
+            return
+        locs = self._ordered_sub_locs(tree)
+        for loc in reversed(locs) if self.reverse else locs:
+            yield from self._yield_from_sitemap(loc, session, headers, parser)
 
     def fetch(self, session: InterruptableSession, headers: Dict[str, str]) -> Iterator[str]:
-        def yield_recursive(sitemap_url: str) -> Iterator[str]:
-            if not is_valid_url(sitemap_url):
-                logger.info(f"Skipped sitemap {sitemap_url!r} because the URL is malformed")
-            try:
-                response = session.get_with_interrupt(url=sitemap_url, headers=headers)
-
-            except (HTTPError, ConnectionError, ReadTimeout) as error:
-                logger.warning(f"Warning! Couldn't reach sitemap {sitemap_url!r} because of {error!r}")
-                return
-            except Exception as error:
-                logger.error(
-                    f"Warning! Couldn't reach sitemap {sitemap_url!r} because of an unexpected error {error!r}"
-                )
-                return
-
-            content = response.content.strip()
-            if (content_type := response.headers.get("content-type")) in self._decompressor.supported_file_formats:
-                try:
-                    content = self._decompressor.decompress(content, content_type)
-                except NotImplementedError:
-                    logger.warning(f"No matching decompression found for {sitemap_url!r}")
-                    return
-            if not content:
-                logger.warning(f"Warning! Empty sitemap at {sitemap_url!r}")
-                return
-            tree = lxml.etree.fromstring(content, parser=self._parser)
-            if tree is None:
-                # in case we somehow end up with non xml content
-                logger.warning(f"Warning! Couldn't parse sitemap {sitemap_url!r}")  # type: ignore[unreachable]
-                return
-            urls = [node.text for node in self._url_selector(tree)]
-            if urls:
-                for new_url in reversed(urls) if self.reverse else urls:
-                    yield clean_url(new_url)
-            elif self.recursive:
-                sitemap_locs = [node.text for node in self._sitemap_selector(tree)]
-
-                if self.sort_predicate is not None:
-
-                    def _extract_predicate(text: str, pattern: Pattern[str]) -> str:
-                        if match := pattern.search(text):
-                            return match.group()
-                        raise NotImplementedError("<sort_predicate> must match in all sitemap URLs")
-
-                    sitemap_locs = sorted(
-                        sitemap_locs,
-                        key=partial(_extract_predicate, pattern=self.sort_predicate),
-                        reverse=True,
-                    )
-
-                filtered_locs = list(filter(inverse(self.sitemap_filter), sitemap_locs))
-                for loc in reversed(filtered_locs) if self.reverse else filtered_locs:
-                    yield from yield_recursive(loc)
-
-        yield from yield_recursive(self.url)
+        # lxml parsers serialize access across threads; construct one per fetch() so
+        # concurrent sitemap fetches don't contend. Each fetch() generator is consumed
+        # by a single thread, so the parser stays single-threaded for its lifetime.
+        parser = XMLParser(strip_cdata=False, recover=True)
+        yield from self._yield_from_sitemap(self.url, session, headers, parser)
 
 
 @dataclass
 class NewsMap(Sitemap):
-    pass
+    """Marker subclass for Google-News-style sitemaps (recent articles only).
+
+    Parsing is identical to Sitemap; the distinct type lets the scraper prioritize
+    news sitemaps over full archive sitemaps via __SOURCE_ORDER__ in base_objects.py.
+    """

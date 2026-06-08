@@ -46,7 +46,6 @@ from fundus.parser.data import (
     LinkedDataMapping,
     TextSequence,
 )
-from fundus.scraping.url import is_valid_url
 from fundus.utils.regex import _get_match_dict
 from fundus.utils.serialization import JSONVal
 
@@ -605,15 +604,6 @@ def parse_title_from_root(root: lxml.html.HtmlElement) -> Optional[str]:
         return None
 
     return strip_nodes_to_text(title_node)
-
-
-def preprocess_url(url: str, domain: str) -> str:
-    url = re.sub(r"\\/", "/", url)
-    # Some publishers use relative URLs
-    if not is_valid_url(url):
-        publisher_domain = "https://" + domain
-        url = urljoin(publisher_domain, url)
-    return url
 
 
 def image_author_parsing(authors: Union[str, List[str]]) -> List[str]:

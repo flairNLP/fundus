@@ -20,7 +20,6 @@ from typing import (
     Union,
     overload,
 )
-from urllib.parse import urljoin, urlparse
 
 import lxml.etree
 import lxml.html
@@ -30,7 +29,7 @@ from dict2xml import dict2xml
 from lxml.etree import XPath, fromstring, tostring
 from typing_extensions import Self, TypeAlias, deprecated
 
-from fundus.scraping.url import is_valid_url
+from fundus.scraping.url import is_valid_url, strip_query_and_fragment
 from fundus.utils.serialization import (
     DataclassSerializationMixin,
     JSONVal,
@@ -457,12 +456,6 @@ class Dimension(DataclassSerializationMixin):
             return None
 
 
-def remove_query_parameters_from_url(url: str) -> str:
-    if any(parameter_indicator in url for parameter_indicator in ("?", "#")):
-        return urljoin(url, urlparse(url).path)
-    return url
-
-
 @total_ordering
 @dataclass
 class ImageVersion(DataclassSerializationMixin):
@@ -475,7 +468,7 @@ class ImageVersion(DataclassSerializationMixin):
 
     def __post_init__(self):
         if not self.type:
-            url_without_query = remove_query_parameters_from_url(self.url)
+            url_without_query = strip_query_and_fragment(self.url)
             self.type = self._parse_type(url_without_query)
 
     def _parse_type(self, url: str) -> Optional[str]:
