@@ -29,7 +29,7 @@ If you haven't done this yet or are uncertain, follow these steps:
 3. Navigate to the root of the repository.
 4. Run `pip install -e .[dev]`
 
-## Known issues:
+## Known issues
 
 1. `zsh: no matches found: .[dev]`
 When using zsh, you have to wrap the optional dependencies in quotes like this: `pip install -e .'[dev]'`.
@@ -40,4 +40,5 @@ See [this issue](https://github.com/mu-editor/mu/issues/852#issue-451861103) for
 
 1. [How to add a publisher](how_to_add_a_publisher.md)
 
-**_NOTE:_** If you run into any problems while contributing don't hesitate to ask questions in the [**issue**](https://github.com/flairNLP/fundus/issues) tab.
+> [!NOTE]
+> If you run into any problems while contributing don't hesitate to ask questions in the [**issue**](https://github.com/flairNLP/fundus/issues) tab.

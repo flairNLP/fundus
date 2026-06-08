@@ -4,14 +4,16 @@ Consistency between publishers and parsers is a main goal, please report any cas
 document.
 If you want to contribute a parser to this library, please ensure that these attributes are named consistently.
 
-**_NOTE:_** There are certain utility functions to aid you with parsing.
-These can be found under `fundus/parser/utility.py`.
-We *highly* recommend using them.
+> [!NOTE]
+> There are certain utility functions to aid you with parsing.
+> These can be found under `fundus/parser/utility.py`.
+> We *highly* recommend using them.
 
 The following table lists Fundus' core attributes and includes the name of the corresponding utility function.
 Those attributes will be validated with unit tests when used.
 
-**_NOTE:_** If you want to bypass validation you can set the `validate` parameter of the `attribute` decorator to false.
+> [!NOTE]
+> If you want to bypass validation you can set the `validate` parameter of the `attribute` decorator to `False`.
 
 ## Attributes table
 
@@ -60,7 +62,7 @@ Those attributes will be validated with unit tests when used.
     </tr>
     <tr>
         <td>free_access</td>
-        <td>A boolean which is set to be False, if the article is restricted to users with a subscription. This usually indicates
+        <td>A boolean that is False if the article is restricted to users with a subscription. This usually indicates
         that the article cannot be crawled completely.
         <i><b>This attribute is implemented by default</b></i></td>
         <td><code>bool</code></td>
@@ -68,8 +70,8 @@ Those attributes will be validated with unit tests when used.
     </tr>
     <tr>
         <td>images</td>
-        <td>A list of `Images` - Fundus own datatype for image representation - included within the article. 
-        The `Images` include metadata like caption, authors, and position if available.</td>
+        <td>A list of `Image` objects — Fundus' own datatype for image representation — included within the article.
+        The `Image` objects include metadata like caption, authors, and position if available.</td>
         <td><code>List[Image]</code></td>
         <td><code>image_extraction</code></td>
     </tr>
