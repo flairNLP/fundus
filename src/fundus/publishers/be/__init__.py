@@ -17,7 +17,7 @@ class BE(metaclass=PublisherGroup):
             NewsMap("https://www.nieuwsblad.be/sitemap-news.xml"),
             Sitemap("https://www.nieuwsblad.be/sitemap.xml"),
         ],
-        deprecated=True,
+        impersonate="chrome",
     )
 
     PoliticoEu = Publisher(
