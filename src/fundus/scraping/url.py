@@ -20,12 +20,12 @@ from urllib.parse import unquote, urlparse
 
 import feedparser
 import lxml.html
+from curl_cffi.requests.exceptions import ConnectionError, HTTPError, ReadTimeout
 from lxml.etree import XMLParser, XPath
-from requests import ConnectionError, HTTPError, ReadTimeout
 
 from fundus.logging import create_logger
 from fundus.scraping.filter import URLFilter, inverse
-from fundus.scraping.session import _default_header, session_handler
+from fundus.scraping.session import InterruptableSession, _default_header, session_handler
 
 logger = create_logger(__name__)
 
@@ -112,20 +112,29 @@ class URLSource(Iterable[str], ABC):
     url: str
     languages: Set[str] = field(default_factory=set)
 
-    _request_header: Dict[str, str] = field(default_factory=dict)
-
     def __post_init__(self):
-        if not self._request_header:
-            self._request_header = _default_header
         if not is_valid_url(self.url):
             logger.error(f"{type(self).__name__} initialized with invalid URL {self.url}")
 
-    def set_header(self, request_header: Dict[str, str]) -> None:
-        self._request_header = request_header
-
     @abstractmethod
-    def __iter__(self) -> Iterator[str]:
+    def fetch(self, session: InterruptableSession, headers: Dict[str, str]) -> Iterator[str]:
+        """Fetch URLs using the provided session and headers.
+
+        Args:
+            session: The HTTP session to use for requests.
+            headers: Request headers to include. Note that when the session was created
+                with an impersonate profile, headers may be dropped in favour of the
+                browser fingerprint (see InterruptableSession.get_with_interrupt).
+        """
         raise NotImplementedError
+
+    def __iter__(self) -> Iterator[str]:
+        """Iterate URLs using a default session and headers.
+
+        Intended for standalone/testing use. Production scraping goes through
+        WebSource, which calls fetch() with publisher-specific session and headers.
+        """
+        return self.fetch(session_handler.get_session(), _default_header)
 
     def get_urls(self, max_urls: Optional[int] = None) -> Iterator[str]:
         """Returns a generator yielding up to <max_urls> URLs from <self>.
@@ -145,10 +154,9 @@ class URLSource(Iterable[str], ABC):
 
 @dataclass
 class RSSFeed(URLSource):
-    def __iter__(self) -> Iterator[str]:
-        session = session_handler.get_session()
+    def fetch(self, session: InterruptableSession, headers: Dict[str, str]) -> Iterator[str]:
         try:
-            response = session.get_with_interrupt(self.url, headers=self._request_header)
+            response = session.get_with_interrupt(self.url, headers=headers)
 
         except (HTTPError, ConnectionError, ReadTimeout) as err:
             logger.warning(f"Warning! Couldn't parse rss feed {self.url!r} because of {err}")
@@ -180,13 +188,12 @@ class Sitemap(URLSource):
     _url_selector: ClassVar[XPath] = XPath("//*[local-name()='url']/*[local-name()='loc']")
     _parser = XMLParser(strip_cdata=False, recover=True)
 
-    def __iter__(self) -> Iterator[str]:
+    def fetch(self, session: InterruptableSession, headers: Dict[str, str]) -> Iterator[str]:
         def yield_recursive(sitemap_url: str) -> Iterator[str]:
-            session = session_handler.get_session()
             if not is_valid_url(sitemap_url):
                 logger.info(f"Skipped sitemap {sitemap_url!r} because the URL is malformed")
             try:
-                response = session.get_with_interrupt(url=sitemap_url, headers=self._request_header)
+                response = session.get_with_interrupt(url=sitemap_url, headers=headers)
 
             except (HTTPError, ConnectionError, ReadTimeout) as error:
                 logger.warning(f"Warning! Couldn't reach sitemap {sitemap_url!r} because of {error!r}")
