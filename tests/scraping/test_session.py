@@ -2,7 +2,7 @@ import threading
 import time
 from queue import Queue
 from threading import Thread
-from typing import Union
+from typing import Dict, Optional, Union
 from unittest.mock import MagicMock, patch
 
 import curl_cffi
@@ -19,7 +19,7 @@ from fundus.utils.events import __EVENTS__
 from tests.exceptions import Success
 
 
-def _mock_response(status_code: int = 200) -> MagicMock:
+def _mock_response(status_code: int = 200, headers: Optional[Dict[str, str]] = None) -> MagicMock:
     """Build a mock curl_cffi response that satisfies InterruptableSession._log_response."""
     response = MagicMock()
     response._history = []  # object.__getattribute__ reads directly from __dict__
@@ -27,6 +27,7 @@ def _mock_response(status_code: int = 200) -> MagicMock:
     response.url = "https://example.com"
     response.elapsed = 0.01
     response.request = None
+    response.headers = headers if headers is not None else {}
     response.raise_for_status = MagicMock()
     return response
 
@@ -334,6 +335,138 @@ class TestInterruptableSession:
                 session.get_with_interrupt("http://example.com")
 
         session.close()
+
+
+class TestRetry:
+    def test_5xx_retried_then_succeeds(self):
+        session = InterruptableSession(max_retries=3)
+        responses = [_mock_response(status_code=503), _mock_response(status_code=200)]
+
+        with patch.object(session, "_sleep_with_interrupt") as sleep:
+            with patch.object(session, "_follow_redirects", side_effect=responses):
+                result = session.get_with_interrupt("http://example.com")
+
+        assert result is responses[1]
+        assert sleep.call_count == 1
+        session.close()
+
+    def test_5xx_exhausted_raises_http_error(self):
+        session = InterruptableSession(max_retries=2)
+        error = _mock_response(status_code=503)
+        error.raise_for_status.side_effect = HTTPError("503")
+        follow = MagicMock(return_value=error)
+
+        with patch.object(session, "_sleep_with_interrupt"):
+            with patch.object(session, "_follow_redirects", side_effect=follow):
+                with pytest.raises(HTTPError):
+                    session.get_with_interrupt("http://example.com")
+
+        # initial attempt + max_retries
+        assert follow.call_count == 3
+        session.close()
+
+    def test_no_retry_when_disabled(self):
+        session = InterruptableSession(max_retries=0)
+        error = _mock_response(status_code=503)
+        error.raise_for_status.side_effect = HTTPError("503")
+        follow = MagicMock(return_value=error)
+
+        with patch.object(session, "_sleep_with_interrupt") as sleep:
+            with patch.object(session, "_follow_redirects", side_effect=follow):
+                with pytest.raises(HTTPError):
+                    session.get_with_interrupt("http://example.com")
+
+        assert follow.call_count == 1
+        sleep.assert_not_called()
+        session.close()
+
+    def test_4xx_not_retried(self):
+        session = InterruptableSession(max_retries=3)
+        error = _mock_response(status_code=404)
+        error.raise_for_status.side_effect = HTTPError("404")
+        follow = MagicMock(return_value=error)
+
+        with patch.object(session, "_sleep_with_interrupt") as sleep:
+            with patch.object(session, "_follow_redirects", side_effect=follow):
+                with pytest.raises(HTTPError):
+                    session.get_with_interrupt("http://example.com")
+
+        assert follow.call_count == 1
+        sleep.assert_not_called()
+        session.close()
+
+    def test_backoff_passed_to_sleep_between_retries(self):
+        session = InterruptableSession(max_retries=1)
+        responses = [_mock_response(status_code=500), _mock_response(status_code=200)]
+
+        with patch.object(session, "_retry_backoff", return_value=2.5) as backoff:
+            with patch.object(session, "_sleep_with_interrupt") as sleep:
+                with patch.object(session, "_follow_redirects", side_effect=responses):
+                    session.get_with_interrupt("http://example.com")
+
+        backoff.assert_called_once()
+        sleep.assert_called_once()
+        assert sleep.call_args.args[0] == 2.5
+        session.close()
+
+
+class TestRetryAfter:
+    def test_parse_delta_seconds(self):
+        assert InterruptableSession._parse_retry_after("120") == 120.0
+
+    def test_parse_invalid_returns_none(self):
+        assert InterruptableSession._parse_retry_after("not-a-date") is None
+
+    def test_parse_http_date_future(self):
+        from email.utils import formatdate
+
+        seconds = InterruptableSession._parse_retry_after(formatdate(time.time() + 100, usegmt=True))
+        assert seconds is not None
+        assert 90 <= seconds <= 100
+
+    def test_parse_http_date_past_clamped_to_zero(self):
+        from email.utils import formatdate
+
+        assert InterruptableSession._parse_retry_after(formatdate(time.time() - 100, usegmt=True)) == 0.0
+
+    def test_backoff_honors_retry_after(self):
+        session = InterruptableSession()
+        response = _mock_response(status_code=503, headers={"retry-after": "5"})
+        assert session._retry_backoff(response, attempt=0) == 5.0
+        session.close()
+
+    def test_backoff_caps_retry_after(self):
+        session = InterruptableSession()
+        response = _mock_response(status_code=503, headers={"retry-after": "9999"})
+        assert session._retry_backoff(response, attempt=0) == session.retry_backoff_cap
+        session.close()
+
+    def test_backoff_exponential_jitter_within_window(self):
+        session = InterruptableSession()
+        response = _mock_response(status_code=503, headers={})
+        for attempt in range(6):
+            backoff = session._retry_backoff(response, attempt)
+            window = min(session.retry_backoff_cap, session.retry_backoff_base * 2**attempt)
+            assert 0.0 <= backoff <= window
+        session.close()
+
+    def test_backoff_params_configurable(self):
+        session = InterruptableSession(retry_backoff_base=0.5, retry_backoff_cap=4.0)
+        response = _mock_response(status_code=503, headers={"retry-after": "9999"})
+        assert session._retry_backoff(response, attempt=0) == 4.0
+        session.close()
+
+
+class TestSleepWithInterrupt:
+    def test_completes_when_not_interrupted(self):
+        # zero duration returns immediately without consulting the stop event
+        InterruptableSession._sleep_with_interrupt(0.0, "http://example.com")
+
+    def test_raises_crash_thread_on_stop_event(self):
+        with __EVENTS__.context("test-stop-event"):
+            __EVENTS__.set_event("stop", "test-stop-event")
+            with pytest.raises(CrashThread):
+                InterruptableSession._sleep_with_interrupt(5.0, "http://example.com")
 
 
 def _redirect_response(status_code: int, location: str) -> MagicMock:
