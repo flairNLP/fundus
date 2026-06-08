@@ -8,7 +8,7 @@ Note that this script does not check the attributes' correctness, only their pre
 import sys
 import traceback
 from argparse import ArgumentParser
-from typing import Any, Callable, List, Optional, Union
+from typing import List, Optional
 
 from fundus import Crawler, PublisherCollection
 from fundus.publishers.base_objects import Publisher, PublisherGroup
@@ -55,58 +55,37 @@ def main() -> None:
                 crawler: Crawler = Crawler(publisher, delay=0.4, ignore_robots=True)
 
                 complete_article: Optional[Article] = next(
-                    crawler.crawl(
-                        max_articles=1, timeout=timeout_in_seconds, only_complete=True, error_handling="suppress"
-                    ),
+                    crawler.crawl(max_articles=1, timeout=timeout_in_seconds, only_complete=True),
                     None,
                 )
 
                 if complete_article is None:
-                    incomplete_article: Optional[Article] = next(
-                        crawler.crawl(
-                            max_articles=1, timeout=timeout_in_seconds, only_complete=False, error_handling="catch"
-                        ),
-                        None,
-                    )
+                    try:
+                        incomplete_article: Optional[Article] = next(
+                            crawler.crawl(
+                                max_articles=1, timeout=timeout_in_seconds, only_complete=False, raise_on_error=True
+                            ),
+                            None,
+                        )
+                    except Exception as exception:
+                        print(f"❌ FAILED: {publisher_name!r} - Encountered exception during crawling")
+                        traceback.print_exception(type(exception), exception, exception.__traceback__, file=sys.stdout)
+                        failed += 1
+                        continue
 
                     if incomplete_article is None:
                         print(f"❌ FAILED: {publisher_name!r} - No articles received")
 
-                    elif incomplete_article.exception is not None:
-                        print(
-                            f"❌ FAILED: {publisher_name!r} - Encountered exception during crawling "
-                            f"(URL: {incomplete_article.html.requested_url})"
-                        )
-                        traceback.print_exception(
-                            etype=type(incomplete_article.exception),
-                            value=incomplete_article.exception,
-                            tb=incomplete_article.exception.__traceback__,
-                            file=sys.stdout,
-                        )
-
                     else:
-
-                        def guard(field, fnc: Callable[[Any], bool] = lambda x: x is not None) -> Union[bool, str]:
-                            """Makes a boolean evaluation of <field> based on <fnc> and guards exceptions
-
-                            Args:
-                                field: The article field to evaluate
-                                fnc:  The evaluation function
-
-                            Returns:
-                                Either True, False or Exception if isinstance(field, Exception) = True
-                            """
-                            return fnc(field) if not isinstance(field, Exception) else repr(field)
-
                         print(
                             f"❌ FAILED: {publisher_name!r} - No complete articles received "
                             f"(URL of an incomplete article: {incomplete_article.html.requested_url}) with attributes:\n"
-                            f"title: {guard(incomplete_article.title)}\n"
-                            f"plaintext: {guard(incomplete_article.body, bool)}\n"
-                            f"publishing_date: {guard(incomplete_article.publishing_date)}\n"
-                            f"authors: {guard(incomplete_article.authors, bool)}\n"
-                            f"topics: {guard(incomplete_article.topics, bool)}\n"
-                            f"images: {guard(incomplete_article.images, bool)}\n"
+                            f"title: {incomplete_article.title is not None}\n"
+                            f"plaintext: {bool(incomplete_article.body)}\n"
+                            f"publishing_date: {incomplete_article.publishing_date is not None}\n"
+                            f"authors: {bool(incomplete_article.authors)}\n"
+                            f"topics: {bool(incomplete_article.topics)}\n"
+                            f"images: {bool(incomplete_article.images)}\n"
                         )
                     failed += 1
                     continue

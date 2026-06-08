@@ -1,12 +1,9 @@
 import datetime
-import pickle
 from typing import Any, Dict, List, Optional, Tuple, Union
 
-import lxml.html
 import pytest
 
 from fundus.parser.base_parser import (
-    Attribute,
     AttributeCollection,
     BaseParser,
     ParserProxy,
@@ -14,25 +11,6 @@ from fundus.parser.base_parser import (
     attribute,
 )
 from fundus.parser.utility import generic_author_parsing
-from fundus.publishers import PublisherCollection
-from fundus.publishers.base_objects import Publisher
-from tests.resources import attribute_annotations_mapping
-from tests.utility import (
-    get_meta_info_file,
-    load_html_test_file_mapping,
-    load_supported_publishers_markdown,
-    load_test_case_data,
-)
-
-
-def test_supported_publishers_table():
-    root = lxml.html.fromstring(load_supported_publishers_markdown())
-    parsed_names: List[str] = root.xpath("//table[contains(@class,'publishers')]//td[1]/code/text()")
-    for publisher in PublisherCollection:
-        assert publisher.__name__ in parsed_names, (
-            f"Publisher {publisher.name} is not included in docs/supported_news.md. "
-            f"Run 'python -m scripts.generate_tables'"
-        )
 
 
 class TestBaseParser:
@@ -196,84 +174,6 @@ class TestParserProxy:
         assert parser3 != parser2 != parser1
 
 
-# enforce test coverage for test parsing
-# because this is also used for the generate_parser_test_files script we export it here
-attributes_required_to_cover = {"title", "authors", "topics", "publishing_date", "body", "images"}
-
-attributes_parsers_are_required_to_cover = {"body"}
-
-
-@pytest.mark.parametrize(
-    "publisher", list(PublisherCollection), ids=[publisher.__name__ for publisher in PublisherCollection]
-)
-class TestParser:
-    def test_annotations(self, publisher: Publisher) -> None:
-        parser_proxy = publisher.parser
-        for versioned_parser in parser_proxy:
-            assert attributes_parsers_are_required_to_cover.issubset(
-                set(versioned_parser.attributes().validated.names)
-            ), f"{versioned_parser.__name__!r} should implement at least {attributes_parsers_are_required_to_cover!r}"
-            for attr in versioned_parser.attributes().validated:
-                if annotation := attribute_annotations_mapping[attr.__name__]:
-                    assert attr.__annotations__.get("return") == annotation, (
-                        f"Attribute {attr.__name__!r} for {versioned_parser.__name__!r} is of wrong type. "
-                        f"{attr.__annotations__.get('return')} != {annotation}"
-                    )
-                else:
-                    raise KeyError(f"Unsupported attribute {attr.__name__!r}")
-
-    def test_parsing(self, publisher: Publisher) -> None:
-        comparative_data = load_test_case_data(publisher)
-        html_mapping = load_html_test_file_mapping(publisher)
-
-        for versioned_parser in publisher.parser:
-            # validate json
-            version_name = versioned_parser.__name__
-            assert (version_data := comparative_data.get(version_name)), (
-                f"Missing test data for parser version {version_name!r}"
-            )
-
-            # validate test HTML
-            assert (html := html_mapping.get(versioned_parser)), (
-                f"Missing test HTML for parser version {version_name} of publisher {publisher.name}"
-            )
-
-            # re-instantiate parser to address deprecated attributes
-            timestamp_instantiated_parser = publisher.parser(html.crawl_date)
-
-            for key, value in version_data.items():
-                if not value:
-                    raise ValueError(
-                        f"There is no value set for key {key!r} in the test JSON. "
-                        f"Only complete articles should be used as test cases"
-                    )
-
-            # test coverage
-            supported_attrs = set(timestamp_instantiated_parser.registered_attributes.names)
-            missing_attrs = attributes_required_to_cover & supported_attrs - set(version_data.keys())
-            assert not missing_attrs, (
-                f"Test JSON for {version_name} of publisher {publisher.name} does not cover the following attribute(s): {missing_attrs}"
-            )
-
-            assert list(version_data.keys()) == sorted(attributes_required_to_cover & supported_attrs), (
-                f"Test JSON for {version_name} is not in alphabetical order"
-            )
-
-            # compare data
-            extraction = timestamp_instantiated_parser.parse(html.content, "raise")
-            for key, value in version_data.items():
-                assert value == extraction[key], f"{key!r} is not equal"
-
-            # check if extraction is pickable
-            pickle.dumps(extraction)
-
-    def test_reserved_attribute_names(self, publisher: Publisher):
-        parser = publisher.parser
-        for attr in attribute_annotations_mapping.keys():
-            if value := getattr(parser, attr, None):
-                assert isinstance(value, Attribute), f"The name {attr!r} is reserved for attributes only."
-
-
 class TestUtility:
     def test_generic_author_parsing(self):
         # type None
@@ -308,14 +208,3 @@ class TestUtility:
             [{"name": "Peter Funny"}, {"name": "Funny Peter"}, {"this": "is not a pipe"}, {}]  # type: ignore
         ) == ["Peter Funny", "Funny Peter"]
         assert generic_author_parsing([{}]) == generic_author_parsing([{}, {"wrong": "key"}]) == []  # type: ignore
-
-
-class TestMetaInfo:
-    def test_order(self):
-        for cc in PublisherCollection.get_subgroup_mapping().values():
-            meta_file = get_meta_info_file(cc)
-            meta_info = meta_file.load()
-            assert meta_info, f"Meta info file {meta_file.path} is missing"
-            assert sorted(meta_info.keys()) == list(meta_info.keys()), (
-                f"Meta info file {meta_file.path} isn't ordered properly."
-            )

@@ -11,10 +11,11 @@ from typing_extensions import Self
 
 from fundus import PublisherCollection
 from fundus.parser import ArticleBody, BaseParser
-from fundus.parser.data import Image, TextSequenceTree
+from fundus.parser.data import Image
 from fundus.publishers.base_objects import Publisher, PublisherGroup
 from fundus.scraping.article import Article
 from fundus.scraping.html import HTML, SourceInfo
+from fundus.utils.serialization import Serializable
 from scripts.generate_tables import supported_publishers_markdown_path
 from tests.resources.parser.test_data import __module_path__ as test_resource_path
 
@@ -111,13 +112,10 @@ class JSONFile(Generic[_T]):
 class ExtractionEncoder(json.JSONEncoder):
     def default(self, obj: object):
         if isinstance(obj, datetime.datetime):
-            return str(obj)
-        elif isinstance(obj, TextSequenceTree):
+            return obj.isoformat()
+        if isinstance(obj, Serializable):
             return obj.serialize()
-        elif isinstance(obj, Image):
-            return obj.serialize()
-        else:
-            return json.JSONEncoder.default(self, obj)
+        return json.JSONEncoder.default(self, obj)
 
 
 class ExtractionDecoder(json.JSONDecoder):
