@@ -514,6 +514,7 @@ class DE(metaclass=PublisherGroup):
             NewsMap("https://newsfeed.kicker.de/googlesitemapnews.xml"),
         ],
         url_filter=regex_filter("/slideshow|/video|heute-live|live-konferenz|/bilder|/ticker"),
+        impersonate="chrome",
     )
 
     Krautreporter = Publisher(
@@ -594,7 +595,6 @@ class DE(metaclass=PublisherGroup):
             RSSFeed("https://www.freiepresse.de/rss/rss_regional.php"),
             Sitemap("https://www.freiepresse.de/sitemaps/articles_last2years.xml", reverse=True),
         ],
-        impersonate="chrome",
     )
 
     RuhrNachrichten = Publisher(

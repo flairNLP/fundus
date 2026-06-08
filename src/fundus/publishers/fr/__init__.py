@@ -51,5 +51,4 @@ class FR(metaclass=PublisherGroup):
             NewsMap("https://www.lesechos.fr/sitemap_news.xml"),
         ],
         impersonate="chrome",
-        request_header={"User-agent": "Fundus"},
     )
