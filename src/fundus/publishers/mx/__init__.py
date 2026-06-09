@@ -19,5 +19,5 @@ class MX(metaclass=PublisherGroup):
                 languages={"en"},
             )
         ],
-        deprecated=True,
+        impersonate="chrome",
     )
