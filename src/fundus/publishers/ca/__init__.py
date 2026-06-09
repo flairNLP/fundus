@@ -28,6 +28,7 @@ class CA(metaclass=PublisherGroup):
         name="Global News",
         domain="https://www.globalnews.ca",
         parser=GlobalNewsParser,
+        url_filter=regex_filter(r"/the-curator/"),
         sources=[
             NewsMap("https://globalnews.ca/news-sitemap.xml"),
             Sitemap("https://globalnews.ca/sitemap.xml", sitemap_filter=regex_filter(r"image-sitemap"), recursive=True),

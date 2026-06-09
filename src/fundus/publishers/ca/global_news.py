@@ -16,7 +16,10 @@ from fundus.parser.utility import (
 
 class GlobalNewsParser(ParserProxy):
     class V1(BaseParser):
-        _paragraph_selector = XPath("//article/p[not(text()='—') and text()]")
+        _paragraph_selector = XPath(
+            "//article/ul/li | //article/p[not(text()='—') and text() and not(re:test(string(), 'This report by .* was first published'))]",
+            namespaces={"re": "http://exslt.org/regular-expressions"},
+        )
         _subheadline_selector = XPath("//article/*[self::h3 or (self::p and strong and not(text()))]")
 
         _bloat_topics = {"Canada"}
