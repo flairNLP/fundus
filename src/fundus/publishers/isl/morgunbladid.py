@@ -16,7 +16,7 @@ class MorgunbladidParser(ParserProxy):
     class V1(BaseParser):
         _summary_selector = XPath("//div[@class='main-layout']//div[@class='is-merking']/p")
         _paragraph_selector = XPath(
-            "//div[@class='main-layout' or @data-element-type='body-facts']" "/p[not(a and not(text()))]"
+            "//div[@class='main-layout' or @data-element-type='body-facts']/p[not(a and not(text()))]"
         )
         _subheadline_selector = XPath("//div[@class='main-layout' or @class='et_pb_text_inner']/h3")
 

@@ -22,7 +22,7 @@ class NTVParser(ParserProxy):
         _author_substitution_pattern: Pattern[str] = re.compile(r"n-tv NACHRICHTEN")
         _summary_selector = XPath("//div[@class='article__text']/p[not(last()) and strong][1]")
         _paragraph_selector = XPath(
-            "//div[@class='article__text']" "/p[not(strong) or (strong and (position() > 1 or last()))]"
+            "//div[@class='article__text']/p[not(strong) or (strong and (position() > 1 or last()))]"
         )
         _subheadline_selector: XPath = CSSSelector(".article__text > h2")
 

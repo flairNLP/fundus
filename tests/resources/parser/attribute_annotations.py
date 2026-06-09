@@ -12,10 +12,10 @@ def _parse_attribute_annotations() -> Dict[str, object]:
     # We import the attribute annotations types locally to make them accessible in the local namespace,
     # such that eval() can evaluate the type annotations.
     # Therefore, these imports are not unused and manageable more easily than defining them in the global namespace.
-    from datetime import datetime
-    from typing import Optional
+    from datetime import datetime  # noqa: F401
+    from typing import Optional  # noqa: F401
 
-    from fundus.parser import ArticleBody, Image
+    from fundus.parser import ArticleBody, Image  # noqa: F401
 
     attribute_guidelines_path = root_path / "docs" / "attribute_guidelines.md"
 

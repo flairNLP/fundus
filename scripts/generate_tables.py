@@ -30,15 +30,14 @@ supported_publishers_markdown_path: Path = root_path / "docs" / "supported_publi
 
 
 class ColumnFactory(Protocol):
-    def __call__(self, publisher: Publisher) -> lxml.html.HtmlElement:
-        ...
+    def __call__(self, publisher: Publisher) -> lxml.html.HtmlElement: ...
 
 
 column_mapping: Dict[str, ColumnFactory] = {
     "Class": lambda publisher: TD(CODE(publisher.__name__)),
-    "Name": lambda publisher: TD(DIV(f"{publisher.name}"))
-    if not publisher.deprecated
-    else TD(DIV(STRIKE(f"{publisher.name}"))),
+    "Name": lambda publisher: (
+        TD(DIV(f"{publisher.name}")) if not publisher.deprecated else TD(DIV(STRIKE(f"{publisher.name}")))
+    ),
     "URL": lambda publisher: TD(A(SPAN(urlparse(publisher.domain).netloc), href=publisher.domain)),
     "Languages": lambda publisher: TD(*[CODE(lang) for lang in sorted(publisher.languages)]),
     "Missing Attributes": lambda publisher: (
@@ -91,7 +90,8 @@ def align_tables(tables: Sequence[lxml.html.HtmlElement]) -> None:
         raise ValueError("The tables do not have the same number of columns.")
 
     for column_index, colum_heads in enumerate(
-        more_itertools.transpose(table_heads), start=1  # type: ignore[attr-defined]
+        more_itertools.transpose(table_heads),
+        start=1,  # type: ignore[attr-defined]
     ):
         column_texts: List[str] = [
             text for table in tables for text in table.xpath(f"/table/tbody/tr/td[{column_index}]//text()")
@@ -100,8 +100,8 @@ def align_tables(tables: Sequence[lxml.html.HtmlElement]) -> None:
 
         for head in colum_heads:
             assert head.text is not None
-            text: str = head.text.replace(" ", "\u00A0")
-            padding: str = "\u00A0" * (2 * (max_column_length - len(head.text)))
+            text: str = head.text.replace(" ", "\u00a0")
+            padding: str = "\u00a0" * (2 * (max_column_length - len(head.text)))
             head.text = f"{text}{padding}"
 
 

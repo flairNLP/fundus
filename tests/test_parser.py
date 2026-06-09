@@ -159,7 +159,7 @@ class TestParserProxy:
 
     def test_call(self, proxy_with_two_versions_and_different_attrs):
         parser_proxy = proxy_with_two_versions_and_different_attrs()
-        assert type(parser_proxy()) == parser_proxy.latest_version
+        assert type(parser_proxy()) is parser_proxy.latest_version
 
         for versioned_parser in parser_proxy:
             from_proxy = parser_proxy(versioned_parser.VALID_UNTIL)
@@ -229,14 +229,14 @@ class TestParser:
         for versioned_parser in publisher.parser:
             # validate json
             version_name = versioned_parser.__name__
-            assert (
-                version_data := comparative_data.get(version_name)
-            ), f"Missing test data for parser version {version_name!r}"
+            assert (version_data := comparative_data.get(version_name)), (
+                f"Missing test data for parser version {version_name!r}"
+            )
 
             # validate test HTML
-            assert (
-                html := html_mapping.get(versioned_parser)
-            ), f"Missing test HTML for parser version {version_name} of publisher {publisher.name}"
+            assert (html := html_mapping.get(versioned_parser)), (
+                f"Missing test HTML for parser version {version_name} of publisher {publisher.name}"
+            )
 
             # re-instantiate parser to address deprecated attributes
             timestamp_instantiated_parser = publisher.parser(html.crawl_date)
@@ -251,13 +251,13 @@ class TestParser:
             # test coverage
             supported_attrs = set(timestamp_instantiated_parser.registered_attributes.names)
             missing_attrs = attributes_required_to_cover & supported_attrs - set(version_data.keys())
-            assert (
-                not missing_attrs
-            ), f"Test JSON for {version_name} of publisher {publisher.name} does not cover the following attribute(s): {missing_attrs}"
+            assert not missing_attrs, (
+                f"Test JSON for {version_name} of publisher {publisher.name} does not cover the following attribute(s): {missing_attrs}"
+            )
 
-            assert list(version_data.keys()) == sorted(
-                attributes_required_to_cover & supported_attrs
-            ), f"Test JSON for {version_name} is not in alphabetical order"
+            assert list(version_data.keys()) == sorted(attributes_required_to_cover & supported_attrs), (
+                f"Test JSON for {version_name} is not in alphabetical order"
+            )
 
             # compare data
             extraction = timestamp_instantiated_parser.parse(html.content, "raise")
@@ -317,5 +317,5 @@ class TestMetaInfo:
             meta_info = meta_file.load()
             assert meta_info, f"Meta info file {meta_file.path} is missing"
             assert sorted(meta_info.keys()) == list(meta_info.keys()), (
-                f"Meta info file {meta_file.path} " f"isn't ordered properly."
+                f"Meta info file {meta_file.path} isn't ordered properly."
             )

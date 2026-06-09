@@ -25,10 +25,10 @@ jobs:
 
     steps:
       - name: Set up Git repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Set up Python 3.9
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: 3.9
 
@@ -41,7 +41,7 @@ jobs:
       - name: Commit changes
         # [skip ci] prevents this commit from triggering workflows.
         # https://github.com/stefanzweifel/git-auto-commit-action
-        uses: stefanzweifel/git-auto-commit-action@v5
+        uses: stefanzweifel/git-auto-commit-action@v7
         with:
           commit_message: "docs: regenerate supported_publishers.md [skip ci]"
           file_pattern: docs
