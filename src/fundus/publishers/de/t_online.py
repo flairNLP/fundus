@@ -11,11 +11,14 @@ from fundus.parser.utility import (
     generic_date_parsing,
     generic_topic_parsing,
     image_extraction,
+    strip_nodes_to_text,
 )
 
 
 class TOnlineParser(ParserProxy):
     class V1(BaseParser):
+        VALID_UNTIL = datetime.date(2026, 2, 19)
+
         _paragraph_selector = XPath("//div[@data-testid='ArticleBody.StreamLayout']//p[@class='text-18 leading-17']")
         _summary_selector = XPath(
             "//div[@data-testid='ArticleBody.StreamLayout']//p[@class='font-bold text-18 leading-17']"
@@ -57,3 +60,15 @@ class TOnlineParser(ParserProxy):
                 author_selector=re.compile(r"(?i)\(quelle:\s*(?P<credits>.+)\)$"),
                 relative_urls=True,
             )
+
+    class V1_1(V1):
+        _paragraph_selector = XPath(
+            "//div[@data-testid='ArticleBody.StreamLayout']//p[contains(@class,'text-18 leading-17') and not(contains(@class,'font-bold'))]"
+        )
+        _summary_selector = XPath(
+            "//div[@data-testid='ArticleBody.StreamLayout']//p[contains(@class,'text-18 leading-17') and contains(@class,'font-bold')]"
+        )
+
+        @attribute
+        def title(self) -> Optional[str]:
+            return strip_nodes_to_text(XPath("//div[@data-external-article-headline]")(self.precomputed.doc))

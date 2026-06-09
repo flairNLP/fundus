@@ -83,8 +83,7 @@ def regex_filter(regex: str) -> URLFilter:
 
 
 class SupportsBool(Protocol):
-    def __bool__(self) -> bool:
-        ...
+    def __bool__(self) -> bool: ...
 
 
 class ExtractionFilter(Protocol):

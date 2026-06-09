@@ -1,24 +1,20 @@
 import time
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Callable, Dict, Iterable, Iterator, List, Optional, Protocol
+from typing import Callable, Dict, Iterable, Iterator, List, Optional, Protocol, Union
 from urllib.parse import urlparse
 
 import chardet
-import lxml.html
 import requests
-import validators
+from curl_cffi.requests.exceptions import ConnectionError, HTTPError, ReadTimeout
 from fastwarc import ArchiveIterator, WarcRecord, WarcRecordType
-from lxml.cssselect import CSSSelector
-from lxml.etree import XPath
-from requests import ConnectionError, HTTPError, ReadTimeout
 
 from fundus.logging import create_logger
 from fundus.publishers.base_objects import Publisher, Robots
 from fundus.scraping.delay import Delay
 from fundus.scraping.filter import URLFilter
 from fundus.scraping.session import _default_header, session_handler
-from fundus.scraping.url import URLSource
+from fundus.scraping.url import URLSource, is_valid_url
 from fundus.utils.events import __EVENTS__
 
 __all__ = [
@@ -32,35 +28,6 @@ __all__ = [
 ]
 
 logger = create_logger(__name__)
-
-# unfortunately lxml does not support case-insensitive CSSSelectors
-_content_type_selector = CSSSelector("meta[http-equiv='Content-Type'], meta[http-equiv='content-type']")
-_charset_selector = XPath("//meta[@charset]/@charset | //meta[@charSet]/@charSet")
-
-
-def _detect_charset_from_response(response: requests.Response) -> Optional[str]:
-    """Detects HTML encoding based on meta tag <http-equiv='Content-Type'>
-
-    Args:
-        response: Response to detect encoding for
-
-    Returns:
-        str: detected encoding or response.apparent_encoding or None
-    """
-    # see https://github.com/flairNLP/fundus/issues/446
-    # use response fallback to decode HTML in a first guess
-    if not (guessed_text := response.content.decode(response.encoding or "utf-8", errors="replace")):
-        return None
-    document = lxml.html.document_fromstring(guessed_text)
-    if (content_type_nodes := _content_type_selector(document)) and len(content_type_nodes) == 1:
-        content_type_node = content_type_nodes.pop()
-        for field in content_type_node.attrib.get("content", "").split(";"):
-            if "charset" in field:
-                charset = field.replace("charset=", "").strip()
-                return charset
-    elif charset := _charset_selector(document):
-        return str(charset.pop())
-    return response.apparent_encoding
 
 
 @dataclass(frozen=True)
@@ -91,8 +58,7 @@ class WebSourceInfo(SourceInfo):
 
 
 class HTMLSource(Protocol):
-    def fetch(self, url_filter: Optional[URLFilter] = None) -> Iterator[HTML]:
-        ...
+    def fetch(self, url_filter: Optional[URLFilter] = None) -> Iterator[HTML]: ...
 
 
 class _Clock:
@@ -143,22 +109,20 @@ class _Clock:
 class WebSource:
     def __init__(
         self,
-        url_source: Iterable[str],
+        url_source: Union[URLSource, Iterable[str]],
         publisher: Publisher,
         url_filter: Optional[URLFilter] = None,
-        request_header: Optional[Dict[str, str]] = None,
         query_parameters: Optional[Dict[str, str]] = None,
         delay: Optional[Delay] = None,
         ignore_robots: bool = False,
         ignore_crawl_delay: bool = False,
+        impersonate: bool = False,
     ):
         self.url_source = url_source
         self.publisher = publisher
         self.url_filter = url_filter
-        self.request_header = request_header or _default_header
         self.query_parameters = query_parameters or {}
-        if isinstance(url_source, URLSource):
-            url_source.set_header(self.request_header)
+        self._impersonate_profile = publisher.impersonate if impersonate else None
 
         # parse robots:
         self.robots: Optional[Robots] = None
@@ -166,12 +130,14 @@ class WebSource:
             self.robots = self.publisher.robots
 
             if not ignore_crawl_delay:
-                if robots_delay := self.robots.crawl_delay(self.request_header.get("user-agent") or "*"):
+                if robots_delay := self.robots.crawl_delay(self.publisher.request_header.get("user-agent", "*")):
                     logger.debug(
                         f"Found crawl-delay of {robots_delay} seconds in robots.txt for {self.publisher.name}. "
                         f"Overwriting existing delay."
                     )
-                    delay = lambda: robots_delay
+
+                    def delay() -> float:
+                        return robots_delay
 
         self.clock = _Clock(delay=delay, sleep=self._sleep)
 
@@ -185,7 +151,7 @@ class WebSource:
 
     def _fetch_html(self, url: str, url_filter: URLFilter) -> Optional[HTML]:
         # check if URL is malformed
-        if not validators.url(url):
+        if not is_valid_url(url):
             logger.debug(f"Skipped requested URL {url!r} because the URL is malformed")
             return None
 
@@ -195,11 +161,13 @@ class WebSource:
             return None
 
         # check robots
-        if not (self.robots is None or self.robots.can_fetch(self.request_header.get("user-agent") or "*", url)):
+        if not (
+            self.robots is None or self.robots.can_fetch(self.publisher.request_header.get("user-agent", "*"), url)
+        ):
             logger.debug(f"Skipped requested URL {url!r} because of robots.txt")
             return None
 
-        session = session_handler.get_session()
+        session = session_handler.get_session(self._impersonate_profile)
 
         # prepare query parameters
         for key, value in self.query_parameters.items():
@@ -213,7 +181,7 @@ class WebSource:
 
         # fetch html
         try:
-            response = session.get_with_interrupt(url, headers=self.request_header)
+            response = session.get_with_interrupt(url, headers=self.publisher.request_header)
 
         except (HTTPError, ConnectionError, ReadTimeout) as error:
             logger.warning(f"Skipped requested URL {url!r} because of {error!r}")
@@ -226,15 +194,6 @@ class WebSource:
             logger.debug(f"Skipped responded URL {str(response.url)!r} because of URL filter")
             return None
 
-        # decode response
-        if "charset" not in response.headers["content-type"]:
-            # That's actually the only place requests checks to detect encoding, so if charset
-            # is not set, requests falls back to default encodings (latin-1/utf-8)
-            logger.debug(f"Detect encoding from response for URL {str(response.url)!r}")
-            if not (encoding := _detect_charset_from_response(response)):
-                logger.warning(f"Could not detect encoding from response for URL {str(response.url)!r}")
-                return None
-            response.encoding = encoding
         html = response.text
 
         # check for redirects
@@ -268,7 +227,13 @@ class WebSource:
         return combined_url_filter
 
     def fetch(self, url_filter: Optional[URLFilter] = None) -> Iterator[HTML]:
-        url_iterator = iter(self.url_source)
+        if isinstance(self.url_source, URLSource):
+            url_iterator = self.url_source.fetch(
+                session_handler.get_session(self._impersonate_profile),
+                self.publisher.request_header,
+            )
+        else:
+            url_iterator = iter(self.url_source)
 
         while not self._is_stopped:
             try:
@@ -351,8 +316,7 @@ class CCNewsSource:
 
                 if publisher.url_filter is not None and publisher.url_filter(target_url):
                     logger.debug(
-                        f"Skipped WARC record with target URI {target_url!r} because of "
-                        f"publisher specific URL filter"
+                        f"Skipped WARC record with target URI {target_url!r} because of publisher specific URL filter"
                     )
                     continue
 

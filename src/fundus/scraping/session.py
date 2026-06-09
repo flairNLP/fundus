@@ -1,11 +1,16 @@
-import socket
+from __future__ import annotations
+
+import re
 import threading
 from contextlib import contextmanager
-from dataclasses import dataclass
 from queue import Empty, Queue
-from typing import Iterator, Optional, Union
+from typing import Any, Dict, Iterator, List, NamedTuple, Optional, Union
+from urllib.parse import urljoin
 
-import requests.adapters
+import chardet
+import curl_cffi.requests
+from curl_cffi.requests import BrowserTypeLiteral
+from curl_cffi.requests.exceptions import HTTPError, TooManyRedirects
 from typing_extensions import Self
 
 from fundus.logging import create_logger
@@ -14,6 +19,7 @@ from fundus.utils.events import __EVENTS__
 logger = create_logger(__name__)
 
 _default_header = {"user-agent": "Fundus/2.0 (contact: github.com/flairnlp/fundus)"}
+_charset_re = re.compile(rb"charset\s*=\s*[\"']?\s*([^\"'\s;>]+)", re.IGNORECASE)
 
 
 class CrashThread(BaseException):
@@ -22,43 +28,117 @@ class CrashThread(BaseException):
     pass
 
 
-class InterruptableSession(requests.Session):
-    def __init__(self, timeout: Optional[int] = None):
-        super().__init__()
-        self.timeout = timeout
+class _RequestTask(NamedTuple):
+    url: str
+    kwargs: Any
+    result_queue: Queue[Union[curl_cffi.requests.Response, Exception]]
 
-    def get_with_interrupt(self, *args, **kwargs) -> requests.Response:
-        """Interruptable request.
 
-        This function hands over the request to another thread and checks every second
-        for an interrupt event. If there was an interrupt event, this function raises
-        a CrashThread exception.
+def _detect_encoding_from_html(response: bytes) -> Optional[str]:
+    """Extract the charset declared in an HTML meta tag, scanning only the first 2048 bytes."""
+    if match := _charset_re.search(response[:2048]):
+        return match.group(1).decode("ascii", errors="replace")
+    return None
 
-        Args:
-            *args: requests.Session.get(*) arguments.
-            **kwargs: requests.Session.get(**) keyword arguments.
 
-        Returns:
-            The response.
+def _detect_encoding_from_bytes(response: bytes) -> str:
+    """Detect the character encoding of an HTML response.
 
-        Raises:
-            CrashThread: If the request is interrupted by a stop event.
-        """
+    Checks the HTML meta charset tag first, then falls back to chardet,
+    then to UTF-8 if neither yields a result.
 
-        def _req():
-            try:
-                response_queue.put(self.get(*args, **kwargs, timeout=self.timeout))
-            except Exception as error:
-                response_queue.put(error)
+    Args:
+        response: Raw response bytes to detect encoding for.
 
-        if args:
-            url = args[0]
+    Returns:
+        Detected encoding string, guaranteed non-empty.
+    """
+    if encoding := _detect_encoding_from_html(response):
+        logger.debug(f"Detected encoding from HTML: {encoding!r}")
+    elif encoding := chardet.detect(response)["encoding"]:
+        logger.debug(f"Detected encoding from chardet: {encoding!r}")
+    else:
+        logger.debug("Unable to detect encoding from response. Defaulting to <utf-8>")
+    # see https://github.com/flairNLP/fundus/issues/446
+    return encoding or "utf-8"
+
+
+class InterruptableSession(curl_cffi.requests.Session[curl_cffi.requests.Response]):
+    """Extends curl_cffi Session with interruptable requests via a persistent daemon thread.
+
+    The daemon thread owns the curl handle for the lifetime of the session, enabling
+    connection reuse across requests. get_with_interrupt() submits work to the daemon
+    thread and polls for a stop event every second, raising CrashThread if interrupted.
+    """
+
+    def __init__(self, **kwargs: Any) -> None:
+        # use_thread_local_curl=True gives the worker thread its own curl handle, separate
+        # from the caller thread's handle closed in close(). Prevents close() from touching
+        # a handle that may still be in use by the worker.
+        kwargs.pop("use_thread_local_curl", None)
+        super().__init__(use_thread_local_curl=True, **kwargs)
+        self._closed = False
+        self._task_queue: Queue[Optional[_RequestTask]] = Queue()
+        self._worker_thread = threading.Thread(target=self._worker_loop, name=f"session-worker-{id(self)}", daemon=True)
+        self._worker_thread.start()
+
+    @staticmethod
+    def _log_response(response: curl_cffi.requests.Response) -> None:
+        history: List[curl_cffi.requests.Response] = object.__getattribute__(response, "_history")
+        method = getattr(getattr(response, "request", None), "method", "GET")
+        if history:
+            hops = f"{history[0].url} → " + " → ".join(
+                f"{r.status_code} {next_r.url}" for r, next_r in zip(history, history[1:] + [response])
+            )
+            chain = f"{method} {hops} → {response.status_code}"
         else:
-            url = kwargs.get("url")
+            chain = f"{method} {response.url} -> {response.status_code}"
+        logger.debug(f"{chain} ({response.elapsed}s)")
 
-        response_queue: Queue[Union[requests.Response, Exception]] = Queue()
-        thread = threading.Thread(target=_req, daemon=True)
-        thread.start()
+    def _follow_redirects(self, url: str, **kwargs: Any) -> curl_cffi.requests.Response:
+        """Follow redirects manually, building a response history."""
+        history: List[curl_cffi.requests.Response] = []
+        current = url
+
+        for _ in range(self.max_redirects):
+            response: curl_cffi.requests.Response = self.get(current, **kwargs, allow_redirects=False)
+
+            if not (300 <= response.status_code <= 399):
+                object.__setattr__(response, "_history", history)
+                return response
+
+            location = response.headers.get("location")
+            if not location:
+                raise HTTPError(f"Redirect {response.status_code} from {current!r} missing Location header")
+
+            history.append(response)
+            current = urljoin(str(response.url), location)
+
+        raise TooManyRedirects(f"Exceeded {self.max_redirects} maximum redirects following {url!r}")
+
+    def _worker_loop(self) -> None:
+        while True:
+            task = self._task_queue.get()
+            if task is None:
+                return
+            try:
+                task.result_queue.put(self._follow_redirects(task.url, **task.kwargs))
+            except Exception as error:
+                task.result_queue.put(error)
+
+    def get_with_interrupt(self, url: str, **kwargs: Any) -> curl_cffi.requests.Response:
+        """Interruptable GET request.
+
+        Submits the request to the persistent daemon thread and polls every second
+        for a stop event. Raises CrashThread if interrupted. When impersonating a
+        browser, kwargs are dropped so curl_cffi can apply the full browser
+        fingerprint unmodified.
+        """
+        if self._closed:
+            raise RuntimeError("Session is closed")
+        request_kwargs: Dict[str, Any] = {} if self.impersonate else kwargs
+        response_queue: Queue[Union[curl_cffi.requests.Response, Exception]] = Queue()
+        self._task_queue.put(_RequestTask(url, request_kwargs, response_queue))
 
         while True:
             try:
@@ -70,156 +150,97 @@ class InterruptableSession(requests.Session):
             else:
                 if isinstance(response, Exception):
                     raise response
+                self._log_response(response)
+                response.raise_for_status()
                 return response
 
+    def close(self) -> None:
+        """Signal the worker thread to exit and close this thread's curl handle.
 
-@dataclass
-class CONFIG:
-    POOL_CONNECTIONS: int = 50
-    POOL_MAXSIZE: int = 1
-    TIMEOUT: Optional[int] = 30
+        Sending the sentinel is non-blocking — the daemon thread exits asynchronously
+        after finishing any in-flight request. Safe to call while a request is in flight.
+        """
+        self._closed = True
+        self._task_queue.put(None)
+        super().close()
 
 
 class SessionHandler:
-    """Object for handling project global request.Session
+    """Manages one InterruptableSession per thread via a thread-id registry.
 
-    The session life cycle consists of three steps which can be repeated indefinitely:
-    Build, Supply, Teardown.
-    Initially there is no session build within the session handler. When a session is requested
-    with get_session() either a new one is created with _session_factory() or the session handler's
-    existing one returned. Every subsequent call to get_session() will return the same
-    response.Session object. If close_current_session() is called, the current session will be
-    tear-downed and the next call to get_session() will build a new session.
+    Each thread gets its own session instance backed by a persistent daemon thread,
+    enabling connection reuse within a thread. Sessions are created lazily on first use.
+    If get_session() is called with a different impersonate profile than the existing
+    session, the old session is closed and replaced.
     """
 
-    def __init__(self):
-        self.CONFIG = CONFIG()
-        self._session: Optional[InterruptableSession] = None
-        self._session_lock = threading.Lock()
+    DEFAULT_SESSION_KWARGS: Dict[str, Any] = {"timeout": 30}
+
+    def __init__(self) -> None:
+        self._session_kwargs: Dict[str, Any] = dict(self.DEFAULT_SESSION_KWARGS)
         self._context_lock = threading.RLock()
+        self._sessions: Dict[int, InterruptableSession] = {}
 
-    def _session_factory(self) -> InterruptableSession:
-        """Builds a new Session
+    def get_session(self, impersonate: Optional[BrowserTypeLiteral] = None) -> InterruptableSession:
+        """Return the session for the current thread, creating it lazily if needed.
 
-        This returns a new client session build from pre-defined configurations:
-        - pool_connections: <self.pool_connections>
-        - pool_maxsize: <self.pool_maxsize>
-        - hooks: (1) Hook to raise an `HTTPError` if one occurred. (2) Hook to log the request responses.
-
-        Returns:
-            A new requests.Session
+        If the existing session was created with a different impersonate profile,
+        it is closed and replaced with a fresh one matching the requested profile.
         """
+        tid = threading.get_ident()
+        session = self._sessions.get(tid)
 
-        logger.debug("Creating new session")
-        session = InterruptableSession(timeout=self.CONFIG.TIMEOUT)
-
-        def _response_log(response: requests.Response, *args, **kwargs) -> None:
-            history = response.history
-            previous_status_codes = [f"({response.status_code})" for response in history] if history else []
-            status_code_chain = " -> ".join(previous_status_codes + [f"({response.status_code})"])
-            logger.debug(
-                f"{status_code_chain} <{response.request.method} {response.url!r}> "
-                f"took {response.elapsed.total_seconds()} second(s)"
+        if session is not None and session.impersonate != impersonate:
+            logger.debug(f"Replacing session in thread-{tid} (impersonate={session.impersonate!r} → {impersonate!r})")
+            session.close()
+            session = None
+        if session is None:
+            session = InterruptableSession(
+                impersonate=impersonate,
+                default_encoding=_detect_encoding_from_bytes,
+                **self._session_kwargs,
             )
-
-        # hooks
-        response_hooks = [lambda response, *args, **kwargs: response.raise_for_status(), _response_log]
-        session.hooks["response"].extend(response_hooks)
-
-        # adapters
-        session.mount(
-            "http://",
-            requests.adapters.HTTPAdapter(
-                pool_connections=self.CONFIG.POOL_CONNECTIONS, pool_maxsize=self.CONFIG.POOL_MAXSIZE
-            ),
-        )
-        session.mount(
-            "https://",
-            requests.adapters.HTTPAdapter(
-                pool_connections=self.CONFIG.POOL_CONNECTIONS, pool_maxsize=self.CONFIG.POOL_MAXSIZE
-            ),
-        )
-
+            self._sessions[tid] = session
         return session
 
-    def get_session(self) -> InterruptableSession:
-        """Requests the current build session
-
-        If called for the first time or after close_current_session was called,
-        this function will build a new session. Every subsequent call will return
-        the same session object until the session is closed with close_current_session().
-
-        Returns:
-            requests.Session: The current build session
-        """
-
-        with self._session_lock:
-            if not self._session:
-                self._session = self._session_factory()
-            return self._session
-
-    def close_current_session(self) -> None:
-        """Tears down the current build session
-
-        Returns:
-            None
-        """
-        if self._session is not None:
-            session = self.get_session()
-            logger.debug(f"Close session {session}")
+    def close_sessions(self) -> None:
+        """Closes and removes all open sessions."""
+        sessions, self._sessions = self._sessions, {}
+        for tid, session in sessions.items():
+            logger.debug(f"Close session in thread-{tid} (impersonate={session.impersonate!r})")
             session.close()
-            self._session = None
 
     @contextmanager
-    def context(self, **kwargs) -> Iterator[Self]:
-        """Thread-safe context manager for temporarily overriding session configuration.
+    def context(self, **kwargs: Any) -> Iterator[Self]:
+        """Context manager for temporarily overriding session kwargs.
 
-        This context manager temporarily replaces the current `CONFIG` instance with a new one
-        constructed from the provided keyword arguments and clears the current session.
-        Subsequent calls to `get_session()` will use the new configuration, while existing
-        sessions remain unchanged. Internally we use a reentrant lock (RLock) to allow nested
-        contexts within the same thread.
-
-        To prevent deadlocks, attempting to open a new context in another thread while already in
-        a context raises an `AssertionError`.`
+        Merges kwargs with the defaults for the duration of the block, then
+        restores the previous state on exit. Only one context may be active at a time.
 
         Args:
-            **kwargs: Keyword arguments corresponding to `CONFIG` parameters.
-
-        Returns:
-            SessionHandler: The current session handler instance with the temporary configuration.
+            **kwargs: Any curl_cffi Session kwargs to override (e.g. timeout=10, verify=False).
 
         Raises:
-            AssertionError: If a context is already active in another thread.
+            AssertionError: If a context is already active.
         """
-
-        if self._context_lock.acquire(blocking=False):
-            prev = self.CONFIG, self._session
-            self.CONFIG = CONFIG(**kwargs)
-            self._session = None
-
-            try:
-                yield self
-            finally:
-                self._context_lock.release()
-                self.CONFIG, self._session = prev
-
-        else:
+        if not self._context_lock.acquire(blocking=False):
             raise AssertionError(
-                f"Tried to open a session context within another thread. "
-                f"Exit the existing context before opening a new one."
+                "Tried to open a session context while another is already active. "
+                "Exit the existing context before opening a new one."
             )
 
+        prev_kwargs = self._session_kwargs
+        prev_sessions = self._sessions
+        self._session_kwargs = {**self.DEFAULT_SESSION_KWARGS, **kwargs}
+        self._sessions = {}
 
-@contextmanager
-def socket_timeout(timeout: Optional[int] = None):
-    """Temporarily sets the socket timeout within this context."""
-    old_timeout = socket.getdefaulttimeout()
-    socket.setdefaulttimeout(timeout)
-    try:
-        yield
-    finally:
-        socket.setdefaulttimeout(old_timeout)
+        try:
+            yield self
+        finally:
+            self.close_sessions()
+            self._session_kwargs = prev_kwargs
+            self._sessions = prev_sessions
+            self._context_lock.release()
 
 
 session_handler = SessionHandler()

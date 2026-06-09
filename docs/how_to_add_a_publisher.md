@@ -261,6 +261,8 @@ will exclude all sitemap URLs not containing the substring `sitemap-content-`.
    The default is: `{"user-agent": "Fundus/2.0 (contact: github.com/flairnlp/fundus)"}`.
 2. If you want to block URLs for the entire publisher use the `url_filter` parameter of `Publisher`.
 3. In some cases it can be necessary to append query parameters to the end of the URL, e.g. to load the article as one page. This can be achieved by adding the `query_parameter` attribute of `PublisherSpec` and assigning it a dictionary object containing the key - value pairs: e.g. `{"page": "all"}`. These key  - value pairs will be appended to all crawled URLs.
+4. If the publisher is only reachable through a browser-like TLS/HTTP fingerprint (i.e. plain `requests`/`curl` get blocked by an anti-bot layer such as Cloudflare or Akamai), you can declare a browser profile via the `impersonate` parameter, e.g. `impersonate="chrome"`. See [curl_cffi's supported targets](https://curl-cffi.readthedocs.io/en/latest/impersonate/targets.html) for the full list.
+   Because browser impersonation is an opt-in feature on the user side (see [Browser impersonation](5_advanced_topics.md#browser-impersonation)), the profile only takes effect when the user constructs the `Crawler` with `impersonate=True`; with the default `impersonate=False` your publisher will be requested without impersonation and will likely fail. Only set this when the publisher genuinely cannot be crawled without it.
 
 Now, let's put it all together to specify The Intercept as a new publisher in Fundus:
 
@@ -756,20 +758,21 @@ pytest
 ## 7. Opening a Pull Request
 
 1. Make sure you tested your parser using `pytest`.
-2. Run `black src`, `isort src`, and `mypy src` with no errors.
+2. Run `ruff format src`, `ruff check --fix src`, and `mypy src` with no errors.
 3. Push and open a new PR
 4. Congratulation and thank you very much.
 
 ## 8. Maintaining publishers
 
-If you encounter an issue with a publisher, feel free to correct it and submit a PR.  
-Please follow this general guideline when making such changes.  
+Website layouts change over time, so we may occasionally need to update a publisher's parser.
+If you run into an issue, feel free to correct it and submit a pull request (PR).
+Please follow these guidelines when making such changes:
 
-- If the parser can no longer extract articles properly, create a new parser version to implement the fix.  
-- Use a minor version bump (e.g., from `V1` to `V1_1(V1)`) if the update only involves adjusting selectors.  
-- If the change introduces new attributes or substantially modifies several existing ones, consider moving to a new major version (e.g., from `V1` to `V2`).  
+- If the layout of the publisher changes and the corresponding parser can no longer extract articles properly, create a new parser version with updated selectors.
+- Use a minor version bump (e.g., from `V1` to `V1_1(V1)`) if the update only involves adjusting selectors.
+- If the change introduces new attributes or substantially modifies several existing ones, consider moving to a new major version (e.g., from `V1` to `V2`).
 
 > [!NOTE]
-> You will now need to set the `VALID_UNTIL` attribute for the previous version to a `datetime.date` pointing to the day before the layout change.
+> Set the `VALID_UNTIL` attribute on the previous version to a `datetime.date` for the day before the layout change.
 > You can estimate this date using the logs or the Wayback Machine.
-> The Attribute is not inherited from previous versions. Every subclass of `BaseParser` by default has `VALID_UNTIL` set to `date.max`.
+> Note that `VALID_UNTIL` is not inherited from previous versions — every subclass of `BaseParser` defaults to `date.max`.
