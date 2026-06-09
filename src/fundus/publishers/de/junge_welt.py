@@ -64,7 +64,9 @@ class JungeWeltParser(ParserProxy):
             )
 
     class V1_1(V1):
-        _paragraph_selector = XPath("//div[contains(@class, 'content')]//p[not(strong) or text()]")
+        _paragraph_selector = XPath(
+            "//div[div[@id='article-meta-footer']] //div[contains(@class, 'content')]//p[not(strong) or text()]"
+        )
         _summary_selector = XPath("//article/h2 | //div[contains(@class, 'content')]/p[position()=1 and strong]")
         _subheadline_selector = XPath(
             "//div[contains(@class, 'content')]/h3 | //div[contains(@class, 'content')]/p[position()>1 and strong]"
@@ -76,7 +78,9 @@ class JungeWeltParser(ParserProxy):
                 doc=self.precomputed.doc,
                 image_selector=XPath("//article//div[contains(@class, 'mx-auto')]/img"),
                 paragraph_selector=self._paragraph_selector,
-                caption_selector=XPath("./ancestor::div[contains(@class, 'mx-auto')]//div[@class='text-base/6']"),
+                caption_selector=XPath(
+                    "./ancestor::div[contains(@class, 'mx-auto')]//div[contains(@class, 'text-base/6')]"
+                ),
                 author_selector=XPath("./ancestor::div[contains(@class, 'mx-auto')]//span"),
                 relative_urls=True,
             )
