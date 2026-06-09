@@ -7,6 +7,7 @@ from fundus.scraping.filter import inverse, regex_filter
 from fundus.scraping.url import NewsMap, RSSFeed, Sitemap
 
 from ..shared import EuronewsParser
+from .afp_faktencheck import AFPFaktencheckParser
 from .berliner_zeitung import BerlinerZeitungParser
 from .bild import BildParser
 from .boersenzeitung import BoersenZeitungParser
@@ -70,6 +71,22 @@ class DE(metaclass=PublisherGroup):
             NewsMap("https://www.lto.de/googlenews-sitemap.xml"),
             Sitemap("https://www.lto.de/sitemap.xml", sitemap_filter=inverse(regex_filter("/article/"))),
         ],
+    )
+
+    AFPFaktencheck = Publisher(
+        name="AFP Faktencheck",
+        domain="https://faktencheck.afp.com/",
+        parser=AFPFaktencheckParser,
+        sources=[
+            Sitemap(
+                "https://faktencheck.afp.com/sitemap.xml",
+                reverse=True,
+                sitemap_filter=regex_filter(
+                    r"(?i)/(cookie-einstellungen|korrekturen|das-team|ueber-afp|wie-wir-arbeiten|seite-nicht-gefunden)$|^https://faktencheck.afp.com/$"
+                ),
+            ),
+        ],
+        impersonate="chrome",
     )
 
     SportSchau = Publisher(
