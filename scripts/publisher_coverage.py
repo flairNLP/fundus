@@ -13,7 +13,7 @@ from typing import Any, Callable, List, Optional, Union
 from fundus import Crawler, PublisherCollection
 from fundus.publishers.base_objects import Publisher, PublisherGroup
 from fundus.scraping.article import Article
-from fundus.scraping.session import socket_timeout
+from fundus.scraping.session import session_handler
 
 
 def main() -> None:
@@ -34,8 +34,7 @@ def main() -> None:
         PublisherCollection.get_subgroup_mapping().values(), key=lambda region: region.__name__
     )
 
-    # interrupts running network connections after <timeout_in_seconds>
-    with socket_timeout(timeout_in_seconds):
+    with session_handler.context(timeout=timeout_in_seconds):
         for publisher_region in publisher_regions:
             print(f"{publisher_region.__name__:-^50}")
 
@@ -53,7 +52,7 @@ def main() -> None:
                 if publisher.__name__ in parsed_arguments.skip:
                     print(f"⏩  SKIPPED: {publisher_name!r} - Blocked")
                     continue
-                crawler: Crawler = Crawler(publisher, delay=0.4, ignore_robots=True)
+                crawler: Crawler = Crawler(publisher, delay=0.4, ignore_robots=True, impersonate=True)
 
                 complete_article: Optional[Article] = next(
                     crawler.crawl(
