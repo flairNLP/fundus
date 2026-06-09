@@ -11,5 +11,4 @@ class ID(metaclass=PublisherGroup):
         domain="https://www.mediaindonesia.com/",
         parser=MediaIndonesiaParser,
         sources=[Sitemap("https://mediaindonesia.com/sitemap.xml")],
-        deprecated=True,
     )
