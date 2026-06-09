@@ -23,9 +23,7 @@ class NieuwsbladParser(ParserProxy):
             "//*[@data-testid='article-body']/p/span[@class='bold'] | //*[@data-testid='article-body']/h3"
         )
 
-        _topic_selector = XPath(
-            "//ul[contains(@class, 'taglist')]/li|//div[contains(@class, 'tag-list')]/a"
-        )
+        _topic_selector = XPath("//ul[contains(@class, 'taglist')]/li|//div[contains(@class, 'tag-list')]/a")
 
         @attribute
         def body(self) -> Optional[ArticleBody]:
@@ -50,9 +48,7 @@ class NieuwsbladParser(ParserProxy):
 
         @attribute
         def topics(self) -> List[str]:
-            topic_string = strip_nodes_to_text(
-                self._topic_selector(self.precomputed.doc), join_on=","
-            )
+            topic_string = strip_nodes_to_text(self._topic_selector(self.precomputed.doc), join_on=",")
             if topic_string is not None:
                 return generic_topic_parsing(topic_string, delimiter=",")
             return []
