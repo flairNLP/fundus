@@ -2231,7 +2231,9 @@
         <code>TheJapanNews</code>
       </td>
       <td>
-        <div>The Japan News</div>
+        <div>
+          <strike>The Japan News</strike>
+        </div>
       </td>
       <td>
         <a href="https://japannews.yomiuri.co.jp/">
