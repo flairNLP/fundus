@@ -70,7 +70,7 @@ class BerlinerZeitungParser(ParserProxy):
                 author_selector=self._author_selector,
             )
 
-    class V1_1(V1):
+    class V2(BaseParser):
         _paragraph_selector = XPath("//article//p[contains(@class, 'leading-7') and text()]")
         _subheadline_selector = XPath("//article//h2")
         _summary_selector = XPath("//article//p[contains(@class, 'font-roboto font-normal')]")
@@ -96,9 +96,31 @@ class BerlinerZeitungParser(ParserProxy):
             )
 
         @attribute
+        def title(self) -> Optional[str]:
+            return self.precomputed.meta.get("og:title")
+
+        @attribute
+        def authors(self) -> List[str]:
+            return generic_author_parsing(self.precomputed.meta.get("article:author"))
+
+        @attribute
+        def publishing_date(self) -> Optional[datetime.datetime]:
+            return generic_date_parsing(self.precomputed.ld.bf_search("datePublished"))
+
+        @attribute
         def topics(self) -> List[str]:
             return generic_topic_parsing(
                 generic_nodes_to_text(self._topic_selector(self.precomputed.doc), normalize=True)
+            )
+
+        @attribute
+        def images(self) -> List[Image]:
+            return image_extraction(
+                doc=self.precomputed.doc,
+                paragraph_selector=self._paragraph_selector,
+                image_selector=self._image_selector,
+                caption_selector=self._caption_selector,
+                author_selector=self._author_selector,
             )
 
         @function(priority=1)
