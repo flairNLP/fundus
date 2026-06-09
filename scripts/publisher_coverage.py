@@ -52,7 +52,7 @@ def main() -> None:
                 if publisher.__name__ in parsed_arguments.skip:
                     print(f"⏩  SKIPPED: {publisher_name!r} - Blocked")
                     continue
-                crawler: Crawler = Crawler(publisher, delay=0.4, ignore_robots=True)
+                crawler: Crawler = Crawler(publisher, delay=0.4, ignore_robots=True, impersonate=True)
 
                 complete_article: Optional[Article] = next(
                     crawler.crawl(
