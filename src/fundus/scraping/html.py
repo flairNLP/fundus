@@ -1,337 +1,76 @@
-import time
-from dataclasses import dataclass
+from __future__ import annotations
+
+from dataclasses import dataclass, fields
 from datetime import datetime
-from typing import Callable, Dict, Iterable, Iterator, List, Optional, Protocol, Union
-from urllib.parse import urlparse
+from typing import Dict
 
-import chardet
-import requests
-from curl_cffi.requests.exceptions import ConnectionError, HTTPError, ReadTimeout
-from fastwarc import ArchiveIterator, WarcRecord, WarcRecordType
-
-from fundus.logging import create_logger
-from fundus.publishers.base_objects import Publisher, Robots
-from fundus.scraping.delay import Delay
-from fundus.scraping.filter import URLFilter
-from fundus.scraping.session import _default_header, session_handler
-from fundus.scraping.url import URLSource, is_valid_url
-from fundus.utils.events import __EVENTS__
+from fundus.utils.serialization import JSONVal, serialize_value
 
 __all__ = [
     "HTML",
     "SourceInfo",
-    "WarcSourceInfo",
-    "WebSourceInfo",
-    "HTMLSource",
-    "WebSource",
-    "CCNewsSource",
 ]
-
-logger = create_logger(__name__)
-
-
-@dataclass(frozen=True)
-class HTML:
-    requested_url: str
-    responded_url: str
-    content: str
-    crawl_date: datetime
-    source_info: "SourceInfo"
 
 
 @dataclass(frozen=True)
 class SourceInfo:
+    """Provenance metadata for an HTML record.
+
+    The base form carries only the publisher's name; needs to be pickable. Per-backend
+    subclasses (WebSourceInfo, WarcSourceInfo) add their own origin fields.
+
+    Attributes:
+        publisher (str): The publisher's name (its identity).
+    """
+
     publisher: str
 
+    def serialize(self) -> Dict[str, JSONVal]:
+        """Serialize all dataclass fields to a JSON-compatible dict.
+
+        Subclasses inherit this unchanged and automatically pick up their extra fields,
+        since it reflects over the dataclass fields rather than naming them explicitly.
+
+        Returns:
+            Dict[str, JSONVal]: Field name to JSON-serializable value for every field.
+        """
+        return {f.name: serialize_value(getattr(self, f.name)) for f in fields(self)}
+
 
 @dataclass(frozen=True)
-class WarcSourceInfo(SourceInfo):
-    warc_path: str
-    warc_headers: Dict[str, str]
-    http_headers: Dict[str, str]
+class HTML:
+    """A fetched HTML document together with its URLs, crawl time, and source provenance.
 
+    The unit of exchange between the Source and Pipeline layers: a Source yields HTML,
+    the Pipeline parses it into an Article. Frozen so it can be shared/pickled safely.
 
-@dataclass(frozen=True)
-class WebSourceInfo(SourceInfo):
-    type: str
-    url: str
+    Attributes:
+        requested_url (str): The URL that was requested.
+        responded_url (str): The final URL after redirects (equals requested_url when none).
+        content (str): The decoded HTML body.
+        crawl_date (datetime): When the document was fetched (or its WARC record date).
+        source_info (SourceInfo): Provenance metadata describing where the record came from.
+    """
 
+    requested_url: str
+    responded_url: str
+    content: str
+    crawl_date: datetime
+    source_info: SourceInfo
 
-class HTMLSource(Protocol):
-    def fetch(self, url_filter: Optional[URLFilter] = None) -> Iterator[HTML]: ...
+    def serialize(self) -> Dict[str, JSONVal]:
+        """Serialize the record to a JSON-compatible dict.
 
+        The crawl date is ISO-formatted and the source info is serialized via its own
+        serialize(); all other fields are emitted as-is.
 
-class _Clock:
-    def __init__(
-        self, delay: Optional[Delay], sleep: Callable[[float], None] = time.sleep, warm_start: bool = True
-    ) -> None:
-        """Utility class for time-aligned delay.
-
-        Keeps track of the time passed since last call or init and waits at most the remaining delay.
-
-        Args:
-            delay: A customized delay.
-            sleep: A customized sleep function. Defaults to <time.sleep>.
-            warm_start: If true, skips first delay.
+        Returns:
+            Dict[str, JSONVal]: The record's fields as JSON-serializable values.
         """
-        self.delay = delay
-        self.timestamp = time.time()
-
-        if warm_start and self.delay is not None:
-            self.timestamp -= self.delay()
-
-        self.sleep = sleep
-
-    def __call__(self, blocking: bool = True) -> bool:
-        """Waits at most <delay> seconds since last called.
-
-        Args:
-            blocking: If True, blocks until <delay> seconds have elapsed since last call.
-            If non-blocking returns False if less time has elapsed, else returns True.
-
-        Returns: True if <delay> seconds have elapsed since last call. False otherwise.
-
-        """
-        if self.delay is None:
-            return True
-
-        if delay := max(0.0, self.delay() - time.time() + self.timestamp):
-            if not blocking:
-                return False
-            self.sleep(delay)
-        self.reset()
-        return True
-
-    def reset(self):
-        self.timestamp = time.time()
-
-
-class WebSource:
-    def __init__(
-        self,
-        url_source: Union[URLSource, Iterable[str]],
-        publisher: Publisher,
-        url_filter: Optional[URLFilter] = None,
-        query_parameters: Optional[Dict[str, str]] = None,
-        delay: Optional[Delay] = None,
-        ignore_robots: bool = False,
-        ignore_crawl_delay: bool = False,
-        impersonate: bool = False,
-    ):
-        self.url_source = url_source
-        self.publisher = publisher
-        self.url_filter = url_filter
-        self.query_parameters = query_parameters or {}
-        self._impersonate_profile = publisher.impersonate if impersonate else None
-
-        # parse robots:
-        self.robots: Optional[Robots] = None
-        if not ignore_robots:
-            self.robots = self.publisher.robots
-
-            if not ignore_crawl_delay:
-                if robots_delay := self.robots.crawl_delay(self.publisher.request_header.get("user-agent", "*")):
-                    logger.debug(
-                        f"Found crawl-delay of {robots_delay} seconds in robots.txt for {self.publisher.name}. "
-                        f"Overwriting existing delay."
-                    )
-
-                    def delay() -> float:
-                        return robots_delay
-
-        self.clock = _Clock(delay=delay, sleep=self._sleep)
-
-    @property
-    def _is_stopped(self):
-        return __EVENTS__.is_event_set("stop")
-
-    @staticmethod
-    def _sleep(s: float):
-        __EVENTS__.get("stop").wait(s)
-
-    def _fetch_html(self, url: str, url_filter: URLFilter) -> Optional[HTML]:
-        # check if URL is malformed
-        if not is_valid_url(url):
-            logger.debug(f"Skipped requested URL {url!r} because the URL is malformed")
-            return None
-
-        # apply URL filter to requested URL
-        if url_filter(url):
-            logger.debug(f"Skipped requested URL {url!r} because of URL filter")
-            return None
-
-        # check robots
-        if not (
-            self.robots is None or self.robots.can_fetch(self.publisher.request_header.get("user-agent", "*"), url)
-        ):
-            logger.debug(f"Skipped requested URL {url!r} because of robots.txt")
-            return None
-
-        session = session_handler.get_session(self._impersonate_profile)
-
-        # prepare query parameters
-        for key, value in self.query_parameters.items():
-            if "?" in url:
-                url += "&" + key + "=" + value
-            else:
-                url += "?" + key + "=" + value
-
-        # apply crawl-delay
-        self.clock()
-
-        # fetch html
-        try:
-            response = session.get_with_interrupt(url, headers=self.publisher.request_header)
-
-        except (HTTPError, ConnectionError, ReadTimeout) as error:
-            logger.warning(f"Skipped requested URL {url!r} because of {error!r}")
-            if isinstance(error, HTTPError) and error.response.status_code >= 500:
-                logger.warning(f"Skipped {self.publisher.name!r} due to server errors: {error!r}")
-            return None
-
-        # apply URL filter to responded URL
-        if url_filter(str(response.url)):
-            logger.debug(f"Skipped responded URL {str(response.url)!r} because of URL filter")
-            return None
-
-        html = response.text
-
-        # check for redirects
-        if response.history:
-            logger.info(f"Got redirected {len(response.history)} time(s) from {url!r} -> {response.url!r}")
-
-        # create WebSourceInfo
-        source_info = (
-            WebSourceInfo(self.publisher.name, type(self.url_source).__name__, self.url_source.url)
-            if isinstance(self.url_source, URLSource)
-            else SourceInfo(self.publisher.name)
-        )
-
-        # create HTML
-        return HTML(
-            requested_url=url,
-            responded_url=str(response.url),
-            content=html,
-            crawl_date=datetime.now(),
-            source_info=source_info,
-        )
-
-    def _build_url_filter(self, url_filter: Optional[URLFilter]) -> URLFilter:
-        combined_filters: List[URLFilter] = ([self.url_filter] if self.url_filter else []) + (
-            [url_filter] if url_filter else []
-        )
-
-        def combined_url_filter(url: str) -> bool:
-            return any(f(url) for f in combined_filters)
-
-        return combined_url_filter
-
-    def fetch(self, url_filter: Optional[URLFilter] = None) -> Iterator[HTML]:
-        if isinstance(self.url_source, URLSource):
-            url_iterator = self.url_source.fetch(
-                session_handler.get_session(self._impersonate_profile),
-                self.publisher.request_header,
-            )
-        else:
-            url_iterator = iter(self.url_source)
-
-        while not self._is_stopped:
-            try:
-                # check iterator
-                if (url := next(url_iterator, None)) is None:
-                    return
-            except Exception as error:
-                logger.error(
-                    f"Warning! URLSource {self.url_source!r} crashed because of an unexpected error: {error!r}"
-                )
-                return
-
-            try:
-                if html := self._fetch_html(url, self._build_url_filter(url_filter)):
-                    yield html
-            except Exception as error:
-                logger.error(f"Warning! Skipped requested URL {url!r} because of an unexpected error {error!r}")
-                continue
-
-
-class CCNewsSource:
-    def __init__(self, *publishers: Publisher, warc_path: str, headers: Optional[Dict[str, str]] = None):
-        self.publishers = publishers
-        self.warc_path = warc_path
-        self.headers = headers or _default_header
-        self._publisher_mapping: Dict[str, Publisher] = {
-            urlparse(publisher.domain).netloc: publisher for publisher in self.publishers
+        return {
+            "requested_url": self.requested_url,
+            "responded_url": self.responded_url,
+            "content": self.content,
+            "crawl_date": self.crawl_date.isoformat(),
+            "source_info": self.source_info.serialize(),
         }
-
-    def fetch(self, url_filter: Optional[URLFilter] = None) -> Iterator[HTML]:
-        def extract_content(record: WarcRecord) -> Optional[str]:
-            warc_body: bytes = record.reader.read()
-
-            try:
-                return str(warc_body, encoding=record.http_charset)  # type: ignore[arg-type]
-            except (UnicodeDecodeError, TypeError):
-                encoding: Optional[str] = chardet.detect(warc_body)["encoding"]
-
-                if encoding is not None:
-                    logger.debug(
-                        f"Trying to decode record {record.record_id!r} from {target_url!r} "
-                        f"using detected encoding {encoding}."
-                    )
-
-                    try:
-                        return str(warc_body, encoding=encoding)
-                    except UnicodeDecodeError:
-                        logger.warning(
-                            f"Couldn't decode record {record.record_id!r} from {target_url!r} with "
-                            f"original charset {record.http_charset!r} using detected charset {encoding!r}."
-                        )
-                else:
-                    logger.warning(
-                        f"Couldn't detect charset for record {record.record_id!r} from {target_url!r} "
-                        f"with invalid original charset {record.http_charset!r}."
-                    )
-
-            return None
-
-        with requests.Session() as session:
-            response = session.get(self.warc_path, stream=True, headers=self.headers)
-            response.raise_for_status()
-
-            for warc_record in ArchiveIterator(response.raw, record_types=WarcRecordType.response, verify_digests=True):
-                if not warc_record.record_date:
-                    continue
-
-                target_url = str(warc_record.headers["WARC-Target-URI"])
-
-                if url_filter is not None and url_filter(target_url):
-                    logger.debug(f"Skipped WARC record with target URI {target_url!r} because of URL filter")
-                    continue
-
-                publisher_domain: str = urlparse(target_url).netloc
-
-                if publisher_domain not in self._publisher_mapping:
-                    continue
-
-                publisher = self._publisher_mapping[publisher_domain]
-
-                if publisher.url_filter is not None and publisher.url_filter(target_url):
-                    logger.debug(
-                        f"Skipped WARC record with target URI {target_url!r} because of publisher specific URL filter"
-                    )
-                    continue
-
-                if (content := extract_content(warc_record)) is None:
-                    continue
-
-                yield HTML(
-                    requested_url=target_url,
-                    responded_url=target_url,
-                    content=content,
-                    crawl_date=warc_record.record_date,
-                    source_info=WarcSourceInfo(
-                        publisher=publisher.name,
-                        warc_path=self.warc_path,
-                        warc_headers=dict(warc_record.headers),
-                        http_headers=dict(warc_record.http_headers or {}),
-                    ),
-                )

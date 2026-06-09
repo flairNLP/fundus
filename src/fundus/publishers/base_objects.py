@@ -67,7 +67,10 @@ class CustomRobotFileParser(RobotFileParser):
                     " Defaulting to disallow all."
                 )
                 self.disallow_all = True
-            elif 400 <= err.response.status_code < 500:
+            else:
+                # Any other HTTP error — a 4xx without a robots.txt, or a 5xx server error —
+                # leaves us with no retrievable rules, so default to allow-all rather than an
+                # unset parser state. (Inside this except, raise_for_status guarantees >= 400.)
                 self.allow_all = True
         else:
             self.parse(response.text.splitlines())
@@ -230,6 +233,9 @@ class Publisher:
 
     def __str__(self) -> str:
         return f"{self.name}"
+
+    def serialize(self) -> str:
+        return self.name
 
     def __hash__(self) -> int:
         return hash(self.name)

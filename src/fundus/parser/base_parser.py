@@ -13,7 +13,6 @@ from typing import (
     Dict,
     Iterator,
     List,
-    Literal,
     Optional,
     Tuple,
     Type,
@@ -278,7 +277,7 @@ class BaseParser(ABC):
         doc = lxml.html.document_fromstring(html)
         self.precomputed = Precomputed(html, doc, get_meta_content(doc), get_ld_content(doc))
 
-    def parse(self, html: str, error_handling: Literal["suppress", "catch", "raise"] = "raise") -> Dict[str, Any]:
+    def parse(self, html: str, raise_on_error: bool = True) -> Dict[str, Any]:
         # wipe existing precomputed
         self._base_setup(html)
 
@@ -294,18 +293,13 @@ class BaseParser(ABC):
                 try:
                     parsed_data[attribute_name] = func()
                 except Exception as err:
-                    if error_handling == "suppress":
-                        parsed_data[attribute_name] = func.__default__
-                        logger.info(
-                            f"Couldn't parse attribute {attribute_name!r} for "
-                            f"{self.precomputed.meta.get('og:url')!r}: {err!r}"
-                        )
-                    elif error_handling == "catch":
-                        parsed_data[attribute_name] = err
-                    elif error_handling == "raise":
+                    if raise_on_error:
                         raise err
-                    else:
-                        raise ValueError(f"Invalid value {error_handling!r} for parameter <error_handling>")
+                    parsed_data[attribute_name] = func.__default__
+                    logger.info(
+                        f"Couldn't parse attribute {attribute_name!r} for "
+                        f"{self.precomputed.meta.get('og:url')!r}: {err!r}"
+                    )
 
             else:
                 raise TypeError(f"Invalid type for {func}. Only subclasses of 'RegisteredFunction' are allowed")

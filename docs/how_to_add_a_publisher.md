@@ -1,41 +1,42 @@
 # Table of Contents
 
-* [How to add a Publisher](#how-to-add-a-publisher)
-  * [1. Creating a Parser Stub](#1-creating-a-parser-stub)
-  * [2. Creating a Publisher Specification](#2-creating-a-publisher-specification)
-    * [Adding Sources](#adding-sources)
+* [How to add a publisher](#how-to-add-a-publisher)
+  * [1. Creating a parser stub](#1-creating-a-parser-stub)
+  * [2. Creating a publisher specification](#2-creating-a-publisher-specification)
+    * [Adding sources](#adding-sources)
       * [Different `URLSource` types](#different-urlsource-types)
       * [How to specify a `URLSource`](#how-to-specify-a-urlsource)
         * [RSS feeds](#rss-feeds)
         * [Sitemaps](#sitemaps)
       * [How to differentiate between `Sitemap` and `NewsMap`](#how-to-differentiate-between-sitemap-and-newsmap)
-    * [Finishing the Publisher Specification](#finishing-the-publisher-specification)
-  * [4. Validating the Current Implementation Progress](#4-validating-the-current-implementation-progress)
-  * [5. Implementing the Parser](#5-implementing-the-parser)
-    * [Extracting Attributes from Precomputed](#extracting-attributes-from-precomputed)
-    * [Extracting Attributes with XPath and CSS-Select](#extracting-attributes-with-xpath-and-css-select)
+    * [Finishing the publisher specification](#finishing-the-publisher-specification)
+  * [3. Validating the current implementation progress](#3-validating-the-current-implementation-progress)
+  * [4. Implementing the parser](#4-implementing-the-parser)
+    * [Extracting attributes from Precomputed](#extracting-attributes-from-precomputed)
+    * [Extracting attributes with XPath and CSS-Select](#extracting-attributes-with-xpath-and-css-select)
       * [Working with `lxml`](#working-with-lxml)
       * [CSS-Select](#css-select)
       * [XPath](#xpath)
     * [Extracting the ArticleBody](#extracting-the-articlebody)
-    * [Extracting the Images](#extracting-the-images)
+    * [Extracting the images](#extracting-the-images)
     * [Checking the free_access attribute](#checking-the-free_access-attribute)
-    * [Finishing the Parser](#finishing-the-parser)
-  * [6. Generate unit tests and update tables](#6-generate-unit-tests-and-update-tables)
+    * [Finishing the parser](#finishing-the-parser)
+  * [5. Generate unit tests and update tables](#5-generate-unit-tests-and-update-tables)
     * [Add unit tests](#add-unit-tests)
     * [Update tables](#update-tables)
-  * [7. Opening a Pull Request](#7-opening-a-pull-request)
-  * [8. Maintaining publishers](#8-maintaining-publishers)
+  * [6. Opening a pull request](#6-opening-a-pull-request)
+  * [7. Maintaining publishers](#7-maintaining-publishers)
 
-# How to add a Publisher
+# How to add a publisher
 
 Before contributing a publisher make sure you set up Fundus correctly alongside [these](how_to_contribute.md#setup-fundus) steps.
 Then check the [**supported publishers**](supported_publishers.md) table if there is already support for your desired publisher.
 In the following, we will walk you through an example implementation of the [*The Intercept*](https://www.theintercept.com/) covering the best practices for adding a new publisher.
 
-**_NOTE:_**: Before proceeding, it's essential to ensure that the publisher you intend to add is crawl-able.
-Fundus keeps track of those who aren't in [this issue](https://github.com/flairNLP/fundus/issues/309).
-To verify, simply replace the three dots `...` in the code snippet below with the URL of an article from the publisher you wish to add, and run the snippet afterward.
+> [!NOTE]
+> Before proceeding, it's essential to ensure that the publisher you intend to add is crawl-able.
+> Fundus keeps track of those who aren't in [this issue](https://github.com/flairNLP/fundus/issues/309).
+> To verify, simply replace the three dots `...` in the code snippet below with the URL of an article from the publisher you wish to add, and run the snippet afterward.
 ````python
 import urllib.request
 
@@ -51,7 +52,7 @@ In such cases, please comment on the issue mentioned above, mentioning the publi
 This helps keep the list accurate and up-to-date.
 
 
-## 1. Creating a Parser Stub
+## 1. Creating a parser stub
 
 Take a look at the file structure in `fundus/publishers`.
 Fundus uses the [**ALPHA-2**](https://www.iban.com/country-codes) codes specified in ISO3166 to sort publishers into directories by country of origin.
@@ -100,7 +101,7 @@ class TheInterceptParser(ParserProxy):
 Internally, the `ParserProxy` maps crawl dates to specific versions (`V1`, `V2`, etc.) subclassing `BaseParser`.
 Since Fundus' parsers are handcrafted and usually tied to specific layouts, this proxying step helps address changes to the layout.
 
-## 2. Creating a Publisher Specification
+## 2. Creating a publisher specification
 
 Next, add a new publisher specification for the publisher you want to cover.
 The publisher specification links information about the publisher, sources from where to get the HTML to parse, and the corresponding parser used by Fundus' `Crawler`.
@@ -120,9 +121,9 @@ class US(PublisherGroup):
     )
 ```
 
-If the country section for your publisher did not exist before step 1, please add the `PublisherGroup` to the `PublisherCollection` in `fundus/publishers/__init__.py'`.
+If the country section for your publisher did not exist before step 1, please add the `PublisherGroup` to the `PublisherCollection` in `fundus/publishers/__init__.py`.
 
-### Adding Sources
+### Adding sources
 
 For your newly added publisher to work you first need to specify where to find articles - in the form of HTML - to parse.
 Fundus adopts a unique approach by utilizing access points provided by the publishers, rather than resorting to generic web spiders.
@@ -131,7 +132,7 @@ Presently, Fundus supports RSS feeds and sitemaps by adding them as correspondin
 
 #### Different `URLSource` types
 
-Fundus provides the following types of `URLSource`, which you can import from `fundus.scraping.html`.
+Fundus provides the following types of `URLSource`, which you can import from `fundus.scraping.url`.
 
 1. `RSSFeed` - specifying RSS feeds
 2. `Sitemap` - specifying sitemaps
@@ -139,10 +140,11 @@ Fundus provides the following types of `URLSource`, which you can import from `f
 
 Fundus distinguishes between these source types to facilitate crawling only recent articles (`RSSFeed`, `NewsMap`) or an entire website (`Sitemap`).
 This differentiation is mainly for efficiency reasons.
-Refer to [this](4_how_to_filter_articles#filter-sources) documentation on how to filter for different source types.
+Refer to [this](4_how_to_filter_articles.md#filter-sources) documentation on how to filter for different source types.
 
-**_NOTE:_** When adding a new publisher, it is recommended to specify at least one `Sitemap` and one `RSSFeed` or `NewsMap` (preferred).
-If your publisher provides a `NewsFeed`, there is no need to specify an `RSSFeed`.
+> [!NOTE]
+> When adding a new publisher, it is recommended to specify at least one `Sitemap` and one `RSSFeed` or `NewsMap` (preferred).
+> If your publisher provides a `NewsFeed`, there is no need to specify an `RSSFeed`.
 
 #### How to specify a `URLSource`
 
@@ -179,12 +181,13 @@ A typical sitemap looks like this:
    ...
 ```
 
-**_NOTE:_** There is a known issue with Firefox not displaying XML properly.
-You can find a plugin to resolve this issue [here](https://addons.mozilla.org/de/firefox/addon/pretty-xml/)
+> [!NOTE]
+> There is a known issue with Firefox not displaying XML properly.
+> You can find a plugin to resolve this issue [here](https://addons.mozilla.org/de/firefox/addon/pretty-xml/)
 
 Links to sitemaps are typically found within the `robots.txt` file provided by the publisher, often located at the end of it.
 To access this file, append `robots.txt` at the end of the publisher's domain.
-For example, to access The Intercepts' `robots.txt`, use https://theintercept.com/robots.txt in your preferred browser.
+For example, to access The Intercept's `robots.txt`, use https://theintercept.com/robots.txt in your preferred browser.
 This will give you one sitemap link:
 
 ```console
@@ -217,7 +220,8 @@ Sitemap: https://theintercept.com/news-sitemap.xml
 This link points to a NewsMap, which is a special kind of Sitemap.
 To have a look at how to differentiate between those two, refer to [this](#how-to-differentiate-between-sitemap-and-newsmap) section.
 
-**_NOTE:_** If you wonder why you should reverse your sources from time to time, `URLSource`'s should, if possible, yield URLs in descending order by publishing date.
+> [!NOTE]
+> If you wonder why you should reverse your sources from time to time, `URLSource`'s should, if possible, yield URLs in descending order by publishing date.
 
 Now building a new `URLSource` for a `NewsMap` covering The Intercept looks like this:
 
@@ -237,8 +241,8 @@ You can check if a sitemap is a news map by:
    While this is a very simple method this can be unreliable.
 2. Checking the namespace:
    Typically there is a namespace `news` defined within a news map using the `xmlns:news` attribute of the `<urlset>` tag.
-   E.g. `<urlset ... xmlns:news="http://www.google.com/schemas/sitemap-news/0.9" ... >`<br>
-   **_NOTE:_** This can only be found within the actual sitemap and not the index map.
+   E.g. `<urlset ... xmlns:news="http://www.google.com/schemas/sitemap-news/0.9" ... >`.
+   Note that this can only be found within the actual sitemap and not the index map.
 
 #### Filter noisy sitemaps
 
@@ -255,12 +259,12 @@ sitemap_filter=inverse(regex_filter("sitemap-content-"))
 ````
 will exclude all sitemap URLs not containing the substring `sitemap-content-`.
 
-### Finishing the Publisher Specification
+### Finishing the publisher specification
 
-1. If your publisher requires to use custom request headers to work properly you can alter it by using the `request_header` parameter of `PublisherSpec`.
+1. If your publisher requires custom request headers to work properly you can set them using the `request_header` parameter of `Publisher`.
    The default is: `{"user-agent": "Fundus/2.0 (contact: github.com/flairnlp/fundus)"}`.
 2. If you want to block URLs for the entire publisher use the `url_filter` parameter of `Publisher`.
-3. In some cases it can be necessary to append query parameters to the end of the URL, e.g. to load the article as one page. This can be achieved by adding the `query_parameter` attribute of `PublisherSpec` and assigning it a dictionary object containing the key - value pairs: e.g. `{"page": "all"}`. These key  - value pairs will be appended to all crawled URLs.
+3. In some cases it can be necessary to append query parameters to the end of the URL, e.g. to load the article as one page. This can be achieved by setting the `query_parameter` parameter of `Publisher` and assigning it a dictionary containing the key-value pairs, e.g. `{"page": "all"}`. These key-value pairs will be appended to all crawled URLs.
 4. If the publisher is only reachable through a browser-like TLS/HTTP fingerprint (i.e. plain `requests`/`curl` get blocked by an anti-bot layer such as Cloudflare or Akamai), you can declare a browser profile via the `impersonate` parameter, e.g. `impersonate="chrome"`. See [curl_cffi's supported targets](https://curl-cffi.readthedocs.io/en/latest/impersonate/targets.html) for the full list.
    Because browser impersonation is an opt-in feature on the user side (see [Browser impersonation](5_advanced_topics.md#browser-impersonation)), the profile only takes effect when the user constructs the `Crawler` with `impersonate=True`; with the default `impersonate=False` your publisher will be requested without impersonation and will likely fail. Only set this when the publisher genuinely cannot be crawled without it.
 
@@ -284,7 +288,7 @@ class US(PublisherGroup):
     )
 ```
 
-## 4. Validating the Current Implementation Progress
+## 3. Validating the current implementation progress
 
 Now validate your implementation progress by crawling some example articles from your publisher.
 The following script fits The Intercept and is adaptable by changing the publisher variable accordingly.
@@ -319,14 +323,14 @@ Fundus-Article:
 
 Since we didn't add any specific implementation to the parser yet, most entries are empty.
 
-## 5. Implementing the Parser
+## 4. Implementing the parser
 
 Now bring your parser to life and define the attributes you want to extract.
 
 One important caveat to consider is the type of content on a particular page.
 Some news outlets feature live tickers, displaying podcasts, or hub sites that link to other pages but are not articles themselves.
-At this stage, there's no need to concern yourself with handling non-article pages. 
-our parser should concentrate on extracting desired attributes from most pages that can be classified as articles.
+At this stage, there's no need to concern yourself with handling non-article pages.
+Your parser should concentrate on extracting the desired attributes from most pages that can be classified as articles.
 Pages lacking the desired attributes will be filtered out by the library during a later phase of the processing pipeline.
 
 You can add attributes by decorating the methods of your parser with the `@attribute` decorator.
@@ -337,8 +341,8 @@ There you can locate an attribute named `title`, which precisely corresponds to 
 It is essential to adhere to the specified return types, as they are enforced through our unit tests.
 While you're welcome to experiment locally, contributions to the repository won't be accepted if your pull request deviates from the guidelines.
 
-**_NOTE:_**
-Should you wish to add an attribute not covered in the guidelines, set the `validate` parameter of the attribute decorator to `False`, like this:
+> [!NOTE]
+> Should you wish to add an attribute not covered in the guidelines, set the `validate` parameter of the attribute decorator to `False`, like this:
 
 ``` python
 @attribute(validate=False)
@@ -373,10 +377,10 @@ This is a title
 This is a title 
 ```
 
-Fundus will automatically add your decorated attributes as instance attributes to the `article` object during parsing.
-Additionally, attributes defined in the attribute guidelines are explicitly defined as `dataclasses.fields`.
+Fundus will automatically expose your decorated attributes on the `article` object during parsing.
+Attributes defined in the attribute guidelines are additionally available as typed properties of `Article`, each with a default value, so they can be accessed safely even on articles whose parser didn't extract them.
 
-### Extracting Attributes from Precomputed
+### Extracting attributes from Precomputed
 
 One way to extract useful information from articles rather than placeholders is to utilize the `ld` and `meta` attributes of the `Article`.
 These attributes are automatically extracted when they are present in the currently parsed HTML.
@@ -412,10 +416,11 @@ For instance, to extract the title for an article in The Intercept, we can acces
         return self.precomputed.ld.get_value_by_key_path(["NewsArticle", "headline"])
 ```
 
-**_NOTE:_** In case a `class` is present in the HTML `meta` tag, it will be appended as a namespace to avoid collisions.
-I.e. the content of the following meta tag `<meta class="swiftype" name="author" ...` can be accessed with the key `swiftype:author`.
+> [!NOTE]
+> In case a `class` is present in the HTML `meta` tag, it will be appended as a namespace to avoid collisions.
+> I.e. the content of the following meta tag `<meta class="swiftype" name="author" ...` can be accessed with the key `swiftype:author`.
 
-### Extracting Attributes with XPath and CSS-Select
+### Extracting attributes with XPath and CSS-Select
 
 When parsing the `ArticleBody`, or the desired information cannot be extracted from the `ld` or `meta` attributes, you need to directly obtain information from the [Document Object Model](https://en.wikipedia.org/wiki/Document_Object_Model) (DOM) of the HTML/XML.
 The DOM serves as an interface representing the underlying HTML or XML file as a tree structure, where each element (tag) of the file functions as a node in the tree.
@@ -484,7 +489,8 @@ This is a paragraph within a div of class B
 This is a paragraph with a weird attribute
 ````
 
-**_NOTE:_** The nodes are returned in depth-first pre-order.
+> [!NOTE]
+> The nodes are returned in depth-first pre-order.
 
 Similarly, you can select based on the `class` attribute of a tag.
 For instance, selecting all  `<p>` tags with class `A` looks like this.
@@ -537,8 +543,9 @@ Output:
 This is a paragraph with a weird attribute
 ````
 
-**_NOTE:_** It's also possible to select solely by the existence of an attribute by omitting the equality.
-Sticking to the above example you can simply use `CSSSelector("p[additional-attribute]")` instead.
+> [!NOTE]
+> It's also possible to select solely by the existence of an attribute by omitting the equality.
+> Sticking to the above example you can simply use `CSSSelector("p[additional-attribute]")` instead.
 
 
 #### XPath
@@ -546,11 +553,13 @@ Sticking to the above example you can simply use `CSSSelector("p[additional-attr
 Given the complexity of XPath compared to CSS-Select, we refrain from providing an extensive tutorial here.
 Instead, we recommend referring to [this](https://devhints.io/xpath) documentation for a translation table and a concise overview of XPath functionalities beyond CSS-Select.
 
-**_NOTE:_** Although it's possible to select nodes using the built-in methods of  `lxml.html.HtmlElement`, it's recommended to use the dedicated selectors [`CSSSelect`](https://lxml.de/cssselect.html) and [`XPath`](https://lxml.de/xpathxslt.html), as demonstrated in the above examples.
+> [!NOTE]
+> Although it's possible to select nodes using the built-in methods of  `lxml.html.HtmlElement`, it's recommended to use the dedicated selectors [`CSSSelect`](https://lxml.de/cssselect.html) and [`XPath`](https://lxml.de/xpathxslt.html), as demonstrated in the above examples.
 
-**_NOTE:_** The `fundus/parser/utility.py` module includes several utility functions that can assist you in implementing parser attributes.
-Make sure to examine other parsers and consult the [attribute guidelines](attribute_guidelines.md) for specifics on attribute implementation. 
-We strongly encourage utilizing these utility functions, especially when parsing the `ArticleBody`.
+> [!NOTE]
+> The `fundus/parser/utility.py` module includes several utility functions that can assist you in implementing parser attributes.
+> Make sure to examine other parsers and consult the [attribute guidelines](attribute_guidelines.md) for specifics on attribute implementation.
+> We strongly encourage utilizing these utility functions, especially when parsing the `ArticleBody`.
 
 ### Extracting the ArticleBody
 
@@ -620,7 +629,7 @@ def free_access(self) -> bool:
 Usually you can identify a premium article by an indicator within the URL or by using XPath or CSSSelector and selecting
 the element asking to purchase a subscription to view the article.
 
-### Finishing the Parser
+### Finishing the parser
 
 Bringing all the above together, the The Intercept Parser now looks like this.
 
@@ -682,7 +691,7 @@ class TheInterceptParser(ParserProxy):
 
 ```
 
-Now, execute the example script from step 4 to validate your implementation.
+Now, execute the example script from step 3 to validate your implementation.
 If the attributes are implemented correctly, they appear in the printout accordingly.
 
 ```console
@@ -700,7 +709,7 @@ Fundus-Article:
 - From:   The Intercept (2024-06-06 17:16)
 ```
 
-## 6. Generate unit tests and update tables
+## 5. Generate unit tests and update tables
 
 ### Add unit tests
 
@@ -719,7 +728,7 @@ Then in most cases it should be enough to simply run
 python -m scripts.generate_parser_test_files -p <your_publisher_class>
 ````
 
-with <your_publisher_class> being the class name of the `Publisher` your working on.
+with <your_publisher_class> being the class name of the `Publisher` you're working on.
 
 In our case, we would run:
 
@@ -729,8 +738,9 @@ python -m scripts.generate_parser_test_files -p TheIntercept
 
 to generate a unit test for our parser.
 
-Note: If you need to modify your parser slightly after already adding a unit test, there's no need to create a new test case and load a new HTML file. 
-You can simply run the script with the `-oj` flag.
+> [!NOTE]
+> If you need to modify your parser slightly after already adding a unit test, there's no need to create a new test case and load a new HTML file.
+> You can simply run the script with the `-oj` flag.
 
 In our scenario, the command would be:
 
@@ -755,14 +765,14 @@ Now to test your newly added publisher you should run pytest with the following 
 pytest
 ````
 
-## 7. Opening a Pull Request
+## 6. Opening a pull request
 
 1. Make sure you tested your parser using `pytest`.
 2. Run `ruff format src`, `ruff check --fix src`, and `mypy src` with no errors.
 3. Push and open a new PR
-4. Congratulation and thank you very much.
+4. Congratulations and thank you very much.
 
-## 8. Maintaining publishers
+## 7. Maintaining publishers
 
 Website layouts change over time, so we may occasionally need to update a publisher's parser.
 If you run into an issue, feel free to correct it and submit a pull request (PR).
