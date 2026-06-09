@@ -58,7 +58,9 @@ class TagesAnzeigerParser(ParserProxy):
             )
 
     class V1_1(V1):
-        _paragraph_selector = XPath("//article//p[contains(@class, 'articleParagraph')]")
+        _paragraph_selector = XPath(
+            "//article//div[contains(@class, 'ArticleElementsList')]//p[contains(@class, 'articleParagraph')]"
+        )
         _summary_selector = XPath(
             "//article//p[contains(@class, 'lead')] | "
             "//article//div[contains(@class, 'SummaryList')]//*[self::strong or self::li]"
