@@ -54,7 +54,7 @@ class CorrectivParser(ParserProxy):
             return image_extraction(
                 doc=self.precomputed.doc,
                 paragraph_selector=self._paragraph_selector,
-                image_selector=XPath("//figure/img | //figure/picture/img"),
+                image_selector=XPath("//figure[@id]/img | //figure[@class='figure']/picture/img"),
                 author_selector=[
                     re.compile(
                         r"(?i)(?<=\. )((foto|credit image|bild|image|symbolbild):|©)?\s*(?P<credits>([^.:]|CORRECTIV\.|.com)+?)([.])?$"
