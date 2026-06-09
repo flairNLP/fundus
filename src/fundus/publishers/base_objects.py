@@ -5,7 +5,7 @@ from warnings import warn
 
 import more_itertools
 from curl_cffi.requests import BrowserType, BrowserTypeLiteral
-from curl_cffi.requests.exceptions import ConnectionError, HTTPError, ReadTimeout
+from curl_cffi.requests.exceptions import ConnectionError, HTTPError, Timeout
 from curl_cffi.requests.impersonate import normalize_browser_type
 from robots import RobotFileParser
 from typing_extensions import TypeAlias
@@ -91,7 +91,7 @@ class Robots:
     def _read(self) -> None:
         try:
             self.robots_file_parser.read()
-        except (ConnectionError, ReadTimeout):
+        except (ConnectionError, Timeout):
             logger.warning(f"Could not load robots {self.url!r}. Ignoring robots and continuing.")
             self.robots_file_parser.allow_all = True
         self.ready = True

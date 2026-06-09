@@ -20,7 +20,7 @@ from urllib.parse import unquote, urlparse
 
 import feedparser
 import lxml.html
-from curl_cffi.requests.exceptions import ConnectionError, HTTPError, ReadTimeout
+from curl_cffi.requests.exceptions import ConnectionError, HTTPError, Timeout
 from lxml.etree import XMLParser, XPath
 
 from fundus.logging import create_logger
@@ -158,7 +158,7 @@ class RSSFeed(URLSource):
         try:
             response = session.get_with_interrupt(self.url, headers=headers)
 
-        except (HTTPError, ConnectionError, ReadTimeout) as err:
+        except (HTTPError, ConnectionError, Timeout) as err:
             logger.warning(f"Warning! Couldn't parse rss feed {self.url!r} because of {err}")
             return
         except Exception as error:
@@ -195,7 +195,7 @@ class Sitemap(URLSource):
             try:
                 response = session.get_with_interrupt(url=sitemap_url, headers=headers)
 
-            except (HTTPError, ConnectionError, ReadTimeout) as error:
+            except (HTTPError, ConnectionError, Timeout) as error:
                 logger.warning(f"Warning! Couldn't reach sitemap {sitemap_url!r} because of {error!r}")
                 return
             except Exception as error:
