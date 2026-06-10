@@ -13,6 +13,7 @@ from .bild import BildParser
 from .boersenzeitung import BoersenZeitungParser
 from .br import BRParser
 from .business_insider_de import BusinessInsiderDEParser
+from .correctiv import CorrectivParser
 from .der_freitag import DerFreitagParser
 from .die_welt import DieWeltParser
 from .die_zeit import DieZeitParser
@@ -70,6 +71,21 @@ class DE(metaclass=PublisherGroup):
             RSSFeed("https://www.lto.de/rss/feed.xml"),
             NewsMap("https://www.lto.de/googlenews-sitemap.xml"),
             Sitemap("https://www.lto.de/sitemap.xml", sitemap_filter=inverse(regex_filter("/article/"))),
+        ],
+    )
+
+    Correctiv = Publisher(
+        name="Correctiv",
+        domain="https://www.correctiv.org/",
+        parser=CorrectivParser,
+        sources=[
+            Sitemap(
+                "https://www.correctiv.org/sitemap_index.xml",
+                reverse=True,
+                sitemap_filter=inverse(regex_filter("post-sitemap")),
+            ),
+            RSSFeed("https://correctiv.org/feed/"),
+            RSSFeed("https://correctiv.org/en/feed/", languages={"en"}),
         ],
     )
 

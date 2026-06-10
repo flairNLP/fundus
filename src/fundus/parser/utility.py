@@ -853,10 +853,13 @@ def parse_image_nodes(
                 if caption and (match := re.search(pattern, caption)):
                     authors = [match.group("credits")]
                     caption = re.sub(pattern, "", caption).strip() or None
-                elif description and (match := re.search(pattern, description)):
-                    authors = [match.group("credits")]
-                if authors:
                     break
+            if not authors:
+                for pattern in author_selector:
+                    if description and (match := re.search(pattern, description)):
+                        authors = [match.group("credits")]
+                        break
+
         else:
             # author is selectable as node
             if author_nodes := author_selector(node):
