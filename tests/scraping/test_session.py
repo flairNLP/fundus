@@ -7,7 +7,7 @@ from unittest.mock import MagicMock, patch
 
 import curl_cffi
 import pytest
-from curl_cffi.requests.exceptions import HTTPError, TooManyRedirects
+from curl_cffi.requests.exceptions import HTTPError, Timeout, TooManyRedirects
 
 from fundus.scraping.session import (
     CrashThread,
@@ -335,6 +335,16 @@ class TestInterruptableSession:
                 session.get_with_interrupt("http://example.com")
 
         session.close()
+
+    @pytest.mark.integration
+    def test_session_timeout_raises_timeout(self, hanging_url):
+        """get_with_interrupt raises curl_cffi's Timeout when a request times out."""
+        session = InterruptableSession(timeout=0.3, max_retries=0)
+        try:
+            with pytest.raises(Timeout):
+                session.get_with_interrupt(hanging_url)
+        finally:
+            session.close()
 
 
 class TestRetry:

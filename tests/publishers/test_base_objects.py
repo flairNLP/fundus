@@ -5,6 +5,7 @@ from curl_cffi.requests.exceptions import ConnectionError, ReadTimeout
 
 from fundus import NewsMap, RSSFeed, Sitemap
 from fundus.publishers.base_objects import CustomRobotFileParser, FilteredPublisher, Robots
+from fundus.scraping.session import session_handler
 from tests.fixtures.builders import make_http_error, make_publisher, make_publisher_group, mock_response
 
 
@@ -216,6 +217,19 @@ class TestRobots:
         robots.robots_file_parser = MagicMock()
         robots.robots_file_parser.read.side_effect = error
         robots.ensure_ready()  # must not raise
+        assert robots.robots_file_parser.allow_all is True
+        assert robots.ready is True
+
+    @pytest.mark.integration
+    @pytest.mark.xfail(
+        reason="_read catches ReadTimeout, not the base Timeout curl_cffi raises on a real timeout, so the "
+        "timeout propagates out of ensure_ready instead of defaulting to allow-all. Fixed by flairNLP/fundus#939.",
+        strict=True,
+    )
+    def test_real_timeout_is_swallowed_and_allows_all(self, hanging_url):
+        robots = Robots(hanging_url)
+        with session_handler.context(timeout=0.3):
+            robots.ensure_ready()  # must not raise
         assert robots.robots_file_parser.allow_all is True
         assert robots.ready is True
 
