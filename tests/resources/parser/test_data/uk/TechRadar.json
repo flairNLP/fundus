@@ -1,0 +1,186 @@
+{
+  "V1": {
+    "authors": [
+      "Lance Ulanoff"
+    ],
+    "body": {
+      "summary": [
+        "A big shift, but with some wiggle room"
+      ],
+      "sections": [
+        {
+          "headline": [],
+          "paragraphs": [
+            "Google has been synonymous with search for more than 25 years, and so how it reimagines search matters to billions of people who rely on its powerful knowledge graph. In recent years, we've seen the steady encroachment of AI Overviews and AI mode on our search experience. Now, though the transition to inserting AI into your search results seems complete, I worry that this might alter Google Search in ways that no one wants or can reverse. Google, however, tells me that's not the case.",
+            "First, Google is now on record saying that in this next chapter of search, the change it unveiled during its Google I/O 2026 keynote is, according to Google Search lead Liz Reid, \"truly the biggest upgrade to our iconic search box since its debut over 25 years ago.\"",
+            "That's heady, terrifying, and maybe a bit of hyperbole. What's promised is a new search box that not only effortlessly expands to support your most long-winded queries but also carries intelligence that lets it decide on the fly what kind of AI smarts might help answer your, well, let's call it what it is: a prompt.",
+            "If that sounds like AI Mode is now inside the classic Google Search box, I think you're right. In the demo video I saw, I didn't even see the current \"AI Mode\" iconography. And instead of basic autocomplete, the new search box has AI-powered query suggestions and multi-modal capabilities (throw in some images and ask a question)."
+          ]
+        },
+        {
+          "headline": [
+            "Google vs. OpenAI"
+          ],
+          "paragraphs": [
+            "If Google's long-term effort was to make AI, specifically, various Gemini models, inescapable in Search, I think the work is nearly complete. I don't blame Google for doing this. After all, OpenAI's ChatGPT has been surging in recent years, with some people saying they \"Chatted\" instead of \"Googled\".",
+            "Verb status aside, ChatGPT, though rising, remains by one measure at less than 25% of the search market, while Google hovers around 80%. But ChatGPT's trajectory is unmistakable in Google's eyes. It has no choice but to deeply infuse traditional search with AI.",
+            "How much AI, though, is too much?",
+            "There remains a large contingent who want nothing to do with AI from Google or ChatGPT. I wondered if they could opt out, and during a Google I/O 2026 pre-brief, I posed the question to Google. Later, I got an email reply from a Google representative.",
+            "\"The AI dimension of the Search box is giving you quick access to AI tools, and an updated query suggestion system that helps you formulate long questions, where an AI response is likely the most helpful. Using this new search box does not mean that you will only get AI responses - you'll continue to get a range of results on Search.\"",
+            "Using this new search box does not mean that you will only get AI responses.",
+            "What's notable is that there is no \"No, I'd rather not\" option here. You can't opt out of the Intelligent Search Box. But that doesn't mean your search results won't still include some of the classic link and summary results you've known and loved since 1998. As a Google spokesperson promised, \"No matter what you ask, you’ll continue to get a range of results from Search, just like you do today.\"",
+            "Those results, though, will likely be below the AI Overviews that already sit atop those classic results. If anything, Overviews may be even richer and more accurate thanks to the intelligent query guidance you received in the search box. Scrolling down below them might be pointless.",
+            "It doesn't take much imagination to envision a future in which the AI Overviews are your Google Search results, and there is nothing below because it's not as useful, or at least it doesn't \"speak\" to you in the same way the overviews do. They seem to get you because they're designed to respond to your intention in a way that traditional search results could never do.",
+            "For some, this is progress. For me? The jury's still out.",
+            "What about you? Share your thoughts on Google's new Intelligent Search Box in the comments below."
+          ]
+        }
+      ]
+    },
+    "images": [
+      {
+        "versions": [
+          {
+            "url": "https://cdn.mos.cms.futurecdn.net/rERQRhw7xajcatmufxPXAM-320-80.jpg",
+            "query_width": null,
+            "size": {
+              "width": 320,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://cdn.mos.cms.futurecdn.net/rERQRhw7xajcatmufxPXAM-320-80.jpg.webp",
+            "query_width": null,
+            "size": {
+              "width": 320,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://cdn.mos.cms.futurecdn.net/rERQRhw7xajcatmufxPXAM-480-80.jpg",
+            "query_width": null,
+            "size": {
+              "width": 480,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://cdn.mos.cms.futurecdn.net/rERQRhw7xajcatmufxPXAM-480-80.jpg.webp",
+            "query_width": null,
+            "size": {
+              "width": 480,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://cdn.mos.cms.futurecdn.net/rERQRhw7xajcatmufxPXAM-650-80.jpg",
+            "query_width": null,
+            "size": {
+              "width": 650,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://cdn.mos.cms.futurecdn.net/rERQRhw7xajcatmufxPXAM-650-80.jpg.webp",
+            "query_width": null,
+            "size": {
+              "width": 650,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://cdn.mos.cms.futurecdn.net/rERQRhw7xajcatmufxPXAM-970-80.jpg",
+            "query_width": null,
+            "size": {
+              "width": 970,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://cdn.mos.cms.futurecdn.net/rERQRhw7xajcatmufxPXAM-970-80.jpg.webp",
+            "query_width": null,
+            "size": {
+              "width": 970,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://cdn.mos.cms.futurecdn.net/rERQRhw7xajcatmufxPXAM-1024-80.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1024,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://cdn.mos.cms.futurecdn.net/rERQRhw7xajcatmufxPXAM-1024-80.jpg.webp",
+            "query_width": null,
+            "size": {
+              "width": 1024,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://cdn.mos.cms.futurecdn.net/rERQRhw7xajcatmufxPXAM-1200-80.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1200,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://cdn.mos.cms.futurecdn.net/rERQRhw7xajcatmufxPXAM-1200-80.jpg.webp",
+            "query_width": null,
+            "size": {
+              "width": 1200,
+              "height": 0
+            },
+            "type": "image/webp"
+          }
+        ],
+        "is_cover": true,
+        "description": "Google search",
+        "caption": null,
+        "authors": [
+          "TechRadar (Image credit: Google)"
+        ],
+        "position": 1851
+      },
+      {
+        "versions": [
+          {
+            "url": "https://cdn.mos.cms.futurecdn.net/UDSETB5pZsBuBg37vf6B2R.gif",
+            "query_width": null,
+            "size": null,
+            "type": null
+          }
+        ],
+        "is_cover": false,
+        "description": "Google Intelligent Search Box",
+        "caption": "(",
+        "authors": [
+          "Google)"
+        ],
+        "position": 1992
+      }
+    ],
+    "publishing_date": "2026-05-19 21:00:00+00:00",
+    "title": "'This new search box does not mean that you'll only get AI responses': Google's Search makeover incorporates yet more AI, but Google promises to leave room for classic results",
+    "topics": [
+      "Software",
+      "Computing",
+      "Google"
+    ]
+  }
+}
