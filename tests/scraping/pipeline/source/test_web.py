@@ -7,6 +7,7 @@ from curl_cffi.requests.exceptions import ConnectionError, HTTPError, ReadTimeou
 
 from fundus.scraping.html import HTML, SourceInfo
 from fundus.scraping.pipeline.source.web import WebSource, WebSourceInfo, _Pacer
+from fundus.scraping.session import session_handler
 from fundus.scraping.url import RSSFeed
 from tests.fixtures.builders import make_http_error, mock_response, mock_robots, stub_publisher
 
@@ -174,6 +175,18 @@ class TestFetchOne:
     def test_returns_none_on_read_timeout(self, source, patched_web_session_handler):
         patched_web_session_handler.get_with_interrupt.side_effect = ReadTimeout("boom")
         assert source._fetch_one("https://example.com/", lambda u: False) is None
+
+    @pytest.mark.integration
+    @pytest.mark.xfail(
+        reason="_request catches ReadTimeout, not the base Timeout curl_cffi raises on a real timeout, "
+        "so the timeout propagates out of _fetch_one instead of being swallowed. Fixed by flairNLP/fundus#939.",
+        strict=True,
+    )
+    def test_returns_none_on_real_timeout(self, hanging_url):
+        source = WebSource(url_source=[], publisher=stub_publisher(), ignore_robots=True)
+        source.pacer = MagicMock(return_value=True)
+        with session_handler.context(timeout=0.3):
+            assert source._fetch_one(hanging_url, lambda u: False) is None
 
     def test_returns_none_on_5xx_status_code(self, source, patched_web_session_handler):
         patched_web_session_handler.get_with_interrupt.side_effect = make_http_error(status_code=503)
