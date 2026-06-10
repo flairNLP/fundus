@@ -290,6 +290,25 @@
     </tr>
     <tr>
       <td>
+        <code>OttawaCitizen</code>
+      </td>
+      <td>
+        <div>Ottawa Citizen</div>
+      </td>
+      <td>
+        <a href="https://ottawacitizen.com">
+          <span>ottawacitizen.com</span>
+        </a>
+      </td>
+      <td>
+        <code>en</code>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
         <code>TheGlobeAndMail</code>
       </td>
       <td>
