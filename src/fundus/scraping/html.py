@@ -6,7 +6,7 @@ from urllib.parse import urlparse
 
 import chardet
 import requests
-from curl_cffi.requests.exceptions import ConnectionError, HTTPError, ReadTimeout
+from curl_cffi.requests.exceptions import ConnectionError, HTTPError, Timeout
 from fastwarc import ArchiveIterator, WarcRecord, WarcRecordType
 
 from fundus.logging import create_logger
@@ -183,7 +183,7 @@ class WebSource:
         try:
             response = session.get_with_interrupt(url, headers=self.publisher.request_header)
 
-        except (HTTPError, ConnectionError, ReadTimeout) as error:
+        except (HTTPError, ConnectionError, Timeout) as error:
             logger.warning(f"Skipped requested URL {url!r} because of {error!r}")
             if isinstance(error, HTTPError) and error.response.status_code >= 500:
                 logger.warning(f"Skipped {self.publisher.name!r} due to server errors: {error!r}")
