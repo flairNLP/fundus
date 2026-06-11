@@ -252,6 +252,25 @@
   <tbody>
     <tr>
       <td>
+        <code>CanadaCom</code>
+      </td>
+      <td>
+        <div>Canada.com</div>
+      </td>
+      <td>
+        <a href="https://www.canada.com">
+          <span>www.canada.com</span>
+        </a>
+      </td>
+      <td>
+        <code>en</code>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
         <code>CBCNews</code>
       </td>
       <td>
@@ -260,6 +279,25 @@
       <td>
         <a href="https://www.cbc.ca/">
           <span>www.cbc.ca</span>
+        </a>
+      </td>
+      <td>
+        <code>en</code>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
+        <code>FinancialPost</code>
+      </td>
+      <td>
+        <div>Financial Post</div>
+      </td>
+      <td>
+        <a href="https://financialpost.com">
+          <span>financialpost.com</span>
         </a>
       </td>
       <td>
@@ -298,6 +336,25 @@
       <td>
         <a href="https://www.theglobeandmail.com">
           <span>www.theglobeandmail.com</span>
+        </a>
+      </td>
+      <td>
+        <code>en</code>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
+        <code>TheProvince</code>
+      </td>
+      <td>
+        <div>The Province</div>
+      </td>
+      <td>
+        <a href="https://www.theprovince.com">
+          <span>www.theprovince.com</span>
         </a>
       </td>
       <td>
