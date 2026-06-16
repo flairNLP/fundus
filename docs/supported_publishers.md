@@ -660,6 +660,26 @@
     </tr>
     <tr>
       <td>
+        <code>Correctiv</code>
+      </td>
+      <td>
+        <div>Correctiv</div>
+      </td>
+      <td>
+        <a href="https://www.correctiv.org/">
+          <span>www.correctiv.org</span>
+        </a>
+      </td>
+      <td>
+        <code>de</code>
+        <code>en</code>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
         <code>DerFreitag</code>
       </td>
       <td>
