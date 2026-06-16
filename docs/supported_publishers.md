@@ -271,6 +271,25 @@
     </tr>
     <tr>
       <td>
+        <code>GlobalNews</code>
+      </td>
+      <td>
+        <div>Global News</div>
+      </td>
+      <td>
+        <a href="https://www.globalnews.ca">
+          <span>www.globalnews.ca</span>
+        </a>
+      </td>
+      <td>
+        <code>en</code>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
         <code>NationalPost</code>
       </td>
       <td>
