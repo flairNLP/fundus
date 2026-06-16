@@ -24,6 +24,7 @@ from typing import (
 )
 
 import lxml.html
+from lxml.etree import XPath
 
 from fundus.logging import create_logger
 from fundus.parser.data import LinkedDataMapping
@@ -232,6 +233,22 @@ class BaseParser(ABC):
     @classmethod
     def version(cls) -> str:
         return cls.__name__
+
+    @classmethod
+    def body_selectors(cls) -> Dict[str, Optional[XPath]]:
+        """The version's body selectors, keyed 'summary' / 'subheadline' / 'paragraph'.
+
+        These are the selectors a version feeds to ``extract_article_body_with_selector``;
+        a value is None when the version does not declare the corresponding selector
+        (or builds its body another way entirely). Public so external tooling (e.g. the
+        review skill under skills/) does not have to reach into the private
+        ``_*_selector`` attributes.
+        """
+        return {
+            "summary": getattr(cls, "_summary_selector", None),
+            "subheadline": getattr(cls, "_subheadline_selector", None),
+            "paragraph": getattr(cls, "_paragraph_selector", None),
+        }
 
     @classmethod
     def _search_members(cls, obj_type: type) -> List[Tuple[str, Any]]:
