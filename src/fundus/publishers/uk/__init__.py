@@ -98,6 +98,7 @@ class UK(metaclass=PublisherGroup):
             Sitemap("https://www.dailystar.co.uk/sitemaps/sitemap_index.xml", reverse=True),
             NewsMap("https://www.dailystar.co.uk/map_news.xml"),
         ],
+        impersonate="chrome",
     )
 
     TheSun = Publisher(

@@ -32,4 +32,5 @@ class LU(metaclass=PublisherGroup):
             Sitemap("https://www.wort.lu/sitemap.xml", reverse=True),
             NewsMap("https://www.wort.lu/sitemap-news.xml"),
         ],
+        impersonate="chrome",
     )
