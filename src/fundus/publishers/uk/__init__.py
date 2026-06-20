@@ -53,6 +53,7 @@ class UK(metaclass=PublisherGroup):
             Sitemap("https://www.mirror.co.uk/sitemaps/sitemap_index.xml", reverse=True),
             NewsMap("https://www.mirror.co.uk/map_news.xml"),
         ],
+        impersonate="chrome",
     )
 
     TheTelegraph = Publisher(
@@ -63,7 +64,7 @@ class UK(metaclass=PublisherGroup):
             Sitemap("https://www.telegraph.co.uk/sitemap.xml"),
             NewsMap("https://www.telegraph.co.uk/custom/daily-news/sitemap.xml"),
         ],
-        deprecated=True,
+        impersonate="chrome99_android",
     )
 
     iNews = Publisher(
@@ -121,6 +122,7 @@ class UK(metaclass=PublisherGroup):
             Sitemap(f"https://www.dailymail.co.uk/sitemap-articles-year~{year.year}.xml")
             for year in rrule(YEARLY, dtstart=datetime(2021, 1, 1), until=datetime.today())
         ],
+        impersonate="chrome",
     )
 
     EveningStandard = Publisher(
