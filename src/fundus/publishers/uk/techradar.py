@@ -9,6 +9,7 @@ from fundus.parser.utility import (
     extract_article_body_with_selector,
     generic_author_parsing,
     generic_date_parsing,
+    generic_nodes_to_text,
     generic_topic_parsing,
     image_extraction,
 )
@@ -27,7 +28,8 @@ class TechRadarParser(ParserProxy):
             r"^Sign up for breaking news|"
             r"^Follow TechRadar on Google News|"
             r"^Get daily insight|"
-            r"^You might also like"
+            r"^You might also like|"
+            r"^What about you? Share your"
         )
         _paragraph_selector = XPath(
             "//article//div[contains(concat(' ', normalize-space(@class), ' '), ' text-copy ')]"
@@ -37,6 +39,8 @@ class TechRadarParser(ParserProxy):
             f"and not(re:test(normalize-space(string()), '{_bloat_regex}'))]",
             namespaces={"re": "http://exslt.org/regular-expressions"},
         )
+
+        _topics_selector = XPath("//div[@class='tc23-post-relevant-terms__terms']/a")
 
         @attribute
         def body(self) -> Optional[ArticleBody]:
@@ -63,7 +67,9 @@ class TechRadarParser(ParserProxy):
 
         @attribute
         def topics(self) -> List[str]:
-            return generic_topic_parsing(self.precomputed.meta.get("article:tag"))
+            return generic_topic_parsing(
+                generic_nodes_to_text(self._topics_selector(self.precomputed.doc))
+            ) or generic_topic_parsing(self.precomputed.meta.get("article:tag"))
 
         @attribute
         def images(self) -> List[Image]:
@@ -73,5 +79,5 @@ class TechRadarParser(ParserProxy):
                 upper_boundary_selector=XPath("//article"),
                 image_selector=XPath("//article//figure//img"),
                 caption_selector=XPath("./ancestor::figure//figcaption"),
-                author_selector=re.compile(r"(?i)image credit[s]?: (?P<credits>.*)"),
+                author_selector=re.compile(r"(?i)image credit[s]?: (?P<credits>.*)/?"),
             )

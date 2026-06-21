@@ -163,7 +163,11 @@ class UK(metaclass=PublisherGroup):
         domain="https://www.techradar.com/",
         parser=TechRadarParser,
         sources=[
-            Sitemap("https://www.techradar.com/sitemap.xml", reverse=True),
+            Sitemap(
+                "https://www.techradar.com/sitemap.xml",
+                reverse=True,
+                sitemap_filter=inverse(regex_filter(r"https://www.techradar.com/sitemap-[0-9]{4}-[0-9]{2}.xml")),
+            ),
             NewsMap("https://www.techradar.com/sitemap-news.xml"),
         ],
         url_filter=regex_filter(r"/deals/compare|/html/|/outlink|/infinite-scroll-"),
