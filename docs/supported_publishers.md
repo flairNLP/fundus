@@ -290,14 +290,14 @@
     </tr>
     <tr>
       <td>
-        <code>GlobalNews</code>
+        <code>FinancialPost</code>
       </td>
       <td>
-        <div>Global News</div>
+        <div>Financial Post</div>
       </td>
       <td>
-        <a href="https://www.globalnews.ca">
-          <span>www.globalnews.ca</span>
+        <a href="https://financialpost.com">
+          <span>financialpost.com</span>
         </a>
       </td>
       <td>
@@ -309,14 +309,14 @@
     </tr>
     <tr>
       <td>
-        <code>FinancialPost</code>
+        <code>GlobalNews</code>
       </td>
       <td>
-        <div>Financial Post</div>
+        <div>Global News</div>
       </td>
       <td>
-        <a href="https://financialpost.com">
-          <span>financialpost.com</span>
+        <a href="https://www.globalnews.ca">
+          <span>www.globalnews.ca</span>
         </a>
       </td>
       <td>
@@ -584,6 +584,25 @@
   <tbody>
     <tr>
       <td>
+        <code>AFPFaktencheck</code>
+      </td>
+      <td>
+        <div>AFP Faktencheck</div>
+      </td>
+      <td>
+        <a href="https://faktencheck.afp.com/">
+          <span>faktencheck.afp.com</span>
+        </a>
+      </td>
+      <td>
+        <code>de</code>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
         <code>BR</code>
       </td>
       <td>
@@ -710,6 +729,26 @@
       </td>
       <td>
         <code>de</code>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+    <tr>
+      <td>
+        <code>Correctiv</code>
+      </td>
+      <td>
+        <div>Correctiv</div>
+      </td>
+      <td>
+        <a href="https://www.correctiv.org/">
+          <span>www.correctiv.org</span>
+        </a>
+      </td>
+      <td>
+        <code>de</code>
+        <code>en</code>
       </td>
       <td>&#160;</td>
       <td>&#160;</td>
@@ -898,9 +937,7 @@
         <code>FreiePresse</code>
       </td>
       <td>
-        <div>
-          <strike>FreiePresse</strike>
-        </div>
+        <div>FreiePresse</div>
       </td>
       <td>
         <a href="https://www.freiepresse.de/">
@@ -1845,9 +1882,7 @@
         <code>LesEchos</code>
       </td>
       <td>
-        <div>
-          <strike>Les &#201;chos</strike>
-        </div>
+        <div>Les &#201;chos</div>
       </td>
       <td>
         <a href="https://www.lesechos.fr/">
@@ -2059,9 +2094,7 @@
         <code>Morgunbladid</code>
       </td>
       <td>
-        <div>
-          <strike>Morgunbladid</strike>
-        </div>
+        <div>Morgunbladid</div>
       </td>
       <td>
         <a href="https://www.mbl.is/">
@@ -2256,9 +2289,7 @@
         <code>NikkanGeadai</code>
       </td>
       <td>
-        <div>
-          <strike>Nikkan Geadai</strike>
-        </div>
+        <div>Nikkan Geadai</div>
       </td>
       <td>
         <a href="https://www.nikkan-gendai.com/">
@@ -2296,7 +2327,9 @@
         <code>TheJapanNews</code>
       </td>
       <td>
-        <div>The Japan News</div>
+        <div>
+          <strike>The Japan News</strike>
+        </div>
       </td>
       <td>
         <a href="https://japannews.yomiuri.co.jp/">
@@ -2749,9 +2782,7 @@
         <code>TheNamibian</code>
       </td>
       <td>
-        <div>
-          <strike>The Namibian</strike>
-        </div>
+        <div>The Namibian</div>
       </td>
       <td>
         <a href="https://www.namibian.com.na/">
@@ -3585,9 +3616,7 @@
         <code>TheTelegraph</code>
       </td>
       <td>
-        <div>
-          <strike>The Telegraph</strike>
-        </div>
+        <div>The Telegraph</div>
       </td>
       <td>
         <a href="https://www.telegraph.co.uk/">
@@ -3936,9 +3965,7 @@
         <code>WashingtonTimes</code>
       </td>
       <td>
-        <div>
-          <strike>The Washington Times</strike>
-        </div>
+        <div>The Washington Times</div>
       </td>
       <td>
         <a href="https://www.washingtontimes.com/">
@@ -3979,9 +4006,7 @@
         <code>WashingtonPost</code>
       </td>
       <td>
-        <div>
-          <strike>Washington Post</strike>
-        </div>
+        <div>Washington Post</div>
       </td>
       <td>
         <a href="https://www.washingtonpost.com/">
