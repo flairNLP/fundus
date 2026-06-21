@@ -1,8 +1,8 @@
 from fundus.publishers.base_objects import Publisher, PublisherGroup
 from fundus.publishers.ca.canada_com import CanadaComParser
 from fundus.publishers.ca.cbc_news import CBCNewsParser
-from fundus.publishers.ca.global_news import GlobalNewsParser
 from fundus.publishers.ca.financial_post import FinancialPostParser
+from fundus.publishers.ca.global_news import GlobalNewsParser
 from fundus.publishers.ca.globe_and_mail import TheGlobeAndMailParser
 from fundus.publishers.ca.national_post import NationalPostParser
 from fundus.publishers.ca.the_province import TheProvinceParser
@@ -48,7 +48,6 @@ class CA(metaclass=PublisherGroup):
             RSSFeed("https://financialpost.com/feed"),
         ],
     )
-
 
     GlobalNews = Publisher(
         name="Global News",
