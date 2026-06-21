@@ -1,4 +1,8 @@
 {
+  "AFPFaktencheck_2026_05_24.html.gz": {
+    "url": "https://faktencheck.afp.com/doc.afp.com.B2LA2G3",
+    "crawl_date": "2026-05-24 22:31:51.234241"
+  },
   "BR_2024_04_22.html.gz": {
     "url": "https://www.br.de/nachrichten/bayern/evangelische-kirche-landeskirche-will-missbrauch-aufarbeiten,UAf9GNd",
     "crawl_date": "2024-04-22 17:33:43.091856"
@@ -39,6 +43,10 @@
     "url": "https://www.berliner-zeitung.de/news/550-kinder-gezeugt-gericht-stoppt-uebereifrigen-samenspender-in-den-niederlanden-li.343191",
     "crawl_date": "2023-04-28 20:25:16.328923"
   },
+  "BerlinerZeitung_2026_05_18.html.gz": {
+    "url": "https://www.berliner-zeitung.de/article/es-geht-nicht-darum-ob-wir-kinder-wollen-oder-nicht-es-geht-um-unser-leben-10035612",
+    "crawl_date": "2026-05-18 10:53:36.787379"
+  },
   "Bild_2023_05_15.html.gz": {
     "url": "https://www.bild.de/sport/fussball/fortuna-duesseldorf/bubi-bomber-wieder-da-thioune-fordert-geduld-mit-niemiec-83936220.bild.html",
     "crawl_date": "2023-05-15 13:55:04.823203"
@@ -58,6 +66,10 @@
   "BusinessInsiderDE_2024_01_29.html.gz": {
     "url": "https://www.businessinsider.de/wirtschaft/international-business/wie-gross-ist-evergrande-chinas-sterbender-immobilienriese/",
     "crawl_date": "2024-01-29 22:53:02.986279"
+  },
+  "Correctiv_2026_05_24.html.gz": {
+    "url": "https://correctiv.org/hybride-kriegsfuehrung/2026/05/21/von-muenchen-bis-aachen-im-netz-der-china-agenten/",
+    "crawl_date": "2026-05-24 21:56:37.825605"
   },
   "DW_2023_04_28.html.gz": {
     "url": "https://www.dw.com/de/ukrainische-gegenoffensive-ziele-chancen-risiken/a-65464327?maca=de-rss-de-all-1119-xml-mrss",
@@ -158,6 +170,10 @@
   "JungeWelt_2024_04_26.html.gz": {
     "url": "https://www.jungewelt.de/artikel/474126.nationaler-veteranentag-orden-f%C3%BCrs-morden.html",
     "crawl_date": "2024-04-26 10:19:03.483980"
+  },
+  "JungeWelt_2026_05_18.html.gz": {
+    "url": "https://www.jungewelt.de/artikel/522721.kenia-nairobi-von-unten.html",
+    "crawl_date": "2026-05-18 12:29:59.423860"
   },
   "Kicker_2024_04_26.html.gz": {
     "url": "https://www.kicker.de/interimstrainer-schubert-nicht-mehr-viel-zu-verlieren-1019241/artikel#omrss",

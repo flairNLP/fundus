@@ -7,11 +7,13 @@ from fundus.scraping.filter import inverse, regex_filter
 from fundus.scraping.url import NewsMap, RSSFeed, Sitemap
 
 from ..shared import EuronewsParser
+from .afp_faktencheck import AFPFaktencheckParser
 from .berliner_zeitung import BerlinerZeitungParser
 from .bild import BildParser
 from .boersenzeitung import BoersenZeitungParser
 from .br import BRParser
 from .business_insider_de import BusinessInsiderDEParser
+from .correctiv import CorrectivParser
 from .der_freitag import DerFreitagParser
 from .die_welt import DieWeltParser
 from .die_zeit import DieZeitParser
@@ -70,6 +72,37 @@ class DE(metaclass=PublisherGroup):
             NewsMap("https://www.lto.de/googlenews-sitemap.xml"),
             Sitemap("https://www.lto.de/sitemap.xml", sitemap_filter=inverse(regex_filter("/article/"))),
         ],
+    )
+
+    Correctiv = Publisher(
+        name="Correctiv",
+        domain="https://www.correctiv.org/",
+        parser=CorrectivParser,
+        sources=[
+            Sitemap(
+                "https://www.correctiv.org/sitemap_index.xml",
+                reverse=True,
+                sitemap_filter=inverse(regex_filter("post-sitemap")),
+            ),
+            RSSFeed("https://correctiv.org/feed/"),
+            RSSFeed("https://correctiv.org/en/feed/", languages={"en"}),
+        ],
+    )
+
+    AFPFaktencheck = Publisher(
+        name="AFP Faktencheck",
+        domain="https://faktencheck.afp.com/",
+        parser=AFPFaktencheckParser,
+        sources=[
+            Sitemap(
+                "https://faktencheck.afp.com/sitemap.xml",
+                reverse=True,
+                sitemap_filter=regex_filter(
+                    r"(?i)/(cookie-einstellungen|korrekturen|das-team|ueber-afp|wie-wir-arbeiten|seite-nicht-gefunden)$|^https://faktencheck.afp.com/$"
+                ),
+            ),
+        ],
+        impersonate="chrome",
     )
 
     SportSchau = Publisher(
@@ -514,6 +547,7 @@ class DE(metaclass=PublisherGroup):
             NewsMap("https://newsfeed.kicker.de/googlesitemapnews.xml"),
         ],
         url_filter=regex_filter("/slideshow|/video|heute-live|live-konferenz|/bilder|/ticker"),
+        impersonate="chrome",
     )
 
     Krautreporter = Publisher(
@@ -594,7 +628,6 @@ class DE(metaclass=PublisherGroup):
             RSSFeed("https://www.freiepresse.de/rss/rss_regional.php"),
             Sitemap("https://www.freiepresse.de/sitemaps/articles_last2years.xml", reverse=True),
         ],
-        deprecated=True,
     )
 
     RuhrNachrichten = Publisher(

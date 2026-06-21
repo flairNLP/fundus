@@ -167,7 +167,7 @@ class US(metaclass=PublisherGroup):
             Sitemap("https://www.washingtontimes.com/sitemap-stories.xml"),
             Sitemap("https://www.washingtontimes.com/sitemap-entries.xml"),
         ],
-        deprecated=True,
+        impersonate="chrome",
     )
 
     WashingtonPost = Publisher(
@@ -182,7 +182,7 @@ class US(metaclass=PublisherGroup):
         ],
         # Adds a URL-filter to ignore incomplete URLs
         url_filter=regex_filter(r"washingtonpost.com(\/)?$"),
-        deprecated=True,
+        impersonate="chrome",
     )
 
     TheNewYorker = Publisher(

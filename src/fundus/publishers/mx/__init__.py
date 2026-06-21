@@ -19,4 +19,5 @@ class MX(metaclass=PublisherGroup):
                 languages={"en"},
             )
         ],
+        impersonate="chrome",
     )

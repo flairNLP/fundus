@@ -14,4 +14,5 @@ class MY(metaclass=PublisherGroup):
             Sitemap("https://www.malaymail.com/sitemap.xml"),
             RSSFeed("https://www.malaymail.com/feed/rss/"),
         ],
+        impersonate="chrome",
     )

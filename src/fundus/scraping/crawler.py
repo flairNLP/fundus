@@ -454,7 +454,7 @@ class CrawlerBase(ABC):
                     if sum(article_count.values()) == max_articles:
                         break
         finally:
-            session_handler.close_current_session()
+            session_handler.close_sessions()
             if save_to_file is not None:
                 if isinstance(save_to_file, str):
                     save_to_file = Path(save_to_file)
@@ -476,6 +476,7 @@ class Crawler(CrawlerBase):
         threading: bool = True,
         ignore_robots: bool = False,
         ignore_crawl_delay: bool = False,
+        impersonate: bool = False,
     ):
         """Fundus base class for crawling articles from the web.
 
@@ -506,6 +507,10 @@ class Crawler(CrawlerBase):
             ignore_crawl_delay (bool): Determines whether to ignore a crawl delay given by a publisher.
                 If set to False, this will overwrite <delay>. If ignore_robots is set to True, the crawl delay
                 will also be ignored.
+            impersonate (bool): If True, publishers that declare an `impersonate` browser profile will use
+                curl_cffi's TLS/HTTP fingerprint impersonation. If False (default), the profile is ignored
+                and requests go out with Fundus' regular fingerprint — publishers gated by anti-bot checks
+                will likely return 4xx/5xx. Defaults to False.
         """
 
         def filter_publishers(publisher: Publisher) -> bool:
@@ -528,6 +533,7 @@ class Crawler(CrawlerBase):
         self.threading = threading
         self.ignore_robots = ignore_robots
         self.ignore_crawl_delay = ignore_crawl_delay
+        self.impersonate = impersonate
 
     def _fetch_articles(
         self,
@@ -540,6 +546,9 @@ class Crawler(CrawlerBase):
     ) -> Iterator[Article]:
         if skip_publishers_disallowing_training and publisher.disallows_training:
             logger.info(f"Skipping publisher {publisher.name} because it disallows training.")
+            return
+        elif publisher.robots.disallow_all():
+            logger.info(f"Skipping publisher {publisher.name} because it disallows all URLs.")
             return
 
         def build_delay() -> Optional[Delay]:
@@ -563,6 +572,7 @@ class Crawler(CrawlerBase):
             build_delay(),
             ignore_robots=self.ignore_robots,
             ignore_crawl_delay=self.ignore_crawl_delay,
+            impersonate=self.impersonate,
         )
         if not scraper.sources and self.restrict_sources_to:
             logger.warning(
@@ -600,9 +610,7 @@ class Crawler(CrawlerBase):
             queue_wrapper(result_queue, article_task, silenced_exceptions=(CrashThread,))
         )
 
-        with session_handler.context(POOL_CONNECTIONS=len(publishers)), _manage_pool(
-            processes=len(publishers) or None
-        ) as pool:
+        with _manage_pool(processes=len(publishers) or None) as pool:
             yield from pool_queue_iter(pool.map_async(wrapped_article_task, publishers), result_queue)
 
     def _build_article_iterator(
@@ -826,7 +834,7 @@ class CCNewsCrawler(CrawlerBase):
             def run_disallow_training(publisher: Publisher) -> bool:
                 return publisher.disallows_training
 
-            with ThreadPoolExecutor(max_workers=max_workers) as executor, session_handler.context(TIMEOUT=10):
+            with ThreadPoolExecutor(max_workers=max_workers) as executor, session_handler.context(timeout=10):
                 future_to_publisher = {
                     executor.submit(run_disallow_training, publisher=publisher): publisher for publisher in publishers
                 }

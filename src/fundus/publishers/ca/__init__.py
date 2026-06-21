@@ -1,6 +1,7 @@
 from fundus.publishers.base_objects import Publisher, PublisherGroup
 from fundus.publishers.ca.canada_com import CanadaComParser
 from fundus.publishers.ca.cbc_news import CBCNewsParser
+from fundus.publishers.ca.global_news import GlobalNewsParser
 from fundus.publishers.ca.financial_post import FinancialPostParser
 from fundus.publishers.ca.globe_and_mail import TheGlobeAndMailParser
 from fundus.publishers.ca.national_post import NationalPostParser
@@ -45,6 +46,18 @@ class CA(metaclass=PublisherGroup):
             NewsMap("https://financialpost.com/sitemap-news.xml"),
             Sitemap("https://financialpost.com/sitemap-old.xml"),
             RSSFeed("https://financialpost.com/feed"),
+        ],
+    )
+
+
+    GlobalNews = Publisher(
+        name="Global News",
+        domain="https://www.globalnews.ca",
+        parser=GlobalNewsParser,
+        url_filter=regex_filter(r"/the-curator/"),
+        sources=[
+            NewsMap("https://globalnews.ca/news-sitemap.xml"),
+            Sitemap("https://globalnews.ca/sitemap.xml", sitemap_filter=regex_filter(r"image-sitemap"), recursive=True),
         ],
     )
 
