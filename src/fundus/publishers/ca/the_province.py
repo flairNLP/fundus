@@ -11,10 +11,13 @@ class TheProvinceParser(ParserProxy):
     class V1(PostMediaParser.V1):
         _paragraph_selector = XPath("//section[contains(@class, 'article-content')]//p[text() or span[text()]]")
         _subheadline_selector = XPath(
-            "//section[contains(@class, 'article-content')]//*[(self::h4 or self::h3 or self::h2) and not(@class)]"
+            "//section[contains(@class, 'article-content')]//*["
+            "((self::h4 or self::h3 or self::h2) and not(@class))"
+            " or (self::p[(strong or b) and not(text())])"
+            "]"
         )
 
-        _bloat_topics = PostMediaParser.V1._bloat_topics | {"theprovince.com"}
+        _bloat_topics = PostMediaParser.V1._bloat_topics | {"theprovince.com", "regwall", "Anonymous", "General"}
 
         @attribute
         def images(self) -> List[Image]:

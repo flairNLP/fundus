@@ -5,6 +5,7 @@ from fundus.publishers.ca.financial_post import FinancialPostParser
 from fundus.publishers.ca.globe_and_mail import TheGlobeAndMailParser
 from fundus.publishers.ca.national_post import NationalPostParser
 from fundus.publishers.ca.the_province import TheProvinceParser
+from fundus.scraping.filter import regex_filter
 from fundus.scraping.url import NewsMap, RSSFeed, Sitemap
 
 # noinspection PyPep8Naming
@@ -66,6 +67,7 @@ class CA(metaclass=PublisherGroup):
             Sitemap("https://theprovince.com/sitemap-old.xml"),
             RSSFeed("https://theprovince.com/feed"),
         ],
+        url_filter=regex_filter("/editors/"),
     )
 
     NationalPost = Publisher(

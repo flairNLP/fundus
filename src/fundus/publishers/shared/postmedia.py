@@ -19,12 +19,11 @@ from fundus.parser.utility import (
 class PostMediaParser(ParserProxy):
     class V1(BaseParser):
         _paragraph_selector = XPath(
-            "//div[@class='story-v2-content-element-inline']/"
-            "p[text() and not(@data-async) and not(text()='National Post')]"
+            "//div[@class='story-v2-content-element-inline']/p[text() and not(text()='National Post')]"
         )
         _subheadline_selector = XPath(
-            "//div[@class='story-v2-content-element-inline']/h3 |"
-            "//div[@class='story-v2-content-element-inline']/p/strong"
+            "//div[@class='story-v2-content-element-inline']/h3[not(@class)] |"
+            "//div[@class='story-v2-content-element-inline']/p/strong",
         )
         _summary_selector = CSSSelector("article p.article-subtitle")
 
