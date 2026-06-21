@@ -1,4 +1,5 @@
 import datetime
+import re
 from typing import List, Optional
 
 from lxml.cssselect import CSSSelector
@@ -13,7 +14,6 @@ from fundus.parser.utility import (
     generic_topic_parsing,
     image_extraction,
 )
-from fundus.scraping.filter import regex_filter
 
 
 class NationalPostParser(ParserProxy):
@@ -29,6 +29,20 @@ class NationalPostParser(ParserProxy):
         )
         _paragraph_selector = XPath(
             "//section[@class='article-content__content-group article-content__content-group--story']/p[text()]"
+        )
+
+        _bloat_topics = {
+            "Curated",
+            "News",
+            "Newsroom daily",
+            "story",
+            "Canada",
+            "World",
+            "nationalpost.com",
+            "politics",
+        }
+        _topic_filter = re.compile(
+            r"([0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}|NLP Entity Tokens|NLP Category|NP Comment|Category):?\s*"
         )
 
         @attribute
@@ -54,15 +68,11 @@ class NationalPostParser(ParserProxy):
 
         @attribute
         def topics(self) -> List[str]:
-            preliminary_topics = self.precomputed.ld.bf_search("keywords")
-            filter_list = ["Curated", "News", "Newsroom daily", "story", "Canada", "World", "nationalpost.com"]
-            topic_filter = regex_filter(
-                r"([0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}|NLP Entity Tokens|NLP Category|NP Comment|Category:)"
+            return generic_topic_parsing(
+                self.precomputed.ld.bf_search("keywords"),
+                substitution_pattern=self._topic_filter,
+                result_filter=self._bloat_topics,
             )
-            filtered_topics = [
-                topic for topic in preliminary_topics if not topic_filter(topic) and topic not in filter_list
-            ]
-            return generic_topic_parsing(filtered_topics)
 
         @attribute
         def images(self) -> List[Image]:
