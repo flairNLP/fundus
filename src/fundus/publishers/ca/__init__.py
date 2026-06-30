@@ -5,6 +5,7 @@ from fundus.publishers.ca.financial_post import FinancialPostParser
 from fundus.publishers.ca.global_news import GlobalNewsParser
 from fundus.publishers.ca.globe_and_mail import TheGlobeAndMailParser
 from fundus.publishers.ca.national_post import NationalPostParser
+from fundus.publishers.ca.ottawa_citizen import OttawaCitizenParser
 from fundus.publishers.ca.the_province import TheProvinceParser
 from fundus.scraping.filter import regex_filter
 from fundus.scraping.url import NewsMap, RSSFeed, Sitemap
@@ -90,5 +91,15 @@ class CA(metaclass=PublisherGroup):
             NewsMap("https://nationalpost.com/sitemap-news.xml"),
             Sitemap("https://nationalpost.com/sitemap-old.xml"),
             RSSFeed("https://nationalpost.com/feed"),
+        ],
+    )
+
+    OttawaCitizen = Publisher(
+        name="Ottawa Citizen",
+        domain="https://ottawacitizen.com",
+        parser=OttawaCitizenParser,
+        sources=[
+            NewsMap("https://ottawacitizen.com/sitemap-news.xml"),
+            Sitemap("https://ottawacitizen.com/sitemap-old.xml"),
         ],
     )
