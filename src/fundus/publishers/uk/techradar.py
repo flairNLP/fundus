@@ -25,7 +25,6 @@ class TechRadarParser(ParserProxy):
 
         _bloat_regex = (
             r"^When you purchase through links|"
-            r"^Sign up for breaking news|"
             r"^Follow TechRadar on Google News|"
             r"^Get daily insight|"
             r"^You might also like|"
@@ -36,7 +35,9 @@ class TechRadarParser(ParserProxy):
             "//*[self::p or self::li]"
             "[normalize-space() and not(contains(@class, 'vanilla-image-block')) "
             "and not(self::li[contains(@class, 'list-none')]) "
-            f"and not(re:test(normalize-space(string()), '{_bloat_regex}'))]",
+            f"and not(re:test(normalize-space(string()), '{_bloat_regex}'))"
+            f"and not(contains(@class,'newsletter-form__strapline'))"
+            f"and not(ancestor::*[contains(@class,'person')])]",
             namespaces={"re": "http://exslt.org/regular-expressions"},
         )
 
@@ -79,5 +80,5 @@ class TechRadarParser(ParserProxy):
                 upper_boundary_selector=XPath("//article"),
                 image_selector=XPath("//article//figure//img"),
                 caption_selector=XPath("./ancestor::figure//figcaption"),
-                author_selector=re.compile(r"(?i)image credit[s]?: (?P<credits>.*)/?"),
+                author_selector=re.compile(r"(?i)\(?image credit[s]?: (?P<credits>.*?)[/)]?$"),
             )

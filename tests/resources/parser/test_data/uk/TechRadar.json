@@ -153,7 +153,7 @@
         "description": "Google search",
         "caption": null,
         "authors": [
-          "TechRadar (Image credit: Google)"
+          "TechRadar (Image credit: Google"
         ],
         "position": 1851
       },
@@ -168,9 +168,9 @@
         ],
         "is_cover": false,
         "description": "Google Intelligent Search Box",
-        "caption": "(",
+        "caption": null,
         "authors": [
-          "Google)"
+          "Google"
         ],
         "position": 1992
       }
