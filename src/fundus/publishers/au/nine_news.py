@@ -53,3 +53,18 @@ class NineNewsParser(ParserProxy):
                 caption_selector=XPath("./ancestor::figure//figcaption/text()[1]"),
                 author_selector=XPath("./ancestor::figure//figcaption/text()[last()]"),
             )
+
+    class V2(BaseParser):
+        _paragraph_selector = XPath("//div[@class='sc-iKFaHN gHSkdP']/p[text()]")
+
+        @attribute
+        def publishing_date(self) -> Optional[datetime.datetime]:
+            return generic_date_parsing(self.precomputed.ld.bf_search("datePublished"))
+
+        @attribute
+        def title(self) -> Optional[str]:
+            return self.precomputed.ld.bf_search("headline")
+
+        @attribute
+        def authors(self) -> List[str]:
+            return generic_author_parsing(self.precomputed.ld.bf_search("author"))

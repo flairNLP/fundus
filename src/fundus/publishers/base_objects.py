@@ -142,6 +142,7 @@ class Publisher:
         disallows_training: bool = False,
         suppress_robots: bool = False,
         impersonate: Optional[BrowserTypeLiteral] = None,
+        deprecated_domains: List[str] = [],
     ):
         """Initialization of a new Publisher object
 
@@ -163,6 +164,8 @@ class Publisher:
                 "chrome" or "safari". If set, requests to this publisher use curl_cffi instead of
                 the standard urllib3 stack, which can bypass TLS fingerprint-based bot detection.
                 Check https://curl-cffi.readthedocs.io/en/latest/impersonate/targets.html for browser targets.
+            deprecated_domains (List[str]): List of domains that are deprecated. This is used to handle domain
+                migration by publishers in order to support CCNewsCrawling
 
         """
         if not (name and domain and parser and sources):
@@ -191,6 +194,7 @@ class Publisher:
             impersonate=impersonate,
         )
         self._disallows_training = disallows_training
+        self.deprecated_domains = deprecated_domains
 
         # Temporary fix to compensate for a bug in the RobotsFileParser treating rule lines
         # like /? as / disallowing the entire site. we could think about replacing the urllib

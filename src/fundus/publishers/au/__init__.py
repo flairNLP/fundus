@@ -11,15 +11,16 @@ class AU(metaclass=PublisherGroup):
 
     NineNews = Publisher(
         name="Nine News",
-        domain="https://www.9news.com.au/",
+        domain="https://www.nine.com.au",
         parser=NineNewsParser,
         sources=[
-            RSSFeed("https://www.9news.com.au/rss"),
+            RSSFeed("https://www.nine.com.au/rss/feed.xml"),
             Sitemap(
-                "https://www.9news.com.au/sitemap.xml",
-                sitemap_filter=inverse(regex_filter("sitemap-content-")),
+                "https://www.nine.com.au/sitemap.xml",
+                sitemap_filter=inverse(regex_filter("nine-articles-")),
             ),
         ],
+        deprecated_domains=["https://www.9news.com.au/"],
     )
 
     WestAustralian = Publisher(
