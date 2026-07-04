@@ -18,6 +18,8 @@ from tests.utility import HTMLTestFile, get_test_case_json, load_html_test_file_
 
 logger = create_logger(__name__)
 
+set_log_level(logging.DEBUG)
+
 
 def get_test_article(publisher: Publisher, url: Optional[str] = None) -> Optional[Article]:
     if url is not None:

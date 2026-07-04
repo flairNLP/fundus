@@ -260,7 +260,9 @@ class CCNewsSource:
         self.warc_path = warc_path
         self.headers = headers or _default_header
         self._publisher_mapping: Dict[str, Publisher] = {
-            urlparse(domain).netloc: publisher for publisher in self.publishers for domain in [publisher.domain] + publisher.deprecated_domains
+            urlparse(domain).netloc: publisher
+            for publisher in self.publishers
+            for domain in [publisher.domain] + publisher.deprecated_domains
         }
 
     def fetch(self, url_filter: Optional[URLFilter] = None) -> Iterator[HTML]:
