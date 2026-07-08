@@ -10,7 +10,7 @@ from fundus import PublisherCollection
 from fundus.publishers import Publisher, PublisherGroup
 from fundus.scraping.session import _default_header
 
-_language_code_selector = XPath("//table[contains(@class, 'wikitable') and @id='Table'] //td[@id] / @id")
+_language_code_selector = XPath("//table[contains(@class, 'wikitable') and @data-x-id='Table'] //td[@id] / @id")
 
 
 def get_two_letter_code() -> List[str]:
