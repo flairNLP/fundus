@@ -189,6 +189,7 @@ class DE(metaclass=PublisherGroup):
             Sitemap("https://www.mdr.de/sitemap-index-100.xml"),
             NewsMap("https://www.mdr.de/news-sitemap.xml"),
         ],
+        url_filter=regex_filter(r"/video/|video-[0-9]+\.html|sportschau.de"),
     )
 
     FAZ = Publisher(
