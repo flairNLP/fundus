@@ -298,6 +298,7 @@ class DE(metaclass=PublisherGroup):
         domain="https://www.stern.de/",
         parser=SternParser,
         sources=[RSSFeed("https://www.stern.de/feed/standard/alle-nachrichten/")],
+        deprecated=True,
     )
 
     NTV = Publisher(

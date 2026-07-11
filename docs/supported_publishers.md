@@ -1346,7 +1346,9 @@
         <code>Stern</code>
       </td>
       <td>
-        <div>Stern</div>
+        <div>
+          <strike>Stern</strike>
+        </div>
       </td>
       <td>
         <a href="https://www.stern.de/">
