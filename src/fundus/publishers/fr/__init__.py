@@ -18,7 +18,7 @@ class FR(metaclass=PublisherGroup):
             Sitemap("https://www.lemonde.fr/sitemap_index.xml"),
             NewsMap("https://www.lemonde.fr/sitemap_news.xml"),
         ],
-        deprecated=True
+        deprecated=True,
     )
 
     EuronewsFR = Publisher(
