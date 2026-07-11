@@ -64,5 +64,79 @@
       "Baden-Württemberg",
       "Deutschland"
     ]
+  },
+  "V2": {
+    "authors": [
+      "Jan Sellner"
+    ],
+    "body": {
+      "summary": [
+        "Wir Stuttgarter können alles - nur nicht lahm! Ein Kommentar von Jan Sellner"
+      ],
+      "sections": [
+        {
+          "headline": [],
+          "paragraphs": [
+            "Wir leben in einer Stadt der Superlative! Das fängt beim Oberbürgermeister an. Frank Nopper dürfte dasjenige Stadtoberhaupt sein, das in seinen Reden die meisten Superlative einstreut. Deutschlandweit. Wir erinnern an Redepassagen wie: „Stuttgart ist die einzige Großstadt Deutschlands, die innerhalb ihrer Gemarkung einen Höhenunterschied von fast 350 Metern hat. Stuttgart ist mit 400 Hektar Rebfläche die größte Weinbaugemeinde und die park- und waldreichste Stadt Deutschlands. Stuttgart ist die Stadt mit dem größten Mineralwasservorkommen Westeuropas. Stuttgart ist die Stadt mit der größten Dichte an Architekten . . .“",
+            "Dieses Loblied können wir übrigens länger fortsetzen als irgendeine andere Stadt auf dem Planeten. Denn Stuttgart hat’s halt drauf. „Wir im Süden stellen die hochwertigeren Kraftfahrzeuge her“, sangen die Fuenf, die beste A-cappella-Gruppe der Welt, jahrelang rauf und runter. Die „hochwertigeren Kraftfahrzeuge“ zweifellos, nur halt nicht mehr die kostengünstigsten, wie sich gerade zeigt, aber daran arbeiten wir jetzt ja und zwar intensiver als jede andere Stadt.",
+            "In diesen Tagen ist ein weiterer Superlativ hinzugekommen, der bundesweit Schlagzeilen macht. Einer, auf den wir allerdings gerne verzichten können. Er stammt von der in Schlewsig-Hosltein geborenen Sängerin Nina Chuba. Nach ihrem jüngsten Auftritt beim Kessel-Festival auf dem Wasen bezeichnete sie das Stuttgarter Publikum als die „lamest crowd“ in Deutschland. Die hiesige Bewegungsarmut, so argwöhnte die Musikerin, habe vielleicht damit zu tun, dass die Stuttgarter aufgrund der Kessellage zu wenig Sauerstoff abbekämen. Wie bitte?! Nun mal halblahm, pardon halblang!",
+            "Die Wahrheit ist: In Stuttgart bewegt sich bis auf die eine oder andere Großbaustelle ständig etwas! Hier wird regelmäßig durchgelüftet und gekehrt, und die Maultaschen liegen uns nicht etwa „quer im Magen“, wie Chubas Drummer spottete, sondern sie zergehen uns im Mund! Jedenfalls die selbstgemachten! Vielleicht rührte der lahme Eindruck auch daher, dass der Auftritt der Sängerin nicht der beste aller Zeiten war - anders als die Gastspiele bei den weltbesten Jazz Open, die aktuell das Stuttgarter Publikum begeistern?"
+          ]
+        },
+        {
+          "headline": [
+            "Niemand ist innerlicher als wir!"
+          ],
+          "paragraphs": [
+            "Inzwischen hat Frau Chuba zurückgerudert. Sie liebe ihre Fans „auch die, die in Stuttgart wohnen und auch die, die sich nicht so viel bewegen und sich von innen freuen“, ließ sie verlauten. Entschuldigung angenommen. Wir sind ja nicht nachtragend. Im Gegenteil, wir sind die am wenigsten Nachtragenden in ganz Deutschland. Vorausgesetzt, Frau Chuba stimmt folgendem Satz zu: Niemand freut sich mehr und schöner und ausgelassener von innen! Wir Stuttgarter sind die Innerlichsten überhaupt!"
+          ]
+        }
+      ]
+    },
+    "images": [
+      {
+        "versions": [
+          {
+            "url": "https://cdn.stuttgarter-zeitung.de/2026/06/26/1959d47c-2172-425e-8e55-31049d59ac94.jpg?crop=3200%2C1800%2C0%2C92&width=480&format=webp&token=9f4fa71b934190d1db2788ac66aa7bd715f17ecbb9ab61717dc041ae038d377f",
+            "query_width": null,
+            "size": {
+              "width": 480,
+              "height": 270
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://cdn.stuttgarter-zeitung.de/2026/06/26/1959d47c-2172-425e-8e55-31049d59ac94.jpg?crop=3200%2C1800%2C0%2C92&width=720&format=webp&token=60424afceacc7190099bab34e1d1aa16da13c061f4df0f8161a186ee0fdbd34f",
+            "query_width": null,
+            "size": {
+              "width": 720,
+              "height": 405
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://cdn.stuttgarter-zeitung.de/2026/06/26/1959d47c-2172-425e-8e55-31049d59ac94.jpg?crop=3200%2C1800%2C0%2C92&width=1200&format=webp&token=54067a437fd2257cc6566e1877586be49669038cf5807858888dfe9e4ca5f72c",
+            "query_width": null,
+            "size": {
+              "width": 1200,
+              "height": 675
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": true,
+        "description": "Kesselfestival 2026 - Nina Chuba: 26.06.2026, Stuttgart: Sängerin Nina Chuba auf dem Kesselfestival 2026. Foto: Lichtgut/Christoph Schmidt",
+        "caption": "Sängerin Nina Chuba bei ihrem Auftritt auf dem Kesselfestival.",
+        "authors": [
+          "Lichtgut/Christoph Schmidt"
+        ],
+        "position": 867
+      }
+    ],
+    "publishing_date": "2026-07-11 09:30:13+02:00",
+    "title": "Stuttgart hat's drauf: Stadt der Superlative",
+    "topics": [
+      "Frank Nopper"
+    ]
   }
 }
