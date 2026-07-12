@@ -69,6 +69,8 @@ class HankookIlboParser(ParserProxy):
             )
 
     class V2(BaseParser):
+        VALID_UNTIL = datetime.date(2026, 6, 1)
+
         _paragraph_selector = XPath("//div[@class='article-view']/p[@class='editor-p']")
         _summary_selector = XPath("//div[@class='article-view']/h2")
         _subheadline_selector = XPath("//div[@class='article-view']/h3")
@@ -104,7 +106,8 @@ class HankookIlboParser(ParserProxy):
                 transform_breaks_to_tag(summary__node, tag="h2", replace=True)
 
                 # insert content node
-                self.precomputed.doc.body.insert(0, content_node)
+                if self.precomputed.doc.body is not None:
+                    self.precomputed.doc.body.insert(0, content_node)
 
         @attribute
         def body(self) -> Optional[ArticleBody]:
@@ -141,6 +144,49 @@ class HankookIlboParser(ParserProxy):
                 paragraph_selector=self._paragraph_selector,
                 upper_boundary_selector=XPath("//div[@class='article-view']"),
                 image_selector=XPath("//div[@class='article-view']//img"),
+                caption_selector=XPath("./ancestor::div[@class='editor-img-box']//div[@class='caption']"),
+                author_selector=re.compile(r"(?!.+\.)(.+=|\.)?(?P<credits>.+?)( 제공| 기자)?$"),
+            )
+
+    class V3(BaseParser):
+        _paragraph_selector = XPath("//div[@class='article-view']/p[text()]")
+        _subheadline_selector = XPath("//div[@class='article-view']/h3")
+        _summary_selector = XPath("//div[@class='article-view']/h2")
+
+        _topics_selector = XPath("//div[@class='flex flex-wrap gap-8']//a")
+
+        @attribute
+        def body(self) -> Optional[ArticleBody]:
+            return extract_article_body_with_selector(
+                doc=self.precomputed.doc,
+                paragraph_selector=self._paragraph_selector,
+                subheadline_selector=self._subheadline_selector,
+                summary_selector=self._summary_selector,
+            )
+
+        @attribute
+        def publishing_date(self) -> Optional[datetime.datetime]:
+            return generic_date_parsing(self.precomputed.meta.get("article:published_time"))
+
+        @attribute
+        def topics(self) -> List[str]:
+            return generic_topic_parsing(self.precomputed.meta.get("article:tag"))
+
+        @attribute
+        def authors(self) -> List[str]:
+            return generic_author_parsing(self.precomputed.meta.get("article:author"))
+
+        @attribute
+        def title(self) -> Optional[str]:
+            return self.precomputed.meta.get("headline")
+
+        @attribute
+        def images(self) -> List[Image]:
+            return image_extraction(
+                doc=self.precomputed.doc,
+                paragraph_selector=self._paragraph_selector,
+                upper_boundary_selector=XPath("//div[@class='article-view']"),
+                image_selector=XPath("//div[@class='article-view']//div[@class='img-box']/img"),
                 caption_selector=XPath("./ancestor::div[@class='editor-img-box']//div[@class='caption']"),
                 author_selector=re.compile(r"(?!.+\.)(.+=|\.)?(?P<credits>.+?)( 제공| 기자)?$"),
             )

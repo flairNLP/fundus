@@ -140,6 +140,7 @@ class LinkedDataMapping:
         return self.__xml
 
     __value_regex__ = re.compile("^<[^<]*>(?P<value>.*)</[^<]*>$", flags=re.DOTALL)
+    __empty_tag_regex__ = re.compile("^<[^<]*/>$", flags=re.DOTALL)
 
     @overload
     def xpath_search(self, query: Union[XPath, str], scalar: Literal[False] = False) -> List[Any]: ...
@@ -193,6 +194,8 @@ class LinkedDataMapping:
             node_value = lxml.etree.tostring(n, encoding="unicode").strip()
             if match := self.__value_regex__.match(node_value):
                 return match.group("value")
+            if self.__empty_tag_regex__.match(node_value):
+                return ""
             raise ValueError("XML malformed. Could not determine value.")
 
         reversed_table = {v: k for k, v in self.__xml_transformation_table__.items()}
