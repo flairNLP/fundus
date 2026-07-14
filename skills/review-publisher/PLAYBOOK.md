@@ -253,8 +253,13 @@ land together.
 
 ### Write it to be read
 
-A review nobody can skim doesn't get acted on. The failure mode to avoid is **stating the same
-evidence twice** — once in the summary and again in the inline comment. Split the labor:
+A review nobody can skim doesn't get acted on. Two failure modes to avoid:
+
+- **Stating the same evidence twice** — once in the summary and again in the inline comment.
+- **Cataloguing what passed** — silence already says "checked, clean", so an inventory of working
+  attributes only buries the finding that needs acting on.
+
+Split the labor:
 
 - **Summary body** — skimmable, no verbatim evidence. Lead with the verdict, then **one line per
   publisher** (clean, or the blocker named in a clause; include the not-machine-checked line: read N,
