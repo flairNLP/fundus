@@ -16,7 +16,7 @@ class AU(metaclass=PublisherGroup):
         sources=[
             RSSFeed("https://www.nine.com.au/rss/feed.xml"),
             Sitemap(
-                "https://www.nine.com.au/sitemap.xml",
+                "https://www.nine.com.au/sitemaps/nine-sitemaps-articles.xml",
                 sitemap_filter=inverse(regex_filter("nine-articles-")),
             ),
         ],
