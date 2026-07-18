@@ -5,7 +5,7 @@ from typing import List, Optional, Pattern
 from lxml.cssselect import CSSSelector
 from lxml.etree import XPath
 
-from fundus.parser import ArticleBody, BaseParser, Image, ParserProxy, attribute
+from fundus.parser import ArticleBody, BaseParser, Image, ParserProxy, attribute, function
 from fundus.parser.utility import (
     apply_substitution_pattern_over_list,
     extract_article_body_with_selector,
@@ -80,8 +80,14 @@ class MDRParser(ParserProxy):
 
     class V2(BaseParser):
         _summary_selector = XPath("//header/p[@class='preface']")
-        _paragraph_selector = XPath("//article/p[string-length(@class)<1 and text()] | //article/ul/li[text()]")
+        _paragraph_selector = XPath(""
+                                    "//article/p[string-length(@class)<1 and text()] | "
+                                    "//article/ul/li[text()] |"
+                                    "//article/blockquote"
+                                    )
         _subheadline_selector = XPath("//article/h2")
+
+        _blockquote_text_content_selector = XPath("//article/blockquote/span/em")
 
         _headline_selector = XPath("//header/h1")
 
@@ -97,6 +103,13 @@ class MDRParser(ParserProxy):
             "Sachsen-Anhalt",
             "Anhalt",
         }
+
+        @function(priority=1)
+        def insert_quote_punctuation(self) -> None:
+            blockquote_nodes = self._blockquote_text_content_selector(self.precomputed.doc)
+            for blockquote_node in blockquote_nodes:
+                blockquote_node.text = f"«{blockquote_node.text}.» - "
+
 
         @attribute
         def body(self) -> Optional[ArticleBody]:
