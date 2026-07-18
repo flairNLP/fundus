@@ -57,8 +57,8 @@ class NineNewsParser(ParserProxy):
             )
 
     class V2(BaseParser):
-        _paragraph_selector = XPath("//div[@class='sc-iKFaHN gHSkdP']/p")
-        _subheadline_selector = XPath("//div[@class='sc-iKFaHN gHSkdP']/h2")
+        _paragraph_selector = XPath("//article/div/div/p")
+        _subheadline_selector = XPath("//article/div/div/h2")
 
         _topic_selector = XPath("//ul[@data-ui-testid='footer-tags']//li")
 
