@@ -80,11 +80,9 @@ class MDRParser(ParserProxy):
 
     class V2(BaseParser):
         _summary_selector = XPath("//header/p[@class='preface']")
-        _paragraph_selector = XPath(""
-                                    "//article/p[string-length(@class)<1 and text()] | "
-                                    "//article/ul/li[text()] |"
-                                    "//article/blockquote"
-                                    )
+        _paragraph_selector = XPath(
+            "//article/p[string-length(@class)<1 and text()] | //article/ul/li[text()] |//article/blockquote"
+        )
         _subheadline_selector = XPath("//article/h2")
 
         _blockquote_text_content_selector = XPath("//article/blockquote/span/em")
@@ -109,7 +107,6 @@ class MDRParser(ParserProxy):
             blockquote_nodes = self._blockquote_text_content_selector(self.precomputed.doc)
             for blockquote_node in blockquote_nodes:
                 blockquote_node.text = f"«{blockquote_node.text}.» - "
-
 
         @attribute
         def body(self) -> Optional[ArticleBody]:
