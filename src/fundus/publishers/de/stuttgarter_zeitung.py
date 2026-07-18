@@ -57,7 +57,9 @@ class StuttgarterZeitungParser(ParserProxy):
             )
 
     class V2(BaseParser):
-        _summary_selector = XPath("//section[@class='u-article-header']/div/span")
+        _summary_selector = XPath(
+            "//section[@class='u-article-header']/div/span[not(contains(@class,'u-article-type-flag'))]"
+        )
         _paragraph_selector = XPath("//article//p[@class='u-paragraph'] | //article//ul[@class='u-list']/li[text()]")
         _subheadline_selector = XPath("//article//h2[contains(@class,'u-headline')]")
 
