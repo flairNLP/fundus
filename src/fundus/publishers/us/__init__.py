@@ -86,11 +86,9 @@ class US(metaclass=PublisherGroup):
         parser=TheGatewayPunditParser,
         sources=[
             Sitemap(
-                "https://www.thegatewaypundit.com/sitemap_index.xml",
-                sitemap_filter=inverse(regex_filter("post-sitemap")),
-                reverse=True,
+                "https://www.thegatewaypundit.com/sitemap.xml",
+                sitemap_filter=inverse(regex_filter("sitemap-pt_post")),
             ),
-            NewsMap("https://www.thegatewaypundit.com/news-sitemap.xml"),
         ],
     )
 
