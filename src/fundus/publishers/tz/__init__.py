@@ -10,12 +10,13 @@ class TZ(metaclass=PublisherGroup):
 
     DailyNewsTZ = Publisher(
         name="Daily News (Tanzania)",
-        domain="https://www.dailynews.co.tz/",
+        domain="https://dailynews.co.tz/",
         parser=DailyNewsTZParser,
         sources=[
             Sitemap(
-                "https://dailynews.co.tz/wp-sitemap.xml",
+                "https://dailynews.co.tz/sitemap_index.xml",
                 sitemap_filter=inverse(regex_filter("post-sitemap")),
+                reverse=True,
                 languages={"en"},
             ),
         ],
