@@ -1,6 +1,6 @@
 import re
 from datetime import date, datetime
-from typing import List, Optional, Union
+from typing import List, Optional, Pattern, Union
 
 from lxml.etree import XPath
 
@@ -25,8 +25,8 @@ class AftonbladetParser(ParserProxy):
         _subheadline_selector = XPath("//h2[@data-test-tag='paragraph-header']")
 
         _caption_selector = XPath("./ancestor::figure//figcaption/span[@class='image-caption']")
-        _image_author_selector: Union[XPath, re.Pattern[str]] = XPath(
-            "./ancestor::figure//figcaption/span[@class='image-byline']"
+        _image_author_selector: Union[XPath, Pattern[str]] = XPath(
+            "./ancestor::figure//figcaption/span[contains(@class,'image-byline')]"
         )
         _image_selector = XPath("//figure//img")
 
