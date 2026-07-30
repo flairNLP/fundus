@@ -500,9 +500,7 @@ def _parser_source_path(parser_proxy: ParserProxy) -> str:
         return "<path of the parser file in the PR diff>"
 
 
-def _review_skeleton(
-    parser_path: str, findings: Dict[str, Any], blockers: List[Dict[str, Any]]
-) -> Dict[str, Any]:
+def _review_skeleton(parser_path: str, findings: Dict[str, Any], blockers: List[Dict[str, Any]]) -> Dict[str, Any]:
     """The review to post, per PLAYBOOK §5, with everything the state knows prefilled.
 
     What's left is exactly the judgment half — every `<...>` placeholder. The `line` fields are
@@ -521,10 +519,10 @@ def _review_skeleton(
             "line": "<int: a diff line at the offending selector>",
             "side": "RIGHT",
             "body": (
-                f'**Blocker — <one-line claim; your note: {blocker["note"]}>.** '
+                f"**Blocker — <one-line claim; your note: {blocker['note']}>.** "
                 f'"…<the single most damning quote — `show {blocker["id"]}` prints the full text>…" '
-                f'Fix: <one line naming the selector/change>. '
-                f'[[1]]({blocker["urls"][0] if blocker["urls"] else "<article url>"})'
+                f"Fix: <one line naming the selector/change>. "
+                f"[[1]]({blocker['urls'][0] if blocker['urls'] else '<article url>'})"
             ),
         }
         for blocker in blockers

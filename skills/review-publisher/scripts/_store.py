@@ -129,10 +129,13 @@ def missing_attributes(article: Article) -> List[str]:
 
 
 def save_article(cache_dir: Path, index: int, article: Article) -> Dict[str, Any]:
-    """Write one article's raw bytes and return its state record.
+    """Write one article's html and return its state record.
 
-    `write_bytes` keeps the cached file the *exact* crawled bytes — text mode would
-    newline-translate on Windows (\\r\\n -> \\r\\r\\n on disk).
+    The cache stores `html.content` — already decoded by fundus — re-encoded as UTF-8; the
+    original response bytes are gone, so on a legacy-encoded site the file's `<meta charset>`
+    no longer matches its bytes. Readers must decode UTF-8 themselves (`read_html` does; so
+    does the playbook's by-hand snippet) rather than let lxml sniff the charset from bytes.
+    `write_bytes` because text mode would newline-translate on Windows (\\r\\n -> \\r\\r\\n).
     """
     (cache_dir / html_filename(index)).write_bytes(article.html.content.encode("utf-8"))
     body = article.body
