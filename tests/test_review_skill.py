@@ -4,6 +4,7 @@ The sweep is a review *gate*: each test here pins a failure mode the gate must n
 above all, ways it could report a silent false "clean".
 """
 
+import json
 import shutil
 import sys
 from datetime import datetime
@@ -48,6 +49,18 @@ def _result(*texts: str, reason: str = "") -> _sweep.SweepResult:
             for text in texts
         ],
     )
+
+
+def _ranked_risks(size: int, flagged: Sequence[int]) -> List[_sweep.ArticleRisk]:
+    """One risk per pool index, worst-first — `flagged` in the order they should be swapped in."""
+    return [
+        _sweep.ArticleRisk(index=index, tier=1, flags=[], uncommon_chars=1000 - rank, result=_result())
+        for rank, index in enumerate(flagged)
+    ] + [
+        _sweep.ArticleRisk(index=index, tier=0, flags=[], uncommon_chars=0, result=_result())
+        for index in range(size)
+        if index not in flagged
+    ]
 
 
 @pytest.fixture
@@ -224,9 +237,29 @@ class TestRankPool:
         assert all(risk.uncommon_chars == len(CHROME) for risk in risks)
 
 
+class TestApplyRiskSwaps:
+    """The swap policy itself, as a pure function; TestSelectForReview covers its wiring."""
+
+    def test_budget_share_rounds_down_and_replaces_from_the_back(self):
+        drawn = _sweep.apply_risk_swaps([0, 1, 2, 3, 4], _ranked_risks(10, [5, 6, 7]), budget=5)
+        assert drawn == [0, 1, 2, 6, 5]  # int(5 * RISK_SWAP_SHARE) = 2 swaps; the worst takes the last slot
+
+    def test_no_swappable_position_stops_cleanly(self):
+        # Every position but the protected first already holds a flagged article - nothing may
+        # be given up, however much swap budget is left.
+        drawn = _sweep.apply_risk_swaps([0, 8, 9], _ranked_risks(10, [8, 9, 5]), budget=6)
+        assert drawn == [0, 8, 9]
+
+    def test_input_draw_is_not_mutated(self):
+        original = [0, 1, 2, 3]
+        _sweep.apply_risk_swaps(original, _ranked_risks(10, [7]), budget=4)
+        assert original == [0, 1, 2, 3]
+
+
 class TestSelectForReview:
-    """The swap policy. The diverse ranking itself is the sampler's business (and needs numpy /
-    scikit-learn), so it is stubbed out here to leave exactly the driver's own decisions under test.
+    """The swap policy's wiring into the draw. The diverse ranking itself is the sampler's business
+    (and needs numpy / scikit-learn), so it is stubbed out here to leave exactly the driver's own
+    decisions under test.
     """
 
     @pytest.fixture(autouse=True)
@@ -246,21 +279,9 @@ class TestSelectForReview:
             for i in range(size)
         ]
 
-    @staticmethod
-    def _risks(size: int, flagged: Sequence[int]) -> List[_sweep.ArticleRisk]:
-        """One risk per pool index, worst-first — `flagged` in the order they should be swapped in."""
-        return [
-            _sweep.ArticleRisk(index=index, tier=1, flags=[], uncommon_chars=1000 - rank, result=_result())
-            for rank, index in enumerate(flagged)
-        ] + [
-            _sweep.ArticleRisk(index=index, tier=0, flags=[], uncommon_chars=0, result=_result())
-            for index in range(size)
-            if index not in flagged
-        ]
-
     def test_flagged_articles_take_the_least_distinctive_picks(self):
         pool = self._pool(10)
-        selection = review._select_for_review(pool, self._risks(10, [7, 8, 9]), budget=6)
+        selection = review._select_for_review(pool, _ranked_risks(10, [7, 8, 9]), budget=6)
 
         assert [pool.index(article) for article, _, _ in selection] == [0, 1, 2, 9, 8, 7]
         assert [role for _, role, _ in selection] == ["diverse"] * 3 + ["flagged"] * 3
@@ -269,14 +290,14 @@ class TestSelectForReview:
         # The pool medoid is the review's only ordinary article; without it there is no baseline
         # for judging the odd ones, so it is never traded away.
         pool = self._pool(10)
-        selection = review._select_for_review(pool, self._risks(10, [5, 6, 7, 8, 9]), budget=4)
+        selection = review._select_for_review(pool, _ranked_risks(10, [5, 6, 7, 8, 9]), budget=4)
 
         assert pool.index(selection[0][0]) == 0 and selection[0][1] == "diverse"
-        assert sum(1 for _, role, _ in selection if role == "flagged") == int(4 * review.RISK_SWAP_SHARE)
+        assert sum(1 for _, role, _ in selection if role == "flagged") == int(4 * _sweep.RISK_SWAP_SHARE)
 
     def test_a_flagged_article_already_drawn_costs_no_swap(self):
         pool = self._pool(10)
-        selection = review._select_for_review(pool, self._risks(10, [2, 7, 8, 9]), budget=8)
+        selection = review._select_for_review(pool, _ranked_risks(10, [2, 7, 8, 9]), budget=8)
 
         drawn = [pool.index(article) for article, _, _ in selection]
         assert {2, 7, 8, 9} <= set(drawn)  # the in-draw flag did not consume one of the four swaps
@@ -358,6 +379,55 @@ class TestStore:
 
         state["crawl"]["completed"] = False
         assert any("did not complete" in gap for gap in _store.payload_gaps(state))
+
+
+class TestPayloadSkeleton:
+    """`payload` must emit review.json as a fillable skeleton — and never clobber a filled one."""
+
+    @staticmethod
+    def _ready_state() -> Dict[str, Any]:
+        return {
+            "publisher": "xx.Test",
+            "crawl": {"pool": 50, "started": 1.0, "finished": 2.0, "completed": True},
+            "articles": [{"index": 1, "url": "https://x.test/a", "html_file": "01.html"}],
+            "scan": {"pool": 50, "flagged": 4, "reviewed": 1, "reviewed_flagged": 1, "medoid_flagged": False},
+            "sweep": {
+                "version": None,
+                "swept_at": 3.0,
+                "articles_swept": 1,
+                "not_applicable": 0,
+                "candidates": [{"id": "Dabc123", "kind": "drop", "text": "dropped text", "articles": [1]}],
+            },
+            "adjudications": {"Dabc123": {"verdict": "blocker", "note": "match results list dropped", "at": 4.0}},
+        }
+
+    def test_payload_emits_prefilled_skeleton_and_keeps_edits(
+        self, cache_root: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        cache = cache_root / "cache"
+        cache.mkdir()
+        _store.write_state(cache, self._ready_state())
+        monkeypatch.setattr(review, "resolve_publisher", lambda spec: SimpleNamespace(parser=None))
+        monkeypatch.setattr(review, "_parser_source_path", lambda proxy: "src/fundus/publishers/xx/test.py")
+        args = SimpleNamespace(publisher="xx.Test", cache_dir=str(cache))
+
+        assert review.cmd_payload(cast(Any, args)) == 0
+        skeleton = json.loads((cache / "review.json").read_text(encoding="utf-8"))
+        assert skeleton["event"] == "REQUEST_CHANGES"
+        assert "read 1 of 50 scanned (4 flagged, 1 in draw)" in skeleton["body"]
+        (comment,) = skeleton["comments"]
+        assert comment["path"] == "src/fundus/publishers/xx/test.py" and comment["side"] == "RIGHT"
+        assert "match results list dropped" in comment["body"] and "https://x.test/a" in comment["body"]
+        assert not isinstance(comment["line"], int)  # an unfilled stub must fail the POST, not post
+
+        # A second run must keep the agent's edits rather than regenerate over them.
+        (cache / "review.json").write_text("edited by the agent", encoding="utf-8")
+        assert review.cmd_payload(cast(Any, args)) == 0
+        assert (cache / "review.json").read_text(encoding="utf-8") == "edited by the agent"
+
+    def test_parser_source_path_falls_back_outside_src_layout(self) -> None:
+        # This test file is not under src/fundus/, so the repo-relative cut has nothing to cut at.
+        assert review._parser_source_path(cast(Any, iter([TestPayloadSkeleton]))).startswith("<")
 
 
 class TestBodySelectorsAccessor:

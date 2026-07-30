@@ -57,6 +57,8 @@ NO_BODY = "parser extracted no body"
 # A drop text this common across the pool is site chrome, not this article's problem. Same logic as
 # `find_leaks` on the other side: boilerplate repeats across articles, article content doesn't.
 COMMON_DROP_SHARE = 0.5
+# Share of the review draw the scan's worst articles may claim from the diverse picks.
+RISK_SWAP_SHARE = 0.5
 # Uncommon uncaptured text below this (roughly a short paragraph) flags nothing: a stray line that
 # merely failed to repeat is far more likely chrome than a body miss, and flagging it floods the scan.
 MIN_RISK_CHARS = 120
@@ -372,3 +374,29 @@ def rank_pool(swept: Sequence[Tuple[int, SweepResult, Sequence[str]]]) -> List[A
         )
     risks.sort(key=lambda risk: (-risk.tier, -risk.uncommon_chars, risk.index))
     return risks
+
+
+def apply_risk_swaps(drawn: Sequence[int], risks: Sequence[ArticleRisk], budget: int) -> List[int]:
+    """Let the scan's worst flagged articles claim up to `RISK_SWAP_SHARE` of the draw.
+
+    `drawn` is the diverse ranking's pick (pool indices, most typical first); `risks` is
+    `rank_pool`'s output and stays worst-first. Each flagged article not already drawn replaces
+    the lowest-ranked pick that isn't itself flagged — never position 0, so the draw always keeps
+    the pool's most typical article: the read's baseline, or, when the scan flags that one too,
+    the finding that the failure is mainstream rather than an edge case.
+    """
+    drawn = list(drawn)
+    risk_by_index = {risk.index: risk for risk in risks}
+    swaps_left = int(budget * RISK_SWAP_SHARE)
+    for risk in risks:  # worst first, so the swaps go to the worst articles that missed the draw
+        if swaps_left <= 0 or not risk.flagged:
+            break
+        if risk.index in drawn:
+            continue
+        # Give up the least distinctive diverse pick that isn't itself flagged; never position 0.
+        position = next((p for p in range(len(drawn) - 1, 0, -1) if not risk_by_index[drawn[p]].flagged), None)
+        if position is None:
+            break
+        drawn[position] = risk.index
+        swaps_left -= 1
+    return drawn

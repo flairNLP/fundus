@@ -8,7 +8,8 @@ machine so the agent can't substitute "looks clean" for verification:
     show        full detail for one candidate (text, articles, cached html paths)
     adjudicate  record the boilerplate-vs-body judgment for one candidate (the only judgment input)
     status      where the review stands; exit 0 only when nothing is pending
-    payload     refuse while anything is un-adjudicated, else emit findings.json for §5
+    payload     refuse while anything is un-adjudicated, else emit findings.json plus a
+                review.json skeleton — the review to post, mechanical half prefilled (§5)
 
 Both tiers and every re-run work the *same* crawled draw (PLAYBOOK.md §2): `crawl` is the
 only networked step, everything else replays the cache. Re-sweeping (e.g. `--version V1`)
@@ -24,6 +25,7 @@ Usage (any working directory; <skill>/ is this skill's directory):
 """
 
 import argparse
+import inspect
 import io
 import json
 import logging
@@ -54,7 +56,16 @@ from _store import (
     save_article,
     write_state,
 )
-from _sweep import STRUCTURAL_TAGS, ArticleRisk, SweepResult, find_leaks, rank_pool, sweep_article, version_classes
+from _sweep import (
+    STRUCTURAL_TAGS,
+    ArticleRisk,
+    SweepResult,
+    apply_risk_swaps,
+    find_leaks,
+    rank_pool,
+    sweep_article,
+    version_classes,
+)
 
 from fundus import Article, Crawler
 from fundus.logging import set_log_level
@@ -65,7 +76,6 @@ RULE = "=" * 100
 
 TEXT_CAP = 400  # stored/printed candidate text cap; `show` prints it in full from state
 REVIEW_ARTICLES = 10  # articles actually reviewed (the draw), independent of the pool scanned
-RISK_SWAP_SHARE = 0.5  # share of the draw the scan's worst articles may claim from the diverse picks
 
 
 # --- small helpers ---
@@ -136,12 +146,9 @@ def _select_for_review(
     *structure*: its first pick is the pool's most typical article and every later pick is the most
     different one left, so it covers the page shapes a publisher uses, rare ones included. The scan
     ranks by what the parser actually did — the part structure cannot see, since a class-name
-    variant that breaks a selector leaves a structurally identical page.
-
-    So take the diverse draw, then let the worst-scoring flagged articles claim up to
-    `RISK_SWAP_SHARE` of it, replacing the *lowest-ranked* diverse picks. The first pick is never
-    swapped, so the draw always holds the pool's most typical article — the read's baseline, or, when
-    the scan flags that one too, the finding that the failure is mainstream rather than an edge case.
+    variant that breaks a selector leaves a structurally identical page. `apply_risk_swaps` (the
+    policy, unit-tested in _sweep) then lets the scan's worst flagged articles claim their share
+    of the diverse draw.
     """
     if not pool:
         return []
@@ -150,21 +157,9 @@ def _select_for_review(
     # `diverse` hands back the articles themselves; map by identity to line them up with the scan.
     pool_index = {id(article): index for index, article in enumerate(pool)}
     drawn = [pool_index[id(s.article)] for s in Sampler().diverse(pool, n=min(budget, len(pool)))]
+    drawn = apply_risk_swaps(drawn, risks, budget)
 
     risk_by_index = {risk.index: risk for risk in risks}
-    swaps_left = int(budget * RISK_SWAP_SHARE)
-    for risk in risks:  # worst first, so the swaps go to the worst articles that missed the draw
-        if swaps_left <= 0 or not risk.flagged:
-            break
-        if risk.index in drawn:
-            continue
-        # Give up the least distinctive diverse pick that isn't itself flagged; never position 0.
-        position = next((p for p in range(len(drawn) - 1, 0, -1) if not risk_by_index[drawn[p]].flagged), None)
-        if position is None:
-            break
-        drawn[position] = risk.index
-        swaps_left -= 1
-
     return [
         (pool[index], "flagged" if risk_by_index[index].flagged else "diverse", risk_by_index[index]) for index in drawn
     ]
@@ -496,6 +491,62 @@ def cmd_status(args: argparse.Namespace) -> int:
     return 0
 
 
+def _parser_source_path(parser_proxy: ParserProxy) -> str:
+    """Repo-relative path of the parser's file — the diff file the comment stubs anchor to."""
+    try:
+        posix = Path(inspect.getfile(next(iter(parser_proxy)))).as_posix()
+        return posix[posix.rindex("src/fundus/") :]
+    except (StopIteration, TypeError, ValueError, OSError):
+        return "<path of the parser file in the PR diff>"
+
+
+def _review_skeleton(
+    parser_path: str, findings: Dict[str, Any], blockers: List[Dict[str, Any]]
+) -> Dict[str, Any]:
+    """The review to post, per PLAYBOOK §5, with everything the state knows prefilled.
+
+    What's left is exactly the judgment half — every `<...>` placeholder. The `line` fields are
+    deliberately non-integer strings: an unfilled stub makes the GitHub POST fail loudly instead
+    of posting a template.
+    """
+    event = findings["event_suggestion"]
+    scope_line = (
+        f"`{findings['publisher']}`: read {findings['articles_cached']} of {findings['articles_scanned']} scanned "
+        f"({findings['flagged_by_scan']} flagged, {findings['flagged_by_scan'] - findings['flagged_not_reviewed']} "
+        f"in draw); layouts, over-capture, image attributes checked. <X> blockers + <Y> nits inline."
+    )
+    comments = [
+        {
+            "path": parser_path,
+            "line": "<int: a diff line at the offending selector>",
+            "side": "RIGHT",
+            "body": (
+                f'**Blocker — <one-line claim; your note: {blocker["note"]}>.** '
+                f'"…<the single most damning quote — `show {blocker["id"]}` prints the full text>…" '
+                f'Fix: <one line naming the selector/change>. '
+                f'[[1]]({blocker["urls"][0] if blocker["urls"] else "<article url>"})'
+            ),
+        }
+        for blocker in blockers
+    ]
+    return {
+        "commit_id": "<PR head SHA: gh pr view <PR> --json headRefOid -q .headRefOid>",
+        "event": event,
+        "body": "\n".join(
+            [
+                f"**{event}** — <what drove the verdict, one line>.",
+                "",
+                scope_line,
+                "Not inline:",
+                "- <one bullet per finding with no diff line to anchor to; delete the block if none>",
+                "",
+                "<open questions, if any; delete if none>",
+            ]
+        ),
+        "comments": comments,
+    }
+
+
 def cmd_payload(args: argparse.Namespace) -> int:
     cache_dir = resolve_cache_dir(args.publisher, args.cache_dir)
     state = _require_state(cache_dir, args.publisher)
@@ -538,10 +589,24 @@ def cmd_payload(args: argparse.Namespace) -> int:
     findings_file.write_text(json.dumps(findings, ensure_ascii=False, indent=2), encoding="utf-8")
     print(json.dumps(findings, ensure_ascii=False, indent=2))
     print(RULE)
-    print(f"written to {findings_file}")
-    print("This is the mechanical half only - your Tier-1 / layout / over-capture findings join it in")
-    print("the review body. Assemble review.json from it (own PR -> COMMENT; never APPROVE) and show")
-    print("it to the user BEFORE any `gh api` POST.")
+
+    review_file = cache_dir / "review.json"
+    if review_file.exists():
+        print(f"{review_file} already exists - keeping your edits (delete it and re-run to regenerate).")
+    else:
+        skeleton = _review_skeleton(_parser_source_path(resolve_publisher(args.publisher).parser), findings, blockers)
+        review_file.write_text(json.dumps(skeleton, ensure_ascii=False, indent=2), encoding="utf-8")
+        print(f"findings.json (the evidence) + review.json (the review, as a skeleton) -> {cache_dir}")
+
+    print("review.json prefills the mechanical half; the judgment half is yours:")
+    print("  - replace every <...> placeholder; delete template lines that don't apply")
+    print("  - add inline comments for your Tier-1 / image / static-read findings, same shape")
+    print("  - the event is suggested from adjudicated blockers only - your own findings can escalate")
+    print("    it; your own PR -> COMMENT regardless; never APPROVE")
+    print("  - a multi-publisher PR gets ONE review: fold the other publishers into this body/comments")
+    print("show the filled review.json to the user, and once they approve:")
+    print("  gh pr view <PR> --json headRefOid -q .headRefOid          # -> commit_id")
+    print(f'  gh api repos/flairNLP/fundus/pulls/<PR>/reviews -X POST --input "{review_file}"')
     return 0
 
 
