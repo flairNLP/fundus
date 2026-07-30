@@ -148,7 +148,8 @@ class DE(metaclass=PublisherGroup):
         domain="https://www.stuttgarter-zeitung.de/",
         parser=StuttgarterZeitungParser,
         sources=[
-            NewsMap("https://www.stuttgarter-zeitung.de/docs.newsmap_stuttgarter_zeitung.xml"),
+            NewsMap("https://www.stuttgarter-zeitung.de/sitemap-news.xml"),
+            Sitemap("https://www.stuttgarter-zeitung.de/sitemap.xml"),
         ],
     )
 

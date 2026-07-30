@@ -771,6 +771,7 @@ Please follow these guidelines when making such changes:
 - If the layout of the publisher changes and the corresponding parser can no longer extract articles properly, create a new parser version with updated selectors.
 - Use a minor version bump (e.g., from `V1` to `V1_1(V1)`) if the update only involves adjusting selectors.
 - If the change introduces new attributes or substantially modifies several existing ones, consider moving to a new major version (e.g., from `V1` to `V2`).
+- For changes in the domain, update the domain in the publisher specifications, but add the now outdated domain to the `deprecated_domains` list for backward crawling support.
 
 > [!NOTE]
 > Set the `VALID_UNTIL` attribute on the previous version to a `datetime.date` for the day before the layout change.

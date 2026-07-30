@@ -142,16 +142,14 @@
         <div>Nine News</div>
       </td>
       <td>
-        <a href="https://www.9news.com.au/">
-          <span>www.9news.com.au</span>
+        <a href="https://www.nine.com.au">
+          <span>www.nine.com.au</span>
         </a>
       </td>
       <td>
         <code>en</code>
       </td>
-      <td>
-        <code>topics</code>
-      </td>
+      <td>&#160;</td>
       <td>&#160;</td>
       <td>&#160;</td>
     </tr>
