@@ -45,19 +45,16 @@ The installer is a full-screen **status dashboard**. Run it with no arguments:
 python skills/install.py
 ```
 
-It shows a live matrix of *skills* × *scopes* for the selected agent. Each row is a skill; the
-**Project** and **User** columns show whether it's installed (`✓`) or not (`·`). Move the cursor with
-`↑`/`↓`, then toggle a scope to act on the highlighted skill — `p` for project, `u` for user. Toggling
-installs the skill if it's absent and uninstalls it if it's present; the matrix updates in place, so you
-never have to re-run. `r` refreshes from disk and `q` quits.
+It shows a live list of *skills* for the selected agent. Each row is a skill; the **Installed** column
+shows whether it's installed (`✓`) or not (`·`). Move the cursor with `↑`/`↓`, then press `space` to act
+on the highlighted skill — installing it if it's absent, uninstalling it if it's present. The list updates
+in place, so you never have to re-run. `r` refreshes from disk and `q` quits.
 
-The two scopes:
-
-- **project** installs to `./.claude/skills/`. The skill is scoped to this repo, where it's relevant,
-  and never pushed (`.claude/` is in the committed `.gitignore`).
-- **user** installs to `~/.claude/skills/`, available in every project. Nothing touches the repo. (The
-  review skill references repo files, so it only makes sense while your working directory is the Fundus
-  repo regardless.)
+Skills install to `./.claude/skills/`, scoped to this repo — where they're relevant (Fundus skills
+reference repo files and run against the repo) — and never pushed (`.claude/` is in the committed
+`.gitignore`). A skill's `requirements.txt` is installed into the interpreter you run the installer with
+(a venv/conda env if one is active), *not* system-wide, so run the installer with the same Python your
+agent uses.
 
 The installer needs the `textual` package, which ships in the project's `dev` extra:
 
@@ -77,12 +74,42 @@ your agent so it picks up a newly installed skill.
 
 ## Adding a skill
 
-Create `skills/<name>/` with a `SKILL.md` (frontmatter `name`/`description`) and a `PLAYBOOK.md`
-it links to as a sibling; put helper scripts under `scripts/`. The installer **discovers skills from
-the folder layout** (any directory here containing a `SKILL.md`), so there is nothing to register —
-run `python skills/install.py` and the new skill shows up as a row. If the skill needs packages
-beyond Fundus, drop a `requirements.txt` at its root — the installer pip-installs it on install (and
-leaves it in place on uninstall).
+Create a self-contained folder `skills/<name>/`. A typical one looks like this — only `SKILL.md` is
+required; the rest are optional:
+
+```
+skills/
+└── my-skill/
+    ├── SKILL.md          # required: frontmatter (name/description) + instructions
+    ├── PLAYBOOK.md       # the steps SKILL.md links to as a sibling
+    ├── requirements.txt  # optional: extra pip deps, installed on install
+    └── scripts/          # optional: helper scripts the playbook calls
+        └── do_thing.py
+```
+
+A minimal `SKILL.md` looks like this — the block fenced by `---` at the top is the **YAML frontmatter**
+(a small metadata header): the installer reads its one-line `description` for the dashboard, and your
+agent reads `name`/`description` to decide when to invoke the skill. Everything after the closing `---`
+is the instructions the agent follows.
+
+```markdown
+---
+name: my-skill
+description: One-line summary of what this skill does and, crucially, when the agent should use it.
+---
+
+# My skill
+
+What to do, in prose the agent can follow. Point it at the sibling playbook and give it the skill's
+own directory so bundled scripts resolve:
+
+Follow the steps in [PLAYBOOK.md](PLAYBOOK.md); this skill's directory is `${CLAUDE_SKILL_DIR}`.
+```
+
+The installer **discovers skills from the folder layout** (any directory here containing a `SKILL.md`),
+so there is nothing to register — run `python skills/install.py` and the new skill shows up as a row. If
+the skill needs packages beyond Fundus, drop a `requirements.txt` at its root — the installer pip-installs
+it on install (and leaves it in place on uninstall).
 
 Keep the path conventions above: state the skill's own directory in `SKILL.md` via
 `${CLAUDE_SKILL_DIR}` (it is substituted nowhere else), and point cross-doc links at repo-root paths

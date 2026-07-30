@@ -9,7 +9,6 @@ from __future__ import annotations
 
 from .core import (
     REPO_ROOT,
-    SCOPES,
     SKILLS_DIR,
     Agent,
     InstallResult,
@@ -20,7 +19,6 @@ from .core import (
 
 __all__ = [
     "REPO_ROOT",
-    "SCOPES",
     "SKILLS_DIR",
     "Agent",
     "InstallResult",
