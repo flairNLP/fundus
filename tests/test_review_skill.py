@@ -8,8 +8,8 @@ import shutil
 import sys
 from datetime import datetime
 from pathlib import Path
-from types import SimpleNamespace
-from typing import Any, Dict, Iterator, cast
+from types import ModuleType, SimpleNamespace
+from typing import Any, Dict, Iterator, List, Sequence, Tuple, cast
 
 import lxml.html
 import pytest
@@ -24,13 +24,30 @@ sys.path.insert(0, str(_SCRIPTS))
 
 import _store  # noqa: E402
 import _sweep  # noqa: E402
+import review  # noqa: E402
 
 PARAGRAPH_SELECTOR = XPath("//p[@class='b']")
 SELECTORS: Dict[str, Any] = {"paragraph": PARAGRAPH_SELECTOR, "summary": None, "subheadline": None}
 
+CHROME = "Sign up for our daily newsletter and never miss a story from the newsroom." * 3
+UNIQUE = "A dropped paragraph of real article text that appears on exactly one page here." * 3
+
 
 def _doc(body_html: str) -> lxml.html.HtmlElement:
     return lxml.html.document_fromstring(f"<html><body>{body_html}</body></html>")
+
+
+def _result(*texts: str, reason: str = "") -> _sweep.SweepResult:
+    """A sweep result carrying one <p> drop per text (or an inapplicable one, given `reason`)."""
+    if reason:
+        return _sweep.SweepResult(applicable=False, reason=reason)
+    return _sweep.SweepResult(
+        applicable=True,
+        drops=[
+            _sweep.DropCandidate(tag="p", description="<p>", text=text, chars=len(text), missing_segments=[])
+            for text in texts
+        ],
+    )
 
 
 @pytest.fixture
@@ -164,6 +181,105 @@ class TestFindLeaks:
         units = [(i, [f"unique article text number {i} here", boilerplate]) for i in range(1, 4)]
         units += [(i, []) for i in range(4, 11)]
         assert [leak.text for leak in _sweep.find_leaks(units)] == [boilerplate]
+
+
+class TestRankPool:
+    def test_site_chrome_does_not_outrank_a_one_off_miss(self):
+        # Uncaptured characters raw would rank every article equally, since the same nav/footer
+        # text is uncaptured on all of them. Only what *doesn't* repeat says anything.
+        swept: List[Tuple[int, _sweep.SweepResult, Sequence[str]]] = [(i, _result(CHROME), []) for i in range(5)]
+        swept[3] = (3, _result(CHROME, UNIQUE), [])
+
+        risks = _sweep.rank_pool(swept)
+        assert [risk.index for risk in risks][0] == 3
+        assert risks[0].uncommon_chars == len(UNIQUE) and risks[0].flagged
+        assert all(risk.uncommon_chars == 0 and not risk.flagged for risk in risks[1:])
+
+    def test_a_broken_article_outranks_a_merely_chatty_one(self):
+        swept: List[Tuple[int, _sweep.SweepResult, Sequence[str]]] = [
+            (0, _result(UNIQUE * 5), []),  # lots of uncaptured text, but the parser did produce a body
+            (1, _result(reason=_sweep.NO_BODY), ["body"]),
+            (2, _result(), []),
+        ]
+        risks = _sweep.rank_pool(swept)
+        assert [risk.index for risk in risks] == [1, 0, 2]
+        assert risks[0].tier == 2 and risks[0].flags == ["missing body", _sweep.NO_BODY]
+        assert risks[1].tier == 1 and risks[2].tier == 0
+
+    def test_a_parser_without_a_paragraph_selector_flags_nothing(self):
+        # That reason is a property of the parser - identical on every article, so it ranks nothing.
+        # Making it a flag would mark the entire pool and leave the ranking meaningless.
+        risks = _sweep.rank_pool([(i, _result(reason=_sweep.NO_PARAGRAPH_SELECTOR), []) for i in range(5)])
+        assert all(risk.tier == 0 and risk.flags == [] for risk in risks)
+
+    def test_a_stray_line_is_below_the_flagging_floor(self):
+        stray = "x" * (_sweep.MIN_RISK_CHARS - 1)
+        (risk,) = _sweep.rank_pool([(0, _result(stray), [])])
+        assert risk.uncommon_chars == len(stray) and not risk.flagged
+
+    def test_tiny_pools_discount_nothing(self):
+        # Below three articles a "share of the pool" is meaningless; discounting there would erase
+        # the only evidence a two-article scan has.
+        risks = _sweep.rank_pool([(i, _result(CHROME), []) for i in range(2)])
+        assert all(risk.uncommon_chars == len(CHROME) for risk in risks)
+
+
+class TestSelectForReview:
+    """The swap policy. The diverse ranking itself is the sampler's business (and needs numpy /
+    scikit-learn), so it is stubbed out here to leave exactly the driver's own decisions under test.
+    """
+
+    @pytest.fixture(autouse=True)
+    def stub_sampler(self, monkeypatch: pytest.MonkeyPatch) -> None:
+        class StubSampler:
+            def diverse(self, articles: List[Article], n: int) -> List[Any]:
+                return [SimpleNamespace(article=article) for article in articles[:n]]
+
+        module = ModuleType("sampler")
+        module.Sampler = StubSampler  # type: ignore[attr-defined]
+        monkeypatch.setitem(sys.modules, "sampler", module)
+
+    @staticmethod
+    def _pool(size: int) -> List[Article]:
+        return [
+            cast(Article, SimpleNamespace(html=SimpleNamespace(requested_url=f"https://x.test/{i}")))
+            for i in range(size)
+        ]
+
+    @staticmethod
+    def _risks(size: int, flagged: Sequence[int]) -> List[_sweep.ArticleRisk]:
+        """One risk per pool index, worst-first — `flagged` in the order they should be swapped in."""
+        return [
+            _sweep.ArticleRisk(index=index, tier=1, flags=[], uncommon_chars=1000 - rank, result=_result())
+            for rank, index in enumerate(flagged)
+        ] + [
+            _sweep.ArticleRisk(index=index, tier=0, flags=[], uncommon_chars=0, result=_result())
+            for index in range(size)
+            if index not in flagged
+        ]
+
+    def test_flagged_articles_take_the_least_distinctive_picks(self):
+        pool = self._pool(10)
+        selection = review._select_for_review(pool, self._risks(10, [7, 8, 9]), budget=6)
+
+        assert [pool.index(article) for article, _, _ in selection] == [0, 1, 2, 9, 8, 7]
+        assert [role for _, role, _ in selection] == ["diverse"] * 3 + ["flagged"] * 3
+
+    def test_the_first_pick_survives_a_full_swap_budget(self):
+        # The pool medoid is the review's only ordinary article; without it there is no baseline
+        # for judging the odd ones, so it is never traded away.
+        pool = self._pool(10)
+        selection = review._select_for_review(pool, self._risks(10, [5, 6, 7, 8, 9]), budget=4)
+
+        assert pool.index(selection[0][0]) == 0 and selection[0][1] == "diverse"
+        assert sum(1 for _, role, _ in selection if role == "flagged") == int(4 * review.RISK_SWAP_SHARE)
+
+    def test_a_flagged_article_already_drawn_costs_no_swap(self):
+        pool = self._pool(10)
+        selection = review._select_for_review(pool, self._risks(10, [2, 7, 8, 9]), budget=8)
+
+        drawn = [pool.index(article) for article, _, _ in selection]
+        assert {2, 7, 8, 9} <= set(drawn)  # the in-draw flag did not consume one of the four swaps
 
 
 class TestStore:

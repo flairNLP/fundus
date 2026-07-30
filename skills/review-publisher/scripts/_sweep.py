@@ -1,8 +1,13 @@
-"""Pure sweep logic for the publisher review: drop candidates and leak candidates.
+"""Pure sweep logic for the publisher review: drop candidates, leak candidates, pool ranking.
 
 No I/O and no crawling here — `review.py` feeds parsed documents and cached body text in,
 results come out. That is what makes this file unit-testable (tests/test_review_skill.py),
 and the tests pin exactly the failure modes a review gate must not have.
+
+The same `sweep_article` serves two callers, and the distinction matters: over the *cached
+draw* it produces the candidates a human adjudicates (the gate), while over the whole crawled
+pool `rank_pool` turns it into a per-article score that decides which articles get cached at
+all. Selection and gating therefore measure with one instrument and can never drift apart.
 
 Design rule: **a heuristic may be noisy, but it must never be silently green.**
 - Fewer than two captured nodes -> the walk falls back to the whole document and is
@@ -15,6 +20,7 @@ Design rule: **a heuristic may be noisy, but it must never be silently green.**
   built the body text being compared against, so the two sides can never drift.
 """
 
+import math
 from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional, Sequence, Set, Tuple, Type
 
@@ -43,6 +49,18 @@ MIN_SEGMENT_CHARS = 12
 # A body unit must be at least this long to count for cross-article leak detection.
 MIN_LEAK_CHARS = 8
 
+# Why a sweep does not apply. `NO_PARAGRAPH_SELECTOR` is a property of the *parser* — identical for
+# every article — while the others describe this one article, which is what `rank_pool` keys on.
+NO_PARAGRAPH_SELECTOR = "no _paragraph_selector - body built another way"
+NO_BODY = "parser extracted no body"
+
+# A drop text this common across the pool is site chrome, not this article's problem. Same logic as
+# `find_leaks` on the other side: boilerplate repeats across articles, article content doesn't.
+COMMON_DROP_SHARE = 0.5
+# Uncommon uncaptured text below this (roughly a short paragraph) flags nothing: a stray line that
+# merely failed to repeat is far more likely chrome than a body miss, and flagging it floods the scan.
+MIN_RISK_CHARS = 120
+
 
 @dataclass
 class DropCandidate:
@@ -53,6 +71,15 @@ class DropCandidate:
     text: str
     chars: int
     missing_segments: List[str]
+
+    @property
+    def key(self) -> Tuple[str, str]:
+        """Identity of this drop *across* articles: same tag, same (capped, folded) text.
+
+        Shared by the pool scan's chrome subtraction and the driver's candidate merging, so the
+        two can never disagree about what counts as "the same drop seen again".
+        """
+        return self.tag, self.text[:160].casefold()
 
 
 @dataclass
@@ -182,10 +209,10 @@ def sweep_article(doc: lxml.html.HtmlElement, selectors: Dict[str, Optional[Any]
     """Sweep one parsed document against the body units the parser extracted from it."""
     paragraph_selector = selectors.get("paragraph")
     if paragraph_selector is None:
-        return SweepResult(applicable=False, reason="no _paragraph_selector - body built another way")
+        return SweepResult(applicable=False, reason=NO_PARAGRAPH_SELECTOR)
     if not units:
         # Without body text every block reads as missing, burying the gate in drop candidates.
-        return SweepResult(applicable=False, reason="parser extracted no body")
+        return SweepResult(applicable=False, reason=NO_BODY)
 
     para_nodes = _element_nodes(paragraph_selector, doc)
     summary_selector = selectors.get("summary")
@@ -273,3 +300,75 @@ def find_leaks(units_per_article: Sequence[Tuple[int, Sequence[str]]]) -> List[L
     ]
     leaks.sort(key=lambda leak: (-len(leak.article_indices), leak.text))
     return leaks
+
+
+# --- the pool-wide risk scan ---
+
+
+@dataclass
+class ArticleRisk:
+    """How badly the parser handled one *pooled* article, measured from its own sweep result."""
+
+    index: int  # position in the crawled pool
+    tier: int  # 2 = parser produced nothing usable, 1 = real uncaptured text, 0 = nominal
+    flags: List[str]  # what makes this article stand out; empty below tier 2
+    uncommon_chars: int  # uncaptured text left once site chrome is discounted
+    result: SweepResult
+
+    @property
+    def flagged(self) -> bool:
+        return self.tier > 0
+
+    @property
+    def detail(self) -> str:
+        """One line of evidence for the printout and the state file."""
+        parts = list(self.flags)
+        if self.uncommon_chars:
+            parts.append(f"{self.uncommon_chars} uncaptured chars")
+        return "; ".join(parts)
+
+
+def rank_pool(swept: Sequence[Tuple[int, SweepResult, Sequence[str]]]) -> List[ArticleRisk]:
+    """Rank a whole crawled pool by how badly the parser handled each article, worst first.
+
+    Takes one `(pool index, sweep result, missing required attributes)` triple per article — the
+    caller supplies the missing attributes, which keeps this free of fundus' `Article` and as
+    unit-testable as the rest of the file.
+
+    Ranking uncaptured characters raw would only rank *page chrome*, which is near-identical on
+    every article of a publisher. Discounting whatever repeats across the pool leaves what is
+    unusual about this article's extraction, which is the only part that says anything.
+    """
+    n = len(swept)
+    articles_per_key: Dict[Tuple[str, str], int] = {}
+    for _, result, _ in swept:
+        for key in {drop.key for drop in result.drops}:  # a repeat *within* one article proves nothing
+            articles_per_key[key] = articles_per_key.get(key, 0) + 1
+    # Below three articles a "share of the pool" means nothing, so nothing is discounted.
+    common: Set[Tuple[str, str]] = set()
+    if n >= 3:
+        threshold = max(2, math.ceil(COMMON_DROP_SHARE * n))
+        common = {key for key, count in articles_per_key.items() if count >= threshold}
+
+    risks: List[ArticleRisk] = []
+    for index, result, missing in swept:
+        # A sweep that could not run is a finding about this article - unless the reason is the
+        # parser's own design, which is identical for every article and so ranks nothing.
+        inapplicable = not result.applicable and result.reason != NO_PARAGRAPH_SELECTOR
+        flags: List[str] = []
+        if missing:
+            flags.append("missing " + ", ".join(missing))
+        if inapplicable:
+            flags.append(result.reason)
+        uncommon_chars = sum(drop.chars for drop in result.drops if drop.key not in common)
+        risks.append(
+            ArticleRisk(
+                index=index,
+                tier=2 if flags else (1 if uncommon_chars >= MIN_RISK_CHARS else 0),
+                flags=flags,
+                uncommon_chars=uncommon_chars,
+                result=result,
+            )
+        )
+    risks.sort(key=lambda risk: (-risk.tier, -risk.uncommon_chars, risk.index))
+    return risks

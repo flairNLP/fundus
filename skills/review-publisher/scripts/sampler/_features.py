@@ -19,6 +19,7 @@ from typing import Dict, List, Optional, Sequence
 
 import lxml.html
 import numpy as np
+import numpy.typing as npt
 from lxml.html import HtmlElement
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_distances
@@ -123,10 +124,10 @@ def fingerprint(html: str, text_share: float = DEFAULT_TEXT_SHARE, max_path_len:
 # --- distance ---
 
 
-def distance_matrix(fingerprints: Sequence[List[str]]) -> np.ndarray:
+def distance_matrix(fingerprints: Sequence[List[str]]) -> npt.NDArray[np.float64]:
     """Symmetric (m, m) tagpath TF-IDF cosine distances; IDF suppresses the shared site chrome."""
     vectorizer = TfidfVectorizer(analyzer=lambda paths: paths, norm="l2", sublinear_tf=True)
     matrix = vectorizer.fit_transform(list(fingerprints))
-    distances: np.ndarray = cosine_distances(matrix)
+    distances: npt.NDArray[np.float64] = cosine_distances(matrix)
     np.fill_diagonal(distances, 0.0)
     return np.asarray(distances, dtype=float)

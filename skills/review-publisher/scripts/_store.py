@@ -2,13 +2,13 @@
 
 The cache dir holds the raw crawled bytes (`NN.html`) plus a single `state.json` that is
 the source of truth for the whole review: crawl parameters, the per-article records, the
-sweep's candidates, and the agent's adjudications. Everything `review.py` knows it knows
-from here, which is what makes the workflow crash-safe (state is rewritten after every
-article) and gateable (`payload_gaps` can name exactly what is still missing).
+pool-wide scan, the sweep's candidates, and the agent's adjudications. Everything `review.py`
+knows it knows from here, which is what makes the workflow crash-safe (state is rewritten after
+every article) and gateable (`payload_gaps` can name exactly what is still missing).
 
 Layout of a cache dir (default: <tempdir>/fundus-review/<cc>.<Class>/):
 
-    state.json   # crawl meta + article records + sweep candidates + adjudications
+    state.json   # crawl meta + article records + pool scan + sweep candidates + adjudications
     01.html      # raw html.content bytes for article 1 (exact crawled bytes)
     02.html      # ...
 """
@@ -89,6 +89,7 @@ def new_state(spec: str, pool: int) -> Dict[str, Any]:
         "publisher": spec,
         "crawl": {"pool": pool, "started": time.time(), "finished": None, "completed": False},
         "articles": [],
+        "scan": None,
         "sweep": None,
         "adjudications": {},
     }

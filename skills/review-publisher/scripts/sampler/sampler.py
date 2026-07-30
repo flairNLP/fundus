@@ -25,6 +25,7 @@ from dataclasses import dataclass
 from typing import Iterable, List, Union
 
 import numpy as np
+import numpy.typing as npt
 
 from fundus import Article
 from fundus.publishers.base_objects import Publisher
@@ -119,7 +120,7 @@ class Sampler:
 
     # --- internals ---
 
-    def _compute_distance_matrix(self, articles: List[Article]) -> np.ndarray:
+    def _compute_distance_matrix(self, articles: List[Article]) -> npt.NDArray[np.float64]:
         """Fingerprint each article's body, and build the distance matrix."""
         fingerprints = [fingerprint(a.html.content, self.text_share, self.max_path_len) for a in articles]
         return distance_matrix(fingerprints)

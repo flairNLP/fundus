@@ -87,34 +87,48 @@ Skim the diff and sanity-check the parser:
 ### Crawl once
 
 ```bash
-python "<skill>/scripts/review.py" crawl <cc>.<Class>             # pool 50 -> 2 articles per layout
-python "<skill>/scripts/review.py" crawl <cc>.<Class> --pool 80   # widen the draw if rare layouts are missed
+python "<skill>/scripts/review.py" crawl <cc>.<Class>                         # pool 100 -> read 10
+python "<skill>/scripts/review.py" crawl <cc>.<Class> --pool 200 --review 16  # widen either half
 ```
 
 One live crawl per publisher; everything after it replays the cache, so the read set and the swept
-set are the same draw by construction. The crawl draws a **candidate pool** (`--pool`, default 50)
-and reduces it to a **layout-diverse subset** — **two representatives per distinct layout** the
-publisher uses (its most typical article plus its most different one), **never dropping a layout** —
-so you review each layout twice over instead of the first *N* near-duplicate news stories. The number
-of layouts is discovered automatically; if a near-uniform publisher collapses to fewer than three
-articles, it falls back to the three most-diverse articles so the coherence read and the leak scan
-still have something to work with. It prints the **Tier-1 view** (url / title / authors / topics /
-image count / body, each tagged with its layout id and `rep`/`extra` role) and caches the selected
-articles' exact bytes. Sampling needs the whole pool up front, so an interrupted crawl caches nothing
-— just re-run it (the crawl is the only networked step).
+set are the same draw by construction. The crawl draws a **candidate pool** (`--pool`, default 100),
+**sweeps every article in it** offline, then caches only the `--review` (default 10) articles worth
+your time and prints the **Tier-1 view** for each (url / title / authors / topics / image count /
+body). Scanning and sampling both need the whole pool up front, so an interrupted crawl caches
+nothing — just re-run it (the crawl is the only networked step).
 
-**Layout coverage is the gate, and the sampler is what delivers it.** The subset must span the
-layouts that break parsers — a straight news piece, an opinion/column, a **listicle or bullet-list**
-piece, and an **image-heavy** one. The pool→sample draw surfaces these automatically; if a layout you
-know exists is still missing, **widen the draw (`--pool`) and re-crawl**. If the publisher is too
-small or uniform to cover all four, note that in the review. Don't prompt the user for a number; the
-default pool is the floor and coverage decides the rest.
+**The scan covers the pool; the draw is what you read.** That split is the point — selection can only
+show you ten articles, but `0 flagged` is a statement about all hundred. Two rankings fill the draw,
+and each cached article prints which one put it there:
+
+- `diverse` — structural coverage. The first pick is the pool's most typical article and every later
+  pick is the most different one left, so the page shapes a publisher uses get represented.
+- `flagged` — what the parser actually *did*, which structure cannot see: a class-name variant that
+  breaks a selector leaves a structurally identical page. Flagged articles claim up to half the draw
+  from the least distinctive diverse picks. The first pick — the pool's most typical article, your
+  baseline for what a correct extraction looks like here — is never traded away.
+
+So **the draw is skewed toward broken articles on purpose**: "all ten read fine" is a weaker claim
+than "this publisher reads fine", and it's the scan counts that carry the second one. Two lines the
+crawl prints deserve action rather than acknowledgement — *more articles flagged than the draw holds*
+(re-run with a bigger `--review`, or read the printed urls by hand; every scanned article is in
+`state.json` under `scan`), and *the most typical article in the pool is flagged*, which is a
+mainstream failure rather than an edge case and should lead the review.
+
+**Layout coverage stays your judgment.** The draw should span the layouts that break parsers — a
+straight news piece, an opinion/column, a **listicle or bullet-list** piece, and an **image-heavy**
+one. Diverse sampling surfaces these automatically; if a layout you know exists is still missing,
+**widen the pool (`--pool`) and re-crawl**. If the publisher is too small or uniform to cover all
+four, note that in the review. Don't prompt the user for a number; the defaults are the floor and
+coverage decides the rest.
 
 **The draw is deliberately unfiltered** (`only_complete=False`). Fundus' default crawl drops any
 article missing `title`, `body` or `publishing_date` — precisely the articles a parser broke — so
-filtering before sampling would hide the worst findings. Such an article is sampled and cached like
-any other, and the Tier-1 view flags it `! missing title, body`. Treat that as **blocker-level unless
-the page genuinely isn't an article** (video stub, liveblog, photo gallery); say which in the review.
+filtering before the scan would hide the worst findings. Such an article is flagged outright and
+almost always lands in the draw, where the Tier-1 view repeats it as `! missing title, body`. Treat
+that as **blocker-level unless the page genuinely isn't an article** (video stub, liveblog, photo
+gallery); say which in the review.
 Note that a parser that *raises* is skipped by fundus before it reaches the pool, and its reason is
 logged below the default handler level. If the crawl returns far fewer articles than `--pool`, re-run
 it with `--verbose` to surface both those skips and every per-attribute extraction failure.
@@ -142,8 +156,10 @@ python "<skill>/scripts/review.py" sweep <cc>.<Class>                 # same cac
 python "<skill>/scripts/review.py" sweep <cc>.<Class> --version V1_1  # pin a legacy version; re-runs free
 ```
 
-The sweep applies the version's *real* body selectors to each cached article and emits two kinds of
-candidate, each with an id:
+This is the same sweep the crawl already ran across the whole pool — the difference is what it's for.
+There it *ranked* articles so the draw would contain the right ones; here it applies the version's
+*real* body selectors to each cached article and turns what it finds into adjudicable candidates. The
+scan selects, the sweep gates. It emits two kinds of candidate, each with an id:
 
 - **DROP** — a structural block (`ul`/`ol`/`dl`/`pre`/`blockquote`/`table`) or `<p>`/`<h*>` in the
   body container whose text is **absent from the extracted body**. A candidate is a question, not a
@@ -209,7 +225,8 @@ python "<skill>/scripts/review.py" status <cc>.<Class>
 `status` is the self-audit the old coverage table used to be, but machine-checked: it exits non-zero
 until the crawl completed, the sweep ran on it, and **every candidate is adjudicated**. It also lists
 what it *can't* check (coherence read, layout coverage, one-off over-capture, images) — those become
-one line each in your review body per publisher. **No verdict before `status` reports READY for every
+one line each in your review body per publisher. It reprints the scan counts too; carry them into the
+review, since they are the only evidence you have about the articles nobody read. **No verdict before `status` reports READY for every
 publisher in the PR.**
 
 ## 3. Diagnose a miss
@@ -278,9 +295,9 @@ A review nobody can skim doesn't get acted on. Two failure modes to avoid:
 Split the labor:
 
 - **Summary body** — skimmable, no verbatim evidence. Lead with the verdict, then **one line per
-  publisher** (clean, or the blocker named in a clause; include the not-machine-checked line: read N,
-  layouts covered, over-capture scanned), then a short **bulleted blocker list** where each bullet
-  names the problem and **links to its inline thread** instead of restating the quote.
+  publisher** (clean, or the blocker named in a clause; include the not-machine-checked line: read N
+  of M scanned, layouts covered, over-capture scanned), then a short **bulleted blocker list** where
+  each bullet names the problem and **links to its inline thread** instead of restating the quote.
 - **Inline comment** — where the evidence lives, one finding each, in this shape:
   - **Line 1:** `**Blocker — <one-line claim>.**` (or `**Nit — …**`).
   - **One** quoted snippet — the single most damning example, ellipsized to the few words that prove
