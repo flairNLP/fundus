@@ -59,7 +59,7 @@ class Sampler:
     ----------
     text_share     : body-isolation tightness for the density finder (0.7 validated; <0.9).
     k_max          : cap on the number of layouts the clustering may find (mode 2).
-    max_path_len   : optionally coarsen tag paths to the last k tags (None = full path).
+    max_path_len   : optionally coarsen tag paths to the last m tags (None = full path).
     """
 
     def __init__(
