@@ -25,6 +25,10 @@ from fundus.parser.utility import normalize_whitespace
 
 # Structural blocks whose dropped content silently corrupts the body. A paragraph-only
 # selector never matches these, so any one of them with real text is a drop candidate.
+# Reported, never judged: `table` has no representation in `ArticleBody` and a `blockquote`
+# may legitimately restate body text, so both are usually adjudicated `ok` (PLAYBOOK §2).
+# They stay on the list because a `table` only reaches here when *none* of its text was
+# captured — which is a real miss when the cell held prose.
 STRUCTURAL_TAGS = {"table", "ul", "ol", "dl", "blockquote", "pre"}
 # Text-bearing blocks the selector is *supposed* to catch; an uncaptured one usually
 # means a selector gap (e.g. <p> whose text lives only inside <em>/<a>).
@@ -62,6 +66,7 @@ class LeakCandidate:
 @dataclass
 class SweepResult:
     applicable: bool
+    reason: str = ""  # why the sweep does not apply; empty when it does
     counts: Dict[str, int] = field(default_factory=dict)
     container: Optional[str] = None
     loose_scope: bool = False
@@ -177,7 +182,10 @@ def sweep_article(doc: lxml.html.HtmlElement, selectors: Dict[str, Optional[Any]
     """Sweep one parsed document against the body units the parser extracted from it."""
     paragraph_selector = selectors.get("paragraph")
     if paragraph_selector is None:
-        return SweepResult(applicable=False)
+        return SweepResult(applicable=False, reason="no _paragraph_selector - body built another way")
+    if not units:
+        # Without body text every block reads as missing, burying the gate in drop candidates.
+        return SweepResult(applicable=False, reason="parser extracted no body")
 
     para_nodes = _element_nodes(paragraph_selector, doc)
     summary_selector = selectors.get("summary")
@@ -240,7 +248,11 @@ def find_leaks(units_per_article: Sequence[Tuple[int, Sequence[str]]]) -> List[L
     The sweep's drop side cannot see leaks (leaked text is *in* the body), but boilerplate
     repeats across articles while article text doesn't. Needs >= 3 articles to mean anything;
     below that it returns nothing and the driver says so.
+
+    Articles without body text are excluded outright: counting them would raise the threshold
+    that real boilerplate has to clear without contributing any unit that could clear it.
     """
+    units_per_article = [(index, units) for index, units in units_per_article if units]
     n = len(units_per_article)
     if n < 3:
         return []

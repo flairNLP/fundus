@@ -4,18 +4,20 @@ The sweep is a review *gate*: each test here pins a failure mode the gate must n
 above all, ways it could report a silent false "clean".
 """
 
+import shutil
 import sys
 from datetime import datetime
 from pathlib import Path
 from types import SimpleNamespace
-from typing import Any, Dict, cast
+from typing import Any, Dict, Iterator, cast
 
 import lxml.html
 import pytest
 from lxml.etree import XPath
 
 from fundus import Article
-from fundus.parser import BaseParser
+from fundus.parser import ArticleBody, BaseParser
+from fundus.parser.data import ArticleSection, TextSequence
 
 _SCRIPTS = Path(__file__).resolve().parents[1] / "skills" / "review-publisher" / "scripts"
 sys.path.insert(0, str(_SCRIPTS))
@@ -29,6 +31,13 @@ SELECTORS: Dict[str, Any] = {"paragraph": PARAGRAPH_SELECTOR, "summary": None, "
 
 def _doc(body_html: str) -> lxml.html.HtmlElement:
     return lxml.html.document_fromstring(f"<html><body>{body_html}</body></html>")
+
+
+@pytest.fixture
+def cache_root(tmp_path: Path) -> Iterator[Path]:
+    """`tmp_path`, emptied again afterwards — pytest itself keeps the last three runs' dirs around."""
+    yield tmp_path
+    shutil.rmtree(tmp_path, ignore_errors=True)
 
 
 class TestSweepArticle:
@@ -112,6 +121,25 @@ class TestSweepArticle:
         result = _sweep.sweep_article(doc, SELECTORS, [normalize_whitespace(raw)])
         assert result.drops == []
 
+    def test_empty_body_is_not_applicable_rather_than_all_drops(self):
+        # The crawl draws unfiltered, so a parser that extracted nothing reaches the sweep. Comparing
+        # against an empty body would make every block a drop candidate and bury the gate.
+        doc = _doc(
+            """
+            <div class="content">
+              <p class="b">Intro paragraph text here.</p>
+              <ul><li>A list item with enough characters.</li></ul>
+            </div>
+            """
+        )
+        result = _sweep.sweep_article(doc, SELECTORS, [])
+        assert not result.applicable and result.drops == []
+        assert "no body" in result.reason
+
+    def test_missing_paragraph_selector_reports_its_own_reason(self):
+        result = _sweep.sweep_article(_doc("<p>text</p>"), {"paragraph": None}, ["some body text"])
+        assert not result.applicable and "_paragraph_selector" in result.reason
+
 
 class TestFindLeaks:
     def test_repeated_unit_is_flagged(self):
@@ -129,9 +157,17 @@ class TestFindLeaks:
         assert _sweep.find_leaks(units) == []  # 4 of 10 < threshold 5
         assert _sweep.find_leaks(units[:2]) == []  # <3 articles: scan is inactive
 
+    def test_articles_without_body_do_not_raise_the_threshold(self):
+        # Body-less articles reach the sweep now; counting them would demand that boilerplate clear
+        # a threshold it cannot reach, since they contribute no unit at all.
+        boilerplate = "Subscribe to our newsletter for daily updates!"
+        units = [(i, [f"unique article text number {i} here", boilerplate]) for i in range(1, 4)]
+        units += [(i, []) for i in range(4, 11)]
+        assert [leak.text for leak in _sweep.find_leaks(units)] == [boilerplate]
+
 
 class TestStore:
-    def test_save_article_round_trips_exact_bytes(self, tmp_path: Path):
+    def test_save_article_round_trips_exact_bytes(self, cache_root: Path):
         # CRLF must survive: text mode would write \r\r\n on Windows and read back \n\n.
         content = "<html>\r\n<body>line1\r\nline2</body>\r\n</html>"
         article = SimpleNamespace(
@@ -142,27 +178,44 @@ class TestStore:
             images=[],
             body=None,
         )
-        record = _store.save_article(tmp_path, 1, cast(Article, article))
-        assert _store.read_html(tmp_path, record) == content
+        record = _store.save_article(cache_root, 1, cast(Article, article))
+        assert _store.read_html(cache_root, record) == content
         assert _store.body_units(record["body"]) == []
 
-    def test_prepare_cache_dir_refuses_foreign_directories(self, tmp_path: Path):
-        foreign = tmp_path / "foreign"
+    def test_prepare_cache_dir_refuses_foreign_directories(self, cache_root: Path):
+        foreign = cache_root / "foreign"
         foreign.mkdir()
         (foreign / "important.txt").write_text("do not delete", encoding="utf-8")
         with pytest.raises(SystemExit):
             _store.prepare_cache_dir(foreign)
         assert (foreign / "important.txt").exists()
 
-        cache = tmp_path / "cache"
+        cache = cache_root / "cache"
         cache.mkdir()
         (cache / _store.STATE_FILE).write_text("{}", encoding="utf-8")
         (cache / "01.html").write_text("x", encoding="utf-8")
         _store.prepare_cache_dir(cache)  # a real cache is wiped and recreated
         assert cache.exists() and not any(cache.iterdir())
 
-        _store.prepare_cache_dir(tmp_path / "fresh")  # nonexistent is simply created
-        assert (tmp_path / "fresh").is_dir()
+        _store.prepare_cache_dir(cache_root / "fresh")  # nonexistent is simply created
+        assert (cache_root / "fresh").is_dir()
+
+    def test_missing_attributes_matches_the_default_draw(self):
+        # `Requires` is fundus' own filter, so a summary-only body counts as missing here exactly
+        # as it does in the default crawl - the review must not invent its own truthiness.
+        summary_only = ArticleBody(summary=TextSequence(["A standfirst."]), sections=[])
+        complete = ArticleBody(
+            summary=TextSequence([]), sections=[ArticleSection(TextSequence([]), TextSequence(["A paragraph."]))]
+        )
+
+        def article(**overrides: Any) -> Article:
+            attributes = {"title": "t", "body": complete, "publishing_date": datetime(2026, 6, 1), **overrides}
+            return cast(Article, SimpleNamespace(**attributes))
+
+        assert _store.missing_attributes(article()) == []
+        assert _store.missing_attributes(article(body=summary_only)) == ["body"]
+        assert _store.missing_attributes(article(title=None, body=None)) == ["title", "body"]
+        assert _store.missing_attributes(article(publishing_date=None)) == ["publishing_date"]
 
     def test_candidate_ids_are_stable_content_hashes(self):
         assert _store.candidate_id("drop", "x", "ul", "text") == _store.candidate_id("drop", "x", "ul", "text")

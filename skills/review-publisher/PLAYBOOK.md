@@ -110,6 +110,15 @@ know exists is still missing, **widen the draw (`--pool`) and re-crawl**. If the
 small or uniform to cover all four, note that in the review. Don't prompt the user for a number; the
 default pool is the floor and coverage decides the rest.
 
+**The draw is deliberately unfiltered** (`only_complete=False`). Fundus' default crawl drops any
+article missing `title`, `body` or `publishing_date` — precisely the articles a parser broke — so
+filtering before sampling would hide the worst findings. Such an article is sampled and cached like
+any other, and the Tier-1 view flags it `! missing title, body`. Treat that as **blocker-level unless
+the page genuinely isn't an article** (video stub, liveblog, photo gallery); say which in the review.
+Note that a parser that *raises* is skipped by fundus before it reaches the pool, and its reason is
+logged below the default handler level. If the crawl returns far fewer articles than `--pool`, re-run
+it with `--verbose` to surface both those skips and every per-attribute extraction failure.
+
 **Stop condition:** 0 articles after a fair attempt means the sources or parser are broken — that is
 itself a blocker-level finding; report it, don't silently stall. Many publishers block generic
 fetchers, so inspect via the cached html (`show` prints the per-article file paths), never a manual
@@ -136,9 +145,16 @@ python "<skill>/scripts/review.py" sweep <cc>.<Class> --version V1_1  # pin a le
 The sweep applies the version's *real* body selectors to each cached article and emits two kinds of
 candidate, each with an id:
 
-- **DROP** — a structural block (`table`/`ul`/`ol`/`dl`/`blockquote`/`pre`) or `<p>`/`<h*>` in the
-  body container whose text is **absent from the extracted body**. Either real content the selector
-  misses (blocker) or page chrome (fine).
+- **DROP** — a structural block (`ul`/`ol`/`dl`/`pre`/`blockquote`/`table`) or `<p>`/`<h*>` in the
+  body container whose text is **absent from the extracted body**. A candidate is a question, not a
+  verdict, and the answer depends on the tag:
+  - `ul`/`ol`/`dl`/`pre`, `<p>`, `<h*>` — prose the selector should have caught. A blocker unless
+    the text is page chrome.
+  - `blockquote` — case by case. A pull-quote restating a paragraph that *is* in the body is fine
+    (`ok`); quoted source material appearing nowhere else is a blocker.
+  - `table` — Fundus has no representation for tabular content (`ArticleBody` is a summary plus
+    sections of plain text), so a dropped data table is normally `ok`. It is a blocker only when
+    the element is layout and the missing text is ordinary prose.
 - **LEAK** — a body unit **repeated across half the cached articles**: the signature of boilerplate
   *inside* the body (newsletter pitches, teasers, bios repeat; article text doesn't).
 
@@ -147,7 +163,7 @@ The boilerplate-vs-body call is yours, and it's recorded, not implied:
 ```bash
 python "<skill>/scripts/review.py" show <cc>.<Class> <id>      # full text + cached html paths
 python "<skill>/scripts/review.py" adjudicate <cc>.<Class> <id> ok --note "site-wide cookie banner"
-python "<skill>/scripts/review.py" adjudicate <cc>.<Class> <id> blocker --note "agenda table dropped; <url>"
+python "<skill>/scripts/review.py" adjudicate <cc>.<Class> <id> blocker --note "<ul> of match results dropped; <url>"
 ```
 
 `ok` means benign (chrome outside the body for a DROP; legitimately recurring content for a LEAK);
@@ -161,8 +177,9 @@ What the sweep **cannot** do, and stays on you:
 - **Over-capture beyond repetition.** The LEAK scan only catches *recurring* boilerplate. A one-off
   caption or "Related:" line leaked into a single body never repeats — on the articles you read,
   check the body for anything that isn't article content.
-- **Not-sweepable articles.** A version without a `_paragraph_selector` builds its body another way;
-  the sweep reports it N/A and you do the by-hand walk below.
+- **Not-sweepable articles.** A version without a `_paragraph_selector` builds its body another way,
+  and an article whose body came out empty has nothing to compare against. The sweep reports both
+  N/A with the reason and you do the by-hand walk below — an empty body is itself the finding.
 - **Layout coverage** (§2 crawl) and the **image attributes** (§3).
 
 When you want the raw container — a candidate needs context, or an article is N/A — walk the cached
@@ -211,11 +228,10 @@ parser's `caption_selector`, `author_selector` (whose `credits` named group is s
 caption), and the `upper_`/`lower_boundary_selector` cover boundaries. Name the offending selector when
 you report.
 
-To see articles the extraction filter *dropped* entirely (not just mis-parsed), re-crawl with
-`crawl(max_articles=..., only_complete=False)` in a scratch snippet — incomplete articles then show up
-instead of being silently filtered. (For a one-off URL:
-`PublisherCollection.<cc>.<Class>.parser(date.today()).parse(content, "raise")` — but source the HTML
-from the cache or the crawler's session; many publishers block generic fetchers.)
+Articles the default extraction filter would have dropped are already in the draw (§2), so there is
+nothing to re-crawl for them. To re-run a parser against one cached article while you iterate on a
+selector: `PublisherCollection.<cc>.<Class>.parser(date.today()).parse(content, "raise")` — but source
+the HTML from the cache or the crawler's session; many publishers block generic fetchers.
 
 ## 4. Decide the verdict
 

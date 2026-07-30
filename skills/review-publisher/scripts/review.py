@@ -26,6 +26,7 @@ Usage (any working directory; <skill>/ is this skill's directory):
 import argparse
 import io
 import json
+import logging
 import sys
 import time
 from pathlib import Path
@@ -40,6 +41,7 @@ from _store import (
     candidates,
     default_cache_dir,
     load_state,
+    missing_attributes,
     new_state,
     payload_gaps,
     pending_candidates,
@@ -54,6 +56,7 @@ from _store import (
 from _sweep import STRUCTURAL_TAGS, SweepResult, find_leaks, sweep_article, version_classes
 
 from fundus import Article, Crawler
+from fundus.logging import set_log_level
 
 SCRIPT = Path(__file__).resolve()
 RULE = "=" * 100
@@ -127,6 +130,12 @@ def _select_for_review(pool: List[Article]) -> List[Tuple[Article, int, bool]]:
 
 
 def cmd_crawl(args: argparse.Namespace) -> int:
+    if args.verbose:
+        # Fundus' handlers default to ERROR, so the two things a short crawl needs explaining —
+        # articles skipped because the parser raised, and per-attribute extraction failures — are
+        # invisible. Opt-in, because the redirect log fires per article and buries the Tier-1 read.
+        set_log_level(logging.INFO)
+
     publisher = resolve_publisher(args.publisher)
     cache_dir = resolve_cache_dir(args.publisher, args.cache_dir)
     prepare_cache_dir(cache_dir)
@@ -140,7 +149,9 @@ def cmd_crawl(args: argparse.Namespace) -> int:
         # The only networked step: draw a candidate pool, then reduce it to a layout-diverse subset.
         # Sampling needs the whole pool up front, so unlike the per-article cache this buffers in
         # memory — an interrupted crawl caches nothing and is simply re-run (it's the cheap step).
-        pool = list(Crawler(publisher).crawl(max_articles=args.pool))
+        # `only_complete=False`: fundus' default draw drops articles missing title/body/publishing_date,
+        # which is exactly the parser failure a review must see. They reach the sampler like any other.
+        pool = list(Crawler(publisher).crawl(max_articles=args.pool, only_complete=False))
         for article, layout, is_representative in _select_for_review(pool):
             index = len(state["articles"]) + 1
             state["articles"].append(save_article(cache_dir, index, article))
@@ -151,6 +162,8 @@ def cmd_crawl(args: argparse.Namespace) -> int:
             print(RULE)
             print(f"[{index}] (layout {layout} {role}) {article.html.requested_url}")
             print(f"{article.title} | {article.authors} | {article.topics} | imgs: {len(article.images)}")
+            if missing := missing_attributes(article):
+                print(f"! missing {', '.join(missing)} - fundus' default crawl would have dropped this article.")
             print(str(article.body))
         completed = True
     finally:
@@ -162,7 +175,7 @@ def cmd_crawl(args: argparse.Namespace) -> int:
     print(RULE)
     print(f"crawled {len(pool)} candidate(s), reviewing {reviewing} layout-diverse article(s) -> {cache_dir}")
     if reviewing == 0:
-        print("0 articles crawled - sources or parser likely broken (blocker-level; see PLAYBOOK §2).")
+        print("0 articles crawled - sources or parser likely broken; that is itself a blocker-level finding.")
     else:
         print(f"next (Tier 2): {_self_invocation(args, 'sweep')}")
     return 0
@@ -224,8 +237,8 @@ def cmd_sweep(args: argparse.Namespace) -> int:
         print(f"     version={version_cls.__name__}  crawl_date={record['crawl_date']}")
         if not result.applicable:
             not_applicable += 1
-            print("     sweep N/A (no _paragraph_selector - body built another way).")
-            print("     MANUAL diff required for this article (PLAYBOOK §2, by-hand walk).")
+            print(f"     sweep N/A ({result.reason}).")
+            print("     MANUAL diff required for this article - walk the cached html by hand.")
             continue
         counts = result.counts
         print(
@@ -272,7 +285,7 @@ def cmd_sweep(args: argparse.Namespace) -> int:
     if len(state["articles"]) < 3:
         print("note: <3 articles cached, so the cross-article leak scan is inactive - scan bodies by hand.")
     if not_applicable:
-        print(f"! {not_applicable} article(s) not sweepable - the manual diff there is on you (PLAYBOOK §2).")
+        print(f"! {not_applicable} article(s) not sweepable - the manual diff there is on you.")
     for line in _candidate_lines(state):
         print(line)
     if state["sweep"]["candidates"]:
@@ -356,6 +369,10 @@ def cmd_status(args: argparse.Namespace) -> int:
     else:
         version = sweep["version"] or "by crawl date"
         print(f"sweep:     {sweep['articles_swept']} article(s), selectors {version}, N/A: {sweep['not_applicable']}")
+        if sweep["articles_swept"] and sweep["articles_swept"] == sweep["not_applicable"]:
+            # Zero candidates here means nothing was checkable, not that nothing was wrong - and the
+            # gate opens on zero candidates.
+            print("! no article was sweepable - the sweep verified nothing; the by-hand walk is the whole review")
         verdicts = [adjudications.get(c["id"], {}).get("verdict") for c in candidates(state)]
         print(
             f"candidates: {len(verdicts)} total - {verdicts.count('blocker')} blocker, "
@@ -417,8 +434,8 @@ def cmd_payload(args: argparse.Namespace) -> int:
     print(RULE)
     print(f"written to {findings_file}")
     print("This is the mechanical half only - your Tier-1 / layout / over-capture findings join it in")
-    print("the review body. Assemble review.json per PLAYBOOK §5 (own PR -> COMMENT; never APPROVE)")
-    print("and show it to the user BEFORE any `gh api` POST.")
+    print("the review body. Assemble review.json from it (own PR -> COMMENT; never APPROVE) and show")
+    print("it to the user BEFORE any `gh api` POST.")
     return 0
 
 
@@ -441,6 +458,9 @@ def main() -> int:
 
     crawl = add("crawl", "crawl a candidate pool, then Tier-1 read + cache a layout-diverse subset")
     crawl.add_argument("--pool", type=int, default=50, help="candidate articles to crawl before sampling")
+    crawl.add_argument(
+        "--verbose", action="store_true", help="surface fundus' INFO logs: why articles/attributes were skipped"
+    )
     crawl.set_defaults(func=cmd_crawl)
 
     sweep = add("sweep", "offline structural sweep of the cached draw -> candidates")

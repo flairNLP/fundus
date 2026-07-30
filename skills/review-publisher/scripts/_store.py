@@ -22,7 +22,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
-from fundus import Article, PublisherCollection
+from fundus import Article, PublisherCollection, Requires
 from fundus.publishers.base_objects import Publisher
 
 STATE_FILE = "state.json"
@@ -30,6 +30,12 @@ STATE_FILE = "state.json"
 # Adjudication verdicts: "ok" = benign (boilerplate outside the body for a drop candidate,
 # legitimately repeated content for a leak candidate); "blocker" = a real finding.
 VERDICTS = ("ok", "blocker")
+
+# The completeness filter fundus' `crawl` applies by default. The review crawls without it (see
+# `cmd_crawl`) so the broken articles reach the sampler; this re-applies it only to *name* what an
+# article is missing, so the Tier-1 read says "missing: body" instead of printing a bare `None`.
+REQUIRED_ATTRIBUTES = ("title", "body", "publishing_date")
+_completeness_filter = Requires(*REQUIRED_ATTRIBUTES)
 
 
 # --- publisher + path resolution ---
@@ -110,6 +116,17 @@ def html_filename(index: int) -> str:
     return f"{index:02d}.html"
 
 
+def missing_attributes(article: Article) -> List[str]:
+    """The required attributes fundus' default extraction filter would have rejected `article` for.
+
+    Delegates the truthiness call to fundus' own `Requires` rather than re-implementing it: an
+    `ArticleBody` is falsy when it holds no section with paragraphs, so a summary-only body counts
+    as missing here exactly as it does in the default draw.
+    """
+    rejected = _completeness_filter({name: getattr(article, name) for name in REQUIRED_ATTRIBUTES})
+    return [name for name in REQUIRED_ATTRIBUTES if name in rejected.missing_attributes]
+
+
 def save_article(cache_dir: Path, index: int, article: Article) -> Dict[str, Any]:
     """Write one article's raw bytes and return its state record.
 
@@ -123,8 +140,8 @@ def save_article(cache_dir: Path, index: int, article: Article) -> Dict[str, Any
         "url": article.html.requested_url,
         "crawl_date": article.html.crawl_date.isoformat(),
         "title": article.title,
-        "authors": list(article.authors),
-        "topics": list(article.topics),
+        "authors": article.authors,
+        "topics": article.topics,
         "images": len(article.images),
         "body": body.serialize() if body is not None else None,
         "html_file": html_filename(index),
@@ -182,7 +199,7 @@ def payload_gaps(state: Dict[str, Any]) -> List[str]:
     if not crawl.get("completed"):
         gaps.append("the crawl did not complete (interrupted?) — re-run `crawl`")
     if not state.get("articles"):
-        gaps.append("no articles in the cache — 0 crawled is itself a blocker-level finding (see PLAYBOOK §2)")
+        gaps.append("no articles in the cache — 0 crawled is itself a blocker-level finding")
     sweep = state.get("sweep")
     if not sweep:
         gaps.append("no sweep recorded — run `sweep`")
@@ -191,6 +208,6 @@ def payload_gaps(state: Dict[str, Any]) -> List[str]:
             gaps.append("the sweep predates the last crawl — re-run `sweep`")
         pending = pending_candidates(state)
         if pending:
-            ids = ", ".join(c["id"] for c in pending[:15])
+            ids = ", ".join(c["id"] for c in pending[:15]) + (", ..." if len(pending) > 15 else "")
             gaps.append(f"{len(pending)} candidate(s) un-adjudicated: {ids}")
     return gaps
