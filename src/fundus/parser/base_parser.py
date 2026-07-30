@@ -243,6 +243,11 @@ class BaseParser(ABC):
         (or builds its body another way entirely). Public so external tooling (e.g. the
         review skill under skills/) does not have to reach into the private
         ``_*_selector`` attributes.
+
+        The naming convention this relies on — a selector passed as ``<x>_selector`` lives on
+        the class as ``_<x>_selector`` — is nothing but a convention, so it is enforced by
+        ``tests/test_parser.py::TestParser::test_body_selector_naming`` until the selectors
+        become declared class variables (see #958, which retires both).
         """
         return {
             "summary": getattr(cls, "_summary_selector", None),

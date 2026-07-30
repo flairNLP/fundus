@@ -1,6 +1,9 @@
+import ast
 import datetime
+import inspect
 import pickle
-from typing import Any, Dict, List, Optional, Tuple, Union
+import textwrap
+from typing import Any, Dict, List, Optional, Tuple, Type, Union
 
 import lxml.html
 import pytest
@@ -203,6 +206,48 @@ attributes_required_to_cover = {"title", "authors", "topics", "publishing_date",
 attributes_parsers_are_required_to_cover = {"body"}
 
 
+# `BaseParser.body_selectors` locates a version's body selectors by convention: a selector passed as
+# `<x>_selector` must live on the class as `_<x>_selector`. Nothing declares that, so where the name
+# drifts, external tooling (skills/review-publisher) silently reads `None` instead of the selector.
+# Enforced here until the selectors become declared class variables, see #958 - which retires this.
+_BODY_SELECTOR_PARAMETERS = ("paragraph_selector", "summary_selector", "subheadline_selector")
+
+
+def _called_name(func: ast.expr) -> Optional[str]:
+    if isinstance(func, ast.Name):
+        return func.id
+    return func.attr if isinstance(func, ast.Attribute) else None
+
+
+def _misnamed_body_selectors(parser_class: Type[BaseParser]) -> List[str]:
+    """Body selectors `parser_class` passes under a name `BaseParser.body_selectors` cannot find."""
+    misnamed: List[str] = []
+    for node in ast.walk(ast.parse(textwrap.dedent(inspect.getsource(parser_class)))):
+        if not isinstance(node, ast.Call) or _called_name(node.func) != "extract_article_body_with_selector":
+            continue
+        # extract_article_body_with_selector(doc, paragraph_selector, summary_selector, subheadline_selector, ...)
+        arguments: List[Tuple[str, ast.expr]] = [
+            (_BODY_SELECTOR_PARAMETERS[index - 1], argument)
+            for index, argument in enumerate(node.args)
+            if 1 <= index <= len(_BODY_SELECTOR_PARAMETERS)
+        ]
+        arguments += [
+            (keyword.arg, keyword.value)
+            for keyword in node.keywords
+            if keyword.arg is not None and keyword.arg in _BODY_SELECTOR_PARAMETERS
+        ]
+        for parameter, value in arguments:
+            # Only a `self.<attribute>` argument can be misnamed. An inline selector is invisible to
+            # `body_selectors()` either way, which then reports "not declared" rather than "empty".
+            if not (isinstance(value, ast.Attribute) and isinstance(value.value, ast.Name)):
+                continue
+            if value.value.id == "self" and value.attr != f"_{parameter}":
+                misnamed.append(
+                    f"{parser_class.__qualname__} passes {parameter}=self.{value.attr}, expected self._{parameter}"
+                )
+    return misnamed
+
+
 @pytest.mark.parametrize(
     "publisher", list(PublisherCollection), ids=[publisher.__name__ for publisher in PublisherCollection]
 )
@@ -221,6 +266,19 @@ class TestParser:
                     )
                 else:
                     raise KeyError(f"Unsupported attribute {attr.__name__!r}")
+
+    def test_body_selector_naming(self, publisher: Publisher) -> None:
+        misnamed: List[str] = []
+        for versioned_parser in publisher.parser:
+            # Walk the MRO: `body` is often defined on V1 and inherited by the later versions.
+            for parser_class in versioned_parser.__mro__:
+                if not issubclass(parser_class, BaseParser) or parser_class is BaseParser:
+                    continue
+                misnamed += [entry for entry in _misnamed_body_selectors(parser_class) if entry not in misnamed]
+        assert not misnamed, (
+            f"{'; '.join(misnamed)}\n`BaseParser.body_selectors` finds a version's body selectors by name only, "
+            f"so {publisher.name} silently reads as not declaring them (see #958)."
+        )
 
     def test_parsing(self, publisher: Publisher) -> None:
         comparative_data = load_test_case_data(publisher)
