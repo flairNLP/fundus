@@ -29,5 +29,7 @@ hold onto even before you open it:
 - **Each publisher is its own review** — its own crawl, sweep, and `status READY`; a blocker on one
   does not discharge the checks on the rest.
 - **Verdict:** any blocker → `REQUEST_CHANGES`, else `COMMENT`. Never `APPROVE`; your own PR → `COMMENT`.
-- **Keep the review tight, and confirm before posting** — one skimmable review, no evidence stated
-  twice (§5); show `review.json` to the user before the `gh api` POST.
+- **Keep the review tight, and confirm before posting** — fill the `review.json` skeleton `payload`
+  emits; every finding lives in exactly one place (inline if it has a diff line), and the summary
+  carries only what has no inline home (§5). Show the filled `review.json` to the user before the
+  `gh api` POST.
