@@ -54,7 +54,7 @@ class InstallerApp(App[None]):
     """
 
     BINDINGS = [
-        Binding("space", "toggle", "Install / uninstall"),
+        Binding("space", "toggle_skill", "Install / uninstall"),
         Binding("r", "refresh", "Refresh"),
         Binding("q", "quit", "Quit"),
     ]
@@ -161,7 +161,7 @@ class InstallerApp(App[None]):
     def on_data_table_row_highlighted(self, event: DataTable.RowHighlighted) -> None:
         self._show_description(self.skills.get(str(event.row_key.value)))
 
-    def action_toggle(self) -> None:
+    def action_toggle_skill(self) -> None:
         skill = self._highlighted_skill()
         if skill is None:
             return
