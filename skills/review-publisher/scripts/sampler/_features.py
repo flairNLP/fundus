@@ -27,7 +27,7 @@ from sklearn.metrics.pairwise import cosine_distances
 _SKIP_TAGS = frozenset({"script", "style", "noscript", "template", "svg", "path", "br", "wbr"})
 
 DEFAULT_TEXT_SHARE = 0.7  # tightest container holding >= this share of body text (validated)
-_MAX_LINK_DENSITY = 0.5  # a block whose text is >this fraction inside <a> is boilerplate
+_MAX_LINK_DENSITY = 0.5  # a block whose text is > this fraction inside <a> is boilerplate
 _MIN_BLOCK_TEXT = 40  # ignore tiny blocks when stripping boilerplate / protecting prose
 
 
