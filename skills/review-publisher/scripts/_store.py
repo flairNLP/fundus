@@ -69,7 +69,7 @@ def prepare_cache_dir(cache_dir: Path) -> None:
         if any(cache_dir.iterdir()) and not (cache_dir / STATE_FILE).exists():
             raise SystemExit(
                 f"refusing to wipe {cache_dir}: non-empty and no {STATE_FILE}, so it doesn't look like "
-                f"a review cache. Use an empty or not-yet-existing --cache-dir."
+                f"a review cache. Use a valid or not-yet-existing --cache-dir."
             )
         shutil.rmtree(cache_dir)
     cache_dir.mkdir(parents=True, exist_ok=True)
