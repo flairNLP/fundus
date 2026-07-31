@@ -185,6 +185,7 @@ def _scan_summary(pool: List[Article], risks: List[ArticleRisk], cached: Dict[in
                 "tier": risk.tier,
                 "flags": risk.flags,
                 "uncommon_chars": risk.uncommon_chars,
+                "signatures": risk.signatures,
                 "cached_index": cached.get(risk.index),
             }
             for risk in risks
@@ -254,11 +255,21 @@ def cmd_crawl(args: argparse.Namespace) -> int:
     if (state["scan"] or {}).get("medoid_flagged"):
         print("! the most typical article in the pool is flagged - a mainstream failure, not an edge case.")
     if unreviewed:
-        print(f"! {len(unreviewed)} flagged article(s) did not fit the draw - raise --review or read them by hand:")
-        for risk in unreviewed[:5]:
-            print(f"    {pool[risk.index].html.requested_url}  ({risk.detail})")
-        if len(unreviewed) > 5:
-            print(f"    ... and {len(unreviewed) - 5} more; every scanned article is in state.json under `scan`.")
+        # Expected, not a coverage gap: the draw is capped and the pool scan already covers these.
+        # Grouped by class because that is the unit of judgment - the review owes one line per
+        # class, not a read per article.
+        classes: Dict[str, List[ArticleRisk]] = {}
+        for risk in unreviewed:
+            label = "; ".join(risk.flags) or (f"{risk.signatures[0]} dropped" if risk.signatures else "uncaptured text")
+            classes.setdefault(label, []).append(risk)
+        print(
+            f"undrawn: {len(unreviewed)} flagged article(s) outside the draw - expected; the pool scan above\n"
+            "         already covers them. Account for each class below in the review with one line;\n"
+            "         re-crawling with a bigger --review needs a stated reason and the user's go-ahead."
+        )
+        for label, members in sorted(classes.items(), key=lambda item: -len(item[1])):
+            print(f"    {len(members):>3}x  {label}  e.g. {pool[members[0].index].html.requested_url}")
+        print("         (per-article rows, with flags and drop signatures, are in state.json under `scan`)")
     print(f"next (Tier 2): {_self_invocation(args, 'sweep')}")
     return 0
 
@@ -456,8 +467,8 @@ def cmd_status(args: argparse.Namespace) -> int:
         print("draw:      skewed toward flagged articles by design; the rest of the pool is covered by the scan")
         if scan["flagged"] > scan["reviewed_flagged"]:
             print(
-                f"!          {scan['flagged'] - scan['reviewed_flagged']} flagged article(s) were not "
-                f"reviewed - their urls are under `scan` in state.json"
+                f"           {scan['flagged'] - scan['reviewed_flagged']} flagged not in the draw "
+                f"(expected; per-article rows under `scan` in state.json)"
             )
         if scan["medoid_flagged"]:
             print("!          the most typical article in the pool is flagged - a mainstream failure")

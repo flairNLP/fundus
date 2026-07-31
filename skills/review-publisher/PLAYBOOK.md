@@ -66,9 +66,12 @@ gh pr diff <PR_NUMBER>
 ## 2. Crawl live articles and verify the body
 
 ```bash
-python "<skill>/scripts/review.py" crawl <cc>.<Class>                         # pool 100 -> read 10
-python "<skill>/scripts/review.py" crawl <cc>.<Class> --pool 200 --review 16  # widen either half
+python "<skill>/scripts/review.py" crawl <cc>.<Class>   # pool 100 -> read 10
 ```
+
+**The defaults are the budget.** Raising `--pool` or `--review` costs a second live crawl and
+context on every extra article — never do it on your own initiative: state the concrete reason
+(e.g. a named missing layout) and get the user's go-ahead first.
 
 **One live crawl per publisher; every later step replays its cache.** The crawl draws a candidate
 pool (`--pool`), sweeps *all* of it offline, then caches the `--review` articles worth reading and
@@ -76,17 +79,23 @@ prints each one's Tier-1 view. The draw is **deliberately skewed toward flagged 
 read fine" is a weaker claim than the pool-wide scan counts, which you carry into the review as the
 evidence about the articles nobody read. An interrupted crawl caches nothing; just re-run it.
 
-- **Two crawl warnings demand action, not acknowledgement**: flagged articles that didn't fit the
-  draw (raise `--review` or read their printed urls by hand), and a flagged *most-typical* article —
-  a mainstream failure, which should lead the review.
+- **A flagged *most-typical* article demands action, not acknowledgement** — that's a mainstream
+  failure, and it should lead the review.
+- **Flagged articles outside the draw are the normal case, not a coverage hole** — premium/teaser
+  pages flag by the hundred, and the pool scan already covers them. The driver groups them by
+  class; the review owes one line per class: "74 premium stubs with no body" is an explanation,
+  and a class whose drop signature matches a defect you already named is covered by that finding
+  ("N more articles show the same signature" — the signatures are in `state.json` under `scan`).
+  Don't re-crawl with a bigger `--review` to shrink the count — it won't clear, and the budget
+  rule above applies regardless.
 - **The draw is unfiltered** (`only_complete=False`): articles missing
   `title`/`body`/`publishing_date` — exactly what a broken parser produces — reach the scan and
   print as `! missing …`. Treat as blocker-level unless the page genuinely isn't an article (video
   stub, liveblog, photo gallery); say which in the review.
 - **Layout coverage is yours**: the draw should span a straight news piece, an opinion/column, a
-  listicle/bullet-list piece, and an image-heavy one. If a layout you know exists is missing, widen
-  `--pool` and re-crawl — don't ask the user for numbers. Publisher too small or uniform for all
-  four → note that in the review.
+  listicle/bullet-list piece, and an image-heavy one. A layout you know exists but that's missing
+  from the draw is the concrete reason for a wider `--pool` — name it and ask before re-crawling.
+  Publisher too small or uniform for all four → note that in the review.
 - **Far fewer articles than `--pool`?** Re-run with `--verbose` to surface parser-raise skips and
   per-attribute failures. **0 articles after a fair attempt is itself a blocker-level finding** —
   report it, don't stall. Inspect via the cached html (`show` prints paths); many publishers block

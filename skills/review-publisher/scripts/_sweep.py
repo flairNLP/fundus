@@ -316,6 +316,9 @@ class ArticleRisk:
     flags: List[str]  # what makes this article stand out; empty below tier 2
     uncommon_chars: int  # uncaptured text left once site chrome is discounted
     result: SweepResult
+    # Descriptions of the uncommon dropped blocks, biggest first — the checkable evidence that an
+    # article outside the draw shows the *same* defect as an adjudicated finding.
+    signatures: List[str] = field(default_factory=list)
 
     @property
     def flagged(self) -> bool:
@@ -362,7 +365,8 @@ def rank_pool(swept: Sequence[Tuple[int, SweepResult, Sequence[str]]]) -> List[A
             flags.append("missing " + ", ".join(missing))
         if inapplicable:
             flags.append(result.reason)
-        uncommon_chars = sum(drop.chars for drop in result.drops if drop.key not in common)
+        uncommon = sorted((drop for drop in result.drops if drop.key not in common), key=lambda drop: -drop.chars)
+        uncommon_chars = sum(drop.chars for drop in uncommon)
         risks.append(
             ArticleRisk(
                 index=index,
@@ -370,6 +374,7 @@ def rank_pool(swept: Sequence[Tuple[int, SweepResult, Sequence[str]]]) -> List[A
                 flags=flags,
                 uncommon_chars=uncommon_chars,
                 result=result,
+                signatures=list(dict.fromkeys(drop.description for drop in uncommon))[:3],
             )
         )
     risks.sort(key=lambda risk: (-risk.tier, -risk.uncommon_chars, risk.index))
