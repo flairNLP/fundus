@@ -64,11 +64,13 @@ class LuxemburgerWortParser(ParserProxy):
 
     class V2(BaseParser):
         _summary_selector = XPath("//article//h2[contains(@class, 'paragraph')]")
-        _paragraph_selector = XPath("//article//section/p[text()]")
+        _paragraph_selector = XPath(
+            "//article//section/p[text() or em] | //article//section/div[contains(@class,'interview_interview')]/p"
+        )
         _subheadline_selector = XPath("//article//section/h4")
 
         _topics_selector = XPath("//div[contains(@class, 'tag-list')]//a")
-        _bloat_topics = {"Mosaik", "Sport", "Panorama"}
+        _bloat_topics = {"Mosaik", "Sport", "Panorama", "Luxemburg", "Norden", "Osten", "Westen", "Süden"}
 
         @attribute
         def body(self) -> Optional[ArticleBody]:
@@ -103,8 +105,10 @@ class LuxemburgerWortParser(ParserProxy):
             return image_extraction(
                 doc=self.precomputed.doc,
                 paragraph_selector=self._paragraph_selector,
-                lower_boundary_selector=XPath("//div[@class='trustbox_trustbox__Yxr99']"),
+                lower_boundary_selector=XPath("//div[starts-with(@class,'trustbox_trustbox')]"),
                 image_selector=XPath("//figure//img[not(contains(@class, 'teaser'))]"),
-                caption_selector=XPath("./ancestor::figure//span[contains(@class, 'caption')]"),
+                caption_selector=XPath(
+                    "./ancestor::figure//span[contains(@class, 'caption') and not(contains(@class,'gallery_counter'))]"
+                ),
                 author_selector=re.compile(r"(?i)Foto:\s*(?P<credits>.*)$"),
             )
