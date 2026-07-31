@@ -3288,8 +3288,8 @@
         <div>Daily News (Tanzania)</div>
       </td>
       <td>
-        <a href="https://www.dailynews.co.tz/">
-          <span>www.dailynews.co.tz</span>
+        <a href="https://dailynews.co.tz/">
+          <span>dailynews.co.tz</span>
         </a>
       </td>
       <td>
