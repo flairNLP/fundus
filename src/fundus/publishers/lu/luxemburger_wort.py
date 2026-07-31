@@ -65,9 +65,12 @@ class LuxemburgerWortParser(ParserProxy):
     class V2(BaseParser):
         _summary_selector = XPath("//article//h2[contains(@class, 'paragraph')]")
         _paragraph_selector = XPath(
-            "//article//section/p[text() or em] | //article//section/div[contains(@class,'interview_interview')]/p"
+            "//article//section/p[text() or em] | "
+            "//article//section/div[contains(@class,'interview_interview')]/p | "
+            "//article//section/ul/li | "
+            "//article//section/ol/li"
         )
-        _subheadline_selector = XPath("//article//section/h4")
+        _subheadline_selector = XPath("//article//section/*[self::h4 or self::h5]")
 
         _topics_selector = XPath("//div[contains(@class, 'tag-list')]//a")
         _bloat_topics = {"Mosaik", "Sport", "Panorama", "Luxemburg", "Norden", "Osten", "Westen", "Süden"}
