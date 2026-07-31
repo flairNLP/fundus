@@ -149,11 +149,17 @@ class HankookIlboParser(ParserProxy):
             )
 
     class V3(BaseParser):
-        _paragraph_selector = XPath("//div[@class='article-view']/p[text()]")
+        _paragraph_selector = XPath(
+            "//div[@class='article-view']/p[normalize-space()] |//div[@class='article-view']//blockquote"
+        )
         _subheadline_selector = XPath("//div[@class='article-view']/h3")
         _summary_selector = XPath("//div[@class='article-view']/h2")
 
-        _topics_selector = XPath("//div[@class='flex flex-wrap gap-8']//a")
+        @function(priority=1)
+        def _preprocess_summary_nodes(self) -> None:
+            summary_nodes = self._summary_selector(self.precomputed.doc)
+            for summary_node in summary_nodes:
+                transform_breaks_to_tag(summary_node, tag="h2", replace=True)
 
         @attribute
         def body(self) -> Optional[ArticleBody]:
