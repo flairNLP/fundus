@@ -90,6 +90,7 @@ class US(metaclass=PublisherGroup):
                 sitemap_filter=inverse(regex_filter("sitemap-pt_post")),
             ),
         ],
+        suppress_robots=True,
     )
 
     FoxNews = Publisher(
