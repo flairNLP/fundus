@@ -1,3 +1,4 @@
+import re
 from datetime import date, datetime
 from typing import List, Optional
 
@@ -56,7 +57,7 @@ class TheGatewayPunditParser(ParserProxy):
 
     class V2(BaseParser):
         _related = (
-            r"(?i)^(Click|This article appeared originally|(read )?more:|watch:|more from .{1,20}:|this video is)\s*"
+            r"(?i)^(Click|This article appeared originally|(read )?more:|watch:|more from .{0,20}:|this video is)\s*"
         )
         _author_selector = XPath("//span[@class='author-name']")
 
@@ -66,7 +67,7 @@ class TheGatewayPunditParser(ParserProxy):
             namespaces={"re": "http://exslt.org/regular-expressions"},
         )
         _paragraph_selector = XPath(
-            f"(//div[@class='entry-content'] | //div[@class='entry-content']/blockquote[not(@class='twitter-tweet')]) "
+            f"(//div[@class='entry-content'] | //div[@class='entry-content']//blockquote[not(@class='twitter-tweet')]) "
             f"/p[not(child::img or child::script or re:test(text(), '{_related}')) and text()] |"
             f"//div[@class='entry-content']//ul/li[not(@class)] |"
             f"//div[@class='entry-content']//p[not(text())]/em",
@@ -99,5 +100,6 @@ class TheGatewayPunditParser(ParserProxy):
                 doc=self.precomputed.doc,
                 paragraph_selector=self._paragraph_selector,
                 image_selector=XPath("//div[@class='entry-content']//img"),
-                author_selector=XPath("./ancestor::figure//figcaption"),
+                caption_selector=XPath("./ancestor::figure//figcaption"),
+                author_selector=re.compile(r"(?i)photo by(?P<credits>.*)$"),
             )

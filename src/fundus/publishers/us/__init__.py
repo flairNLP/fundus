@@ -90,6 +90,7 @@ class US(metaclass=PublisherGroup):
                 sitemap_filter=inverse(regex_filter("sitemap-pt_post")),
             ),
         ],
+        url_filter=inverse(regex_filter("www.thegatewaypundit.com")),
         suppress_robots=True,
     )
 
