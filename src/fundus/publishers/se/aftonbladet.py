@@ -30,8 +30,6 @@ class AftonbladetParser(ParserProxy):
         )
         _image_selector = XPath("//figure//img")
 
-        _paywall_selector = XPath("//main/vev")
-
         @attribute
         def title(self) -> Optional[str]:
             return self.precomputed.meta.get("og:title")
@@ -44,10 +42,6 @@ class AftonbladetParser(ParserProxy):
                 paragraph_selector=self._paragraph_selector,
                 subheadline_selector=self._subheadline_selector,
             )
-
-        @attribute
-        def free_access(self) -> bool:
-            return not bool(self._paywall_selector(self.precomputed.doc))
 
         @attribute
         def authors(self) -> List[str]:
@@ -73,9 +67,11 @@ class AftonbladetParser(ParserProxy):
 
     class V1_1(V1):
         _summary_selector = XPath("(//header)[2]/p")
-        _paragraph_selector = XPath("(//section[@class='article-body'])[1]/p")
+        _paragraph_selector = XPath(
+            "(//section[@class='article-body'])[1]/p | (//section[@class='article-body'])[1]/ul/li"
+        )
         _subheadline_selector = XPath("(//section[@class='article-body'])[1]/h2")
 
-        _caption_selector = XPath("./ancestor::figure//figcaption/span")
+        _caption_selector = XPath("./ancestor::figure//figcaption/span[not(contains(@class,'showMore'))]")
         _image_author_selector = re.compile(r"(?i)foto:\s*(?P<credits>.*)\s*$")
         _image_selector = XPath("//figure[contains(@class, 'layout-component')]//img")
