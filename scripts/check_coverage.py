@@ -15,11 +15,8 @@ from github.WorkflowRun import WorkflowRun
 from tqdm import tqdm
 
 from fundus import __development_base_path__ as __root__
-from fundus.logging import create_logger
 
 load_dotenv()
-
-logger = create_logger(__name__)
 
 # ---------- CONFIG ----------
 __REPO__ = "flairNLP/fundus"
