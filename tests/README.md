@@ -27,6 +27,7 @@ tests/
 ├── exceptions.py          #   and `tests.exceptions`
 ├── fixtures/              # builders, fakes, and @pytest.fixture wrappers (see below)
 ├── resources/             # recorded HTML, parser test data, frozen snapshots
+├── logging/               # mirrors src/fundus/logging/
 ├── parser/                # mirrors src/fundus/parser/
 ├── publishers/            # mirrors src/fundus/publishers/
 ├── scraping/              # mirrors src/fundus/scraping/  (pipeline/, crawler/, ...)

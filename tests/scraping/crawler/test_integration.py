@@ -11,7 +11,8 @@ from unittest.mock import patch
 import pytest
 
 from fundus import Crawler
-from fundus.logging import _BATCH_CAPACITY, add_handler, remove_handler, set_log_level
+from fundus.logging import add_handler, remove_handler, set_log_level
+from fundus.logging.workers import _BATCH_CAPACITY
 from fundus.scraping.article import Article
 from fundus.scraping.crawler import CCNewsCrawler
 from fundus.scraping.html import HTML, SourceInfo
