@@ -17,7 +17,8 @@ import requests
 from dateutil.rrule import MONTHLY, rrule
 from tqdm import tqdm
 
-from fundus.logging import create_logger, flush_worker_logs, worker_logging
+from fundus.logging import create_logger
+from fundus.logging.workers import flush_worker_logs, worker_logging
 from fundus.publishers.base_objects import Publisher
 from fundus.scraping.article import Article
 from fundus.scraping.crawler.base import CrawlerBase, PublisherType
