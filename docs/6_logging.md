@@ -158,6 +158,18 @@ remove_handler("url_file_handler", logger="fundus.scraping.url").close()
 > [!NOTE]
 > All of the above can also be done individually for every logger by [accessing loggers](#accessing-loggers) directly.
 
+> [!NOTE]
+> `CCNewsCrawler` spreads its work over several processes. Those processes send their log
+> records back here rather than writing anything themselves, so a handler you add is the
+> one that receives them, and a log file has a single writer. Log levels carry over too,
+> including one scoped to a single module.
+>
+> Records travel in batches, so verbosity is not free but nor is it paid per record. What it
+> does mean is that a crawl logging faster than your handler can write will be slowed to your
+> handler's pace, rather than building a backlog to be paid for at the end. If that shows up
+> as a crawl running slower than you expect at `DEBUG`, narrow the level to the modules you
+> are actually interested in.
+
 ## Using Fundus inside an application
 
 Fundus attaches a `stderr` handler of its own, named `fundus-stderr`. That is unusual for a

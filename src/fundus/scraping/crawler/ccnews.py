@@ -1,8 +1,6 @@
 from __future__ import annotations
 
 import gzip
-import logging.config
-import multiprocessing
 import os
 import random
 import re
@@ -19,7 +17,7 @@ import requests
 from dateutil.rrule import MONTHLY, rrule
 from tqdm import tqdm
 
-from fundus.logging import create_logger, get_current_config
+from fundus.logging import create_logger, flush_worker_logs, worker_logging
 from fundus.publishers.base_objects import Publisher
 from fundus.scraping.article import Article
 from fundus.scraping.crawler.base import CrawlerBase, PublisherType
@@ -146,20 +144,26 @@ class CCNewsCrawler(CrawlerBase):
         self, warc_paths: Tuple[str, ...], article_task: Callable[[str], Iterator[Article]]
     ) -> Iterator[Article]:
         """Process WARC paths across a process pool, funnelling articles through a managed queue."""
-        if multiprocessing.get_start_method() == "spawn":
-            logging_config = get_current_config()
-            initializer = partial(logging.config.dictConfig, config=logging_config)
-        else:
-            initializer = None
-
-        with Manager() as manager, Pool(
+        # Order matters, and is the reverse on the way out: the pool terminates its workers,
+        # then the listener drains what they logged, then the manager owning both queues goes.
+        with Manager() as manager, worker_logging(manager) as initializer, Pool(
             processes=min(self.processes, len(warc_paths)),
             initializer=initializer,
         ) as pool:
             result_queue = manager.Queue(maxsize=1000)
+
+            # Push articles onto the queue as they are found, rather than returning them at the end.
             wrapped_task = enqueue_results(result_queue, article_task)
+
+            # Stagger the workers so they do not all reach for the archive at once.
             spread_task = random_sleep(wrapped_task, (0, 3))
-            serialized_task = dill_wrapper(spread_task)
+
+            # Send the worker's buffered log records on before the pool terminates it.
+            flushed_task = flush_worker_logs(spread_task)
+
+            # Serialize with dill: the chain above is closures, which pickle cannot carry.
+            serialized_task = dill_wrapper(flushed_task)
+
             yield from iter_pool_results(pool.map_async(serialized_task, warc_paths), result_queue)
             logger.debug(f"Shutting down {type(self).__name__!r} ...")
 
