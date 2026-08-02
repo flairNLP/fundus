@@ -17,8 +17,8 @@ from fundus.parser.utility import (
 class EveningStandardParser(ParserProxy):
     class V1(BaseParser):
         VALID_UNTIL = datetime.date(2024, 6, 30)
-        _paragraph_selector = CSSSelector("div.sc-bkSUFG.bdkDcZ")
-        _summary_selector = CSSSelector("div.sc-wkolL.dWZJhQ")
+        _paragraph_selector: XPath = CSSSelector("div.sc-bkSUFG.bdkDcZ")
+        _summary_selector: XPath = CSSSelector("div.sc-wkolL.dWZJhQ")
 
         @attribute
         def body(self) -> Optional[ArticleBody]:
@@ -63,9 +63,11 @@ class EveningStandardParser(ParserProxy):
             )
 
     class V1_1(V1):
-        _summary_selector = CSSSelector("div.sc-jgyXzG")
-        _subheadline_selector = CSSSelector("div#main div.sc-dFfFtc > h3")
-        _paragraph_selector = CSSSelector("div#main > div.sc-gEvEer p")
+        _summary_selector = XPath("//article//div[h1]/div[text()]")
+        _subheadline_selector = XPath(
+            "//article//div[@class]/div[@class]/div/*[(self::h2 or self::h3) and not(@class)]"
+        )
+        _paragraph_selector = XPath("//article//div[@class]/div[@class]/div[not(@class)]/div/p")
 
         @attribute
         def body(self) -> Optional[ArticleBody]:
