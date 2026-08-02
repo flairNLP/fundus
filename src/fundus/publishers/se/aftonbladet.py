@@ -72,6 +72,6 @@ class AftonbladetParser(ParserProxy):
         )
         _subheadline_selector = XPath("(//section[@class='article-body'])[1]/h2")
 
-        _caption_selector = XPath("./ancestor::figure//figcaption/span[not(contains(@class,'showMore'))]")
+        _caption_selector = XPath("./ancestor::figure//figcaption/node()[not(self::span[contains(@class,'showMore')])]")
         _image_author_selector = re.compile(r"(?i)foto:\s*(?P<credits>.*)\s*$")
         _image_selector = XPath("//figure[contains(@class, 'layout-component')]//img")
