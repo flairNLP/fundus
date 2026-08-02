@@ -4,6 +4,7 @@ import pytest
 from curl_cffi.requests.exceptions import ConnectionError, ReadTimeout
 
 from fundus import NewsMap, RSSFeed, Sitemap
+from fundus.parser import BaseParser, ParserProxy
 from fundus.publishers.base_objects import CustomRobotFileParser, FilteredPublisher, Robots
 from fundus.scraping.session import session_handler
 from tests.fixtures.builders import make_http_error, make_publisher, make_publisher_group, mock_response
@@ -325,13 +326,15 @@ class TestPublisherEquality:
         publisher = make_publisher()
         assert publisher == publisher
 
-    @pytest.mark.xfail(
-        reason="Publisher.__eq__ compares self.parser by identity (ParserProxy defines no __eq__), "
-        "so two value-equal publishers never compare equal.",
-        strict=True,
-    )
     def test_value_equal_publishers_compare_equal(self):
         assert make_publisher(name="x") == make_publisher(name="x")
+
+    def test_differs_by_parser(self):
+        class OtherParserProxy(ParserProxy):
+            class Default(BaseParser):
+                pass
+
+        assert make_publisher(name="x") != make_publisher(name="x", parser=OtherParserProxy)
 
 
 class TestFilteredPublisher:

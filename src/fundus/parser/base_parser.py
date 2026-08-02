@@ -407,6 +407,21 @@ class ParserProxy(ABC):
     def __bool__(self) -> bool:
         return bool(self._parser_mapping)
 
+    def __eq__(self, other: object) -> bool:
+        """Two proxies are equal iff they are instances of the same ParserProxy subclass.
+
+        A proxy carries no instance state beyond the versions collected from its own class
+        definition, so the type determines the value. Without this, proxies fall back to
+        identity comparison and two freshly instantiated proxies of the same class -- as
+        held by two value-equal Publishers -- never compare equal.
+        """
+        if not isinstance(other, ParserProxy):
+            return NotImplemented
+        return type(self) is type(other)
+
+    def __hash__(self) -> int:
+        return hash(type(self))
+
     def __str__(self) -> str:
         return f"<{ParserProxy.__name__} {type(self).__name__}>"
 

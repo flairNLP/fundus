@@ -173,6 +173,19 @@ class TestParserProxy:
         assert parser3 == proxy(datetime.date(2024, 5, 1))
         assert parser3 != parser2 != parser1
 
+    def test_instances_of_same_proxy_compare_equal(self, proxy_with_two_versions_and_different_attrs):
+        proxy = proxy_with_two_versions_and_different_attrs
+        assert proxy() == proxy()
+        assert hash(proxy()) == hash(proxy())
+
+    def test_instances_of_different_proxies_compare_unequal(
+        self, proxy_with_two_versions_and_different_attrs, proxy_with_two_deprecated_attributes
+    ):
+        assert proxy_with_two_versions_and_different_attrs() != proxy_with_two_deprecated_attributes()
+
+    def test_not_equal_to_non_proxy(self, proxy_with_two_versions_and_different_attrs):
+        assert proxy_with_two_versions_and_different_attrs() != "not a proxy"
+
 
 class TestUtility:
     def test_generic_author_parsing(self):
