@@ -57,7 +57,8 @@ class TheGatewayPunditParser(ParserProxy):
 
     class V2(BaseParser):
         _related = (
-            r"(?i)^(Click|This article appeared originally|(read )?more:|watch:|more from .{0,20}:|this video is)\s*"
+            r"(?i)^(Click|This article appeared originally|(read )?more:|watch:|more from .{0,20}:|trending:"
+            r"|this video is)\s*"
         )
         _author_selector = XPath("//span[@class='author-name']")
 
@@ -67,8 +68,8 @@ class TheGatewayPunditParser(ParserProxy):
             namespaces={"re": "http://exslt.org/regular-expressions"},
         )
         _paragraph_selector = XPath(
-            f"(//div[@class='entry-content'] | //div[@class='entry-content']//blockquote[not(@class='twitter-tweet')]) "
-            f"/p[not(child::img or child::script or re:test(text(), '{_related}')) and text()] |"
+            f"//div[@class='entry-content']//p[not(ancestor::blockquote[@class='twitter-tweet']) "
+            f"and not(child::img or child::script or re:test(normalize-space(.), '{_related}')) and text()] |"
             f"//div[@class='entry-content']//ul/li[not(@class)] |"
             f"//div[@class='entry-content']//p[not(text())]/em",
             namespaces={"re": "http://exslt.org/regular-expressions"},
