@@ -1,5 +1,6 @@
-from datetime import datetime
-from typing import List, Optional
+import re
+from datetime import date, datetime
+from typing import List, Optional, Pattern, Union
 
 from lxml.etree import XPath
 
@@ -15,13 +16,19 @@ from fundus.parser.utility import (
 
 class AftonbladetParser(ParserProxy):
     class V1(BaseParser):
+        VALID_UNTIL = date(2026, 7, 9)
+
         _summary_selector = XPath("//p[contains(@data-test-tag,'lead-text')]")
         _paragraph_selector = XPath(
             "//p[starts-with(@class,'hyperion-css-') and not(contains(@data-test-tag,'lead-text'))]"
         )
         _subheadline_selector = XPath("//h2[@data-test-tag='paragraph-header']")
 
-        _paywall_selector = XPath("//main/vev")
+        _caption_selector = XPath("./ancestor::figure//figcaption/span[@class='image-caption']")
+        _image_author_selector: Union[XPath, Pattern[str]] = XPath(
+            "./ancestor::figure//figcaption/span[contains(@class,'image-byline')]"
+        )
+        _image_selector = XPath("//figure//img")
 
         @attribute
         def title(self) -> Optional[str]:
@@ -35,10 +42,6 @@ class AftonbladetParser(ParserProxy):
                 paragraph_selector=self._paragraph_selector,
                 subheadline_selector=self._subheadline_selector,
             )
-
-        @attribute
-        def free_access(self) -> bool:
-            return not bool(self._paywall_selector(self.precomputed.doc))
 
         @attribute
         def authors(self) -> List[str]:
@@ -56,7 +59,19 @@ class AftonbladetParser(ParserProxy):
         def images(self) -> List[Image]:
             return image_extraction(
                 doc=self.precomputed.doc,
+                image_selector=self._image_selector,
                 paragraph_selector=self._paragraph_selector,
-                caption_selector=XPath("./ancestor::figure//figcaption/span[@class='image-caption']"),
-                author_selector=XPath("./ancestor::figure//figcaption/span[contains(@class,'image-byline')]"),
+                caption_selector=self._caption_selector,
+                author_selector=self._image_author_selector,
             )
+
+    class V1_1(V1):
+        _summary_selector = XPath("(//header)[2]/p")
+        _paragraph_selector = XPath(
+            "(//section[@class='article-body'])[1]/p | (//section[@class='article-body'])[1]/ul/li"
+        )
+        _subheadline_selector = XPath("(//section[@class='article-body'])[1]/h2")
+
+        _caption_selector = XPath("./ancestor::figure//figcaption/node()[not(self::span[contains(@class,'showMore')])]")
+        _image_author_selector = re.compile(r"(?i)foto:\s*(?P<credits>.*)\s*$")
+        _image_selector = XPath("//figure[contains(@class, 'layout-component')]//img")
