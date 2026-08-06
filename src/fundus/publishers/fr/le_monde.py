@@ -56,3 +56,46 @@ class LeMondeParser(ParserProxy):
                 caption_selector=XPath("./ancestor::figure//figcaption/text()"),
                 author_selector=XPath("./ancestor::figure//figcaption/span"),
             )
+
+    # class V2(BaseParser):
+    # This is a draft that could not be verified due to javascript execution issues
+
+    # _summary_selector = XPath("//div[@class='ds-description']/span")
+    # _paragraph_selector = XPath("//article/p")
+    # _subheadline_selector = XPath("//article/h2")
+
+    # @attribute
+    # def body(self) -> Optional[ArticleBody]:
+    #    return extract_article_body_with_selector(
+    #        self.precomputed.doc,
+    #        paragraph_selector=self._paragraph_selector,
+    #        summary_selector=self._summary_selector,
+    #        subheadline_selector=self._subheadline_selector,
+    #    )
+
+    # @attribute
+    # def title(self) -> Optional[str]:
+    #    return self.precomputed.meta.get("og:title")
+
+    # @attribute
+    # def topics(self) -> List[str]:
+    #    return self.precomputed.ld.bf_search("keywords")
+
+    # @attribute
+    # def publishing_date(self) -> Optional[datetime.datetime]:
+    #    return generic_date_parsing(self.precomputed.meta.get("og:article:published_time"))
+
+    # @attribute
+    # def authors(self) -> List[str]:
+    #    return generic_author_parsing(self.precomputed.meta.get("og:article:author"))
+
+    # @attribute
+    # def images(self) -> List[Image]:
+    #    return image_extraction(
+    #        doc=self.precomputed.doc,
+    #        paragraph_selector=self._paragraph_selector,
+    #        upper_boundary_selector=CSSSelector("article"),
+    #        image_selector=XPath("//figure[@class='article__media']//img"),
+    #        caption_selector=XPath("./ancestor::figure//figcaption/text()"),
+    #        author_selector=XPath("./ancestor::figure//figcaption/span"),
+    #    )
