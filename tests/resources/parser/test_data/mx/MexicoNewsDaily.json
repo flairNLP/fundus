@@ -212,5 +212,88 @@
       "steel aluminum tariffs mexico",
       "steel trade us-mexico"
     ]
+  },
+  "V1_1": {
+    "authors": [
+      "César Hernández"
+    ],
+    "body": {
+      "summary": [],
+      "sections": [
+        {
+          "headline": [],
+          "paragraphs": [
+            "Human error caused a head-on collision by two trains in Chihuahua yesterday that killed a conductor and injured five other crew members, Ferromex officials said.",
+            "The trains collided about 1:30am on a stretch of track between the cities of Chihuahua and Ciudad Juárez. The conductor of the northbound train died, while five crew members from both trains were injured.",
+            "The collision sparked a fire that could be seen for several kilometers.",
+            "Investigations by the rail consortium indicated that the conductor of the southbound train erred by exceeding the authorized indicated speed limit and was running ahead of time.",
+            "Ferromex, with its subsidiary Ferrosur, is a private rail consortium that operates the largest railway network in Mexico with combined length of 12,070 kilometers."
+          ]
+        }
+      ]
+    },
+    "images": [
+      {
+        "versions": [
+          {
+            "url": "https://mexiconewsdaily.com/wp-content/uploads/2018/05/crash-1-150x92.jpg",
+            "query_width": null,
+            "size": {
+              "width": 150,
+              "height": 92
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://mexiconewsdaily.com/wp-content/uploads/2018/05/crash-1-300x184.jpg",
+            "query_width": null,
+            "size": {
+              "width": 300,
+              "height": 184
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://mexiconewsdaily.com/wp-content/uploads/2018/05/crash-1-696x427.jpg",
+            "query_width": null,
+            "size": {
+              "width": 696,
+              "height": 427
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://mexiconewsdaily.com/wp-content/uploads/2018/05/crash-1-768x471.jpg",
+            "query_width": null,
+            "size": {
+              "width": 768,
+              "height": 471
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://mexiconewsdaily.com/wp-content/uploads/2018/05/crash-1.jpg",
+            "query_width": null,
+            "size": {
+              "width": 850,
+              "height": 521
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": true,
+        "description": "The train wreck in Chihuahua yesterday.",
+        "caption": "The train wreck in Chihuahua yesterday.",
+        "authors": [],
+        "position": 804
+      }
+    ],
+    "publishing_date": "2018-05-31 16:04:54+00:00",
+    "title": "One dead in Chihuahua train crash; human error blamed",
+    "topics": [
+      "ferromex",
+      "railway",
+      "train accident"
+    ]
   }
 }

@@ -16,6 +16,8 @@ from fundus.parser.utility import (
 
 class MexicoNewsDailyParser(ParserProxy):
     class V1(BaseParser):
+        VALID_UNTIL = datetime.date(2026, 7, 27)
+
         _paragraph_selector = XPath("//div[@class='tdb-block-inner td-fix-index']/p[text()] ")
 
         _bloat_topics = {"editors_pick"}
@@ -55,3 +57,6 @@ class MexicoNewsDailyParser(ParserProxy):
                 upper_boundary_selector=XPath("//h1"),
                 author_selector=re.compile(r"\((?P<credits>.*?)\)\s*$"),
             )
+
+    class V1_1(V1):
+        _paragraph_selector = XPath("//div[@class='tts_content_wrapper_1']/p[text()]")
