@@ -1,6 +1,6 @@
 import datetime
 import re
-from typing import List, Optional, Union, Pattern
+from typing import List, Optional, Pattern, Union
 
 from lxml.etree import XPath
 
@@ -62,7 +62,6 @@ class KleineZeitungParser(ParserProxy):
                 ),
                 author_selector=self._image_author_selector,
             )
-
 
     class V1_1(V1):
         _paragraph_selector = XPath("//div[contains(@class,'prose')]/p")
