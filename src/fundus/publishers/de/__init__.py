@@ -141,6 +141,7 @@ class DE(metaclass=PublisherGroup):
             )
             for d in reversed(list(rrule(MONTHLY, dtstart=datetime(2003, 2, 1), until=datetime.now())))
         ],
+        impersonate="chrome",
     )
 
     StuttgarterZeitung = Publisher(
@@ -167,6 +168,7 @@ class DE(metaclass=PublisherGroup):
             )
             for d in reversed(list(rrule(MONTHLY, dtstart=datetime(2000, 4, 1), until=datetime.today())))
         ],
+        impersonate="chrome",
     )
 
     DieWelt = Publisher(
@@ -371,6 +373,7 @@ class DE(metaclass=PublisherGroup):
         domain="https://www.waz.de/",
         parser=WAZParser,
         sources=[NewsMap("https://www.waz.de/sitemaps/news.xml")],
+        impersonate="chrome",
     )
 
     BSZ = Publisher(
@@ -387,6 +390,7 @@ class DE(metaclass=PublisherGroup):
             )
             for d in list(rrule(MONTHLY, dtstart=datetime(2005, 12, 1), until=datetime.now()))
         ],
+        impersonate="chrome",
     )
 
     BusinessInsiderDE = Publisher(
