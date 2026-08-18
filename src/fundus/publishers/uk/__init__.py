@@ -95,6 +95,7 @@ class UK(metaclass=PublisherGroup):
         name="Daily Star",
         domain="https://www.dailystar.co.uk/",
         parser=DailyStarParser,
+        deprecated=True,
         sources=[
             Sitemap("https://www.dailystar.co.uk/sitemaps/sitemap_index.xml", reverse=True),
             NewsMap("https://www.dailystar.co.uk/map_news.xml"),
