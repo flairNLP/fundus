@@ -79,6 +79,7 @@ class _ArchiveDecompressor:
         self.archive_mapping: Dict[str, Callable[[bytes], bytes]] = {
             "application/octet-stream": self._decompress_octet_stream,
             "application/x-gzip": CompressionFormats.GZIP,
+            "application/gzip": CompressionFormats.GZIP,
             "gzip": CompressionFormats.GZIP,
         }
 

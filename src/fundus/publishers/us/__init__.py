@@ -261,6 +261,7 @@ class US(metaclass=PublisherGroup):
             Sitemap(
                 "https://www.voanews.com/sitemap.xml",
                 sitemap_filter=inverse(regex_filter(r"sitemap_[\d_]*\.xml\.gz")),
+                reverse=True,
             ),
         ],
     )
