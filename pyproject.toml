@@ -52,6 +52,8 @@ dev = [
     "pytest~=7.2.2",
     "mypy==1.9.0",
     "ruff==0.15.6",
+    # skills installer dashboard (skills/installer/tui.py); needs Python >=3.8.1 (textual 6.2.x; 6.3+ requires >=3.9)
+    "textual>=6.2, <7",
     # type stubs
     "types-lxml",
     "types-python-dateutil>=2.8, <3",
