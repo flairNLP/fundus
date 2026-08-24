@@ -25,7 +25,7 @@ class AnadoluAjansiParser(ParserProxy):
             "//h6[not(ancestor::div[@class='detay-paylas'])] | "
             "//div[@class='detay-icerik']//p"
         )
-        _subheadline_Selector = CSSSelector("div.detay-icerik > div:nth-child(2) > h3")
+        _subheadline_selector = CSSSelector("div.detay-icerik > div:nth-child(2) > h3")
         _author_selector = CSSSelector("div.detay-bg > div > div > div > span:nth-child(1)")
         _date_selector = CSSSelector("div.detay-bg > div > div > div > span.tarih")
 
@@ -34,7 +34,7 @@ class AnadoluAjansiParser(ParserProxy):
             return extract_article_body_with_selector(
                 self.precomputed.doc,
                 paragraph_selector=self._paragraph_selector,
-                subheadline_selector=self._subheadline_Selector,
+                subheadline_selector=self._subheadline_selector,
                 summary_selector=self._summary_selector,
             )
 

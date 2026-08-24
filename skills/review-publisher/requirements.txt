@@ -1,0 +1,5 @@
+# Sampler dependencies beyond Fundus itself. Not part of the shipped package's runtime deps.
+# Pinned for Python 3.8 (the repo's CI target).
+numpy==1.24.4
+scikit-learn==1.3.2
+# lxml is already a Fundus dependency.
