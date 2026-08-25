@@ -3,7 +3,6 @@ from textwrap import indent
 from typing import Dict, Iterable, Iterator, List, Optional, Set, Type, Union
 from warnings import warn
 
-import more_itertools
 from curl_cffi.requests import BrowserType, BrowserTypeLiteral
 from curl_cffi.requests.exceptions import ConnectionError, HTTPError, Timeout
 from curl_cffi.requests.impersonate import normalize_browser_type
@@ -14,8 +13,7 @@ from fundus.logging import create_logger
 from fundus.parser.base_parser import ParserProxy
 from fundus.scraping.filter import URLFilter
 from fundus.scraping.session import _default_header, session_handler
-from fundus.scraping.url import NewsMap, RSSFeed, Sitemap, URLSource
-from fundus.utils.iteration import iterate_all_subclasses
+from fundus.scraping.url import SourceHandler, URLSource
 
 logger = create_logger(__name__)
 
@@ -123,12 +121,6 @@ class Publisher:
     __name__: str
     __group__: "PublisherGroup"
 
-    __SOURCE_ORDER__: Dict[Type[URLSource], int] = {
-        RSSFeed: 1,
-        NewsMap: 2,
-        Sitemap: 3,
-    }
-
     def __init__(
         self,
         name: str,
@@ -202,35 +194,31 @@ class Publisher:
         if suppress_robots:
             self.robots.robots_file_parser.allow_all = True
 
-        # we define the dict here manually instead of using default dict so that we can control
-        # the order in which sources are proceeded.
-        source_mapping: Dict[Type[URLSource], List[URLSource]] = defaultdict(list)
-
-        for url_source in sources:
-            if not isinstance(url_source, URLSource):
-                raise TypeError(
-                    f"Unexpected type {type(url_source).__name__!r} as source for {self!r}. "
-                    f"Allowed are {', '.join(repr(cls.__name__) for cls in iterate_all_subclasses(URLSource))}"
-                )
-            source_mapping[type(url_source)].append(url_source)
-
-        self._source_mapping = dict(sorted(source_mapping.items(), key=lambda item: self.__SOURCE_ORDER__[item[0]]))
+        self._sources = SourceHandler(sources)
 
     @property
     def disallows_training(self) -> bool:
         return self._disallows_training or self.robots.disallows_training()
 
     @property
+    def sources(self) -> SourceHandler:
+        return self._sources
+
+    @property
     def source_mapping(self) -> Dict[Type[URLSource], List[URLSource]]:
-        return self._source_mapping
+        """Deprecated view on <sources>, grouped by source type and kept in crawl order."""
+        mapping: Dict[Type[URLSource], List[URLSource]] = defaultdict(list)
+        for source in self.sources:
+            mapping[type(source)].append(source)
+        return dict(mapping)
 
     @property
     def languages(self) -> Set[str]:
-        return set.union(*(source.languages for sources in self.source_mapping.values() for source in sources))
+        return self.sources.languages
 
     @property
     def source_types(self) -> Set[Type[URLSource]]:
-        return set(self.source_mapping.keys())
+        return self.sources.source_types
 
     def __str__(self) -> str:
         return f"{self.name}"
@@ -245,7 +233,7 @@ class Publisher:
             self.name == other.name
             and self.parser == other.parser
             and self.domain == other.domain
-            and self.source_mapping == other.source_mapping
+            and self.sources == other.sources
             and self.query_parameter == other.query_parameter
             and self.url_filter == other.url_filter
             and self.request_header == other.request_header
@@ -254,17 +242,10 @@ class Publisher:
     def supports(
         self, source_types: Optional[List[Type[URLSource]]] = None, languages: Optional[List[str]] = None
     ) -> bool:
-        # we iterate source by source instead of checking self.languages and self.source_types,
-        # because we need to know if there is a source supporting the given combination of
-        # <source_types> and <languages>
-        filtered_sources = [
-            source
-            for source in more_itertools.flatten(self.source_mapping.values())
-            if (type(source) in source_types if source_types else True)
-            and (source.languages & set(languages) if languages else True)
-        ]
-
-        return any(filtered_sources)
+        # we filter instead of checking self.languages and self.source_types, because we need to
+        # know if there is a single source supporting the given combination of <source_types>
+        # and <languages>
+        return bool(self.sources.filter(source_types=source_types, languages=languages))
 
 
 class FilteredPublisher(Publisher):
@@ -296,23 +277,8 @@ class FilteredPublisher(Publisher):
         return new
 
     @property
-    def source_mapping(self) -> Dict[Type[URLSource], List[URLSource]]:
-        filtered_mapping: Dict[Type[URLSource], List[URLSource]] = {}
-
-        # iterate over internal mapping to preserve order
-        for source_type, sources in self._source_mapping.items():
-            if self.__source_types_filter__ and source_type not in self.__source_types_filter__:
-                continue
-
-            filtered_sources = [
-                source
-                for source in sources
-                if not self.__language_filter__ or source.languages & self.__language_filter__
-            ]
-            if filtered_sources:
-                filtered_mapping[source_type] = filtered_sources
-
-        return filtered_mapping
+    def sources(self) -> SourceHandler:
+        return self._sources.filter(source_types=self.__source_types_filter__, languages=self.__language_filter__)
 
     @property
     def language_filter(self) -> Set[str]:
@@ -329,7 +295,7 @@ class PublisherGroup(type):
                 value.__name__ = attribute
                 value.__group__ = new
                 if default_language := attributes.get("default_language"):
-                    for source in more_itertools.flatten(value.source_mapping.values()):
+                    for source in value.sources:
                         if not source.languages:
                             source.languages = {default_language}
 
