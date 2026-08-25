@@ -1,13 +1,13 @@
+import copy
 from collections import defaultdict
 from textwrap import indent
-from typing import Dict, Iterable, Iterator, List, Optional, Set, Type, Union
+from typing import Dict, FrozenSet, Iterable, Iterator, List, Optional, Set, Type, Union
 from warnings import warn
 
 from curl_cffi.requests import BrowserType, BrowserTypeLiteral
 from curl_cffi.requests.exceptions import ConnectionError, HTTPError, Timeout
 from curl_cffi.requests.impersonate import normalize_browser_type
 from robots import RobotFileParser
-from typing_extensions import TypeAlias
 
 from fundus.logging import create_logger
 from fundus.parser.base_parser import ParserProxy
@@ -16,8 +16,6 @@ from fundus.scraping.session import _default_header, session_handler
 from fundus.scraping.url import SourceHandler, URLSource
 
 logger = create_logger(__name__)
-
-FilterResult: TypeAlias = Union[List["FilteredPublisher"], List["Publisher"]]
 
 
 class CustomRobotFileParser(RobotFileParser):
@@ -117,6 +115,19 @@ class Robots:
         return self.robots_file_parser.disallow_all
 
 
+def _narrow_languages(
+    current: Optional[FrozenSet[str]], languages: Optional[Iterable[str]]
+) -> Optional[FrozenSet[str]]:
+    """Intersects <current> with <languages>, with None standing for no restriction at all.
+
+    Intersecting rather than replacing keeps restrictions from widening each other, so that
+    narrowing an already narrowed publisher can only ever remove languages.
+    """
+    if not languages:
+        return current
+    return frozenset(languages) if current is None else current & frozenset(languages)
+
+
 class Publisher:
     __name__: str
     __group__: "PublisherGroup"
@@ -195,6 +206,7 @@ class Publisher:
             self.robots.robots_file_parser.allow_all = True
 
         self._sources = SourceHandler(sources)
+        self._language_filter: Optional[FrozenSet[str]] = None
 
     @property
     def disallows_training(self) -> bool:
@@ -242,47 +254,57 @@ class Publisher:
     def supports(
         self, source_types: Optional[List[Type[URLSource]]] = None, languages: Optional[List[str]] = None
     ) -> bool:
+        """Whether this publisher has a source left to contribute under the given restrictions.
+
+        Restrictions it already carries and the given ones have to be met by one and the same
+        source, since a publisher covering a language through one source and a source type through
+        another covers neither combination. Called without arguments, this asks whether anything
+        survived the restrictions it carries.
+        """
+        # a publisher restricted to languages excluding each other supports nothing, even where a
+        # source declaring both survived the filtering, since no article of it could be kept
+        if _narrow_languages(self._language_filter, languages) == frozenset():
+            return False
+
         # we filter instead of checking self.languages and self.source_types, because we need to
         # know if there is a single source supporting the given combination of <source_types>
         # and <languages>
         return bool(self.sources.filter(source_types=source_types, languages=languages))
 
-
-class FilteredPublisher(Publisher):
-    """Publisher with prefiltered sources.
-
-    Publisher with attached source types and languages to pre-filter sources.
-    """
-
-    def __init__(
-        self, source_types: Optional[Set[Type[URLSource]]] = None, languages: Optional[Set[str]] = None, *args, **kwargs
-    ) -> None:
-        super().__init__(*args, **kwargs)
-        self.__source_types_filter__ = source_types or set()
-        self.__language_filter__ = languages or set()
-
-    @classmethod
-    def from_publisher(
-        cls,
-        publisher: Publisher,
-        source_types: Optional[Set[Type[URLSource]]] = None,
-        languages: Optional[Set[str]] = None,
-    ) -> "FilteredPublisher":
-        new = FilteredPublisher.__new__(cls)
-
-        # we create a deepcopy since the aware publisher is not included in the PublisherGroup
-        new.__dict__.update(publisher.__dict__)
-        new.__source_types_filter__ = source_types or set()
-        new.__language_filter__ = languages or set()
-        return new
-
     @property
-    def sources(self) -> SourceHandler:
-        return self._sources.filter(source_types=self.__source_types_filter__, languages=self.__language_filter__)
+    def language_filter(self) -> Optional[FrozenSet[str]]:
+        """The languages this publisher was restricted to, or None if it was not restricted.
 
-    @property
-    def language_filter(self) -> Set[str]:
-        return self.__language_filter__
+        Kept next to the narrowed sources because selecting sources by the languages they declare
+        only ever approximates the language their articles turn out to be in: a source declaring
+        German and English survives a restriction to German, but its English articles do not.
+        """
+        return self._language_filter
+
+    def restrict(
+        self,
+        source_types: Optional[Iterable[Type[URLSource]]] = None,
+        languages: Optional[Iterable[str]] = None,
+    ) -> "Publisher":
+        """A view on this publisher covering only the sources matching the given restrictions.
+
+        An empty or omitted argument does not restrict on that axis. Restrictions accumulate:
+        restricting an already restricted publisher narrows it further, so that neither call can
+        widen what the other one asked for. The view is a shallow copy, sharing the robots.txt
+        and the parser with the publisher it was taken from, and is never modified afterwards.
+
+        Args:
+            source_types (Optional[Iterable[Type[URLSource]]]): Only keep sources of these types.
+            languages (Optional[Iterable[str]]): Only keep sources covering at least one of these
+                languages, and keep only articles turning out to be in one of them.
+
+        Returns:
+            Publisher: A view on the surviving sources.
+        """
+        view = copy.copy(self)
+        view._sources = self._sources.filter(source_types=source_types, languages=languages)
+        view._language_filter = _narrow_languages(self._language_filter, languages)
+        return view
 
 
 class PublisherGroup(type):
@@ -353,7 +375,7 @@ class PublisherGroup(type):
         source_types: Optional[List[Type[URLSource]]] = None,
         languages: Optional[List[str]] = None,
         include_deprecated_attributes: bool = False,
-    ) -> Union[List[FilteredPublisher], List[Publisher]]:
+    ) -> List[Publisher]:
         if not (attributes or source_types or languages):
             raise ValueError("You have to define at least one search condition")
         if not attributes:
@@ -363,7 +385,7 @@ class PublisherGroup(type):
         if not source_types:
             source_types = []
 
-        matched: Union[List[FilteredPublisher], List[Publisher]] = []
+        matched: List[Publisher] = []
         unique_attributes = set(attributes)
         for publisher in cls:
             if unique_attributes.issubset(
@@ -374,13 +396,7 @@ class PublisherGroup(type):
                     )
                 )
             ) and (publisher.supports(source_types=source_types, languages=languages)):
-                matched.append(
-                    FilteredPublisher.from_publisher(
-                        publisher,
-                        source_types=set(source_types) & publisher.source_types,
-                        languages=set(languages) & publisher.languages,
-                    )
-                )
+                matched.append(publisher.restrict(source_types=source_types, languages=languages))
         if not matched:
             warn("No publisher found matching the search criteria. Returning no publishers.")
         return matched
