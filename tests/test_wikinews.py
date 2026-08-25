@@ -7,6 +7,7 @@ is attributed to.
 """
 
 import datetime
+from typing import Optional
 
 import pytest
 
@@ -16,13 +17,20 @@ from fundus.publishers.international.wikinews import DEFAULT_EDITION, EDITIONS, 
 WIKINEWS = PublisherCollection.international.Wikinews
 
 
-def parser_for(edition: str, *, lang: str = None, host: str = None) -> WikinewsParser.V1:
-    """A parser bound to a minimal document identifying itself as <edition>."""
-    canonical = f"https://{host or edition}.wikinews.org/wiki/Test"
-    html = f'<html lang="{lang or edition}"><head><link rel="canonical" href="{canonical}"/></head><body></body></html>'
+def parser_for_html(html: str) -> WikinewsParser.V1:
+    """A parser set up on <html>, narrowed to the version under test."""
     parser = WIKINEWS.parser()
+    assert isinstance(parser, WikinewsParser.V1)
     parser._base_setup(html)
     return parser
+
+
+def parser_for(edition: str, *, lang: Optional[str] = None, host: Optional[str] = None) -> WikinewsParser.V1:
+    """A parser bound to a minimal document identifying itself as <edition>."""
+    canonical = f"https://{host or edition}.wikinews.org/wiki/Test"
+    return parser_for_html(
+        f'<html lang="{lang or edition}"><head><link rel="canonical" href="{canonical}"/></head><body></body></html>'
+    )
 
 
 class TestEditionTable:
@@ -59,13 +67,11 @@ class TestEditionDetection:
         assert parser_for("no", lang="nb")._edition is EDITIONS["no"]
 
     def test_falls_back_to_lang_without_a_canonical_link(self) -> None:
-        parser = WIKINEWS.parser()
-        parser._base_setup('<html lang="fr"><head></head><body></body></html>')
+        parser = parser_for_html('<html lang="fr"><head></head><body></body></html>')
         assert parser._edition is EDITIONS["fr"]
 
     def test_unknown_host_falls_back_to_the_default(self) -> None:
-        parser = WIKINEWS.parser()
-        parser._base_setup(
+        parser = parser_for_html(
             '<html lang="xx"><head><link rel="canonical" href="https://xx.example.org/a"/></head><body></body></html>'
         )
         assert parser._edition is DEFAULT_EDITION
@@ -75,8 +81,7 @@ class TestEditionDetection:
         # must not be parsed as an edition code -- 'guw.wikipedia.org' is not the Gun
         # *Wikinews*. Falling through to lang still lands on Gun's date rules, which is
         # the right answer for a Gun-language page.
-        parser = WIKINEWS.parser()
-        parser._base_setup(
+        parser = parser_for_html(
             '<html lang="guw"><head>'
             '<link rel="canonical" href="https://guw.wikipedia.org/wiki/A"/>'
             "</head><body></body></html>"
@@ -84,8 +89,7 @@ class TestEditionDetection:
         assert parser._edition is EDITIONS["guw"]
 
     def test_a_host_that_merely_ends_in_the_suffix_is_not_an_edition(self) -> None:
-        parser = WIKINEWS.parser()
-        parser._base_setup(
+        parser = parser_for_html(
             '<html lang="xx"><head>'
             '<link rel="canonical" href="https://evil.wikinews.org.example.com/a"/>'
             "</head><body></body></html>"
