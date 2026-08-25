@@ -1,7 +1,5 @@
 from typing import Dict, Iterator, List, Literal, Optional, Type
 
-import more_itertools
-
 from fundus.logging import create_logger
 from fundus.parser import ParserProxy
 from fundus.publishers.base_objects import Publisher
@@ -12,7 +10,13 @@ from fundus.scraping.filter import (
     FilterResultWithMissingAttributes,
     URLFilter,
 )
-from fundus.scraping.html import CCNewsSource, HTMLSource, WebSource
+from fundus.scraping.html import (
+    CCNewsSource,
+    HTMLSource,
+    InterleavedSource,
+    WebSource,
+    build_clock,
+)
 from fundus.scraping.url import URLSource
 
 logger = create_logger(__name__)
@@ -80,29 +84,26 @@ class WebScraper(BaseScraper):
         ignore_crawl_delay: bool = False,
         impersonate: bool = False,
     ):
-        if restrict_sources_to:
-            url_sources = tuple(
-                more_itertools.flatten(
-                    publisher.source_mapping[source_type]
-                    for source_type in restrict_sources_to
-                    if source_type in publisher.source_mapping
-                )
-            )
-        else:
-            url_sources = tuple(more_itertools.flatten(publisher.source_mapping.values()))
+        url_sources = publisher.sources.filter(source_types=restrict_sources_to)
 
-        html_sources = [
-            WebSource(
+        # a single clock for all of the publisher's sources, so that the crawl-delay paces the
+        # publisher rather than each source separately. Without this, round-robining a batch of n
+        # sources would fire n requests before any of them waits.
+        clock = build_clock(publisher, delay, ignore_robots, ignore_crawl_delay)
+
+        def build(url_source: URLSource) -> WebSource:
+            return WebSource(
                 url_source=url_source,
                 publisher=publisher,
-                delay=delay,
                 url_filter=publisher.url_filter,
                 query_parameters=publisher.query_parameter,
                 ignore_robots=ignore_robots,
-                ignore_crawl_delay=ignore_crawl_delay,
                 impersonate=impersonate,
+                clock=clock,
             )
-            for url_source in url_sources
+
+        html_sources = [
+            InterleavedSource(*(build(url_source) for url_source in batch)) for batch in url_sources.batches()
         ]
         parser_mapping: Dict[str, ParserProxy] = {publisher.name: publisher.parser}
         super().__init__(*html_sources, parser_mapping=parser_mapping)

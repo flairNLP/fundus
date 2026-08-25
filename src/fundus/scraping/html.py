@@ -1,13 +1,23 @@
 import time
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Callable, Dict, Iterable, Iterator, List, Optional, Protocol, Union
+from typing import (
+    Callable,
+    Dict,
+    Iterable,
+    Iterator,
+    List,
+    Optional,
+    Protocol,
+    Union,
+)
 from urllib.parse import urlparse
 
 import chardet
 import requests
 from curl_cffi.requests.exceptions import ConnectionError, HTTPError, Timeout
 from fastwarc import ArchiveIterator, WarcRecord, WarcRecordType
+from more_itertools import roundrobin
 
 from fundus.logging import create_logger
 from fundus.publishers.base_objects import Publisher, Robots
@@ -24,7 +34,9 @@ __all__ = [
     "WebSourceInfo",
     "HTMLSource",
     "WebSource",
+    "InterleavedSource",
     "CCNewsSource",
+    "build_clock",
 ]
 
 logger = create_logger(__name__)
@@ -106,6 +118,46 @@ class _Clock:
         self.timestamp = time.time()
 
 
+def _interruptable_sleep(seconds: float) -> None:
+    """Sleeps <seconds>, waking early once the crawl is stopped."""
+    __EVENTS__.get("stop").wait(seconds)
+
+
+def build_clock(
+    publisher: Publisher,
+    delay: Optional[Delay] = None,
+    ignore_robots: bool = False,
+    ignore_crawl_delay: bool = False,
+) -> _Clock:
+    """Builds the clock pacing the requests to <publisher>.
+
+    A crawl-delay declared in the publisher's robots.txt overrides <delay>, unless robots.txt or
+    the crawl-delay it declares is ignored. Since the delay paces a publisher rather than a single
+    source, pass one clock to all the WebSources addressing it whenever they do not run one after
+    another (see InterleavedSource).
+
+    Args:
+        publisher: The publisher the requests address.
+        delay: The crawl-delay to keep between requests. If None, requests are not delayed.
+        ignore_robots: If True, robots.txt is not consulted for a crawl-delay.
+        ignore_crawl_delay: If True, a crawl-delay given by robots.txt does not overwrite <delay>.
+
+    Returns:
+        _Clock: A clock over the effective delay.
+    """
+    if not (ignore_robots or ignore_crawl_delay):
+        if robots_delay := publisher.robots.crawl_delay(publisher.request_header.get("user-agent", "*")):
+            logger.debug(
+                f"Found crawl-delay of {robots_delay} seconds in robots.txt for {publisher.name}. "
+                f"Overwriting existing delay."
+            )
+
+            def delay() -> float:
+                return robots_delay
+
+    return _Clock(delay=delay, sleep=_interruptable_sleep)
+
+
 class WebSource:
     def __init__(
         self,
@@ -117,7 +169,24 @@ class WebSource:
         ignore_robots: bool = False,
         ignore_crawl_delay: bool = False,
         impersonate: bool = False,
+        clock: Optional["_Clock"] = None,
     ):
+        """
+        Args:
+            url_source: The URLs to scrape, given either as a single URLSource or as a plain
+                iterable of URLs.
+            publisher: The publisher the URLs belong to.
+            url_filter: Filter to apply to the requested and responded URLs.
+            query_parameters: Query parameters to append to every crawled URL.
+            delay: The crawl-delay to keep between requests. Ignored if <clock> is given.
+            ignore_robots: If True, robots.txt restrictions are ignored.
+            ignore_crawl_delay: If True, a crawl-delay given by robots.txt does not overwrite <delay>.
+            impersonate: If True, use the publisher's browser profile to impersonate.
+            clock: The clock pacing the requests. Pass one clock to every WebSource addressing a
+                publisher to keep the crawl-delay per publisher rather than per source, which
+                matters once the sources are drawn from in turn (see InterleavedSource). If None,
+                this source paces itself using <delay>.
+        """
         self.url_source = url_source
         self.publisher = publisher
         self.url_filter = url_filter
@@ -125,29 +194,13 @@ class WebSource:
         self._impersonate_profile = publisher.impersonate if impersonate else None
 
         # parse robots:
-        self.robots: Optional[Robots] = None
-        if not ignore_robots:
-            self.robots = self.publisher.robots
+        self.robots: Optional[Robots] = None if ignore_robots else self.publisher.robots
 
-            if not ignore_crawl_delay:
-                if robots_delay := self.robots.crawl_delay(self.publisher.request_header.get("user-agent", "*")):
-                    logger.debug(
-                        f"Found crawl-delay of {robots_delay} seconds in robots.txt for {self.publisher.name}. "
-                        f"Overwriting existing delay."
-                    )
-
-                    def delay() -> float:
-                        return robots_delay
-
-        self.clock = _Clock(delay=delay, sleep=self._sleep)
+        self.clock = clock if clock is not None else build_clock(publisher, delay, ignore_robots, ignore_crawl_delay)
 
     @property
     def _is_stopped(self):
         return __EVENTS__.is_event_set("stop")
-
-    @staticmethod
-    def _sleep(s: float):
-        __EVENTS__.get("stop").wait(s)
 
     def _fetch_html(self, url: str, url_filter: URLFilter) -> Optional[HTML]:
         # check if URL is malformed
@@ -252,6 +305,24 @@ class WebSource:
             except Exception as error:
                 logger.error(f"Warning! Skipped requested URL {url!r} because of an unexpected error {error!r}")
                 continue
+
+
+class InterleavedSource:
+    """Several HTMLSources drawn from in turn rather than one after another.
+
+    Satisfies the HTMLSource protocol itself, so that a group of sources is interchangeable with a
+    single one wherever a scraper takes HTMLSources. Exhausted sources leave the rotation, so the
+    remaining ones keep going, and a group of one is simply drawn as it is.
+    """
+
+    def __init__(self, *sources: HTMLSource) -> None:
+        self.sources = sources
+
+    def fetch(self, url_filter: Optional[URLFilter] = None) -> Iterator[HTML]:
+        return roundrobin(*(source.fetch(url_filter) for source in self.sources))
+
+    def __repr__(self) -> str:
+        return f"{type(self).__name__}({list(self.sources)!r})"
 
 
 class CCNewsSource:
