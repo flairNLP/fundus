@@ -547,7 +547,7 @@ class Crawler(CrawlerBase):
         if skip_publishers_disallowing_training and publisher.disallows_training:
             logger.info(f"Skipping publisher {publisher.name} because it disallows training.")
             return
-        elif publisher.robots.disallow_all():
+        elif publisher.robots.disallow_all() and not self.ignore_robots:
             logger.info(f"Skipping publisher {publisher.name} because it disallows all URLs.")
             return
 
