@@ -24,8 +24,20 @@ jobs:
       contents: write
 
     steps:
+      # Mints a short-lived token for the 'fundus-docs-bot' GitHub App, which is
+      # allowed to bypass branch protection on 'master'. The default GITHUB_TOKEN
+      # cannot push to the protected branch.
+      - name: Generate app token
+        id: app-token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.DOCS_BOT_APP_ID }}
+          private-key: ${{ secrets.DOCS_BOT_PRIVATE_KEY }}
+
       - name: Set up Git repository
         uses: actions/checkout@v6
+        with:
+          token: ${{ steps.app-token.outputs.token }}
 
       - name: Set up Python 3.9
         uses: actions/setup-python@v6
