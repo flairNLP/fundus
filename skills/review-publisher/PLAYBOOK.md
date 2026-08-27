@@ -8,6 +8,12 @@
 All mechanics run through one driver (`<skill>` is the skill directory SKILL.md told you):
 
     python "<skill>/scripts/review.py" {crawl,sweep,show,adjudicate,status,payload} <cc>.<Class>
+    python "<skill>/scripts/review.py" done
+
+The cache is keyed on the **commit under review** (derived from git, nothing to pass), so no other
+review inherits these articles and adjudications and a mid-review push retires them rather than
+letting them be replayed against changed code. `done` removes it (§6). `--pr` on `crawl` is
+recorded, so `status` and `payload` can name the PR back to you.
 
 The driver owns the bookkeeping and prints its own next steps and warnings — trust that output, and
 **act on its `!` lines rather than just acknowledging them**. What it never does is judge; this
@@ -38,7 +44,8 @@ photo caption corrupts that mapping. Over-capture is a blocker, not a nit.
 
 - **The PR number**, and whether it's **your own** PR (changes the event — §4). If the user didn't
   name one: `gh pr view --json number,title,author` reads the current branch's PR — show and confirm
-  it; if the branch has none, ask. Never guess. (`author` also settles the own-PR question.)
+  it; if the branch has none, ask. Never guess — pass it to `crawl` as `--pr`. (`author` also
+  settles the own-PR question.)
 - The publisher(s) as `PublisherCollection.<cc>.<Class>` and the parser version(s) touched.
 
 ## 1. Static read
@@ -47,6 +54,9 @@ photo caption corrupts that mapping. Over-capture is a blocker, not a nit.
 gh pr checkout <PR_NUMBER>
 gh pr diff <PR_NUMBER>
 ```
+
+**Check out before you crawl** — the cache is keyed on `HEAD`, so crawling first draws against
+`master` and the checkout then strands that cache (`status` reports no state).
 
 - `@attribute` return types match [`attribute_guidelines.md`](/docs/attribute_guidelines.md).
 - **`validate=False` attributes are checked by nobody but you** — CI type-checks validated
@@ -60,13 +70,21 @@ gh pr diff <PR_NUMBER>
   leaving it unset is the intended `date.max`.)
 - **Version bump fits the change**: selector-only fix → minor (`V1_1(V1)`); new or substantially
   changed attributes → major (`V2`). Flag a mismatch in either direction.
+- **`impersonate`**: a browser profile (e.g. `"chrome"`) routing this publisher through curl_cffi,
+  for sites behind a TLS-fingerprint anti-bot layer. The value is validated in `Publisher.__init__`,
+  so a bad target fails at import; what's yours is whether it belongs there at all. **Present** — set
+  it *only* when the publisher genuinely can't be crawled without it
+  ([`how_to_add_a_publisher.md`](/docs/how_to_add_a_publisher.md)); ask the PR to say why, a nit
+  unless plainly cargo-culted. **Absent** — the tell is §2's crawl coming back empty. It's opt-in
+  user-side, so under the default `Crawler(impersonate=False)` a declared profile does nothing and
+  the publisher just yields nothing, silently; the review's crawl always passes `impersonate=True`.
 - **Changes to `parser/utility.py`** (`generic_topic_parsing`, `apply_result_filter`,
   `image_extraction`, …) affect every publisher — check the call sites.
 
 ## 2. Crawl live articles and verify the body
 
 ```bash
-python "<skill>/scripts/review.py" crawl <cc>.<Class>   # pool 100 -> read 10
+python "<skill>/scripts/review.py" crawl <cc>.<Class> --pr <PR>   # pool 100 -> read 10
 ```
 
 **The defaults are the budget.** Raising `--pool` or `--review` costs a second live crawl and
@@ -100,6 +118,21 @@ evidence about the articles nobody read. An interrupted crawl caches nothing; ju
   per-attribute failures. **0 articles after a fair attempt is itself a blocker-level finding** —
   report it, don't stall. Inspect via the cached html (`show` prints paths); many publishers block
   generic fetchers, so never fetch manually with `urllib`/`requests`.
+- **0 articles and no `impersonate` declared?** A fingerprint block looks exactly like broken
+  sources, but the fix is a one-line declaration. Rule it in or out before writing that finding:
+
+  ```python
+  # In a *fresh* process: a robots.txt already read as 403 stays disallowed, and re-reading it
+  # can't undo that, so reusing the crawl's interpreter would answer 0 for the wrong reason.
+  from fundus import Crawler, PublisherCollection
+  publisher = PublisherCollection.<cc>.<Class>
+  publisher.impersonate = "chrome"                             # in-process only, nothing on disk
+  publisher.robots.robots_file_parser.impersonate = "chrome"   # robots.txt is often blocked too
+  print(len(list(Crawler(publisher, impersonate=True).crawl(max_articles=1, only_complete=False))))
+  ```
+
+  An article back means the finding is the **missing `impersonate` profile**, `"chrome"` as the fix.
+  Nothing back and the empty-draw finding stands as written.
 
 ### Tier 1 — coherence read (every cached article, from the crawl output)
 
@@ -115,7 +148,7 @@ Tier 2 exists for exactly that.
 
 ```bash
 python "<skill>/scripts/review.py" sweep <cc>.<Class>                 # same cache, no network
-python "<skill>/scripts/review.py" sweep <cc>.<Class> --version V1_1  # pin a legacy version; re-runs free
+python "<skill>/scripts/review.py" sweep <cc>.<Class> --version V1_1  # pin a legacy version; free
 ```
 
 The sweep applies the version's real body selectors to each cached article and emits candidates with
@@ -134,7 +167,7 @@ ids. **A candidate is a question, not a verdict** — the answer depends on the 
 ```bash
 python "<skill>/scripts/review.py" show <cc>.<Class> <id>      # full text + cached html paths
 python "<skill>/scripts/review.py" adjudicate <cc>.<Class> <id> ok --note "site-wide cookie banner"
-python "<skill>/scripts/review.py" adjudicate <cc>.<Class> <id> blocker --note "<ul> of match results dropped; <url>"
+python "<skill>/scripts/review.py" adjudicate <cc>.<Class> <id> blocker --note "<ul> dropped; <url>"
 ```
 
 `ok` = benign; `blocker` = real finding, with the note as its evidence line. Adjudicate from the
@@ -250,8 +283,18 @@ gh api repos/flairNLP/fundus/pulls/<PR>/reviews -X POST --input "<cache>/review.
 The review posts under the `gh`-authenticated user; with `REQUEST_CHANGES` it blocks merge until
 resolved if the repo enforces review gating.
 
+## 6. Close the review out
+
+```bash
+python "<skill>/scripts/review.py" done
+```
+
+Removes this commit's cache — every publisher at once, which is why it takes no arguments. Run it
+*after* the POST: until then the cache is the evidence behind the review. Skip it only if the user
+wants the html kept — and say so. (`crawl` prunes abandoned caches, but only after a week.)
+
 ---
 
-*Cleanup: with scratch in the cache/temp dir there's nothing to clean in the repo. If anything of
+*Cleanup: `done` clears the temp cache; nothing of the review lands in the repo. If anything of
 yours did land in the working dir, remove only that; never touch pre-existing untracked files
 without asking.*

@@ -10,7 +10,7 @@ their own agent with the installer below.
 
 | Skill | What it does |
 |-------|--------------|
-| [`review-publisher`](review-publisher/SKILL.md) | Reviews a publisher PR (new publisher or parser-version change): crawls live articles to verify the extracted `ArticleBody` mirrors the real article, checks `VALID_UNTIL` / version bumps / `validate=False` / `free_access`, and drafts a single GitHub review. |
+| [`review-publisher`](review-publisher/SKILL.md) | Reviews a publisher PR (new publisher or parser-version change): crawls live articles to verify the extracted `ArticleBody` mirrors the real article, checks `VALID_UNTIL` / version bumps / `validate=False` / `free_access` / `impersonate`, and drafts a single GitHub review. |
 
 `install.py` (the installer launcher) and the `installer/` package behind it, plus this
 `README.md`, round out the folder.
@@ -46,9 +46,21 @@ python skills/install.py
 ```
 
 It shows a live list of *skills* for the selected agent. Each row is a skill; the **Installed** column
-shows whether it's installed (`✓`) or not (`·`). Move the cursor with `↑`/`↓`, then press `space` to act
-on the highlighted skill — installing it if it's absent, uninstalling it if it's present. The list updates
-in place, so you never have to re-run. `r` refreshes from disk and `q` quits.
+shows how the installed copy stands against the source in this repo:
+
+| | Meaning | What to do |
+|---|---|---|
+| `·` | not installed | `space` to install |
+| `✓` | installed, identical to `skills/` | nothing |
+| `↑` | the repo has moved on since you installed | re-install (toggle off, then on) |
+| `≠` | the **installed copy** was edited in place | port the edit back into `skills/` *first* — re-installing overwrites it |
+| `?` | no usable install manifest (pre-manifest, corrupt, or from an older fingerprint algorithm), and the two differ | compare by hand, then re-install |
+
+The **Version** column shows the source's `version:`, or `installed → source` when they differ.
+
+Move the cursor with `↑`/`↓`, then `space` to install (if absent) or uninstall (if present) — it keys
+off presence, not sync state, so on a `↑`/`≠` row it uninstalls and re-installing is the second press.
+The list updates in place. `r` refreshes from disk, `q` quits.
 
 Skills install to `./.claude/skills/`, scoped to this repo — where they're relevant (Fundus skills
 reference repo files and run against the repo) — and never pushed (`.claude/` is in the committed
@@ -65,6 +77,20 @@ pip install -e .[dev]
 Re-install (toggle off, then on) after editing a skill source to refresh the installed copy. Restart
 your agent so it picks up a newly installed skill.
 
+## Versioning and drift
+
+Installing writes an `.install-manifest.json` into the installed folder holding the skill's `version`
+and a **content fingerprint**. Each refresh re-fingerprints both sides against that record, which is
+what separates the repo moving on (`↑`) from the copy being edited in place (`≠`). The manifest also
+carries a `format`; changing how fingerprints are computed means bumping it, so old manifests read as
+`?` rather than accusing an untouched copy of local edits.
+
+The fingerprint does the work, not the version: nobody editing an installed copy bumps a label. `≠`
+is the state worth acting on — work under `.claude/` that exists nowhere else, which a re-install
+would throw away. `version:` is optional (unversioned shows `—`); bump it when users should notice,
+and a `↑` row then reads `1.0.0 → 1.1.0`. `__pycache__`/`.pyc` are excluded, since an installed
+skill accumulates them just by running.
+
 ## Supported agents
 
 | Agent | Status | Target |
@@ -80,7 +106,7 @@ required; the rest are optional:
 ```
 skills/
 └── my-skill/
-    ├── SKILL.md          # required: frontmatter (name/description) + instructions
+    ├── SKILL.md          # required: frontmatter (name/description/version) + instructions
     ├── PLAYBOOK.md       # the steps SKILL.md links to as a sibling
     ├── requirements.txt  # optional: extra pip deps, installed on install
     └── scripts/          # optional: helper scripts the playbook calls
@@ -88,13 +114,15 @@ skills/
 ```
 
 A minimal `SKILL.md` looks like this — the block fenced by `---` at the top is the **YAML frontmatter**
-(a small metadata header): the installer reads its one-line `description` for the dashboard, and your
-agent reads `name`/`description` to decide when to invoke the skill. Everything after the closing `---`
+(a small metadata header): the installer reads its one-line `description` for the dashboard and its
+optional `version` for the Version column, and your agent reads `name`/`description` to decide when to
+invoke the skill. Everything after the closing `---`
 is the instructions the agent follows.
 
 ```markdown
 ---
 name: my-skill
+version: 1.0.0
 description: One-line summary of what this skill does and, crucially, when the agent should use it.
 ---
 
