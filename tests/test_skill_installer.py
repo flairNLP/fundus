@@ -63,7 +63,9 @@ class TestFingerprint:
             root = tmp_path / case
             root.mkdir()
             (root / name).write_text(content, encoding="utf-8")
-            return fingerprint(root)
+            # `str(...)`: checking tests/ on its own resolves `fingerprint` through the sys.path
+            # insert above, so its return type is Any there and `warn_return_any` fires.
+            return str(fingerprint(root))
 
         # Without the name prefix both stream as "a:5:b:1:c" — verified; with it they diverge.
         assert folder("one", "a", "b:1:c") != folder("two", "a:5:b", "c")

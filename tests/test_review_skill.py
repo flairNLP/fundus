@@ -7,6 +7,7 @@ above all, ways it could report a silent false "clean".
 import json
 import os
 import shutil
+import subprocess
 import sys
 import time
 from datetime import datetime
@@ -355,7 +356,7 @@ class TestStore:
             lambda *a, **k: SimpleNamespace(returncode=0, stdout="  \n"),  # git answered nothing
         ):
             _store.commit_id.cache_clear()
-            monkeypatch.setattr(_store.subprocess, "run", run)
+            monkeypatch.setattr(subprocess, "run", run)
             assert _store.commit_id() == "detached"
         monkeypatch.undo()
         _store.commit_id.cache_clear()
@@ -420,7 +421,8 @@ class TestStore:
         assert "chrome131" in review._impersonation_line("chrome131")
         assert "none declared" in review._impersonation_line(None)
         # `status` reads it off a state dict, so a cache predating the field must not crash.
-        assert review._impersonation_line({}.get("impersonate"))
+        crawl: Dict[str, Any] = {}
+        assert review._impersonation_line(crawl.get("impersonate"))
 
     def test_missing_attributes_matches_the_default_draw(self):
         # `Requires` is fundus' own filter, so a summary-only body counts as missing here exactly
