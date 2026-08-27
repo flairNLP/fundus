@@ -90,13 +90,9 @@ class IT(metaclass=PublisherGroup):
         domain="https://www.ilgiornale.it",
         parser=IlGiornaleParser,
         sources=[
-            # Main RSS feed (removed the one returning 404)
-            RSSFeed("https://www.ilgiornale.it/feed.xml"),
-            # Main sitemaps - excluding video and image sitemaps
-            NewsMap("https://www.ilgiornale.it/sitemap/google-news.xml"),
+            NewsMap("https://www.ilgiornale.it/arc/outboundfeeds/sitemap-news/latest/"),
             Sitemap(
-                "https://www.ilgiornale.it/sitemap/indice.xml",
-                sitemap_filter=regex_filter(r"\*/video/|\*/image/"),
+                "https://www.ilgiornale.it/arc/outboundfeeds/sitemap-index/?outputType=xml",
             ),
         ],
     )
