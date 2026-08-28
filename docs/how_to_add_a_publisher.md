@@ -255,6 +255,23 @@ sitemap_filter=inverse(regex_filter("sitemap-content-"))
 ````
 will exclude all sitemap URLs not containing the substring `sitemap-content-`.
 
+#### Ordering sitemaps
+
+Some indices list their sitemaps in an order that is neither ascending nor descending by date, e.g. numbered sitemaps ordered as text, where `sitemap_10` follows directly after `sitemap_1`.
+Use the `sort_key` parameter to reorder them.
+It is handed to `list.sort`, so ordering is ascending, and `numeric_sort_key` builds one from a regular expression by reading its capture groups as integers:
+
+````python
+Sitemap(
+    "https://www.voanews.com/sitemap.xml",
+    sitemap_filter=inverse(regex_filter(r"sitemap_[\d_]*\.xml\.gz")),
+    sort_key=numeric_sort_key(r"sitemap_\d+_(\d+)\.xml"),
+)
+````
+
+Pass `reverse=True` to `numeric_sort_key` if the number grows with recency instead.
+Unlike `Sitemap`'s `reverse`, which is applied afterwards and also flips the URLs within each sitemap, this only reorders the sitemaps.
+
 ### Finishing the Publisher Specification
 
 1. If your publisher requires to use custom request headers to work properly you can alter it by using the `request_header` parameter of `PublisherSpec`.
