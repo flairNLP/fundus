@@ -176,6 +176,7 @@
   },
   "V2": {
     "authors": [
+      "Anette Dowideit",
       "Max Bernhard"
     ],
     "body": {
@@ -195,14 +196,7 @@
             "Gegenseitige Schuldzuweisungen"
           ],
           "paragraphs": [
-            "Die Flüchtlingswelle vor zwei Wochen hatte zu einem Konflikt zwischen Spanien und Marokko geführt. Beide Seiten wiesen sich gegenseitig die Schuld daran zu. Bislang sind die Hintergründe für die plötzliche Migrationsbewegung ungeklärt."
-          ]
-        },
-        {
-          "headline": [
-            "Mehr von CORRECTIV"
-          ],
-          "paragraphs": [
+            "Die Flüchtlingswelle vor zwei Wochen hatte zu einem Konflikt zwischen Spanien und Marokko geführt. Beide Seiten wiesen sich gegenseitig die Schuld daran zu. Bislang sind die Hintergründe für die plötzliche Migrationsbewegung ungeklärt.",
             "Eine Wiederholung wollen beide Staaten erkennbar verhindern. In Ceuta selbst halten sich noch einige tausend Flüchtlinge auf, darunter viele Minderjährige und Frauen. Ein Sprecher des spanischen Innenministeriums betonte, dass alle präventiven Maßnahmen ergriffen worden seien, um die Grenze zu schützen. Eine illegale Einreise von Migranten soll verhindert werden, wie der Sprecher sagte. Die Regierung hat nach früheren Angaben zusätzliche Militärkräfte in die Exklave geschickt.",
             "Marokko hat den Sicherungsring tief in das eigene Gebiet gestaffelt: In der Gemeinde Fnideq, etwa vier Kilometer vor der Grenze, ist die Polizeipräsenz hoch. Auf einem Parkplatz der Küstenstadt stehen mehrere Polizeibusse, Polizisten mit Schutzausrüstung vertreiben sich die Zeit. Davon abgesehen herrscht reges Treiben, in den Einkaufsstraßen drängen sich Menschen dicht an dicht, hier gibt es marokkanisches Streetfood und an Ständen Fake-Fußballtrikots zu kaufen.",
             "Auf der spanischen Seite ist die Präsenz von Sicherheitskräften weniger groß. Lediglich vor größeren Supermärkten und am Strand stehen Soldaten und Polizisten. Ein Grenztor in Strandnähe ist geöffnet, davor steht ein einzelner Polizei-Jeep. Marokkanerinnen und Marokkaner, die freiwillig zurückkehren wollen, sollen hier ohne Fragen über die Grenze in ihr Heimatland zurückkehren können. Rund 600 Personen sollen in den vergangenen Tagen laut Medienberichten freiwillig zurückgekehrt sein.",
@@ -230,12 +224,6 @@
             "Wie viele jetzt noch in Ceuta sind, ist unklar. Das spanische Innenministerium teilte CORRECTIV am Freitagnachmittag mit, seine Sicherheitskräfte hätten ihre Schätzung der Zahl der noch in Ceuta verbliebenen erwachsenen irregulären Migranten auf 5.000 nach oben korrigiert; hinzu kämen 1.989 Minderjährige, die von der Nationalpolizei registriert wurden.",
             "Zuvor hatte Spaniens Regierung die Zahl der Flüchtlinge in Ceuta auf 2.500 bis 3.000 Flüchtlinge geschätzt – der Bürgermeister der Exklave sagte schon vor Tagen, er gehe eher von 9.000 aus. Auf der Straße schätzen die Menschen, es seien noch mehr."
           ]
-        },
-        {
-          "headline": [
-            "CORRECTIV im Postfach"
-          ],
-          "paragraphs": []
         }
       ]
     },
@@ -275,39 +263,9 @@
         "caption": "Marokkanische Grenzbeamte haben die Grenzbefestigungen ausgebaut und die Patrouillen deutlich verstärkt.",
         "authors": [
           "Picture Alliance / Sipa USA",
-          "JNA PRESS."
+          "JNA PRESS"
         ],
         "position": 216
-      },
-      {
-        "versions": [
-          {
-            "url": "https://correctiv.org/wp-content/uploads/2026/08/Ceuta-12.-August-2026-750x412.jpeg",
-            "query_width": "max-width:700",
-            "size": {
-              "width": 750,
-              "height": 412
-            },
-            "type": "image/jpeg"
-          },
-          {
-            "url": "https://correctiv.org/wp-content/uploads/2026/08/Ceuta-12.-August-2026-1412x772.jpeg",
-            "query_width": "max-width:860",
-            "size": {
-              "width": 1412,
-              "height": 772
-            },
-            "type": "image/jpeg"
-          }
-        ],
-        "is_cover": true,
-        "description": null,
-        "caption": "Marokkanische Grenzbeamte haben die Grenzbefestigungen ausgebaut und die Patrouillen deutlich verstärkt.",
-        "authors": [
-          "Picture Alliance / Sipa USA",
-          "JNA PRESS."
-        ],
-        "position": 218
       },
       {
         "versions": [
@@ -325,7 +283,7 @@
         "description": null,
         "caption": "Die spanische Seite der Grenze in Ceuta mit Blick Richtung Marokko.",
         "authors": [
-          "Max Bernhard/CORRECTIV."
+          "Max Bernhard/CORRECTIV"
         ],
         "position": 242
       },
@@ -345,7 +303,7 @@
         "description": null,
         "caption": "Szene aus dem Industriegebiet.",
         "authors": [
-          "Max Bernhard/CORRECTIV."
+          "Max Bernhard/CORRECTIV"
         ],
         "position": 249
       },
@@ -365,7 +323,7 @@
         "description": null,
         "caption": "Eine Unterkunft für Minderjährige soll schon vor den Ereignissen von Ende Juli überfüllt gewesen sein. Jetzt schlafen junge Männer hier unter freiem Himmel.",
         "authors": [
-          "Max Bernhard/CORRECTIV."
+          "Max Bernhard/CORRECTIV"
         ],
         "position": 253
       },
@@ -385,7 +343,7 @@
         "description": null,
         "caption": "Die Jugendlichen schlafen auf Pappkartons und schützen sich mit Tüchern vor der Sonne.",
         "authors": [
-          "Max Bernhard/CORRECTIV."
+          "Max Bernhard/CORRECTIV"
         ],
         "position": 256
       },
@@ -405,7 +363,7 @@
         "description": null,
         "caption": "Der 18-jährige Salim zeigt ein Video, das ihn zum Aufbruch motiviert haben soll.",
         "authors": [
-          "Max Bernhard/CORRECTIV."
+          "Max Bernhard/CORRECTIV"
         ],
         "position": 264
       }
