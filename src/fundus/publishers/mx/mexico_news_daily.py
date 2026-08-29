@@ -59,4 +59,4 @@ class MexicoNewsDailyParser(ParserProxy):
             )
 
     class V1_1(V1):
-        _paragraph_selector = XPath("//div[@class='tts_content_wrapper_1']/p[text()]")
+        _paragraph_selector = XPath("//div[@class='tts_content_wrapper_1']/p[text() or strong]")
