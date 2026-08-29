@@ -55,5 +55,5 @@ class VOAParser(ParserProxy):
             )
 
     class V1_1(V1):
-        _paragraph_selector = XPath("//div[@id='article-content']/div/p[not(strong)]")
-        _subheadline_selector = XPath("//div[@id='article-content']/div/p[strong]")
+        _paragraph_selector = XPath("//div[@id='article-content']/div[@class='wsw']//p[not(strong) and not(@class)]")
+        _subheadline_selector = XPath("//div[@id='article-content']/div[@class='wsw']//p[strong]")
