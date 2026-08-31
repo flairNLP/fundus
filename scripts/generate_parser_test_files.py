@@ -22,7 +22,7 @@ logger = create_logger(__name__)
 def get_test_article(publisher: Publisher, url: Optional[str] = None) -> Optional[Article]:
     if url is not None:
         source = WebSource([url], publisher=publisher)
-        scraper = BaseScraper(source, parser_mapping={publisher.name: publisher.parser})
+        scraper = BaseScraper(source, publisher_mapping={publisher.name: publisher})
         return next(scraper.scrape(error_handling="suppress", extraction_filter=RequiresAll()), None)
 
     crawler = Crawler(publisher)

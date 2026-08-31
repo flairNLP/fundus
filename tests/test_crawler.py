@@ -69,7 +69,7 @@ class TestImpersonate:
             impersonate="chrome",
         )
         source = WebSource(
-            url_source=publisher.source_mapping[RSSFeed][0],
+            url_source=next(iter(publisher.sources)),
             publisher=publisher,
             impersonate=False,
         )
@@ -84,7 +84,7 @@ class TestImpersonate:
             impersonate="chrome",
         )
         source = WebSource(
-            url_source=publisher.source_mapping[RSSFeed][0],
+            url_source=next(iter(publisher.sources)),
             publisher=publisher,
             impersonate=True,
         )

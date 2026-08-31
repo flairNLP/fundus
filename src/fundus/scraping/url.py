@@ -15,6 +15,8 @@ from typing import (
     Optional,
     Pattern,
     Set,
+    Tuple,
+    Type,
 )
 from urllib.parse import unquote, urlparse
 
@@ -26,6 +28,7 @@ from lxml.etree import XMLParser, XPath
 from fundus.logging import create_logger
 from fundus.scraping.filter import URLFilter, inverse
 from fundus.scraping.session import InterruptableSession, _default_header, session_handler
+from fundus.utils.iteration import iterate_all_subclasses
 
 logger = create_logger(__name__)
 
@@ -111,6 +114,7 @@ def clean_url(url: str) -> str:
 class URLSource(Iterable[str], ABC):
     url: str
     languages: Set[str] = field(default_factory=set)
+    interleave: bool = False
 
     def __post_init__(self):
         if not is_valid_url(self.url):
@@ -249,3 +253,121 @@ class Sitemap(URLSource):
 @dataclass
 class NewsMap(Sitemap):
     pass
+
+
+class SourceHandler(Iterable[URLSource]):
+    """The sources of a publisher, in crawl order and grouped into execution batches.
+
+    Sources are ordered by their type following <__SOURCE_ORDER__>, and within a type by
+    the order they were declared in. Sources marked with <URLSource.interleave> are grouped
+    with the other interleaved sources of their type into a single batch, which the scraper
+    round-robins rather than exhausting one source after another.
+    """
+
+    __SOURCE_ORDER__: ClassVar[Tuple[Type[URLSource], ...]] = (RSSFeed, NewsMap, Sitemap)
+
+    def __init__(self, sources: Iterable[URLSource]) -> None:
+        collected = tuple(sources)
+
+        for source in collected:
+            if not isinstance(source, URLSource):
+                raise TypeError(
+                    f"Unexpected type {type(source).__name__!r} as source. "
+                    f"Allowed are {', '.join(repr(cls.__name__) for cls in iterate_all_subclasses(URLSource))}"
+                )
+
+        self._sources: Tuple[URLSource, ...] = tuple(sorted(collected, key=self._rank))
+
+    @classmethod
+    def _rank(cls, source: URLSource) -> int:
+        """The position of <source>'s type in the crawl order.
+
+        Types not listed in <__SOURCE_ORDER__> are proceeded last rather than raising, so that
+        URLSource implementations living outside this module stay usable without registration.
+        Since sorting is stable, they keep their declared order among themselves.
+        """
+        source_type = type(source)
+        if source_type in cls.__SOURCE_ORDER__:
+            return cls.__SOURCE_ORDER__.index(source_type)
+        return len(cls.__SOURCE_ORDER__)
+
+    def __iter__(self) -> Iterator[URLSource]:
+        return iter(self._sources)
+
+    def __len__(self) -> int:
+        return len(self._sources)
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, SourceHandler):
+            return NotImplemented
+        return self._sources == other._sources
+
+    def __repr__(self) -> str:
+        return f"{type(self).__name__}({list(self._sources)!r})"
+
+    def batches(self) -> Iterator[Tuple[URLSource, ...]]:
+        """Yields the sources as units of work, in crawl order.
+
+        A batch holding more than one source is meant to be round-robined. Interleaved sources
+        of the same type share a batch, which takes the position of the first of them; every
+        other source forms a batch of its own.
+
+        Yields:
+            Tuple[URLSource, ...]: The next batch of sources.
+        """
+        # maps a source type onto the batch collecting its interleaved sources. Since sources
+        # are sorted by type, at most one such batch is open at any time, but keying by type
+        # keeps this independent of that guarantee.
+        interleaved: Dict[Type[URLSource], List[URLSource]] = {}
+        batches: List[List[URLSource]] = []
+
+        for source in self._sources:
+            if not source.interleave:
+                batches.append([source])
+            elif (open_batch := interleaved.get(type(source))) is not None:
+                open_batch.append(source)
+            else:
+                # placed at the position of the first interleaved source of this type
+                interleaved[type(source)] = new_batch = [source]
+                batches.append(new_batch)
+
+        for batch in batches:
+            yield tuple(batch)
+
+    def filter(
+        self,
+        source_types: Optional[Iterable[Type[URLSource]]] = None,
+        languages: Optional[Iterable[str]] = None,
+    ) -> "SourceHandler":
+        """Returns a new handler holding only the sources matching the given restrictions.
+
+        An empty or omitted argument does not restrict on that axis. Filtering an already
+        filtered handler narrows it further, so chained calls intersect.
+
+        Args:
+            source_types (Optional[Iterable[Type[URLSource]]]): Only keep sources of these types.
+            languages (Optional[Iterable[str]]): Only keep sources covering at least one of
+                these languages.
+
+        Returns:
+            SourceHandler: A new handler over the surviving sources.
+        """
+        allowed_types = set(source_types) if source_types else set()
+        allowed_languages = set(languages) if languages else set()
+
+        return type(self)(
+            source
+            for source in self._sources
+            if (not allowed_types or type(source) in allowed_types)
+            and (not allowed_languages or source.languages & allowed_languages)
+        )
+
+    @property
+    def languages(self) -> Set[str]:
+        # deliberately not cached: PublisherGroup fills in a default language by mutating
+        # the sources after the handler was built.
+        return set().union(*(source.languages for source in self._sources)) if self._sources else set()
+
+    @property
+    def source_types(self) -> Set[Type[URLSource]]:
+        return {type(source) for source in self._sources}

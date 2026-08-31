@@ -27,6 +27,7 @@ from typing import (
     Callable,
     Dict,
     Generic,
+    Iterable,
     Iterator,
     List,
     Literal,
@@ -51,8 +52,9 @@ from tqdm import tqdm
 from typing_extensions import ParamSpec, TypeAlias
 
 from fundus.logging import create_logger, get_current_config
+from fundus.parser import BaseParser
 from fundus.parser.data import remove_query_parameters_from_url
-from fundus.publishers.base_objects import FilteredPublisher, Publisher, PublisherGroup
+from fundus.publishers.base_objects import Publisher, PublisherGroup
 from fundus.scraping.article import Article
 from fundus.scraping.delay import Delay
 from fundus.scraping.filter import ExtractionFilter, Requires, RequiresAll, URLFilter
@@ -266,11 +268,38 @@ def random_sleep(func: Callable[_P, _T], between: Tuple[float, float]) -> Callab
     return wrapper
 
 
+def supports_attributes(extraction_filter: Optional[ExtractionFilter], versions: Iterable[Type[BaseParser]]) -> bool:
+    """Whether <versions> together cover what <extraction_filter> requires.
+
+    Args:
+        extraction_filter: The filter the extractions are checked against. Only a <Requires> names
+            attributes a parser version has to support.
+        versions: The parser versions the extraction can end up using.
+
+    Returns:
+        bool: True if the required attributes are within reach.
+    """
+    if not isinstance(extraction_filter, Requires):
+        return True
+
+    supported = set(more_itertools.flatten(version.attributes().names for version in versions))
+    return extraction_filter.required_attributes <= supported
+
+
 class CrawlerBase(ABC):
     def __init__(self, *publishers: PublisherType):
-        self.publishers: List[Union[Publisher, FilteredPublisher]] = list(set(more_itertools.collapse(publishers)))
+        self.publishers: List[Publisher] = list(set(more_itertools.collapse(publishers)))
         if not self.publishers:
             raise ValueError("param <publishers> of <Crawler.__init__> must include at least one publisher.")
+
+    @abstractmethod
+    def _supports_attributes(self, publisher: Publisher, extraction_filter: Optional[ExtractionFilter]) -> bool:
+        """Whether <publisher> can extract what <extraction_filter> requires.
+
+        Which parser versions an extraction can end up using depends on how the crawler reaches
+        its articles, so every crawler answers this for the versions within its own reach.
+        """
+        raise NotImplementedError
 
     @abstractmethod
     def _build_article_iterator(
@@ -279,7 +308,6 @@ class CrawlerBase(ABC):
         error_handling: Literal["suppress", "catch", "raise"],
         extraction_filter: Optional[ExtractionFilter],
         url_filter: Optional[URLFilter],
-        language_filter: Optional[List[str]],
         skip_publishers_disallowing_training: bool = False,
     ) -> Iterator[Article]:
         raise NotImplementedError
@@ -321,8 +349,10 @@ class CrawlerBase(ABC):
             url_filter (Optional[URLFilter]): A callable object satisfying the URLFilter protocol to skip
                 URLs before download. This filter applies on both requested and responded URL. Defaults to None.
             language_filter (Optional[List[str]]): A set of language codes to filter the articles by. If set,
-                articles of different languages will be skipped and not counted towards the article count. Defaults
-                to None.
+                articles of different languages will be skipped and not counted towards the article count.
+                Publishers already restricted to certain languages, as returned by PublisherCollection.search,
+                narrow this down further rather than widening it, so that a publisher never yields a language
+                neither side asked for. Defaults to None.
             only_unique (bool): If set to True, articles yielded will be unique on the responded URL.
                 Always returns the first encountered article. Defaults to True.
             save_to_file (Union[None, str, Path]): If set, the crawled articles will be collected saved to the
@@ -357,52 +387,22 @@ class CrawlerBase(ABC):
         response_cache: Set[str] = set()
 
         extraction_filter = build_extraction_filter()
-        fitting_publishers: List[Union[Publisher, FilteredPublisher]] = []
 
-        if isinstance(extraction_filter, Requires):
-            for publisher in self.publishers:
-                supported_attributes = set(
-                    more_itertools.flatten(
-                        collection.names for collection in publisher.parser.attribute_mapping.values()
-                    )
-                )
-                if missing_attributes := extraction_filter.required_attributes - supported_attributes:
-                    logger.warning(
-                        f"The required attribute(s) `{', '.join(missing_attributes)}` "
-                        f"is(are) not supported by {publisher.name}. Skipping publisher"
-                    )
-                elif language_filter and not publisher.supports(languages=language_filter):
-                    logger.warning(
-                        f"None of the required language(s) `{', '.join(language_filter)}` "
-                        f"is(are) supported by {publisher.name}. Skipping publisher"
-                    )
-                else:
-                    fitting_publishers.append(publisher)
+        # restricted here rather than while crawling, since <language_filter> is the last piece of
+        # information to arrive. From now on a publisher carries exactly the sources and languages
+        # it is meant to contribute, and nothing downstream has to filter again.
+        restricted_publishers = [publisher.restrict(languages=language_filter) for publisher in self.publishers]
+        fitting_publishers = [
+            publisher
+            for publisher in restricted_publishers
+            if publisher.supports() and self._supports_attributes(publisher, extraction_filter)
+        ]
 
-            if not fitting_publishers:
-                logger.error(
-                    f"Could not find any fitting publishers for required attributes  "
-                    f"`{', '.join(extraction_filter.required_attributes)}`"
-                )
-                return
-        else:
-            fitting_publishers = self.publishers
+        if not fitting_publishers:
+            raise ValueError("No publisher matches the given crawl restrictions.")
 
-        # check if there are filtered publishers and if so, adopt their language restrictions
-        publisher_language_filter = set()
-        for publisher in fitting_publishers:
-            if isinstance(publisher, FilteredPublisher):
-                publisher_language_filter.update(publisher.language_filter)
-
-        if language_filter and publisher_language_filter:
-            language_filter = list(set(language_filter).union(publisher_language_filter))
-            logger.info(
-                f"Publisher language filter: {publisher_language_filter} will be added to the given language filter: "
-                f"{language_filter}. "
-            )
-        elif publisher_language_filter:
-            language_filter = list(publisher_language_filter)
-            logger.info(f"Publisher language filter: {publisher_language_filter} will be used as the language filter. ")
+        if skipped := len(self.publishers) - len(fitting_publishers):
+            logger.warning(f"Skipping {skipped} of {len(self.publishers)} publisher(s) not matching the restrictions")
 
         article_count: Dict[str, int] = defaultdict(int)
         crawled_articles: Dict[str, List[Article]] = defaultdict(list)
@@ -430,9 +430,8 @@ class CrawlerBase(ABC):
                 for article in self._build_article_iterator(
                     tuple(fitting_publishers),
                     error_handling,
-                    build_extraction_filter(),
+                    extraction_filter,
                     url_filter,
-                    language_filter,
                     skip_publishers_disallowing_training,
                 ):
                     if max_articles_per_publisher and article_count[article.publisher] == max_articles_per_publisher:
@@ -440,7 +439,7 @@ class CrawlerBase(ABC):
                             "stop", article.publisher
                         ):
                             __EVENTS__.set_event("stop", article.publisher)
-                        if sum(article_count.values()) == len(self.publishers) * max_articles_per_publisher:
+                        if sum(article_count.values()) == len(fitting_publishers) * max_articles_per_publisher:
                             break
                         continue
                     timer.reset()
@@ -526,7 +525,10 @@ class Crawler(CrawlerBase):
                 "include at least one publisher that isn't deprecated."
             )
 
-        super().__init__(*fitting_publishers)
+        # restricted here, since <restrict_sources_to> arrives with the crawler and holds for every
+        # crawl it runs. Publishers left without a source are reported per crawl rather than raising,
+        # together with the ones a crawl's own restrictions rule out.
+        super().__init__(*(publisher.restrict(source_types=restrict_sources_to) for publisher in fitting_publishers))
 
         self.restrict_sources_to = restrict_sources_to
         self.delay = delay
@@ -535,13 +537,16 @@ class Crawler(CrawlerBase):
         self.ignore_crawl_delay = ignore_crawl_delay
         self.impersonate = impersonate
 
+    def _supports_attributes(self, publisher: Publisher, extraction_filter: Optional[ExtractionFilter]) -> bool:
+        # the live web is always parsed with the version valid today
+        return supports_attributes(extraction_filter, [publisher.parser.latest_version])
+
     def _fetch_articles(
         self,
         publisher: Publisher,
         error_handling: Literal["suppress", "catch", "raise"],
         extraction_filter: Optional[ExtractionFilter] = None,
         url_filter: Optional[URLFilter] = None,
-        language_filter: Optional[List[str]] = None,
         skip_publishers_disallowing_training: bool = False,
     ) -> Iterator[Article]:
         if skip_publishers_disallowing_training and publisher.disallows_training:
@@ -568,19 +573,12 @@ class Crawler(CrawlerBase):
 
         scraper = WebScraper(
             publisher,
-            self.restrict_sources_to,
             build_delay(),
             ignore_robots=self.ignore_robots,
             ignore_crawl_delay=self.ignore_crawl_delay,
             impersonate=self.impersonate,
         )
-        if not scraper.sources and self.restrict_sources_to:
-            logger.warning(
-                f"No sources of type {[source_type.__name__ for source_type in self.restrict_sources_to]} "
-                f"found for publisher {publisher.name}. Skipping publisher."
-            )
-            return
-        yield from scraper.scrape(error_handling, extraction_filter, url_filter, language_filter)
+        yield from scraper.scrape(error_handling, extraction_filter, url_filter)
 
     @staticmethod
     def _single_crawl(
@@ -619,7 +617,6 @@ class Crawler(CrawlerBase):
         error_handling: Literal["suppress", "catch", "raise"],
         extraction_filter: Optional[ExtractionFilter],
         url_filter: Optional[URLFilter],
-        language_filter: Optional[List[str]],
         skip_publishers_disallowing_training: bool = False,
     ) -> Iterator[Article]:
         article_task = partial(
@@ -627,7 +624,6 @@ class Crawler(CrawlerBase):
             error_handling=error_handling,
             extraction_filter=extraction_filter,
             url_filter=url_filter,
-            language_filter=language_filter,
             skip_publishers_disallowing_training=skip_publishers_disallowing_training,
         )
 
@@ -688,6 +684,12 @@ class CCNewsCrawler(CrawlerBase):
         self.disable_tqdm = disable_tqdm
         self.server_address = server_address
 
+    def _supports_attributes(self, publisher: Publisher, extraction_filter: Optional[ExtractionFilter]) -> bool:
+        # records are parsed with the version valid when they were added, so every version covering
+        # part of the crawled range is within reach
+        versions = publisher.parser.versions_covering(self.start.date(), self.end.date())
+        return supports_attributes(extraction_filter, versions)
+
     def _fetch_articles(
         self,
         warc_path: str,
@@ -695,7 +697,6 @@ class CCNewsCrawler(CrawlerBase):
         error_handling: Literal["suppress", "catch", "raise"],
         extraction_filter: Optional[ExtractionFilter] = None,
         url_filter: Optional[URLFilter] = None,
-        language_filter: Optional[List[str]] = None,
         bar: Optional[tqdm] = None,
     ) -> Iterator[Article]:
         retries: int = 0
@@ -703,7 +704,7 @@ class CCNewsCrawler(CrawlerBase):
             source = CCNewsSource(*publishers, warc_path=warc_path)
             scraper = CCNewsScraper(source)
             try:
-                yield from scraper.scrape(error_handling, extraction_filter, url_filter, language_filter)
+                yield from scraper.scrape(error_handling, extraction_filter, url_filter)
             except (requests.HTTPError, fastwarc.stream_io.StreamError, urllib3.exceptions.HTTPError) as exception:
                 if retries >= self.retries:
                     logger.error(f"Failed to load WARC file {warc_path!r} after {retries} retries")
@@ -823,7 +824,6 @@ class CCNewsCrawler(CrawlerBase):
         error_handling: Literal["suppress", "catch", "raise"],
         extraction_filter: Optional[ExtractionFilter],
         url_filter: Optional[URLFilter],
-        language_filter: Optional[List[str]],
         skip_publishers_disallowing_training: bool = False,
         **kwargs,
     ) -> Iterator[Article]:
@@ -862,7 +862,6 @@ class CCNewsCrawler(CrawlerBase):
                 error_handling=error_handling,
                 extraction_filter=extraction_filter,
                 url_filter=url_filter,
-                language_filter=language_filter,
                 bar=bar,
             )
 
