@@ -1,4 +1,4 @@
-"""Persistence for the publisher-review driver (`review.py`): one cache dir per review.
+"""Persistence for the publisher-review driver (`review.py`): one cache dir per publisher.
 
 The cache dir holds the raw crawled bytes (`NN.html`) plus a single `state.json` that is
 the source of truth for the whole review: crawl parameters, the per-article records, the
@@ -6,26 +6,44 @@ pool-wide scan, the sweep's candidates, and the agent's adjudications. Everythin
 knows it knows from here, which is what makes the workflow crash-safe (state is rewritten after
 every article) and gateable (`payload_gaps` can name exactly what is still missing).
 
-Layout of a cache dir (default: <tempdir>/fundus-review/<cc>.<Class>/):
+Caches are keyed on the **commit under review** — the HEAD of the repo the parser is imported from.
+Derived, not passed, so there is no flag to get wrong and every agent computes the same key. Two
+consequences fall out of that choice rather than needing code: a review of a *different* commit
+can never inherit these articles and adjudications, and when the PR author pushes a fix the old
+cache simply stops being addressed, so adjudications made against superseded parser code can't be
+replayed. `review.py done` removes the commit's caches; `crawl` prunes ones nobody cleaned up.
 
-    state.json   # crawl meta + article records + pool scan + sweep candidates + adjudications
-    01.html      # raw html.content bytes for article 1 (exact crawled bytes)
-    02.html      # ...
+Layout (<tempdir>/fundus-review/<short-sha>/<cc>.<Class>/):
+
+    d732ca85/
+      ca.NationalPost/
+        state.json      # crawl meta + article records + pool scan + candidates + adjudications
+        01.html         # article 1's html.content, re-encoded UTF-8 (see `save_article`)
+        findings.json   # `payload`: the adjudicated evidence
+        review.json     # `payload`: the review to post, as a skeleton
+      ca.TorontoStar/   # another publisher in the same review — its own crawl, sweep and gate
 """
 
+import functools
 import hashlib
 import json
+import re
 import shutil
+import subprocess
 import tempfile
 import time
 from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
+import fundus
 from fundus import Article, PublisherCollection, Requires
 from fundus.publishers.base_objects import Publisher
 
 STATE_FILE = "state.json"
+# What `payload` writes: the adjudicated evidence, and the review built from it.
+FINDINGS_FILE = "findings.json"
+REVIEW_FILE = "review.json"
 
 # Adjudication verdicts: "ok" = benign (boilerplate outside the body for a drop candidate,
 # legitimately repeated content for a leak candidate); "blocker" = a real finding.
@@ -56,38 +74,137 @@ def resolve_publisher(spec: str) -> Publisher:
     return publisher
 
 
+def cache_root() -> Path:
+    return Path(tempfile.gettempdir()) / "fundus-review"
+
+
+@functools.lru_cache(maxsize=1)
+def commit_id() -> str:
+    """Short SHA of the repo the parser under review comes from, or "detached" if git can't say.
+
+    Cached: it is constant within a process, and two `git` calls in one command could otherwise
+    straddle a checkout and have the driver name a different commit than the one it acted on.
+
+    Anchored to `fundus.__file__` (<root>/src/fundus/__init__.py), not the working directory: the
+    cache is about the parser code being imported, and the driver runs from anywhere. Sanitised on
+    the way out, because it builds directories that later get deleted.
+    """
+    root = Path(fundus.__file__).resolve().parents[2]
+    try:
+        git = subprocess.run(
+            ["git", "-C", str(root), "rev-parse", "--short", "HEAD"],
+            capture_output=True,
+            text=True,
+            timeout=10,
+        )
+    except (OSError, subprocess.SubprocessError):
+        return "detached"
+    return (re.sub(r"[^A-Za-z0-9]", "", git.stdout.strip()) if git.returncode == 0 else "") or "detached"
+
+
+def commit_cache_dir() -> Path:
+    """Everything this commit's review wrote — the unit `done` tears down."""
+    return cache_root() / commit_id()
+
+
 def default_cache_dir(spec: str) -> Path:
-    """Predictable per-publisher temp location, so every subcommand agrees without a path."""
-    return Path(tempfile.gettempdir()) / "fundus-review" / spec
+    """Per-publisher location inside the commit's dir, so every subcommand agrees without a path."""
+    return commit_cache_dir() / spec
 
 
-def resolve_cache_dir(spec: str, provided: Optional[str]) -> Path:
-    return Path(provided) if provided else default_cache_dir(spec)
+def _assert_review_cache(cache_dir: Path, action: str) -> None:
+    """Refuse to touch a directory that isn't ours: a non-empty dir with no `state.json` is
+    somebody's files, not a review cache. An empty one is a crawl killed before its first write.
+
+    Mostly matters for `remove_commit_cache`, which walks whatever the commit dir happens to hold;
+    `prepare_cache_dir` only ever reaches a path this module built.
+    """
+    if any(cache_dir.iterdir()) and not (cache_dir / STATE_FILE).exists():
+        raise SystemExit(
+            f"refusing to {action} {cache_dir}: non-empty and no {STATE_FILE}, so it doesn't look "
+            f"like a review cache. Remove it by hand if that is really what you want."
+        )
 
 
 def prepare_cache_dir(cache_dir: Path) -> None:
-    """Wipe and recreate `cache_dir` for a fresh crawl — refusing anything that isn't a review cache.
-
-    The guard is what makes `--cache-dir` safe: a non-empty directory without a
-    `state.json` (someone's working tree, a typo'd path) is never deleted.
-    """
+    """Wipe and recreate `cache_dir` for a fresh crawl — refusing anything that isn't a review cache."""
     if cache_dir.exists():
-        if any(cache_dir.iterdir()) and not (cache_dir / STATE_FILE).exists():
-            raise SystemExit(
-                f"refusing to wipe {cache_dir}: non-empty and no {STATE_FILE}, so it doesn't look like "
-                f"a review cache. Use a valid or not-yet-existing --cache-dir."
-            )
+        _assert_review_cache(cache_dir, "wipe")
         shutil.rmtree(cache_dir)
     cache_dir.mkdir(parents=True, exist_ok=True)
+
+
+def remove_commit_cache() -> List[str]:
+    """Delete this commit's caches, returning the specs removed.
+
+    Refuses if the dir holds anything that isn't a review cache, so a stray `done` can't take down
+    real work. An *empty* child is fine to remove — that is a crawl killed before its first write,
+    not somebody's files (same rule as `_assert_review_cache`).
+    """
+    commit_dir = commit_cache_dir()
+    if not commit_dir.exists():
+        return []
+    children = sorted(commit_dir.iterdir())
+    for child in children:
+        if child.is_dir():
+            _assert_review_cache(child, "remove")
+        else:
+            raise SystemExit(f"refusing to remove {commit_dir}: it holds the file {child.name!r}.")
+    # Every child, not just the ones with state: `rmtree` takes the lot, so reporting only the
+    # stateful ones would tell the reviewer "nothing to remove" right after removing something.
+    removed = [child.name for child in children]
+    try:
+        shutil.rmtree(commit_dir)
+    except OSError as error:  # a file still open (an editor, a pager) - fail like the rest of the module
+        raise SystemExit(f"could not remove {commit_dir}: {error}")
+    return removed
+
+
+def prune_stale_caches(max_age_days: int = 7) -> List[str]:
+    """Drop caches from reviews that ended without `done`, so abandoned ones can't pile up.
+
+    Only touches dirs that look like review caches throughout, and never this commit's own.
+    Best-effort: a dir that vanishes underneath us (or that we may not delete) is skipped.
+    """
+    root, mine = cache_root(), commit_cache_dir()
+    if not root.exists():
+        return []
+    cutoff = time.time() - max_age_days * 86400
+    pruned: List[str] = []
+    for cached in sorted(root.iterdir()):
+        # The whole body, not just the rmtree: another review pruning or crawling concurrently can
+        # delete `cached` between any two of these calls, and housekeeping must never be the reason
+        # a crawl dies before it crawls.
+        try:
+            if not cached.is_dir() or cached == mine or cached.stat().st_mtime > cutoff:
+                continue
+            children = list(cached.iterdir())
+            if any(not c.is_dir() or (any(c.iterdir()) and not (c / STATE_FILE).exists()) for c in children):
+                continue  # not ours throughout — leave it alone
+            shutil.rmtree(cached)
+        except OSError:
+            continue  # vanished underneath us, or not ours to delete
+        pruned.append(cached.name)
+    return pruned
 
 
 # --- state file ---
 
 
-def new_state(spec: str, pool: int) -> Dict[str, Any]:
+def new_state(spec: str, pr: Optional[str], pool: int, impersonate: Optional[str]) -> Dict[str, Any]:
     return {
         "publisher": spec,
-        "crawl": {"pool": pool, "started": time.time(), "finished": None, "completed": False},
+        # Metadata, not identity: the commit owns the path. Recorded so `status` says what this
+        # cache is about and `payload` can fill in the `gh` commands.
+        "pr": pr,
+        "crawl": {
+            "pool": pool,
+            "started": time.time(),
+            "finished": None,
+            "completed": False,
+            # The declared browser profile, or None: the fingerprint the draw came back through.
+            "impersonate": impersonate,
+        },
         "articles": [],
         "scan": None,
         "sweep": None,

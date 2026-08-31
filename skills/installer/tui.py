@@ -1,8 +1,8 @@
 """Textual dashboard for the skill installer.
 
-A live list of *skills* for the selected agent. Each row is a skill; the **Installed** column
-shows whether it's installed (``✓``) or not (``·``). Move the cursor to a skill and toggle it
-to install it (if absent) or uninstall it (if present) — the list updates in place, no
+A live list of *skills* for the selected agent. The **Installed** column shows both presence and
+drift: ``✓`` in sync, ``↑`` repo moved on, ``≠`` copy edited in place, ``·`` absent. Move the
+cursor to a skill and toggle it to install (if absent) or uninstall (if present) — in place, no
 re-running.
 
 This module owns everything textual/rich; all install logic lives in :mod:`installer.core`.
@@ -18,19 +18,40 @@ from textual.app import App, ComposeResult
 from textual.binding import Binding
 from textual.widgets import DataTable, Footer, Header, RadioButton, RadioSet, RichLog, Static
 
-from .core import Agent, InstallResult, Skill, available_agents, discover_skills
+from .core import Agent, InstallResult, InstallStatus, Skill, available_agents, discover_skills
 
 _YES = Text("✓", style="bold green", justify="center")
 _NO = Text("·", style="dim", justify="center")
+# Kept apart because the fix differs: ↑ reinstall; ≠ the copy holds work a reinstall would lose.
+_OUTDATED = Text("↑", style="bold yellow", justify="center")
+_MODIFIED = Text("≠", style="bold magenta", justify="center")
+# Pre-manifest install whose folders differ: real drift, direction unknown.
+_UNKNOWN = Text("?", style="bold yellow", justify="center")
 # Install failed and was rolled back: a transient marker, replaced by · on the next refresh
 # (the rollback makes "not installed" the true steady state, so refresh doesn't lie).
 _FAILED = Text("!", style="bold red", justify="center")
 _SPINNER = "⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏"  # braille "wheel": a busy cell cycles through these frames
 _INSTALLED_COL = "installed"
+_VERSION_COL = "version"
 
 
-def _status(installed: bool) -> Text:
-    return _YES if installed else _NO
+def _status(status: InstallStatus) -> Text:
+    """One glyph for the row. Local edits outrank a stale repo: reinstalling would lose them."""
+    if not status.installed:
+        return _NO
+    if status.in_sync:
+        return _YES
+    if not status.tracked:
+        return _UNKNOWN  # differs, but nothing says which side moved
+    return _MODIFIED if status.local_changed else _OUTDATED
+
+
+def _version_cell(status: InstallStatus) -> Text:
+    """The source version, prefixed with the installed one when they differ."""
+    source = status.source_version or "—"
+    if status.installed and status.installed_version and status.installed_version != status.source_version:
+        return Text(f"{status.installed_version} → {source}", style="yellow")
+    return Text(source, style="dim")
 
 
 def _spinner_cell(frame: int) -> Text:
@@ -93,12 +114,15 @@ class InstallerApp(App[None]):
             self.query_one("#agent", RadioSet).border_title = "Agent"
         else:
             self.sub_title = f"agent: {self._agent_names[0]}"
-        self.table.border_title = "Skills - ✓ = installed"
+        self.table.border_title = (
+            "Skills - ✓ in sync | ↑ repo newer | ≠ edited in place | ? unknown | ! failed | · absent"
+        )
         self.table.border_subtitle = "↑/↓ pick a skill · space to (un)install"
         self.detail.border_title = "Description"
         self.output.border_title = "Log"
         self.table.add_column("Skill", key="skill")
         self.table.add_column("Installed", key=_INSTALLED_COL, width=12)
+        self.table.add_column("Version", key=_VERSION_COL, width=16)
         self._rebuild()
         self.table.focus()
         self._show_description(self._highlighted_skill())
@@ -126,9 +150,11 @@ class InstallerApp(App[None]):
         self.table.clear()
         for name in sorted(self.skills):
             skill = self.skills[name]
+            status = agent.status(skill)
             self.table.add_row(
                 Text(name, style="bold"),
-                _status(agent.is_installed(skill)),
+                _status(status),
+                _version_cell(status),
                 key=name,
             )
 
@@ -144,8 +170,9 @@ class InstallerApp(App[None]):
 
     def _refresh_row(self, name: str) -> None:
         agent = self._agent()
-        skill = self.skills[name]
-        self.table.update_cell(name, _INSTALLED_COL, _status(agent.is_installed(skill)))
+        status = agent.status(self.skills[name])
+        self.table.update_cell(name, _INSTALLED_COL, _status(status))
+        self.table.update_cell(name, _VERSION_COL, _version_cell(status))
 
     def _write_log(self, lines: List[str], style: str = "") -> None:
         """Write core-produced log lines as literal Text — styled, and safe against any
@@ -168,6 +195,7 @@ class InstallerApp(App[None]):
         if self._busy:
             return  # an install is in flight — ignore toggles until it finishes
         agent = self._agent()
+        # Keyed on presence, not sync state: space on a ↑/≠ row uninstalls, same as on ✓.
         if agent.is_installed(skill):
             self._write_log(agent.uninstall(skill))
             self._refresh_row(skill.name)

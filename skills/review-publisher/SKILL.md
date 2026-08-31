@@ -1,10 +1,11 @@
 ---
 name: review-publisher
+version: 2.0.0
 description: >-
   Review a Fundus publisher PR — one that adds a new publisher or adds/changes a parser version.
   Crawls live articles to verify the extracted ArticleBody mirrors the real article (no missing or
-  leaked content), checks VALID_UNTIL / version bumps / validate=False attributes / free_access, and
-  drafts a single GitHub review. Use when asked to review a publisher or parser PR.
+  leaked content), checks VALID_UNTIL / version bumps / validate=False attributes / free_access /
+  impersonate, and drafts a single GitHub review. Use when asked to review a publisher or parser PR.
 ---
 
 # Review a Publisher PR
@@ -15,12 +16,15 @@ SKILL.md*, so note the literal path above now. The procedure lives in the siblin
 The bundled driver — the only tool you need — is:
 
     python "<skill>/scripts/review.py" {crawl,sweep,show,adjudicate,status,payload} <cc>.<Class>
+    python "<skill>/scripts/review.py" done
 
-Open the PLAYBOOK and work through §1–§5; it's the source of truth. These are the guardrails to
+Open the PLAYBOOK and work through §1–§6; it's the source of truth. These are the guardrails to
 hold onto even before you open it:
 
 - **No PR named? Resolve it first** — read the current branch's PR (`gh pr view`), confirm it, or ask.
-  Never guess or default to the latest.
+  Never guess or default to the latest. `gh pr checkout` it **before** the first crawl — the cache is
+  keyed on `HEAD`. Pass `--pr` to `crawl` so the driver can name it back to you; `done` clears the
+  cache once the review is posted (§6).
 - **Don't run `pytest` / `mypy` / `ruff`** — CI covers them; your value-add is live-article correctness.
 - **The body must mirror the article** — no dropped paragraphs, no leaked boilerplate. The driver's
   crawl-once-then-sweep flow (§2) is a hard gate on **every** publisher: every candidate it surfaces
