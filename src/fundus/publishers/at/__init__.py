@@ -1,7 +1,5 @@
-import re
-
 from fundus.publishers.base_objects import Publisher, PublisherGroup
-from fundus.scraping.url import NewsMap, RSSFeed, Sitemap
+from fundus.scraping.url import NewsMap, RSSFeed, Sitemap, numeric_sort_key
 
 from .derstandard import DerStandardParser
 from .die_presse import DiePresseParser
@@ -59,7 +57,7 @@ class AT(metaclass=PublisherGroup):
             NewsMap("https://www.sn.at/news-artikel.sitemap.xml"),
             Sitemap(
                 "https://www.sn.at/portal-artikel.sitemap.xml",
-                sort_predicate=re.compile(r"(article-)\d{4}_\d{2}-\d(.)"),
+                sort_key=numeric_sort_key(r"article-(\d{4})_(\d{2})-(\d)", reverse=True),
             ),
         ],
     )

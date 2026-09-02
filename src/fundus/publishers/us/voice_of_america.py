@@ -16,11 +16,18 @@ from fundus.parser.utility import (
 
 class VOAParser(ParserProxy):
     class V1(BaseParser):
-        _paragraph_selector = CSSSelector("#article-content > div > p")
+        VALID_UNTIL = datetime.date(2026, 7, 20)
+
+        _paragraph_selector: XPath = CSSSelector("#article-content > div > p")
+        _subheadline_selector: Optional[XPath] = None
 
         @attribute
         def body(self) -> Optional[ArticleBody]:
-            return extract_article_body_with_selector(self.precomputed.doc, paragraph_selector=self._paragraph_selector)
+            return extract_article_body_with_selector(
+                self.precomputed.doc,
+                paragraph_selector=self._paragraph_selector,
+                subheadline_selector=self._subheadline_selector,
+            )
 
         @attribute
         def publishing_date(self) -> Optional[datetime.datetime]:
@@ -46,3 +53,7 @@ class VOAParser(ParserProxy):
                 upper_boundary_selector=XPath("//h1"),
                 lower_boundary_selector=XPath("//div[@id='ymla-section']"),
             )
+
+    class V1_1(V1):
+        _paragraph_selector = XPath("//div[@id='article-content']/div[@class='wsw']//p[not(strong) and not(@class)]")
+        _subheadline_selector = XPath("//div[@id='article-content']/div[@class='wsw']//p[strong]")
