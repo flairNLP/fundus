@@ -67,35 +67,60 @@ class CorrectivParser(ParserProxy):
             )
 
     class V2(BaseParser):
+        # credit labels CORRECTIV sets at the foot of an article
         _paragraph_bloat_sentence_beginnings = [
             "Text and research",
+            "Text & Recherche",
             "Editing",
             "Fact-checking",
             "Data work",
             "Design",
-            "Redigatur",
+            "Redigat",  # covers both "Redigatur" and "Redigat und Faktencheck"
             "Redaktion",
             "Mitarbeit",
             "Faktencheck",
             "Grafiken",
         ]
 
+        # paragraphs matching one of these carry credits, bylines or separators instead of body text
+        _paragraph_bloat_patterns = [
+            r"– ",
+            r"\*\*\*",
+            r"_ _",  # underscore separator rule, e.g. "_ _ _ _ _ _ _ _"
+            r"von ",  # byline, e.g. "von Gesa Steeger und Annika Joeres" (lowercase; prose starts capitalized)
+            r"\d{1,2}\. \w+ \d{4}$",  # standalone dateline, e.g. "19. August 2026"
+            *_paragraph_bloat_sentence_beginnings,
+        ]
+        _bloat_pattern = "|".join(_paragraph_bloat_patterns)
+        _is_bloat_paragraph = f"re:test(string(.), '^({_bloat_pattern})')"
+
+        # a paragraph that is nothing but a bold run is a subheadline; nothing but an italic run
+        # is an editorial note or a credit line ("Illustration: ..."). count(*) keeps this off
+        # body prose that merely italicizes a word or two.
+        _is_bold_only = "b and not(text())"
+        _is_italic_only = "i and count(*) = 1 and not(text())"
+
+        # markup variants CORRECTIV uses for body paragraphs; anything else is layout or credits
+        _is_body_paragraph = " or ".join(
+            [
+                f"not(({_is_bold_only}) or ({_is_italic_only}) or @class or @style)",
+                "@class = 'wp-block-paragraph'",
+                "contains(@class, 'text-base')",
+            ]
+        )
+
+        # the body lives in 'entry-content'; some articles wrap additional paragraphs in a '-container'
+        _entry_content = "//article//div[contains(@class, 'entry-content')]"
+        _paragraph_container = "//article//div[contains(@class, 'entry-content') or contains(@class, '-container')]"
+
         _summary_selector = XPath("//article//p[@class='detail__excerpt wp-block-paragraph']")
         _paragraph_selector = XPath(
-            r"//article//div[contains(@class, 'entry-content') or contains(@class,'-container')]/p"
-            rf"[not(re:test(string(.), '^(– |{'|'.join(_paragraph_bloat_sentence_beginnings)}|\*\*\*)')) "
-            r"and ("
-            r"not((b and not(text())) or @class or @style) "
-            r"or @class='wp-block-paragraph' "
-            r"or contains(@class, 'text-base')"
-            r") and string-length(text())>1"
-            r"] |"
-            "//article//div[contains(@class, 'entry-content')]//*[self::li or self::blockquote]",
+            f"{_paragraph_container}/p"
+            f"[not({_is_bloat_paragraph}) and ({_is_body_paragraph}) and string-length(normalize-space(.)) > 1]"
+            f" | {_entry_content}//*[self::li or self::blockquote]",
             namespaces={"re": "http://exslt.org/regular-expressions"},
         )
-        _subheadline_selector = XPath(
-            "//article//div[contains(@class, 'entry-content')]/*[(self::h2 or self::h3) or (self::p and b and not(text()))]"
-        )
+        _subheadline_selector = XPath(f"{_entry_content}/*[(self::h2 or self::h3) or (self::p and {_is_bold_only})]")
 
         # keywords CORRECTIV uses to introduce image credits within a caption
         _credit_keywords = (
@@ -110,9 +135,7 @@ class CorrectivParser(ParserProxy):
             # credits introduced by a copyright sign or a dash, e.g. "... Chemnitz. \u00a9Ralf Jerke"
             re.compile(r"(?i)(?<=\.)\s*(?:\u00a9|[\u0096\u2013\u2014-])\s*(?P<credits>(?:[^.:]|\.com)+?)\.?$"),
             # bare agency credits trailing a sentence, e.g. "... Cavallo. picture alliance/dpa | Martin Meissner"
-            re.compile(
-                r"(?i)(?:(?<=\. )|\s*\(\s*)(?P<credits>(?:[^().:]|\.com)*[/|](?:[^().:]|\.com)*?)\)?\.?\s*$"
-            ),
+            re.compile(r"(?i)(?:(?<=\. )|\s*\(\s*)(?P<credits>(?:[^().:]|\.com)*[/|](?:[^().:]|\.com)*?)\)?\.?\s*$"),
         ]
 
         # inline image credits are rendered as a <span> following an <img> within a paragraph
