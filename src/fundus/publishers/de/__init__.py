@@ -87,6 +87,7 @@ class DE(metaclass=PublisherGroup):
             RSSFeed("https://correctiv.org/feed/"),
             RSSFeed("https://correctiv.org/en/feed/", languages={"en"}),
         ],
+        url_filter=regex_filter("/in-eigener-sache/"),
     )
 
     AFPFaktencheck = Publisher(
