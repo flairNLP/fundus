@@ -59,4 +59,14 @@ class MexicoNewsDailyParser(ParserProxy):
             )
 
     class V1_1(V1):
-        _paragraph_selector = XPath("//div[@class='tts_content_wrapper_1']/p[text() or strong]")
+        # trailing italic paragraphs hold author bios and editor's notes. <em> ones are already
+        # dropped by extract_article_body_with_selector; this covers the <i> variant as well.
+        _trailing_bio = "(i or em) and not(normalize-space(text())) and not(following-sibling::p[normalize-space()])"
+        _bloat_pattern = r"^(Sources?:|With reports from|By Mexico News Daily|Mexico News Daily\s*$)"
+        _paragraph_selector = XPath(
+            f"//div[@class='tts_content_wrapper_1']"
+            f"/p[normalize-space()"
+            f" and not(re:test(normalize-space(), '{_bloat_pattern}'))"
+            f" and not({_trailing_bio})]",
+            namespaces={"re": "http://exslt.org/regular-expressions"},
+        )
