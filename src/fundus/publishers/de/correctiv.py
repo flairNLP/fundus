@@ -97,6 +97,27 @@ class CorrectivParser(ParserProxy):
             "//article//div[contains(@class, 'entry-content')]/*[(self::h2 or self::h3) or (self::p and b and not(text()))]"
         )
 
+        # keywords CORRECTIV uses to introduce image credits within a caption
+        _credit_keywords = (
+            r"(?:(?:f|ph)otos?(?:-scan)?|bild(?:er)?|symbol(?:bild|foto)|collagen?|montagen?|"
+            r"quellen?|screenshots?|grafiken?|illustrationen?|credits?|wasserzeichen)"
+        )
+        _author_selector = [
+            # credits given in parentheses, e.g. "... (Foto: picture alliance/dpa | Hendrik Schmidt)"
+            re.compile(rf"(?i)\s*\(\s*{_credit_keywords}\s*:\s*(?P<credits>[^()]+?)\)?\.?\s*$"),
+            # credits introduced by a keyword, e.g. "... Collage: Ivo Mayr / CORRECTIV, Fotos: picture alliance"
+            re.compile(rf"(?i)\s*[/;,]?\s*\b{_credit_keywords}\s*:\s*(?P<credits>.+?)\.?\s*$"),
+            # credits introduced by a copyright sign or a dash, e.g. "... Chemnitz. \u00a9Ralf Jerke"
+            re.compile(r"(?i)(?<=\.)\s*(?:\u00a9|[\u0096\u2013\u2014-])\s*(?P<credits>(?:[^.:]|\.com)+?)\.?$"),
+            # bare agency credits trailing a sentence, e.g. "... Cavallo. picture alliance/dpa | Martin Meissner"
+            re.compile(
+                r"(?i)(?:(?<=\. )|\s*\(\s*)(?P<credits>(?:[^().:]|\.com)*[/|](?:[^().:]|\.com)*?)\)?\.?\s*$"
+            ),
+        ]
+
+        # inline image credits are rendered as a <span> following an <img> within a paragraph
+        _caption_filter = XPath("self::span[preceding-sibling::img]")
+
         _bloat_topics = {"Featured-auf-Startseite", "Related Articles am Ende"}
 
         @attribute
@@ -106,6 +127,7 @@ class CorrectivParser(ParserProxy):
                 summary_selector=self._summary_selector,
                 subheadline_selector=self._subheadline_selector,
                 paragraph_selector=self._paragraph_selector,
+                tag_filter=self._caption_filter,
             )
 
         @attribute
@@ -129,12 +151,6 @@ class CorrectivParser(ParserProxy):
             return image_extraction(
                 doc=self.precomputed.doc,
                 paragraph_selector=self._paragraph_selector,
-                author_selector=[
-                    re.compile(
-                        r"(?i)(?<=\. )(((f|ph)otos?|(credit )?image|(symbol)?bild|collage|quelle):|©)?\s*(?P<credits>([^.:]|CORRECTIV\.|.com)+?)([.])?$"
-                    ),
-                    re.compile(r"\((.+:)?(?P<credits>[^):]+?)\)$"),
-                    re.compile(r"/(?P<credits>.+)$"),
-                ],
+                author_selector=self._author_selector,
                 image_selector=XPath("//figure[@id]/img | //figure[@class='figure']/picture/img"),
             )
