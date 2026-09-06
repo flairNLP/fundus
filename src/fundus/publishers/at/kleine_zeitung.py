@@ -1,6 +1,6 @@
 import datetime
 import re
-from typing import List, Optional
+from typing import List, Optional, Pattern, Union
 
 from lxml.etree import XPath
 
@@ -16,9 +16,13 @@ from fundus.parser.utility import (
 
 class KleineZeitungParser(ParserProxy):
     class V1(BaseParser):
+        VALID_UNTIL = datetime.date(2026, 7, 24)
+
         _paragraph_selector = XPath("//div[@class='w-full prose']/p")
         _subheadline_selector = XPath("//div[@class='w-full prose']/h2")
         _summary_selector = XPath("//div[contains(@class, 'article-lead')]")
+
+        _image_author_selector: Union[Pattern[str], XPath] = re.compile(r"©(?P<credits>.*?)$")
 
         @attribute
         def body(self) -> Optional[ArticleBody]:
@@ -56,5 +60,12 @@ class KleineZeitungParser(ParserProxy):
                     "./ancestor::figure//*[self::figcaption or contains(@class, 'md:hidden')]|"
                     "./ancestor::div[contains(@class, 'not-prose') or @class=' mb-0']//small"
                 ),
-                author_selector=re.compile(r"©(?P<credits>.*?)$"),
+                author_selector=self._image_author_selector,
             )
+
+    class V1_1(V1):
+        _paragraph_selector = XPath("//div[contains(@class,'prose')]/p")
+        _subheadline_selector = XPath("//div[contains(@class,'prose')]/h2")
+        _summary_selector = XPath("//p[@class='klz-text-article-lead']")
+
+        _image_author_selector = XPath("./ancestor::figure//small")
