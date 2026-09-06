@@ -3424,7 +3424,9 @@
         <code>DailyStar</code>
       </td>
       <td>
-        <div>Daily Star</div>
+        <div>
+          <strike>Daily Star</strike>
+        </div>
       </td>
       <td>
         <a href="https://www.dailystar.co.uk/">
@@ -3614,7 +3616,9 @@
         <code>TheMirror</code>
       </td>
       <td>
-        <div>The Mirror</div>
+        <div>
+          <strike>The Mirror</strike>
+        </div>
       </td>
       <td>
         <a href="https://www.mirror.co.uk/">
