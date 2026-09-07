@@ -141,5 +141,117 @@
       "Canada",
       "Russia"
     ]
+  },
+  "V2": {
+    "authors": [
+      "Fausto Biloslavo"
+    ],
+    "body": {
+      "summary": [
+        "Parla Alessandro Morelli: “In Italia siamo stati vittime dell’invasione di centinaia di migliaia di clandestini tra il 2015 e il 2018″"
+      ],
+      "sections": [
+        {
+          "headline": [],
+          "paragraphs": [
+            "Alessandro Morelli, sottosegretario della Lega a Palazzo Chigi con delega alla programmazione economica, è andato a toccare con mano l’esplosiva situazione di Ceuta. Senatore e giornalista ha postato video denunce sui social con un taglio politico netto. Prima di rientrare in Italia risponde alle domande del Giornale."
+          ]
+        },
+        {
+          "headline": [
+            "Un mese dopo l’invasione qual è la situazione a Ceuta?"
+          ],
+          "paragraphs": [
+            "«Di altissima tensione, ma latente. I cittadini spagnoli sono esasperati da un mese di invasione e dalla domanda per quanto ancora la città sarà militarizzata. Gli irregolari sono lasciati a se stessi 24 ore su 24. L’unico loro appuntamento è quello con la Croce Rossa per ricevere il pacchetto alimentare quotidiano, altrimenti non avrebbero neanche i minimi livelli di sostentamento per sopravvivere. Ad ogni angolo delle strade c’è un poliziotto oppure un militare che presidiano in maniera fortissima tutto il territorio»."
+          ]
+        },
+        {
+          "headline": [
+            "Lunedì la polizia ha dovuto sparare in aria per fronteggiare i migranti. La situazione potrebbe precipitare?"
+          ],
+          "paragraphs": [
+            "«Ceuta vive sul filo del rasoio perché sia la comunità spagnola che gli irregolari si pongono delle domande alle quali non c’è risposta: quanto durerà? e abbiamo una speranza di essere regolarizzati?»."
+          ]
+        },
+        {
+          "headline": [
+            "Esiste un pericolo jihadista?"
+          ],
+          "paragraphs": [
+            "«L’intelligence riporta che questo pericolo è reale. Però il dato preoccupante è che migliaia e migliaia di persone possano semplicemente immaginare di varcare il confine europeo pensando di venire in seguito regolarizzate. A Ceuta l’invasione di 72mila irregolari è avvenuta in poche ore creando uno shock fortissimo. In Italia siamo stati vittime dell’invasione di centinaia di migliaia di clandestini tra il 2015 e il 2018 ai tempi di Renzi, Letta, Gentiloni e Lamorgese nel 2021 con la sola parentesi di Salvini all’Interno, che ha chiuso i porti»."
+          ]
+        },
+        {
+          "headline": [
+            "Sanchez ha accusato una campagna di disinformazione russa, di Israele e dell’estrema destra europea, ma non il Marocco. Cosa ne pensa?"
+          ],
+          "paragraphs": [
+            "«Certe accuse vanno circostanziate e provate. L’unica cosa certa è che tutti abbiamo potuto vedere le immagini di migliaia di marocchini che salivano sui camion e venivano persino indirizzati dalla polizia verso il confine. Non credo che io e lei, semplicemente attraverso i social media, riusciremmo a organizzare l’invasione di 70.000 persone»."
+          ]
+        },
+        {
+          "headline": [
+            "La proroga italiana della sospensione di Schengen serve veramente?"
+          ],
+          "paragraphs": [
+            "«Certamente, fino a quando la situazione non sarà tornata alla normalità»."
+          ]
+        },
+        {
+          "headline": [
+            "L’invasione a Ceuta e Melilla rischia di ripetersi?"
+          ],
+          "paragraphs": [
+            "«Potrebbe sempre accadere sia per ragioni geopolitiche che per nuovi ingressi illegali. Per questo è ancora più fondamentale il ruolo dell’Europa nella difesa dei propri confini»."
+          ]
+        },
+        {
+          "headline": [
+            "Oggi gli spagnoli scenderanno in piazza per Ceuta. Si temono incidenti. Cosa si aspetta da questa manifestazione?"
+          ],
+          "paragraphs": [
+            "«Tutte le manifestazioni a cui ho partecipato sono state popolari e pacifiche. Non mi aspetto nulla di diverso. Certo è che il popolo di Ceuta non ne può più e lo ho dimostrato anche con due grandi proteste al giorno»."
+          ]
+        }
+      ]
+    },
+    "images": [
+      {
+        "versions": [
+          {
+            "url": "https://ilgiornale-ilgiornale-staging.web.arc-cdn.net/resizer/v2/IKTXIB5GEJDQFGQIIUIHV4KFRE.jpg?focal=533%2C471&auth=be481ef73288730edea1e660ef1b92a1d62c0782b545c9f1c3491fb3ca9c63bc&width=800&height=449",
+            "query_width": null,
+            "size": {
+              "width": 800,
+              "height": 449
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://ilgiornale-ilgiornale-staging.web.arc-cdn.net/resizer/v2/IKTXIB5GEJDQFGQIIUIHV4KFRE.jpg?focal=533%2C471&auth=be481ef73288730edea1e660ef1b92a1d62c0782b545c9f1c3491fb3ca9c63bc&width=1600&height=899",
+            "query_width": null,
+            "size": {
+              "width": 1600,
+              "height": 899
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": true,
+        "description": null,
+        "caption": null,
+        "authors": [],
+        "position": 195
+      }
+    ],
+    "publishing_date": "2026-09-02 12:32:48.853000+00:00",
+    "title": "“Il pericolo jihadista è reale, l’Europa difenda i suoi confini”",
+    "topics": [
+      "Immigrazione",
+      "Alessandro Morelli",
+      "Lega (partito Politico)",
+      "Ceuta",
+      "Spagna"
+    ]
   }
 }
