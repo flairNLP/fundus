@@ -259,5 +259,99 @@
       "Natur & Umwelt",
       "Eisheilige"
     ]
+  },
+  "V1_1": {
+    "authors": [
+      "Arndt Brede"
+    ],
+    "body": {
+      "summary": [
+        "Als Clown Knopf hat Gesine Homrighausen Menschen jeden Alters zum Lachen gebracht. Jetzt ist die Selmerin gestorben."
+      ],
+      "sections": [
+        {
+          "headline": [],
+          "paragraphs": [
+            "Gesine Homrighausen zu beschreiben, fällt leicht: engagiert, freundlich, empathisch, zugewandt, kämpferisch… und lustig. Karierte Latzhose mit passender Schiebermütze und einer knalligen Bluse: Das war ihre Kleidung, wenn sie zu Veranstaltungen kam, bei denen sie als Clown Knopf auftrat. In den Medien häufen sich jetzt die Nachrichten: Gesine Homrighausen ist mit 67 Jahren gestorben.",
+            "Aus Brandenburg zog sie der Liebe wegen nach Selm. Beruflich hat sie mit ukrainischen Jugendlichen gearbeitet, Kinder in Erziehungsstellen betreut und suchtkranke junge Menschen begleitet. Wie komme ich an die Familien ran, die ‚sozial schwach‘ sind? Diese Frage beantwortete sie sich selbst: eigentlich nur über die Kinder. Die Idee der Clownerie war geboren. Und damit ihr Lebensinhalt: Menschen zum Lachen zu bringen."
+          ]
+        },
+        {
+          "headline": [
+            "„Das ist meine Berufung“"
+          ],
+          "paragraphs": [
+            "Sie ging in Kitas, besuchte Vereine. Wenn es beim Selmer Stadtfest mal einen kleinen Menschenauflauf gab, konnte es gut sein, dass es deshalb so war, weil Gesine Homrighausen alias Clown Knopf gerade riesige Seifenblasen zauberte und damit die Herzen vor allem von Mädchen und Jungen eroberte.",
+            "Aber auch sie selbst nahm viel aus ihrer Tätigkeit für sich mit, wie sie der Redaktion mal verraten hat: „Wenn ich von der Clownerie nach drei Stunden wiederkomme, dann geht es mir blendend.“",
+            "Kein Wunder, dass sie zugab: „Das ist meine Berufung, das möchte ich mein ganzes Leben lang machen, bis zum letzten Atemzug.“",
+            "Ihr Lachen wird vielen Menschen, denen sie im Laufe der Jahre begegnet ist, fehlen. Aber es ist gewiss, dass diejenigen, die sich an Gesine Homrighausen erinnern, ein Lächeln auf den Lippen haben werden."
+          ]
+        },
+        {
+          "headline": [
+            "Freundin verabschiedet sich"
+          ],
+          "paragraphs": [
+            "Auch Rebecca Gutzat nimmt Abschied von ihrer Freundin Gesine, die nach einem kurzen Aufenthalt im Krankenhaus gestorben ist. „Es fällt schwer, Worte zu finden, denn Gesine war ein ganz besonderer Mensch“, schreibt sie in einem Post bei Facebook. Viel Zeit steckte Gesine Homrighausen in ihre Arbeit. „Sie schenkte den Kindern ihre Zeit, ihre Aufmerksamkeit und vor allem ganz viel Herz. Das Lächeln eines Kindes war für sie die schönste Bezahlung“, schreibt Rebecca Gutzat weiter.",
+            "Neben ihrem Mann Gerd hinterlässt Gesine Homrighausen auch ihre Kinder und Enkelkinder. Rebecca Gutzat will nicht glauben, dass ihre Freundin nicht woanders für Lachen sorgen wird: „Vielleicht ziehst du jetzt irgendwo deinen bunten Anzug an, nimmst deine Luftballons und deinen Teddy und machst dort weiter, wo du aufgehört hast – Menschen zum Lachen zu bringen.“"
+          ]
+        }
+      ]
+    },
+    "images": [
+      {
+        "versions": [
+          {
+            "url": "https://www.ruhrnachrichten.de/wp-content/uploads/2026/09/07/12/630_0900_6808292_-320x214.jpg,",
+            "query_width": null,
+            "size": {
+              "width": 640,
+              "height": 428
+            },
+            "type": null
+          },
+          {
+            "url": "https://www.ruhrnachrichten.de/wp-content/uploads/2026/09/07/12/630_0900_6808295_-824x412.jpg,",
+            "query_width": "min-width:641",
+            "size": {
+              "width": 824,
+              "height": 412
+            },
+            "type": null
+          },
+          {
+            "url": "https://www.ruhrnachrichten.de/wp-content/uploads/2026/09/07/12/630_0900_6808292_-640x428.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1280,
+              "height": 856
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://www.ruhrnachrichten.de/wp-content/uploads/2026/09/07/12/630_0900_6808295_-1648x824.jpg",
+            "query_width": "min-width:641",
+            "size": {
+              "width": 3296,
+              "height": 1648
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": true,
+        "description": "Gesine Homrighausen, hier als Clown Knopf, lässt vor Publikum riesige Seifenblasen entstehen.",
+        "caption": "Gesine Homrighausen brachte die Menschen zum Lachen. Hier bei einem Selmer Stadtfest. Jetzt ist die Frau, die auch als Clown Knopf bekannt ist, gestorben.",
+        "authors": [
+          "Arndt Brede (Archiv)"
+        ],
+        "position": 390
+      }
+    ],
+    "publishing_date": "2026-09-07 14:15:00+02:00",
+    "title": "Als Clownin Menschen zum Lachen gebracht: Selmerin Gesine Homrighausen ist tot",
+    "topics": [
+      "Prominent",
+      "Gesine Homrighausen"
+    ]
   }
 }
