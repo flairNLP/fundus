@@ -58,7 +58,7 @@ class RuhrNachrichtenParser(ParserProxy):
             )
 
     class V1_1(V1):
-        _bloat_regex = r"^(?i)verfasst von"
+        _bloat_regex = r"(?i)^verfasst von"
 
         _paragraph_selector = XPath(
             f"//div[@class='article__content']/p[@class='wp-block-paragraph' and not(re:test(string(), '{_bloat_regex}'))] | "
