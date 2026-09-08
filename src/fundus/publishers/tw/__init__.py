@@ -1,6 +1,6 @@
 from fundus.publishers.base_objects import Publisher, PublisherGroup
 from fundus.publishers.tw.taipei_times import TaipeiTimesParser
-from fundus.scraping.url import NewsMap, Sitemap, RSSFeed
+from fundus.scraping.url import RSSFeed
 
 
 class TW(metaclass=PublisherGroup):
