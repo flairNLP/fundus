@@ -1,7 +1,6 @@
 import datetime
 from typing import List, Optional
 
-from lxml.cssselect import CSSSelector
 from lxml.etree import XPath
 
 from fundus.parser import ArticleBody, BaseParser, Image, ParserProxy, attribute
@@ -16,10 +15,16 @@ from fundus.parser.utility import (
 
 class VOAParser(ParserProxy):
     class V1(BaseParser):
-        VALID_UNTIL = datetime.date(2026, 7, 20)
-
-        _paragraph_selector: XPath = CSSSelector("#article-content > div > p")
-        _subheadline_selector: Optional[XPath] = None
+        # subheadlines are fully bold paragraphs; paragraphs opening with a bold
+        # lead-in ("<strong>Economic imbalance:</strong> China has become ...") are not
+        _subheadline_selector = XPath(
+            "//div[@id='article-content']/div[@class='wsw']"
+            "//p[strong and normalize-space(.) = normalize-space(strong)]"
+        )
+        _paragraph_selector = XPath(
+            "//div[@id='article-content']/div[@class='wsw']"
+            "//p[not(@class) and not(strong and normalize-space(.) = normalize-space(strong))]"
+        )
 
         @attribute
         def body(self) -> Optional[ArticleBody]:
@@ -53,7 +58,3 @@ class VOAParser(ParserProxy):
                 upper_boundary_selector=XPath("//h1"),
                 lower_boundary_selector=XPath("//div[@id='ymla-section']"),
             )
-
-    class V1_1(V1):
-        _paragraph_selector = XPath("//div[@id='article-content']/div[@class='wsw']//p[not(strong) and not(@class)]")
-        _subheadline_selector = XPath("//div[@id='article-content']/div[@class='wsw']//p[strong]")
