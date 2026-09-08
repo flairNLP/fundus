@@ -126,26 +126,25 @@ def _interruptable_sleep(seconds: float) -> None:
 def build_clock(
     publisher: Publisher,
     delay: Optional[Delay] = None,
-    ignore_robots: bool = False,
     ignore_crawl_delay: bool = False,
 ) -> _Clock:
     """Builds the clock pacing the requests to <publisher>.
 
-    A crawl-delay declared in the publisher's robots.txt overrides <delay>, unless robots.txt or
-    the crawl-delay it declares is ignored. Since the delay paces a publisher rather than a single
+    A crawl-delay declared in the publisher's robots.txt overrides <delay>, unless it is ignored.
+    Since ignoring robots.txt as a whole ignores the crawl-delay it declares, callers doing so pass
+    it in here as an ignored crawl-delay. Since the delay paces a publisher rather than a single
     source, pass one clock to all the WebSources addressing it whenever they do not run one after
     another (see InterleavedSource).
 
     Args:
         publisher: The publisher the requests address.
         delay: The crawl-delay to keep between requests. If None, requests are not delayed.
-        ignore_robots: If True, robots.txt is not consulted for a crawl-delay.
         ignore_crawl_delay: If True, a crawl-delay given by robots.txt does not overwrite <delay>.
 
     Returns:
         _Clock: A clock over the effective delay.
     """
-    if not (ignore_robots or ignore_crawl_delay):
+    if not ignore_crawl_delay:
         if robots_delay := publisher.robots.crawl_delay(publisher.request_header.get("user-agent", "*")):
             logger.debug(
                 f"Found crawl-delay of {robots_delay} seconds in robots.txt for {publisher.name}. "
@@ -196,7 +195,7 @@ class WebSource:
         # parse robots:
         self.robots: Optional[Robots] = None if ignore_robots else self.publisher.robots
 
-        self.clock = clock if clock is not None else build_clock(publisher, delay, ignore_robots, ignore_crawl_delay)
+        self.clock = clock if clock is not None else build_clock(publisher, delay, ignore_robots or ignore_crawl_delay)
 
     @property
     def _is_stopped(self):

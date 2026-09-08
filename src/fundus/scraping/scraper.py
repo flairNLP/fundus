@@ -107,7 +107,7 @@ class WebScraper(BaseScraper):
         # a single clock for all of the publisher's sources, so that the crawl-delay paces the
         # publisher rather than each source separately. Without this, round-robining a batch of n
         # sources would fire n requests before any of them waits.
-        clock = build_clock(publisher, delay, ignore_robots, ignore_crawl_delay)
+        clock = build_clock(publisher, delay, ignore_robots or ignore_crawl_delay)
 
         def build(url_source: URLSource) -> WebSource:
             return WebSource(

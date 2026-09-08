@@ -269,7 +269,11 @@ def random_sleep(func: Callable[_P, _T], between: Tuple[float, float]) -> Callab
 
 
 def supports_attributes(extraction_filter: Optional[ExtractionFilter], versions: Iterable[Type[BaseParser]]) -> bool:
-    """Whether <versions> together cover what <extraction_filter> requires.
+    """Returns True, if one of <versions> covers what <extraction_filter> requires.
+
+    The required attributes have to be covered by one and the same version, since an article is
+    parsed by a single version: versions splitting the requirements between them cover none of
+    them. Without a version in reach, nothing can be extracted at all.
 
     Args:
         extraction_filter: The filter the extractions are checked against. Only a <Requires> names
@@ -282,8 +286,7 @@ def supports_attributes(extraction_filter: Optional[ExtractionFilter], versions:
     if not isinstance(extraction_filter, Requires):
         return True
 
-    supported = set(more_itertools.flatten(version.attributes().names for version in versions))
-    return extraction_filter.required_attributes <= supported
+    return any(extraction_filter.required_attributes <= set(version.attributes().names) for version in versions)
 
 
 class CrawlerBase(ABC):
@@ -294,7 +297,7 @@ class CrawlerBase(ABC):
 
     @abstractmethod
     def _supports_attributes(self, publisher: Publisher, extraction_filter: Optional[ExtractionFilter]) -> bool:
-        """Whether <publisher> can extract what <extraction_filter> requires.
+        """Returns True, if <publisher> can extract what <extraction_filter> requires.
 
         Which parser versions an extraction can end up using depends on how the crawler reaches
         its articles, so every crawler answers this for the versions within its own reach.

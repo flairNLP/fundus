@@ -282,7 +282,7 @@ class SourceHandler(Iterable[URLSource]):
     def _rank(cls, source: URLSource) -> int:
         """The position of <source>'s type in the crawl order.
 
-        Types not listed in <__SOURCE_ORDER__> are proceeded last rather than raising, so that
+        Types not listed in <__SOURCE_ORDER__> are processed last rather than raising, so that
         URLSource implementations living outside this module stay usable without registration.
         Since sorting is stable, they keep their declared order among themselves.
         """
@@ -355,7 +355,7 @@ class SourceHandler(Iterable[URLSource]):
         allowed_types = set(source_types) if source_types else set()
         allowed_languages = set(languages) if languages else set()
 
-        return type(self)(
+        return SourceHandler(
             source
             for source in self._sources
             if (not allowed_types or type(source) in allowed_types)

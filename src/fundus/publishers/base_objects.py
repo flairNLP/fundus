@@ -1,5 +1,4 @@
 import copy
-from collections import defaultdict
 from textwrap import indent
 from typing import Dict, FrozenSet, Iterable, Iterator, List, Optional, Set, Type, Union
 from warnings import warn
@@ -215,14 +214,6 @@ class Publisher:
     @property
     def sources(self) -> SourceHandler:
         return self._sources
-
-    @property
-    def source_mapping(self) -> Dict[Type[URLSource], List[URLSource]]:
-        """Deprecated view on <sources>, grouped by source type and kept in crawl order."""
-        mapping: Dict[Type[URLSource], List[URLSource]] = defaultdict(list)
-        for source in self.sources:
-            mapping[type(source)].append(source)
-        return dict(mapping)
 
     @property
     def languages(self) -> Set[str]:
