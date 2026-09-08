@@ -460,3 +460,23 @@ class ParserProxy(ABC):
     @property
     def latest_version(self) -> Type[BaseParser]:
         return self._get_latest_cache().factory
+
+    def versions_covering(self, start: date, end: date) -> Iterator[Type[BaseParser]]:
+        """Iterates over the versions used to parse articles crawled between <start> and <end>.
+
+        A version is valid from the day after its predecessor's VALID_UNTIL up to and including its
+        own, so it takes part in the range as soon as those two spans overlap. Versions are yielded
+        oldest first.
+
+        Args:
+            start: The first day of the range, inclusive.
+            end: The last day of the range, inclusive.
+
+        Returns:
+            Iterator over the parser versions covering part of the range.
+        """
+        previous_valid_until = date.min
+        for valid_until, cache in self._parser_mapping.items():
+            if valid_until >= start and previous_valid_until < end:
+                yield cache.factory
+            previous_valid_until = valid_until

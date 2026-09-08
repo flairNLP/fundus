@@ -2091,6 +2091,81 @@
 </table>
 
 
+## INTERNATIONAL-Publishers
+
+<table class="publishers international">
+  <thead>
+    <tr>
+      <th>Class&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</th>
+      <th>Name&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</th>
+      <th>URL&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</th>
+      <th>Languages</th>
+      <th>Missing&#160;Attributes</th>
+      <th>Deprecated&#160;Attributes</th>
+      <th>Additional&#160;Attributes&#160;&#160;&#160;&#160;</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <code>Wikinews</code>
+      </td>
+      <td>
+        <div>Wikinews</div>
+      </td>
+      <td>
+        <a href="https://www.wikinews.org">
+          <span>www.wikinews.org</span>
+        </a>
+      </td>
+      <td>
+        <code>ar</code>
+        <code>bg</code>
+        <code>bs</code>
+        <code>ca</code>
+        <code>cs</code>
+        <code>de</code>
+        <code>el</code>
+        <code>en</code>
+        <code>eo</code>
+        <code>es</code>
+        <code>fa</code>
+        <code>fi</code>
+        <code>fr</code>
+        <code>guw</code>
+        <code>he</code>
+        <code>hu</code>
+        <code>it</code>
+        <code>ja</code>
+        <code>ko</code>
+        <code>li</code>
+        <code>nl</code>
+        <code>no</code>
+        <code>pl</code>
+        <code>pt</code>
+        <code>ro</code>
+        <code>ru</code>
+        <code>sd</code>
+        <code>shn</code>
+        <code>sq</code>
+        <code>sr</code>
+        <code>sv</code>
+        <code>ta</code>
+        <code>th</code>
+        <code>tr</code>
+        <code>uk</code>
+        <code>zh</code>
+      </td>
+      <td>
+        <code>authors</code>
+      </td>
+      <td>&#160;</td>
+      <td>&#160;</td>
+    </tr>
+  </tbody>
+</table>
+
+
 ## ISL-Publishers
 
 <table class="publishers isl">
