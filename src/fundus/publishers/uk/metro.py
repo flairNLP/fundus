@@ -14,6 +14,21 @@ from fundus.parser.utility import (
     image_extraction,
 )
 
+METRO_BLOAT_REGEX = (
+    r"^Got a story|"
+    r"^Get in touch with our news team|"
+    r"^Get in touch by emailing|"
+    r"^If you’ve got a celebrity story|"
+    r"^For more stories|"
+    r"^Follow Metro|"
+    r"^\s*MORE :|"
+    r"^Share your views in the comments|"
+    r"^Email gamecentral@metro.co.uk|"
+    r"^To submit Inbox letters and Reader’s Features more easily|"
+    r"^Do you have a story to share?|"
+    r"^Sign up to our newsletter"
+)
+
 
 class MetroParser(ParserProxy):
     class V1(BaseParser):
@@ -21,21 +36,8 @@ class MetroParser(ParserProxy):
         _summary_selector = XPath("//article / div[@class='article-body'] / p[1]")
         _subheadline_selector: Union[CSSSelector, XPath] = CSSSelector("article > div.article-body > h2")
 
-        _bloat_regex_ = (
-            r"^Got a story|"
-            r"^Get in touch with our news team|"
-            r"^Get in touch by emailing|"
-            r"^If you’ve got a celebrity story|"
-            r"^For more stories|"
-            r"^Follow Metro|"
-            r"^\s*MORE :|"
-            r"^Share your views in the comments|"
-            r"^Email gamecentral@metro.co.uk|"
-            r"^To submit Inbox letters and Reader’s Features more easily|"
-            r"^Do you have a story to share?"
-        )
         _paragraph_selector = XPath(
-            f"//article /div[@class='article-body'] /p[position()>1 and not(re:test(string(), '{_bloat_regex_}'))]",
+            f"//article /div[@class='article-body'] /p[position()>1 and not(re:test(string(), '{METRO_BLOAT_REGEX}'))]",
             namespaces={"re": "http://exslt.org/regular-expressions"},
         )
 
@@ -75,6 +77,14 @@ class MetroParser(ParserProxy):
             )
 
     class V1_1(V1):
+        VALID_UNTIL = datetime.date(2026, 8, 21)
+
         _summary_selector = XPath("//article//div[@class='article__content__inner']/p[1]")
         _paragraph_selector = XPath("//article//div[@class='article__content__inner']/p[not(@class) and position()>1]")
         _subheadline_selector = XPath("//article//div[@class='article__content__inner']/h2")
+
+    class V1_2(V1_1):
+        _paragraph_selector = XPath(
+            f"//article//p[@class='wp-block-paragraph' and position()>1 and not(re:test(string(), '{METRO_BLOAT_REGEX}'))]",
+            namespaces={"re": "http://exslt.org/regular-expressions"},
+        )
