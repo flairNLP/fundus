@@ -18,8 +18,7 @@ class VOAParser(ParserProxy):
         # subheadlines are fully bold paragraphs; paragraphs opening with a bold
         # lead-in ("<strong>Economic imbalance:</strong> China has become ...") are not
         _subheadline_selector = XPath(
-            "//div[@id='article-content']/div[@class='wsw']"
-            "//p[strong and normalize-space(.) = normalize-space(strong)]"
+            "//div[@id='article-content']/div[@class='wsw']//p[strong and normalize-space(.) = normalize-space(strong)]"
         )
         _paragraph_selector = XPath(
             "//div[@id='article-content']/div[@class='wsw']"
