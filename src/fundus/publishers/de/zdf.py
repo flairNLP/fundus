@@ -21,7 +21,7 @@ class ZDFParser(ParserProxy):
 
         _paragraph_selector = XPath("//div[contains(@class,'r1nj4qn5')]")
         _summary_selector = CSSSelector("p.c1bdz7f4")
-        _subheadlines_selector = CSSSelector("h2.hhhtovw")
+        _subheadline_selector = CSSSelector("h2.hhhtovw")
 
         @attribute
         def body(self) -> Optional[ArticleBody]:
@@ -29,7 +29,7 @@ class ZDFParser(ParserProxy):
                 self.precomputed.doc,
                 paragraph_selector=self._paragraph_selector,
                 summary_selector=self._summary_selector,
-                subheadline_selector=self._subheadlines_selector,
+                subheadline_selector=self._subheadline_selector,
             )
 
         @attribute

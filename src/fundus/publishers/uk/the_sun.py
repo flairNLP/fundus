@@ -18,7 +18,7 @@ class TheSunParser(ParserProxy):
     class V1(BaseParser):
         _summary_selector = CSSSelector("div[data-gu-name='standfirst'] p")
         _paragraph_selector = XPath("//div[@class='article__content']/p[not(not(text()) and a[strong])]")
-        _sub_headline_selector = CSSSelector("div.article__content > h2.wp-block-heading")
+        _subheadline_selector = CSSSelector("div.article__content > h2.wp-block-heading")
 
         @attribute
         def body(self) -> Optional[ArticleBody]:
@@ -26,7 +26,7 @@ class TheSunParser(ParserProxy):
                 self.precomputed.doc,
                 summary_selector=self._summary_selector,
                 paragraph_selector=self._paragraph_selector,
-                subheadline_selector=self._sub_headline_selector,
+                subheadline_selector=self._subheadline_selector,
             )
 
         @attribute

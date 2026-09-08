@@ -17,6 +17,7 @@ class MX(metaclass=PublisherGroup):
                 "https://mexiconewsdaily.com/sitemap_index.xml",
                 sitemap_filter=inverse(regex_filter(r"post-sitemap")),
                 languages={"en"},
+                reverse=True,
             )
         ],
         impersonate="chrome",
