@@ -502,5 +502,133 @@
       "Sweden",
       "World War 3"
     ]
+  },
+  "V1_2": {
+    "authors": [
+      "Alice Giddings"
+    ],
+    "body": {
+      "summary": [
+        "I remember being led through the racks of lingerie in Marks & Spencer by my nan, to get measured for my first bra."
+      ],
+      "sections": [
+        {
+          "headline": [],
+          "paragraphs": [
+            "It was a time when the sexiest thing on the rails was supermodel Rosie Huntington-Whiteley’s vintage-inspired floral lingerie – then revolutionary for celebrating a range of body shapes and sizes, with cup sizes up to a G and pants to a size 20.",
+            "For many of us, M&S has remained that reliable favourite. It’s there when we need it, whether that’s offering up a new cookie flavour, or refreshing our pant draw.",
+            "Fast forward 20 years, and M&S has launched its Body Sculpt Hip Boost All-In-One bodysuit, costing £28.",
+            "Just as you might stick chicken fillets under your boobs, this bodysuit features pockets on the sides of the hips, where you can place pads, designed to give the illusion of an hourglass figure.",
+            "In the retailer’s words: ‘Removable pads at the hips help you to create the perfect shape.’",
+            "The perfect shape.",
+            "It all but confirms that the most desirable body-type of this age is the signature Kardashian look, with large hips, a tiny waist, and a big bum.",
+            "For Stylist Shauna Flavin, shape wear shouldn’t be about ‘hiding our bodies’.",
+            "‘It’s about making us feel more confident,’ she told Metro. ‘It simply helps clothes fit a little better, it’s not trying to create a body shape that isn’t natural to that person.’"
+          ]
+        },
+        {
+          "headline": [
+            "Your body isn’t a trend"
+          ],
+          "paragraphs": [
+            "When it comes to these hip-inserts though, it is indeed creating a body shape that isn’t natural to you.",
+            "While the Victorian era saw corsets, often made from whalebone or steel, used to create tiny waistlines and big busts, it’s now padding that provides a similar effect.",
+            "Dr Galyna Selezneva, a psychiatrist, aesthetic doctor and body specialist, tells Metro a product like M&S’ bodysuit ‘normalises the idea that your body should be endlessly customisable, or that your body can follow a fleeting trend’.",
+            "M&S’ bodysuit also comes after ‘hip dips’ – the natural indentation just below the hip bone – became the latest body part to come under fire on TikTok.",
+            "‘They ruin every good outfit,’ wrote one social media user. Another agreed, saying: ‘Someone convince me not to get hip dip fillers.’",
+            "Others shared how they needed ‘underwear with padded sides’.",
+            "But as Dr Selezneva confirms, hip dips are a normal feature of human anatomy.",
+            "She says: ‘They’re largely determined by the shape of the pelvis, femur and distribution of muscle and fat, but social media has a remarkable ability to amplify what seems an ordinary anatomical variation into an extreme “flaw”.",
+            "‘The big issue is that label then requires “fixing” and is accompanied by products promising to fix it, and women can start looking at a completely normal part of themselves as a problem requiring correction.’"
+          ]
+        },
+        {
+          "headline": [
+            "Supply and demand"
+          ],
+          "paragraphs": [
+            "While some shoppers might be surprised – even a little sad – that’s it M&S, the reliable, mum-of-the-high-street that’s stocking this kind of underwear option, fashion branding expert Julia Darlington says they wouldn’t sell it without cause.",
+            "‘It’s the consumer who will ultimately choose,’ she tells Metro. ‘If they want it, they’ll buy it and I’m sure M&S will have done a lot of consumer research to determine demand.’",
+            "The high street retailer has made it clear it offers cheaper Skims-inspired shapewear, after the Kim’s £2.93billion brand began selling hip-padded lingerie last year for £100 more.",
+            "M&S already offers padded bottom shorts for £15, which again promote the same body type, and even launched stick-on nipples for £7 in the wake of Kim’s £72 nipple bra.",
+            "For Julia, this type of shapewear is a sign that the brand is moving with the times.",
+            "‘M&S has been an icon of the British High Street for decades,’ she explains. ‘It’s always played a really important role for women in terms of clothing but really lost its way when previous senior decision-makers kept it stuck.",
+            "‘However, since it opened up its doors to some amazing Topshop creatives it has made a brilliant come back. Stuart Machin has also had the courage to let the teams design and buy what the customer wants-stylish, relevant clothes, accessories and lingerie.’",
+            "Ultimately, Dr Selezneva is more concerned about the women buying the product, rather than the retailers selling it.",
+            "‘My problem isn’t with the padding, I’m more concerned with the fact that women feel their bodies need to be modified, and that we are simply not enough.’"
+          ]
+        }
+      ]
+    },
+    "images": [
+      {
+        "versions": [
+          {
+            "url": "https://metro.co.uk/wp-content/uploads/2026/09/SEI_311212734-2741.jpg?quality=90&strip=all&w=646",
+            "query_width": null,
+            "size": {
+              "width": 646,
+              "height": 342
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": true,
+        "description": "We love you M&S, but we need to talk about your latest underwear drop Picture: M&S/Getty",
+        "caption": "What will be padded out next?",
+        "authors": [
+          "M&S/Getty"
+        ],
+        "position": 627
+      },
+      {
+        "versions": [
+          {
+            "url": "https://metro.co.uk/wp-content/uploads/2026/09/SEI_311215490-23c9.jpg?quality=90&strip=all&w=646",
+            "query_width": null,
+            "size": {
+              "width": 646,
+              "height": 840
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": false,
+        "description": "Body-Sculpt-Hip-Boost-All-In-One Picture: M&S",
+        "caption": "The Body-Sculpt-Hip-Boost-All-In-One has obvious pads on the hips",
+        "authors": [
+          "M&S"
+        ],
+        "position": 658
+      },
+      {
+        "versions": [
+          {
+            "url": "https://metro.co.uk/wp-content/uploads/2026/09/SEI_311215489-8bc3-e1788795298936.jpg?quality=90&strip=all&w=646",
+            "query_width": null,
+            "size": {
+              "width": 646,
+              "height": 579
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": false,
+        "description": "Body-Sculpt-Hip-Boost-All-In-One Picture: M&S",
+        "caption": "The pads are intended to give you a ‘perfect’ figure",
+        "authors": [
+          "M&S"
+        ],
+        "position": 691
+      }
+    ],
+    "publishing_date": "2026-09-08 06:00:00+00:00",
+    "title": "We love you M&S, but we need to talk about your latest underwear drop",
+    "topics": [
+      "Body Image",
+      "Fashion",
+      "Kim Kardashian",
+      "Marks & Spencer"
+    ]
   }
 }
