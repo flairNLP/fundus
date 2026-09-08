@@ -254,7 +254,7 @@ class Publisher:
     def supports(
         self, source_types: Optional[List[Type[URLSource]]] = None, languages: Optional[List[str]] = None
     ) -> bool:
-        """Whether this publisher has a source left to contribute under the given restrictions.
+        """Returns True, if this publisher has a source left to contribute under the given restrictions.
 
         Restrictions it already carries and the given ones have to be met by one and the same
         source, since a publisher covering a language through one source and a source type through
