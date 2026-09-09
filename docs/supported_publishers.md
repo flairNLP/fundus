@@ -1880,7 +1880,9 @@
         <code>LeMonde</code>
       </td>
       <td>
-        <div>Le Monde</div>
+        <div>
+          <strike>Le Monde</strike>
+        </div>
       </td>
       <td>
         <a href="https://www.lemonde.fr/">
