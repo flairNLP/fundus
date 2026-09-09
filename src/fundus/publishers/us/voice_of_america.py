@@ -1,7 +1,6 @@
 import datetime
 from typing import List, Optional
 
-from lxml.cssselect import CSSSelector
 from lxml.etree import XPath
 
 from fundus.parser import ArticleBody, BaseParser, Image, ParserProxy, attribute
@@ -16,11 +15,23 @@ from fundus.parser.utility import (
 
 class VOAParser(ParserProxy):
     class V1(BaseParser):
-        _paragraph_selector = CSSSelector("#article-content > div > p")
+        # subheadlines are fully bold paragraphs; paragraphs opening with a bold
+        # lead-in ("<strong>Economic imbalance:</strong> China has become ...") are not
+        _subheadline_selector = XPath(
+            "//div[@id='article-content']/div[@class='wsw']//p[strong and normalize-space(.) = normalize-space(strong)]"
+        )
+        _paragraph_selector = XPath(
+            "//div[@id='article-content']/div[@class='wsw']"
+            "//p[not(@class) and not(strong and normalize-space(.) = normalize-space(strong))]"
+        )
 
         @attribute
         def body(self) -> Optional[ArticleBody]:
-            return extract_article_body_with_selector(self.precomputed.doc, paragraph_selector=self._paragraph_selector)
+            return extract_article_body_with_selector(
+                self.precomputed.doc,
+                paragraph_selector=self._paragraph_selector,
+                subheadline_selector=self._subheadline_selector,
+            )
 
         @attribute
         def publishing_date(self) -> Optional[datetime.datetime]:
