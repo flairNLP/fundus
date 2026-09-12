@@ -16,8 +16,10 @@ from fundus.parser.utility import (
 
 class RuhrNachrichtenParser(ParserProxy):
     class V1(BaseParser):
+        VALID_UNTIL = datetime.date(2026, 8, 25)
+
         _summary_selector = CSSSelector("div.article__content > p.article__teaser-text")
-        _paragraph_selector = CSSSelector("div.article__content > p:not([class])")
+        _paragraph_selector: XPath = CSSSelector("div.article__content > p:not([class])")
         _subheadline_selector = CSSSelector("div.article__content > h2")
 
         @attribute
@@ -54,3 +56,12 @@ class RuhrNachrichtenParser(ParserProxy):
                 caption_selector=XPath("./ancestor::figure//figcaption/text()"),
                 author_selector=XPath("./ancestor::figure//figcaption/span"),
             )
+
+    class V1_1(V1):
+        _bloat_regex = r"(?i)^verfasst von"
+
+        _paragraph_selector = XPath(
+            f"//div[@class='article__content']/p[@class='wp-block-paragraph' and not(re:test(string(), '{_bloat_regex}'))] | "
+            "//div[@class='article__content']/ul[@class='wp-block-list']/li",
+            namespaces={"re": "http://exslt.org/regular-expressions"},
+        )
