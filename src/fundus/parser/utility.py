@@ -659,7 +659,10 @@ def image_author_parsing(authors: Union[str, List[str]]) -> List[str]:
 
 
 # https://regex101.com/r/MplUXL/2
-_srcset_pattern = re.compile(r"(?P<url>\S+)\s*(?P<descriptor>[0-9.]+[wx])?(,?\s*)")
+# candidates are separated by a comma that may sit flush against the preceding url, e.g.
+# 'a.jpg, b.jpg 2x'. only strip commas terminating a url, so that urls carrying commas of
+# their own - CDN transformations like '.../w_300,h_200/img.jpg' - survive intact.
+_srcset_pattern = re.compile(r"(?P<url>\S+?),*(?=\s|$)\s*(?P<descriptor>[0-9.]+[wx])?\s*,?\s*")
 
 
 def parse_srcset(srcset: str) -> Dict[str, str]:

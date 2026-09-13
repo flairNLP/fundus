@@ -2,10 +2,12 @@ import bz2
 import gzip
 import itertools
 import lzma
+import re
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
-from functools import cached_property, partial
+from functools import cached_property
 from typing import (
+    Any,
     Callable,
     ClassVar,
     Dict,
@@ -13,8 +15,8 @@ from typing import (
     Iterator,
     List,
     Optional,
-    Pattern,
     Set,
+    Tuple,
 )
 from urllib.parse import unquote, urlparse
 
@@ -79,6 +81,7 @@ class _ArchiveDecompressor:
         self.archive_mapping: Dict[str, Callable[[bytes], bytes]] = {
             "application/octet-stream": self._decompress_octet_stream,
             "application/x-gzip": CompressionFormats.GZIP,
+            "application/gzip": CompressionFormats.GZIP,
             "gzip": CompressionFormats.GZIP,
         }
 
@@ -176,12 +179,34 @@ class RSSFeed(URLSource):
                 yield clean_url(url)
 
 
+def numeric_sort_key(pattern: str, reverse: bool = False) -> Callable[[str], Tuple[int, ...]]:
+    """Build a <sort_key> ordering sitemaps by the integer capture groups of <pattern>.
+
+    Groups are compared numerically rather than as text, so unpadded indices order as
+    1, 2, ..., 10 instead of 1, 10, 2. Pass reverse=True to negate them, putting the
+    highest value first - use it when the number grows with recency (e.g. a date),
+    and leave it off when it grows with age (e.g. a sitemap chunk counted from newest).
+
+    Raises ValueError for a URL the pattern doesn't match; <sitemap_filter> is applied
+    first, so the key only ever sees the sitemaps that were kept.
+    """
+    compiled = re.compile(pattern)
+    sign = -1 if reverse else 1
+
+    def key(url: str) -> Tuple[int, ...]:
+        if match := compiled.search(url):
+            return tuple(sign * int(group) for group in match.groups())
+        raise ValueError(f"<sort_key> pattern {pattern!r} does not match sitemap URL {url!r}")
+
+    return key
+
+
 @dataclass
 class Sitemap(URLSource):
     recursive: bool = True
     reverse: bool = False
     sitemap_filter: URLFilter = lambda url: not bool(url)
-    sort_predicate: Optional[Pattern[str]] = None
+    sort_key: Optional[Callable[[str], Any]] = None
 
     _decompressor: ClassVar[_ArchiveDecompressor] = _ArchiveDecompressor()
     _sitemap_selector: ClassVar[XPath] = XPath("//*[local-name()='sitemap']/*[local-name()='loc']")
@@ -226,20 +251,11 @@ class Sitemap(URLSource):
             elif self.recursive:
                 sitemap_locs = [node.text for node in self._sitemap_selector(tree)]
 
-                if self.sort_predicate is not None:
-
-                    def _extract_predicate(text: str, pattern: Pattern[str]) -> str:
-                        if match := pattern.search(text):
-                            return match.group()
-                        raise NotImplementedError("<sort_predicate> must match in all sitemap URLs")
-
-                    sitemap_locs = sorted(
-                        sitemap_locs,
-                        key=partial(_extract_predicate, pattern=self.sort_predicate),
-                        reverse=True,
-                    )
-
                 filtered_locs = list(filter(inverse(self.sitemap_filter), sitemap_locs))
+
+                if self.sort_key is not None:
+                    filtered_locs.sort(key=self.sort_key)
+
                 for loc in reversed(filtered_locs) if self.reverse else filtered_locs:
                     yield from yield_recursive(loc)
 
