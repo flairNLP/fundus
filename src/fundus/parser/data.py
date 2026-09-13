@@ -3,6 +3,7 @@ from __future__ import annotations
 import re
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, fields
+from datetime import datetime
 from functools import total_ordering
 from itertools import chain
 from typing import (
@@ -332,14 +333,14 @@ class TextSequence(Sequence[str]):
 class TextSequenceTree(ABC):
     """Base class to traverse and build trees of TextSequence."""
 
-    def as_text_sequence(self, iterator: Optional[Iterator[Any]] = None) -> TextSequence:
-        texts = [text for tl in self.df_traversal(iterator=iterator) for text in tl]
+    def as_text_sequence(self) -> TextSequence:
+        texts = [text for tl in self.df_traversal() for text in tl]
         return TextSequence(texts)
 
-    def text(self, join_on: str = "\n\n", iterator: Optional[Iterator[Any]] = None) -> str:
-        return join_on.join(self.as_text_sequence(iterator=iterator))
+    def text(self, join_on: str = "\n\n") -> str:
+        return join_on.join(self.as_text_sequence())
 
-    def df_traversal(self, iterator: Optional[Iterator[Any]] = None) -> Iterable[TextSequence]:
+    def df_traversal(self) -> Iterable[TextSequence]:
         def recursion(o: object):
             if isinstance(o, TextSequence):
                 yield o
@@ -349,7 +350,7 @@ class TextSequenceTree(ABC):
             else:
                 yield o
 
-        for value in iter(self) if not iterator else iterator:
+        for value in self:
             yield from recursion(value)
 
     @abstractmethod
@@ -414,51 +415,71 @@ class ArticleBody(TextSequenceTree):
 
 
 @dataclass
+class LiveTickerEntry(TextSequenceTree):
+    """One entry of a live ticker: its text content plus the metadata specific to that entry."""
+
+    sections: List[ArticleSection]
+    publishing_date: Optional[datetime]
+    authors: List[str]
+    images: List[Image]
+    html: str
+
+    def serialize(self) -> Dict[str, Any]:
+        return {
+            "sections": [section.serialize() for section in self.sections],
+            "publishing_date": self.publishing_date.isoformat() if self.publishing_date else None,
+            "authors": self.authors,
+            "images": [image.serialize() for image in self.images],
+            "html": self.html,
+        }
+
+    @classmethod
+    def deserialize(cls, serialized: Dict[str, Any]) -> Self:
+        return cls(
+            sections=[ArticleSection.deserialize(section) for section in serialized["sections"]],
+            publishing_date=(
+                datetime.fromisoformat(serialized["publishing_date"]) if serialized["publishing_date"] else None
+            ),
+            authors=serialized["authors"],
+            images=[Image.deserialize(image) for image in serialized["images"]],
+            html=serialized["html"],
+        )
+
+    def __bool__(self):
+        return any(bool(section) for section in self.sections)
+
+    def __iter__(self) -> Iterator[Any]:
+        for section in self.sections:
+            yield from section
+
+
+@dataclass
 class LiveTickerBody(TextSequenceTree):
     summary: TextSequence
-    entries: List[ArticleBody]
-    entry_meta_information: List[Dict[str, Any]]
+    entries: List[LiveTickerEntry]
 
     def serialize(self) -> Dict[str, Any]:
         return {
             "summary": list(self.summary),
             "entries": [entry.serialize() for entry in self.entries],
-            "entry_meta_information": self.entry_meta_information,
         }
 
     @classmethod
     def deserialize(cls, serialized: Dict[str, Any]) -> Self:
         return cls(
             summary=TextSequence(serialized["summary"]),
-            entries=[ArticleBody.deserialize(entry) for entry in serialized["entries"]],
-            entry_meta_information=serialized["entry_meta_information"],
+            entries=[LiveTickerEntry.deserialize(entry) for entry in serialized["entries"]],
         )
 
     def __bool__(self):
         return any(bool(entry) for entry in self.entries)
 
-    def __iter__(self) -> Iterator[Any]:
-        field_values = [
-            getattr(self, f.name) for f in fields(self) if f.name not in ("entry_meta_information", "entries")
-        ]
-        field_values.extend([entry.sections for entry in self.entries])
-        yield from field_values
-
-    def __meta_iter__(self) -> Iterator[Any]:
-        field_values = [
-            getattr(self, f.name) for f in fields(self) if f.name not in ("entry_meta_information", "entries")
-        ]
-        for entry, meta in zip(self.entries, self.entry_meta_information):
-            field_values.append(
-                TextSequence(
-                    [f"LiveTicker entry from {meta.get('publishing_date')} by {', '.join(meta.get('authors', []))}"]
-                )
-            )
-            field_values.extend([entry.sections])
-        yield from field_values
-
-    def pretty_print(self):
-        return self.text(iterator=self.__meta_iter__())
+    def pretty_print(self) -> str:
+        parts = [str(self.summary)] if self.summary else []
+        for entry in self.entries:
+            header = f"LiveTicker entry from {entry.publishing_date} by {', '.join(entry.authors)}"
+            parts.append(f"{header}\n\n{entry.text()}")
+        return "\n\n".join(parts)
 
 
 @total_ordering

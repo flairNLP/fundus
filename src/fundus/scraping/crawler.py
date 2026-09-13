@@ -269,7 +269,7 @@ class CrawlerBase(ABC):
                 specified file as a JSON list.
 
         Returns:
-            Iterator[Publication]: An iterator yielding objects of type Article.
+            Iterator[Publication]: An iterator yielding objects of type Article or LiveTicker.
         """
 
         if max_articles == 0:

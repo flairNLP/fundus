@@ -8,7 +8,7 @@ from colorama import Fore, Style
 
 from fundus.logging import create_logger
 from fundus.parser import ArticleBody, Image
-from fundus.parser.data import LiveTickerBody, TextSequenceTree
+from fundus.parser.data import LiveTickerBody, TextSequence, TextSequenceTree
 from fundus.scraping.html import HTML
 from fundus.utils.serialization import JSONVal, is_jsonable
 
@@ -199,7 +199,7 @@ class LiveTicker(Publication):
         )
 
         summary_text = (
-            f" including {len(self.body.entries if hasattr(self.body, 'entries') and self.body is not None else [])} entries"
+            f" including {len(self.body.entries) if isinstance(self.body, LiveTickerBody) else 0} entries"
             f" and {len(self.images)} image(s)"
             if self.images and not isinstance(self.images, Exception)
             else ""
@@ -217,13 +217,13 @@ class LiveTicker(Publication):
         return dedent(text)
 
     def __iter__(self) -> Iterator[Article]:
-        if not self.body:
+        if not isinstance(self.body, LiveTickerBody):
             return
-        for idx, (entry, metas) in enumerate(zip(self.body.entries, self.body.entry_meta_information)):
+        for idx, entry in enumerate(self.body.entries):
             html_entry = HTML(
                 requested_url=self.html.requested_url,
                 responded_url=self.html.responded_url,
-                content=metas.get("html", ""),
+                content=entry.html,
                 crawl_date=self.html.crawl_date,
                 source_info=self.html.source_info,
             )
@@ -231,11 +231,11 @@ class LiveTicker(Publication):
                 title = f"LiveTicker Entry #{idx + 1}"
             yield Article(
                 html=html_entry,
-                body=entry,
+                body=ArticleBody(summary=TextSequence([]), sections=entry.sections),
                 title=title,
-                authors=metas.get("authors", []),
-                images=metas.get("images", []),
-                publishing_date=metas.get("publishing_date", None),
+                authors=entry.authors,
+                images=entry.images,
+                publishing_date=entry.publishing_date,
             )
 
     @property
@@ -245,17 +245,17 @@ class LiveTicker(Publication):
     @property
     def authors(self) -> List[str]:
         authors: List[str] = super().authors
-        if self.body is None:
+        if not isinstance(self.body, LiveTickerBody):
             return authors
-        for entry_meta in self.body.entry_meta_information:
-            authors.extend(entry_meta.get("authors", []))
+        for entry in self.body.entries:
+            authors.extend(entry.authors)
         return list(set(authors))
 
     @property
     def images(self) -> List[Image]:
         images: List[Image] = super().images
-        if self.body is None:
+        if not isinstance(self.body, LiveTickerBody):
             return images
-        for entry_meta in self.body.entry_meta_information:
-            images.extend(entry_meta.get("images", []))
+        for entry in self.body.entries:
+            images.extend(entry.images)
         return images
