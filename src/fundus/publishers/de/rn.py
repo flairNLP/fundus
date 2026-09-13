@@ -61,7 +61,7 @@ class RuhrNachrichtenParser(ParserProxy):
         _bloat_regex = r"(?i)^verfasst von"
 
         _paragraph_selector = XPath(
-            f"//div[@class='article__content']/p[@class='wp-block-paragraph' and not(re:test(string(), '{_bloat_regex}'))] | "
-            "//div[@class='article__content']/ul[@class='wp-block-list']/li",
+            f"//div[@class='article__content']/p[@class='wp-block-paragraph' and not(re:test(normalize-space(), '{_bloat_regex}'))] | "
+            "//div[@class='article__content']/*[@class='wp-block-list' and (self::ol or self::ul)]/li",
             namespaces={"re": "http://exslt.org/regular-expressions"},
         )
