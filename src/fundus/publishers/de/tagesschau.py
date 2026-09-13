@@ -5,8 +5,14 @@ from typing import List, Optional, Union
 from lxml.cssselect import CSSSelector
 from lxml.etree import XPath
 
-from fundus.parser import ArticleBody, BaseParser, Image, ParserProxy, attribute
-from fundus.parser.data import LiveTickerBody
+from fundus.parser import (
+    ArticleBody,
+    BaseParser,
+    Image,
+    LiveTickerBody,
+    ParserProxy,
+    attribute,
+)
 from fundus.parser.utility import (
     extract_body_with_selector,
     generic_author_parsing,

@@ -178,6 +178,21 @@ def _extract_nodes(
     return [node for element in selector(doc) if (node := node_type(df_idx_by_ref[element], element))]
 
 
+def _nodes_to_text_sequence(nodes: Iterable[Node], tag_filter: Optional[XPath] = None) -> TextSequence:
+    return TextSequence(
+        normalize_whitespace(node.text_content(excluded_tags=["script"], tag_filter=tag_filter)) for node in nodes
+    )
+
+
+def _build_sections(instructions: Iterable[List[Node]], tag_filter: Optional[XPath] = None) -> List[ArticleSection]:
+    sections: List[ArticleSection] = []
+    for chunk in more_itertools.chunked(instructions, 2):
+        if len(chunk) == 1:
+            chunk.append([])
+        sections.append(ArticleSection(*(_nodes_to_text_sequence(c, tag_filter) for c in chunk)))
+    return sections
+
+
 def extract_article_body_with_selector(
     doc: lxml.html.HtmlElement,
     paragraph_selector: XPath,
@@ -211,24 +226,8 @@ def extract_article_body_with_selector(
         first = next(instructions)
         instructions = itertools.chain([first, []], instructions)
 
-    summary = TextSequence(
-        map(
-            lambda x: normalize_whitespace(x.text_content(excluded_tags=["script"], tag_filter=tag_filter)),
-            next(instructions),
-        )
-    )
-    sections: List[ArticleSection] = []
-
-    for chunk in more_itertools.chunked(instructions, 2):
-        if len(chunk) == 1:
-            chunk.append([])
-        texts = [
-            list(
-                map(lambda x: normalize_whitespace(x.text_content(excluded_tags=["script"], tag_filter=tag_filter)), c)
-            )
-            for c in chunk
-        ]
-        sections.append(ArticleSection(*map(TextSequence, texts)))
+    summary = _nodes_to_text_sequence(next(instructions), tag_filter)
+    sections = _build_sections(instructions, tag_filter)
 
     return ArticleBody(summary=summary, sections=sections)
 
@@ -265,12 +264,7 @@ def extract_live_ticker_body_with_selector(
     if not nodes[: len(summary_nodes)] == summary_nodes:
         raise ValueError(f"All summary nodes should be at the beginning of the article")
 
-    summary = TextSequence(
-        map(
-            lambda x: normalize_whitespace(x.text_content(excluded_tags=["script"], tag_filter=tag_filter)),
-            summary_nodes,
-        )
-    )
+    summary = _nodes_to_text_sequence(summary_nodes, tag_filter)
 
     entries: List[LiveTickerEntry] = []
     entry_nodes = more_itertools.split_at(nodes[len(summary_nodes) :], pred=lambda x: isinstance(x, BoundaryNode))
@@ -301,27 +295,11 @@ def extract_live_ticker_body_with_selector(
             else:
                 raise ValueError(f"Unsupported node type: {type(node)}")
 
-        if not entry_subhead_nodes or (
-            entry_paragraph_nodes and entry_subhead_nodes[0] > entry_paragraph_nodes[0]
-        ):
+        if not entry_subhead_nodes or (entry_paragraph_nodes and entry_subhead_nodes[0] > entry_paragraph_nodes[0]):
             first = next(instructions, [])
             instructions = itertools.chain([first, []], instructions)
 
-        sections: List[ArticleSection] = []
-
-        for chunk in more_itertools.chunked(instructions, 2):
-            if len(chunk) == 1:
-                chunk.append([])
-            texts = [
-                list(
-                    map(
-                        lambda x: normalize_whitespace(x.text_content(excluded_tags=["script"], tag_filter=tag_filter)),
-                        c,
-                    )
-                )
-                for c in chunk
-            ]
-            sections.append(ArticleSection(*map(TextSequence, texts)))
+        sections = _build_sections(instructions, tag_filter)
 
         entries.append(
             LiveTickerEntry(
