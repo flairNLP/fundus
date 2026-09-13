@@ -302,22 +302,22 @@
       {
         "versions": [
           {
-            "url": "https://www.ruhrnachrichten.de/wp-content/uploads/2026/09/07/12/630_0900_6808292_-320x214.jpg,",
+            "url": "https://www.ruhrnachrichten.de/wp-content/uploads/2026/09/07/12/630_0900_6808292_-320x214.jpg",
             "query_width": null,
             "size": {
               "width": 640,
               "height": 428
             },
-            "type": null
+            "type": "image/jpeg"
           },
           {
-            "url": "https://www.ruhrnachrichten.de/wp-content/uploads/2026/09/07/12/630_0900_6808295_-824x412.jpg,",
+            "url": "https://www.ruhrnachrichten.de/wp-content/uploads/2026/09/07/12/630_0900_6808295_-824x412.jpg",
             "query_width": "min-width:641",
             "size": {
               "width": 824,
               "height": 412
             },
-            "type": null
+            "type": "image/jpeg"
           },
           {
             "url": "https://www.ruhrnachrichten.de/wp-content/uploads/2026/09/07/12/630_0900_6808292_-640x428.jpg",
