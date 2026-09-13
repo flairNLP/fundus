@@ -11,6 +11,9 @@ class TW(metaclass=PublisherGroup):
         domain="https://www.taipeitimes.com/",
         parser=TaipeiTimesParser,
         sources=[
+            # Accessing these sources is forbidden. Check status regularly.
+            # Sitemap("https://www.taipeitimes.com/sitemapIndex.xml", languages={"en"}),
+            # NewsMap("https://www.taipeitimes.com/sitemap/sitemap.xml", languages={"en"}),
             RSSFeed("https://www.taipeitimes.com/xml/index.rss", languages={"en"}),
         ],
     )
