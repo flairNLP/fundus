@@ -112,8 +112,10 @@ class IlGiornaleParser(ParserProxy):
 
     class V2(BaseParser):
         _summary_selector = XPath("//main//p[@class='b-subheadline']")
-        _paragraph_selector = XPath("//main//p[@class='c-paragraph' and text()]")
-        _subheadline_selector = XPath("//main//*[self::h2 or (self::p and not(text()) and b)]")
+        _paragraph_selector = XPath(
+            "//main//p[@class='c-paragraph' and (text() or i)] | //article/*[self::ol or self::il]/li"
+        )
+        _subheadline_selector = XPath("//main//*[self::h3 or self::h2 or (self::p and not(text()) and b)]")
 
         _topic_selector = XPath("//div[@class='c-stack b-article-tag']/a")
 
@@ -132,9 +134,7 @@ class IlGiornaleParser(ParserProxy):
 
         @attribute
         def publishing_date(self) -> Optional[datetime.datetime]:
-            return generic_date_parsing(
-                self.precomputed.ld.xpath_search("//NewsArticle//datePublished", scalar=True)
-            )  #
+            return generic_date_parsing(self.precomputed.ld.xpath_search("//NewsArticle/datePublished", scalar=True))
 
         @attribute
         def authors(self) -> List[str]:
@@ -149,5 +149,7 @@ class IlGiornaleParser(ParserProxy):
             return image_extraction(
                 doc=self.precomputed.doc,
                 paragraph_selector=self._paragraph_selector,
-                author_selector=re.compile(r"(?i)(?<=\.)(?P<credits>((\s*[A-z]+\s*){1,3}/)+(\s*[A-z]+\s*){1,3})$"),
+                author_selector=re.compile(
+                    r"(?i)(?<=\.)(?P<credits>((\s*[A-Za-zÀ-ÿ]+\s*){1,3}/)+(\s*[A-Za-zÀ-ÿ]+\s*){1,3})$"
+                ),
             )
