@@ -1,6 +1,6 @@
 from fundus.publishers.base_objects import Publisher, PublisherGroup
 from fundus.scraping.filter import inverse, lor, regex_filter
-from fundus.scraping.url import NewsMap, RSSFeed, Sitemap
+from fundus.scraping.url import NewsMap, RSSFeed, Sitemap, numeric_sort_key
 
 from .ap_news import APNewsParser
 from .business_insider import BusinessInsiderParser
@@ -261,6 +261,7 @@ class US(metaclass=PublisherGroup):
             Sitemap(
                 "https://www.voanews.com/sitemap.xml",
                 sitemap_filter=inverse(regex_filter(r"sitemap_[\d_]*\.xml\.gz")),
+                sort_key=numeric_sort_key(r"sitemap_\d+_(\d+)\.xml"),
             ),
         ],
     )
