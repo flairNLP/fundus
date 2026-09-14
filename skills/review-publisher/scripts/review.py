@@ -10,18 +10,24 @@ machine so the agent can't substitute "looks clean" for verification:
     status      where the review stands; exit 0 only when nothing is pending
     payload     refuse while anything is un-adjudicated, else emit findings.json plus a
                 review.json skeleton — the review to post, mechanical half prefilled (§5)
+    done        remove this commit's whole cache once the verdict is posted
 
 Both tiers and every re-run work the *same* crawled draw (PLAYBOOK.md §2): `crawl` is the
 only networked step, everything else replays the cache. Re-sweeping (e.g. `--version V1`)
 costs nothing and keeps existing adjudications — candidate ids are content-hashes.
 
+The cache is scoped to the commit under review (derived from git, nothing to pass), so no other
+review can inherit these articles and adjudications, and a push by the PR author retires them
+rather than letting them be replayed against changed code; `done` removes the lot.
+
 Usage (any working directory; <skill>/ is this skill's directory):
 
-    python <skill>/scripts/review.py crawl ca.NationalPost [--pool 100] [--review 10]
+    python <skill>/scripts/review.py crawl ca.NationalPost --pr 970 [--pool 100] [--review 10]
     python <skill>/scripts/review.py sweep ca.NationalPost [--version V1_1]
     python <skill>/scripts/review.py adjudicate ca.NationalPost D3f2a1c ok --note "cookie banner"
     python <skill>/scripts/review.py status ca.NationalPost
     python <skill>/scripts/review.py payload ca.NationalPost
+    python <skill>/scripts/review.py done
 """
 
 import argparse
@@ -32,16 +38,19 @@ import logging
 import sys
 import time
 from pathlib import Path
-from typing import Any, Dict, List, Tuple
+from typing import Any, Dict, List, Optional, Tuple
 
 import lxml.etree
 import lxml.html
 from _store import (
+    FINDINGS_FILE,
+    REVIEW_FILE,
     VERDICTS,
     blocker_candidates,
     body_units,
     candidate_id,
     candidates,
+    commit_id,
     default_cache_dir,
     load_state,
     missing_attributes,
@@ -49,9 +58,10 @@ from _store import (
     payload_gaps,
     pending_candidates,
     prepare_cache_dir,
+    prune_stale_caches,
     read_html,
     record_crawl_date,
-    resolve_cache_dir,
+    remove_commit_cache,
     resolve_publisher,
     save_article,
     write_state,
@@ -81,10 +91,9 @@ REVIEW_ARTICLES = 10  # articles actually reviewed (the draw), independent of th
 # --- small helpers ---
 
 
-def _self_invocation(args: argparse.Namespace, command: str) -> str:
-    """A copy-pasteable follow-up command with the resolved script path and cache dir."""
-    cache_flag = f' --cache-dir "{args.cache_dir}"' if args.cache_dir else ""
-    return f'python "{SCRIPT}" {command} {args.publisher}{cache_flag}'
+def _self_invocation(spec: str, command: str) -> str:
+    """A copy-pasteable follow-up command with the resolved script path."""
+    return f'python "{SCRIPT}" {command} {spec}'
 
 
 def _require_state(cache_dir: Path, spec: str) -> Dict[str, Any]:
@@ -92,6 +101,19 @@ def _require_state(cache_dir: Path, spec: str) -> Dict[str, Any]:
     if state is None:
         raise SystemExit(f"no review state in {cache_dir} - run `crawl {spec}` first.")
     return state
+
+
+def _impersonation_line(declared: Optional[str]) -> str:
+    """The fingerprint the draw came back through — shared by `crawl` and `status`."""
+    if declared:
+        return f"impersonate: declares {declared!r}, used for this crawl - §1: is it justified?"
+    return "impersonate: none declared; regular fingerprint."
+
+
+def _open_review(args: argparse.Namespace) -> Tuple[Path, Dict[str, Any]]:
+    """The cache dir and its state — how every subcommand except `crawl` and `done` starts."""
+    cache_dir = default_cache_dir(args.publisher)
+    return cache_dir, _require_state(cache_dir, args.publisher)
 
 
 def _records_by_index(state: Dict[str, Any]) -> Dict[int, Dict[str, Any]]:
@@ -201,10 +223,12 @@ def cmd_crawl(args: argparse.Namespace) -> int:
         set_log_level(logging.INFO)
 
     publisher = resolve_publisher(args.publisher)
-    cache_dir = resolve_cache_dir(args.publisher, args.cache_dir)
+    if pruned := prune_stale_caches():
+        print(f"pruned {len(pruned)} stale review cache(s) that never ran `done`.")
+    cache_dir = default_cache_dir(args.publisher)
     prepare_cache_dir(cache_dir)
 
-    state = new_state(args.publisher, args.pool)
+    state = new_state(args.publisher, args.pr, args.pool, publisher.impersonate)
     write_state(cache_dir, state)
 
     pool: List[Article] = []
@@ -217,7 +241,9 @@ def cmd_crawl(args: argparse.Namespace) -> int:
         # this buffers in memory — an interrupted crawl caches nothing and is simply re-run.
         # `only_complete=False`: fundus' default draw drops articles missing title/body/publishing_date,
         # which is exactly the parser failure a review must see. They reach the scan like any other.
-        pool = list(Crawler(publisher).crawl(max_articles=args.pool, only_complete=False))
+        # `impersonate=True`: a declared profile only applies when the user opts in this way, and
+        # publishers declaring none are unaffected - without it, protected publishers draw 0.
+        pool = list(Crawler(publisher, impersonate=True).crawl(max_articles=args.pool, only_complete=False))
         risks = _scan_pool(publisher.parser, pool)
         selection = _select_for_review(pool, risks, args.review)
 
@@ -249,8 +275,11 @@ def cmd_crawl(args: argparse.Namespace) -> int:
         f"crawled and scanned {len(pool)} article(s): {len(flagged)} flagged; reviewing {reviewing} "
         f"({reviewed_flagged} flagged, {reviewing - reviewed_flagged} diverse) -> {cache_dir}"
     )
+    print(_impersonation_line(publisher.impersonate))
     if reviewing == 0:
         print("0 articles crawled - sources or parser likely broken; that is itself a blocker-level finding.")
+        if publisher.impersonate is None:
+            print("  no impersonate profile is declared - rule a TLS-fingerprint block in or out first (§2).")
         return 0
     if (state["scan"] or {}).get("medoid_flagged"):
         print("! the most typical article in the pool is flagged - a mainstream failure, not an edge case.")
@@ -270,7 +299,7 @@ def cmd_crawl(args: argparse.Namespace) -> int:
         for label, members in sorted(classes.items(), key=lambda item: -len(item[1])):
             print(f"    {len(members):>3}x  {label}  e.g. {pool[members[0].index].html.requested_url}")
         print("         (per-article rows, with flags and drop signatures, are in state.json under `scan`)")
-    print(f"next (Tier 2): {_self_invocation(args, 'sweep')}")
+    print(f"next (Tier 2): {_self_invocation(args.publisher, 'sweep')}")
     return 0
 
 
@@ -301,8 +330,7 @@ def _aggregate_drops(per_article: List[Tuple[int, SweepResult]], spec: str) -> L
 
 def cmd_sweep(args: argparse.Namespace) -> int:
     publisher = resolve_publisher(args.publisher)
-    cache_dir = resolve_cache_dir(args.publisher, args.cache_dir)
-    state = _require_state(cache_dir, args.publisher)
+    cache_dir, state = _open_review(args)
 
     parser_proxy = publisher.parser
     version_map = version_classes(parser_proxy)
@@ -383,8 +411,8 @@ def cmd_sweep(args: argparse.Namespace) -> int:
         print(line)
     if state["sweep"]["candidates"]:
         print("adjudicate each candidate (`show <id>` for detail, cached html included):")
-        print(f'  {_self_invocation(args, "adjudicate")} <id> ok|blocker --note "..."')
-    print(f"then: {_self_invocation(args, 'status')}")
+        print(f'  {_self_invocation(args.publisher, "adjudicate")} <id> ok|blocker --note "..."')
+    print(f"then: {_self_invocation(args.publisher, 'status')}")
     return 0
 
 
@@ -400,8 +428,7 @@ def _find_candidate(state: Dict[str, Any], candidate_ref: str) -> Dict[str, Any]
 
 
 def cmd_show(args: argparse.Namespace) -> int:
-    cache_dir = resolve_cache_dir(args.publisher, args.cache_dir)
-    state = _require_state(cache_dir, args.publisher)
+    cache_dir, state = _open_review(args)
     candidate = _find_candidate(state, args.id)
     records = _records_by_index(state)
 
@@ -423,8 +450,7 @@ def cmd_show(args: argparse.Namespace) -> int:
 
 
 def cmd_adjudicate(args: argparse.Namespace) -> int:
-    cache_dir = resolve_cache_dir(args.publisher, args.cache_dir)
-    state = _require_state(cache_dir, args.publisher)
+    cache_dir, state = _open_review(args)
     candidate = _find_candidate(state, args.id)
 
     state.setdefault("adjudications", {})[candidate["id"]] = {
@@ -446,19 +472,20 @@ def cmd_adjudicate(args: argparse.Namespace) -> int:
 
 
 def cmd_status(args: argparse.Namespace) -> int:
-    cache_dir = resolve_cache_dir(args.publisher, args.cache_dir)
-    state = _require_state(cache_dir, args.publisher)
+    cache_dir, state = _open_review(args)
     crawl, scan, sweep = state["crawl"], state.get("scan"), state.get("sweep")
     adjudications = state.get("adjudications") or {}
 
     print(f"publisher: {state['publisher']}")
+    print(f"PR:        {state.get('pr') or '<not recorded - pass --pr on crawl>'}")
     print(f"cache:     {cache_dir}")
     print(
         f"crawl:     {len(state['articles'])} reviewed (pool {crawl.get('pool', '?')}), "
         f"{'completed' if crawl.get('completed') else 'NOT completed (interrupted?)'}"
     )
+    print(_impersonation_line(crawl.get("impersonate")))
     if scan is None:
-        print("scan:      not run - this cache predates the pool scan; re-crawl to get it")
+        print("scan:      not run - the crawl was interrupted before the pool scan; re-crawl")
     else:
         print(
             f"scan:      {scan['pool']} scanned, {scan['flagged']} flagged, "
@@ -557,8 +584,7 @@ def _review_skeleton(parser_path: str, findings: Dict[str, Any], blockers: List[
 
 
 def cmd_payload(args: argparse.Namespace) -> int:
-    cache_dir = resolve_cache_dir(args.publisher, args.cache_dir)
-    state = _require_state(cache_dir, args.publisher)
+    cache_dir, state = _open_review(args)
 
     gaps = payload_gaps(state)
     if gaps:
@@ -594,12 +620,12 @@ def cmd_payload(args: argparse.Namespace) -> int:
         "ok_candidates": sum(1 for c in candidates(state) if adjudications.get(c["id"], {}).get("verdict") == "ok"),
     }
 
-    findings_file = cache_dir / "findings.json"
+    findings_file = cache_dir / FINDINGS_FILE
     findings_file.write_text(json.dumps(findings, ensure_ascii=False, indent=2), encoding="utf-8")
     print(json.dumps(findings, ensure_ascii=False, indent=2))
     print(RULE)
 
-    review_file = cache_dir / "review.json"
+    review_file = cache_dir / REVIEW_FILE
     if review_file.exists():
         print(f"{review_file} already exists - keeping your edits (delete it and re-run to regenerate).")
     else:
@@ -614,8 +640,24 @@ def cmd_payload(args: argparse.Namespace) -> int:
     print("    it; your own PR -> COMMENT regardless; never APPROVE")
     print("  - a multi-publisher PR gets ONE review: fold the other publishers into this body/comments")
     print("show the filled review.json to the user, and once they approve:")
-    print("  gh pr view <PR> --json headRefOid -q .headRefOid          # -> commit_id")
-    print(f'  gh api repos/flairNLP/fundus/pulls/<PR>/reviews -X POST --input "{review_file}"')
+    pr = state.get("pr") or "<PR>"
+    print(f"  gh pr view {pr} --json headRefOid -q .headRefOid          # -> commit_id")
+    print(f'  gh api repos/flairNLP/fundus/pulls/{pr}/reviews -X POST --input "{review_file}"')
+    print("then close it out - removes every publisher's cache for this commit:")
+    print(f'  python "{SCRIPT}" done')
+    return 0
+
+
+# --- done ---
+
+
+def cmd_done(args: argparse.Namespace) -> int:
+    """Tear down this commit's review cache once the verdict is posted."""
+    commit, removed = commit_id(), remove_commit_cache()
+    if not removed:
+        print(f"nothing to remove for commit {commit}.")
+        return 0
+    print(f"removed the review cache for commit {commit}: {', '.join(removed)}")
     return 0
 
 
@@ -631,12 +673,12 @@ def main() -> int:
     def add(name: str, help_text: str) -> argparse.ArgumentParser:
         sub = subparsers.add_parser(name, help=help_text)
         sub.add_argument("publisher", help="publisher spec, e.g. 'ca.NationalPost'")
-        sub.add_argument(
-            "--cache-dir", default=None, help=f"override the cache dir (default: {default_cache_dir('<spec>')})"
-        )
         return sub
 
     crawl = add("crawl", "crawl a candidate pool, scan all of it, then Tier-1 read + cache a subset")
+    # Metadata, not identity — the commit owns the cache path (`_store.commit_id`). Recorded here
+    # so `status` and `payload` can name the PR without being told again.
+    crawl.add_argument("--pr", default=None, help="the PR under review, e.g. 970 - recorded in the state")
     crawl.add_argument("--pool", type=int, default=100, help="candidate articles to crawl and scan")
     crawl.add_argument("--review", type=int, default=REVIEW_ARTICLES, help="articles to cache and read from that pool")
     crawl.add_argument(
@@ -663,6 +705,10 @@ def main() -> int:
 
     payload = add("payload", "emit findings.json - refuses while anything is pending")
     payload.set_defaults(func=cmd_payload)
+
+    # Commit-scoped, so it needs nothing: the key is derived, not passed.
+    done = subparsers.add_parser("done", help="remove this commit's review cache once the verdict is posted")
+    done.set_defaults(func=cmd_done)
 
     args = parser.parse_args()
     result: int = args.func(args)

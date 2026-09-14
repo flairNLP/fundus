@@ -5,8 +5,11 @@ above all, ways it could report a silent false "clean".
 """
 
 import json
+import os
 import shutil
+import subprocess
 import sys
+import time
 from datetime import datetime
 from pathlib import Path
 from types import ModuleType, SimpleNamespace
@@ -337,6 +340,90 @@ class TestStore:
         _store.prepare_cache_dir(cache_root / "fresh")  # nonexistent is simply created
         assert (cache_root / "fresh").is_dir()
 
+    def test_commit_id_is_derived_from_the_imported_fundus_and_stays_inside_the_cache_root(self) -> None:
+        # Derived, not passed: every agent computes the same key with no flag and no env var.
+        # It must also never escape the cache root, whatever git hands back.
+        assert _store.commit_id() and _store.commit_id().isalnum()
+        assert _store.commit_cache_dir().parent == _store.cache_root()
+        assert _store.commit_cache_dir().name == _store.commit_id()
+
+    def test_commit_id_falls_back_when_git_cannot_answer(self, monkeypatch: pytest.MonkeyPatch) -> None:
+        # A tarball install, a missing git binary: still usable, still inside the cache root.
+        # `commit_id` is cached, so each case needs a cold cache - and the real value restored after.
+        for run in (
+            lambda *a, **k: (_ for _ in ()).throw(OSError()),
+            lambda *a, **k: SimpleNamespace(returncode=1, stdout=""),
+            lambda *a, **k: SimpleNamespace(returncode=0, stdout="  \n"),  # git answered nothing
+        ):
+            _store.commit_id.cache_clear()
+            monkeypatch.setattr(subprocess, "run", run)
+            assert _store.commit_id() == "detached"
+        monkeypatch.undo()
+        _store.commit_id.cache_clear()
+
+    def test_remove_commit_cache_takes_every_publisher_but_refuses_foreign_entries(
+        self, cache_root: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        commit = cache_root / "d732ca85"
+        for spec in ("ca.NationalPost", "ca.TorontoStar"):
+            (commit / spec).mkdir(parents=True)
+            (commit / spec / _store.STATE_FILE).write_text("{}", encoding="utf-8")
+        monkeypatch.setattr(_store, "commit_cache_dir", lambda: commit)
+
+        # A crawl killed before its first write leaves an empty dir. It must not wedge teardown,
+        # and since `rmtree` takes it too it belongs in what the caller is told was removed.
+        (commit / "ca.Empty").mkdir()
+        assert _store.remove_commit_cache() == ["ca.Empty", "ca.NationalPost", "ca.TorontoStar"]
+        assert not commit.exists()
+        assert _store.remove_commit_cache() == []  # already gone is a no-op, not an error
+
+        # Anything that is *not* a review cache stops the teardown entirely.
+        (commit / "notes").mkdir(parents=True)
+        (commit / "notes" / "important.md").write_text("hand-written", encoding="utf-8")
+        with pytest.raises(SystemExit):
+            _store.remove_commit_cache()
+        assert (commit / "notes" / "important.md").exists()
+
+    def test_prune_stale_caches_skips_fresh_and_foreign_dirs(
+        self, cache_root: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        monkeypatch.setattr(_store, "cache_root", lambda: cache_root)
+        monkeypatch.setattr(_store, "commit_cache_dir", lambda: cache_root / "mine")
+
+        def make(name: str, age_days: float) -> Path:
+            path = cache_root / name / "ca.X"
+            path.mkdir(parents=True)
+            (path / _store.STATE_FILE).write_text("{}", encoding="utf-8")
+            stale = time.time() - age_days * 86400
+            os.utime(cache_root / name, (stale, stale))
+            return cache_root / name
+
+        make("mine", 30)  # this commit's own cache is never pruned out from under it
+        make("old", 30)
+        make("recent", 1)
+        foreign = cache_root / "foreign" / "notes"
+        foreign.mkdir(parents=True)
+        (foreign / "keep.md").write_text("x", encoding="utf-8")
+        os.utime(cache_root / "foreign", (time.time() - 30 * 86400,) * 2)
+
+        assert _store.prune_stale_caches(max_age_days=7) == ["old"]
+        assert (cache_root / "mine").exists() and (cache_root / "recent").exists()
+        assert (foreign / "keep.md").exists()
+
+    def test_new_state_records_the_declared_impersonation_profile(self) -> None:
+        # The profile decides the TLS fingerprint the draw came back through, so the review's
+        # claims are claims about it - it has to survive into the state, not just the crawl.
+        declared = _store.new_state("mx.Test", "970", 100, "chrome")
+        assert declared["crawl"]["impersonate"] == "chrome"
+        assert _store.new_state("ca.Test", None, 100, None)["crawl"]["impersonate"] is None
+
+    def test_impersonation_line_names_the_profile_and_survives_an_old_cache(self) -> None:
+        assert "chrome131" in review._impersonation_line("chrome131")
+        assert "none declared" in review._impersonation_line(None)
+        # `status` reads it off a state dict, so a cache predating the field must not crash.
+        crawl: Dict[str, Any] = {}
+        assert review._impersonation_line(crawl.get("impersonate"))
+
     def test_missing_attributes_matches_the_default_draw(self):
         # `Requires` is fundus' own filter, so a summary-only body counts as missing here exactly
         # as it does in the default crawl - the review must not invent its own truthiness.
@@ -381,6 +468,40 @@ class TestStore:
         assert any("did not complete" in gap for gap in _store.payload_gaps(state))
 
 
+class TestCommands:
+    """The two contracts a caller acts on: `status`' exit code, and what `done` says it removed."""
+
+    def test_status_exits_nonzero_until_the_gate_is_open(
+        self, cache_root: Path, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        # SKILL.md and PLAYBOOK §2 both state "no verdict before status reports READY"; the exit
+        # code is the machine-checkable half of that, so it needs to actually track the gate.
+        cache = cache_root / "cache"
+        cache.mkdir()
+        monkeypatch.setattr(review, "default_cache_dir", lambda spec: cache)
+        args = SimpleNamespace(publisher="xx.Test")
+
+        ready = TestPayloadSkeleton._ready_state()
+        pending = dict(ready, adjudications={})
+        _store.write_state(cache, pending)
+        assert review.cmd_status(cast(Any, args)) == 1  # a candidate is un-adjudicated
+
+        _store.write_state(cache, ready)
+        assert review.cmd_status(cast(Any, args)) == 0
+
+    def test_done_reports_everything_it_removed(self, cache_root: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+        # `rmtree` takes the whole commit dir, so a publisher dir left empty by an interrupted
+        # crawl is removed too - saying "nothing to remove" there would be a lie about a delete.
+        commit = cache_root / "abc1234"
+        (commit / "ca.Interrupted").mkdir(parents=True)  # crawl killed before its first write
+        monkeypatch.setattr(_store, "commit_cache_dir", lambda: commit)
+        monkeypatch.setattr(review, "commit_id", lambda: "abc1234")
+
+        assert review.cmd_done(cast(Any, SimpleNamespace())) == 0
+        assert not commit.exists()
+        assert review.cmd_done(cast(Any, SimpleNamespace())) == 0  # gone already is still fine
+
+
 class TestPayloadSkeleton:
     """`payload` must emit review.json as a fillable skeleton — and never clobber a filled one."""
 
@@ -388,6 +509,7 @@ class TestPayloadSkeleton:
     def _ready_state() -> Dict[str, Any]:
         return {
             "publisher": "xx.Test",
+            "pr": "970",
             "crawl": {"pool": 50, "started": 1.0, "finished": 2.0, "completed": True},
             "articles": [{"index": 1, "url": "https://x.test/a", "html_file": "01.html"}],
             "scan": {"pool": 50, "flagged": 4, "reviewed": 1, "reviewed_flagged": 1, "medoid_flagged": False},
@@ -409,7 +531,8 @@ class TestPayloadSkeleton:
         _store.write_state(cache, self._ready_state())
         monkeypatch.setattr(review, "resolve_publisher", lambda spec: SimpleNamespace(parser=None))
         monkeypatch.setattr(review, "_parser_source_path", lambda proxy: "src/fundus/publishers/xx/test.py")
-        args = SimpleNamespace(publisher="xx.Test", cache_dir=str(cache))
+        monkeypatch.setattr(review, "default_cache_dir", lambda spec: cache)
+        args = SimpleNamespace(publisher="xx.Test", pr=None)
 
         assert review.cmd_payload(cast(Any, args)) == 0
         skeleton = json.loads((cache / "review.json").read_text(encoding="utf-8"))
@@ -419,6 +542,7 @@ class TestPayloadSkeleton:
         assert comment["path"] == "src/fundus/publishers/xx/test.py" and comment["side"] == "RIGHT"
         assert "match results list dropped" in comment["body"] and "https://x.test/a" in comment["body"]
         assert not isinstance(comment["line"], int)  # an unfilled stub must fail the POST, not post
+        assert (cache / "findings.json").is_file()
 
         # A second run must keep the agent's edits rather than regenerate over them.
         (cache / "review.json").write_text("edited by the agent", encoding="utf-8")
