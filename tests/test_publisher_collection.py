@@ -1,25 +1,32 @@
-from typing import List
+import csv
+import io
+from typing import Dict, List, Set
 
-import lxml.html
-import more_itertools
 import pytest
 import requests
-from lxml.etree import XPath
 
 from fundus import PublisherCollection
 from fundus.publishers import Publisher, PublisherGroup
 from fundus.scraping.session import _default_header
 
-_language_code_selector = XPath("//table[contains(@class, 'wikitable') and @data-x-id='Table'] //td[@id] / @id")
+# The registration authority's own export. 'Id' holds a language's three-letter 639-3
+# code, 'Part1' the two-letter 639-1 code for the 184 languages that have one.
+_iso_639_3_url = "https://iso639-3.sil.org/sites/iso639-3/files/downloads/iso-639-3.tab"
 
 
-def get_two_letter_code() -> List[str]:
-    wiki_page = requests.get("https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes", headers=_default_header)
-    two_letter_codes: List[str] = _language_code_selector(lxml.html.document_fromstring(wiki_page.content))
-    return two_letter_codes
+def get_iso_639_table() -> List[Dict[str, str]]:
+    response = requests.get(_iso_639_3_url, headers=_default_header)
+    response.raise_for_status()
+    return list(csv.DictReader(io.StringIO(response.text), delimiter="\t"))
 
 
-language_codes = get_two_letter_code()
+_iso_639_table = get_iso_639_table()
+
+# Every language gets exactly one accepted code: the two-letter one where it exists and
+# the three-letter one otherwise. So German is 'de' and never 'deu', while Shan ('shn')
+# and Gun ('guw'), which have no two-letter form, are referenced by their 639-3 code.
+language_codes: Set[str] = {row["Part1"] or row["Id"] for row in _iso_639_table}
+superseded_codes: Dict[str, str] = {row["Id"]: row["Part1"] for row in _iso_639_table if row["Part1"]}
 
 
 class TestPublisherCollection:
@@ -40,5 +47,13 @@ class TestPublisherCollection:
         "publisher", [pytest.param(publisher, id=publisher.__name__) for publisher in PublisherCollection]
     )
     def test_source_languages(self, publisher: Publisher):
-        for source in more_itertools.flatten(publisher.source_mapping.values()):
-            assert source.languages.issubset(language_codes)
+        for source in publisher.sources:
+            rejected = source.languages - language_codes
+            superseded = ", ".join(
+                f"{code!r} -> {superseded_codes[code]!r}" for code in sorted(rejected) if code in superseded_codes
+            )
+            assert not rejected, (
+                f"{type(source).__name__} of {publisher.name!r} uses language code(s) {sorted(rejected)} "
+                f"that are no ISO 639 codes"
+                + (f", or that ISO 639-1 supersedes: use {superseded}" if superseded else "")
+            )
