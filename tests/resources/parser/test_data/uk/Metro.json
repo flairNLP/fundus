@@ -502,5 +502,147 @@
       "Sweden",
       "World War 3"
     ]
+  },
+  "V1_2": {
+    "authors": [
+      "Maicey Navarro Griffiths"
+    ],
+    "body": {
+      "summary": [
+        "British Airways is switching up the London airport that four major routes depart from, starting this October."
+      ],
+      "sections": [
+        {
+          "headline": [],
+          "paragraphs": [
+            "The four destinations affected are: Costa Rica (San Jose), Tampa, Fuerteventura, and Innsbruck.",
+            "The news will be particularly important for UK tourists heading to Fuerteventura, as latest official figures show that 576,338 Brits visited the Canary Islands in July alone.",
+            "It means that British tourists accounted for 37% of all tourists visiting the islands during that month.",
+            "So, if you’re heading off to any of these destinations in the coming months, you might want to triple check where you’re leaving from — or risk missing your flight.",
+            "BA, which flies to over 200 destinations, are also set to introduce brand new routes this autumn and winter, including a seasonal route to Finland, just in time for the festive season.",
+            "Here’s everything you need to know…"
+          ]
+        },
+        {
+          "headline": [
+            "What changes are coming at London airports?"
+          ],
+          "paragraphs": [
+            "Costa Rica (San Jose) (October 25) – flights will depart from London Heathrow instead of London Gatwick (one-way from £696)",
+            "Tampa, Florida (October) - flights will depart from London Heathrow instead of London Gatwick (one-way from £729)",
+            "Fuerteventura, Spain (December 13) - flights will depart from London Heathrow instead of London Gatwick(one-way from £118)",
+            "Innsbruck, Austria (December 7) - flights will depart from London Gatwick instead of London Heathrow (one-way from £70)"
+          ]
+        },
+        {
+          "headline": [
+            "What happens if you’ve already booked your flight?"
+          ],
+          "paragraphs": [
+            "Metro contacted British Airways, to ask what this means for travellers who already have a flight booked.",
+            "British Airways said: ‘We’ve given customers travelling with us advance notice of some minor adjustments to a small number of our services this winter.",
+            "‘We’re focused on making sure we’re flying to where our customers want to travel to this winter, and affected customers have been offered rebooking options on an alternative flight, or a full refund.’",
+            "Tampa and Costa Rica changes were communicated in March, and Fuerteventura and Innsbruck in July, giving over five months notice."
+          ]
+        },
+        {
+          "headline": [
+            "How much is a round trip?"
+          ],
+          "paragraphs": [
+            "A return trip for one person, from October 14 to 21, Economy Standard from London Heathrow to San Jose starts from £934.49.",
+            "A return trip for one person, from October 14 to 21, Economy Standard from London Heathrow to Tampa starts from £648.",
+            "A return trip for one person, from December 17 to 24, Economy Plus (this flight does not offer Standard), from London Heathrow to Fuerteventura starts from £270.95.",
+            "A return trip for one person, from December 22 to 29, Economy Plus (this flight does not offer Standard), from London Gatwick to Innsbruck starts from £275.10."
+          ]
+        },
+        {
+          "headline": [
+            "What other changes are coming for British Airways?"
+          ],
+          "paragraphs": [
+            "Airport switches aren’t the only changes coming to the airline, with BA set to unveil several changes happening this year and one to look forward to next year too.",
+            "From October, BA will be flying direct three times a week from London Gatwick to Sri Lanka.",
+            "New flights to Barbados from London Gatwick, alongside the existing London Heathrow departures, will launch from October.",
+            "Flights from London Heathrow to Cologne, Germany, will relaunch from November.",
+            "Flights to Graz, Austria, will launch from November.",
+            "Flights to Rabat, Morocco, will launch twice weekly from November.",
+            "Flights twice a week from London Gatwick to Rovaniemi, Finland throughout December, including Christmas Eve.",
+            "Flights to Melbourne, Australia will launch in January 2027."
+          ]
+        }
+      ]
+    },
+    "images": [
+      {
+        "versions": [
+          {
+            "url": "https://metro.co.uk/wp-content/uploads/2026/08/SEI204236892-86cc.jpg?quality=90&strip=all&w=646",
+            "query_width": null,
+            "size": {
+              "width": 646,
+              "height": 431
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": true,
+        "description": null,
+        "caption": "BA are swapping routes between London Heathrow and London Gatwick from October",
+        "authors": [
+          "Shutterstock / Markus Mainka"
+        ],
+        "position": 634
+      },
+      {
+        "versions": [
+          {
+            "url": "https://metro.co.uk/wp-content/uploads/2025/08/SEI_261577856-ec64.jpg?quality=90&strip=all&w=646",
+            "query_width": null,
+            "size": {
+              "width": 646,
+              "height": 363
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": false,
+        "description": "Morro Jable, Fuerteventura, Spain. Breathtaking beach Playa del Matorral in the rays of the sunset. Morro Jable and Playa del Matorral, Fuerteventura, Canary Islands, Spain, Atlantic, Europe",
+        "caption": "Fuerteventura is a great winter-sun destination with 22°C temperatures in December",
+        "authors": [
+          "Getty Images"
+        ],
+        "position": 647
+      },
+      {
+        "versions": [
+          {
+            "url": "https://metro.co.uk/wp-content/uploads/2026/09/SEI_248787417-1569.jpg?quality=90&strip=all&w=646",
+            "query_width": null,
+            "size": {
+              "width": 646,
+              "height": 430
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": false,
+        "description": "Costa Rica, beach Manuel Antonio; Shutterstock ID 2537335403; purchase_order: -; job: -; client: -; other: -",
+        "caption": "Costa Rica can now be reached from London Heathrow",
+        "authors": [
+          "Shutterstock"
+        ],
+        "position": 717
+      }
+    ],
+    "publishing_date": "2026-09-14 15:34:19+00:00",
+    "title": "British Airways makes major flight change to 4 destinations — including Spanish favourite",
+    "topics": [
+      "British Airways",
+      "Canary Islands",
+      "Gatwick Airport",
+      "Heathrow Airport",
+      "Travel Advice"
+    ]
   }
 }
