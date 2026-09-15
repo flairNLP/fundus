@@ -248,19 +248,34 @@ class Sitemap(URLSource):
                 logger.warning(f"Warning! Couldn't parse sitemap {sitemap_url!r}")  # type: ignore[unreachable]
                 return
             urls = [node.text for node in self._url_selector(tree)]
-            if urls:
-                for new_url in reversed(urls) if self.reverse else urls:
-                    yield clean_url(new_url)
-            elif self.recursive:
-                sitemap_locs = [node.text for node in self._sitemap_selector(tree)]
+            sitemap_locs = [node.text for node in self._sitemap_selector(tree)]
 
-                filtered_locs = list(filter(inverse(self.sitemap_filter), sitemap_locs))
+            def _recurse_into_locs(locs: List[str]) -> Iterator[str]:
+                filtered_locs = list(filter(inverse(self.sitemap_filter), locs))
 
                 if self.sort_key is not None:
                     filtered_locs.sort(key=self.sort_key)
 
                 for loc in reversed(filtered_locs) if self.reverse else filtered_locs:
                     yield from yield_recursive(loc)
+
+            if (
+                urls
+                and self.recursive
+                and not sitemap_locs
+                and all(url and url.lower().endswith(".xml") for url in urls)
+            ):
+                # Some sitemaps (e.g. Kleine Zeitung's <sitemap-articles.xml>) violate the sitemap
+                # protocol by wrapping references to further sub-sitemaps in <url><loc> tags instead
+                # of the <sitemap><loc> tags reserved for sitemap indexes. Detect this by checking
+                # whether every discovered "url" actually points to another XML sitemap and, if so,
+                # recurse into them instead of yielding them as article URLs.
+                yield from _recurse_into_locs(urls)
+            elif urls:
+                for new_url in reversed(urls) if self.reverse else urls:
+                    yield clean_url(new_url)
+            elif self.recursive:
+                yield from _recurse_into_locs(sitemap_locs)
 
         yield from yield_recursive(self.url)
 
