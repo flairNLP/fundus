@@ -25,10 +25,14 @@ METRO_BLOAT_REGEX = (
     r"^Share your views in the comments|"
     r"^Email gamecentral@metro.co.uk|"
     r"^To submit Inbox letters and Reader’s Features more easily|"
-    r"^Do you have a story to share?|"
+    r"^Do you have a story|"
     r"^Sign up to our newsletter|"
-    r"^Head here|"
+    # Metro separates the words of the horoscope cross-promos with non-breaking spaces,
+    # so these have to match on \s rather than a literal space
+    r"^Head\s+here|"
     r"^Like checking your horoscope|"
+    r"^Your\s+daily\s+Metro\.co\.uk\s+horoscope|"
+    r"^Check out the\s+tarot|"
     r"^A version of this article"
 )
 
@@ -92,9 +96,11 @@ class MetroParser(ParserProxy):
     class V1_2(V1_1):
         _paragraph_selector = XPath(
             f"//article//div[@class='article__content__inner']/p["
-            f"      @class='wp-block-paragraph' and position()>1 and not(re:test(string(), '{METRO_BLOAT_REGEX}'))"
+            f"      contains(concat(' ', normalize-space(@class), ' '), ' wp-block-paragraph ')"
+            f"      and position()>1"
+            f"      and not(re:test(string(), '{METRO_BLOAT_REGEX}'))"
             f"] | "
-            f"//article//div[@class='article__content__inner']/ul[@class='wp-block-list']",
+            f"//article//div[@class='article__content__inner']/ul[@class='wp-block-list']/li",
             namespaces={"re": "http://exslt.org/regular-expressions"},
         )
 
