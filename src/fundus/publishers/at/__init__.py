@@ -40,7 +40,7 @@ class AT(metaclass=PublisherGroup):
         parser=KleineZeitungParser,
         sources=[
             NewsMap("https://www.kleinezeitung.at/news-sitemap"),
-            Sitemap("https://www.kleinezeitung.at/sitemaps/sitemap_main.xml", reverse=True),
+            Sitemap("https://www.kleinezeitung.at/sitemap-articles.xml", reverse=True),
         ],
     )
 
