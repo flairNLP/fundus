@@ -259,7 +259,12 @@ class Sitemap(URLSource):
                 for loc in reversed(filtered_locs) if self.reverse else filtered_locs:
                     yield from yield_recursive(loc)
 
-            if urls and self.recursive and not sitemap_locs and all(url and url.lower().endswith(".xml") for url in urls):
+            if (
+                urls
+                and self.recursive
+                and not sitemap_locs
+                and all(url and url.lower().endswith(".xml") for url in urls)
+            ):
                 # Some sitemaps (e.g. Kleine Zeitung's <sitemap-articles.xml>) violate the sitemap
                 # protocol by wrapping references to further sub-sitemaps in <url><loc> tags instead
                 # of the <sitemap><loc> tags reserved for sitemap indexes. Detect this by checking
