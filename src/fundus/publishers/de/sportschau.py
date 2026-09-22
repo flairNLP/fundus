@@ -17,6 +17,8 @@ from fundus.parser.utility import (
 
 class SportSchauParser(ParserProxy):
     class V1(BaseParser):
+        VALID_UNTIL = datetime.date(2025, 10, 13)
+
         _summary_selector = CSSSelector(
             "p[class='textabsatz columns twelve  m-ten  m-offset-one l-eight l-offset-two'] > strong"
         )
@@ -66,3 +68,7 @@ class SportSchauParser(ParserProxy):
                 ),
                 size_pattern=re.compile(r"/[\dx]+-(?P<width>[0-9]+)/"),
             )
+
+    class V1_1(V1):
+        _summary_selector = CSSSelector("p.article-head__shorttext > strong")
+        _paragraph_selector = CSSSelector("article > p.textabsatz")

@@ -303,5 +303,137 @@
       "FC Liverpool",
       "FC Everton"
     ]
+  },
+  "V1_1": {
+    "authors": [
+      "sportschau.de"
+    ],
+    "body": {
+      "summary": [
+        "Bundesliga-Schlusslicht Borussia Mönchengladbach hat einen Nachfolger für Eugen Polanski gefunden: Es ist Alexander Blessin, der vergangene Saison mit dem FC St. Pauli abgestiegen ist."
+      ],
+      "sections": [
+        {
+          "headline": [],
+          "paragraphs": [
+            "Der 53-Jährige erhält am Niederrhein einen Vertrag bis 2028, das bestätigte der Klub am Dienstag."
+          ]
+        },
+        {
+          "headline": [
+            "Neuer Trainer bereits am Wochenende angekündigt"
+          ],
+          "paragraphs": [
+            "Blessin folgt auf Eugen Polanski, der nach nur drei Spieltagen hatte gehen müssen. Die Borussia hat nach vier Spieltagen noch keinen Punkt geholt und schon 16 Gegentore kassiert, dies ist der schlechteste Saisonstart der Vereinsgeschichte.",
+            "Gladbachs Sportchef Rouven Schröder hatte nach der 3:4-Niederlage in der Bundesliga gegen den FSV Mainz 05 bereits am Wochenende gesagt, dass man mit einem Coach \"eine mündliche Einigung erzielt\" habe. Den früheren Bremer Trainer Horst Steffen und Christian Titz, von dem sich Hannover 96 kürzlich getrennt hatte, schloss Schröder dabei für den Job aus.",
+            "Es sei \"jemand, der natürlich auch eine gewisse Erfahrung haben muss, auch schon gezeigt hat, dass er auch mit schwierigen Situationen umgehen kann\", berichtete Schröder am Wochenende im Interview mit Sky.",
+            "Blessin saß zuvor zwei Jahre lang auf der Trainerbank des FC St. Pauli. Mit den Kiezkickern gelang ihm in der Saison 2024/25 als Aufsteiger der Klassenerhalt. In der vergangenen Saison stieg Blessin dann nach einer Heimniederlage gegen den VfL Wolfsburg am letzten Spieltag aus der Bundesliga ab."
+          ]
+        },
+        {
+          "headline": [
+            "Rheinderby zum Auftakt"
+          ],
+          "paragraphs": [
+            "Blessin tritt den neuen Job in Mönchengladbach zur dreiwöchigen Länderspielpause an und bekommt somit genug Eingewöhnungszeit in sein neues Aufgabenfeld. Nach der Pause würde es für den 53-Jährigen dann direkt mit einer großen Aufgabe losgehen: Im nächsten Bundesliga-Spiel tritt Borussia Mönchengladbach im Rheinderby auswärts beim 1. FC Köln an.",
+            "Unsere Quellen:",
+            "Sendung: WDR.de, \"Alexander Blessin: Zwischen Rasenmäher und neuer Mannschaft\", 21.09.26, 19:02 Uhr"
+          ]
+        }
+      ]
+    },
+    "images": [
+      {
+        "versions": [
+          {
+            "url": "https://images.sportschau.de/image/a036d164-7dee-470a-908e-ecaf14fc74e2/AAABoMktQQ0/AAABnSSvdEs/16x7/wdr-alexander-blessin-100.jpg?overlay=829a71d9-4698-403c-8865-2e31c92d86b5&overlayModificationDate=AAABlxDi-1w&width=960",
+            "query_width": "max-width:900",
+            "size": {
+              "width": 16,
+              "height": 7
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://images.sportschau.de/image/a036d164-7dee-470a-908e-ecaf14fc74e2/AAABoMktQQ0/AAABnSSvdEs/16x7/wdr-alexander-blessin-100.webp?overlay=829a71d9-4698-403c-8865-2e31c92d86b5&overlayModificationDate=AAABlxDi-1w&width=960",
+            "query_width": "max-width:900",
+            "size": {
+              "width": 16,
+              "height": 7
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://images.sportschau.de/image/a036d164-7dee-470a-908e-ecaf14fc74e2/AAABoMktQQ0/AAABnSSvdEs/16x7/wdr-alexander-blessin-100.jpg?overlay=829a71d9-4698-403c-8865-2e31c92d86b5&overlayModificationDate=AAABlxDi-1w&width=1280",
+            "query_width": "min-width:901",
+            "size": {
+              "width": 16,
+              "height": 7
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://images.sportschau.de/image/a036d164-7dee-470a-908e-ecaf14fc74e2/AAABoMktQQ0/AAABnSSvdEs/16x7/wdr-alexander-blessin-100.webp?overlay=829a71d9-4698-403c-8865-2e31c92d86b5&overlayModificationDate=AAABlxDi-1w&width=1280",
+            "query_width": "min-width:901",
+            "size": {
+              "width": 16,
+              "height": 7
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://images.sportschau.de/image/a036d164-7dee-470a-908e-ecaf14fc74e2/AAABoMktQQ0/AAABnSSvrFg/16x9-big/wdr-alexander-blessin-100.jpg?overlay=829a71d9-4698-403c-8865-2e31c92d86b5&overlayModificationDate=AAABlxDi-1w&width=640",
+            "query_width": "max-width:440",
+            "size": {
+              "width": 16,
+              "height": 9
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://images.sportschau.de/image/a036d164-7dee-470a-908e-ecaf14fc74e2/AAABoMktQQ0/AAABnSSvrFg/16x9-big/wdr-alexander-blessin-100.webp?overlay=829a71d9-4698-403c-8865-2e31c92d86b5&overlayModificationDate=AAABlxDi-1w&width=640",
+            "query_width": "max-width:440",
+            "size": {
+              "width": 16,
+              "height": 9
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://images.sportschau.de/image/a036d164-7dee-470a-908e-ecaf14fc74e2/AAABoMktQQ0/AAABnSSvrFg/16x9-big/wdr-alexander-blessin-100.jpg?overlay=829a71d9-4698-403c-8865-2e31c92d86b5&overlayModificationDate=AAABlxDi-1w&width=768",
+            "query_width": "max-width:767",
+            "size": {
+              "width": 16,
+              "height": 9
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://images.sportschau.de/image/a036d164-7dee-470a-908e-ecaf14fc74e2/AAABoMktQQ0/AAABnSSvrFg/16x9-big/wdr-alexander-blessin-100.webp?overlay=829a71d9-4698-403c-8865-2e31c92d86b5&overlayModificationDate=AAABlxDi-1w&width=768",
+            "query_width": "max-width:767",
+            "size": {
+              "width": 16,
+              "height": 9
+            },
+            "type": "image/webp"
+          }
+        ],
+        "is_cover": true,
+        "description": "Alexander Blessin | ddp/Sven Simon",
+        "caption": null,
+        "authors": [
+          "ddp/Sven Simon"
+        ],
+        "position": 2351
+      }
+    ],
+    "publishing_date": "2026-09-22 14:13:00",
+    "title": "Soll Borussia retten: Blessin ist neuer Trainer in Mönchengladbach",
+    "topics": [
+      "WDR",
+      "Bundesliga",
+      "Borussia Mönchengladbach",
+      "Fußball"
+    ]
   }
 }
