@@ -633,7 +633,11 @@ def image_author_parsing(authors: Union[str, List[str]]) -> List[str]:
         "quellen?",
         "bild(rechte)?",
         "sources?",
-        r"(((f|ph)oto(graph)?s?|image|illustrations?|cartoons?|pictures?)\s*)+(by|:|courtesy)",
+        "collagen?",
+        "montagen?",
+        "screenshots?",
+        "grafiken?",
+        "wasserzeichen",
         "©",
         "– alle rechte vorbehalten",
         "copyright",
@@ -641,12 +645,18 @@ def image_author_parsing(authors: Union[str, List[str]]) -> List[str]:
         "courtesy of",
         "＝",
     ]
-    author_filter = re.compile(r"(?is)^(" + r"|".join(credit_keywords) + r"):?\s*")
+    media_keywords = r"(((f|ph)oto(graph)?s?|image|illustrations?|cartoons?|pictures?)\s*)+"
+    credit_prefix = r"(?is)^(?:" + r"|".join(credit_keywords) + r"|" + media_keywords + r"(by|:|courtesy))"
+    author_filter = re.compile(credit_prefix + r":?\s*")
+    # within a credit line a keyword only introduces another author if it is followed by a colon or forms the
+    # entire author, so that credits reading like a sentence, e.g. "Bild erstellt mit KI", keep their wording
+    nested_credit_prefix = r"(?is)^(?:" + r"|".join(credit_keywords) + r"|" + media_keywords + r")"
+    nested_author_filter = re.compile(nested_credit_prefix + r"\s*(?::\s*|$)")
 
-    def clean(author: str):
+    def clean(author: str, credit_filter: Pattern[str] = author_filter) -> str:
         author = re.sub(r"^\((.*)\)$", r"\1", author).strip()
         # filtering credit keywords
-        author = re.sub(author_filter, "", author, count=1)
+        author = re.sub(credit_filter, "", author, count=1)
         # filtering bloat follwing the author
         author = re.sub(r"(?i)/?copyright.*", "", author)
         return author.strip()
@@ -655,7 +665,10 @@ def image_author_parsing(authors: Union[str, List[str]]) -> List[str]:
         authors = [clean(author) for author in authors]
     else:
         authors = clean(authors)
-    return generic_author_parsing(authors)
+
+    # a caption can credit several sources at once, e.g. "Collage: Ivo Mayr / CORRECTIV, Fotos: picture alliance",
+    # so credits are filtered again after being split into single authors
+    return [cleaned for author in generic_author_parsing(authors) if (cleaned := clean(author, nested_author_filter))]
 
 
 # https://regex101.com/r/MplUXL/2
