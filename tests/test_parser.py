@@ -3,7 +3,7 @@ import datetime
 import inspect
 import pickle
 import textwrap
-from typing import Any, Dict, List, Optional, Tuple, Type, Union
+from typing import Any, Dict, Iterator, List, Optional, Tuple, Type, Union
 
 import lxml.html
 import pytest
@@ -20,9 +20,13 @@ from fundus.parser.base_parser import (
 from fundus.parser.utility import generic_author_parsing
 from fundus.publishers import PublisherCollection
 from fundus.publishers.base_objects import Publisher
+from fundus.scraping.html import HTML, SourceInfo
+from fundus.scraping.publication import LiveTicker
+from fundus.scraping.scraper import BaseScraper
 from tests.resources import attribute_annotations_mapping
 from tests.utility import (
     get_meta_info_file,
+    get_test_case_json,
     load_html_test_file_mapping,
     load_supported_publishers_markdown,
     load_test_case_data,
@@ -206,6 +210,9 @@ attributes_required_to_cover = {"title", "authors", "topics", "publishing_date",
 
 attributes_parsers_are_required_to_cover = {"body"}
 
+# live tickers don't necessarily provide every attribute, e.g. authors or topics, so fewer are required
+live_ticker_attributes_required_to_cover = {"title", "publishing_date", "body"}
+
 
 # `BaseParser.body_selectors` locates a version's body selectors by convention: a selector passed as
 # `<x>_selector` must live on the class as `_<x>_selector`. Nothing declares that, so where the name
@@ -335,6 +342,108 @@ class TestParser:
         for attr in attribute_annotations_mapping.keys():
             if value := getattr(parser, attr, None):
                 assert isinstance(value, Attribute), f"The name {attr!r} is reserved for attributes only."
+
+
+class FixedSource:
+    """An HTMLSource yielding the given HTML only."""
+
+    def __init__(self, *htmls: HTML):
+        self.htmls = htmls
+
+    def fetch(self, url_filter=None) -> Iterator[HTML]:
+        yield from self.htmls
+
+
+def _supports_live_ticker(publisher: Publisher) -> bool:
+    return any(hasattr(versioned_parser, "_live_ticker_boundary_selector") for versioned_parser in publisher.parser)
+
+
+live_ticker_publishers = [publisher for publisher in PublisherCollection if _supports_live_ticker(publisher)]
+
+
+@pytest.mark.parametrize(
+    "publisher", live_ticker_publishers, ids=[publisher.__name__ for publisher in live_ticker_publishers]
+)
+class TestLiveTickerParser:
+    """Counterpart of `TestParser.test_parsing` for live tickers.
+
+    Live tickers can't be found by crawling, so their test files are kept apart from the article test files
+    (in a `live_ticker` subdirectory) and generated from explicit URLs:
+    `python -m scripts.generate_parser_test_files -l -p <publisher> -u <live ticker url>`.
+    """
+
+    def test_parsing(self, publisher: Publisher) -> None:
+        html_mapping = load_html_test_file_mapping(publisher, live_ticker=True)
+        if not html_mapping and not get_test_case_json(publisher, live_ticker=True).path.exists():
+            # live tickers can't be found by crawling, so not every publisher has a test case yet
+            pytest.skip(f"No live ticker test case for {publisher.name} yet")
+        comparative_data = load_test_case_data(publisher, live_ticker=True)
+
+        # only versions implementing live ticker extraction need a live ticker test case
+        for versioned_parser in publisher.parser:
+            if not hasattr(versioned_parser, "_live_ticker_boundary_selector"):
+                continue
+
+            version_name = versioned_parser.__name__
+            assert (version_data := comparative_data.get(version_name)), (
+                f"Missing live ticker test data for parser version {version_name!r}"
+            )
+            assert (html := html_mapping.get(versioned_parser)), (
+                f"Missing live ticker test HTML for parser version {version_name} of publisher {publisher.name}"
+            )
+
+            timestamp_instantiated_parser = publisher.parser(html.crawl_date)
+
+            for key, value in version_data.items():
+                if key == "topics":
+                    # LiveTickers inherit topic parsing from the Article class, and it is not guaranteed to be supported
+                    # for LiveTickers. If it is, it is enough to check for the Article test case.
+                    continue
+                if not value:
+                    raise ValueError(
+                        f"There is no value set for key {key!r} in the test JSON. "
+                        f"Only complete live tickers should be used as test cases"
+                    )
+
+            supported_attrs = set(timestamp_instantiated_parser.registered_attributes.names)
+            missing_attrs = live_ticker_attributes_required_to_cover & supported_attrs - set(version_data.keys())
+            assert not missing_attrs, (
+                f"Live ticker test JSON for {version_name} of publisher {publisher.name} "
+                f"does not cover the following attribute(s): {missing_attrs}"
+            )
+
+            assert list(version_data.keys()) == sorted(version_data.keys()), (
+                f"Live ticker test JSON for {version_name} is not in alphabetical order"
+            )
+            assert set(version_data.keys()) <= supported_attrs, (
+                f"Live ticker test JSON for {version_name} contains unsupported attribute(s): "
+                f"{set(version_data.keys()) - supported_attrs}"
+            )
+
+            extraction = timestamp_instantiated_parser.parse(html.content, "raise")
+
+            body = extraction["body"]
+            assert isinstance(body, LiveTickerBody), f"The test HTML for {version_name} is not a live ticker"
+            assert body.entries, f"The live ticker of {version_name} has no entries"
+
+            for key, value in version_data.items():
+                assert value == extraction[key], f"{key!r} is not equal"
+
+            pickle.dumps(extraction)
+
+    def test_live_ticker_is_scraped_as_live_ticker(self, publisher: Publisher) -> None:
+        for versioned_parser, html_file in load_html_test_file_mapping(publisher, live_ticker=True).items():
+            html = HTML(
+                content=html_file.content,
+                crawl_date=html_file.crawl_date,
+                requested_url=html_file.url,
+                responded_url=html_file.url,
+                source_info=SourceInfo(publisher.name),
+            )
+            scraper = BaseScraper(FixedSource(html), publisher_mapping={publisher.name: publisher})
+            (publication,) = scraper.scrape(error_handling="raise")
+            assert isinstance(publication, LiveTicker)
+            assert list(publication), "iterating the live ticker should yield its entries as articles"
 
 
 class TestUtility:
