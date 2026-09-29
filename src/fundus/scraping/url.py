@@ -2,21 +2,34 @@ import bz2
 import gzip
 import itertools
 import lzma
+import re
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from functools import cached_property
-from typing import Callable, ClassVar, Dict, Iterable, Iterator, List, Optional, Set
-from urllib.parse import unquote
+from typing import (
+    Any,
+    Callable,
+    ClassVar,
+    Dict,
+    Iterable,
+    Iterator,
+    List,
+    Optional,
+    Set,
+    Tuple,
+    Type,
+)
+from urllib.parse import unquote, urlparse
 
 import feedparser
 import lxml.html
-import validators
+from curl_cffi.requests.exceptions import ConnectionError, HTTPError, Timeout
 from lxml.etree import XMLParser, XPath
-from requests import ConnectionError, HTTPError, ReadTimeout
 
 from fundus.logging import create_logger
 from fundus.scraping.filter import URLFilter, inverse
-from fundus.scraping.session import _default_header, session_handler
+from fundus.scraping.session import InterruptableSession, _default_header, session_handler
+from fundus.utils.iteration import iterate_all_subclasses
 
 logger = create_logger(__name__)
 
@@ -70,12 +83,13 @@ class _ArchiveDecompressor:
         self.archive_mapping: Dict[str, Callable[[bytes], bytes]] = {
             "application/octet-stream": self._decompress_octet_stream,
             "application/x-gzip": CompressionFormats.GZIP,
+            "application/gzip": CompressionFormats.GZIP,
             "gzip": CompressionFormats.GZIP,
         }
 
     def _decompress_octet_stream(self, compressed_content: bytes) -> bytes:
         if (compression_format := CompressionFormats.identify(compressed_content)) is None:
-            logger.debug(f"Could not identify compression format")
+            logger.debug("Could not identify compression format")
             raise NotImplementedError
 
         return compression_format(compressed_content)
@@ -89,6 +103,11 @@ class _ArchiveDecompressor:
         return list(self.archive_mapping.keys())
 
 
+def is_valid_url(url: str) -> bool:
+    parsed = urlparse(url)
+    return bool(parsed.scheme in ("http", "https") and parsed.netloc)
+
+
 def clean_url(url: str) -> str:
     return unquote(url)
 
@@ -97,21 +116,31 @@ def clean_url(url: str) -> str:
 class URLSource(Iterable[str], ABC):
     url: str
     languages: Set[str] = field(default_factory=set)
-
-    _request_header: Dict[str, str] = field(default_factory=dict)
+    interleave: bool = False
 
     def __post_init__(self):
-        if not self._request_header:
-            self._request_header = _default_header
-        if not validators.url(self.url, strict_query=False):
+        if not is_valid_url(self.url):
             logger.error(f"{type(self).__name__} initialized with invalid URL {self.url}")
 
-    def set_header(self, request_header: Dict[str, str]) -> None:
-        self._request_header = request_header
-
     @abstractmethod
+    def fetch(self, session: InterruptableSession, headers: Dict[str, str]) -> Iterator[str]:
+        """Fetch URLs using the provided session and headers.
+
+        Args:
+            session: The HTTP session to use for requests.
+            headers: Request headers to include. Note that when the session was created
+                with an impersonate profile, headers may be dropped in favour of the
+                browser fingerprint (see InterruptableSession.get_with_interrupt).
+        """
+        raise NotImplementedError
+
     def __iter__(self) -> Iterator[str]:
-        raise NotImplemented
+        """Iterate URLs using a default session and headers.
+
+        Intended for standalone/testing use. Production scraping goes through
+        WebSource, which calls fetch() with publisher-specific session and headers.
+        """
+        return self.fetch(session_handler.get_session(), _default_header)
 
     def get_urls(self, max_urls: Optional[int] = None) -> Iterator[str]:
         """Returns a generator yielding up to <max_urls> URLs from <self>.
@@ -131,15 +160,13 @@ class URLSource(Iterable[str], ABC):
 
 @dataclass
 class RSSFeed(URLSource):
-    def __iter__(self) -> Iterator[str]:
-        session = session_handler.get_session()
+    def fetch(self, session: InterruptableSession, headers: Dict[str, str]) -> Iterator[str]:
         try:
-            response = session.get_with_interrupt(self.url, headers=self._request_header)
+            response = session.get_with_interrupt(self.url, headers=headers)
 
-        except (HTTPError, ConnectionError, ReadTimeout) as err:
+        except (HTTPError, ConnectionError, Timeout) as err:
             logger.warning(f"Warning! Couldn't parse rss feed {self.url!r} because of {err}")
             return
-
         except Exception as error:
             logger.error(f"Warning! Couldn't parse rss feed {self.url!r} because of an unexpected error {error!r}")
             return
@@ -155,29 +182,50 @@ class RSSFeed(URLSource):
                 yield clean_url(url)
 
 
+def numeric_sort_key(pattern: str, reverse: bool = False) -> Callable[[str], Tuple[int, ...]]:
+    """Build a <sort_key> ordering sitemaps by the integer capture groups of <pattern>.
+
+    Groups are compared numerically rather than as text, so unpadded indices order as
+    1, 2, ..., 10 instead of 1, 10, 2. Pass reverse=True to negate them, putting the
+    highest value first - use it when the number grows with recency (e.g. a date),
+    and leave it off when it grows with age (e.g. a sitemap chunk counted from newest).
+
+    Raises ValueError for a URL the pattern doesn't match; <sitemap_filter> is applied
+    first, so the key only ever sees the sitemaps that were kept.
+    """
+    compiled = re.compile(pattern)
+    sign = -1 if reverse else 1
+
+    def key(url: str) -> Tuple[int, ...]:
+        if match := compiled.search(url):
+            return tuple(sign * int(group) for group in match.groups())
+        raise ValueError(f"<sort_key> pattern {pattern!r} does not match sitemap URL {url!r}")
+
+    return key
+
+
 @dataclass
 class Sitemap(URLSource):
     recursive: bool = True
     reverse: bool = False
     sitemap_filter: URLFilter = lambda url: not bool(url)
+    sort_key: Optional[Callable[[str], Any]] = None
 
     _decompressor: ClassVar[_ArchiveDecompressor] = _ArchiveDecompressor()
     _sitemap_selector: ClassVar[XPath] = XPath("//*[local-name()='sitemap']/*[local-name()='loc']")
     _url_selector: ClassVar[XPath] = XPath("//*[local-name()='url']/*[local-name()='loc']")
     _parser = XMLParser(strip_cdata=False, recover=True)
 
-    def __iter__(self) -> Iterator[str]:
+    def fetch(self, session: InterruptableSession, headers: Dict[str, str]) -> Iterator[str]:
         def yield_recursive(sitemap_url: str) -> Iterator[str]:
-            session = session_handler.get_session()
-            if not validators.url(sitemap_url):
+            if not is_valid_url(sitemap_url):
                 logger.info(f"Skipped sitemap {sitemap_url!r} because the URL is malformed")
             try:
-                response = session.get_with_interrupt(url=sitemap_url, headers=self._request_header)
+                response = session.get_with_interrupt(url=sitemap_url, headers=headers)
 
-            except (HTTPError, ConnectionError, ReadTimeout) as error:
+            except (HTTPError, ConnectionError, Timeout) as error:
                 logger.warning(f"Warning! Couldn't reach sitemap {sitemap_url!r} because of {error!r}")
                 return
-
             except Exception as error:
                 logger.error(
                     f"Warning! Couldn't reach sitemap {sitemap_url!r} because of an unexpected error {error!r}"
@@ -195,13 +243,22 @@ class Sitemap(URLSource):
                 logger.warning(f"Warning! Empty sitemap at {sitemap_url!r}")
                 return
             tree = lxml.etree.fromstring(content, parser=self._parser)
+            if tree is None:
+                # in case we somehow end up with non xml content
+                logger.warning(f"Warning! Couldn't parse sitemap {sitemap_url!r}")  # type: ignore[unreachable]
+                return
             urls = [node.text for node in self._url_selector(tree)]
             if urls:
                 for new_url in reversed(urls) if self.reverse else urls:
                     yield clean_url(new_url)
             elif self.recursive:
                 sitemap_locs = [node.text for node in self._sitemap_selector(tree)]
+
                 filtered_locs = list(filter(inverse(self.sitemap_filter), sitemap_locs))
+
+                if self.sort_key is not None:
+                    filtered_locs.sort(key=self.sort_key)
+
                 for loc in reversed(filtered_locs) if self.reverse else filtered_locs:
                     yield from yield_recursive(loc)
 
@@ -211,3 +268,121 @@ class Sitemap(URLSource):
 @dataclass
 class NewsMap(Sitemap):
     pass
+
+
+class SourceHandler(Iterable[URLSource]):
+    """The sources of a publisher, in crawl order and grouped into execution batches.
+
+    Sources are ordered by their type following <__SOURCE_ORDER__>, and within a type by
+    the order they were declared in. Sources marked with <URLSource.interleave> are grouped
+    with the other interleaved sources of their type into a single batch, which the scraper
+    round-robins rather than exhausting one source after another.
+    """
+
+    __SOURCE_ORDER__: ClassVar[Tuple[Type[URLSource], ...]] = (RSSFeed, NewsMap, Sitemap)
+
+    def __init__(self, sources: Iterable[URLSource]) -> None:
+        collected = tuple(sources)
+
+        for source in collected:
+            if not isinstance(source, URLSource):
+                raise TypeError(
+                    f"Unexpected type {type(source).__name__!r} as source. "
+                    f"Allowed are {', '.join(repr(cls.__name__) for cls in iterate_all_subclasses(URLSource))}"
+                )
+
+        self._sources: Tuple[URLSource, ...] = tuple(sorted(collected, key=self._rank))
+
+    @classmethod
+    def _rank(cls, source: URLSource) -> int:
+        """The position of <source>'s type in the crawl order.
+
+        Types not listed in <__SOURCE_ORDER__> are processed last rather than raising, so that
+        URLSource implementations living outside this module stay usable without registration.
+        Since sorting is stable, they keep their declared order among themselves.
+        """
+        source_type = type(source)
+        if source_type in cls.__SOURCE_ORDER__:
+            return cls.__SOURCE_ORDER__.index(source_type)
+        return len(cls.__SOURCE_ORDER__)
+
+    def __iter__(self) -> Iterator[URLSource]:
+        return iter(self._sources)
+
+    def __len__(self) -> int:
+        return len(self._sources)
+
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, SourceHandler):
+            return NotImplemented
+        return self._sources == other._sources
+
+    def __repr__(self) -> str:
+        return f"{type(self).__name__}({list(self._sources)!r})"
+
+    def batches(self) -> Iterator[Tuple[URLSource, ...]]:
+        """Yields the sources as units of work, in crawl order.
+
+        A batch holding more than one source is meant to be round-robined. Interleaved sources
+        of the same type share a batch, which takes the position of the first of them; every
+        other source forms a batch of its own.
+
+        Yields:
+            Tuple[URLSource, ...]: The next batch of sources.
+        """
+        # maps a source type onto the batch collecting its interleaved sources. Since sources
+        # are sorted by type, at most one such batch is open at any time, but keying by type
+        # keeps this independent of that guarantee.
+        interleaved: Dict[Type[URLSource], List[URLSource]] = {}
+        batches: List[List[URLSource]] = []
+
+        for source in self._sources:
+            if not source.interleave:
+                batches.append([source])
+            elif (open_batch := interleaved.get(type(source))) is not None:
+                open_batch.append(source)
+            else:
+                # placed at the position of the first interleaved source of this type
+                interleaved[type(source)] = new_batch = [source]
+                batches.append(new_batch)
+
+        for batch in batches:
+            yield tuple(batch)
+
+    def filter(
+        self,
+        source_types: Optional[Iterable[Type[URLSource]]] = None,
+        languages: Optional[Iterable[str]] = None,
+    ) -> "SourceHandler":
+        """Returns a new handler holding only the sources matching the given restrictions.
+
+        An empty or omitted argument does not restrict on that axis. Filtering an already
+        filtered handler narrows it further, so chained calls intersect.
+
+        Args:
+            source_types (Optional[Iterable[Type[URLSource]]]): Only keep sources of these types.
+            languages (Optional[Iterable[str]]): Only keep sources covering at least one of
+                these languages.
+
+        Returns:
+            SourceHandler: A new handler over the surviving sources.
+        """
+        allowed_types = set(source_types) if source_types else set()
+        allowed_languages = set(languages) if languages else set()
+
+        return SourceHandler(
+            source
+            for source in self._sources
+            if (not allowed_types or type(source) in allowed_types)
+            and (not allowed_languages or source.languages & allowed_languages)
+        )
+
+    @property
+    def languages(self) -> Set[str]:
+        # deliberately not cached: PublisherGroup fills in a default language by mutating
+        # the sources after the handler was built.
+        return set().union(*(source.languages for source in self._sources)) if self._sources else set()
+
+    @property
+    def source_types(self) -> Set[Type[URLSource]]:
+        return {type(source) for source in self._sources}

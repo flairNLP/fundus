@@ -56,7 +56,6 @@ class TechCrunchParser(ParserProxy):
                 return generic_topic_parsing(self.precomputed.meta.get("sailthru.tags"))
 
     class V1_1(V1):
-        VALID_UNTIL = datetime.date.today()
         _summary_selector: XPath = CSSSelector("div.entry-content > p#speakable-summary")
         _paragraph_selector: XPath = CSSSelector(
             "div.entry-content > p:not(#speakable-summary), div.entry-content > ul > li"

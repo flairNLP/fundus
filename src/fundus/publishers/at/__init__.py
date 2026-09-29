@@ -1,5 +1,5 @@
 from fundus.publishers.base_objects import Publisher, PublisherGroup
-from fundus.scraping.url import NewsMap, RSSFeed, Sitemap
+from fundus.scraping.url import NewsMap, RSSFeed, Sitemap, numeric_sort_key
 
 from .derstandard import DerStandardParser
 from .die_presse import DiePresseParser
@@ -29,9 +29,7 @@ class AT(metaclass=PublisherGroup):
         name="Die Presse",
         domain="https://diepresse.com",
         parser=DiePresseParser,
-        sources=[
-            NewsMap("https://www.diepresse.com/news-sitemap"),
-        ],
+        sources=[NewsMap("https://www.diepresse.com/news-sitemap"), Sitemap("https://www.diepresse.com/sitemap")],
     )
 
     KleineZeitung = Publisher(
@@ -40,7 +38,7 @@ class AT(metaclass=PublisherGroup):
         parser=KleineZeitungParser,
         sources=[
             NewsMap("https://www.kleinezeitung.at/news-sitemap"),
-            Sitemap("https://www.kleinezeitung.at/sitemaps/sitemap_main.xml", reverse=True),
+            Sitemap("https://www.kleinezeitung.at/sitemap-articles.xml", reverse=True),
         ],
     )
 
@@ -56,7 +54,10 @@ class AT(metaclass=PublisherGroup):
         domain="https://www.sn.at",
         parser=SalzburgerNachrichtenParser,  # Placeholder for future parser
         sources=[
-            NewsMap("https://www.sn.at/sitemap/2/0001.xml"),
-            Sitemap("https://www.sn.at/sitemapindex.xml", reverse=True),
+            NewsMap("https://www.sn.at/news-artikel.sitemap.xml"),
+            Sitemap(
+                "https://www.sn.at/portal-artikel.sitemap.xml",
+                sort_key=numeric_sort_key(r"article-(\d{4})_(\d{2})-(\d)", reverse=True),
+            ),
         ],
     )

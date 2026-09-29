@@ -1,5 +1,5 @@
 import re
-from datetime import date, datetime
+from datetime import datetime
 from typing import List, Optional
 
 from lxml.cssselect import CSSSelector
@@ -18,7 +18,6 @@ from fundus.parser.utility import image_extraction
 
 class DailyNewsTZParser(ParserProxy):
     class V1(BaseParser):
-        # VALID_UNTIL = date(2025, 5, 3)
         _summary_selector = CSSSelector("div.cs-entry__subtitle")
         _subheadline_selector = XPath(
             "//div[contains(@class,'entry-content')]//p[not(text() or position()=1)]//span//strong"
@@ -35,8 +34,10 @@ class DailyNewsTZParser(ParserProxy):
 
         @attribute
         def title(self) -> Optional[str]:
-            return self.precomputed.ld.xpath_search("//Article//headline", scalar=True) or re.sub(
-                r"(?i)\s*-\s*(daily\s*news|habari\s*leo)\s*", "", self.precomputed.meta.get("og:title") or ""
+            return self.precomputed.ld.xpath_search("(//Article//headline)[1]", scalar=True) or re.sub(
+                r"(?i)\s*-\s*(daily\s*news|habari\s*leo)\s*",
+                "",
+                self.precomputed.meta.get("og:title") or "",
             )
 
         @attribute

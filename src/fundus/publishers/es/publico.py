@@ -2,7 +2,6 @@ import datetime
 from typing import List, Optional
 
 from lxml.etree import XPath
-from lxml.html import HtmlElement
 
 from fundus.parser import ArticleBody, BaseParser, Image, ParserProxy, attribute
 from fundus.parser.utility import (

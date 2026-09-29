@@ -1,23 +1,20 @@
-from collections import defaultdict
+import copy
 from textwrap import indent
-from typing import Dict, Iterator, List, Optional, Set, Type, Union
-from urllib.robotparser import RobotFileParser
+from typing import Dict, FrozenSet, Iterable, Iterator, List, Optional, Set, Type, Union
 from warnings import warn
 
-import more_itertools
-from requests.exceptions import ConnectionError, HTTPError, ReadTimeout
-from typing_extensions import TypeAlias
+from curl_cffi.requests import BrowserType, BrowserTypeLiteral
+from curl_cffi.requests.exceptions import ConnectionError, HTTPError, Timeout
+from curl_cffi.requests.impersonate import normalize_browser_type
+from robots import RobotFileParser
 
 from fundus.logging import create_logger
 from fundus.parser.base_parser import ParserProxy
 from fundus.scraping.filter import URLFilter
-from fundus.scraping.session import session_handler
-from fundus.scraping.url import NewsMap, RSSFeed, Sitemap, URLSource
-from fundus.utils.iteration import iterate_all_subclasses
+from fundus.scraping.session import _default_header, session_handler
+from fundus.scraping.url import SourceHandler, URLSource
 
 logger = create_logger(__name__)
-
-FilterResult: TypeAlias = Union[List["FilteredPublisher"], List["Publisher"]]
 
 
 class CustomRobotFileParser(RobotFileParser):
@@ -27,53 +24,112 @@ class CustomRobotFileParser(RobotFileParser):
     This is in order to avoid 403 errors when fetching the robots.txt file.
     """
 
+    _disallow_training_keywords: Set[str] = {
+        "machine",
+        "learning",
+        "training",
+        "train",
+        "model",
+        "models",
+        "artificial",
+        "intelligence",
+        "large",
+        "language",
+        "llm",
+        "llms",
+    }
+
+    def __init__(
+        self, url: str, headers: Optional[Dict[str, str]] = None, impersonate: Optional[BrowserTypeLiteral] = None
+    ):
+        self.headers = headers
+        self.disallows_training: bool = False
+        self.url = url
+        self.impersonate = impersonate
+        super().__init__(url)
+
     # noinspection PyAttributeOutsideInit
-    def read(self, headers: Optional[Dict[str, str]] = None) -> None:
+    def read(self) -> None:
         """Reads the robots.txt URL and feeds it to the parser."""
         try:
             # noinspection PyUnresolvedReferences
-            session = session_handler.get_session()
-            response = session.get_with_interrupt(self.url, headers=headers)  # type: ignore[attr-defined]
+            session = session_handler.get_session(self.impersonate)
+            response = session.get_with_interrupt(self.url, headers=self.headers)
         except HTTPError as err:
             if err.response.status_code in (401, 403):
+                logger.warning(
+                    f"Robots {self.url!r} disallowed access with status code {err.response.status_code}."
+                    " Defaulting to disallow all."
+                )
                 self.disallow_all = True
             elif 400 <= err.response.status_code < 500:
                 self.allow_all = True
         else:
             self.parse(response.text.splitlines())
 
+    def parse(self, lines: Iterable[str]) -> None:
+        for line in lines:
+            if line.strip().startswith("#") and set(line.split(" ")) & self._disallow_training_keywords:
+                self.disallows_training = True
+                break
+        super().parse(lines)
+
 
 class Robots:
-    def __init__(self, url: str):
+    def __init__(
+        self, url: str, headers: Optional[Dict[str, str]] = None, impersonate: Optional[BrowserTypeLiteral] = None
+    ):
         self.url = url
-        self.robots_file_parser = CustomRobotFileParser(url)
+        self.robots_file_parser = CustomRobotFileParser(url, headers=headers, impersonate=impersonate)
         self.ready: bool = False
 
-    def read(self, headers: Optional[Dict[str, str]] = None) -> None:
+    def _read(self) -> None:
         try:
-            self.robots_file_parser.read(headers=headers)
-        except (ConnectionError, ReadTimeout):
+            self.robots_file_parser.read()
+        except (ConnectionError, Timeout):
             logger.warning(f"Could not load robots {self.url!r}. Ignoring robots and continuing.")
             self.robots_file_parser.allow_all = True
         self.ready = True
 
+    def ensure_ready(self) -> None:
+        """Ensure that the robots.txt file is read and parsed."""
+        if not self.ready:
+            self._read()
+
     def can_fetch(self, useragent: str, url: str) -> bool:
+        self.ensure_ready()
         return self.robots_file_parser.can_fetch(useragent, url)
 
     def crawl_delay(self, useragent: str) -> Optional[float]:
+        self.ensure_ready()
         delay = self.robots_file_parser.crawl_delay(useragent)
         return delay if delay is None else float(delay)
+
+    def disallows_training(self) -> bool:
+        self.ensure_ready()
+        return self.robots_file_parser.disallows_training
+
+    def disallow_all(self) -> bool:
+        self.ensure_ready()
+        return self.robots_file_parser.disallow_all
+
+
+def _narrow_languages(
+    current: Optional[FrozenSet[str]], languages: Optional[Iterable[str]]
+) -> Optional[FrozenSet[str]]:
+    """Intersects <current> with <languages>, with None standing for no restriction at all.
+
+    Intersecting rather than replacing keeps restrictions from widening each other, so that
+    narrowing an already narrowed publisher can only ever remove languages.
+    """
+    if not languages:
+        return current
+    return frozenset(languages) if current is None else current & frozenset(languages)
 
 
 class Publisher:
     __name__: str
     __group__: "PublisherGroup"
-
-    __SOURCE_ORDER__: Dict[Type[URLSource], int] = {
-        RSSFeed: 1,
-        NewsMap: 2,
-        Sitemap: 3,
-    }
 
     def __init__(
         self,
@@ -83,9 +139,12 @@ class Publisher:
         sources: List[URLSource],
         query_parameter: Optional[Dict[str, str]] = None,
         url_filter: Optional[URLFilter] = None,
-        request_header: Optional[Dict[str, str]] = None,
+        request_header: Dict[str, str] = _default_header,
         deprecated: bool = False,
+        disallows_training: bool = False,
         suppress_robots: bool = False,
+        impersonate: Optional[BrowserTypeLiteral] = None,
+        deprecated_domains: Optional[List[str]] = None,
     ):
         """Initialization of a new Publisher object
 
@@ -98,18 +157,46 @@ class Publisher:
                 appended to crawled URLs
             url_filter (Optional[URLFilter]): Regex filter to apply determining URLs to be skipped
             request_header (Optional[Dict[str, str]]): Request header to be used for the GET-request
+            deprecated (bool): If True, the publisher is deprecated and skipped by default
+            disallows_training (bool): If True, the publisher disallows training on its articles in
+                its robots.txt file. Note that this is only an indicator and users should verify the
+                terms of use of the publisher before using the articles for training purposes.
+            suppress_robots (bool): If True, robots.txt restrictions are ignored for this publisher
+            impersonate (Optional[str]): Browser profile to impersonate via CurlCffiAdapter, e.g.
+                "chrome" or "safari". If set, requests to this publisher use curl_cffi instead of
+                the standard urllib3 stack, which can bypass TLS fingerprint-based bot detection.
+                Check https://curl-cffi.readthedocs.io/en/latest/impersonate/targets.html for browser targets.
+            deprecated_domains (Optional[List[str]]): List of domains that are deprecated. This is used to handle domain
+                migration by publishers in order to support CCNewsCrawling
 
         """
         if not (name and domain and parser and sources):
             raise ValueError("Failed to create Publisher. Name, Domain, Parser and Sources are mandatory")
+
+        if (
+            impersonate is not None
+            and (impersonate := normalize_browser_type(impersonate)) not in BrowserType._value2member_map_
+        ):
+            raise ValueError(
+                f"Browser type <{impersonate}> not supported. Supported types are: "
+                f"{', '.join(BrowserType._value2member_map_.keys())}"
+            )
+
         self.name = name
         self.parser = parser()
         self.domain = domain
         self.query_parameter = query_parameter
         self.url_filter = url_filter
         self.request_header = request_header
+        self.impersonate = impersonate
         self.deprecated = deprecated
-        self.robots = Robots(self.domain + "robots.txt" if self.domain.endswith("/") else self.domain + "/robots.txt")
+        self.robots = Robots(
+            url=self.domain + "robots.txt" if self.domain.endswith("/") else self.domain + "/robots.txt",
+            headers=self.request_header,
+            impersonate=impersonate,
+        )
+        self._disallows_training = disallows_training
+        self.deprecated_domains = deprecated_domains or []
 
         # Temporary fix to compensate for a bug in the RobotsFileParser treating rule lines
         # like /? as / disallowing the entire site. we could think about replacing the urllib
@@ -117,29 +204,24 @@ class Publisher:
         if suppress_robots:
             self.robots.robots_file_parser.allow_all = True
 
-        source_mapping: Dict[Type[URLSource], List[URLSource]] = defaultdict(list)
-
-        for url_source in sources:
-            if not isinstance(url_source, URLSource):
-                raise TypeError(
-                    f"Unexpected type {type(url_source).__name__!r} as source for {self!r}. "
-                    f"Allowed are {', '.join(repr(cls.__name__) for cls in iterate_all_subclasses(URLSource))}"
-                )
-            source_mapping[type(url_source)].append(url_source)
-
-        self._source_mapping = dict(sorted(source_mapping.items(), key=lambda item: self.__SOURCE_ORDER__[item[0]]))
+        self._sources = SourceHandler(sources)
+        self._language_filter: Optional[FrozenSet[str]] = None
 
     @property
-    def source_mapping(self) -> Dict[Type[URLSource], List[URLSource]]:
-        return self._source_mapping
+    def disallows_training(self) -> bool:
+        return self._disallows_training or self.robots.disallows_training()
+
+    @property
+    def sources(self) -> SourceHandler:
+        return self._sources
 
     @property
     def languages(self) -> Set[str]:
-        return set.union(*(source.languages for sources in self.source_mapping.values() for source in sources))
+        return self.sources.languages
 
     @property
     def source_types(self) -> Set[Type[URLSource]]:
-        return set(self.source_mapping.keys())
+        return self.sources.source_types
 
     def __str__(self) -> str:
         return f"{self.name}"
@@ -154,7 +236,7 @@ class Publisher:
             self.name == other.name
             and self.parser == other.parser
             and self.domain == other.domain
-            and self.source_mapping == other.source_mapping
+            and self.sources == other.sources
             and self.query_parameter == other.query_parameter
             and self.url_filter == other.url_filter
             and self.request_header == other.request_header
@@ -163,69 +245,57 @@ class Publisher:
     def supports(
         self, source_types: Optional[List[Type[URLSource]]] = None, languages: Optional[List[str]] = None
     ) -> bool:
-        # we iterate source by source instead of checking self.languages and self.source_types,
-        # because we need to know if there is a source supporting the given combination of
-        # <source_types> and <languages>
-        filtered_sources = [
-            source
-            for source in more_itertools.flatten(self.source_mapping.values())
-            if (type(source) in source_types if source_types else True)
-            and (source.languages & set(languages) if languages else True)
-        ]
+        """Returns True, if this publisher has a source left to contribute under the given restrictions.
 
-        return any(filtered_sources)
+        Restrictions it already carries and the given ones have to be met by one and the same
+        source, since a publisher covering a language through one source and a source type through
+        another covers neither combination. Called without arguments, this asks whether anything
+        survived the restrictions it carries.
+        """
+        # a publisher restricted to languages excluding each other supports nothing, even where a
+        # source declaring both survived the filtering, since no article of it could be kept
+        if _narrow_languages(self._language_filter, languages) == frozenset():
+            return False
 
-
-class FilteredPublisher(Publisher):
-    """Publisher with prefiltered sources.
-
-    Publisher with attached source types and languages to pre-filter sources.
-    """
-
-    def __init__(
-        self, source_types: Optional[Set[Type[URLSource]]] = None, languages: Optional[Set[str]] = None, *args, **kwargs
-    ) -> None:
-        super().__init__(*args, **kwargs)
-        self.__source_types_filter__ = source_types or set()
-        self.__language_filter__ = languages or set()
-
-    @classmethod
-    def from_publisher(
-        cls,
-        publisher: Publisher,
-        source_types: Optional[Set[Type[URLSource]]] = None,
-        languages: Optional[Set[str]] = None,
-    ) -> "FilteredPublisher":
-        new = FilteredPublisher.__new__(cls)
-
-        # we create a deepcopy since the aware publisher is not included in the PublisherGroup
-        new.__dict__.update(publisher.__dict__)
-        new.__source_types_filter__ = source_types or set()
-        new.__language_filter__ = languages or set()
-        return new
+        # we filter instead of checking self.languages and self.source_types, because we need to
+        # know if there is a single source supporting the given combination of <source_types>
+        # and <languages>
+        return bool(self.sources.filter(source_types=source_types, languages=languages))
 
     @property
-    def source_mapping(self) -> Dict[Type[URLSource], List[URLSource]]:
-        filtered_mapping: Dict[Type[URLSource], List[URLSource]] = {}
+    def language_filter(self) -> Optional[FrozenSet[str]]:
+        """The languages this publisher was restricted to, or None if it was not restricted.
 
-        # iterate over internal mapping to preserve order
-        for source_type, sources in self._source_mapping.items():
-            if self.__source_types_filter__ and source_type not in self.__source_types_filter__:
-                continue
+        Kept next to the narrowed sources because selecting sources by the languages they declare
+        only ever approximates the language their articles turn out to be in: a source declaring
+        German and English survives a restriction to German, but its English articles do not.
+        """
+        return self._language_filter
 
-            filtered_sources = [
-                source
-                for source in sources
-                if not self.__language_filter__ or source.languages & self.__language_filter__
-            ]
-            if filtered_sources:
-                filtered_mapping[source_type] = filtered_sources
+    def restrict(
+        self,
+        source_types: Optional[Iterable[Type[URLSource]]] = None,
+        languages: Optional[Iterable[str]] = None,
+    ) -> "Publisher":
+        """A view on this publisher covering only the sources matching the given restrictions.
 
-        return filtered_mapping
+        An empty or omitted argument does not restrict on that axis. Restrictions accumulate:
+        restricting an already restricted publisher narrows it further, so that neither call can
+        widen what the other one asked for. The view is a shallow copy, sharing the robots.txt
+        and the parser with the publisher it was taken from, and is never modified afterwards.
 
-    @property
-    def language_filter(self) -> Set[str]:
-        return self.__language_filter__
+        Args:
+            source_types (Optional[Iterable[Type[URLSource]]]): Only keep sources of these types.
+            languages (Optional[Iterable[str]]): Only keep sources covering at least one of these
+                languages, and keep only articles turning out to be in one of them.
+
+        Returns:
+            Publisher: A view on the surviving sources.
+        """
+        view = copy.copy(self)
+        view._sources = self._sources.filter(source_types=source_types, languages=languages)
+        view._language_filter = _narrow_languages(self._language_filter, languages)
+        return view
 
 
 class PublisherGroup(type):
@@ -238,7 +308,7 @@ class PublisherGroup(type):
                 value.__name__ = attribute
                 value.__group__ = new
                 if default_language := attributes.get("default_language"):
-                    for source in more_itertools.flatten(value.source_mapping.values()):
+                    for source in value.sources:
                         if not source.languages:
                             source.languages = {default_language}
 
@@ -296,7 +366,7 @@ class PublisherGroup(type):
         source_types: Optional[List[Type[URLSource]]] = None,
         languages: Optional[List[str]] = None,
         include_deprecated_attributes: bool = False,
-    ) -> Union[List[FilteredPublisher], List[Publisher]]:
+    ) -> List[Publisher]:
         if not (attributes or source_types or languages):
             raise ValueError("You have to define at least one search condition")
         if not attributes:
@@ -306,9 +376,8 @@ class PublisherGroup(type):
         if not source_types:
             source_types = []
 
-        matched: Union[List[FilteredPublisher], List[Publisher]] = []
+        matched: List[Publisher] = []
         unique_attributes = set(attributes)
-        spec: Publisher
         for publisher in cls:
             if unique_attributes.issubset(
                 set(publisher.parser().attributes().names)
@@ -318,13 +387,7 @@ class PublisherGroup(type):
                     )
                 )
             ) and (publisher.supports(source_types=source_types, languages=languages)):
-                matched.append(
-                    FilteredPublisher.from_publisher(
-                        publisher,
-                        source_types=set(source_types) & publisher.source_types,
-                        languages=set(languages) & publisher.languages,
-                    )
-                )
+                matched.append(publisher.restrict(source_types=source_types, languages=languages))
         if not matched:
             warn("No publisher found matching the search criteria. Returning no publishers.")
         return matched

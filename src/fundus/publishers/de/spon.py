@@ -53,7 +53,7 @@ class SPONParser(ParserProxy):
                 lower_boundary_selector=XPath("//footer"),
                 image_selector=XPath("//figure//picture//img"),
                 caption_selector=XPath(
-                    "./ancestor::figure/following-sibling::figcaption[1]//p|" "./ancestor::figure/figcaption[1]//p"
+                    "./ancestor::figure/following-sibling::figcaption[1]//p|./ancestor::figure/figcaption[1]//p"
                 ),
                 author_selector=XPath(
                     "./ancestor::figure/following-sibling::figcaption[1]/span|"

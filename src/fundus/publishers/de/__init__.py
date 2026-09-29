@@ -7,11 +7,14 @@ from fundus.scraping.filter import inverse, regex_filter
 from fundus.scraping.url import NewsMap, RSSFeed, Sitemap
 
 from ..shared import EuronewsParser
+from .afp_faktencheck import AFPFaktencheckParser
 from .berliner_zeitung import BerlinerZeitungParser
 from .bild import BildParser
 from .boersenzeitung import BoersenZeitungParser
 from .br import BRParser
 from .business_insider_de import BusinessInsiderDEParser
+from .correctiv import CorrectivParser
+from .der_freitag import DerFreitagParser
 from .die_welt import DieWeltParser
 from .die_zeit import DieZeitParser
 from .dw import DWParser
@@ -26,7 +29,9 @@ from .heise import HeiseParser
 from .hessenschau import HessenschauParser
 from .junge_welt import JungeWeltParser
 from .kicker import KickerParser
+from .klassegegenklasse import KlasseGegenKlasseParser
 from .krautreporter import KrautreporterParser
+from .lto import LTOParser
 from .mdr import MDRParser
 from .merkur import MerkurParser
 from .motorsport_magazin import MotorSportMagazinParser
@@ -40,7 +45,9 @@ from .rn import RuhrNachrichtenParser
 from .spon import SPONParser
 from .sportschau import SportSchauParser
 from .stern import SternParser
+from .stuttgarter_zeitung import StuttgarterZeitungParser
 from .sz import SZParser
+from .t_online import TOnlineParser
 from .tagesschau import TagesschauParser
 from .tagesspiegel import TagesspiegelParser
 from .taz import TazParser
@@ -54,6 +61,50 @@ from .zdf import ZDFParser
 # noinspection PyPep8Naming
 class DE(metaclass=PublisherGroup):
     default_language = "de"
+
+    LTO = Publisher(
+        name="Legal Tribune Online",
+        domain="https://www.lto.de/",
+        parser=LTOParser,
+        url_filter=regex_filter("/podcast/"),
+        sources=[
+            RSSFeed("https://www.lto.de/rss/feed.xml"),
+            NewsMap("https://www.lto.de/googlenews-sitemap.xml"),
+            Sitemap("https://www.lto.de/sitemap.xml", sitemap_filter=inverse(regex_filter("/article/"))),
+        ],
+    )
+
+    Correctiv = Publisher(
+        name="Correctiv",
+        domain="https://www.correctiv.org/",
+        parser=CorrectivParser,
+        sources=[
+            Sitemap(
+                "https://www.correctiv.org/sitemap_index.xml",
+                reverse=True,
+                sitemap_filter=inverse(regex_filter("post-sitemap")),
+            ),
+            RSSFeed("https://correctiv.org/feed/"),
+            RSSFeed("https://correctiv.org/en/feed/", languages={"en"}),
+        ],
+        url_filter=regex_filter("/in-eigener-sache/"),
+    )
+
+    AFPFaktencheck = Publisher(
+        name="AFP Faktencheck",
+        domain="https://faktencheck.afp.com/",
+        parser=AFPFaktencheckParser,
+        sources=[
+            Sitemap(
+                "https://faktencheck.afp.com/sitemap.xml",
+                reverse=True,
+                sitemap_filter=regex_filter(
+                    r"(?i)/(cookie-einstellungen|korrekturen|das-team|ueber-afp|wie-wir-arbeiten|seite-nicht-gefunden)$|^https://faktencheck.afp.com/$"
+                ),
+            ),
+        ],
+        impersonate="chrome",
+    )
 
     SportSchau = Publisher(
         name="Sportschau",
@@ -91,6 +142,17 @@ class DE(metaclass=PublisherGroup):
             )
             for d in reversed(list(rrule(MONTHLY, dtstart=datetime(2003, 2, 1), until=datetime.now())))
         ],
+        impersonate="chrome",
+    )
+
+    StuttgarterZeitung = Publisher(
+        name="Stuttgarter Zeitung",
+        domain="https://www.stuttgarter-zeitung.de/",
+        parser=StuttgarterZeitungParser,
+        sources=[
+            NewsMap("https://www.stuttgarter-zeitung.de/sitemap-news.xml"),
+            Sitemap("https://www.stuttgarter-zeitung.de/sitemap.xml"),
+        ],
     )
 
     HamburgerAbendblatt = Publisher(
@@ -107,6 +169,7 @@ class DE(metaclass=PublisherGroup):
             )
             for d in reversed(list(rrule(MONTHLY, dtstart=datetime(2000, 4, 1), until=datetime.today())))
         ],
+        impersonate="chrome",
     )
 
     DieWelt = Publisher(
@@ -130,6 +193,7 @@ class DE(metaclass=PublisherGroup):
             Sitemap("https://www.mdr.de/sitemap-index-100.xml"),
             NewsMap("https://www.mdr.de/news-sitemap.xml"),
         ],
+        url_filter=regex_filter(r"/video/|video-[0-9]+\.html|sportschau.de"),
     )
 
     FAZ = Publisher(
@@ -154,7 +218,6 @@ class DE(metaclass=PublisherGroup):
         sources=[
             NewsMap("https://www.focus.de/sitemap_news_ressorts.xml"),
         ],
-        request_header={"user-agent": "Fundus"},
     )
 
     Merkur = Publisher(
@@ -201,7 +264,6 @@ class DE(metaclass=PublisherGroup):
         url_filter=regex_filter(
             "/zett/|/angebote/|/kaenguru-comics/|/administratives/|/index(?!.)|/elbvertiefung-[0-9]{2}-[0-9]{2}"
         ),
-        request_header={"user-agent": "Googlebot"},
     )
 
     BerlinerZeitung = Publisher(
@@ -241,6 +303,7 @@ class DE(metaclass=PublisherGroup):
         domain="https://www.stern.de/",
         parser=SternParser,
         sources=[RSSFeed("https://www.stern.de/feed/standard/alle-nachrichten/")],
+        deprecated=True,
     )
 
     NTV = Publisher(
@@ -311,6 +374,7 @@ class DE(metaclass=PublisherGroup):
         domain="https://www.waz.de/",
         parser=WAZParser,
         sources=[NewsMap("https://www.waz.de/sitemaps/news.xml")],
+        impersonate="chrome",
     )
 
     BSZ = Publisher(
@@ -327,6 +391,7 @@ class DE(metaclass=PublisherGroup):
             )
             for d in list(rrule(MONTHLY, dtstart=datetime(2005, 12, 1), until=datetime.now()))
         ],
+        impersonate="chrome",
     )
 
     BusinessInsiderDE = Publisher(
@@ -439,9 +504,10 @@ class DE(metaclass=PublisherGroup):
         domain="https://www.br.de/",
         parser=BRParser,
         sources=[
-            Sitemap("https://www.br.de/sitemapIndex.xml"),
+            Sitemap("https://web.master.br24-web.br-master.de/nachrichten/sitemaps/article-recent.xml"),
             NewsMap("https://www.br.de/nachrichten/sitemaps/news.xml"),
         ],
+        url_filter=regex_filter("br-fernsehen/sendungen|index.html$"),
     )
 
     ZDF = Publisher(
@@ -489,6 +555,7 @@ class DE(metaclass=PublisherGroup):
             NewsMap("https://newsfeed.kicker.de/googlesitemapnews.xml"),
         ],
         url_filter=regex_filter("/slideshow|/video|heute-live|live-konferenz|/bilder|/ticker"),
+        impersonate="chrome",
     )
 
     Krautreporter = Publisher(
@@ -593,5 +660,51 @@ class DE(metaclass=PublisherGroup):
         sources=[
             NewsMap("https://www.gamestar.de/sitemapnews.xml"),
             Sitemap("https://www.gamestar.de/artikel_archiv_index.xml"),
+        ],
+    )
+
+    KlasseGegenKlasse = Publisher(
+        name="Klasse Gegen Klasse",
+        domain="https://www.klassegegenklasse.org/",
+        parser=KlasseGegenKlasseParser,
+        sources=[
+            RSSFeed("https://www.klassegegenklasse.org/feed/"),
+            Sitemap(
+                "https://www.klassegegenklasse.org/wp-sitemap.xml",
+                sitemap_filter=inverse(regex_filter("wp-sitemap-posts-post")),
+            ),
+        ],
+        request_header={"user-agent": "Fundus"},
+    )
+
+    DerFreitag = Publisher(
+        name="der Freitag",
+        domain="https://www.freitag.de/",
+        parser=DerFreitagParser,
+        sources=[
+            RSSFeed("https://www.freitag.de/@@RSS"),
+            Sitemap("https://www.freitag.de/sitemap.xml", sitemap_filter=inverse(regex_filter("sitemap-articles"))),
+        ],
+    )
+
+    TOnline = Publisher(
+        name="T-Online",
+        domain="https://www.t-online.de/",
+        parser=TOnlineParser,
+        sources=[
+            RSSFeed("https://www.t-online.de/nachrichten/feed.rss"),
+            RSSFeed("https://www.t-online.de/nachrichten/ukraine/feed.rss"),
+            RSSFeed("https://www.t-online.de/themen/corona/feed.rss"),
+            RSSFeed("https://www.t-online.de/nachrichten/panorama/feed.rss"),
+            RSSFeed("https://www.t-online.de/sport/feed.rss"),
+            RSSFeed("https://www.t-online.de/sport/fussball/feed.rss"),
+            RSSFeed("https://www.t-online.de/unterhaltung/feed.rss"),
+            RSSFeed("https://www.t-online.de/digital/feed.rss"),
+            RSSFeed("https://www.t-online.de/finanzen/feed.rss"),
+            RSSFeed("https://www.t-online.de/mobilitaet/feed.rss"),
+            RSSFeed("https://www.t-online.de/gesundheit/feed.rss"),
+            RSSFeed("https://www.t-online.de/leben/feed.rss"),
+            RSSFeed("https://www.t-online.de/heim-garten/feed.rss"),
+            RSSFeed("https://www.t-online.de/klima/feed.rss"),
         ],
     )

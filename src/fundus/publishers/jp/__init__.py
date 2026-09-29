@@ -30,6 +30,7 @@ class JP(metaclass=PublisherGroup):
                 languages={"en"},
             ),
         ],
+        deprecated=True,
     )
 
     YomiuriShimbun = Publisher(
@@ -86,6 +87,7 @@ class JP(metaclass=PublisherGroup):
             )
         ],
         deprecated=True,
+        impersonate="chrome",
     )
 
     SankeiShimbun = Publisher(

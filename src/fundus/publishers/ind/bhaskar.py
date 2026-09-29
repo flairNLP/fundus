@@ -41,11 +41,9 @@ class BhaskarParser(ParserProxy):
 
         @attribute
         def topics(self) -> List[str]:
-            return [
-                topic
-                for topic in generic_topic_parsing(self.precomputed.ld.bf_search("keywords"))
-                if not re.search(self._topic_bloat_pattern, topic)
-            ]
+            return generic_topic_parsing(
+                self.precomputed.ld.bf_search("keywords"), result_filter=self._topic_bloat_pattern
+            )
 
         @attribute
         def images(self) -> List[Image]:

@@ -17,7 +17,10 @@ from fundus.parser.utility import (
 class RheinischePostParser(ParserProxy):
     class V1(BaseParser):
         _summary_selector = CSSSelector("strong[data-cy='intro']")
-        _paragraph_selector = CSSSelector("div[data-cy='article-content'] p")
+        _paragraph_selector = XPath(
+            "//div[@data-cy='article-content']"
+            "//p[not(ancestor::figcaption)][not(contains(@class, '!text-transparent'))]"
+        )
         _subheadline_selector = CSSSelector("div[data-cy='article-content'] h2")
 
         @attribute

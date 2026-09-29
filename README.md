@@ -25,6 +25,11 @@ Developed at <a href="https://www.informatik.hu-berlin.de/en/forschung-en/gebiet
 
 ---
 
+***Disclaimer**: Although we try to provide an indication of whether a publisher has not explicitly objected to the training of AI models on its data, we would like to point out that this information must be verified independently before their content is used.
+More details can be found [here](docs/5_advanced_topics.md#filtering-publishers-for-ai-training).*
+
+
+---
 Fundus is:
 
 * **A static news crawler.** 

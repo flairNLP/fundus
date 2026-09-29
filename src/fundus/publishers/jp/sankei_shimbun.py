@@ -41,7 +41,9 @@ class SankeiShimbunParser(ParserProxy):
         @attribute
         def authors(self) -> List[str]:
             return [
-                author for author in generic_author_parsing(self.precomputed.meta.get("author")) if "産経新聞" not in author
+                author
+                for author in generic_author_parsing(self.precomputed.meta.get("author"))
+                if "産経新聞" not in author
             ]
 
         @attribute

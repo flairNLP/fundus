@@ -55,7 +55,7 @@ class WDRParser(ParserProxy):
                 image_selector=XPath(
                     "//article//picture[not(@data-resp-img-id='LinklistenteaserImageSectionZModA')]//img[@class='img']"
                 ),
-                upper_boundary_selector=XPath("//div[@class='segment']"),
+                upper_boundary_selector=XPath("//div[@class='segment' or @class='section sectionArticle']"),
                 lower_boundary_selector=XPath("//div[@class='shareCon']"),
                 alt_selector=XPath("./@title"),
                 author_selector=re.compile(r"(?i)\|\s*bildquelle:(?P<credits>.+)"),

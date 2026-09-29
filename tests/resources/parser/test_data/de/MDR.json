@@ -191,5 +191,310 @@
       "Grafik",
       "Zahlen"
     ]
+  },
+  "V2": {
+    "authors": [
+      "Engin Haupt",
+      "MDR SACHSEN-ANHALT"
+    ],
+    "body": {
+      "summary": [
+        "Auch bei aktuell erträglichen Temperaturen ist klar: Die nächste Hitzewelle wird kommen. Auf den Schienen und Straßen in Sachsen-Anhalt könnte es dann wieder problematisch werden. So sind beispielsweise die älteren Straßenbahn-Modelle bei den Magdeburger Verkehrsbetrieben nicht auf Hitze ausgelegt und fallen bei sehr hohen Temperaturen teilweise aus. Bis die Autobahnen im Land nach der letzten Hitzewelle saniert sind, wird es noch Jahre dauern. Künftig könnte es zu Tempolimits kommen."
+      ],
+      "sections": [
+        {
+          "headline": [],
+          "paragraphs": [
+            "In Teilen Deutschlands hat die Hitzewelle im Juni für ernsthafte Probleme auf den Straßen und im Nahverkehr gesorgt. In Leipzig verklebte geschmolzene Fugenmasse die Schienen der Straßenbahnen. Über mehrere Tage mussten die Trams stillstehen."
+          ]
+        },
+        {
+          "headline": [
+            "Magdeburg: Ältere Straßenbahnen nicht Hitze-bereit"
+          ],
+          "paragraphs": [
+            "Von solchen Problemen blieben die Magdeburger Verkehrsbetriebe (MVB) verschont. Beim Gleisbau in Magdeburg wurde eine andere Fugenmasse verwendet. Das sagte Tim Stein, Pressesprecher der MVB, MDR SACHSEN-ANHALT im Interview.",
+            "Ganz ohne Sorgen blickt man allerdings auch in Magdeburg nicht auf die hohen Temperaturen. Das Problem hier sind die älteren Straßenbahn-Modelle. Die in diesen Trams verbaute Technik stamme aus den 90er-Jahren, sagte Stein: \"Die ist für solche Hitze gar nicht ausgelegt. Die Motoren können bei sehr heißen Temperaturen irgendwann nicht mehr gekühlt werden.\"",
+            "Die Straßenbahnen seien dann nicht mehr verkehrssicher. Laut MVB müssen sie dann ins Depot und einige Stunden abkühlen, ehe sie wieder fahren können. Neue Straßenbahnen hätten das Problem nicht. Von denen hat die MVB aber noch nicht genug."
+          ]
+        },
+        {
+          "headline": [
+            "Hitzeschäden vor allem an älteren Autobahnabschnitten"
+          ],
+          "paragraphs": [
+            "Gravierender als auf den Schienen waren die Probleme während des Hitze-Wochenendes auf den Autobahnen Sachsen-Anhalts. Aufgeplatzter Beton hatte dort vor anderthalb Wochen sogar für Vollsperrungen gesorgt. Betroffen waren ausschließlich ältere Streckenabschnitte.",
+            "Steffen Kauert leitet die Außenstelle Magdeburg der Niederlassung Ost der Autobahn GmbH. Er erklärte MDR SACHSEN-ANHALT im Interview, bei hohen Temperaturen dehne der Beton sich aus. Das führe zu erhöhter Spannung. Irgendwann könne die Fahrbahn an einzelnen Stellen, an denen es beispielsweise bereits Flicken gibt, diese Spannung nicht mehr tragen. \"Dann platzt oder bricht sie an verschiedenen Stellen auf.\" So sei es während der Hitzewelle auch auf der A2 passiert."
+          ]
+        },
+        {
+          "headline": [
+            "Tempolimits wegen Straßenschäden"
+          ],
+          "paragraphs": [
+            "Bis die Schäden, die auf den Autobahnen in den letzten Wochen entstanden sind, komplett saniert sind, wird es laut Kauert noch Jahre dauern. Vorbeugende Geschwindigkeitsbegrenzungen an einzelnen Stellen seien nicht ausgeschlossen. Der Grund: Straßenschäden seien während der Fahrt schwer zu erkennen. Wenn man mit dem Auto eine aufgeplatzte Stelle im Asphalt erwische, könne das gerade bei hoher Geschwindigkeit im schlimmsten Fall tödliche Folgen haben.",
+            "Kauert sagte deswegen im Gespräch mit MDR SACHSEN-ANHALT: \"Da können wir auch nur alle auffordern, sich bitte an solche Geschwindigkeitsbegrenzungen zu halten. Wir machen das nicht aus Spaß oder um die Verkehrsteilnehmer zu ärgern, sondern es dient tatsächlich der Verkehrssicherheit.\" Zukünftigen Schäden vorzubeugen, beispielsweise über eine Bewässerung der Fahrbahn, ist laut Kauert kaum möglich."
+          ]
+        }
+      ]
+    },
+    "images": [
+      {
+        "versions": [
+          {
+            "url": "https://www.mdr.de/resources/assets/resources/images/placeholder.png",
+            "query_width": null,
+            "size": {
+              "width": 20,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://images.mdr.de/image/9db05bb9-548b-4fe1-a1eb-e588400c85bb/AAABnzzXm7I/AAABnSSvsdE/16x9-small/strassenbahn-magdeburg-hitze-100.webp?width=256",
+            "query_width": null,
+            "size": {
+              "width": 256,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://images.mdr.de/image/9db05bb9-548b-4fe1-a1eb-e588400c85bb/AAABnzzXm7I/AAABnSSvsdE/16x9-small/strassenbahn-magdeburg-hitze-100.webp?width=384",
+            "query_width": null,
+            "size": {
+              "width": 384,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://images.mdr.de/image/9db05bb9-548b-4fe1-a1eb-e588400c85bb/AAABnzzXm7I/AAABnSSvrFg/16x9-big/strassenbahn-magdeburg-hitze-100.webp?width=576",
+            "query_width": null,
+            "size": {
+              "width": 576,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://images.mdr.de/image/9db05bb9-548b-4fe1-a1eb-e588400c85bb/AAABnzzXm7I/AAABnSSvrFg/16x9-big/strassenbahn-magdeburg-hitze-100.webp?width=640",
+            "query_width": null,
+            "size": {
+              "width": 640,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://images.mdr.de/image/9db05bb9-548b-4fe1-a1eb-e588400c85bb/AAABnzzXm7I/AAABnSSvrFg/16x9-big/strassenbahn-magdeburg-hitze-100.webp?width=768",
+            "query_width": null,
+            "size": {
+              "width": 768,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://images.mdr.de/image/9db05bb9-548b-4fe1-a1eb-e588400c85bb/AAABnzzXm7I/AAABnSSvrFg/16x9-big/strassenbahn-magdeburg-hitze-100.webp?width=1088",
+            "query_width": null,
+            "size": {
+              "width": 1088,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://images.mdr.de/image/9db05bb9-548b-4fe1-a1eb-e588400c85bb/AAABnzzXm7I/AAABnSSvrFg/16x9-big/strassenbahn-magdeburg-hitze-100.webp?width=1920",
+            "query_width": null,
+            "size": {
+              "width": 1920,
+              "height": 0
+            },
+            "type": "image/webp"
+          }
+        ],
+        "is_cover": false,
+        "description": "Dach einer geparkten Straßenbahn mit sichtbarer Technik darauf in einem Depot",
+        "caption": "Bei den älteren Straßenbahn-Modellen in Magdeburg ist die Technik auf dem Dach verbaut und nicht auf Hitze ausgelegt.",
+        "authors": [],
+        "position": 279
+      },
+      {
+        "versions": [
+          {
+            "url": "https://www.mdr.de/resources/assets/resources/images/placeholder.png",
+            "query_width": null,
+            "size": {
+              "width": 20,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://images.mdr.de/image/477e1df5-17e4-4b1d-a8a9-e2202e2cdd55/AAABnzzXw8Q/AAABnSSvsdE/16x9-small/strassenbahn-magdeburg-hitze-102.webp?width=256",
+            "query_width": null,
+            "size": {
+              "width": 256,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://images.mdr.de/image/477e1df5-17e4-4b1d-a8a9-e2202e2cdd55/AAABnzzXw8Q/AAABnSSvsdE/16x9-small/strassenbahn-magdeburg-hitze-102.webp?width=384",
+            "query_width": null,
+            "size": {
+              "width": 384,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://images.mdr.de/image/477e1df5-17e4-4b1d-a8a9-e2202e2cdd55/AAABnzzXw8Q/AAABnSSvrFg/16x9-big/strassenbahn-magdeburg-hitze-102.webp?width=576",
+            "query_width": null,
+            "size": {
+              "width": 576,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://images.mdr.de/image/477e1df5-17e4-4b1d-a8a9-e2202e2cdd55/AAABnzzXw8Q/AAABnSSvrFg/16x9-big/strassenbahn-magdeburg-hitze-102.webp?width=640",
+            "query_width": null,
+            "size": {
+              "width": 640,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://images.mdr.de/image/477e1df5-17e4-4b1d-a8a9-e2202e2cdd55/AAABnzzXw8Q/AAABnSSvrFg/16x9-big/strassenbahn-magdeburg-hitze-102.webp?width=768",
+            "query_width": null,
+            "size": {
+              "width": 768,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://images.mdr.de/image/477e1df5-17e4-4b1d-a8a9-e2202e2cdd55/AAABnzzXw8Q/AAABnSSvrFg/16x9-big/strassenbahn-magdeburg-hitze-102.webp?width=1088",
+            "query_width": null,
+            "size": {
+              "width": 1088,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://images.mdr.de/image/477e1df5-17e4-4b1d-a8a9-e2202e2cdd55/AAABnzzXw8Q/AAABnSSvrFg/16x9-big/strassenbahn-magdeburg-hitze-102.webp?width=1920",
+            "query_width": null,
+            "size": {
+              "width": 1920,
+              "height": 0
+            },
+            "type": "image/webp"
+          }
+        ],
+        "is_cover": false,
+        "description": "Ein Mann mit Brille und Hemd steht neben einer Straßenbahn, auf der \"MVB\" steht",
+        "caption": "Laut MVB-Pressesprecher Tim Stein gibt es in Magdeburg noch nicht genug neue Straßenbahnen, um der Hitze vollends trotzen zu können.",
+        "authors": [],
+        "position": 295
+      },
+      {
+        "versions": [
+          {
+            "url": "https://www.mdr.de/resources/assets/resources/images/placeholder.png",
+            "query_width": null,
+            "size": {
+              "width": 20,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://images.mdr.de/image/77031ebb-aed7-4789-ad20-90f732e0712f/AAABnSZE4EQ/AAABnSSvsdE/16x9-small/baustelle-autobahn-zwei-106.webp?width=256",
+            "query_width": null,
+            "size": {
+              "width": 256,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://images.mdr.de/image/77031ebb-aed7-4789-ad20-90f732e0712f/AAABnSZE4EQ/AAABnSSvsdE/16x9-small/baustelle-autobahn-zwei-106.webp?width=384",
+            "query_width": null,
+            "size": {
+              "width": 384,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://images.mdr.de/image/77031ebb-aed7-4789-ad20-90f732e0712f/AAABnSZE4EQ/AAABnSSvrFg/16x9-big/baustelle-autobahn-zwei-106.webp?width=576",
+            "query_width": null,
+            "size": {
+              "width": 576,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://images.mdr.de/image/77031ebb-aed7-4789-ad20-90f732e0712f/AAABnSZE4EQ/AAABnSSvrFg/16x9-big/baustelle-autobahn-zwei-106.webp?width=640",
+            "query_width": null,
+            "size": {
+              "width": 640,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://images.mdr.de/image/77031ebb-aed7-4789-ad20-90f732e0712f/AAABnSZE4EQ/AAABnSSvrFg/16x9-big/baustelle-autobahn-zwei-106.webp?width=768",
+            "query_width": null,
+            "size": {
+              "width": 768,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://images.mdr.de/image/77031ebb-aed7-4789-ad20-90f732e0712f/AAABnSZE4EQ/AAABnSSvrFg/16x9-big/baustelle-autobahn-zwei-106.webp?width=1088",
+            "query_width": null,
+            "size": {
+              "width": 1088,
+              "height": 0
+            },
+            "type": "image/webp"
+          },
+          {
+            "url": "https://images.mdr.de/image/77031ebb-aed7-4789-ad20-90f732e0712f/AAABnSZE4EQ/AAABnSSvrFg/16x9-big/baustelle-autobahn-zwei-106.webp?width=1920",
+            "query_width": null,
+            "size": {
+              "width": 1920,
+              "height": 0
+            },
+            "type": "image/webp"
+          }
+        ],
+        "is_cover": false,
+        "description": "Steffen Kauert bei der Baustelle auf der A2.",
+        "caption": "Steffen Kauert von der Autobahn GmbH erklärt, welche Folgen die Hitze für Autobahnen hat. (Archivbild)",
+        "authors": [],
+        "position": 334
+      }
+    ],
+    "publishing_date": "2026-07-08 03:00:07.152000+00:00",
+    "title": "So sind Straßenbahnen und Autobahnen auf künftige Hitzewellen vorbereitet",
+    "topics": [
+      "Hitzewelle Deutschland",
+      "Leipzig Straßenbahn Ausfall",
+      "geschmolzene Fugenmasse Tram",
+      "Magdeburg Verkehrsbetriebe MVB Hitze",
+      "Straßenbahn Motor Überhitzung",
+      "Autobahn A2 Schäden",
+      "Beton platzt Hitze",
+      "Tempolimit Sicherheit",
+      "Verkehr Infrastruktur Hitze Deutschland"
+    ]
   }
 }

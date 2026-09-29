@@ -1,5 +1,4 @@
 from fundus.publishers.base_objects import Publisher, PublisherGroup
-from fundus.scraping.filter import inverse, regex_filter
 from fundus.scraping.url import NewsMap, RSSFeed, Sitemap
 
 from .kommersant import KommersantParser

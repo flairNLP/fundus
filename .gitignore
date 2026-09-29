@@ -139,3 +139,6 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Installed agent skills (see skills/install.py)
+.claude/

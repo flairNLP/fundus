@@ -1,8 +1,7 @@
 import re
 from datetime import datetime
-from typing import List, Optional, Pattern
+from typing import List, Optional
 
-import lxml.html
 from lxml.etree import XPath
 
 from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute

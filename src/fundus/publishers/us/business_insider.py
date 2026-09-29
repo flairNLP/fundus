@@ -75,8 +75,6 @@ class BusinessInsiderParser(ParserProxy):
             )
 
     class V2(BaseParser):
-        VALID_UNTIL = datetime.date.today()
-
         _paragraph_selector = XPath("//section[contains(@class, 'post-body-content')]/p")
         _summary_selector = XPath("//div[@class='post-summary-bullets']//li")
         _subheadline_selector = XPath("//section[contains(@class, 'post-body-content')]/h2")

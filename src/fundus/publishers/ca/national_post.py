@@ -14,7 +14,7 @@ from fundus.parser.utility import (
     generic_topic_parsing,
     image_extraction,
 )
-from fundus.scraping.filter import regex_filter
+from fundus.publishers.shared.postmedia import PostMediaParser
 
 
 class NationalPostParser(ParserProxy):
@@ -30,6 +30,20 @@ class NationalPostParser(ParserProxy):
         )
         _paragraph_selector = XPath(
             "//section[@class='article-content__content-group article-content__content-group--story']/p[text()]"
+        )
+
+        _bloat_topics = {
+            "Curated",
+            "News",
+            "Newsroom daily",
+            "story",
+            "Canada",
+            "World",
+            "nationalpost.com",
+            "politics",
+        }
+        _topic_filter = re.compile(
+            r"([0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}|NLP Entity Tokens|NLP Category|NP Comment|Category):?\s*"
         )
 
         @attribute
@@ -55,15 +69,11 @@ class NationalPostParser(ParserProxy):
 
         @attribute
         def topics(self) -> List[str]:
-            preliminary_topics = self.precomputed.ld.bf_search("keywords")
-            filter_list = ["Curated", "News", "Newsroom daily", "story", "Canada", "World", "nationalpost.com"]
-            topic_filter = regex_filter(
-                r"([0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}|NLP Entity Tokens|NLP Category|NP Comment|Category:)"
+            return generic_topic_parsing(
+                self.precomputed.ld.bf_search("keywords"),
+                substitution_pattern=self._topic_filter,
+                result_filter=self._bloat_topics,
             )
-            filtered_topics = [
-                topic for topic in preliminary_topics if not topic_filter(topic) and topic not in filter_list
-            ]
-            return generic_topic_parsing(filtered_topics)
 
         @attribute
         def images(self) -> List[Image]:
@@ -74,25 +84,5 @@ class NationalPostParser(ParserProxy):
                 lower_boundary_selector=CSSSelector("section.article-delimiter"),
             )
 
-    class V1_1(V1):
-        VALID_UNTIL = datetime.date.today()
-
-        _paragraph_selector = XPath(
-            "//div[@class='story-v2-content-element-inline']/"
-            "p[text() and not(@data-async) and not(text()='National Post')]"
-        )
-        _subheadline_selector = XPath(
-            "//div[@class='story-v2-content-element-inline']/h3 |"
-            "//div[@class='story-v2-content-element-inline']/p/strong"
-        )
-
-        @attribute
-        def images(self) -> List[Image]:
-            return image_extraction(
-                doc=self.precomputed.doc,
-                paragraph_selector=self._paragraph_selector,
-                upper_boundary_selector=XPath("(//div[@class='story-v2-block story-v2-article-container'])[1]"),
-                lower_boundary_selector=XPath("//section[@class='article-content__share-group']"),
-                caption_selector=XPath("./ancestor::figure/figcaption/span[@class='caption']"),
-                author_selector=XPath("./ancestor::figure/figcaption/span[@class='credit' or @class='distributor']"),
-            )
+    class V1_1(PostMediaParser.V1):
+        _bloat_topics = PostMediaParser.V1._bloat_topics | {"nationalpost.com"}

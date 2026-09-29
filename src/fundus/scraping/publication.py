@@ -1,6 +1,6 @@
 from datetime import datetime
 from textwrap import TextWrapper, dedent
-from typing import Any, Dict, Iterator, List, Mapping, Optional, Union
+from typing import Any, Dict, Iterator, List, Mapping, Optional
 
 import langdetect
 import lxml.html
@@ -175,7 +175,7 @@ class Article(Publication):
             f'\n- Text:  "{wrapped_plaintext}"'
             f"\n- URL:    {self.html.requested_url}"
             f"\n- From:   {self.publisher}"
-            f'{" (" + self.publishing_date.strftime("%Y-%m-%d %H:%M") + ")" if self.publishing_date else ""}'
+            f"{' (' + self.publishing_date.strftime('%Y-%m-%d %H:%M') + ')' if self.publishing_date else ''}"
         )
 
         return dedent(text)

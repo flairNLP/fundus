@@ -3,6 +3,10 @@
     "url": "https://www.abc.es/sociedad/detenido-policia-abusar-torturar-sexualmente-cuatro-hijos-20241202105634-nt.html",
     "crawl_date": "2025-01-13 13:17:58.165742"
   },
+  "ABC_2026_04_25.html.gz": {
+    "url": "https://www.abc.es/espana/andalucia/cordoba/cordoba-patrimonio-logra-punto-vital-ante-noia-20260425145127-nts.html",
+    "crawl_date": "2026-04-25 16:37:10.152936"
+  },
   "ElDiario_2025_05_29.html.gz": {
     "url": "https://www.eldiario.es/internacional/israel-asesina-sabado-58-palestinos-madrid-gana-fuerza-solucion-estados_1_12328678.html",
     "crawl_date": "2025-05-29 20:31:25.875220"
@@ -18,6 +22,10 @@
   "LaVanguardia_2025_01_13.html.gz": {
     "url": "https://www.lavanguardia.com/politica/20250113/10277301/juez-cita-investigado-fiscal-general-revelar-datos-pareja-diaz-ayuso.html",
     "crawl_date": "2025-01-13 19:51:18.100984"
+  },
+  "LaVanguardia_2026_07_11.html.gz": {
+    "url": "https://www.lavanguardia.com/local/andalucia/20260710/11588570/mueren-seis-personas-incendio-forestal-gallardos.html",
+    "crawl_date": "2026-07-11 17:21:17.980310"
   },
   "MallorcaMagazin_2025_04_16.html.gz": {
     "url": "https://www.mallorcamagazin.com/nachrichten/spanien/2025/04/15/135777/literaturnobelpreistrager-vargas-llosa-gestorben-warum-eine-ganz-besondere-beziehung-mallorca-hatte.html",

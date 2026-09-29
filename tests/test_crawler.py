@@ -1,6 +1,9 @@
 import pytest
 
-from fundus import Crawler, NewsMap, RSSFeed
+from fundus import Crawler, NewsMap, Requires, RSSFeed
+from fundus.publishers.base_objects import Publisher
+from fundus.scraping.crawler import supports_attributes
+from fundus.scraping.html import WebSource
 
 
 class TestPipeline:
@@ -47,3 +50,62 @@ class TestPipeline:
         crawler = Crawler(group_with_valid_publisher_subgroup)
         next(crawler.crawl(max_articles=0), None)
         next(crawler.crawl(max_articles=0), None)
+
+
+class TestSupportsAttributes:
+    def test_without_a_requires_filter_anything_is_supported(self, proxy_with_two_versions_and_different_attrs):
+        assert supports_attributes(None, proxy_with_two_versions_and_different_attrs()) is True
+
+    def test_a_version_covering_the_requirements_supports_them(self, proxy_with_two_versions_and_different_attrs):
+        proxy = proxy_with_two_versions_and_different_attrs()
+        assert supports_attributes(Requires("title"), proxy) is True
+        assert supports_attributes(Requires("another_title"), proxy) is True
+
+    def test_requirements_split_between_versions_are_not_supported(self, proxy_with_two_versions_and_different_attrs):
+        # 'title' comes from one version and 'another_title' from the other, so no article, which
+        # is parsed by a single version, could ever carry both.
+        proxy = proxy_with_two_versions_and_different_attrs()
+        assert supports_attributes(Requires("title", "another_title"), proxy) is False
+
+    def test_without_a_version_nothing_is_supported(self):
+        assert supports_attributes(Requires("title"), []) is False
+
+
+class TestImpersonate:
+    def test_crawler_default_impersonate_false(self, group_with_valid_publisher_subgroup):
+        crawler = Crawler(group_with_valid_publisher_subgroup)
+        assert crawler.impersonate is False
+
+    def test_crawler_stores_impersonate_flag(self, group_with_valid_publisher_subgroup):
+        crawler = Crawler(group_with_valid_publisher_subgroup, impersonate=True)
+        assert crawler.impersonate is True
+
+    def test_websource_disabled_drops_publisher_profile(self, parser_proxy_with_version):
+        publisher = Publisher(
+            name="impersonating",
+            domain="https://test.com/",
+            sources=[RSSFeed("https://test.com/feed")],
+            parser=parser_proxy_with_version,
+            impersonate="chrome",
+        )
+        source = WebSource(
+            url_source=next(iter(publisher.sources)),
+            publisher=publisher,
+            impersonate=False,
+        )
+        assert source._impersonate_profile is None
+
+    def test_websource_enabled_uses_publisher_profile(self, parser_proxy_with_version):
+        publisher = Publisher(
+            name="impersonating",
+            domain="https://test.com/",
+            sources=[RSSFeed("https://test.com/feed")],
+            parser=parser_proxy_with_version,
+            impersonate="chrome",
+        )
+        source = WebSource(
+            url_source=next(iter(publisher.sources)),
+            publisher=publisher,
+            impersonate=True,
+        )
+        assert source._impersonate_profile == publisher.impersonate

@@ -4,7 +4,7 @@ from fundus.scraping.url import NewsMap, RSSFeed, Sitemap
 from ...scraping.filter import inverse, regex_filter
 from .nzz import NZZParser
 from .srf import SRFParser
-from .ta import TAParser
+from .tages_anzeiger import TagesAnzeigerParser
 from .zwanzig_minuten import ZwanzigMinutenParser
 
 # noinspection PyPep8Naming
@@ -40,7 +40,7 @@ class CH(metaclass=PublisherGroup):
     TagesAnzeiger = Publisher(
         name="Tages-Anzeiger",
         domain="https://www.tagesanzeiger.ch/",
-        parser=TAParser,
+        parser=TagesAnzeigerParser,
         sources=[
             NewsMap("https://www.tagesanzeiger.ch/sitemaps/news.xml"),
             Sitemap(

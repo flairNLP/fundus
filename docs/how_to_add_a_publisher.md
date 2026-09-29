@@ -25,6 +25,7 @@
     * [Add unit tests](#add-unit-tests)
     * [Update tables](#update-tables)
   * [7. Opening a Pull Request](#7-opening-a-pull-request)
+  * [8. Maintaining publishers](#8-maintaining-publishers)
 
 # How to add a Publisher
 
@@ -239,19 +240,46 @@ You can check if a sitemap is a news map by:
    E.g. `<urlset ... xmlns:news="http://www.google.com/schemas/sitemap-news/0.9" ... >`<br>
    **_NOTE:_** This can only be found within the actual sitemap and not the index map.
 
+#### Filter noisy sitemaps
+
+Sometimes sitemaps can include a lot of noise like maps pointing to a collection of tags or authors, etc.
+You can use the `sitemap_filter` parameter of `Sitemap` or `NewsMap` to prefilter these based on a regular expression.
+E.g. 
+```` python
+Sitemap("https://apnews.com/sitemap.xml", sitemap_filter=regex_filter("apnews.com/hub/|apnews.com/video/"))
+````
+Will filter out all URLs encountered within the processing of the `Sitemap` object including either the string `apnews.com/hub/` or `apnews.com/video/`. 
+Alternatively:
+````python
+sitemap_filter=inverse(regex_filter("sitemap-content-"))
+````
+will exclude all sitemap URLs not containing the substring `sitemap-content-`.
+
+#### Ordering sitemaps
+
+Some indices list their sitemaps in an order that is neither ascending nor descending by date, e.g. numbered sitemaps ordered as text, where `sitemap_10` follows directly after `sitemap_1`.
+Use the `sort_key` parameter to reorder them.
+It is handed to `list.sort`, so ordering is ascending, and `numeric_sort_key` builds one from a regular expression by reading its capture groups as integers:
+
+````python
+Sitemap(
+    "https://www.voanews.com/sitemap.xml",
+    sitemap_filter=inverse(regex_filter(r"sitemap_[\d_]*\.xml\.gz")),
+    sort_key=numeric_sort_key(r"sitemap_\d+_(\d+)\.xml"),
+)
+````
+
+Pass `reverse=True` to `numeric_sort_key` if the number grows with recency instead.
+Unlike `Sitemap`'s `reverse`, which is applied afterwards and also flips the URLs within each sitemap, this only reorders the sitemaps.
+
 ### Finishing the Publisher Specification
 
-1. Sometimes sitemaps can include a lot of noise like maps pointing to a collection of tags or authors, etc.
-   You can use the `sitemap_filter` parameter of `Sitemap` or `NewsMap` to prefilter these based on a regular expression.
-   E.g. 
-   ```` python
-   Sitemap("https://apnews.com/sitemap.xml", sitemap_filter=regex_filter("apnews.com/hub/|apnews.com/video/"))
-   ````
-   Will filter out all URLs encountered within the processing of the `Sitemap` object including either the string `apnews.com/hub/` or `apnews.com/video/`.  
-2. If your publisher requires to use custom request headers to work properly you can alter it by using the `request_header` parameter of `PublisherSpec`.
-   The default is: `{"user_agent": "Fundus"}`.
-3. If you want to block URLs for the entire publisher use the `url_filter` parameter of `Publisher`.
-4. In some cases it can be necessary to append query parameters to the end of the URL, e.g. to load the article as one page. This can be achieved by adding the `query_parameter` attribute of `PublisherSpec` and assigning it a dictionary object containing the key - value pairs: e.g. `{"page": "all"}`. These key  - value pairs will be appended to all crawled URLs.
+1. If your publisher requires to use custom request headers to work properly you can alter it by using the `request_header` parameter of `PublisherSpec`.
+   The default is: `{"user-agent": "Fundus/2.0 (contact: github.com/flairnlp/fundus)"}`.
+2. If you want to block URLs for the entire publisher use the `url_filter` parameter of `Publisher`.
+3. In some cases it can be necessary to append query parameters to the end of the URL, e.g. to load the article as one page. This can be achieved by adding the `query_parameter` attribute of `PublisherSpec` and assigning it a dictionary object containing the key - value pairs: e.g. `{"page": "all"}`. These key  - value pairs will be appended to all crawled URLs.
+4. If the publisher is only reachable through a browser-like TLS/HTTP fingerprint (i.e. plain `requests`/`curl` get blocked by an anti-bot layer such as Cloudflare or Akamai), you can declare a browser profile via the `impersonate` parameter, e.g. `impersonate="chrome"`. See [curl_cffi's supported targets](https://curl-cffi.readthedocs.io/en/latest/impersonate/targets.html) for the full list.
+   Because browser impersonation is an opt-in feature on the user side (see [Browser impersonation](5_advanced_topics.md#browser-impersonation)), the profile only takes effect when the user constructs the `Crawler` with `impersonate=True`; with the default `impersonate=False` your publisher will be requested without impersonation and will likely fail. Only set this when the publisher genuinely cannot be crawled without it.
 
 Now, let's put it all together to specify The Intercept as a new publisher in Fundus:
 
@@ -514,6 +542,11 @@ Output:
 This is a paragraph within a div of class B
 ````
 
+You will probably find the class attribute to be useful in many cases.
+There is, however, one aspect to look out for.
+Class names that are a random string of characters, such as `sc-dFfFtc` for example, are dynamically generated by the host server and *not* persistent across reboots.
+Hence, you should avoid using them in selectors.
+
 Selectors can also target nodes with specific attribute values, even if those attributes are not standard in the HTML specification:
 
 ```` python
@@ -553,6 +586,10 @@ It's important to note that article layouts can vary significantly between publi
 To accurately extract the body of an article, use the `extract_article_body_with_selector` function from the parser utilities.
 This function accepts selectors for the different body parts as input and returns a parsed `ArticleBody`.
 For practical examples, refer to existing parser implementations to understand how everything integrates.
+
+> [!IMPORTANT]  
+> Regardless of the article's layout, the extracted `ArticleBody` should closely mirror the actual body/text of the article and must not include any additional content.
+> This ensures that the text can be accurately mapped back to the HTML for annotation purposes.
 
 ### Extracting the images
 
@@ -743,6 +780,22 @@ pytest
 ## 7. Opening a Pull Request
 
 1. Make sure you tested your parser using `pytest`.
-2. Run `black src`, `isort src`, and `mypy src` with no errors.
+2. Run `ruff format src`, `ruff check --fix src`, and `mypy src` with no errors.
 3. Push and open a new PR
 4. Congratulation and thank you very much.
+
+## 8. Maintaining publishers
+
+Website layouts change over time, so we may occasionally need to update a publisher's parser.
+If you run into an issue, feel free to correct it and submit a pull request (PR).
+Please follow these guidelines when making such changes:
+
+- If the layout of the publisher changes and the corresponding parser can no longer extract articles properly, create a new parser version with updated selectors.
+- Use a minor version bump (e.g., from `V1` to `V1_1(V1)`) if the update only involves adjusting selectors.
+- If the change introduces new attributes or substantially modifies several existing ones, consider moving to a new major version (e.g., from `V1` to `V2`).
+- For changes in the domain, update the domain in the publisher specifications, but add the now outdated domain to the `deprecated_domains` list for backward crawling support.
+
+> [!NOTE]
+> Set the `VALID_UNTIL` attribute on the previous version to a `datetime.date` for the day before the layout change.
+> You can estimate this date using the logs or the Wayback Machine.
+> Note that `VALID_UNTIL` is not inherited from previous versions — every subclass of `BaseParser` defaults to `date.max`.

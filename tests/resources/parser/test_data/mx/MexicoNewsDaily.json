@@ -212,5 +212,154 @@
       "steel aluminum tariffs mexico",
       "steel trade us-mexico"
     ]
+  },
+  "V1_1": {
+    "authors": [
+      "MND Staff"
+    ],
+    "body": {
+      "summary": [],
+      "sections": [
+        {
+          "headline": [],
+          "paragraphs": [
+            "Steady August rains have helped replenish the Cutzamala reservoir system, Mexico City’s primary source of water, boosting supply to 81% capacity, its highest volume in a decade.",
+            "According to data from the National Water Commission (Conagua), the Cutzamala System has experienced 13 consecutive weeks of recovery, dating to the beginning of the rainy season on June 4.",
+            "During the final week of August, 15.02 million cubic meters of water from rainfall and runoff were captured in the Balsas River basin, where the system’s physical infrastructure and reservoirs are located.",
+            "The Cutzamala System supplies 5 million inhabitants of the greater Mexico City Metropolitan Area and provides 18% of the water the area consumes, around 422 million liters daily.",
+            "Conagua’s monthly report for August indicated that the Valle de Bravo dam was at 86.58% capacity with 341.47 million cubic meters of water; Villa Victoria dam held 78.10% of its capacity with 145.06 million cubic meters; and the El Bosque dam was at 72.98% with 147.71 million cubic meters.",
+            "These totals dwarf the numbers the system reported the past three years and come two years after policymakers were faced with concerns that a Day Zero might be approaching.",
+            "The current volume of water is roughly equivalent to that recorded in August 2017, but storage steadily declined during the following years. By 2021 and 2022, the system was operating at 50.31% and 50.15%, respectively.",
+            "Then, a drought in 2023 reduced the water supply even more dramatically so that in 2023, the system was operating at 36.71% of its capacity. In 2024, it rose slightly to 42%. Ahead of the 2025 rainy season, Conagua reported that storage had reached 56%, but cautioned that the crisis had yet to be averted.",
+            "However, plentiful rains boosted the Cutzamala water supply so thoroughly that it remained at nearly 70% by spring 2026.",
+            "This year’s August data shows that the three dams had increased their level by more than 30 million cubic meters compared to the same period in 2025, helped considerably by five days in which more than 20 mm of rainfall was recorded in the Balsas and Lerma river basins. Aug. 16 was particularly beneficial to the system, as downpours added 18 mm to Villa Victoria, 34 mm to Valle de Bravo and 26 mm to El Bosque.",
+            "On Aug. 1, total storage was 577.56 billion cubic meters, equivalent to 73.81%. By the 30th, the volume had reached 634.25 billion cubic meters, or 81.05%.",
+            "Conagua says the system is on track to reach its maximum capacity for the year by Oct. 31 (the date rainfall is expected to drop to near zero in its area of influence), projecting 98% capacity."
+          ]
+        }
+      ]
+    },
+    "images": [
+      {
+        "versions": [
+          {
+            "url": "https://mexiconewsdaily.com/wp-content/uploads/2024/07/986822_Lluvias-Domingo_impreso-150x100.jpg",
+            "query_width": null,
+            "size": {
+              "width": 150,
+              "height": 100
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://mexiconewsdaily.com/wp-content/uploads/2024/07/986822_Lluvias-Domingo_impreso-300x199.jpg",
+            "query_width": null,
+            "size": {
+              "width": 300,
+              "height": 200
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://mexiconewsdaily.com/wp-content/uploads/2024/07/986822_Lluvias-Domingo_impreso-696x463.jpg",
+            "query_width": null,
+            "size": {
+              "width": 696,
+              "height": 463
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://mexiconewsdaily.com/wp-content/uploads/2024/07/986822_Lluvias-Domingo_impreso-768x510.jpg",
+            "query_width": null,
+            "size": {
+              "width": 768,
+              "height": 511
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://mexiconewsdaily.com/wp-content/uploads/2024/07/986822_Lluvias-Domingo_impreso.jpg",
+            "query_width": null,
+            "size": {
+              "width": 850,
+              "height": 565
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": true,
+        "description": "A person walks holding an umbrella in the rain",
+        "caption": "This year's heavy rainfall may have been inconvenient to many and even caused damage on occasion, but it has undeniably helped Mexico's main water supply system avoid a crisis.",
+        "authors": [
+          "Daniel Augusto/Cuartoscuro"
+        ],
+        "position": 809
+      },
+      {
+        "versions": [
+          {
+            "url": "https://mexiconewsdaily.com/wp-content/uploads/2023/06/931448_Presa-de-Villa-Victoria-bajo-nivel-12.jpg-_impreso-150x100.jpg",
+            "query_width": null,
+            "size": {
+              "width": 150,
+              "height": 100
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://mexiconewsdaily.com/wp-content/uploads/2023/06/931448_Presa-de-Villa-Victoria-bajo-nivel-12.jpg-_impreso-300x200.jpg",
+            "query_width": null,
+            "size": {
+              "width": 300,
+              "height": 200
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://mexiconewsdaily.com/wp-content/uploads/2023/06/931448_Presa-de-Villa-Victoria-bajo-nivel-12.jpg-_impreso-696x464.jpg",
+            "query_width": null,
+            "size": {
+              "width": 696,
+              "height": 464
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://mexiconewsdaily.com/wp-content/uploads/2023/06/931448_Presa-de-Villa-Victoria-bajo-nivel-12.jpg-_impreso-768x512.jpg",
+            "query_width": null,
+            "size": {
+              "width": 768,
+              "height": 512
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://mexiconewsdaily.com/wp-content/uploads/2023/06/931448_Presa-de-Villa-Victoria-bajo-nivel-12.jpg-_impreso.jpg",
+            "query_width": null,
+            "size": {
+              "width": 850,
+              "height": 567
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": false,
+        "description": "Vila Victoria reservoir",
+        "caption": "Just three years ago, the Villa Victoria reservoir was about 30% full. Today it’s over 78% capacity, holding more than 145 million cubic meters of water.",
+        "authors": [
+          "Crisanta Espinosa Aguilar/Cuartoscuro.com"
+        ],
+        "position": 827
+      }
+    ],
+    "publishing_date": "2026-09-03 20:34:08+00:00",
+    "title": "Mexico City’s Cutzamala water supply system hits 81%, highest level in a decade",
+    "topics": [
+      "cutzamala system",
+      "El Bosque dam",
+      "Valle de Bravo dam",
+      "Villa Victoria Dam"
+    ]
   }
 }

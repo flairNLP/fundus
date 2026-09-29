@@ -11,47 +11,36 @@ on:
       - src/fundus/publishers/**
       - scripts/generate_tables.py
 
-  # https://github.com/stefanzweifel/git-auto-commit-action/issues/211#issuecomment-1100105924
-  pull_request_target:
-    paths:
-      - src/fundus/publishers/**
-      - scripts/generate_tables.py
-
   workflow_dispatch:
 
 env:
   PYTHONPATH: .
-  CI_COMMIT_MESSAGE: >-
-    ${{ 
-      github.event_name == 'pull_request' 
-      && format('Update documentation from @ {0} (#{1})', github.event.pull_request.head.sha, github.event.number) 
-      || format('Update documentation from @ {0}', github.sha)
-    }}
 
 jobs:
   supported_publishers:
     runs-on: ubuntu-latest
-    
+
     permissions:
       contents: write
 
     steps:
-      - name: Set up Git repository
-        uses: actions/checkout@v4
-    # https://github.com/stefanzweifel/git-auto-commit-action?tab=readme-ov-file#use-in-forks-from-public-repositories
+      # Mints a short-lived token for the 'fundus-docs-bot' GitHub App, which is
+      # allowed to bypass branch protection on 'master'. The default GITHUB_TOKEN
+      # cannot push to the protected branch.
+      - name: Generate app token
+        id: app-token
+        uses: actions/create-github-app-token@v1
         with:
-          # Checkout the fork/head-repository and push changes to the fork.
-          # If you skip this, the base repository will be checked out and changes
-          # will be committed to the base repository!
-          repository: ${{ github.event.pull_request.head.repo.full_name }}
+          app-id: ${{ secrets.DOCS_BOT_APP_ID }}
+          private-key: ${{ secrets.DOCS_BOT_PRIVATE_KEY }}
 
-          # Checkout the branch made in the fork. Will automatically push changes
-          # back to this branch.
-          ref: ${{ github.head_ref }}
-
+      - name: Set up Git repository
+        uses: actions/checkout@v6
+        with:
+          token: ${{ steps.app-token.outputs.token }}
 
       - name: Set up Python 3.9
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: 3.9
 
@@ -62,7 +51,9 @@ jobs:
         run: python scripts/generate_tables.py
 
       - name: Commit changes
-        uses: stefanzweifel/git-auto-commit-action@v5
+        # [skip ci] prevents this commit from triggering workflows.
+        # https://github.com/stefanzweifel/git-auto-commit-action
+        uses: stefanzweifel/git-auto-commit-action@v7
         with:
-          commit_message: ${{ env.CI_COMMIT_MESSAGE }}
+          commit_message: "docs: regenerate supported_publishers.md [skip ci]"
           file_pattern: docs

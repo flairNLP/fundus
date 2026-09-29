@@ -24,6 +24,7 @@ from typing import (
 )
 
 import lxml.html
+from lxml.etree import XPath
 
 from fundus.logging import create_logger
 from fundus.parser.data import LinkedDataMapping
@@ -206,7 +207,7 @@ class Precomputed:
 
 
 class BaseParser(ABC):
-    VALID_UNTIL: date = date.today()
+    VALID_UNTIL: date
     precomputed: Precomputed
 
     def __init__(self, timestamp: Optional[date] = None):
@@ -223,6 +224,36 @@ class BaseParser(ABC):
         predicated_members: List[Tuple[str, RegisteredFunction]] = inspect.getmembers(self, predicate=predicate)
         bound_registered_functions: List[RegisteredFunction] = [func for _, func in predicated_members]
         self._sorted_registered_functions = sorted(bound_registered_functions, key=lambda f: (f, f.__name__))
+
+    def __init_subclass__(cls, **kwargs):
+        super().__init_subclass__(**kwargs)
+        if "VALID_UNTIL" not in cls.__dict__:
+            cls.VALID_UNTIL = date.max
+
+    @classmethod
+    def version(cls) -> str:
+        return cls.__name__
+
+    @classmethod
+    def body_selectors(cls) -> Dict[str, Optional[XPath]]:
+        """The version's body selectors, keyed 'summary' / 'subheadline' / 'paragraph'.
+
+        These are the selectors a version feeds to ``extract_article_body_with_selector``;
+        a value is None when the version does not declare the corresponding selector
+        (or builds its body another way entirely). Public so external tooling (e.g. the
+        review skill under skills/) does not have to reach into the private
+        ``_*_selector`` attributes.
+
+        The naming convention this relies on — a selector passed as ``<x>_selector`` lives on
+        the class as ``_<x>_selector`` — is nothing but a convention, so it is enforced by
+        ``tests/test_parser.py::TestParser::test_body_selector_naming`` until the selectors
+        become declared class variables (see #958, which retires both).
+        """
+        return {
+            "summary": getattr(cls, "_summary_selector", None),
+            "subheadline": getattr(cls, "_subheadline_selector", None),
+            "paragraph": getattr(cls, "_paragraph_selector", None),
+        }
 
     @classmethod
     def _search_members(cls, obj_type: type) -> List[Tuple[str, Any]]:
@@ -248,8 +279,22 @@ class BaseParser(ABC):
         return self.precomputed.cache if self.precomputed else None
 
     @property
-    def registered(self) -> List[RegisteredFunction]:
-        return self._sorted_registered_functions
+    def registered(self) -> RegisteredFunctionCollection[RegisteredFunction]:
+        return RegisteredFunctionCollection(*self._sorted_registered_functions)
+
+    @property
+    def registered_attributes(self) -> AttributeCollection:
+        return AttributeCollection(
+            *[
+                func
+                for func in self._sorted_registered_functions
+                if isinstance(func, Attribute) and func.__name__ not in ["__ld", "__meta"]
+            ]
+        )
+
+    @property
+    def registered_functions(self) -> FunctionCollection:
+        return FunctionCollection(*[func for func in self._sorted_registered_functions if isinstance(func, Function)])
 
     def _base_setup(self, html: str) -> None:
         doc = lxml.html.document_fromstring(html)
@@ -275,7 +320,7 @@ class BaseParser(ABC):
                         parsed_data[attribute_name] = func.__default__
                         logger.info(
                             f"Couldn't parse attribute {attribute_name!r} for "
-                            f"{self.precomputed.meta.get('og:url')!r}: {err}"
+                            f"{self.precomputed.meta.get('og:url')!r}: {err!r}"
                         )
                     elif error_handling == "catch":
                         parsed_data[attribute_name] = err
@@ -336,7 +381,9 @@ class _ParserCache:
 
 class ParserProxy(ABC):
     def __init__(self):
-        predicate: Callable[[object], bool] = lambda x: inspect.isclass(x) and issubclass(x, BaseParser)
+        def predicate(x: object) -> bool:
+            return inspect.isclass(x) and issubclass(x, BaseParser)
+
         included_parsers: List[Type[BaseParser]] = [
             parser for name, parser in inspect.getmembers(type(self), predicate=predicate)
         ]
@@ -413,3 +460,23 @@ class ParserProxy(ABC):
     @property
     def latest_version(self) -> Type[BaseParser]:
         return self._get_latest_cache().factory
+
+    def versions_covering(self, start: date, end: date) -> Iterator[Type[BaseParser]]:
+        """Iterates over the versions used to parse articles crawled between <start> and <end>.
+
+        A version is valid from the day after its predecessor's VALID_UNTIL up to and including its
+        own, so it takes part in the range as soon as those two spans overlap. Versions are yielded
+        oldest first.
+
+        Args:
+            start: The first day of the range, inclusive.
+            end: The last day of the range, inclusive.
+
+        Returns:
+            Iterator over the parser versions covering part of the range.
+        """
+        previous_valid_until = date.min
+        for valid_until, cache in self._parser_mapping.items():
+            if valid_until >= start and previous_valid_until < end:
+                yield cache.factory
+            previous_valid_until = valid_until

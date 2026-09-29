@@ -1,10 +1,14 @@
+import ast
 import datetime
+import inspect
 import pickle
-from typing import Any, Dict, List, Optional, Tuple, Union
+import textwrap
+from typing import Any, Dict, List, Optional, Tuple, Type, Union
 
 import lxml.html
 import pytest
 
+from fundus.parser import ArticleBody, LiveTickerBody
 from fundus.parser.base_parser import (
     Attribute,
     AttributeCollection,
@@ -159,7 +163,7 @@ class TestParserProxy:
 
     def test_call(self, proxy_with_two_versions_and_different_attrs):
         parser_proxy = proxy_with_two_versions_and_different_attrs()
-        assert type(parser_proxy()) == parser_proxy.latest_version
+        assert type(parser_proxy()) is parser_proxy.latest_version
 
         for versioned_parser in parser_proxy:
             from_proxy = parser_proxy(versioned_parser.VALID_UNTIL)
@@ -203,6 +207,48 @@ attributes_required_to_cover = {"title", "authors", "topics", "publishing_date",
 attributes_parsers_are_required_to_cover = {"body"}
 
 
+# `BaseParser.body_selectors` locates a version's body selectors by convention: a selector passed as
+# `<x>_selector` must live on the class as `_<x>_selector`. Nothing declares that, so where the name
+# drifts, external tooling (skills/review-publisher) silently reads `None` instead of the selector.
+# Enforced here until the selectors become declared class variables, see #958 - which retires this.
+_BODY_SELECTOR_PARAMETERS = ("paragraph_selector", "summary_selector", "subheadline_selector")
+
+
+def _called_name(func: ast.expr) -> Optional[str]:
+    if isinstance(func, ast.Name):
+        return func.id
+    return func.attr if isinstance(func, ast.Attribute) else None
+
+
+def _misnamed_body_selectors(parser_class: Type[BaseParser]) -> List[str]:
+    """Body selectors `parser_class` passes under a name `BaseParser.body_selectors` cannot find."""
+    misnamed: List[str] = []
+    for node in ast.walk(ast.parse(textwrap.dedent(inspect.getsource(parser_class)))):
+        if not isinstance(node, ast.Call) or _called_name(node.func) != "extract_article_body_with_selector":
+            continue
+        # extract_article_body_with_selector(doc, paragraph_selector, summary_selector, subheadline_selector, ...)
+        arguments: List[Tuple[str, ast.expr]] = [
+            (_BODY_SELECTOR_PARAMETERS[index - 1], argument)
+            for index, argument in enumerate(node.args)
+            if 1 <= index <= len(_BODY_SELECTOR_PARAMETERS)
+        ]
+        arguments += [
+            (keyword.arg, keyword.value)
+            for keyword in node.keywords
+            if keyword.arg is not None and keyword.arg in _BODY_SELECTOR_PARAMETERS
+        ]
+        for parameter, value in arguments:
+            # Only a `self.<attribute>` argument can be misnamed. An inline selector is invisible to
+            # `body_selectors()` either way, which then reports "not declared" rather than "empty".
+            if not (isinstance(value, ast.Attribute) and isinstance(value.value, ast.Name)):
+                continue
+            if value.value.id == "self" and value.attr != f"_{parameter}":
+                misnamed.append(
+                    f"{parser_class.__qualname__} passes {parameter}=self.{value.attr}, expected self._{parameter}"
+                )
+    return misnamed
+
+
 @pytest.mark.parametrize(
     "publisher", list(PublisherCollection), ids=[publisher.__name__ for publisher in PublisherCollection]
 )
@@ -215,12 +261,29 @@ class TestParser:
             ), f"{versioned_parser.__name__!r} should implement at least {attributes_parsers_are_required_to_cover!r}"
             for attr in versioned_parser.attributes().validated:
                 if annotation := attribute_annotations_mapping[attr.__name__]:
-                    assert attr.__annotations__.get("return") == annotation, (
+                    allowed = [annotation]
+                    if attr.__name__ == "body":
+                        # live ticker publishers may return a LiveTickerBody in addition to an ArticleBody
+                        allowed.append(Optional[Union[ArticleBody, LiveTickerBody]])
+                    assert attr.__annotations__.get("return") in allowed, (
                         f"Attribute {attr.__name__!r} for {versioned_parser.__name__!r} is of wrong type. "
                         f"{attr.__annotations__.get('return')} != {annotation}"
                     )
                 else:
                     raise KeyError(f"Unsupported attribute {attr.__name__!r}")
+
+    def test_body_selector_naming(self, publisher: Publisher) -> None:
+        misnamed: List[str] = []
+        for versioned_parser in publisher.parser:
+            # Walk the MRO: `body` is often defined on V1 and inherited by the later versions.
+            for parser_class in versioned_parser.__mro__:
+                if not issubclass(parser_class, BaseParser) or parser_class is BaseParser:
+                    continue
+                misnamed += [entry for entry in _misnamed_body_selectors(parser_class) if entry not in misnamed]
+        assert not misnamed, (
+            f"{'; '.join(misnamed)}\n`BaseParser.body_selectors` finds a version's body selectors by name only, "
+            f"so {publisher.name} silently reads as not declaring them (see #958)."
+        )
 
     def test_parsing(self, publisher: Publisher) -> None:
         comparative_data = load_test_case_data(publisher)
@@ -229,9 +292,17 @@ class TestParser:
         for versioned_parser in publisher.parser:
             # validate json
             version_name = versioned_parser.__name__
-            assert (
-                version_data := comparative_data.get(version_name)
-            ), f"Missing test data for parser version {version_name!r}"
+            assert (version_data := comparative_data.get(version_name)), (
+                f"Missing test data for parser version {version_name!r}"
+            )
+
+            # validate test HTML
+            assert (html := html_mapping.get(versioned_parser)), (
+                f"Missing test HTML for parser version {version_name} of publisher {publisher.name}"
+            )
+
+            # re-instantiate parser to address deprecated attributes
+            timestamp_instantiated_parser = publisher.parser(html.crawl_date)
 
             for key, value in version_data.items():
                 if not value:
@@ -241,21 +312,18 @@ class TestParser:
                     )
 
             # test coverage
-            supported_attrs = set(versioned_parser.attributes().names)
+            supported_attrs = set(timestamp_instantiated_parser.registered_attributes.names)
             missing_attrs = attributes_required_to_cover & supported_attrs - set(version_data.keys())
-            assert (
-                not missing_attrs
-            ), f"Test JSON for {version_name} of publisher {publisher.name} does not cover the following attribute(s): {missing_attrs}"
+            assert not missing_attrs, (
+                f"Test JSON for {version_name} of publisher {publisher.name} does not cover the following attribute(s): {missing_attrs}"
+            )
 
-            assert list(version_data.keys()) == sorted(
-                attributes_required_to_cover & supported_attrs
-            ), f"Test JSON for {version_name} is not in alphabetical order"
+            assert list(version_data.keys()) == sorted(attributes_required_to_cover & supported_attrs), (
+                f"Test JSON for {version_name} is not in alphabetical order"
+            )
 
-            assert (
-                html := html_mapping.get(versioned_parser)
-            ), f"Missing test HTML for parser version {version_name} of publisher {publisher.name}"
             # compare data
-            extraction = versioned_parser().parse(html.content, "raise")
+            extraction = timestamp_instantiated_parser.parse(html.content, "raise")
             for key, value in version_data.items():
                 assert value == extraction[key], f"{key!r} is not equal"
 
@@ -312,5 +380,5 @@ class TestMetaInfo:
             meta_info = meta_file.load()
             assert meta_info, f"Meta info file {meta_file.path} is missing"
             assert sorted(meta_info.keys()) == list(meta_info.keys()), (
-                f"Meta info file {meta_file.path} " f"isn't ordered properly."
+                f"Meta info file {meta_file.path} isn't ordered properly."
             )

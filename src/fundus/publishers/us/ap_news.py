@@ -57,22 +57,15 @@ class APNewsParser(ParserProxy):
 
         @attribute
         def topics(self) -> List[str]:
-            return [
-                topic
-                for topic in generic_topic_parsing(self.precomputed.meta.get("keywords"))
-                if not re.search(self._topic_bloat_pattern, topic)
-            ]
+            return generic_topic_parsing(self.precomputed.meta.get("keywords"), result_filter=self._topic_bloat_pattern)
 
         # unfortunately we would need to render the site first before parsing images for this version
 
     class V1_1(V1):
-        VALID_UNTIL = datetime.date.today()
-
         _author_selector = CSSSelector("div.Page-authors")
         _subheadline_selector = XPath("//div[contains(@class, 'RichTextStoryBody')] /h2[not(text()='___')]")
         _paragraph_selector = XPath(
-            "//div[contains(@class, 'RichTextStoryBody')] "
-            "/p[not(preceding-sibling::*[1][self::h2 and text()='___'])]"
+            "//div[contains(@class, 'RichTextStoryBody')] /p[not(preceding-sibling::*[1][self::h2 and text()='___'])]"
             # only p-elements not directly following h2 elements with text() = '___'
         )
 

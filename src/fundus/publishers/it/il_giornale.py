@@ -1,24 +1,33 @@
+import datetime
 import re
-from datetime import datetime
 from typing import List, Optional
 
 from lxml.cssselect import CSSSelector
 from lxml.etree import XPath, tostring
 from lxml.html import document_fromstring
 
-from fundus.parser import ArticleBody, BaseParser, Image, ParserProxy, attribute
+from fundus.parser import (
+    ArticleBody,
+    BaseParser,
+    Image,
+    ParserProxy,
+    attribute,
+    function,
+)
 from fundus.parser.utility import (
     extract_article_body_with_selector,
     generic_author_parsing,
     generic_date_parsing,
+    generic_nodes_to_text,
     generic_topic_parsing,
     image_extraction,
-    transform_breaks_to_paragraphs,
+    transform_breaks_to_tag,
 )
 
 
 class IlGiornaleParser(ParserProxy):
     class V1(BaseParser):
+        VALID_UNTIL = datetime.date(2026, 7, 22)
         # Selectors for article body parts
         _paragraph_selector = XPath(
             "//div[contains(@class, 'typography--content')]//p[text() or strong or em] | //div[@class='banner banner--spaced-block banner-evo' and (text() or em or strong)]"
@@ -28,6 +37,28 @@ class IlGiornaleParser(ParserProxy):
         _image_selector = XPath(
             "//div[contains(@class, 'article__media')]//img | //section[contains(@class, 'article__content')]//img"
         )
+
+        @function(priority=1)
+        def _preprocess(self) -> None:
+            # Clean up HTML by removing ads and handling em/strong/cite tags
+            html_string = tostring(self.precomputed.doc).decode("utf-8")
+            html_string = re.sub(r"</?(em|strong|cite)>", "", html_string)
+            html_string = re.sub(r"<!-- EVOLUTION ADV -->", "", html_string)
+            doc = document_fromstring(html_string)
+
+            # Transform br tags to paragraphs for better structure
+            transform_breaks_to_tag(doc)
+
+            self.precomputed.doc = doc
+
+        @attribute
+        def body(self) -> Optional[ArticleBody]:
+            return extract_article_body_with_selector(
+                self.precomputed.doc,
+                paragraph_selector=self._paragraph_selector,
+                subheadline_selector=self._subheadline_selector,
+                summary_selector=self._summary_selector,
+            )
 
         @attribute
         def title(self) -> Optional[str]:
@@ -47,32 +78,13 @@ class IlGiornaleParser(ParserProxy):
             return []
 
         @attribute
-        def publishing_date(self) -> Optional[datetime]:
+        def publishing_date(self) -> Optional[datetime.datetime]:
             # Try JSON-LD first
             date_str = self.precomputed.ld.xpath_search("//NewsArticle/datePublished", scalar=True)
             if not date_str:
                 # Fallback to meta tags
                 date_str = self.precomputed.meta.get("article:published_time")
             return generic_date_parsing(date_str)
-
-        @attribute
-        def body(self) -> Optional[ArticleBody]:
-            # Clean up HTML by removing ads and handling em/strong/cite tags
-            html_string = tostring(self.precomputed.doc).decode("utf-8")
-            html_string = re.sub(r"</?(em|strong|cite)>", "", html_string)
-            html_string = re.sub(r"<!-- EVOLUTION ADV -->", "", html_string)
-            doc = document_fromstring(html_string)
-
-            # Transform br tags to paragraphs for better structure
-            doc = transform_breaks_to_paragraphs(doc)
-
-            # Extract article body using utility function
-            return extract_article_body_with_selector(
-                doc,
-                paragraph_selector=self._paragraph_selector,
-                subheadline_selector=self._subheadline_selector,
-                summary_selector=self._summary_selector,
-            )
 
         @attribute
         def topics(self) -> List[str]:
@@ -96,4 +108,48 @@ class IlGiornaleParser(ParserProxy):
                 paragraph_selector=self._paragraph_selector,
                 image_selector=self._image_selector,
                 caption_selector=XPath(".//figcaption/text()"),
+            )
+
+    class V2(BaseParser):
+        _summary_selector = XPath("//main//p[@class='b-subheadline']")
+        _paragraph_selector = XPath(
+            "//main//p[@class='c-paragraph' and (text() or i)] | //article/*[self::ol or self::il]/li"
+        )
+        _subheadline_selector = XPath("//main//*[self::h3 or self::h2 or (self::p and not(text()) and b)]")
+
+        _topic_selector = XPath("//div[@class='c-stack b-article-tag']/a")
+
+        @attribute
+        def title(self) -> Optional[str]:
+            return self.precomputed.ld.xpath_search("//NewsArticle/headline", scalar=True)
+
+        @attribute
+        def body(self) -> Optional[ArticleBody]:
+            return extract_article_body_with_selector(
+                self.precomputed.doc,
+                summary_selector=self._summary_selector,
+                paragraph_selector=self._paragraph_selector,
+                subheadline_selector=self._subheadline_selector,
+            )
+
+        @attribute
+        def publishing_date(self) -> Optional[datetime.datetime]:
+            return generic_date_parsing(self.precomputed.ld.xpath_search("//NewsArticle/datePublished", scalar=True))
+
+        @attribute
+        def authors(self) -> List[str]:
+            return generic_author_parsing(self.precomputed.ld.xpath_search("//NewsArticle/author"))
+
+        @attribute
+        def topics(self) -> List[str]:
+            return generic_topic_parsing(generic_nodes_to_text(self._topic_selector(self.precomputed.doc)))
+
+        @attribute
+        def images(self) -> List[Image]:
+            return image_extraction(
+                doc=self.precomputed.doc,
+                paragraph_selector=self._paragraph_selector,
+                author_selector=re.compile(
+                    r"(?i)(?<=\.)(?P<credits>((\s*[A-Za-zÀ-ÿ]+\s*){1,3}/)+(\s*[A-Za-zÀ-ÿ]+\s*){1,3})$"
+                ),
             )

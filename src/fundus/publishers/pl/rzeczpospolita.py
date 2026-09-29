@@ -16,6 +16,8 @@ from fundus.parser.utility import (
 
 class RzeczpospolitaParser(ParserProxy):
     class V1(BaseParser):
+        VALID_UNTIL = datetime.date(2026, 3, 24)
+
         _paragraph_selector = XPath(
             "//div[contains(@class,'article--content')]//div[contains(@class,'body articleBody')]"
             "//p[contains(@class, 'article--paragraph')]"
@@ -26,6 +28,10 @@ class RzeczpospolitaParser(ParserProxy):
         )
 
         _topic_selector = XPath("//div[@data-mrf-section='Article / Tags']/a")
+        _image_selector = XPath("//div[@class='blog--image']//img")
+        _upper_boundary_selector = XPath("//div[@class='row']//h1")
+        _caption_selector = XPath("./ancestor::div[@class='blog--image']//p[@class='article--media--lead']")
+        _author_selector = XPath("./ancestor::div[@class='blog--image']//p[@class='image--author']")
 
         @attribute
         def body(self) -> Optional[ArticleBody]:
@@ -60,8 +66,21 @@ class RzeczpospolitaParser(ParserProxy):
             return image_extraction(
                 doc=self.precomputed.doc,
                 paragraph_selector=self._paragraph_selector,
-                image_selector=XPath("//div[@class='blog--image']//img"),
-                upper_boundary_selector=XPath("//div[@class='row']//h1"),
-                caption_selector=XPath("./ancestor::div[@class='blog--image']//p[@class='article--media--lead']"),
-                author_selector=XPath("./ancestor::div[@class='blog--image']//p[@class='image--author']"),
+                image_selector=self._image_selector,
+                upper_boundary_selector=self._upper_boundary_selector,
+                caption_selector=self._caption_selector,
+                author_selector=self._author_selector,
             )
+
+    class V1_1(V1):
+        _summary_selector = XPath("//div[@class='article--lead ']")
+        _paragraph_selector = XPath(
+            "//div[contains(@class,'article--content')]//div[contains(@class,'body articleBody')]"
+            "//p[contains(@class, 'article--paragraph')] |"
+            "//div[contains(@class, 'articleBodyBlock')]//li"
+        )
+
+        _image_selector = XPath("//div[contains(@class,'--image')]//img")
+        _upper_boundary_selector = XPath("//h1")
+        _caption_selector = XPath("./ancestor::div[contains(@class,'--image')]//p[@class='article--media--lead']")
+        _author_selector = XPath("./ancestor::div[contains(@class,'--image')]//p[@class='image--author']")

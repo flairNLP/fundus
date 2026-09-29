@@ -1,150 +1,4 @@
 {
-  "V1_1": {
-    "authors": [
-      "Noora Mykkanen"
-    ],
-    "body": {
-      "summary": [
-        "Sweden and Finland have told millions of citizens how to be prepared in the case of a war and crisis."
-      ],
-      "sections": [
-        {
-          "headline": [],
-          "paragraphs": [
-            "The Nordic neighbours have published updated guidance today detailing what to do in the case of a conflict.",
-            "It comes just hours after US allowed Ukraine to use its long-range weapons to strike inside Russia.",
-            "The move was criticised by Russian politicians and Donald Trump Jr who wrote on X: ‘Military Industrial Complex seems to want to make sure they get World War 3 going.’",
-            "US analysts have said Russia appears to be preparing for a large-scale conflict with NATO – although no one can say for sure how likely an all-out World War III is.",
-            "Sweden’s Civil Contingencies Agency will mail an updated version of the ‘In case of crisis or war’ brochure to five million households in the country from today.",
-            "It details how to be prepared across different areas of life, including shelter, home preparedness, psychological defence, digital security, terror attacks, disease outbreaks and extreme weather across 32 pages – double the size of the previous pamphlet six years ago.",
-            "The Swedish government has released the new guidance after ‘the state of the world has worsened drastically in recent years’ – referring to the Russian invasion of Ukraine.",
-            "Sweden also joined NATO in March which means a shift in the perceived threat landscape after becoming a member of the military alliance despised by Russia.",
-            "In Finland, the government also issued fresh advice online today called ‘Preparing for incidents and crises.’",
-            "Finland, which shares a 833-mile border with Russia, joined NATO in April last year.",
-            "Its advice, only published online, details how a war or a crisis could disrupt everyday life and what to do about it.",
-            "The Swedish brochure says ‘If Sweden is attacked, we will never surrender. Any suggestion to the contrary is false.’"
-          ]
-        },
-        {
-          "headline": [
-            "What is in the war pamphlet?"
-          ],
-          "paragraphs": [
-            "Surviving a conflict or crisis might be nothing new to doomsday preppers, but majority of modern city dwellers relying largely on digital services might not have thought about things like having a stock of cash if banking is down or storing drinking water.",
-            "Sweden’s brochure includes exactly that – details on how to store emergency drinking water during a shortage, heating if the electricity is cut during the winter and building up an emergency food supply.",
-            "It tells people to have enough cash for at least one week in different denominations. The Finnish guidance advises citizens to have cash for everyday supplies for a ‘few days.’",
-            "To get through a crisis situation, the Finnish online brochure suggests playing games, reading books or doing crafts to kill time.",
-            "It instructs people how to keep warm at home in the country where winter temperatures remain on average below 0C and can erach below -30C in northern Finland.",
-            "The brochure says: ‘In cold temperatures of around 20 degrees Celsius in winter, the indoor temperature of the dwelling will drop below 10 degrees Celsius from just over one day to four days depending on the building.’",
-            "It also explains about civilian shelters which are dotted across both Sweden and Finland.",
-            "Metro visited one of Finland’s many bomb shelters in March, including a huge shelter with room for 6,000 people in Helsinki boasting a sport courts, children’s play park and a food court.",
-            "Daniel Backström, a volunteer lead with the Finnish Civil Defence, told Metro previously: ‘We have never forgotten these things, due to our history – we have always found preparation to be very important.’",
-            "Despite being neighbours and sharing hundreds of years of history, Finland and Sweden have had very different experiences with Russia and have their own geopolitical issues – although both are located around the Baltic Sea.",
-            "While neither were ever part of the Soviet Union, tiny Finland successfully fought USSR’s enormous military power during various wars between 1939 and 1945.",
-            "Sweden was officially neutral during World War II and it avoided having any direct fighting on its territory.",
-            "Although Sweden was officially non-aligned during the war, the country made concessions to Nazi Germany, including allowing German soldiers to transit through on their way to the Finnish-Russian border from occupied Norway.",
-            "Finland was allied with the Nazis and Germany launched its operations agains the USSR from north Finland and Lapland – a dark time in Finland’s history.",
-            "Because of this recent experience of war only a couple of generations ago, Finland has always maintained a relatively high level of preparedness, including armed forces based on mandatory conscription for men.",
-            "In the early 2010s, Sweden swapped a mandatory military service for men for a professional model more akin to the UK system.",
-            "But just seven years later, it made a U-turn and brought back military draft, but this time for both men and women.",
-            "Norway and Denmark have recently also published new war pamphlets."
-          ]
-        }
-      ]
-    },
-    "images": [
-      {
-        "versions": [
-          {
-            "url": "https://metro.co.uk/wp-content/uploads/2024/11/SEI_230033353-f7f0.jpg?quality=90&strip=all&w=646",
-            "query_width": null,
-            "size": {
-              "width": 646,
-              "height": 431
-            },
-            "type": "image/jpeg"
-          }
-        ],
-        "is_cover": true,
-        "description": "Sweden's Minister for Civil Defence Carl-Oskar Bohlin presents Sweden's war pamphlet.",
-        "caption": "Sweden’s Minister for Civil Defence Carl-Oskar Bohlin revealed the new war survival brochure in October",
-        "authors": [
-          "Claudio Bresciani/AP"
-        ],
-        "position": 738
-      },
-      {
-        "versions": [
-          {
-            "url": "https://metro.co.uk/wp-content/uploads/2024/11/SEI_230063122-e635.jpg?quality=90&strip=all&w=646",
-            "query_width": null,
-            "size": {
-              "width": 646,
-              "height": 431
-            },
-            "type": "image/jpeg"
-          }
-        ],
-        "is_cover": false,
-        "description": "A box full of non perishable food items.",
-        "caption": "The Swedish and Finnish guides advise to stock up on non-perishable food in case people can’t leave their homes",
-        "authors": [
-          "Getty Images"
-        ],
-        "position": 752
-      },
-      {
-        "versions": [
-          {
-            "url": "https://metro.co.uk/wp-content/uploads/2024/11/SEI_230063713-0be6.jpg?quality=90&strip=all&w=646",
-            "query_width": null,
-            "size": {
-              "width": 646,
-              "height": 919
-            },
-            "type": "image/jpeg"
-          }
-        ],
-        "is_cover": false,
-        "description": "Sweden's updated war pamphlet.",
-        "caption": "The English version of Sweden’s new war pamphlet",
-        "authors": [
-          "MSB"
-        ],
-        "position": 853
-      },
-      {
-        "versions": [
-          {
-            "url": "https://metro.co.uk/wp-content/uploads/2024/11/SEI_230063710-26ec.jpg?quality=90&strip=all&w=556",
-            "query_width": null,
-            "size": {
-              "width": 556,
-              "height": 795
-            },
-            "type": "image/jpeg"
-          }
-        ],
-        "is_cover": false,
-        "description": "Sweden's updated war survival pamphlet in case of crisis or war in English.",
-        "caption": "The updated brochure include practical advise in the face of a war or crisis affecting Sweden",
-        "authors": [
-          "MSB"
-        ],
-        "position": 867
-      }
-    ],
-    "publishing_date": "2024-11-18 21:26:36+00:00",
-    "title": "Sweden tells 5,000,000 households 'how to survive WWIII' in war pamphlet",
-    "topics": [
-      "Finland",
-      "NATO",
-      "Russia",
-      "Russia-Ukraine war",
-      "Sweden",
-      "World War 3"
-    ]
-  },
   "V1": {
     "authors": [
       "Jen Mills"
@@ -501,6 +355,294 @@
       "Politics",
       "Royal Family",
       "UK Parliament"
+    ]
+  },
+  "V1_1": {
+    "authors": [
+      "Noora Mykkanen"
+    ],
+    "body": {
+      "summary": [
+        "Sweden and Finland have told millions of citizens how to be prepared in the case of a war and crisis."
+      ],
+      "sections": [
+        {
+          "headline": [],
+          "paragraphs": [
+            "The Nordic neighbours have published updated guidance today detailing what to do in the case of a conflict.",
+            "It comes just hours after US allowed Ukraine to use its long-range weapons to strike inside Russia.",
+            "The move was criticised by Russian politicians and Donald Trump Jr who wrote on X: ‘Military Industrial Complex seems to want to make sure they get World War 3 going.’",
+            "US analysts have said Russia appears to be preparing for a large-scale conflict with NATO – although no one can say for sure how likely an all-out World War III is.",
+            "Sweden’s Civil Contingencies Agency will mail an updated version of the ‘In case of crisis or war’ brochure to five million households in the country from today.",
+            "It details how to be prepared across different areas of life, including shelter, home preparedness, psychological defence, digital security, terror attacks, disease outbreaks and extreme weather across 32 pages – double the size of the previous pamphlet six years ago.",
+            "The Swedish government has released the new guidance after ‘the state of the world has worsened drastically in recent years’ – referring to the Russian invasion of Ukraine.",
+            "Sweden also joined NATO in March which means a shift in the perceived threat landscape after becoming a member of the military alliance despised by Russia.",
+            "In Finland, the government also issued fresh advice online today called ‘Preparing for incidents and crises.’",
+            "Finland, which shares a 833-mile border with Russia, joined NATO in April last year.",
+            "Its advice, only published online, details how a war or a crisis could disrupt everyday life and what to do about it.",
+            "The Swedish brochure says ‘If Sweden is attacked, we will never surrender. Any suggestion to the contrary is false.’"
+          ]
+        },
+        {
+          "headline": [
+            "What is in the war pamphlet?"
+          ],
+          "paragraphs": [
+            "Surviving a conflict or crisis might be nothing new to doomsday preppers, but majority of modern city dwellers relying largely on digital services might not have thought about things like having a stock of cash if banking is down or storing drinking water.",
+            "Sweden’s brochure includes exactly that – details on how to store emergency drinking water during a shortage, heating if the electricity is cut during the winter and building up an emergency food supply.",
+            "It tells people to have enough cash for at least one week in different denominations. The Finnish guidance advises citizens to have cash for everyday supplies for a ‘few days.’",
+            "To get through a crisis situation, the Finnish online brochure suggests playing games, reading books or doing crafts to kill time.",
+            "It instructs people how to keep warm at home in the country where winter temperatures remain on average below 0C and can erach below -30C in northern Finland.",
+            "The brochure says: ‘In cold temperatures of around 20 degrees Celsius in winter, the indoor temperature of the dwelling will drop below 10 degrees Celsius from just over one day to four days depending on the building.’",
+            "It also explains about civilian shelters which are dotted across both Sweden and Finland.",
+            "Metro visited one of Finland’s many bomb shelters in March, including a huge shelter with room for 6,000 people in Helsinki boasting a sport courts, children’s play park and a food court.",
+            "Daniel Backström, a volunteer lead with the Finnish Civil Defence, told Metro previously: ‘We have never forgotten these things, due to our history – we have always found preparation to be very important.’",
+            "Despite being neighbours and sharing hundreds of years of history, Finland and Sweden have had very different experiences with Russia and have their own geopolitical issues – although both are located around the Baltic Sea.",
+            "While neither were ever part of the Soviet Union, tiny Finland successfully fought USSR’s enormous military power during various wars between 1939 and 1945.",
+            "Sweden was officially neutral during World War II and it avoided having any direct fighting on its territory.",
+            "Although Sweden was officially non-aligned during the war, the country made concessions to Nazi Germany, including allowing German soldiers to transit through on their way to the Finnish-Russian border from occupied Norway.",
+            "Finland was allied with the Nazis and Germany launched its operations agains the USSR from north Finland and Lapland – a dark time in Finland’s history.",
+            "Because of this recent experience of war only a couple of generations ago, Finland has always maintained a relatively high level of preparedness, including armed forces based on mandatory conscription for men.",
+            "In the early 2010s, Sweden swapped a mandatory military service for men for a professional model more akin to the UK system.",
+            "But just seven years later, it made a U-turn and brought back military draft, but this time for both men and women.",
+            "Norway and Denmark have recently also published new war pamphlets."
+          ]
+        }
+      ]
+    },
+    "images": [
+      {
+        "versions": [
+          {
+            "url": "https://metro.co.uk/wp-content/uploads/2024/11/SEI_230033353-f7f0.jpg?quality=90&strip=all&w=646",
+            "query_width": null,
+            "size": {
+              "width": 646,
+              "height": 431
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": true,
+        "description": "Sweden's Minister for Civil Defence Carl-Oskar Bohlin presents Sweden's war pamphlet.",
+        "caption": "Sweden’s Minister for Civil Defence Carl-Oskar Bohlin revealed the new war survival brochure in October",
+        "authors": [
+          "Claudio Bresciani/AP"
+        ],
+        "position": 738
+      },
+      {
+        "versions": [
+          {
+            "url": "https://metro.co.uk/wp-content/uploads/2024/11/SEI_230063122-e635.jpg?quality=90&strip=all&w=646",
+            "query_width": null,
+            "size": {
+              "width": 646,
+              "height": 431
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": false,
+        "description": "A box full of non perishable food items.",
+        "caption": "The Swedish and Finnish guides advise to stock up on non-perishable food in case people can’t leave their homes",
+        "authors": [
+          "Getty Images"
+        ],
+        "position": 752
+      },
+      {
+        "versions": [
+          {
+            "url": "https://metro.co.uk/wp-content/uploads/2024/11/SEI_230063713-0be6.jpg?quality=90&strip=all&w=646",
+            "query_width": null,
+            "size": {
+              "width": 646,
+              "height": 919
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": false,
+        "description": "Sweden's updated war pamphlet.",
+        "caption": "The English version of Sweden’s new war pamphlet",
+        "authors": [
+          "MSB"
+        ],
+        "position": 853
+      },
+      {
+        "versions": [
+          {
+            "url": "https://metro.co.uk/wp-content/uploads/2024/11/SEI_230063710-26ec.jpg?quality=90&strip=all&w=556",
+            "query_width": null,
+            "size": {
+              "width": 556,
+              "height": 795
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": false,
+        "description": "Sweden's updated war survival pamphlet in case of crisis or war in English.",
+        "caption": "The updated brochure include practical advise in the face of a war or crisis affecting Sweden",
+        "authors": [
+          "MSB"
+        ],
+        "position": 867
+      }
+    ],
+    "publishing_date": "2024-11-18 21:26:36+00:00",
+    "title": "Sweden tells 5,000,000 households 'how to survive WWIII' in war pamphlet",
+    "topics": [
+      "Finland",
+      "NATO",
+      "Russia",
+      "Russia-Ukraine war",
+      "Sweden",
+      "World War 3"
+    ]
+  },
+  "V1_2": {
+    "authors": [
+      "Maicey Navarro Griffiths"
+    ],
+    "body": {
+      "summary": [
+        "British Airways is switching up the London airport that four major routes depart from, starting this October."
+      ],
+      "sections": [
+        {
+          "headline": [],
+          "paragraphs": [
+            "The four destinations affected are: Costa Rica (San Jose), Tampa, Fuerteventura, and Innsbruck.",
+            "The news will be particularly important for UK tourists heading to Fuerteventura, as latest official figures show that 576,338 Brits visited the Canary Islands in July alone.",
+            "It means that British tourists accounted for 37% of all tourists visiting the islands during that month.",
+            "So, if you’re heading off to any of these destinations in the coming months, you might want to triple check where you’re leaving from — or risk missing your flight.",
+            "BA, which flies to over 200 destinations, are also set to introduce brand new routes this autumn and winter, including a seasonal route to Finland, just in time for the festive season.",
+            "Here’s everything you need to know…"
+          ]
+        },
+        {
+          "headline": [
+            "What changes are coming at London airports?"
+          ],
+          "paragraphs": [
+            "Costa Rica (San Jose) (October 25) – flights will depart from London Heathrow instead of London Gatwick (one-way from £696)",
+            "Tampa, Florida (October) - flights will depart from London Heathrow instead of London Gatwick (one-way from £729)",
+            "Fuerteventura, Spain (December 13) - flights will depart from London Heathrow instead of London Gatwick(one-way from £118)",
+            "Innsbruck, Austria (December 7) - flights will depart from London Gatwick instead of London Heathrow (one-way from £70)"
+          ]
+        },
+        {
+          "headline": [
+            "What happens if you’ve already booked your flight?"
+          ],
+          "paragraphs": [
+            "Metro contacted British Airways, to ask what this means for travellers who already have a flight booked.",
+            "British Airways said: ‘We’ve given customers travelling with us advance notice of some minor adjustments to a small number of our services this winter.",
+            "‘We’re focused on making sure we’re flying to where our customers want to travel to this winter, and affected customers have been offered rebooking options on an alternative flight, or a full refund.’",
+            "Tampa and Costa Rica changes were communicated in March, and Fuerteventura and Innsbruck in July, giving over five months notice."
+          ]
+        },
+        {
+          "headline": [
+            "How much is a round trip?"
+          ],
+          "paragraphs": [
+            "A return trip for one person, from October 14 to 21, Economy Standard from London Heathrow to San Jose starts from £934.49.",
+            "A return trip for one person, from October 14 to 21, Economy Standard from London Heathrow to Tampa starts from £648.",
+            "A return trip for one person, from December 17 to 24, Economy Plus (this flight does not offer Standard), from London Heathrow to Fuerteventura starts from £270.95.",
+            "A return trip for one person, from December 22 to 29, Economy Plus (this flight does not offer Standard), from London Gatwick to Innsbruck starts from £275.10."
+          ]
+        },
+        {
+          "headline": [
+            "What other changes are coming for British Airways?"
+          ],
+          "paragraphs": [
+            "Airport switches aren’t the only changes coming to the airline, with BA set to unveil several changes happening this year and one to look forward to next year too.",
+            "From October, BA will be flying direct three times a week from London Gatwick to Sri Lanka.",
+            "New flights to Barbados from London Gatwick, alongside the existing London Heathrow departures, will launch from October.",
+            "Flights from London Heathrow to Cologne, Germany, will relaunch from November.",
+            "Flights to Graz, Austria, will launch from November.",
+            "Flights to Rabat, Morocco, will launch twice weekly from November.",
+            "Flights twice a week from London Gatwick to Rovaniemi, Finland throughout December, including Christmas Eve.",
+            "Flights to Melbourne, Australia will launch in January 2027."
+          ]
+        }
+      ]
+    },
+    "images": [
+      {
+        "versions": [
+          {
+            "url": "https://metro.co.uk/wp-content/uploads/2026/08/SEI204236892-86cc.jpg?quality=90&strip=all&w=646",
+            "query_width": null,
+            "size": {
+              "width": 646,
+              "height": 431
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": true,
+        "description": null,
+        "caption": "BA are swapping routes between London Heathrow and London Gatwick from October",
+        "authors": [
+          "Shutterstock / Markus Mainka"
+        ],
+        "position": 634
+      },
+      {
+        "versions": [
+          {
+            "url": "https://metro.co.uk/wp-content/uploads/2025/08/SEI_261577856-ec64.jpg?quality=90&strip=all&w=646",
+            "query_width": null,
+            "size": {
+              "width": 646,
+              "height": 363
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": false,
+        "description": "Morro Jable, Fuerteventura, Spain. Breathtaking beach Playa del Matorral in the rays of the sunset. Morro Jable and Playa del Matorral, Fuerteventura, Canary Islands, Spain, Atlantic, Europe",
+        "caption": "Fuerteventura is a great winter-sun destination with 22°C temperatures in December",
+        "authors": [
+          "Getty Images"
+        ],
+        "position": 647
+      },
+      {
+        "versions": [
+          {
+            "url": "https://metro.co.uk/wp-content/uploads/2026/09/SEI_248787417-1569.jpg?quality=90&strip=all&w=646",
+            "query_width": null,
+            "size": {
+              "width": 646,
+              "height": 430
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": false,
+        "description": "Costa Rica, beach Manuel Antonio; Shutterstock ID 2537335403; purchase_order: -; job: -; client: -; other: -",
+        "caption": "Costa Rica can now be reached from London Heathrow",
+        "authors": [
+          "Shutterstock"
+        ],
+        "position": 717
+      }
+    ],
+    "publishing_date": "2026-09-14 15:34:19+00:00",
+    "title": "British Airways makes major flight change to 4 destinations — including Spanish favourite",
+    "topics": [
+      "British Airways",
+      "Canary Islands",
+      "Gatwick Airport",
+      "Heathrow Airport",
+      "Travel Advice"
     ]
   }
 }

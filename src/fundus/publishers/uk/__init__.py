@@ -13,6 +13,8 @@ from .evening_standard import EveningStandardParser
 from .express import ExpressParser
 from .i_news import INewsParser
 from .metro import MetroParser
+from .nature import NatureParser
+from .techradar import TechRadarParser
 from .the_bbc import TheBBCParser
 from .the_guardian import TheGuardianParser
 from .the_independent import TheIndependentParser
@@ -38,7 +40,7 @@ class UK(metaclass=PublisherGroup):
         sources=[
             Sitemap(
                 "https://www.independent.co.uk/sitemap.xml",
-                sitemap_filter=inverse(regex_filter(f"sitemap-articles")),
+                sitemap_filter=inverse(regex_filter("sitemap-articles")),
             ),
             NewsMap("https://www.independent.co.uk/sitemaps/googlenews"),
         ],
@@ -52,6 +54,8 @@ class UK(metaclass=PublisherGroup):
             Sitemap("https://www.mirror.co.uk/sitemaps/sitemap_index.xml", reverse=True),
             NewsMap("https://www.mirror.co.uk/map_news.xml"),
         ],
+        deprecated=True,
+        impersonate="chrome",
     )
 
     TheTelegraph = Publisher(
@@ -62,7 +66,7 @@ class UK(metaclass=PublisherGroup):
             Sitemap("https://www.telegraph.co.uk/sitemap.xml"),
             NewsMap("https://www.telegraph.co.uk/custom/daily-news/sitemap.xml"),
         ],
-        deprecated=True,
+        impersonate="chrome99_android",
     )
 
     iNews = Publisher(
@@ -92,10 +96,12 @@ class UK(metaclass=PublisherGroup):
         name="Daily Star",
         domain="https://www.dailystar.co.uk/",
         parser=DailyStarParser,
+        deprecated=True,
         sources=[
             Sitemap("https://www.dailystar.co.uk/sitemaps/sitemap_index.xml", reverse=True),
             NewsMap("https://www.dailystar.co.uk/map_news.xml"),
         ],
+        impersonate="chrome",
     )
 
     TheSun = Publisher(
@@ -120,6 +126,7 @@ class UK(metaclass=PublisherGroup):
             Sitemap(f"https://www.dailymail.co.uk/sitemap-articles-year~{year.year}.xml")
             for year in rrule(YEARLY, dtstart=datetime(2021, 1, 1), until=datetime.today())
         ],
+        impersonate="chrome",
     )
 
     EveningStandard = Publisher(
@@ -143,6 +150,32 @@ class UK(metaclass=PublisherGroup):
             NewsMap("https://metro.co.uk/news-sitemap.xml"),
             Sitemap("https://metro.co.uk/sitemap.xml"),
         ],
+    )
+
+    Nature = Publisher(
+        name="Nature",
+        domain="https://www.nature.com/",
+        parser=NatureParser,
+        sources=[
+            RSSFeed("https://www.nature.com/nature.rss"),
+            NewsMap("https://www.nature.com/latest-news/sitemap.xml"),
+            Sitemap("https://www.nature.com/sitemap.xml"),
+        ],
+    )
+
+    TechRadar = Publisher(
+        name="TechRadar",
+        domain="https://www.techradar.com/",
+        parser=TechRadarParser,
+        sources=[
+            Sitemap(
+                "https://www.techradar.com/sitemap.xml",
+                reverse=True,
+                sitemap_filter=inverse(regex_filter(r"https://www.techradar.com/sitemap-[0-9]{4}-[0-9]{2}.xml")),
+            ),
+            NewsMap("https://www.techradar.com/sitemap-news.xml"),
+        ],
+        url_filter=regex_filter(r"/deals/compare|/html/|/outlink|/infinite-scroll-"),
     )
 
     Express = Publisher(

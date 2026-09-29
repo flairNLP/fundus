@@ -15,9 +15,9 @@ from fundus.parser.utility import (
 
 class LeMondeParser(ParserProxy):
     class V1(BaseParser):
-        _paragraph_selector: CSSSelector = CSSSelector("p[class='article__paragraph ']")
-        _summary_selector: XPath = XPath("//p[contains(@class, 'article__desc') or @id='js-summary-live']")
-        _subheadline_selector: XPath = XPath("//h2[@class = 'article__sub-title']")
+        _paragraph_selector = XPath("//p[contains(@class, 'article__paragraph')]")
+        _summary_selector = XPath("//p[contains(@class, 'article__desc') or @id='js-summary-live']")
+        _subheadline_selector = XPath("//h2[@class = 'article__sub-title']")
 
         @attribute
         def body(self) -> Optional[ArticleBody]:

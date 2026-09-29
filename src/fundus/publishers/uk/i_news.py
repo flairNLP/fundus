@@ -56,8 +56,6 @@ class INewsParser(ParserProxy):
             )
 
     class V1_1(V1):
-        VALID_UNTIL = datetime.date.today()
-
         _summary_selector = CSSSelector("article p.inews__post-excerpt")
 
         @attribute

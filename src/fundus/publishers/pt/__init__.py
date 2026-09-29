@@ -93,4 +93,5 @@ class PT(metaclass=PublisherGroup):
                 languages={"br"},
             ),
         ],
+        impersonate="chrome",
     )
