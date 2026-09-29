@@ -341,10 +341,13 @@ Since we didn't add any specific implementation to the parser yet, most entries 
 Now bring your parser to life and define the attributes you want to extract.
 
 One important caveat to consider is the type of content on a particular page.
-Some news outlets feature live tickers, displaying podcasts, or hub sites that link to other pages but are not articles themselves.
-At this stage, there's no need to concern yourself with handling non-article pages. 
-our parser should concentrate on extracting desired attributes from most pages that can be classified as articles.
+Some news outlets feature podcasts or hub sites that link to other pages but are not articles themselves.
+At this stage, there's no need to concern yourself with handling those non-article pages. 
+Your parser should concentrate on extracting desired attributes from most pages that can be classified as articles.
 Pages lacking the desired attributes will be filtered out by the library during a later phase of the processing pipeline.
+
+Live tickers are the exception: they are a supported content type with their own structure.
+If the publisher runs live tickers, see [Extracting live tickers](#extracting-live-tickers) after you have finished the basic parser.
 
 You can add attributes by decorating the methods of your parser with the `@attribute` decorator.
 The expected return value for each attribute must precisely match the specifications outlined in the [attribute guidelines](attribute_guidelines.md).
@@ -591,6 +594,46 @@ For practical examples, refer to existing parser implementations to understand h
 > Regardless of the article's layout, the extracted `ArticleBody` should closely mirror the actual body/text of the article and must not include any additional content.
 > This ensures that the text can be accurately mapped back to the HTML for annotation purposes.
 
+### Extracting live tickers
+
+Live tickers are pages consisting of many timestamped entries.
+If a publisher has them, the `body` attribute can return a `LiveTickerBody` instead of an `ArticleBody`.
+Use `extract_body_with_selector` instead of `extract_article_body_with_selector` for this.
+It takes the selectors you already use for the article body and the additional selectors for the live ticker, all prefixed with `live_ticker_`:
+
+- `live_ticker_boundary_selector`: selects one element per entry, marking where an entry starts. **A page is treated as a live ticker, if this selector matches**, otherwise as an article.
+- `live_ticker_paragraph_selector`: the paragraphs of the entries.
+- `live_ticker_summary_selector`: the summary of the whole live ticker. All summary nodes must be located before the first entry.
+- `live_ticker_subheadline_selector`: the headlines of the entries.
+- `live_ticker_date_selector`: the date of an entry. Elements with a `datetime` attribute are read from it, all others from their text.
+- `live_ticker_author_selector`: the authors of an entry.
+- `live_ticker_image_selector`: the `<img>` elements of an entry. To enrich the images, `live_ticker_image_caption_selector`, `live_ticker_image_alt_selector`, `live_ticker_image_author_selector`, `live_ticker_image_size_pattern` and `live_ticker_image_relative_urls` work like the corresponding arguments of `image_extraction`.
+
+Only the paragraph selector and the boundary selector are required, everything else is optional.
+The selectors are evaluated on the whole page, an element belongs to the entry that precedes it in the document.
+Therefore, a selector should only match content of the live ticker.
+
+````python
+@attribute
+def body(self) -> Optional[Union[ArticleBody, LiveTickerBody]]:
+    return extract_body_with_selector(
+        self.precomputed.doc,
+        summary_selector=self._summary_selector,
+        subheadline_selector=self._subheadline_selector,
+        paragraph_selector=self._paragraph_selector,
+        live_ticker_boundary_selector=self._live_ticker_boundary_selector,
+        live_ticker_summary_selector=self._live_ticker_summary_selector,
+        live_ticker_subheadline_selector=self._live_ticker_subheadline_selector,
+        live_ticker_paragraph_selector=self._live_ticker_paragraph_selector,
+        live_ticker_date_selector=self._live_ticker_date_selector,
+    )
+````
+
+Because the entries of a live ticker carry their own images and authors, the `images` attribute of the parser should describe the page only.
+Images of entries are attached to their entry by `live_ticker_image_selector`.
+
+For examples, have a look at the parsers of `SZ`, `Tagesschau` or `IlGiornale`.
+
 ### Extracting the images
 
 Fundus offers a utility function `image_extraction` to extract images from the article.
@@ -761,6 +804,22 @@ python -m scripts.generate_parser_test_files -p TheIntercept -oj
 ````
 
 This command will overwrite the existing `.json` file for your test case while retaining the HTML file.
+
+#### Live ticker test cases
+
+If your parser supports live tickers, you should add a test case for them as well.
+Live tickers can't be found by crawling, so you have to provide the URL of one with the `-l` flag:
+
+````shell
+python -m scripts.generate_parser_test_files -l -p <your_publisher_class> -u <url_of_a_live_ticker>
+````
+
+Live ticker test cases are stored in a `live_ticker` subfolder next to the article test cases.
+Their `.json` files only need to contain the attributes the live ticker actually provides, empty ones (e.g. no topics) are left out by the script.
+`title`, `publishing_date` and `body` are required.
+To update the `.json` after changing your parser, use `-l -oj` like above, without a URL.
+
+Publishers without a live ticker test case are skipped by the tests, so add one to have your live ticker parser covered.
 
 ### Update tables
 

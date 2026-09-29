@@ -243,7 +243,13 @@ def cmd_crawl(args: argparse.Namespace) -> int:
         # which is exactly the parser failure a review must see. They reach the scan like any other.
         # `impersonate=True`: a declared profile only applies when the user opts in this way, and
         # publishers declaring none are unaffected - without it, protected publishers draw 0.
-        pool = list(Crawler(publisher, impersonate=True).crawl(max_articles=args.pool, only_complete=False))
+        # Live tickers are skipped: the review compares an `ArticleBody` with the article text, which a
+        # `LiveTickerBody` (a list of entries) does not map onto.
+        pool = [
+            article
+            for article in Crawler(publisher, impersonate=True).crawl(max_articles=args.pool, only_complete=False)
+            if isinstance(article, Article)
+        ]
         risks = _scan_pool(publisher.parser, pool)
         selection = _select_for_review(pool, risks, args.review)
 
