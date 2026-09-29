@@ -153,7 +153,7 @@ class IlGiornaleParser(ParserProxy):
 
         @attribute
         def authors(self) -> List[str]:
-            return generic_author_parsing(self.precomputed.ld.xpath_search("//NewsArticle/author"))
+            return generic_author_parsing(self.precomputed.ld.xpath_search("(//NewsArticle|//LiveBlogPosting)/author"))
 
         @attribute
         def topics(self) -> List[str]:
