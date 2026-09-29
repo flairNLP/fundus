@@ -19,11 +19,11 @@ class SportSchauParser(ParserProxy):
     class V1(BaseParser):
         VALID_UNTIL = datetime.date(2025, 10, 13)
 
-        _summary_selector = CSSSelector(
+        _summary_selector: XPath = CSSSelector(
             "p[class='textabsatz columns twelve  m-ten  m-offset-one l-eight l-offset-two'] > strong"
         )
-        _paragraph_selector = CSSSelector("article >p.textabsatz:not(p.textabsatz:nth-of-type(1))")
-        _subheadline_selector = CSSSelector("article >h2")
+        _paragraph_selector: XPath = CSSSelector("article >p.textabsatz:not(p.textabsatz:nth-of-type(1))")
+        _subheadline_selector: XPath = CSSSelector("article >h2")
 
         @attribute
         def body(self) -> Optional[ArticleBody]:
