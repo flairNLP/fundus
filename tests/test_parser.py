@@ -355,7 +355,7 @@ class FixedSource:
 
 
 def _supports_live_ticker(publisher: Publisher) -> bool:
-    return any(hasattr(versioned_parser, "_live_ticker_boundary_selector") for versioned_parser in publisher.parser)
+    return any(versioned_parser.supports_live_tickers() for versioned_parser in publisher.parser)
 
 
 live_ticker_publishers = [publisher for publisher in PublisherCollection if _supports_live_ticker(publisher)]
@@ -381,7 +381,7 @@ class TestLiveTickerParser:
 
         # only versions implementing live ticker extraction need a live ticker test case
         for versioned_parser in publisher.parser:
-            if not hasattr(versioned_parser, "_live_ticker_boundary_selector"):
+            if not versioned_parser.supports_live_tickers():
                 continue
 
             version_name = versioned_parser.__name__

@@ -1,10 +1,10 @@
 ---
 name: review-publisher
-version: 2.0.0
+version: 3.0.0
 description: >-
   Review a Fundus publisher PR — one that adds a new publisher or adds/changes a parser version.
-  Crawls live articles to verify the extracted ArticleBody mirrors the real article (no missing or
-  leaked content), checks VALID_UNTIL / version bumps / validate=False attributes / free_access /
+  Crawls live articles (and live tickers, entry by entry) to verify the extracted body mirrors the real
+  page (no missing or leaked content, entries intact), checks VALID_UNTIL / version bumps / validate=False attributes / free_access /
   impersonate, and drafts a single GitHub review. Use when asked to review a publisher or parser PR.
 ---
 
@@ -30,6 +30,8 @@ hold onto even before you open it:
   crawl-once-then-sweep flow (§2) is a hard gate on **every** publisher: every candidate it surfaces
   must be explicitly adjudicated (`adjudicate <id> ok|blocker --note ...`), and `status` must report
   READY before any verdict. The judgment calls stay yours; skipping them silently does not.
+- **Live tickers need a URL.** A random crawl seldom draws one. If the PR adds or touches live ticker
+  support, get a ticker URL and pass `--live-url` to `crawl`; heed the driver's `!` line when none was read (§2).
 - **Each publisher is its own review** — its own crawl, sweep, and `status READY`; a blocker on one
   does not discharge the checks on the rest.
 - **Verdict:** any blocker → `REQUEST_CHANGES`, else `COMMENT`. Never `APPROVE`; your own PR → `COMMENT`.
