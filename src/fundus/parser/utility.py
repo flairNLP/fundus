@@ -301,7 +301,7 @@ def extract_live_ticker_body_with_selector(
             elif isinstance(node, ParagraphNode):
                 entry_paragraph_nodes.append(node)
             elif isinstance(node, DateNode):
-                entry_date = generic_date_parsing(node.text_content())
+                entry_date = generic_date_parsing(node.node.get("datetime", None) or node.text_content())
             elif isinstance(node, AuthorNode):
                 entry_authors.extend(generic_author_parsing(node.text_content()))
             elif isinstance(node, ImageNode):
