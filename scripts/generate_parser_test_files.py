@@ -11,7 +11,7 @@ from fundus.logging import create_logger, set_log_level
 from fundus.publishers.base_objects import Publisher
 from fundus.scraping.filter import RequiresAll
 from fundus.scraping.html import WebSource
-from fundus.scraping.publication import Article
+from fundus.scraping.publication import Publication
 from fundus.scraping.scraper import BaseScraper
 from tests.test_parser import attributes_required_to_cover
 from tests.utility import HTMLTestFile, get_test_case_json, load_html_test_file_mapping
@@ -19,7 +19,7 @@ from tests.utility import HTMLTestFile, get_test_case_json, load_html_test_file_
 logger = create_logger(__name__)
 
 
-def get_test_article(publisher: Publisher, url: Optional[str] = None) -> Optional[Article]:
+def get_test_article(publisher: Publisher, url: Optional[str] = None) -> Optional[Publication]:
     if url is not None:
         source = WebSource([url], publisher=publisher, impersonate=True)
         scraper = BaseScraper(source, publisher_mapping={publisher.name: publisher})
@@ -56,6 +56,16 @@ def parse_arguments() -> Namespace:
         nargs="+",
         help="use given URL instead of searching for an article. if set the urls will be mapped to the order of -p",
     )
+    parser.add_argument(
+        "-l",
+        "--live-ticker",
+        action="store_true",
+        default=False,
+        help=(
+            "generate live ticker test cases instead of article test cases. requires -p and -u, since live "
+            "tickers are unlikely to be found by crawling."
+        ),
+    )
     parser.add_argument("-d", "--debug", action="store_true", default=False, help="enable debug output")
     group = parser.add_mutually_exclusive_group()
     group.add_argument(
@@ -75,6 +85,9 @@ def parse_arguments() -> Namespace:
 
     if arguments.debug:
         set_log_level(logging.DEBUG)
+
+    if arguments.live_ticker and arguments.urls is None and not arguments.overwrite_json:
+        parser.error("-l requires -p and -u, since live tickers cannot be found by crawling.")
 
     if arguments.urls is not None:
         if arguments.publishers is None:
@@ -106,11 +119,11 @@ def main() -> None:
             bar.set_description(desc=publisher.name, refresh=True)
 
             # load json
-            test_data_file = get_test_case_json(publisher)
+            test_data_file = get_test_case_json(publisher, arguments.live_ticker)
             test_data = content if not arguments.overwrite_json and (content := test_data_file.load()) else {}
 
             # load html
-            html_mapping = load_html_test_file_mapping(publisher)
+            html_mapping = load_html_test_file_mapping(publisher, arguments.live_ticker)
 
             if arguments.overwrite or not html_mapping.get(publisher.parser.latest_version):
                 if not (article := get_test_article(publisher, url)):
@@ -125,6 +138,7 @@ def main() -> None:
                     content=article.html.content,
                     crawl_date=article.html.crawl_date,
                     publisher=publisher,
+                    live_ticker=arguments.live_ticker,
                 )
                 html.write()
                 subprocess.call(["git", "add", html.path], stdout=subprocess.PIPE)
@@ -139,6 +153,9 @@ def main() -> None:
                     test_data.get(type(versioned_parser).__name__) or {}
                 )
                 new = {attr: value for attr, value in extraction.items() if attr in missing_attributes}
+                if arguments.live_ticker:
+                    # live tickers don't necessarily provide every attribute, so only store the ones they do
+                    new = {attr: value for attr, value in new.items() if value}
                 if not (entry := test_data.get(type(versioned_parser).__name__)):
                     test_data[type(versioned_parser).__name__] = new
                 else:

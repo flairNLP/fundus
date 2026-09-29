@@ -80,7 +80,11 @@ class Node:
     # one could replace this recursion with XPath using an expression like this:
     # //*[not(self::script) and text()]/text(), but for whatever reason, that's actually 50-150% slower
     # than simply using the implemented mixture below
-    def text_content(self, excluded_tags: Optional[List[str]] = None, tag_filter: Optional[XPath] = None) -> str:
+    def text_content(
+        self,
+        excluded_tags: Optional[List[str]] = None,
+        tag_filter: Optional[XPath] = None,
+    ) -> str:
         guarded_excluded_tags: List[str] = excluded_tags or []
 
         def _text_content(element: lxml.html.HtmlElement) -> str:
@@ -147,7 +151,11 @@ class DateNode(Node):
         if (timestamp := self._datetime_selector(self.node)) is not None:
             self._timestamp = " ".join(generic_nodes_to_text(timestamp))
 
-    def text_content(self, excluded_tags: Optional[List[str]] = None, tag_filter: Optional[XPath] = None) -> str:
+    def text_content(
+        self,
+        excluded_tags: Optional[List[str]] = None,
+        tag_filter: Optional[XPath] = None,
+    ) -> str:
         return self._timestamp if self._timestamp else super().text_content(excluded_tags, tag_filter)
 
 
@@ -176,6 +184,27 @@ def _extract_nodes(
         raise ValueError("Both a selector and node type are required")
 
     return [node for element in selector(doc) if (node := node_type(df_idx_by_ref[element], element))]
+
+
+# defaults shared by all image extractions
+_default_image_caption_selector = XPath("./ancestor::figure//figcaption")
+_default_image_alt_selector = XPath("./@alt")
+_default_image_author_selector = XPath(
+    "(./ancestor::figure//*[(contains(@class, 'copyright') or contains(@class, 'credit')) and text()])[1]"
+)
+_default_image_size_pattern = re.compile(
+    r"width([=-])(?P<width>[0-9.]+)|height([=-])(?P<height>[0-9.]+)|dpr=(?P<dpr>[0-9.]+|)"
+)
+
+
+def _resolve_domain(doc: lxml.html.HtmlElement, relative_urls: Union[bool, XPath]) -> Optional[str]:
+    """Determines the domain to prepend to relative image URLs, if <relative_urls> is set."""
+    if not relative_urls:
+        return None
+    selector = _og_url_selector if isinstance(relative_urls, bool) else relative_urls
+    if not (domain := selector(doc)):
+        raise ValueError("Could not determine domain")
+    return domain  # type: ignore[no-any-return]
 
 
 def _nodes_to_text_sequence(nodes: Iterable[Node], tag_filter: Optional[XPath] = None) -> TextSequence:
@@ -256,7 +285,11 @@ def extract_live_ticker_body_with_selector(
     date_selector: Optional[XPath] = None,
     author_selector: Optional[XPath] = None,
     image_selector: Optional[XPath] = None,
-    image_selection_helper: Optional[Callable[[lxml.html.HtmlElement], List[Image]]] = None,
+    image_caption_selector: XPath = _default_image_caption_selector,
+    image_alt_selector: XPath = _default_image_alt_selector,
+    image_author_selector: Union[XPath, Pattern[str], List[Pattern[str]]] = _default_image_author_selector,
+    image_relative_urls: Union[bool, XPath] = False,
+    image_size_pattern: Pattern[str] = _default_image_size_pattern,
 ) -> LiveTickerBody:
     # depth first index for each element in tree
     df_idx_by_ref = {element: i for i, element in enumerate(doc.iter())}
@@ -292,7 +325,7 @@ def extract_live_ticker_body_with_selector(
         entry_paragraph_nodes = []
         entry_date = None
         entry_authors: List[str] = []
-        entry_images: List[Image] = []
+        entry_image_nodes: List[IndexedImageNode] = []
         wrapper = Element("div")
         for node in entry:
             wrapper.append(copy(node.node))
@@ -305,15 +338,33 @@ def extract_live_ticker_body_with_selector(
             elif isinstance(node, AuthorNode):
                 entry_authors.extend(generic_author_parsing(node.text_content()))
             elif isinstance(node, ImageNode):
-                entry_images.extend(image_selection_helper(node.node) if image_selection_helper else [])
+                entry_image_nodes.append(
+                    IndexedImageNode(position=int(node.position), content=node.node, is_cover=False)
+                )
             else:
                 raise ValueError(f"Unsupported node type: {type(node)}")
 
         if not entry_subhead_nodes or (entry_paragraph_nodes and entry_subhead_nodes[0] > entry_paragraph_nodes[0]):
-            first = next(instructions, [])
-            instructions = itertools.chain([first, []], instructions)
+            # no subheadline leads the entry, so its first paragraphs belong to a section without a headline
+            instructions = itertools.chain([[]], instructions)
 
         sections = _build_sections(instructions, tag_filter)
+
+        # parsed as a batch per entry, so that the images are handled the same way as those of an article
+        entry_images = (
+            list(
+                parse_image_nodes(
+                    image_nodes=entry_image_nodes,
+                    caption_selector=image_caption_selector,
+                    alt_selector=image_alt_selector,
+                    author_selector=image_author_selector,
+                    domain=_resolve_domain(doc, image_relative_urls),
+                    size_pattern=image_size_pattern,
+                )
+            )
+            if entry_image_nodes
+            else []
+        )
 
         entries.append(
             LiveTickerEntry(
@@ -340,7 +391,11 @@ def extract_body_with_selector(
     live_ticker_date_selector: Optional[XPath] = None,
     live_ticker_author_selector: Optional[XPath] = None,
     live_ticker_image_selector: Optional[XPath] = None,
-    live_ticker_image_selection_helper: Optional[Callable[[lxml.html.HtmlElement], List[Image]]] = None,
+    live_ticker_image_caption_selector: XPath = _default_image_caption_selector,
+    live_ticker_image_alt_selector: XPath = _default_image_alt_selector,
+    live_ticker_image_author_selector: Union[XPath, Pattern[str], List[Pattern[str]]] = _default_image_author_selector,
+    live_ticker_image_relative_urls: Union[bool, XPath] = False,
+    live_ticker_image_size_pattern: Pattern[str] = _default_image_size_pattern,
 ) -> Union[ArticleBody, LiveTickerBody]:
     """Dispatches to either the plain article or the live ticker body extraction.
 
@@ -361,7 +416,11 @@ def extract_body_with_selector(
             date_selector=live_ticker_date_selector,
             author_selector=live_ticker_author_selector,
             image_selector=live_ticker_image_selector,
-            image_selection_helper=live_ticker_image_selection_helper,
+            image_caption_selector=live_ticker_image_caption_selector,
+            image_alt_selector=live_ticker_image_alt_selector,
+            image_author_selector=live_ticker_image_author_selector,
+            image_relative_urls=live_ticker_image_relative_urls,
+            image_size_pattern=live_ticker_image_size_pattern,
             tag_filter=tag_filter,
         )
 
@@ -482,7 +541,10 @@ def get_meta_content(root: lxml.html.HtmlElement) -> Dict[str, str]:
 
 
 def transform_breaks_to_tag(
-    element: lxml.html.HtmlElement, tag: str = "p", replace: bool = False, **attribs: str
+    element: lxml.html.HtmlElement,
+    tag: str = "p",
+    replace: bool = False,
+    **attribs: str,
 ) -> None:
     """Splits the content of <element> on <br> tags into paragraphs and wraps them in <tag> elements.
 
@@ -574,7 +636,9 @@ def generic_nodes_to_text(nodes: Sequence[Union[lxml.html.HtmlElement, str]], no
 
 
 def apply_substitution_pattern_over_list(
-    input_list: List[str], pattern: Pattern[str], replacement: Union[str, Callable[[Match[str]], str]] = ""
+    input_list: List[str],
+    pattern: Pattern[str],
+    replacement: Union[str, Callable[[Match[str]], str]] = "",
 ) -> List[str]:
     return [subbed for text in input_list if (subbed := re.sub(pattern, replacement, text).strip())]
 
@@ -869,14 +933,20 @@ def parse_urls(node: lxml.html.HtmlElement) -> Optional[Dict[str, str]]:
 
 class _DimensionCalculator:
     def __init__(
-        self, width: Optional[float] = None, height: Optional[float] = None, ratio: Optional[float] = None
+        self,
+        width: Optional[float] = None,
+        height: Optional[float] = None,
+        ratio: Optional[float] = None,
     ) -> None:
         self.width = width
         self.height = height
         self.ratio = ratio
 
     def calculate(
-        self, width: Optional[float] = None, height: Optional[float] = None, dpr: Optional[float] = None
+        self,
+        width: Optional[float] = None,
+        height: Optional[float] = None,
+        dpr: Optional[float] = None,
     ) -> Optional[Dimension]:
         if not (width or height):
             width = self.width
@@ -891,7 +961,9 @@ _width_x_height_pattern = re.compile(r"(?P<width>[0-9]+)x(?P<height>[0-9]+)")
 
 
 def get_versions_from_node(
-    source: lxml.html.HtmlElement, ratio: Optional[float], size_pattern: Optional[Pattern[str]]
+    source: lxml.html.HtmlElement,
+    ratio: Optional[float],
+    size_pattern: Optional[Pattern[str]],
 ) -> Set[ImageVersion]:
     if not (urls := parse_urls(source)):
         return set()
@@ -937,7 +1009,10 @@ def get_versions_from_node(
             kwargs.update({k: float(v) for k, v in match.groupdict().items() if v is not None})
 
         version = ImageVersion(
-            url=url, query_width=query_width, size=calculator.calculate(**kwargs), type=source.get("type")
+            url=url,
+            query_width=query_width,
+            size=calculator.calculate(**kwargs),
+            type=source.get("type"),
         )
         versions.add(version)
 
@@ -1067,7 +1142,10 @@ class Bounds(NamedTuple):
 
 
 def determine_bounds(
-    dom: DOM, paragraph_selector: XPath, upper_boundary_selector: XPath, lower_boundary_selector: Optional[XPath]
+    dom: DOM,
+    paragraph_selector: XPath,
+    upper_boundary_selector: XPath,
+    lower_boundary_selector: Optional[XPath],
 ) -> Optional[Bounds]:
     def get_sorted_indices(nodes: List[lxml.html.HtmlElement]) -> List[int]:
         return sorted([dom.get_index(node) for node in nodes])
@@ -1099,15 +1177,11 @@ def image_extraction(
     image_selector: XPath = XPath("//figure//img"),
     upper_boundary_selector: XPath = XPath("//main"),
     lower_boundary_selector: Optional[XPath] = None,
-    caption_selector: XPath = XPath("./ancestor::figure//figcaption"),
-    alt_selector: XPath = XPath("./@alt"),
-    author_selector: Union[XPath, Pattern[str], List[Pattern[str]]] = XPath(
-        "(./ancestor::figure//*[(contains(@class, 'copyright') or contains(@class, 'credit')) and text()])[1]"
-    ),
+    caption_selector: XPath = _default_image_caption_selector,
+    alt_selector: XPath = _default_image_alt_selector,
+    author_selector: Union[XPath, Pattern[str], List[Pattern[str]]] = _default_image_author_selector,
     relative_urls: Union[bool, XPath] = False,
-    size_pattern: Pattern[str] = re.compile(
-        r"width([=-])(?P<width>[0-9.]+)|height([=-])(?P<height>[0-9.]+)|dpr=(?P<dpr>[0-9.]+|)"
-    ),
+    size_pattern: Pattern[str] = _default_image_size_pattern,
 ) -> List[Image]:
     """Extracts images enriched with metadata from <dom> based on given selectors.
 
@@ -1146,18 +1220,14 @@ def image_extraction(
     if not (bounds := determine_bounds(dom, paragraph_selector, upper_boundary_selector, lower_boundary_selector)):
         raise ValueError("Bounds could not be determined")
 
-    if relative_urls:
-        if isinstance(relative_urls, bool):
-            selector = _og_url_selector
-        else:
-            selector = relative_urls
-        if not (domain := selector(dom.root)):
-            raise ValueError("Could not determine domain")
-    else:
-        domain = None
+    domain = _resolve_domain(dom.root, relative_urls)
 
     image_nodes = [
-        IndexedImageNode(position=position, content=node, is_cover=position < (bounds.first_paragraph or 0))
+        IndexedImageNode(
+            position=position,
+            content=node,
+            is_cover=position < (bounds.first_paragraph or 0),
+        )
         for node in image_selector(doc)
         if bounds.upper < (position := dom.get_index(node)) < bounds.lower
     ]

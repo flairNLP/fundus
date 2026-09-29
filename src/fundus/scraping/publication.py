@@ -244,7 +244,7 @@ class LiveTicker(Publication):
 
     @property
     def authors(self) -> List[str]:
-        authors: List[str] = super().authors
+        authors: List[str] = list(super().authors)
         if not isinstance(self.body, LiveTickerBody):
             return authors
         for entry in self.body.entries:
@@ -253,9 +253,10 @@ class LiveTicker(Publication):
 
     @property
     def images(self) -> List[Image]:
-        images: List[Image] = super().images
+        images: List[Image] = list(super().images)
         if not isinstance(self.body, LiveTickerBody):
             return images
+        # the images of an entry may also be part of the page's images already
         for entry in self.body.entries:
-            images.extend(entry.images)
+            images.extend(image for image in entry.images if image not in images)
         return images

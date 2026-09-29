@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import re
 from abc import ABC, abstractmethod
-from dataclasses import dataclass, fields
+from dataclasses import dataclass, field, fields
 from datetime import datetime
 from functools import total_ordering
 from typing import (
@@ -275,7 +275,8 @@ class LinkedDataMapping:
                         return value
 
                     nested_dicts: Iterable[Dict[str, Any]] = filter(
-                        lambda obj: isinstance(obj, dict), more_itertools.collapse(node.values(), base_type=dict)
+                        lambda obj: isinstance(obj, dict),
+                        more_itertools.collapse(node.values(), base_type=dict),
                     )
                     new.extend(nested_dicts)
 
@@ -383,7 +384,10 @@ class ArticleSection(TextSequenceTree):
 
     @classmethod
     def deserialize(cls, serialized: Dict[str, Any]) -> Self:
-        return cls(headline=TextSequence(serialized["headline"]), paragraphs=TextSequence(serialized["paragraphs"]))
+        return cls(
+            headline=TextSequence(serialized["headline"]),
+            paragraphs=TextSequence(serialized["paragraphs"]),
+        )
 
     def __bool__(self):
         return bool(self.paragraphs)
@@ -419,7 +423,8 @@ class LiveTickerEntry(TextSequenceTree):
     publishing_date: Optional[datetime]
     authors: List[str]
     images: List[Image]
-    html: str
+    # the raw markup of the entry, deliberately not part of equality
+    html: str = field(default="", compare=False)
 
     def serialize(self) -> Dict[str, Any]:
         return {
@@ -439,7 +444,7 @@ class LiveTickerEntry(TextSequenceTree):
             ),
             authors=serialized["authors"],
             images=[Image.deserialize(image) for image in serialized["images"]],
-            html=serialized["html"],
+            html=serialized.get("html", ""),
         )
 
     def __bool__(self):
