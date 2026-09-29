@@ -71,4 +71,23 @@ class SportSchauParser(ParserProxy):
 
     class V1_1(V1):
         _summary_selector = CSSSelector("p.article-head__shorttext > strong")
-        _paragraph_selector = CSSSelector("article > p.textabsatz")
+        _paragraph_selector = XPath(
+            r"""
+            //article/p[contains(@class, 'textabsatz') and not(re:test(normalize-space(.),
+                '^(Sendung:|Unsere Quellen:|Quelle:|Erstveröffentlichung:|Über dieses Thema|Das ist die Europäische Perspektive|Tabellenführung und Abstiegskampf|"Hier ist Bayern")'))]
+            | //article/div//blockquote[contains(@class, 'zitat')]
+            | //article/div[not(preceding-sibling::*[1][starts-with(normalize-space(.), 'Unsere Quellen')])]
+                /ul[contains(@class, 'bulletpoint-list')]
+                /li[not(a[starts-with(@href, '#')] or starts-with(normalize-space(.), 'An dieser Stelle befindet sich externer Inhalt'))]
+            """,
+            namespaces={"re": "http://exslt.org/regular-expressions"},
+        )
+        _subheadline_selector = XPath(
+            r"""
+            //article/h2[not(
+                starts-with(normalize-space(.), 'Unsere Quellen')
+                or starts-with(normalize-space(.), 'Im Video:')
+                or following-sibling::*[1][.//*[contains(@class, 'teaser-absatz') or contains(@class, 'infobox')]]
+            )]
+            """
+        )
