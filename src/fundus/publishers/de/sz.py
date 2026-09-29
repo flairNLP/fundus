@@ -19,6 +19,7 @@ from fundus.parser.utility import (
     generic_date_parsing,
     generic_topic_parsing,
     image_extraction,
+    transform_breaks_to_tag,
 )
 
 
@@ -85,9 +86,23 @@ class SZParser(ParserProxy):
             "//article//div[contains(@class, 'event__body')]//div[@class='tik4-author__name']"
         )
         _live_ticker_summary_selector = XPath("//p[@data-manual='teaserText']")
+        _live_ticker_image_selector = XPath(
+            "//article//div[contains(@class, 'event__body')]//img[contains(@class, 'tik4-media-image__img')]"
+        )
+        _live_ticker_image_container = (
+            "./ancestor::div[contains(concat(' ', normalize-space(@class), ' '), ' tik4-media-image ')][1]"
+        )
+        _live_ticker_image_caption_selector = XPath(
+            f"{_live_ticker_image_container}//span[@class='tik4-media-body__title']"
+        )
+        _live_ticker_image_author_selector = XPath(
+            f"{_live_ticker_image_container}//span[@class='tik4-media-body__credit']"
+        )
 
         @attribute
         def body(self) -> Optional[Union[ArticleBody, LiveTickerBody]]:
+            for element in self._live_ticker_paragraph_selector(self.precomputed.doc):
+                transform_breaks_to_tag(element, tag="div", replace=True)
             return extract_body_with_selector(
                 self.precomputed.doc,
                 summary_selector=self._summary_selector,
@@ -99,4 +114,7 @@ class SZParser(ParserProxy):
                 live_ticker_paragraph_selector=self._live_ticker_paragraph_selector,
                 live_ticker_author_selector=self._live_ticker_author_selector,
                 live_ticker_date_selector=self._live_ticker_date_selector,
+                live_ticker_image_selector=self._live_ticker_image_selector,
+                live_ticker_image_caption_selector=self._live_ticker_image_caption_selector,
+                live_ticker_image_author_selector=self._live_ticker_image_author_selector,
             )

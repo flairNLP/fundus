@@ -33,7 +33,19 @@ class TagesschauParser(ParserProxy):
         _live_ticker_paragraph_selector = XPath("//p[contains(@class,'textabsatz ') and not(strong)]")
         _live_ticker_subheadline_selector = XPath("//h2[@class='meldung__subhead']")
         _live_ticker_date_selector = XPath("//div[@class='liveblog__datetime']")
-        _live_ticker_summary_selector = XPath("//article/p[strong]|//article/div/ul/li[not(@class)]")
+        _live_ticker_image_selector = XPath(
+            "//div[contains(@class, 'absatzbild ')]//div[@class='ts-picture__wrapper']//img"
+        )
+        _live_ticker_summary_selector = XPath(
+            "//article//p[@class='article-head__shorttext']|//article/div/ul/li[not(@class)]"
+        )
+
+        _image_selector = XPath(
+            "//*[not(self::div and @class='teaser-absatz__image')]/div[@class='ts-picture__wrapper']//img"
+        )
+        _image_caption_selector = XPath("./ancestor::div[contains(@class, 'absatzbild ')]")
+        _image_alt_selector = XPath("./@title")
+        _image_author_selector = re.compile(r"\|(?P<credits>.+)")
 
         @attribute
         def body(self) -> Optional[Union[ArticleBody, LiveTickerBody]]:
@@ -47,6 +59,10 @@ class TagesschauParser(ParserProxy):
                 live_ticker_paragraph_selector=self._live_ticker_paragraph_selector,
                 live_ticker_subheadline_selector=self._live_ticker_subheadline_selector,
                 live_ticker_date_selector=self._live_ticker_date_selector,
+                live_ticker_image_selector=self._live_ticker_image_selector,
+                live_ticker_image_caption_selector=self._image_caption_selector,
+                live_ticker_image_alt_selector=self._image_alt_selector,
+                live_ticker_image_author_selector=self._image_author_selector,
             )
 
         @attribute
@@ -55,7 +71,7 @@ class TagesschauParser(ParserProxy):
                 cleaned_author_string = re.sub(r"^Von |, ARD[^\s,]*", "", raw_author_string)
                 return generic_author_parsing(cleaned_author_string)
             else:
-                return []
+                return generic_author_parsing(self.precomputed.meta.get("author", ""))
 
         @attribute
         def publishing_date(self) -> Optional[datetime.datetime]:
@@ -75,11 +91,9 @@ class TagesschauParser(ParserProxy):
             return image_extraction(
                 doc=self.precomputed.doc,
                 paragraph_selector=self._paragraph_selector,
-                image_selector=XPath(
-                    "//*[not(self::div and @class='teaser-absatz__image')]/div[@class='ts-picture__wrapper']//img"
-                ),
-                alt_selector=XPath("./@title"),
-                author_selector=re.compile(r"\|(?P<credits>.+)"),
-                caption_selector=XPath("./ancestor::div[contains(@class, 'absatzbild ')]"),
+                image_selector=self._image_selector,
+                alt_selector=self._image_alt_selector,
+                author_selector=self._image_author_selector,
+                caption_selector=self._image_caption_selector,
                 lower_boundary_selector=self._topic_selector,
             )
