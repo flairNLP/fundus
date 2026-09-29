@@ -211,7 +211,7 @@ class LiveTicker(Publication):
             f'\n- Text:  "{wrapped_plaintext}"'
             f"\n- URL:    {self.html.requested_url}"
             f"\n- From:   {self.publisher}"
-            f'{" (Newest Entry from: " + self.publishing_date.strftime("%Y-%m-%d %H:%M") + ")" if self.publishing_date else ""}'
+            f"{' (Newest Entry from: ' + self.publishing_date.strftime('%Y-%m-%d %H:%M') + ')' if self.publishing_date else ''}"
         )
 
         return dedent(text)
