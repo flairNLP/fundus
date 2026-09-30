@@ -80,11 +80,7 @@ class Node:
     # one could replace this recursion with XPath using an expression like this:
     # //*[not(self::script) and text()]/text(), but for whatever reason, that's actually 50-150% slower
     # than simply using the implemented mixture below
-    def text_content(
-        self,
-        excluded_tags: Optional[List[str]] = None,
-        tag_filter: Optional[XPath] = None,
-    ) -> str:
+    def text_content(self, excluded_tags: Optional[List[str]] = None, tag_filter: Optional[XPath] = None) -> str:
         guarded_excluded_tags: List[str] = excluded_tags or []
 
         def _text_content(element: lxml.html.HtmlElement) -> str:
@@ -151,11 +147,7 @@ class DateNode(Node):
         if (timestamp := self._datetime_selector(self.node)) is not None:
             self._timestamp = " ".join(generic_nodes_to_text(timestamp))
 
-    def text_content(
-        self,
-        excluded_tags: Optional[List[str]] = None,
-        tag_filter: Optional[XPath] = None,
-    ) -> str:
+    def text_content(self, excluded_tags: Optional[List[str]] = None, tag_filter: Optional[XPath] = None) -> str:
         return self._timestamp if self._timestamp else super().text_content(excluded_tags, tag_filter)
 
 
@@ -541,10 +533,7 @@ def get_meta_content(root: lxml.html.HtmlElement) -> Dict[str, str]:
 
 
 def transform_breaks_to_tag(
-    element: lxml.html.HtmlElement,
-    tag: str = "p",
-    replace: bool = False,
-    **attribs: str,
+    element: lxml.html.HtmlElement, tag: str = "p", replace: bool = False, **attribs: str
 ) -> None:
     """Splits the content of <element> on <br> tags into paragraphs and wraps them in <tag> elements.
 
@@ -636,9 +625,7 @@ def generic_nodes_to_text(nodes: Sequence[Union[lxml.html.HtmlElement, str]], no
 
 
 def apply_substitution_pattern_over_list(
-    input_list: List[str],
-    pattern: Pattern[str],
-    replacement: Union[str, Callable[[Match[str]], str]] = "",
+    input_list: List[str], pattern: Pattern[str], replacement: Union[str, Callable[[Match[str]], str]] = ""
 ) -> List[str]:
     return [subbed for text in input_list if (subbed := re.sub(pattern, replacement, text).strip())]
 
@@ -813,10 +800,11 @@ class CustomParserInfo(parser.parserinfo):
         ("Jul", "July", "Juli"),
         ("Aug", "August"),
         ("Sep", "Sept", "September"),
-        ("Oct", "October", "Oktober", "Okt"),  # type: ignore[list-item]
+        ("Oct", "October", "Oktober", "Okt"),
         ("Nov", "November"),
-        ("Dec", "December", "Dezember", "Dez"),  # type: ignore[list-item]
-    ]  # type ignore due to types-python-dateutil==2.9.0.20251008, see https://github.com/flairNLP/fundus/issues/806
+        ("Dec", "December", "Dezember", "Dez"),
+    ]  # type: ignore[assignment]
+    # type ignore due to types-python-dateutil==2.9.0.20251008, see https://github.com/flairNLP/fundus/issues/806
 
 
 def generic_date_parsing(date_str: Optional[str], tz: Optional[timezone] = None) -> Optional[datetime]:
@@ -933,20 +921,14 @@ def parse_urls(node: lxml.html.HtmlElement) -> Optional[Dict[str, str]]:
 
 class _DimensionCalculator:
     def __init__(
-        self,
-        width: Optional[float] = None,
-        height: Optional[float] = None,
-        ratio: Optional[float] = None,
+        self, width: Optional[float] = None, height: Optional[float] = None, ratio: Optional[float] = None
     ) -> None:
         self.width = width
         self.height = height
         self.ratio = ratio
 
     def calculate(
-        self,
-        width: Optional[float] = None,
-        height: Optional[float] = None,
-        dpr: Optional[float] = None,
+        self, width: Optional[float] = None, height: Optional[float] = None, dpr: Optional[float] = None
     ) -> Optional[Dimension]:
         if not (width or height):
             width = self.width
@@ -961,9 +943,7 @@ _width_x_height_pattern = re.compile(r"(?P<width>[0-9]+)x(?P<height>[0-9]+)")
 
 
 def get_versions_from_node(
-    source: lxml.html.HtmlElement,
-    ratio: Optional[float],
-    size_pattern: Optional[Pattern[str]],
+    source: lxml.html.HtmlElement, ratio: Optional[float], size_pattern: Optional[Pattern[str]]
 ) -> Set[ImageVersion]:
     if not (urls := parse_urls(source)):
         return set()
@@ -1009,10 +989,7 @@ def get_versions_from_node(
             kwargs.update({k: float(v) for k, v in match.groupdict().items() if v is not None})
 
         version = ImageVersion(
-            url=url,
-            query_width=query_width,
-            size=calculator.calculate(**kwargs),
-            type=source.get("type"),
+            url=url, query_width=query_width, size=calculator.calculate(**kwargs), type=source.get("type")
         )
         versions.add(version)
 
@@ -1142,10 +1119,7 @@ class Bounds(NamedTuple):
 
 
 def determine_bounds(
-    dom: DOM,
-    paragraph_selector: XPath,
-    upper_boundary_selector: XPath,
-    lower_boundary_selector: Optional[XPath],
+    dom: DOM, paragraph_selector: XPath, upper_boundary_selector: XPath, lower_boundary_selector: Optional[XPath]
 ) -> Optional[Bounds]:
     def get_sorted_indices(nodes: List[lxml.html.HtmlElement]) -> List[int]:
         return sorted([dom.get_index(node) for node in nodes])
@@ -1223,11 +1197,7 @@ def image_extraction(
     domain = _resolve_domain(dom.root, relative_urls)
 
     image_nodes = [
-        IndexedImageNode(
-            position=position,
-            content=node,
-            is_cover=position < (bounds.first_paragraph or 0),
-        )
+        IndexedImageNode(position=position, content=node, is_cover=position < (bounds.first_paragraph or 0))
         for node in image_selector(doc)
         if bounds.upper < (position := dom.get_index(node)) < bounds.lower
     ]
