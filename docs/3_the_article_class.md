@@ -115,7 +115,7 @@ Both are a `Publication` and share the attributes `title`, `authors`, `publishin
 To tell them apart, check the type:
 
 ````python
-from fundus import Article, Crawler, PublisherCollection
+from fundus import Crawler, PublisherCollection
 from fundus.scraping.publication import LiveTicker
 
 crawler = Crawler(PublisherCollection.de.Tagesschau)

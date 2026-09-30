@@ -605,11 +605,12 @@ It takes the selectors you already use for the article body and the additional s
 - `live_ticker_paragraph_selector`: the paragraphs of the entries.
 - `live_ticker_summary_selector`: the summary of the whole live ticker. All summary nodes must be located before the first entry.
 - `live_ticker_subheadline_selector`: the headlines of the entries.
-- `live_ticker_date_selector`: the date of an entry. Elements with a `datetime` attribute are read from it, all others from their text.
+- `live_ticker_date_selector`: the date of an entry. It must match exactly one element per entry, otherwise an error is raised. Elements with a `datetime` attribute are read from it, all others from their text.
 - `live_ticker_author_selector`: the authors of an entry.
 - `live_ticker_image_selector`: the `<img>` elements of an entry. To enrich the images, `live_ticker_image_caption_selector`, `live_ticker_image_alt_selector`, `live_ticker_image_author_selector`, `live_ticker_image_size_pattern` and `live_ticker_image_relative_urls` work like the corresponding arguments of `image_extraction`.
 
-Only the paragraph selector and the boundary selector are required, everything else is optional.
+Only `live_ticker_paragraph_selector` and `live_ticker_boundary_selector` are required for the live ticker, everything else is optional.
+The article `paragraph_selector` is still required as well, since it is used for pages that are not live tickers.
 The selectors are evaluated on the whole page, an element belongs to the entry that precedes it in the document.
 Therefore, a selector should only match content of the live ticker.
 

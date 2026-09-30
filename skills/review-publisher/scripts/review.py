@@ -818,6 +818,7 @@ def main() -> int:
     crawl.add_argument("--pr", default=None, help="the PR under review, e.g. 970 - recorded in the state")
     crawl.add_argument("--pool", type=int, default=100, help="candidate articles to crawl and scan")
     crawl.add_argument("--review", type=int, default=REVIEW_ARTICLES, help="articles to cache and read from that pool")
+    # nargs="+" swallows a following positional, so pass --live-url after the publisher (as in the usage line)
     crawl.add_argument(
         "--live-url",
         nargs="+",

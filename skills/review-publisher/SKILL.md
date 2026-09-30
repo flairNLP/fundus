@@ -4,8 +4,9 @@ version: 3.0.0
 description: >-
   Review a Fundus publisher PR — one that adds a new publisher or adds/changes a parser version.
   Crawls live articles (and live tickers, entry by entry) to verify the extracted body mirrors the real
-  page (no missing or leaked content, entries intact), checks VALID_UNTIL / version bumps / validate=False attributes / free_access /
-  impersonate, and drafts a single GitHub review. Use when asked to review a publisher or parser PR.
+  page (no missing or leaked content, entries intact), checks VALID_UNTIL / version bumps /
+  validate=False attributes / free_access / impersonate, and drafts a single GitHub review. Use when
+  asked to review a publisher or parser PR.
 ---
 
 # Review a Publisher PR

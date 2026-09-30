@@ -316,6 +316,7 @@ def extract_live_ticker_body_with_selector(
         entry_subhead_nodes = []
         entry_paragraph_nodes = []
         entry_date = None
+        date_seen = False
         entry_authors: List[str] = []
         entry_image_nodes: List[IndexedImageNode] = []
         wrapper = Element("div")
@@ -326,6 +327,12 @@ def extract_live_ticker_body_with_selector(
             elif isinstance(node, ParagraphNode):
                 entry_paragraph_nodes.append(node)
             elif isinstance(node, DateNode):
+                if date_seen:
+                    raise ValueError(
+                        "Live ticker entry contains more than one date, "
+                        "make sure the date selector matches exactly one element per entry"
+                    )
+                date_seen = True
                 entry_date = generic_date_parsing(node.node.get("datetime", None) or node.text_content())
             elif isinstance(node, AuthorNode):
                 entry_authors.extend(generic_author_parsing(node.text_content()))
