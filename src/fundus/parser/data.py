@@ -275,8 +275,7 @@ class LinkedDataMapping:
                         return value
 
                     nested_dicts: Iterable[Dict[str, Any]] = filter(
-                        lambda obj: isinstance(obj, dict),
-                        more_itertools.collapse(node.values(), base_type=dict),
+                        lambda obj: isinstance(obj, dict), more_itertools.collapse(node.values(), base_type=dict)
                     )
                     new.extend(nested_dicts)
 
@@ -384,10 +383,7 @@ class ArticleSection(TextSequenceTree):
 
     @classmethod
     def deserialize(cls, serialized: Dict[str, Any]) -> Self:
-        return cls(
-            headline=TextSequence(serialized["headline"]),
-            paragraphs=TextSequence(serialized["paragraphs"]),
-        )
+        return cls(headline=TextSequence(serialized["headline"]), paragraphs=TextSequence(serialized["paragraphs"]))
 
     def __bool__(self):
         return bool(self.paragraphs)
