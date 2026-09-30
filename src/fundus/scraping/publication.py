@@ -198,12 +198,8 @@ class LiveTicker(Publication):
             f"{Fore.RED}--missing plaintext--{Style.RESET_ALL}" if self.plaintext is None else self.plaintext.strip()
         )
 
-        summary_text = (
-            f" including {len(self.body.entries) if isinstance(self.body, LiveTickerBody) else 0} entries"
-            f" and {len(self.images)} image(s)"
-            if self.images and not isinstance(self.images, Exception)
-            else ""
-        )
+        entry_count = len(self.body.entries) if isinstance(self.body, LiveTickerBody) else 0
+        summary_text = f" including {entry_count} entries and {len(self.images)} image(s)"
 
         text = (
             f"Fundus-LiveTicker{summary_text}:"
@@ -249,7 +245,7 @@ class LiveTicker(Publication):
             return authors
         for entry in self.body.entries:
             authors.extend(entry.authors)
-        return list(set(authors))
+        return list(dict.fromkeys(authors))
 
     @property
     def images(self) -> List[Image]:
