@@ -320,8 +320,13 @@ def extract_live_ticker_body_with_selector(
         entry_authors: List[str] = []
         entry_image_nodes: List[IndexedImageNode] = []
         wrapper = Element("div")
+        copied: Set[lxml.html.HtmlElement] = set()
         for node in entry:
-            wrapper.append(copy(node.node))
+            # nodes are in document order, so an ancestor is always seen first; copying only the outermost
+            # matched elements keeps nested matches from appearing twice in the entry's html
+            if not any(ancestor in copied for ancestor in node.node.iterancestors()):
+                wrapper.append(copy(node.node))
+                copied.add(node.node)
             if isinstance(node, SubheadNode):
                 entry_subhead_nodes.append(node)
             elif isinstance(node, ParagraphNode):
