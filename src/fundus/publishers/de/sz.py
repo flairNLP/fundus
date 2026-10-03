@@ -1,16 +1,25 @@
 import datetime
-from typing import List, Optional
+from typing import List, Optional, Union
 
 from lxml.cssselect import CSSSelector
 from lxml.etree import XPath
 
-from fundus.parser import ArticleBody, BaseParser, Image, ParserProxy, attribute
+from fundus.parser import (
+    ArticleBody,
+    BaseParser,
+    Image,
+    LiveTickerBody,
+    ParserProxy,
+    attribute,
+)
 from fundus.parser.utility import (
     extract_article_body_with_selector,
+    extract_body_with_selector,
     generic_author_parsing,
     generic_date_parsing,
     generic_topic_parsing,
     image_extraction,
+    transform_breaks_to_tag,
 )
 
 
@@ -64,3 +73,48 @@ class SZParser(ParserProxy):
             "//div[@itemprop='articleBody']//h3[@data-manual='subheadline'] |"
             "//div[@itemprop='articleBody']//h2[@data-manual='subheadline']"
         )
+
+        _live_ticker_boundary_selector = XPath("//div[contains(@class, 'event__body')]")
+        _live_ticker_paragraph_selector = XPath(
+            "//article//div[contains(@class, 'event__body')]//li|//article//div[contains(@class, 'event__body')]//div[@class='tik4-rich-text tik4-rich-text--de']/div"
+        )
+        _live_ticker_subheadline_selector = XPath(
+            "//article//div[contains(@class, 'event__body')]//h2|//article//div[contains(@class, 'event__body')]//h3"
+        )
+        _live_ticker_date_selector = XPath("//article//div[contains(@class, 'event__body')]//time")
+        _live_ticker_author_selector = XPath(
+            "//article//div[contains(@class, 'event__body')]//div[@class='tik4-author__name']"
+        )
+        _live_ticker_summary_selector = XPath("//p[@data-manual='teaserText']")
+        _live_ticker_image_selector = XPath(
+            "//article//div[contains(@class, 'event__body')]//img[contains(@class, 'tik4-media-image__img')]"
+        )
+        _live_ticker_image_container = (
+            "./ancestor::div[contains(concat(' ', normalize-space(@class), ' '), ' tik4-media-image ')][1]"
+        )
+        _live_ticker_image_caption_selector = XPath(
+            f"{_live_ticker_image_container}//span[@class='tik4-media-body__title']"
+        )
+        _live_ticker_image_author_selector = XPath(
+            f"{_live_ticker_image_container}//span[@class='tik4-media-body__credit']"
+        )
+
+        @attribute
+        def body(self) -> Optional[Union[ArticleBody, LiveTickerBody]]:
+            for element in self._live_ticker_paragraph_selector(self.precomputed.doc):
+                transform_breaks_to_tag(element, tag="div", replace=True)
+            return extract_body_with_selector(
+                self.precomputed.doc,
+                summary_selector=self._summary_selector,
+                subheadline_selector=self._subheadline_selector,
+                paragraph_selector=self._paragraph_selector,
+                live_ticker_boundary_selector=self._live_ticker_boundary_selector,
+                live_ticker_summary_selector=self._live_ticker_summary_selector,
+                live_ticker_subheadline_selector=self._live_ticker_subheadline_selector,
+                live_ticker_paragraph_selector=self._live_ticker_paragraph_selector,
+                live_ticker_author_selector=self._live_ticker_author_selector,
+                live_ticker_date_selector=self._live_ticker_date_selector,
+                live_ticker_image_selector=self._live_ticker_image_selector,
+                live_ticker_image_caption_selector=self._live_ticker_image_caption_selector,
+                live_ticker_image_author_selector=self._live_ticker_image_author_selector,
+            )

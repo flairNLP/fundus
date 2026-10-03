@@ -55,10 +55,10 @@ from fundus.logging import create_logger, get_current_config
 from fundus.parser import BaseParser
 from fundus.parser.data import remove_query_parameters_from_url
 from fundus.publishers.base_objects import Publisher, PublisherGroup
-from fundus.scraping.article import Article
 from fundus.scraping.delay import Delay
 from fundus.scraping.filter import ExtractionFilter, Requires, RequiresAll, URLFilter
 from fundus.scraping.html import CCNewsSource
+from fundus.scraping.publication import Publication
 from fundus.scraping.scraper import CCNewsScraper, WebScraper
 from fundus.scraping.session import CrashThread, session_handler
 from fundus.scraping.url import URLSource
@@ -312,7 +312,7 @@ class CrawlerBase(ABC):
         extraction_filter: Optional[ExtractionFilter],
         url_filter: Optional[URLFilter],
         skip_publishers_disallowing_training: bool = False,
-    ) -> Iterator[Article]:
+    ) -> Iterator[Publication]:
         raise NotImplementedError
 
     def crawl(
@@ -327,7 +327,7 @@ class CrawlerBase(ABC):
         only_unique: bool = True,
         save_to_file: Union[None, str, Path] = None,
         skip_publishers_disallowing_training: bool = False,
-    ) -> Iterator[Article]:
+    ) -> Iterator[Publication]:
         """Yields articles from initialized scrapers
 
         Args:
@@ -365,7 +365,7 @@ class CrawlerBase(ABC):
                 training data should always check the publisher's terms of use beforehand.
 
         Returns:
-            Iterator[Article]: An iterator yielding objects of type Article.
+            Iterator[Publication]: An iterator yielding objects of type Article or LiveTicker.
         """
 
         if max_articles == 0:
@@ -408,7 +408,7 @@ class CrawlerBase(ABC):
             logger.warning(f"Skipping {skipped} of {len(self.publishers)} publisher(s) not matching the restrictions")
 
         article_count: Dict[str, int] = defaultdict(int)
-        crawled_articles: Dict[str, List[Article]] = defaultdict(list)
+        crawled_articles: Dict[str, List[Publication]] = defaultdict(list)
 
         # Unfortunately we relly on this little workaround here to terminate the 'Pool' used within
         # the 'CCNewsCrawler'. The 'Timeout' contextmanager utilizes '_thread.interrupt_main',
@@ -551,7 +551,7 @@ class Crawler(CrawlerBase):
         extraction_filter: Optional[ExtractionFilter] = None,
         url_filter: Optional[URLFilter] = None,
         skip_publishers_disallowing_training: bool = False,
-    ) -> Iterator[Article]:
+    ) -> Iterator[Publication]:
         if skip_publishers_disallowing_training and publisher.disallows_training:
             logger.info(f"Skipping publisher {publisher.name} because it disallows training.")
             return
@@ -585,14 +585,14 @@ class Crawler(CrawlerBase):
 
     @staticmethod
     def _single_crawl(
-        publishers: Tuple[Publisher, ...], article_task: Callable[[Publisher], Iterator[Article]]
-    ) -> Iterator[Article]:
+        publishers: Tuple[Publisher, ...], article_task: Callable[[Publisher], Iterator[Publication]]
+    ) -> Iterator[Publication]:
         article_iterators = [article_task(publisher) for publisher in publishers]
         yield from roundrobin(*article_iterators)
 
     def _threaded_crawl(
-        self, publishers: Tuple[Publisher, ...], article_task: Callable[[Publisher], Iterator[Article]]
-    ) -> Iterator[Article]:
+        self, publishers: Tuple[Publisher, ...], article_task: Callable[[Publisher], Iterator[Publication]]
+    ) -> Iterator[Publication]:
         @contextlib.contextmanager
         def _manage_pool(*args, **kwargs) -> Iterator[ThreadPool]:
             managed_pool = ThreadPool(*args, **kwargs)
@@ -606,7 +606,7 @@ class Crawler(CrawlerBase):
                 __EVENTS__.clear_for_all("stop")
                 logger.debug("Shutdown done")
 
-        result_queue: Queue[Union[Article, Exception]] = Queue(len(publishers))
+        result_queue: Queue[Union[Publication, Exception]] = Queue(len(publishers))
         wrapped_article_task = publisher_context_wrapper(
             queue_wrapper(result_queue, article_task, silenced_exceptions=(CrashThread,))
         )
@@ -621,7 +621,7 @@ class Crawler(CrawlerBase):
         extraction_filter: Optional[ExtractionFilter],
         url_filter: Optional[URLFilter],
         skip_publishers_disallowing_training: bool = False,
-    ) -> Iterator[Article]:
+    ) -> Iterator[Publication]:
         article_task = partial(
             self._fetch_articles,
             error_handling=error_handling,
@@ -701,7 +701,7 @@ class CCNewsCrawler(CrawlerBase):
         extraction_filter: Optional[ExtractionFilter] = None,
         url_filter: Optional[URLFilter] = None,
         bar: Optional[tqdm] = None,
-    ) -> Iterator[Article]:
+    ) -> Iterator[Publication]:
         retries: int = 0
         while True:
             source = CCNewsSource(*publishers, warc_path=warc_path)
@@ -727,14 +727,14 @@ class CCNewsCrawler(CrawlerBase):
 
     @staticmethod
     def _single_crawl(
-        warc_paths: Tuple[str, ...], article_task: Callable[[str], Iterator[Article]]
-    ) -> Iterator[Article]:
+        warc_paths: Tuple[str, ...], article_task: Callable[[str], Iterator[Publication]]
+    ) -> Iterator[Publication]:
         for warc_path in warc_paths:
             yield from article_task(warc_path)
 
     def _parallel_crawl(
-        self, warc_paths: Tuple[str, ...], article_task: Callable[[str], Iterator[Article]]
-    ) -> Iterator[Article]:
+        self, warc_paths: Tuple[str, ...], article_task: Callable[[str], Iterator[Publication]]
+    ) -> Iterator[Publication]:
         # because logging configurations are overwritten when using 'spawn' as start method,
         # we have to get current logging configurations and initialize them in the new process
         if multiprocessing.get_start_method() == "spawn":
@@ -750,7 +750,7 @@ class CCNewsCrawler(CrawlerBase):
             processes=min(self.processes, len(warc_paths)),
             initializer=initializer,
         ) as pool:
-            result_queue: Queue[Union[Article, Exception]] = manager.Queue(maxsize=1000)
+            result_queue: Queue[Union[Publication, Exception]] = manager.Queue(maxsize=1000)
 
             # Because multiprocessing.Pool does not support iterators as targets,
             # we wrap the article_task to write the articles to a queue instead of returning them directly.
@@ -829,7 +829,7 @@ class CCNewsCrawler(CrawlerBase):
         url_filter: Optional[URLFilter],
         skip_publishers_disallowing_training: bool = False,
         **kwargs,
-    ) -> Iterator[Article]:
+    ) -> Iterator[Publication]:
         if skip_publishers_disallowing_training:
             max_workers = self.processes if self.processes > 0 else min(len(publishers), 5)
             verified_publishers: List["Publisher"] = []

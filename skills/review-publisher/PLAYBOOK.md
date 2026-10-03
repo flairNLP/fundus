@@ -30,6 +30,12 @@ sweep, and READY `status`, and a blocker on one never lightens the checks on ano
 Fundus maps extracted text back to the source HTML for annotation, so a dropped paragraph or a leaked
 photo caption corrupts that mapping. Over-capture is a blocker, not a nit.
 
+**Live tickers are held to the same standard, per entry.** A page with many timestamped entries
+comes back as a `LiveTicker` whose `body` is a `LiveTickerBody` (a summary plus `entries`, each with its
+own sections, date, authors and images). The text must mirror the ticker, *and* every entry must own
+the right content: an entry that swallows its neighbour, splits in two, or carries another entry's image
+misrepresents the ticker just as a dropped paragraph misrepresents an article.
+
 ## Rules
 
 - **Don't run `pytest`/`mypy`/`ruff` locally — CI covers them.** Your value-add is correctness on
@@ -78,6 +84,12 @@ gh pr diff <PR_NUMBER>
   unless plainly cargo-culted. **Absent** — the tell is §2's crawl coming back empty. It's opt-in
   user-side, so under the default `Crawler(impersonate=False)` a declared profile does nothing and
   the publisher just yields nothing, silently; the review's crawl always passes `impersonate=True`.
+- **Live ticker support** (`_live_ticker_*_selector`, `extract_body_with_selector`; skip if the PR has
+  none). `body` returns `Optional[Union[ArticleBody, LiveTickerBody]]`. The boundary selector decides
+  whether a page is a ticker at all, so it must match *only* ticker pages: a selector that also matches an
+  ordinary article turns it into a one-entry ticker. Entry images belong to
+  `live_ticker_image_selector` (with its caption/alt/author companions); the parser's own `images`
+  attribute should describe the page, not re-list the entries' images.
 - **Changes to `parser/utility.py`** (`generic_topic_parsing`, `apply_result_filter`,
   `image_extraction`, …) affect every publisher — check the call sites.
 
@@ -85,6 +97,7 @@ gh pr diff <PR_NUMBER>
 
 ```bash
 python "<skill>/scripts/review.py" crawl <cc>.<Class> --pr <PR>   # pool 100 -> read 10
+python "<skill>/scripts/review.py" crawl <cc>.<Class> --pr <PR> --live-url <ticker url> [<url> ...]
 ```
 
 **The defaults are the budget.** Raising `--pool` or `--review` costs a second live crawl and
@@ -109,7 +122,7 @@ evidence about the articles nobody read. An interrupted crawl caches nothing; ju
 - **The draw is unfiltered** (`only_complete=False`): articles missing
   `title`/`body`/`publishing_date` — exactly what a broken parser produces — reach the scan and
   print as `! missing …`. Treat as blocker-level unless the page genuinely isn't an article (video
-  stub, liveblog, photo gallery); say which in the review.
+  stub, photo gallery, a live ticker the parser has no support for); say which in the review.
 - **Layout coverage is yours**: the draw should span a straight news piece, an opinion/column, a
   listicle/bullet-list piece, and an image-heavy one. A layout you know exists but that's missing
   from the draw is the concrete reason for a wider `--pool` — name it and ask before re-crawling.
@@ -133,6 +146,32 @@ evidence about the articles nobody read. An interrupted crawl caches nothing; ju
 
   An article back means the finding is the **missing `impersonate` profile**, `"chrome"` as the fix.
   Nothing back and the empty-draw finding stands as written.
+
+### Live tickers
+
+The crawl separates live tickers from articles: they are scanned and read with the version's
+`live_ticker_*` selectors and cached beside the articles (`--review-live`, default 3, flagged ones first).
+**A random draw seldom contains a ticker**, so a clean article review says nothing about the ticker
+parser. When the PR adds or changes live ticker support, get a ticker URL from the PR description or the
+user and pass it with `--live-url` (several are fine, the last three or so are the useful ones). The driver
+prints a `!` line when the parser declares ticker support but no ticker was read, and again for a URL that
+did not come back as a ticker — that second case is itself a finding: the boundary selector doesn't
+recognise the page.
+
+Each ticker prints page attributes, the summary, then every entry with its date, authors, images (caption
+and credit) and text. Read it entry by entry against the live page:
+
+- **Boundaries**: the entries are the site's entries — none merged, none split, none empty. A `! no text`
+  entry is usually a headline-only teaser or a paragraph selector gap; a `! no date` entry means the
+  date selector missed it.
+- **Ownership**: each image, author and date sits on the entry it belongs to. Images are the usual
+  offender — an inline image attaches to whichever entry precedes it in the document.
+- **Order and dates**: entries in the site's order, dates plausible and parsed with the right timezone.
+- **Chrome between entries**: teasers, "read more" boxes and ads that sit between entries must not end
+  up inside one.
+
+The tier-2 sweep below runs on tickers too (the whole page, with the ticker selectors); its candidates are
+adjudicated exactly like an article's, but expect more page chrome in the drops.
 
 ### Tier 1 — coherence read (every cached article, from the crawl output)
 
@@ -217,6 +256,9 @@ Usual culprits for missing content:
 - **`<span>`-wrapped paragraphs** the selector doesn't allow.
 - **Over-capture**: boilerplate or captions leaking *into* the body.
 
+For live tickers, the culprits are the boundary selector (entries merged or split), the date selector
+(missing or wrong timezone), and `live_ticker_image_selector` with its caption/author selectors.
+
 For images, compare each `caption`/`authors`/`is_cover` against the live `<figure>`: paired with the
 right image, prefixes like `"Photo by "` stripped. These map to `caption_selector`,
 `author_selector` (its `credits` named group is stripped from the caption), and the
@@ -232,7 +274,8 @@ A multi-publisher PR gets a per-publisher verdict; the PR's event is the most se
 Classify every finding — the split decides the event:
 
 - **Blockers** — crashes; empty/wrong required attributes; body that misrepresents the article
-  (missing paragraphs/lists or leaked boilerplate); mis-paired image data; missing/incorrect
+  (missing paragraphs/lists or leaked boilerplate); live ticker entries merged, split, or carrying another
+  entry's text, date, authors or images; mis-paired image data; missing/incorrect
   `free_access` on a premium publisher; `VALID_UNTIL`/version-bump mistakes; a wrong
   `validate=False` attribute.
 - **Nits** — dropped trailers ("With files from …"), minor topic noise.

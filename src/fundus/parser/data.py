@@ -2,7 +2,8 @@ from __future__ import annotations
 
 import re
 from abc import ABC, abstractmethod
-from dataclasses import dataclass, fields
+from dataclasses import dataclass, field, fields
+from datetime import datetime
 from functools import total_ordering
 from typing import (
     Any,
@@ -408,6 +409,75 @@ class ArticleBody(TextSequenceTree):
 
     def __bool__(self):
         return any(bool(section) for section in self.sections)
+
+
+@dataclass
+class LiveTickerEntry(TextSequenceTree):
+    """One entry of a live ticker: its text content plus the metadata specific to that entry."""
+
+    sections: List[ArticleSection]
+    publishing_date: Optional[datetime]
+    authors: List[str]
+    images: List[Image]
+    # the raw markup of the entry, deliberately not part of equality
+    html: str = field(default="", compare=False)
+
+    def serialize(self) -> Dict[str, Any]:
+        return {
+            "sections": [section.serialize() for section in self.sections],
+            "publishing_date": self.publishing_date.isoformat() if self.publishing_date else None,
+            "authors": self.authors,
+            "images": [image.serialize() for image in self.images],
+            "html": self.html,
+        }
+
+    @classmethod
+    def deserialize(cls, serialized: Dict[str, Any]) -> Self:
+        return cls(
+            sections=[ArticleSection.deserialize(section) for section in serialized["sections"]],
+            publishing_date=(
+                datetime.fromisoformat(serialized["publishing_date"]) if serialized["publishing_date"] else None
+            ),
+            authors=serialized["authors"],
+            images=[Image.deserialize(image) for image in serialized["images"]],
+            html=serialized.get("html", ""),
+        )
+
+    def __bool__(self):
+        return any(bool(section) for section in self.sections)
+
+    def __iter__(self) -> Iterator[Any]:
+        for section in self.sections:
+            yield from section
+
+
+@dataclass
+class LiveTickerBody(TextSequenceTree):
+    summary: TextSequence
+    entries: List[LiveTickerEntry]
+
+    def serialize(self) -> Dict[str, Any]:
+        return {
+            "summary": list(self.summary),
+            "entries": [entry.serialize() for entry in self.entries],
+        }
+
+    @classmethod
+    def deserialize(cls, serialized: Dict[str, Any]) -> Self:
+        return cls(
+            summary=TextSequence(serialized["summary"]),
+            entries=[LiveTickerEntry.deserialize(entry) for entry in serialized["entries"]],
+        )
+
+    def __bool__(self):
+        return any(bool(entry) for entry in self.entries)
+
+    def pretty_print(self) -> str:
+        parts = [str(self.summary)] if self.summary else []
+        for entry in self.entries:
+            header = f"LiveTicker entry from {entry.publishing_date} by {', '.join(entry.authors)}"
+            parts.append(f"{header}\n\n{entry.text()}")
+        return "\n\n".join(parts)
 
 
 @total_ordering

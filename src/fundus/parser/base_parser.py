@@ -256,6 +256,26 @@ class BaseParser(ABC):
         }
 
     @classmethod
+    def live_ticker_body_selectors(cls) -> Dict[str, Optional[XPath]]:
+        """The version's live ticker selectors, keyed like :meth:`body_selectors`.
+
+        These are the selectors a version feeds to ``extract_body_with_selector`` as
+        ``live_ticker_<x>_selector``, i.e. the ones applied to a live ticker page instead of the
+        article ones. A value is None when the version does not declare the corresponding selector.
+        All values are None for a version without live ticker support.
+        """
+        return {
+            "summary": getattr(cls, "_live_ticker_summary_selector", None),
+            "subheadline": getattr(cls, "_live_ticker_subheadline_selector", None),
+            "paragraph": getattr(cls, "_live_ticker_paragraph_selector", None),
+        }
+
+    @classmethod
+    def supports_live_tickers(cls) -> bool:
+        """Whether the version declares a live ticker boundary selector, the one deciding if a page is a ticker."""
+        return getattr(cls, "_live_ticker_boundary_selector", None) is not None
+
+    @classmethod
     def _search_members(cls, obj_type: type) -> List[Tuple[str, Any]]:
         members = inspect.getmembers(cls, predicate=lambda x: isinstance(x, obj_type)) if obj_type else []
         return members
