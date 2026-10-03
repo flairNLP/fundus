@@ -595,7 +595,7 @@ def generic_date_parsing(date_str: Optional[str], tz: Optional[timezone] = None)
         return None
 
     if tz is not None and parsed_date.tzinfo is None:
-        parsed_date.replace(tzinfo=tz)
+        parsed_date = parsed_date.replace(tzinfo=tz)
 
     return parsed_date
 
