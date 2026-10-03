@@ -606,6 +606,7 @@ It takes the selectors you already use for the article body and the additional s
 - `live_ticker_summary_selector`: the summary of the whole live ticker. All summary nodes must be located before the first entry.
 - `live_ticker_subheadline_selector`: the headlines of the entries.
 - `live_ticker_date_selector`: the date of an entry. It must match exactly one element per entry, otherwise an error is raised. Elements with a `datetime` attribute are read from it, all others from their text.
+- `live_ticker_date_parser`: turns the date string into a `datetime`, defaults to `generic_date_parsing`. `generic_date_parsing` reads ambiguous dates month first, so pass your own parser if the publisher writes dates day first, e.g. `03.10.2026` (see `ZDF` or `Tagesschau`).
 - `live_ticker_author_selector`: the authors of an entry.
 - `live_ticker_image_selector`: the `<img>` elements of an entry. To enrich the images, `live_ticker_image_caption_selector`, `live_ticker_image_alt_selector`, `live_ticker_image_author_selector`, `live_ticker_image_size_pattern` and `live_ticker_image_relative_urls` work like the corresponding arguments of `image_extraction`.
 
@@ -633,7 +634,7 @@ def body(self) -> Optional[Union[ArticleBody, LiveTickerBody]]:
 Because the entries of a live ticker carry their own images and authors, the `images` attribute of the parser should describe the page only.
 Images of entries are attached to their entry by `live_ticker_image_selector`.
 
-For examples, have a look at the parsers of `SZ`, `Tagesschau` or `IlGiornale`.
+For examples, have a look at the parsers of `SZ`, `Tagesschau`, `ZDF` or `IlGiornale`.
 
 ### Extracting the images
 
