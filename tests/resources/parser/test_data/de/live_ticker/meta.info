@@ -6,5 +6,9 @@
   "Tagesschau_2026_09_29.html.gz": {
     "url": "https://www.tagesschau.de/newsticker/liveblog-landtagswahl-mecklenburg-vorpommern-108.html",
     "crawl_date": "2026-09-29 18:36:26.476713"
+  },
+  "ZDF_2026_10_03.html.gz": {
+    "url": "https://www.zdfheute.de/politik/ausland/ukraine-russland-konflikt-blog-102.html",
+    "crawl_date": "2026-10-03 13:28:21.069455"
   }
 }
