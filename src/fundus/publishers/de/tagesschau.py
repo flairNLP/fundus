@@ -47,6 +47,11 @@ class TagesschauParser(ParserProxy):
         _image_alt_selector = XPath("./@title")
         _image_author_selector = re.compile(r"\|(?P<credits>.+)")
 
+        @staticmethod
+        def _parse_live_ticker_date(date_string: str) -> Optional[datetime.datetime]:
+            # dates are given as DD.MM.YYYY, which generic_date_parsing would read month first
+            return generic_date_parsing(re.sub(r"(\d{1,2})\.(\d{1,2})\.(\d{4})", r"\3-\2-\1", date_string))
+
         @attribute
         def body(self) -> Optional[Union[ArticleBody, LiveTickerBody]]:
             return extract_body_with_selector(
@@ -59,6 +64,7 @@ class TagesschauParser(ParserProxy):
                 live_ticker_paragraph_selector=self._live_ticker_paragraph_selector,
                 live_ticker_subheadline_selector=self._live_ticker_subheadline_selector,
                 live_ticker_date_selector=self._live_ticker_date_selector,
+                live_ticker_date_parser=self._parse_live_ticker_date,
                 live_ticker_image_selector=self._live_ticker_image_selector,
                 live_ticker_image_caption_selector=self._image_caption_selector,
                 live_ticker_image_alt_selector=self._image_alt_selector,
