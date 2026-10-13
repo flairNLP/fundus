@@ -14,6 +14,7 @@ from fundus.scraping.url import (
     Sitemap,
     decompress,
     is_valid_url,
+    numeric_sort_key,
 )
 
 # ---- helpers ----------------------------------------------------------------
@@ -231,7 +232,7 @@ class TestSitemapFetch:
         result = list(Sitemap(url="https://example.com/sitemap.xml").fetch(session, {}))
         assert result == []
 
-    def test_sort_predicate_orders_sub_sitemaps_descending(self):
+    def test_sort_key_orders_sub_sitemaps(self):
         import re
 
         sitemap_index = b"""\
@@ -260,7 +261,7 @@ class TestSitemapFetch:
         session = _make_session(side_effect=side_effect)
         sitemap = Sitemap(
             url="https://example.com/sitemap-index.xml",
-            sort_predicate=re.compile(r"\d{4}"),
+            sort_key=numeric_sort_key(r"sitemap-(\d{4})", reverse=True),
         )
         result = list(sitemap.fetch(session, {}))
         assert result == [
@@ -268,3 +269,33 @@ class TestSitemapFetch:
             "https://example.com/2020/article",
             "https://example.com/2019/article",
         ]
+
+    def test_sort_key_only_sees_sitemaps_kept_by_the_filter(self):
+        sitemap_index = b"""<?xml version="1.0" encoding="UTF-8"?>
+<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <sitemap><loc>https://example.com/sitemap-10.xml</loc></sitemap>
+  <sitemap><loc>https://example.com/sitemap-video.xml</loc></sitemap>
+  <sitemap><loc>https://example.com/sitemap-2.xml</loc></sitemap>
+</sitemapindex>"""
+
+        def side_effect(*args, **kwargs):
+            url = args[0] if args else kwargs["url"]
+            if "sitemap-index" in url:
+                return _make_response(content=sitemap_index)
+            name = url.rsplit("/", 1)[-1][: -len(".xml")]
+            return _make_response(
+                content=f"""<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://example.com/{name}/article</loc></url>
+</urlset>""".encode()
+            )
+
+        session = _make_session(side_effect=side_effect)
+        sitemap = Sitemap(
+            url="https://example.com/sitemap-index.xml",
+            sitemap_filter=lambda url: "video" in url,
+            # would raise on sitemap-video.xml if the filter didn't drop it first
+            sort_key=numeric_sort_key(r"sitemap-(\d+)"),
+        )
+        result = list(sitemap.fetch(session, {}))
+        assert result == ["https://example.com/sitemap-2/article", "https://example.com/sitemap-10/article"]
