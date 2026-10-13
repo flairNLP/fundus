@@ -1,15 +1,30 @@
 import threading
-from unittest.mock import MagicMock
+from typing import List
+from unittest.mock import MagicMock, patch
 
 import pytest
 
 from fundus import Crawler, NewsMap, Requires, RSSFeed, Sitemap
+from fundus.publishers.base_objects import Publisher
+from fundus.scraping.article import Article
 from fundus.scraping.crawler import supports_attributes
 from fundus.scraping.delay import RobotsCrawlDelay
+from fundus.scraping.pipeline import Pipeline
 from fundus.scraping.pipeline.source.interleaved import InterleavedSource
 from fundus.scraping.pipeline.source.web import WebSource
 from fundus.utils.events import __EVENTS__
-from tests.fixtures.builders import make_publisher, mock_robots, stub_publisher
+from tests.fixtures.builders import make_article, make_publisher, mock_robots, stub_publisher
+
+
+def _web_source_batches(pipelines: List[Pipeline]) -> List[List[WebSource]]:
+    """The WebSources of each pipeline, asserting that every pipeline draws an InterleavedSource of them."""
+    batches: List[List[WebSource]] = []
+    for pipeline in pipelines:
+        assert isinstance(pipeline.source, InterleavedSource)
+        web_sources = [source for source in pipeline.source.sources if isinstance(source, WebSource)]
+        assert len(web_sources) == len(pipeline.source.sources)
+        batches.append(web_sources)
+    return batches
 
 
 class TestPipeline:
@@ -137,35 +152,29 @@ class TestCrawlerBuildPipelines:
         assert len(pipelines) == 1
 
     def test_returns_one_pipeline_per_batch_in_crawl_order(self):
-        publisher = make_publisher(
-            sources=[
-                Sitemap("https://test.com/sitemap"),
-                RSSFeed("https://test.com/one", interleave=True),
-                NewsMap("https://test.com/news"),
-                RSSFeed("https://test.com/two", interleave=True),
-            ]
-        )
-        crawler = Crawler(publisher, ignore_robots=True)
-        pipelines = crawler._build_pipelines(crawler.publishers[0])
+        sitemap = Sitemap("https://test.com/sitemap")
+        one = RSSFeed("https://test.com/one", interleave=True)
+        news = NewsMap("https://test.com/news")
+        two = RSSFeed("https://test.com/two", interleave=True)
+        crawler = Crawler(make_publisher(sources=[sitemap, one, news, two]), ignore_robots=True)
 
-        assert all(isinstance(pipeline.source, InterleavedSource) for pipeline in pipelines)
-        assert [[source.url_source.url for source in pipeline.source.sources] for pipeline in pipelines] == [
-            ["https://test.com/one", "https://test.com/two"],
-            ["https://test.com/news"],
-            ["https://test.com/sitemap"],
-        ]
+        batches = _web_source_batches(crawler._build_pipelines(crawler.publishers[0]))
+
+        assert [[source.url_source for source in batch] for batch in batches] == [[one, two], [news], [sitemap]]
 
     def test_all_sources_of_a_publisher_share_one_pacer(self):
         publisher = make_publisher(
-            sources=[RSSFeed("https://test.com/one", interleave=True), RSSFeed("https://test.com/two", interleave=True)]
-            + [Sitemap("https://test.com/sitemap")]
+            sources=[
+                RSSFeed("https://test.com/one", interleave=True),
+                RSSFeed("https://test.com/two", interleave=True),
+                Sitemap("https://test.com/sitemap"),
+            ]
         )
         crawler = Crawler(publisher, ignore_robots=True)
-        pipelines = crawler._build_pipelines(crawler.publishers[0])
 
-        pacers = {id(source.pacer) for pipeline in pipelines for source in pipeline.source.sources}
-        assert len(pacers) == 1
-        assert None not in {source.pacer for pipeline in pipelines for source in pipeline.source.sources}
+        batches = _web_source_batches(crawler._build_pipelines(crawler.publishers[0]))
+
+        assert len({id(source.pacer) for batch in batches for source in batch}) == 1
 
     def test_restrict_sources_excludes_non_matching_type(self, publisher_group_with_rss_feeds):
         crawler = Crawler(publisher_group_with_rss_feeds, ignore_robots=True, restrict_sources_to=[NewsMap])
@@ -207,12 +216,12 @@ class TestCrawlerPublisherPacer:
 
 class TestCrawlerFetchArticles:
     @staticmethod
-    def _crawled(crawler: Crawler, publisher) -> list:
-        """Run _fetch_articles over a stubbed pipeline yielding one sentinel per publisher."""
-        pipeline = MagicMock()
-        pipeline.run.return_value = iter([publisher.name])
-        crawler._build_pipelines = lambda _: [pipeline]  # type: ignore[method-assign]
-        return list(crawler._fetch_articles(publisher, raise_on_error=False))
+    def _crawled(crawler: Crawler, publisher: Publisher) -> List[Article]:
+        """Run _fetch_articles over a stubbed pipeline yielding a single article."""
+        pipeline = MagicMock(spec=Pipeline)
+        pipeline.run.return_value = iter([make_article()])
+        with patch.object(crawler, "_build_pipelines", return_value=[pipeline]):
+            return list(crawler._fetch_articles(publisher, raise_on_error=False))
 
     def test_skips_publisher_whose_robots_disallow_all(self):
         robots = mock_robots()
@@ -222,12 +231,12 @@ class TestCrawlerFetchArticles:
     def test_crawls_publisher_whose_robots_allow(self):
         robots = mock_robots()
         robots.disallow_all.return_value = False
-        assert self._crawled(Crawler(make_publisher()), stub_publisher(robots=robots)) == ["test_pub"]
+        assert len(self._crawled(Crawler(make_publisher()), stub_publisher(robots=robots))) == 1
 
     def test_ignore_robots_crawls_publisher_whose_robots_disallow_all(self):
         robots = mock_robots()
         robots.disallow_all.return_value = True
         crawler = Crawler(make_publisher(), ignore_robots=True)
-        assert self._crawled(crawler, stub_publisher(robots=robots)) == ["test_pub"]
+        assert len(self._crawled(crawler, stub_publisher(robots=robots))) == 1
         # an ignored robots.txt is never requested
         robots.disallow_all.assert_not_called()

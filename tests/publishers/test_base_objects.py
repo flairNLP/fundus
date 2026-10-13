@@ -361,7 +361,7 @@ class TestRestrict:
         assert restricted.source_types == {NewsMap, Sitemap}  # RSSFeed excluded by source-type restriction
 
     def test_language_filter_is_exposed(self):
-        assert make_publisher().restrict(languages={"es"}).language_filter == {"es"}
+        assert make_publisher().restrict(languages={"es"}).language_filter == frozenset({"es"})
 
     def test_restrictions_accumulate(self):
         publisher = make_publisher(
@@ -372,7 +372,7 @@ class TestRestrict:
         )
         restricted = publisher.restrict(languages={"es", "de"}).restrict(source_types={RSSFeed}, languages={"de"})
         assert restricted.source_types == {RSSFeed}
-        assert restricted.language_filter == {"de"}
+        assert restricted.language_filter == frozenset({"de"})
 
     def test_restrictions_never_widen(self):
         restricted = make_publisher().restrict(languages={"es"}).restrict(languages={"de"})

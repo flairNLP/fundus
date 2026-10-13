@@ -85,7 +85,7 @@ class TestFittingPublishers:
         publisher = make_publisher(sources=[RSSFeed("https://x/r", languages={"es", "de"})])
         crawler = FakeCrawler(publisher.restrict(languages=["es", "de"]))
         (result,) = crawler._fitting_publishers(extraction_filter=None, language_filter=["de", "en"])
-        assert result.language_filter == {"de"}
+        assert result.language_filter == frozenset({"de"})
 
     def test_keeps_the_crawlers_publishers_untouched(self):
         crawler = FakeCrawler(make_publisher(sources=[RSSFeed("https://x/r", languages={"es"})]))

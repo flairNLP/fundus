@@ -5,6 +5,7 @@ from typing import Dict, Iterator, List, Optional
 import pytest
 
 from fundus.publishers.base_objects import Publisher
+from fundus.scraping.filter import URLFilter
 from fundus.scraping.html import HTML, SourceInfo
 from fundus.scraping.pipeline.source.interleaved import InterleavedSource
 from fundus.scraping.pipeline.source.web import WebSource
@@ -94,10 +95,15 @@ class TestInterleavedSource:
         assert _requested(interleaved) == ["https://example.com/feed/0", "https://example.com/feed/1"]
 
     def test_url_filter_is_forwarded_to_every_source(self, publisher, monkeypatch):
-        received = []
+        received: List[Optional[URLFilter]] = []
+
+        def fetch(url_filter: Optional[URLFilter] = None) -> Iterator[HTML]:
+            received.append(url_filter)
+            return iter(())
+
         sources = [_web_source(publisher, name, 1, monkeypatch) for name in ("one", "two")]
         for web_source in sources:
-            monkeypatch.setattr(web_source, "fetch", lambda url_filter=None: received.append(url_filter) or iter(()))
+            monkeypatch.setattr(web_source, "fetch", fetch)
 
         def url_filter(url: str) -> bool:
             return False

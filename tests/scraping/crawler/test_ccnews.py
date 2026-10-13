@@ -129,7 +129,7 @@ class TestDispatch:
             crawler, "_single_crawl"
         ) as mock_single, patch("fundus.scraping.crawler.ccnews.get_proxy_tqdm"):
             mock_single.return_value = iter([])
-            list(crawler._build_article_iterator(tuple(crawler.publishers), False, None, None, None))
+            list(crawler._build_article_iterator(tuple(crawler.publishers), False, None, None))
 
         mock_single.assert_called_once()
 
@@ -144,6 +144,6 @@ class TestDispatch:
             crawler, "_parallel_crawl"
         ) as mock_parallel, patch("fundus.scraping.crawler.ccnews.get_proxy_tqdm"):
             mock_parallel.return_value = iter([])
-            list(crawler._build_article_iterator(tuple(crawler.publishers), False, None, None, None))
+            list(crawler._build_article_iterator(tuple(crawler.publishers), False, None, None))
 
         mock_parallel.assert_called_once()

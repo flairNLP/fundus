@@ -43,7 +43,12 @@ class TestPacer:
     def test_delay_is_not_evaluated_before_it_is_due(self):
         # lets a delay resolve lazily, e.g. by reading robots.txt (see RobotsCrawlDelay)
         calls: List[None] = []
-        pacer = Pacer(delay=lambda: calls.append(None) or 1.0, sleep=lambda seconds: None)
+
+        def delay() -> float:
+            calls.append(None)
+            return 1.0
+
+        pacer = Pacer(delay=delay, sleep=lambda seconds: None)
         assert calls == []
         pacer()
         assert calls == []
