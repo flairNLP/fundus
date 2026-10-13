@@ -185,11 +185,16 @@ class Crawler(CrawlerBase):
         url_filter: Optional[URLFilter] = None,
         skip_publishers_disallowing_training: bool = False,
     ) -> Iterator[Article]:
-        """Run every pipeline for one publisher, yielding its articles; skip it if training is disallowed."""
+        """Run every pipeline for one publisher, yielding its articles.
+
+        Skips the publisher if training is disallowed and that is asked for, or if its robots.txt
+        disallows all URLs, unless robots.txt is ignored.
+        """
         if skip_publishers_disallowing_training and publisher.disallows_training:
             logger.info(f"Skipping publisher {publisher.name} because it disallows training.")
             return
-        elif publisher.robots.disallow_all():
+        # <ignore_robots> goes first, so that an ignored robots.txt is never requested
+        elif not self.ignore_robots and publisher.robots.disallow_all():
             logger.info(f"Skipping publisher {publisher.name} because it disallows all URLs.")
             return
 

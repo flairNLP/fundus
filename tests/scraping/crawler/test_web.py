@@ -1,4 +1,5 @@
 import threading
+from unittest.mock import MagicMock
 
 import pytest
 
@@ -202,3 +203,31 @@ class TestCrawlerPublisherPacer:
         stop_event = threading.Event()
         pacer = Crawler(make_publisher())._publisher_pacer(stub_publisher(robots=mock_robots()), stop_event)
         assert pacer.sleep == stop_event.wait
+
+
+class TestCrawlerFetchArticles:
+    @staticmethod
+    def _crawled(crawler: Crawler, publisher) -> list:
+        """Run _fetch_articles over a stubbed pipeline yielding one sentinel per publisher."""
+        pipeline = MagicMock()
+        pipeline.run.return_value = iter([publisher.name])
+        crawler._build_pipelines = lambda _: [pipeline]  # type: ignore[method-assign]
+        return list(crawler._fetch_articles(publisher, raise_on_error=False))
+
+    def test_skips_publisher_whose_robots_disallow_all(self):
+        robots = mock_robots()
+        robots.disallow_all.return_value = True
+        assert self._crawled(Crawler(make_publisher()), stub_publisher(robots=robots)) == []
+
+    def test_crawls_publisher_whose_robots_allow(self):
+        robots = mock_robots()
+        robots.disallow_all.return_value = False
+        assert self._crawled(Crawler(make_publisher()), stub_publisher(robots=robots)) == ["test_pub"]
+
+    def test_ignore_robots_crawls_publisher_whose_robots_disallow_all(self):
+        robots = mock_robots()
+        robots.disallow_all.return_value = True
+        crawler = Crawler(make_publisher(), ignore_robots=True)
+        assert self._crawled(crawler, stub_publisher(robots=robots)) == ["test_pub"]
+        # an ignored robots.txt is never requested
+        robots.disallow_all.assert_not_called()
