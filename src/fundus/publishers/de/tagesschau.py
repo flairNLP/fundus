@@ -42,6 +42,7 @@ class TagesschauParser(ParserProxy):
 
         _image_selector = XPath(
             "//*[not(self::div and @class='teaser-absatz__image')]/div[@class='ts-picture__wrapper']//img"
+            "|//div[contains(@class, 'article-head__media')]/div[@class='ts-picture__poster-wrapper']//img"
         )
         _image_caption_selector = XPath("./ancestor::div[contains(@class, 'absatzbild ')]")
         _image_alt_selector = XPath("./@title")
@@ -97,4 +98,5 @@ class TagesschauParser(ParserProxy):
                 author_selector=self._image_author_selector,
                 caption_selector=self._image_caption_selector,
                 lower_boundary_selector=self._topic_selector,
+                live_ticker_boundary_selector=self._live_ticker_boundary_selector,
             )

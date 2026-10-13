@@ -607,6 +607,7 @@ It takes the selectors you already use for the article body and the additional s
 - `live_ticker_subheadline_selector`: the headlines of the entries.
 - `live_ticker_date_selector`: the date of an entry. It must match exactly one element per entry, otherwise an error is raised. Elements with a `datetime` attribute are read from it, all others from their text.
 - `live_ticker_date_dayfirst`: set to `True` if the publisher writes dates day first, e.g. `03.10.2026`, since ambiguous dates are read month first by default (see `ZDF` or `Tagesschau`). ISO 8601 dates are always read year first.
+- `live_ticker_date_default`: a `datetime` filling in what the dates of the entries leave out, e.g. the day of an entry only stating `16:12`. Without it, the current date is used, which makes the result depend on the day the parser runs (see `LeMonde`).
 - `live_ticker_author_selector`: the authors of an entry.
 - `live_ticker_image_selector`: the `<img>` elements of an entry. To enrich the images, `live_ticker_image_caption_selector`, `live_ticker_image_alt_selector`, `live_ticker_image_author_selector`, `live_ticker_image_size_pattern` and `live_ticker_image_relative_urls` work like the corresponding arguments of `image_extraction`.
 

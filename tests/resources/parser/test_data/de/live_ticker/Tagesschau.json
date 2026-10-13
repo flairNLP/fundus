@@ -666,8 +666,8 @@
       {
         "versions": [
           {
-            "url": "https://images.tagesschau.de/image/3868ea83-0ac1-4e94-b9dd-20ffcfc33471/AAABoL7AsPo/AAABnSStX0g/1x1-big/peters-128.jpg?width=640",
-            "query_width": "max-width:420",
+            "url": "https://images.tagesschau.de/image/774a5faf-fb9b-4fa4-9166-3a0251e40f72/AAABoL8X7d4/AAABnSSvrFg/16x9-big/mecklenburg-vorpommern-wahl-100.jpg?width=640",
+            "query_width": "max-width:440",
             "size": {
               "width": 640,
               "height": 0
@@ -675,8 +675,8 @@
             "type": "image/jpeg"
           },
           {
-            "url": "https://images.tagesschau.de/image/3868ea83-0ac1-4e94-b9dd-20ffcfc33471/AAABoL7AsPo/AAABnSStX0g/1x1-big/peters-128.webp?width=640",
-            "query_width": "max-width:420",
+            "url": "https://images.tagesschau.de/image/774a5faf-fb9b-4fa4-9166-3a0251e40f72/AAABoL8X7d4/AAABnSSvrFg/16x9-big/mecklenburg-vorpommern-wahl-100.webp?width=640",
+            "query_width": "max-width:440",
             "size": {
               "width": 640,
               "height": 0
@@ -684,8 +684,8 @@
             "type": "image/webp"
           },
           {
-            "url": "https://images.tagesschau.de/image/3868ea83-0ac1-4e94-b9dd-20ffcfc33471/AAABoL7AsPo/AAABnSSvrFg/16x9-big/peters-128.jpg?width=768",
-            "query_width": "min-width:1024",
+            "url": "https://images.tagesschau.de/image/774a5faf-fb9b-4fa4-9166-3a0251e40f72/AAABoL8X7d4/AAABnSSvrFg/16x9-big/mecklenburg-vorpommern-wahl-100.jpg?width=768",
+            "query_width": "max-width:767",
             "size": {
               "width": 768,
               "height": 0
@@ -693,8 +693,8 @@
             "type": "image/jpeg"
           },
           {
-            "url": "https://images.tagesschau.de/image/3868ea83-0ac1-4e94-b9dd-20ffcfc33471/AAABoL7AsPo/AAABnSSvrFg/16x9-big/peters-128.webp?width=768",
-            "query_width": "min-width:1024",
+            "url": "https://images.tagesschau.de/image/774a5faf-fb9b-4fa4-9166-3a0251e40f72/AAABoL8X7d4/AAABnSSvrFg/16x9-big/mecklenburg-vorpommern-wahl-100.webp?width=768",
+            "query_width": "max-width:767",
             "size": {
               "width": 768,
               "height": 0
@@ -702,132 +702,49 @@
             "type": "image/webp"
           },
           {
-            "url": "https://images.tagesschau.de/image/3868ea83-0ac1-4e94-b9dd-20ffcfc33471/AAABoL7AsPo/AAABnSStX0g/1x1-big/peters-128.jpg?width=840",
-            "query_width": "max-width:767",
+            "url": "https://images.tagesschau.de/image/774a5faf-fb9b-4fa4-9166-3a0251e40f72/AAABoL8X7d4/AAABnSSvdEs/16x7/mecklenburg-vorpommern-wahl-100.jpg?width=960",
+            "query_width": "max-width:900",
             "size": {
-              "width": 840,
+              "width": 960,
               "height": 0
             },
             "type": "image/jpeg"
           },
           {
-            "url": "https://images.tagesschau.de/image/3868ea83-0ac1-4e94-b9dd-20ffcfc33471/AAABoL7AsPo/AAABnSStX0g/1x1-big/peters-128.webp?width=840",
-            "query_width": "max-width:767",
+            "url": "https://images.tagesschau.de/image/774a5faf-fb9b-4fa4-9166-3a0251e40f72/AAABoL8X7d4/AAABnSSvdEs/16x7/mecklenburg-vorpommern-wahl-100.webp?width=960",
+            "query_width": "max-width:900",
             "size": {
-              "width": 840,
+              "width": 960,
               "height": 0
             },
             "type": "image/webp"
           },
           {
-            "url": "https://images.tagesschau.de/image/3868ea83-0ac1-4e94-b9dd-20ffcfc33471/AAABoL7AsPo/AAABnSSvrFg/16x9-big/peters-128.jpg?width=960",
-            "query_width": "max-width:1023",
+            "url": "https://images.tagesschau.de/image/774a5faf-fb9b-4fa4-9166-3a0251e40f72/AAABoL8X7d4/AAABnSSvdEs/16x7/mecklenburg-vorpommern-wahl-100.jpg?width=1280",
+            "query_width": "min-width:901",
             "size": {
-              "width": 960,
+              "width": 1280,
               "height": 0
             },
             "type": "image/jpeg"
           },
           {
-            "url": "https://images.tagesschau.de/image/3868ea83-0ac1-4e94-b9dd-20ffcfc33471/AAABoL7AsPo/AAABnSSvrFg/16x9-big/peters-128.webp?width=960",
-            "query_width": "max-width:1023",
+            "url": "https://images.tagesschau.de/image/774a5faf-fb9b-4fa4-9166-3a0251e40f72/AAABoL8X7d4/AAABnSSvdEs/16x7/mecklenburg-vorpommern-wahl-100.webp?width=1280",
+            "query_width": "min-width:901",
             "size": {
-              "width": 960,
+              "width": 1280,
               "height": 0
             },
             "type": "image/webp"
           }
         ],
-        "is_cover": false,
-        "description": "Daniel Peters, mit seinem Wahlzettel in der Hand, streckt Wahlhelfern die Hand aus. Der CDU-Fraktionsvorsitzende wirbt für \"die Mitte\". Er sieht seine Partei angesichts der schlechten Umfrageergebnisse in einem \"Existenzkampf\". | Bernd Wüstneck/dpa",
-        "caption": "Daniel Peters, mit seinem Wahlzettel in der Hand, streckt Wahlhelfern die Hand aus. Der CDU-Fraktionsvorsitzende wirbt für \"die Mitte\". Er sieht seine Partei angesichts der schlechten Umfrageergebnisse in einem \"Existenzkampf\".",
+        "is_cover": true,
+        "description": "Wähler sitzen in einer Wahlkabine in einer Schweriner Kita zur Stimmenabgabe für die Landtagswahl Mecklenburg-Vorpommern. | Philip Dulian/dpa",
+        "caption": null,
         "authors": [
-          "Bernd Wüstneck/dpa"
+          "Philip Dulian/dpa"
         ],
-        "position": 1268
-      },
-      {
-        "versions": [
-          {
-            "url": "https://images.tagesschau.de/image/010d20f2-3b94-400d-953f-b84c8ca135d6/AAABoL46cIY/AAABnSStX0g/1x1-big/manuela-schwesig-146.jpg?width=640",
-            "query_width": "max-width:420",
-            "size": {
-              "width": 640,
-              "height": 0
-            },
-            "type": "image/jpeg"
-          },
-          {
-            "url": "https://images.tagesschau.de/image/010d20f2-3b94-400d-953f-b84c8ca135d6/AAABoL46cIY/AAABnSStX0g/1x1-big/manuela-schwesig-146.webp?width=640",
-            "query_width": "max-width:420",
-            "size": {
-              "width": 640,
-              "height": 0
-            },
-            "type": "image/webp"
-          },
-          {
-            "url": "https://images.tagesschau.de/image/010d20f2-3b94-400d-953f-b84c8ca135d6/AAABoL46cIY/AAABnSSvrFg/16x9-big/manuela-schwesig-146.jpg?width=768",
-            "query_width": "min-width:1024",
-            "size": {
-              "width": 768,
-              "height": 0
-            },
-            "type": "image/jpeg"
-          },
-          {
-            "url": "https://images.tagesschau.de/image/010d20f2-3b94-400d-953f-b84c8ca135d6/AAABoL46cIY/AAABnSSvrFg/16x9-big/manuela-schwesig-146.webp?width=768",
-            "query_width": "min-width:1024",
-            "size": {
-              "width": 768,
-              "height": 0
-            },
-            "type": "image/webp"
-          },
-          {
-            "url": "https://images.tagesschau.de/image/010d20f2-3b94-400d-953f-b84c8ca135d6/AAABoL46cIY/AAABnSStX0g/1x1-big/manuela-schwesig-146.jpg?width=840",
-            "query_width": "max-width:767",
-            "size": {
-              "width": 840,
-              "height": 0
-            },
-            "type": "image/jpeg"
-          },
-          {
-            "url": "https://images.tagesschau.de/image/010d20f2-3b94-400d-953f-b84c8ca135d6/AAABoL46cIY/AAABnSStX0g/1x1-big/manuela-schwesig-146.webp?width=840",
-            "query_width": "max-width:767",
-            "size": {
-              "width": 840,
-              "height": 0
-            },
-            "type": "image/webp"
-          },
-          {
-            "url": "https://images.tagesschau.de/image/010d20f2-3b94-400d-953f-b84c8ca135d6/AAABoL46cIY/AAABnSSvrFg/16x9-big/manuela-schwesig-146.jpg?width=960",
-            "query_width": "max-width:1023",
-            "size": {
-              "width": 960,
-              "height": 0
-            },
-            "type": "image/jpeg"
-          },
-          {
-            "url": "https://images.tagesschau.de/image/010d20f2-3b94-400d-953f-b84c8ca135d6/AAABoL46cIY/AAABnSSvrFg/16x9-big/manuela-schwesig-146.webp?width=960",
-            "query_width": "max-width:1023",
-            "size": {
-              "width": 960,
-              "height": 0
-            },
-            "type": "image/webp"
-          }
-        ],
-        "is_cover": false,
-        "description": "Nach ihrer Stimmabgabe rief Schwesig Wahlberechtigte auf, ihre Stimme abzugeben: \"Ich wünsche mir, dass alle Bürgerinnen und Bürger zur Wahl gehen und ein starkes Zeichen setzen und dass es ein guter Tag für unser Land wird.\" | AFP",
-        "caption": "Nach ihrer Stimmabgabe rief Schwesig Wahlberechtigte auf, ihre Stimme abzugeben: \"Ich wünsche mir, dass alle Bürgerinnen und Bürger zur Wahl gehen und ein starkes Zeichen setzen und dass es ein guter Tag für unser Land wird.\"",
-        "authors": [
-          "AFP"
-        ],
-        "position": 1362
+        "position": 954
       }
     ],
     "publishing_date": "2026-09-20 15:37:41.121000+00:00",

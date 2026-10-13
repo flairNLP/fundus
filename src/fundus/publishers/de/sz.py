@@ -75,20 +75,15 @@ class SZParser(ParserProxy):
         )
 
         _live_ticker_boundary_selector = XPath("//div[contains(@class, 'event__body')]")
+        _entry = "//article//div[contains(@class, 'event__body')]"
         _live_ticker_paragraph_selector = XPath(
-            "//article//div[contains(@class, 'event__body')]//li|//article//div[contains(@class, 'event__body')]//div[@class='tik4-rich-text tik4-rich-text--de']/div"
+            f"{_entry}//li|{_entry}//div[@class='tik4-rich-text tik4-rich-text--de']/div"
         )
-        _live_ticker_subheadline_selector = XPath(
-            "//article//div[contains(@class, 'event__body')]//h2|//article//div[contains(@class, 'event__body')]//h3"
-        )
-        _live_ticker_date_selector = XPath("//article//div[contains(@class, 'event__body')]//time")
-        _live_ticker_author_selector = XPath(
-            "//article//div[contains(@class, 'event__body')]//div[@class='tik4-author__name']"
-        )
+        _live_ticker_subheadline_selector = XPath(f"{_entry}//h2|{_entry}//h3")
+        _live_ticker_date_selector = XPath(f"{_entry}//time")
+        _live_ticker_author_selector = XPath(f"{_entry}//div[@class='tik4-author__name']")
         _live_ticker_summary_selector = XPath("//p[@data-manual='teaserText']")
-        _live_ticker_image_selector = XPath(
-            "//article//div[contains(@class, 'event__body')]//img[contains(@class, 'tik4-media-image__img')]"
-        )
+        _live_ticker_image_selector = XPath(f"{_entry}//img[contains(@class, 'tik4-media-image__img')]")
         _live_ticker_image_container = (
             "./ancestor::div[contains(concat(' ', normalize-space(@class), ' '), ' tik4-media-image ')][1]"
         )

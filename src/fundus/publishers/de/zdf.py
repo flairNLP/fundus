@@ -35,8 +35,7 @@ class ZDFParser(ParserProxy):
             "//picture//img[not(contains(@class, 'error') or contains(@src, 'zdfheute-whatsapp-channel'))"
             " or contains(@alt, 'Autorenfoto')]"
         )
-        # the paragraphs bounding the images
-        _image_paragraph_selector = _paragraph_selector
+        _live_ticker_boundary_selector: Optional[XPath] = None
 
         @attribute
         def body(self) -> Optional[ArticleBody]:
@@ -63,7 +62,7 @@ class ZDFParser(ParserProxy):
         def images(self) -> List[Image]:
             return image_extraction(
                 doc=self.precomputed.doc,
-                paragraph_selector=self._image_paragraph_selector,
+                paragraph_selector=self._paragraph_selector,
                 image_selector=self._image_selector,
                 caption_selector=XPath(
                     "./ancestor::*[(self::div and @class='c1owvrps c10o8fzf') or self::figure]//*[contains(@class,'c1pbsmr2')]"
@@ -72,6 +71,7 @@ class ZDFParser(ParserProxy):
                     "./ancestor::*[(self::div and @class='c1owvrps c10o8fzf') or self::figure]//small[contains(@class, 'tsdggcs')]"
                 ),
                 lower_boundary_selector=XPath("//div[@class='s1am5zo f1uhhdhr']"),
+                live_ticker_boundary_selector=self._live_ticker_boundary_selector,
             )
 
     class V1_1(V1):
@@ -87,14 +87,6 @@ class ZDFParser(ParserProxy):
         _live_ticker_date_selector = XPath("//article[@data-guid]//time")
         _live_ticker_image_selector = XPath("//article[@data-guid]//picture//img")
         _live_ticker_image_alt_selector = XPath("./@alt[. != 'Videoplayer']")
-
-        # images of live ticker entries are attached to their entry, not to the page
-        _image_selector = XPath(
-            "//picture//img[not(contains(@class, 'error') or contains(@src, 'zdfheute-whatsapp-channel'))"
-            " or contains(@alt, 'Autorenfoto')][not(ancestor::article[@data-guid])]"
-        )
-        # live tickers have no article paragraphs, so their entries bound the images instead
-        _image_paragraph_selector = XPath(f"{_paragraph_selector.path}|{_live_ticker_paragraph_selector.path}")
 
         @attribute
         def body(self) -> Optional[Union[ArticleBody, LiveTickerBody]]:

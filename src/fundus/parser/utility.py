@@ -276,6 +276,7 @@ def extract_live_ticker_body_with_selector(
     tag_filter: Optional[XPath] = None,
     date_selector: Optional[XPath] = None,
     date_dayfirst: bool = False,
+    date_default: Optional[datetime] = None,
     author_selector: Optional[XPath] = None,
     image_selector: Optional[XPath] = None,
     image_caption_selector: XPath = _default_image_caption_selector,
@@ -339,7 +340,7 @@ def extract_live_ticker_body_with_selector(
                         "make sure the date selector matches exactly one element per entry"
                     )
                 date_seen = True
-                entry_date = generic_date_parsing(node.text_content(), dayfirst=date_dayfirst)
+                entry_date = generic_date_parsing(node.text_content(), dayfirst=date_dayfirst, default=date_default)
             elif isinstance(node, AuthorNode):
                 entry_authors.extend(generic_author_parsing(node.text_content()))
             elif isinstance(node, ImageNode):
@@ -395,6 +396,7 @@ def extract_body_with_selector(
     live_ticker_subheadline_selector: Optional[XPath] = None,
     live_ticker_date_selector: Optional[XPath] = None,
     live_ticker_date_dayfirst: bool = False,
+    live_ticker_date_default: Optional[datetime] = None,
     live_ticker_author_selector: Optional[XPath] = None,
     live_ticker_image_selector: Optional[XPath] = None,
     live_ticker_image_caption_selector: XPath = _default_image_caption_selector,
@@ -421,6 +423,7 @@ def extract_body_with_selector(
             subheadline_selector=live_ticker_subheadline_selector,
             date_selector=live_ticker_date_selector,
             date_dayfirst=live_ticker_date_dayfirst,
+            date_default=live_ticker_date_default,
             author_selector=live_ticker_author_selector,
             image_selector=live_ticker_image_selector,
             image_caption_selector=live_ticker_image_caption_selector,
@@ -823,7 +826,10 @@ class CustomParserInfo(parser.parserinfo):
 
 
 def generic_date_parsing(
-    date_str: Optional[str], tz: Optional[timezone] = None, dayfirst: bool = False
+    date_str: Optional[str],
+    tz: Optional[timezone] = None,
+    dayfirst: bool = False,
+    default: Optional[datetime] = None,
 ) -> Optional[datetime]:
     """Parses <date_str> into a datetime.
 
@@ -832,6 +838,8 @@ def generic_date_parsing(
         tz: The timezone assumed if <date_str> doesn't specify one.
         dayfirst: If True, ambiguous dates like 03.10.2026 are read day first. ISO 8601 dates are always
             read year first. Defaults to False.
+        default: The datetime used to fill in components <date_str> doesn't specify, e.g. the date of a time-only
+            string like "16:12". Defaults to None, which fills them in with the current date.
 
     Returns:
         The parsed datetime or None if <date_str> is None.
@@ -850,7 +858,7 @@ def generic_date_parsing(
 
     if parsed_date is None and not (
         parsed_date := parser.parse(
-            date_str, tzinfos=_tz_infos, parserinfo=CustomParserInfo(), fuzzy=True, dayfirst=dayfirst
+            date_str, tzinfos=_tz_infos, parserinfo=CustomParserInfo(), fuzzy=True, dayfirst=dayfirst, default=default
         )
     ):
         return None
@@ -1197,6 +1205,7 @@ def image_extraction(
     author_selector: Union[XPath, Pattern[str], List[Pattern[str]]] = _default_image_author_selector,
     relative_urls: Union[bool, XPath] = False,
     size_pattern: Pattern[str] = _default_image_size_pattern,
+    live_ticker_boundary_selector: Optional[XPath] = None,
 ) -> List[Image]:
     """Extracts images enriched with metadata from <dom> based on given selectors.
 
@@ -1222,6 +1231,10 @@ def image_extraction(
             domain
         size_pattern: Regular expression to select <width>, <height> and <dpr> from the image URL. The given regExp
             will be matched with re.findall and overwrites existing values. Defaults to None.
+        live_ticker_boundary_selector: The entry boundary selector of the live ticker, if the publisher has them.
+            If it matches, the page is a live ticker, which has no article paragraphs to bound the images. Only the
+            images before its first entry are then extracted, since the ones of the entries belong to them.
+            <upper_boundary_selector>, <lower_boundary_selector> and <paragraph_selector> are ignored in that case.
 
     Returns:
         A list of Images contained within the article
@@ -1232,8 +1245,17 @@ def image_extraction(
     dom = DOM(doc)
 
     # determine bounds based on df index
-    if not (bounds := determine_bounds(dom, paragraph_selector, upper_boundary_selector, lower_boundary_selector)):
-        raise ValueError("Bounds could not be determined")
+    if live_ticker_boundary_selector is not None and (entries := live_ticker_boundary_selector(doc)):
+        first_entry = min(dom.get_index(entry) for entry in entries)
+        # everything in front of the first entry is considered a cover image, like the ones in front of a paragraph
+        bounds: Optional[Bounds] = Bounds(upper=-1, first_paragraph=first_entry, lower=first_entry)
+    else:
+        bounds = determine_bounds(dom, paragraph_selector, upper_boundary_selector, lower_boundary_selector)
+    if not bounds:
+        raise ValueError(
+            "Bounds could not be determined, <paragraph_selector> and <lower_boundary_selector> "
+            "should select at least one element behind the upper boundary"
+        )
 
     domain = _resolve_domain(dom.root, relative_urls)
 

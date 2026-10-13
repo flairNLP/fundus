@@ -494,6 +494,19 @@ class TestUtility:
     def test_generic_date_parsing_dayfirst(self, date_string: str, expected: datetime.datetime):
         assert generic_date_parsing(date_string, dayfirst=True) == expected
 
+    @pytest.mark.parametrize(
+        "date_string, expected",
+        [
+            ("16:12", datetime.datetime(2026, 10, 13, 16, 12)),
+            ("Le 27/09 à 22:01", datetime.datetime(2026, 9, 27, 22, 1)),
+            # dates stating more than the default are not affected by it
+            ("03.10.2025, 09:37 Uhr", datetime.datetime(2025, 10, 3, 9, 37)),
+        ],
+    )
+    def test_generic_date_parsing_default(self, date_string: str, expected: datetime.datetime):
+        default = datetime.datetime(2026, 10, 13)
+        assert generic_date_parsing(date_string, dayfirst=True, default=default) == expected
+
 
 class TestMetaInfo:
     def test_order(self):
