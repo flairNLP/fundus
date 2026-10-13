@@ -31,6 +31,7 @@ tests/
 ├── parser/                # mirrors src/fundus/parser/
 ├── publishers/            # mirrors src/fundus/publishers/
 ├── scraping/              # mirrors src/fundus/scraping/  (pipeline/, crawler/, ...)
+├── skills/                # mirrors the repo-root skills/ tooling, not the library
 └── utils/                 # mirrors src/fundus/utils/
 ```
 

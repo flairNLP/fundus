@@ -15,7 +15,7 @@ from pathlib import Path
 
 import pytest
 
-_SKILLS = Path(__file__).resolve().parents[1] / "skills"
+_SKILLS = Path(__file__).resolve().parents[2] / "skills"
 sys.path.insert(0, str(_SKILLS))
 
 from installer.core import (  # noqa: E402
