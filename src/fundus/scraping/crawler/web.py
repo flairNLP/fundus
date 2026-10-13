@@ -12,7 +12,7 @@ from more_itertools import roundrobin
 from fundus.logging import create_logger
 from fundus.publishers.base_objects import Publisher
 from fundus.scraping.article import Article
-from fundus.scraping.crawler.base import CrawlerBase, PublisherType
+from fundus.scraping.crawler.base import CrawlerBase, PublisherType, supports_attributes
 from fundus.scraping.crawler.queueing import enqueue_results, iter_pool_results
 from fundus.scraping.delay import Delay
 from fundus.scraping.filter import ExtractionFilter, URLFilter
@@ -99,7 +99,10 @@ class Crawler(CrawlerBase):
                 "include at least one publisher that isn't deprecated."
             )
 
-        super().__init__(*fitting_publishers)
+        # restricted here, since <restrict_sources_to> arrives with the crawler and holds for every
+        # crawl it runs. Publishers left without a source are reported per crawl rather than raising,
+        # together with the ones a crawl's own restrictions rule out.
+        super().__init__(*(publisher.restrict(source_types=restrict_sources_to) for publisher in fitting_publishers))
 
         self.restrict_sources_to = restrict_sources_to
         self.threading = threading
@@ -124,26 +127,12 @@ class Crawler(CrawlerBase):
             return delay
         raise TypeError("param <delay> of <Crawler.__init__> must be float, Delay, or None")
 
+    def _supports_attributes(self, publisher: Publisher, extraction_filter: Optional[ExtractionFilter]) -> bool:
+        """The live web is always parsed with the version valid today."""
+        return supports_attributes(extraction_filter, [publisher.parser.latest_version])
+
     def _build_pipelines(self, publisher: Publisher) -> List[Pipeline]:
-        """Build one WebSource-backed Pipeline per (optionally restricted) URL source of the publisher."""
-        if self.restrict_sources_to:
-            url_sources = list(
-                more_itertools.flatten(
-                    publisher.source_mapping[source_type]
-                    for source_type in self.restrict_sources_to
-                    if source_type in publisher.source_mapping
-                )
-            )
-        else:
-            url_sources = list(more_itertools.flatten(publisher.source_mapping.values()))
-
-        if not url_sources and self.restrict_sources_to:
-            logger.warning(
-                f"No sources of type {[s.__name__ for s in self.restrict_sources_to]} "
-                f"found for publisher {publisher.name}. Skipping publisher."
-            )
-            return []
-
+        """Build one WebSource-backed Pipeline per URL source of the (restricted) publisher."""
         return [
             Pipeline(
                 WebSource(
@@ -159,7 +148,7 @@ class Crawler(CrawlerBase):
                 ),
                 publishers=[publisher],
             )
-            for url_source in url_sources
+            for url_source in publisher.sources
         ]
 
     def _on_publisher_limit_reached(self, publisher_name: str) -> None:
@@ -173,7 +162,6 @@ class Crawler(CrawlerBase):
         raise_on_error: bool,
         extraction_filter: Optional[ExtractionFilter] = None,
         url_filter: Optional[URLFilter] = None,
-        language_filter: Optional[List[str]] = None,
         skip_publishers_disallowing_training: bool = False,
     ) -> Iterator[Article]:
         """Run every pipeline for one publisher, yielding its articles; skip it if training is disallowed."""
@@ -185,7 +173,7 @@ class Crawler(CrawlerBase):
             return
 
         for pipeline in self._build_pipelines(publisher):
-            yield from pipeline.run(raise_on_error, extraction_filter, url_filter, language_filter)
+            yield from pipeline.run(raise_on_error, extraction_filter, url_filter)
 
     @staticmethod
     def _single_crawl(
@@ -226,7 +214,6 @@ class Crawler(CrawlerBase):
         raise_on_error: bool,
         extraction_filter: Optional[ExtractionFilter],
         url_filter: Optional[URLFilter],
-        language_filter: Optional[List[str]],
         skip_publishers_disallowing_training: bool = False,
     ) -> Iterator[Article]:
         """Yield articles from the live-web backend: bind the per-publisher article task,
@@ -237,7 +224,6 @@ class Crawler(CrawlerBase):
             raise_on_error=raise_on_error,
             extraction_filter=extraction_filter,
             url_filter=url_filter,
-            language_filter=language_filter,
             skip_publishers_disallowing_training=skip_publishers_disallowing_training,
         )
         if self.threading:

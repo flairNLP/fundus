@@ -2,9 +2,12 @@ from __future__ import annotations
 
 import json
 
+import pytest
+
+from fundus import NewsMap, RSSFeed
 from fundus.scraping.crawler.base import CrawlerBase, _CrawlState
 from fundus.scraping.filter import Requires, RequiresAll
-from tests.fixtures.builders import make_article, make_html
+from tests.fixtures.builders import make_article, make_html, make_publisher
 from tests.fixtures.fakes import FakeCrawler
 
 
@@ -59,20 +62,43 @@ class TestBuildExtractionFilter:
         assert CrawlerBase._build_extraction_filter(f) is f
 
 
-class TestFilterPublishers:
-    def test_no_extraction_filter_returns_all_publishers(self, publisher_group_with_news_map):
+class TestFittingPublishers:
+    def test_no_restrictions_keep_all_publishers(self, publisher_group_with_news_map):
         crawler = FakeCrawler(publisher_group_with_news_map)
-        result = crawler._filter_publishers(extraction_filter=None, language_filter=None)
+        result = crawler._fitting_publishers(extraction_filter=None, language_filter=None)
         assert len(result) == len(crawler.publishers)
 
     def test_unsupported_attribute_filters_out_publisher(self, publisher_group_with_news_map):
         crawler = FakeCrawler(publisher_group_with_news_map)
         # parser_proxy_with_version has no @attribute methods, so any Requires removes it
-        result = crawler._filter_publishers(extraction_filter=Requires("nonexistent_attr_xyz"), language_filter=None)
+        result = crawler._fitting_publishers(extraction_filter=Requires("nonexistent_attr_xyz"), language_filter=None)
         assert result == []
+
+    def test_language_filter_drops_publishers_without_a_matching_source(self):
+        spanish = make_publisher(name="es", sources=[RSSFeed("https://x/r", languages={"es"})])
+        german = make_publisher(name="de", sources=[NewsMap("https://x/n", languages={"de"})])
+        crawler = FakeCrawler(spanish, german)
+        (result,) = crawler._fitting_publishers(extraction_filter=None, language_filter=["es"])
+        assert result.name == "es"
+
+    def test_language_filter_narrows_a_restricted_publisher(self):
+        publisher = make_publisher(sources=[RSSFeed("https://x/r", languages={"es", "de"})])
+        crawler = FakeCrawler(publisher.restrict(languages=["es", "de"]))
+        (result,) = crawler._fitting_publishers(extraction_filter=None, language_filter=["de", "en"])
+        assert result.language_filter == {"de"}
+
+    def test_keeps_the_crawlers_publishers_untouched(self):
+        crawler = FakeCrawler(make_publisher(sources=[RSSFeed("https://x/r", languages={"es"})]))
+        crawler._fitting_publishers(extraction_filter=None, language_filter=["es"])
+        assert crawler.publishers[0].language_filter is None
 
 
 class TestCrawl:
+    def test_raises_if_no_publisher_fits(self, publisher_group_with_news_map):
+        crawler = FakeCrawler(publisher_group_with_news_map)
+        with pytest.raises(ValueError):
+            next(crawler.crawl(only_complete=Requires("nonexistent_attr_xyz")))
+
     def test_max_articles_zero_yields_nothing(self, publisher_group_with_news_map):
         articles = [make_article(html=make_html(requested_url=f"https://example.com/{i}")) for i in range(5)]
         crawler = FakeCrawler(publisher_group_with_news_map, articles=articles)

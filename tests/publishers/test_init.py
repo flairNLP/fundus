@@ -1,6 +1,5 @@
 from typing import Set
 
-import more_itertools
 import pytest
 
 from fundus.publishers import Publisher, PublisherCollectionMeta, PublisherGroup
@@ -26,7 +25,7 @@ class TestPublisherCollection:
         )
 
     def test_source_languages(self, publisher: Publisher):
-        for source in more_itertools.flatten(publisher.source_mapping.values()):
+        for source in publisher.sources:
             assert source.languages.issubset(language_codes)
 
 

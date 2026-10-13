@@ -1,6 +1,7 @@
 import pytest
 
-from fundus import Crawler, NewsMap, RSSFeed
+from fundus import Crawler, NewsMap, Requires, RSSFeed
+from fundus.scraping.crawler import supports_attributes
 from fundus.scraping.pipeline.source.web import WebSource
 from fundus.utils.events import __EVENTS__
 from tests.fixtures.builders import make_publisher

@@ -9,11 +9,11 @@ This module deliberately does NOT match the ``fixture_*.py`` glob picked up by c
 
 from __future__ import annotations
 
-from typing import Iterator, List, Optional, Sequence, Tuple
+from typing import Iterator, Optional, Sequence, Tuple
 
 from fundus.publishers.base_objects import Publisher
 from fundus.scraping.article import Article
-from fundus.scraping.crawler.base import CrawlerBase, PublisherType
+from fundus.scraping.crawler.base import CrawlerBase, PublisherType, supports_attributes
 from fundus.scraping.filter import ExtractionFilter, URLFilter
 
 
@@ -24,13 +24,15 @@ class FakeCrawler(CrawlerBase):
         super().__init__(*publishers)
         self._articles = list(articles)
 
+    def _supports_attributes(self, publisher: Publisher, extraction_filter: Optional[ExtractionFilter]) -> bool:
+        return supports_attributes(extraction_filter, publisher.parser)
+
     def _build_article_iterator(
         self,
         publishers: Tuple[Publisher, ...],
         raise_on_error: bool,
         extraction_filter: Optional[ExtractionFilter],
         url_filter: Optional[URLFilter],
-        language_filter: Optional[List[str]],
         skip_publishers_disallowing_training: bool = False,
     ) -> Iterator[Article]:
         yield from self._articles

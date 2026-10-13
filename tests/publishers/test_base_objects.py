@@ -5,7 +5,7 @@ from curl_cffi.requests.exceptions import ConnectionError, ReadTimeout
 
 from fundus import NewsMap, RSSFeed, Sitemap
 from fundus.parser import BaseParser, ParserProxy
-from fundus.publishers.base_objects import CustomRobotFileParser, FilteredPublisher, Robots
+from fundus.publishers.base_objects import CustomRobotFileParser, Robots
 from fundus.scraping.session import session_handler
 from tests.fixtures.builders import make_http_error, make_publisher, make_publisher_group, mock_response
 
@@ -138,7 +138,7 @@ class TestPublisherGroupSearch:
     def test_returns_results_narrowed_to_search_criteria(self):
         group = make_publisher_group(value=make_publisher(sources=[NewsMap("https://x/n"), Sitemap("https://x/s")]))
         (result,) = group.search(source_types=[NewsMap])
-        assert set(result.source_mapping) == {NewsMap}  # Sitemap dropped; result is a narrowed FilteredPublisher
+        assert result.source_types == {NewsMap}  # Sitemap dropped; result is a restricted view
 
 
 @pytest.fixture
@@ -271,7 +271,7 @@ class TestPublisherConstruction:
                 RSSFeed("https://x/feed"),
             ]
         )
-        assert list(publisher.source_mapping) == [RSSFeed, NewsMap, Sitemap]
+        assert [type(source) for source in publisher.sources] == [RSSFeed, NewsMap, Sitemap]
 
     def test_suppress_robots_sets_allow_all(self):
         publisher = make_publisher(suppress_robots=True)
@@ -337,25 +337,24 @@ class TestPublisherEquality:
         assert make_publisher(name="x") != make_publisher(name="x", parser=OtherParserProxy)
 
 
-class TestFilteredPublisher:
-    def test_no_filter_exposes_all_sources(self):
+class TestRestrict:
+    def test_no_restriction_keeps_all_sources(self):
         publisher = make_publisher(sources=[NewsMap("https://x/n"), Sitemap("https://x/s")])
-        filtered = FilteredPublisher.from_publisher(publisher)
-        assert filtered.source_mapping == publisher.source_mapping
+        restricted = publisher.restrict()
+        assert restricted.sources == publisher.sources
+        assert restricted.language_filter is None
 
     def test_narrows_by_source_type(self):
         publisher = make_publisher(sources=[NewsMap("https://x/n"), Sitemap("https://x/s")])
-        filtered = FilteredPublisher.from_publisher(publisher, source_types={NewsMap})
-        assert set(filtered.source_mapping) == {NewsMap}
+        assert publisher.restrict(source_types={NewsMap}).source_types == {NewsMap}
 
     def test_narrows_by_language(self):
         publisher = make_publisher(
             sources=[RSSFeed("https://x/r", languages={"es"}), Sitemap("https://x/s", languages={"de"})]
         )
-        filtered = FilteredPublisher.from_publisher(publisher, languages={"es"})
-        assert set(filtered.source_mapping) == {RSSFeed}  # German Sitemap dropped
+        assert publisher.restrict(languages={"es"}).source_types == {RSSFeed}  # German Sitemap dropped
 
-    def test_combines_source_type_and_language_filters(self):
+    def test_combines_source_type_and_language_restrictions(self):
         publisher = make_publisher(
             sources=[
                 RSSFeed("https://x/r", languages={"es"}),
@@ -363,13 +362,41 @@ class TestFilteredPublisher:
                 Sitemap("https://x/s", languages={"es"}),
             ]
         )
-        filtered = FilteredPublisher.from_publisher(publisher, source_types={NewsMap, Sitemap}, languages={"es"})
-        assert set(filtered.source_mapping) == {NewsMap, Sitemap}  # RSSFeed excluded by source-type filter
+        restricted = publisher.restrict(source_types={NewsMap, Sitemap}, languages={"es"})
+        assert restricted.source_types == {NewsMap, Sitemap}  # RSSFeed excluded by source-type restriction
 
     def test_language_filter_is_exposed(self):
-        filtered = FilteredPublisher.from_publisher(make_publisher(), languages={"es"})
-        assert filtered.language_filter == {"es"}
+        assert make_publisher().restrict(languages={"es"}).language_filter == {"es"}
+
+    def test_restrictions_accumulate(self):
+        publisher = make_publisher(
+            sources=[
+                RSSFeed("https://x/r", languages={"es", "de"}),
+                NewsMap("https://x/n", languages={"es"}),
+            ]
+        )
+        restricted = publisher.restrict(languages={"es", "de"}).restrict(source_types={RSSFeed}, languages={"de"})
+        assert restricted.source_types == {RSSFeed}
+        assert restricted.language_filter == {"de"}
+
+    def test_restrictions_never_widen(self):
+        restricted = make_publisher().restrict(languages={"es"}).restrict(languages={"de"})
+        assert restricted.language_filter == frozenset()
+
+    def test_excluding_languages_support_nothing(self):
+        publisher = make_publisher(sources=[RSSFeed("https://x/r", languages={"es", "de"})])
+        restricted = publisher.restrict(languages={"es"}).restrict(languages={"de"})
+        # the source declaring both languages survives, but no article could be kept
+        assert len(restricted.sources) == 1
+        assert restricted.supports() is False
+
+    def test_leaves_the_original_untouched(self):
+        publisher = make_publisher(sources=[NewsMap("https://x/n"), Sitemap("https://x/s")])
+        publisher.restrict(source_types={NewsMap}, languages={"es"})
+        assert publisher.source_types == {NewsMap, Sitemap}
+        assert publisher.language_filter is None
 
     def test_carries_over_publisher_identity(self):
-        filtered = FilteredPublisher.from_publisher(make_publisher(name="orig"))
-        assert filtered.name == "orig"
+        restricted = make_publisher(name="orig").restrict(languages={"es"})
+        assert restricted.name == "orig"
+        assert hash(restricted) == hash(make_publisher(name="orig"))

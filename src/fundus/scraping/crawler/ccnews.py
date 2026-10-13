@@ -21,7 +21,7 @@ from fundus.logging import create_logger
 from fundus.logging.workers import flush_worker_logs, worker_logging
 from fundus.publishers.base_objects import Publisher
 from fundus.scraping.article import Article
-from fundus.scraping.crawler.base import CrawlerBase, PublisherType
+from fundus.scraping.crawler.base import CrawlerBase, PublisherType, supports_attributes
 from fundus.scraping.crawler.queueing import (
     enqueue_results,
     iter_pool_results,
@@ -98,6 +98,13 @@ class CCNewsCrawler(CrawlerBase):
         if self.processes > 0:
             __EVENTS__.set_event("stop", __MAIN_THREAD_ALIAS__)
 
+    def _supports_attributes(self, publisher: Publisher, extraction_filter: Optional[ExtractionFilter]) -> bool:
+        """Records are parsed with the version valid when they were added, so every version covering
+        part of the crawled range is within reach.
+        """
+        versions = publisher.parser.versions_covering(self.start.date(), self.end.date())
+        return supports_attributes(extraction_filter, versions)
+
     def _fetch_articles(
         self,
         warc_path: str,
@@ -105,7 +112,6 @@ class CCNewsCrawler(CrawlerBase):
         raise_on_error: bool,
         extraction_filter: Optional[ExtractionFilter] = None,
         url_filter: Optional[URLFilter] = None,
-        language_filter: Optional[List[str]] = None,
         bar: Optional[tqdm] = None,
     ) -> Iterator[Article]:
         """Process one WARC file through a pipeline, retrying on WarcFileLoadError up to self.retries."""
@@ -116,7 +122,7 @@ class CCNewsCrawler(CrawlerBase):
                 publishers=publishers,
             )
             try:
-                yield from pipeline.run(raise_on_error, extraction_filter, url_filter, language_filter)
+                yield from pipeline.run(raise_on_error, extraction_filter, url_filter)
             except WarcFileLoadError as exception:
                 if retries >= self.retries:
                     logger.error(f"Failed to load WARC file {warc_path!r} after {retries} retries")
@@ -213,7 +219,6 @@ class CCNewsCrawler(CrawlerBase):
         raise_on_error: bool,
         extraction_filter: Optional[ExtractionFilter],
         url_filter: Optional[URLFilter],
-        language_filter: Optional[List[str]],
         skip_publishers_disallowing_training: bool = False,
     ) -> Iterator[Article]:
         """Yield articles from the CC-NEWS archive backend: optionally drop publishers that disallow training,
@@ -251,7 +256,6 @@ class CCNewsCrawler(CrawlerBase):
                 raise_on_error=raise_on_error,
                 extraction_filter=extraction_filter,
                 url_filter=url_filter,
-                language_filter=language_filter,
                 bar=bar,
             )
             if self.processes == 0:
