@@ -15,12 +15,18 @@ from fundus.parser.utility import (
 
 class LeMondeParser(ParserProxy):
     class V1(BaseParser):
-        _paragraph_selector = XPath("//p[contains(@class, 'article__paragraph')]")
+        _paragraph_selector = XPath(
+            "//p[contains(@class, 'article__paragraph')] | "
+            "//section[contains(@class, 'catcher--reference')]//p[contains(@class, 'catcher__desc')]"
+        )
         _summary_selector = XPath(
             "//p[contains(@class, 'article__desc') or @id='js-summary-live'] | "
             "//div[@class='ds-description']//span[@class='ds-chapo']"
         )
-        _subheadline_selector = XPath("//h2[@class = 'article__sub-title']")
+        _subheadline_selector = XPath(
+            "//h2[@class = 'article__sub-title'] | //h3[contains(@class, 'article__chapter-title')]"
+        )
+        _kicker_filter = XPath("self::span[contains(@class, 'article__kicker')]")
 
         @attribute
         def body(self) -> Optional[ArticleBody]:
@@ -29,6 +35,7 @@ class LeMondeParser(ParserProxy):
                 paragraph_selector=self._paragraph_selector,
                 summary_selector=self._summary_selector,
                 subheadline_selector=self._subheadline_selector,
+                tag_filter=self._kicker_filter,
             )
 
         @attribute
