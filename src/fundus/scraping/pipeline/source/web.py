@@ -8,7 +8,7 @@ from typing import Callable, Dict, Iterable, Iterator, List, Optional, Union
 from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
 
 from curl_cffi.requests import Response
-from curl_cffi.requests.exceptions import ConnectionError, HTTPError, ReadTimeout
+from curl_cffi.requests.exceptions import ConnectionError, HTTPError, Timeout
 
 from fundus.logging import create_logger
 from fundus.publishers.base_objects import Publisher, Robots
@@ -145,7 +145,7 @@ class WebSource:
         self.pacer()
         try:
             return session.get_with_interrupt(url, headers=self.publisher.request_header)
-        except (HTTPError, ConnectionError, ReadTimeout) as error:
+        except (HTTPError, ConnectionError, Timeout) as error:
             logger.warning(f"Skipped requested URL {url!r} because of {error!r}")
             return None
 

@@ -1,7 +1,7 @@
 from unittest.mock import MagicMock, patch
 
 import pytest
-from curl_cffi.requests.exceptions import ConnectionError, ReadTimeout
+from curl_cffi.requests.exceptions import ConnectionError, Timeout
 
 from fundus import NewsMap, RSSFeed, Sitemap
 from fundus.parser import BaseParser, ParserProxy
@@ -212,7 +212,7 @@ class TestRobots:
         robots.disallow_all()
         robots.robots_file_parser.read.assert_called_once()
 
-    @pytest.mark.parametrize("error", [ConnectionError("boom"), ReadTimeout("boom")])
+    @pytest.mark.parametrize("error", [ConnectionError("boom"), Timeout("boom")])
     def test_read_failure_is_swallowed_and_allows_all(self, error):
         robots = Robots("https://x/robots.txt")
         robots.robots_file_parser = MagicMock()
@@ -222,11 +222,6 @@ class TestRobots:
         assert robots.ready is True
 
     @pytest.mark.integration
-    @pytest.mark.xfail(
-        reason="_read catches ReadTimeout, not the base Timeout curl_cffi raises on a real timeout, so the "
-        "timeout propagates out of ensure_ready instead of defaulting to allow-all. Fixed by flairNLP/fundus#939.",
-        strict=True,
-    )
     def test_real_timeout_is_swallowed_and_allows_all(self, hanging_url):
         robots = Robots(hanging_url)
         with session_handler.context(timeout=0.3):

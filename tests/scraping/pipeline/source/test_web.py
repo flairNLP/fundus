@@ -3,7 +3,7 @@ from typing import List
 from unittest.mock import MagicMock, patch
 
 import pytest
-from curl_cffi.requests.exceptions import ConnectionError, HTTPError, ReadTimeout
+from curl_cffi.requests.exceptions import ConnectionError, HTTPError, Timeout
 
 from fundus.scraping.delay import Pacer, RobotsCrawlDelay
 from fundus.scraping.html import HTML, SourceInfo
@@ -147,16 +147,11 @@ class TestFetchOne:
         patched_web_session_handler.get_with_interrupt.side_effect = ConnectionError("boom")
         assert source._fetch_one("https://example.com/", lambda u: False) is None
 
-    def test_returns_none_on_read_timeout(self, source, patched_web_session_handler):
-        patched_web_session_handler.get_with_interrupt.side_effect = ReadTimeout("boom")
+    def test_returns_none_on_timeout(self, source, patched_web_session_handler):
+        patched_web_session_handler.get_with_interrupt.side_effect = Timeout("boom")
         assert source._fetch_one("https://example.com/", lambda u: False) is None
 
     @pytest.mark.integration
-    @pytest.mark.xfail(
-        reason="_request catches ReadTimeout, not the base Timeout curl_cffi raises on a real timeout, "
-        "so the timeout propagates out of _fetch_one instead of being swallowed. Fixed by flairNLP/fundus#939.",
-        strict=True,
-    )
     def test_returns_none_on_real_timeout(self, hanging_url):
         source = WebSource(url_source=[], publisher=stub_publisher(), ignore_robots=True)
         source.pacer = MagicMock(return_value=True)
