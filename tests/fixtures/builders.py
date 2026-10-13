@@ -166,6 +166,7 @@ def mock_robots(*, can_fetch: bool = True, crawl_delay: Optional[float] = None) 
     Defaults are permissive: fetching allowed, no crawl-delay.
     """
     robots = MagicMock(spec=Robots)
+    robots.url = "https://example.com/robots.txt"
     robots.can_fetch.return_value = can_fetch
     robots.crawl_delay.return_value = crawl_delay
     return robots

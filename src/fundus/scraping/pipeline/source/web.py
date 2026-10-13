@@ -12,7 +12,7 @@ from curl_cffi.requests.exceptions import ConnectionError, HTTPError, ReadTimeou
 
 from fundus.logging import create_logger
 from fundus.publishers.base_objects import Publisher, Robots
-from fundus.scraping.delay import Delay
+from fundus.scraping.delay import Pacer, RobotsCrawlDelay
 from fundus.scraping.filter import URLFilter
 from fundus.scraping.html import HTML, SourceInfo
 from fundus.scraping.session import session_handler
@@ -34,37 +34,11 @@ class WebSourceInfo(SourceInfo):
     url: str
 
 
-class _Pacer:
-    """Per-source rate limiter. Sleeps as needed so consecutive calls are at least `delay` apart."""
-
-    def __init__(
-        self, delay: Optional[Delay], sleep: Callable[[float], object] = time.sleep, warm_start: bool = True
-    ) -> None:
-        """Build a pacer with the given delay and sleep function. warm_start=True skips sleep on first call."""
-        self.delay = delay
-        self.timestamp = time.time()
-        if warm_start and self.delay is not None:
-            self.timestamp -= self.delay()
-        self.sleep = sleep
-
-    def __call__(self) -> None:
-        """Sleep just long enough to enforce the configured delay since the last call, then reset."""
-        if self.delay is None:
-            return
-        if delay := max(0.0, self.delay() - time.time() + self.timestamp):
-            self.sleep(delay)
-        self.reset()
-
-    def reset(self) -> None:
-        """Mark the current time as the last call; the next call will wait the full delay from now."""
-        self.timestamp = time.time()
-
-
 class WebSource:
     """HTML source backed by live HTTP requests over a URLSource (RSSFeed/Sitemap/NewsMap) or any iterable of URLs.
 
-    Iterates URLs one at a time, applies URL filters and robots.txt, rate-limits requests via an
-    internal pacer, and fetches each URL through an InterruptableSession. Yields one HTML record per
+    Iterates URLs one at a time, applies URL filters and robots.txt, rate-limits requests via its
+    pacer, and fetches each URL through an InterruptableSession. Yields one HTML record per
     successful fetch. Honors a cooperative stop_event for early cancellation.
     """
 
@@ -74,11 +48,10 @@ class WebSource:
         publisher: Publisher,
         url_filter: Optional[URLFilter] = None,
         query_parameters: Optional[Dict[str, str]] = None,
-        delay: Optional[Delay] = None,
         ignore_robots: bool = False,
-        ignore_crawl_delay: bool = False,
         impersonate: bool = False,
         stop_event: Optional[threading.Event] = None,
+        pacer: Optional[Pacer] = None,
     ):
         """Initialize a source that fetches HTML from URLs produced by a URLSource or any iterable.
 
@@ -92,13 +65,15 @@ class WebSource:
                 per-call filter passed to fetch(). Truthy means skip the URL.
             query_parameters (Optional[Dict[str, str]]): Query parameters appended to every URL
                 before it is requested. Existing query strings are preserved.
-            delay (Optional[Delay]): Per-request delay (seconds). Overridden by robots.txt
-                crawl-delay unless ignore_crawl_delay=True.
-            ignore_robots (bool): If True, skip robots.txt checks (both can_fetch and crawl-delay).
-            ignore_crawl_delay (bool): If True, keep the supplied delay even when robots.txt
-                declares its own crawl-delay.
-            stop_event (Optional[threading.Event]): Cooperative-cancellation flag. When set, any
-                in-flight sleep is interrupted and the source stops iterating URLs.
+            ignore_robots (bool): If True, skip the robots.txt checks. Unless a <pacer> is given,
+                this also drops the crawl-delay robots.txt declares.
+            stop_event (Optional[threading.Event]): Cooperative-cancellation flag. When set, the
+                source stops iterating URLs; also interrupts the default pacer's delay.
+            pacer (Optional[Pacer]): The rate limiter pacing this source's requests. Pass one pacer
+                to every WebSource addressing a publisher to keep the delay per publisher rather
+                than per source, which matters once the sources are drawn from in turn (see
+                InterleavedSource). If None, this source paces itself by the crawl-delay its
+                publisher's robots.txt declares, if any.
 
         """
         self.url_source = url_source
@@ -108,11 +83,7 @@ class WebSource:
         self._impersonate_profile = publisher.impersonate if impersonate else None
         self.robots: Optional[Robots] = None if ignore_robots else self.publisher.robots
         self.stop_event = stop_event
-        self._delay = delay
-        self._ignore_crawl_delay = ignore_crawl_delay
-        # Built lazily on the first request (see _build_pacer): resolving the crawl-delay may
-        # read robots.txt, and construction must stay free of I/O.
-        self.pacer: Optional[_Pacer] = None
+        self.pacer = pacer if pacer is not None else self._default_pacer()
 
         # source_info depends only on url_source's type, which is fixed at construction time.
         self.source_info: SourceInfo = (
@@ -121,46 +92,23 @@ class WebSource:
             else SourceInfo(publisher.name)
         )
 
-    @staticmethod
-    def _resolve_delay(
-        robots: Optional[Robots],
-        user_agent: str,
-        supplied_delay: Optional[Delay],
-        ignore_crawl_delay: bool,
-        publisher_name: str = "",
-    ) -> Optional[Delay]:
-        """Return the effective per-request delay.
+    def _default_pacer(self) -> Pacer:
+        """A pacer following the crawl-delay of the publisher's robots.txt, unless robots.txt is ignored.
 
-        Robots' crawl_delay (if present) overrides supplied_delay; the override is skipped
-        when robots is None or ignore_crawl_delay is True or robots has no crawl_delay set.
+        Reads robots.txt only once the first delay is due, so construction stays free of I/O.
         """
-        if robots is None or ignore_crawl_delay:
-            return supplied_delay
-        robots_delay = robots.crawl_delay(user_agent)
-        if robots_delay is None:
-            return supplied_delay
-        logger.debug(
-            f"Found crawl-delay of {robots_delay} seconds in robots.txt for {publisher_name}. "
-            f"Overwriting existing delay."
+        delay = (
+            None
+            if self.robots is None
+            else RobotsCrawlDelay(self.robots, self.publisher.request_header.get("user-agent", "*"))
         )
-        return lambda: robots_delay
-
-    def _build_pacer(self) -> _Pacer:
-        """Resolve the effective delay (may read robots.txt) and build the rate limiter.
-
-        Deferred out of __init__ so construction performs no I/O; called on the first request.
-        """
-        user_agent = self.publisher.request_header.get("user-agent", "*")
-        resolved_delay = self._resolve_delay(
-            self.robots, user_agent, self._delay, self._ignore_crawl_delay, publisher_name=self.publisher.name
-        )
-        # stop_event.wait makes the per-request delay interruptable; time.sleep does not.
+        # stop_event.wait makes the delay interruptable; time.sleep does not.
         sleep: Callable[[float], object]
         if self.stop_event is None:
             sleep = time.sleep
         else:
             sleep = self.stop_event.wait
-        return _Pacer(delay=resolved_delay, sleep=sleep)
+        return Pacer(delay, sleep=sleep)
 
     @staticmethod
     def _apply_query_parameters(url: str, params: Dict[str, str]) -> str:
@@ -194,10 +142,7 @@ class WebSource:
     def _request(self, url: str) -> Optional[Response]:
         """Sleep on the pacer, then GET the URL. Returns None on request error."""
         session = session_handler.get_session(self._impersonate_profile)
-        pacer = self.pacer
-        if pacer is None:
-            pacer = self.pacer = self._build_pacer()
-        pacer()
+        self.pacer()
         try:
             return session.get_with_interrupt(url, headers=self.publisher.request_header)
         except (HTTPError, ConnectionError, ReadTimeout) as error:

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import contextlib
+import threading
 from functools import partial, wraps
 from multiprocessing.pool import ThreadPool
 from queue import Queue
@@ -14,9 +15,10 @@ from fundus.publishers.base_objects import Publisher
 from fundus.scraping.article import Article
 from fundus.scraping.crawler.base import CrawlerBase, PublisherType, supports_attributes
 from fundus.scraping.crawler.queueing import enqueue_results, iter_pool_results
-from fundus.scraping.delay import Delay
+from fundus.scraping.delay import Delay, Pacer, RobotsCrawlDelay
 from fundus.scraping.filter import ExtractionFilter, URLFilter
 from fundus.scraping.pipeline import Pipeline
+from fundus.scraping.pipeline.source.interleaved import InterleavedSource
 from fundus.scraping.pipeline.source.web import WebSource
 from fundus.scraping.session import CrashThread
 from fundus.scraping.url import URLSource
@@ -50,8 +52,9 @@ def publisher_context_wrapper(func: Callable[[Publisher], None]) -> Callable[[Pu
 class Crawler(CrawlerBase):
     """Crawler for the live web: fetches articles by requesting each publisher's URL sources.
 
-    Builds one WebSource-backed Pipeline per URL source and, when threading is enabled, runs one
-    thread per publisher. Honors robots.txt and crawl delays.
+    Builds one Pipeline per batch of a publisher's URL sources (see SourceHandler.batches), drawing
+    the sources of a batch in turn, and, when threading is enabled, runs one thread per publisher.
+    Honors robots.txt and crawl delays, pacing each publisher as a whole.
     """
 
     def __init__(
@@ -131,24 +134,42 @@ class Crawler(CrawlerBase):
         """The live web is always parsed with the version valid today."""
         return supports_attributes(extraction_filter, [publisher.parser.latest_version])
 
+    def _publisher_pacer(self, publisher: Publisher, stop_event: threading.Event) -> Pacer:
+        """Build the pacer shared by all of <publisher>'s sources.
+
+        A crawl-delay declared in the publisher's robots.txt overrides the crawler's delay, unless
+        robots.txt or the crawl-delay it declares is ignored. Setting <stop_event> interrupts a delay.
+        """
+        delay = self._delay
+        if not (self.ignore_robots or self.ignore_crawl_delay):
+            delay = RobotsCrawlDelay(publisher.robots, publisher.request_header.get("user-agent", "*"), default=delay)
+        return Pacer(delay, sleep=stop_event.wait)
+
     def _build_pipelines(self, publisher: Publisher) -> List[Pipeline]:
-        """Build one WebSource-backed Pipeline per URL source of the (restricted) publisher."""
-        return [
-            Pipeline(
-                WebSource(
-                    url_source=url_source,
-                    publisher=publisher,
-                    delay=self._delay,
-                    url_filter=publisher.url_filter,
-                    query_parameters=publisher.query_parameter,
-                    ignore_robots=self.ignore_robots,
-                    ignore_crawl_delay=self.ignore_crawl_delay,
-                    impersonate=self.impersonate,
-                    stop_event=__EVENTS__.get("stop"),
-                ),
-                publishers=[publisher],
+        """Build one Pipeline per batch of the (restricted) publisher's URL sources, in crawl order.
+
+        All of the publisher's WebSources share one pacer, so that the delay paces the publisher
+        rather than each source separately. Without this, drawing a batch of n sources in turn would
+        fire n requests before any of them waits.
+        """
+        stop_event = __EVENTS__.get("stop")
+        pacer = self._publisher_pacer(publisher, stop_event)
+
+        def build(url_source: URLSource) -> WebSource:
+            return WebSource(
+                url_source=url_source,
+                publisher=publisher,
+                url_filter=publisher.url_filter,
+                query_parameters=publisher.query_parameter,
+                ignore_robots=self.ignore_robots,
+                impersonate=self.impersonate,
+                stop_event=stop_event,
+                pacer=pacer,
             )
-            for url_source in publisher.sources
+
+        return [
+            Pipeline(InterleavedSource(*(build(url_source) for url_source in batch)), publishers=[publisher])
+            for batch in publisher.sources.batches()
         ]
 
     def _on_publisher_limit_reached(self, publisher_name: str) -> None:

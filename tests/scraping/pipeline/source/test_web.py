@@ -5,8 +5,9 @@ from unittest.mock import MagicMock, patch
 import pytest
 from curl_cffi.requests.exceptions import ConnectionError, HTTPError, ReadTimeout
 
+from fundus.scraping.delay import Pacer, RobotsCrawlDelay
 from fundus.scraping.html import HTML, SourceInfo
-from fundus.scraping.pipeline.source.web import WebSource, WebSourceInfo, _Pacer
+from fundus.scraping.pipeline.source.web import WebSource, WebSourceInfo
 from fundus.scraping.session import session_handler
 from fundus.scraping.url import RSSFeed
 from tests.fixtures.builders import make_http_error, mock_response, mock_robots, stub_publisher
@@ -35,39 +36,6 @@ def source(publisher, patched_web_session_handler):
     return s
 
 
-# ---- _Pacer ----------------------------------------------------------------
-
-
-class TestPacer:
-    def test_no_delay_never_sleeps(self):
-        sleeps: List[float] = []
-        pacer = _Pacer(delay=None, sleep=sleeps.append)
-        pacer()
-        pacer()
-        assert sleeps == []
-
-    def test_warm_start_first_call_does_not_sleep(self):
-        sleeps: List[float] = []
-        pacer = _Pacer(delay=lambda: 5.0, sleep=sleeps.append, warm_start=True)
-        pacer()
-        assert sleeps == []
-
-    def test_without_warm_start_first_call_sleeps_for_delay(self):
-        sleeps: List[float] = []
-        pacer = _Pacer(delay=lambda: 0.5, sleep=sleeps.append, warm_start=False)
-        pacer()
-        assert len(sleeps) == 1
-        assert 0.4 <= sleeps[0] <= 0.5
-
-    def test_reset_makes_next_call_sleep(self):
-        sleeps: List[float] = []
-        pacer = _Pacer(delay=lambda: 1.0, sleep=sleeps.append, warm_start=True)
-        pacer()
-        pacer.reset()
-        pacer()
-        assert len(sleeps) == 1
-
-
 # ---- WebSource.__init__ ----------------------------------------------------
 
 
@@ -82,15 +50,51 @@ class TestWebSourceConstruction:
         source = WebSource(url_source=[], publisher=publisher)
         assert source.robots is robots
 
-    def test_crawl_delay_resolution_deferred_to_first_request(self, patched_web_session_handler):
-        # Resolving the crawl-delay may read robots.txt, so the pacer is deferred out of
-        # construction: robots is untouched at build time and consulted on the first request.
+    def test_crawl_delay_resolution_deferred_until_a_delay_is_due(self, patched_web_session_handler):
+        # Resolving the crawl-delay may read robots.txt, so the default pacer defers it out of
+        # construction: robots' crawl-delay is untouched until the first delay is due.
         patched_web_session_handler.get_with_interrupt.return_value = mock_response()
         robots = mock_robots(can_fetch=True, crawl_delay=None)
         source = WebSource(url_source=[], publisher=stub_publisher(robots=robots))
         robots.crawl_delay.assert_not_called()
-        source._fetch_one("https://example.com/article", lambda u: False)
+        source._fetch_one("https://example.com/a", lambda u: False)
+        robots.crawl_delay.assert_not_called()
+        source._fetch_one("https://example.com/b", lambda u: False)
         robots.crawl_delay.assert_called_once()
+
+    def test_default_pacer_follows_robots_crawl_delay(self):
+        robots = mock_robots(crawl_delay=5.0)
+        source = WebSource(url_source=[], publisher=stub_publisher(robots=robots))
+        assert isinstance(source.pacer.delay, RobotsCrawlDelay)
+        assert source.pacer.delay() == 5.0
+
+    def test_default_pacer_without_robots_does_not_delay(self, publisher):
+        source = WebSource(url_source=[], publisher=publisher, ignore_robots=True)
+        assert source.pacer.delay is None
+
+    def test_default_pacer_delay_is_interrupted_by_stop_event(self, publisher):
+        stop_event = threading.Event()
+        source = WebSource(url_source=[], publisher=publisher, stop_event=stop_event)
+        assert source.pacer.sleep == stop_event.wait
+
+    def test_given_pacer_is_used_without_consulting_robots(self, patched_web_session_handler):
+        robots = mock_robots(can_fetch=True, crawl_delay=5.0)
+        pacer = MagicMock(spec=Pacer)
+        source = WebSource(url_source=[], publisher=stub_publisher(robots=robots), pacer=pacer)
+        source._fetch_one("https://example.com/article", lambda u: False)
+        pacer.assert_called_once()
+        robots.crawl_delay.assert_not_called()
+
+    def test_sources_sharing_a_pacer_are_paced_together(self, publisher, patched_web_session_handler):
+        sleeps: List[float] = []
+        pacer = Pacer(delay=lambda: 1.0, sleep=sleeps.append)
+        first, second = (
+            WebSource(url_source=[], publisher=publisher, ignore_robots=True, pacer=pacer) for _ in range(2)
+        )
+        first._fetch_one("https://example.com/a", lambda u: False)
+        second._fetch_one("https://example.com/b", lambda u: False)
+        # the second source waits on the first one's request, as if both were a single source
+        assert len(sleeps) == 1
 
 
 class TestApplyQueryParameters:
@@ -116,35 +120,6 @@ class TestApplyQueryParameters:
     def test_url_encodes_unicode(self):
         result = WebSource._apply_query_parameters("https://example.com/a", {"q": "café"})
         assert result == "https://example.com/a?q=caf%C3%A9"
-
-
-def _supplied_delay() -> float:
-    return 1.0
-
-
-class TestResolveDelay:
-    def test_no_robots_returns_supplied(self):
-        assert WebSource._resolve_delay(None, "*", _supplied_delay, ignore_crawl_delay=False) is _supplied_delay
-
-    def test_ignore_crawl_delay_returns_supplied(self):
-        robots = mock_robots()
-        assert WebSource._resolve_delay(robots, "*", _supplied_delay, ignore_crawl_delay=True) is _supplied_delay
-
-    def test_no_robots_delay_returns_supplied(self):
-        robots = mock_robots(crawl_delay=None)
-        assert WebSource._resolve_delay(robots, "*", _supplied_delay, ignore_crawl_delay=False) is _supplied_delay
-
-    def test_robots_delay_overrides_supplied(self):
-        robots = mock_robots(crawl_delay=5.0)
-        resolved = WebSource._resolve_delay(robots, "*", lambda: 1.0, ignore_crawl_delay=False)
-        assert resolved is not None
-        assert resolved() == 5.0
-
-    def test_robots_delay_returned_when_no_supplied(self):
-        robots = mock_robots(crawl_delay=3.0)
-        resolved = WebSource._resolve_delay(robots, "*", None, ignore_crawl_delay=False)
-        assert resolved is not None
-        assert resolved() == 3.0
 
 
 # ---- WebSource._fetch_one -------------------------------------------------

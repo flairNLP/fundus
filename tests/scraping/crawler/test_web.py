@@ -1,10 +1,14 @@
+import threading
+
 import pytest
 
-from fundus import Crawler, NewsMap, Requires, RSSFeed
+from fundus import Crawler, NewsMap, Requires, RSSFeed, Sitemap
 from fundus.scraping.crawler import supports_attributes
+from fundus.scraping.delay import RobotsCrawlDelay
+from fundus.scraping.pipeline.source.interleaved import InterleavedSource
 from fundus.scraping.pipeline.source.web import WebSource
 from fundus.utils.events import __EVENTS__
-from tests.fixtures.builders import make_publisher
+from tests.fixtures.builders import make_publisher, mock_robots, stub_publisher
 
 
 class TestPipeline:
@@ -131,6 +135,37 @@ class TestCrawlerBuildPipelines:
         pipelines = crawler._build_pipelines(crawler.publishers[0])
         assert len(pipelines) == 1
 
+    def test_returns_one_pipeline_per_batch_in_crawl_order(self):
+        publisher = make_publisher(
+            sources=[
+                Sitemap("https://test.com/sitemap"),
+                RSSFeed("https://test.com/one", interleave=True),
+                NewsMap("https://test.com/news"),
+                RSSFeed("https://test.com/two", interleave=True),
+            ]
+        )
+        crawler = Crawler(publisher, ignore_robots=True)
+        pipelines = crawler._build_pipelines(crawler.publishers[0])
+
+        assert all(isinstance(pipeline.source, InterleavedSource) for pipeline in pipelines)
+        assert [[source.url_source.url for source in pipeline.source.sources] for pipeline in pipelines] == [
+            ["https://test.com/one", "https://test.com/two"],
+            ["https://test.com/news"],
+            ["https://test.com/sitemap"],
+        ]
+
+    def test_all_sources_of_a_publisher_share_one_pacer(self):
+        publisher = make_publisher(
+            sources=[RSSFeed("https://test.com/one", interleave=True), RSSFeed("https://test.com/two", interleave=True)]
+            + [Sitemap("https://test.com/sitemap")]
+        )
+        crawler = Crawler(publisher, ignore_robots=True)
+        pipelines = crawler._build_pipelines(crawler.publishers[0])
+
+        pacers = {id(source.pacer) for pipeline in pipelines for source in pipeline.source.sources}
+        assert len(pacers) == 1
+        assert None not in {source.pacer for pipeline in pipelines for source in pipeline.source.sources}
+
     def test_restrict_sources_excludes_non_matching_type(self, publisher_group_with_rss_feeds):
         crawler = Crawler(publisher_group_with_rss_feeds, ignore_robots=True, restrict_sources_to=[NewsMap])
         pipelines = crawler._build_pipelines(crawler.publishers[0])
@@ -140,3 +175,30 @@ class TestCrawlerBuildPipelines:
         crawler = Crawler(publisher_group_with_rss_feeds, ignore_robots=True)
         pipelines = crawler._build_pipelines(crawler.publishers[0])
         assert len(pipelines) == 1
+
+
+class TestCrawlerPublisherPacer:
+    def test_robots_crawl_delay_overrides_the_crawlers_delay(self):
+        crawler = Crawler(make_publisher(), delay=2.0)
+        pacer = crawler._publisher_pacer(stub_publisher(robots=mock_robots(crawl_delay=5.0)), threading.Event())
+        assert isinstance(pacer.delay, RobotsCrawlDelay)
+        assert pacer.delay() == 5.0
+
+    def test_falls_back_to_the_crawlers_delay(self):
+        crawler = Crawler(make_publisher(), delay=2.0)
+        pacer = crawler._publisher_pacer(stub_publisher(robots=mock_robots(crawl_delay=None)), threading.Event())
+        assert pacer.delay is not None
+        assert pacer.delay() == 2.0
+
+    @pytest.mark.parametrize("ignore", [{"ignore_robots": True}, {"ignore_crawl_delay": True}])
+    def test_ignoring_robots_or_its_crawl_delay_keeps_the_crawlers_delay(self, ignore):
+        robots = mock_robots(crawl_delay=5.0)
+        crawler = Crawler(make_publisher(), delay=2.0, **ignore)
+        pacer = crawler._publisher_pacer(stub_publisher(robots=robots), threading.Event())
+        assert pacer.delay is crawler._delay
+        robots.crawl_delay.assert_not_called()
+
+    def test_delay_is_interrupted_by_the_stop_event(self):
+        stop_event = threading.Event()
+        pacer = Crawler(make_publisher())._publisher_pacer(stub_publisher(robots=mock_robots()), stop_event)
+        assert pacer.sleep == stop_event.wait
