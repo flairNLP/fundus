@@ -1,8 +1,8 @@
 from typing import Dict, Iterator, Literal, Optional
 
 from fundus.logging import create_logger
+from fundus.parser.data import LiveTickerBody
 from fundus.publishers.base_objects import Publisher
-from fundus.scraping.article import Article
 from fundus.scraping.delay import Delay
 from fundus.scraping.filter import (
     ExtractionFilter,
@@ -16,6 +16,7 @@ from fundus.scraping.html import (
     WebSource,
     build_clock,
 )
+from fundus.scraping.publication import Article, LiveTicker, Publication
 from fundus.scraping.url import URLSource
 
 logger = create_logger(__name__)
@@ -39,7 +40,7 @@ class BaseScraper:
         error_handling: Literal["suppress", "catch", "raise"],
         extraction_filter: Optional[ExtractionFilter] = None,
         url_filter: Optional[URLFilter] = None,
-    ) -> Iterator[Article]:
+    ) -> Iterator[Publication]:
 
         for source in self.sources:
             for html in source.fetch(url_filter=url_filter):
@@ -71,7 +72,10 @@ class BaseScraper:
                         else:
                             logger.debug(f"Skipped article at {html.requested_url!r} because of extraction filter")
                     else:
-                        article = Article(html=html, **extraction)
+                        if "body" in extraction.keys() and isinstance(extraction["body"], LiveTickerBody):
+                            article: Publication = LiveTicker(html=html, **extraction)
+                        else:
+                            article = Article(html=html, **extraction)
                         # the exact half of the language restriction: selecting sources by the languages
                         # they declare only narrows down what gets crawled, this decides what is kept.
                         # None is the only value letting everything through, an empty restriction

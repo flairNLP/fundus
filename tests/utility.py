@@ -11,10 +11,10 @@ from typing_extensions import Self
 
 from fundus import PublisherCollection
 from fundus.parser import ArticleBody, BaseParser
-from fundus.parser.data import Image, TextSequenceTree
+from fundus.parser.data import Image, LiveTickerBody, TextSequenceTree
 from fundus.publishers.base_objects import Publisher, PublisherGroup
-from fundus.scraping.article import Article
 from fundus.scraping.html import HTML, SourceInfo
+from fundus.scraping.publication import Article
 from scripts.generate_tables import supported_publishers_markdown_path
 from tests.resources.parser.test_data import __module_path__ as test_resource_path
 
@@ -112,6 +112,12 @@ class ExtractionEncoder(json.JSONEncoder):
     def default(self, obj: object):
         if isinstance(obj, datetime.datetime):
             return str(obj)
+        elif isinstance(obj, LiveTickerBody):
+            # the raw HTML of the entries is not part of the test cases
+            serialized = obj.serialize()
+            for entry in serialized["entries"]:
+                entry.pop("html", None)
+            return serialized
         elif isinstance(obj, TextSequenceTree):
             return obj.serialize()
         elif isinstance(obj, Image):
@@ -124,7 +130,7 @@ class ExtractionDecoder(json.JSONDecoder):
     deserialization_functions: Dict[str, Callable[[Any], Any]] = {
         "crawl_date": datetime.datetime.fromisoformat,
         "publishing_date": datetime.datetime.fromisoformat,
-        "body": ArticleBody.deserialize,
+        "body": lambda body: LiveTickerBody.deserialize(body) if "entries" in body else ArticleBody.deserialize(body),
         "images": lambda images: [Image.deserialize(image) for image in images],
     }
 
@@ -132,6 +138,9 @@ class ExtractionDecoder(json.JSONDecoder):
         json.JSONDecoder.__init__(self, object_hook=self.object_hook, *args, **kwargs)
 
     def object_hook(self, obj_dict):
+        # nested serialized objects (e.g. the entries of a live ticker) are deserialized by their parent
+        if "sections" in obj_dict:
+            return obj_dict
         for key, deserialization_function in self.deserialization_functions.items():
             if (serialized_value := obj_dict.get(key)) is not None:
                 obj_dict[key] = deserialization_function(serialized_value)
@@ -163,17 +172,18 @@ class HTMLTestFile:
     crawl_date: datetime.datetime
     publisher: Publisher
     encoding: str = "utf-8"
+    live_ticker: bool = False
 
     @property
     def path(self) -> Path:
         return (
-            generate_absolute_section_path(self.publisher.__group__)
+            generate_absolute_section_path(self.publisher.__group__, self.live_ticker)
             / f"{self.publisher.__name__}_{self.crawl_date.strftime('%Y_%m_%d')}.html.gz"
         )
 
     @property
     def meta_info(self) -> Optional[Dict[str, Any]]:
-        if meta_info := get_meta_info_file(self.publisher.__group__).load():
+        if meta_info := get_meta_info_file(self.publisher.__group__, self.live_ticker).load():
             return meta_info[self.path.name]
         return None
 
@@ -203,12 +213,15 @@ class HTMLTestFile:
         decompressed_content = gzip.decompress(compressed_file)
         content = decompressed_content.decode(encoding=encoding)
         publisher = cls._parse_path(path)
-        if not (meta_info := get_meta_info_file(publisher.__group__).load()):
+        live_ticker = path.parent.name == LIVE_TICKER_DIRECTORY
+        if not (meta_info := get_meta_info_file(publisher.__group__, live_ticker).load()):
             raise ValueError(f"Missing meta info for file {path.name!r}")
-        return cls(content=content, publisher=publisher, encoding=encoding, **meta_info[path.name])
+        return cls(
+            content=content, publisher=publisher, encoding=encoding, live_ticker=live_ticker, **meta_info[path.name]
+        )
 
     def remove(self) -> None:
-        if meta_info_file := get_meta_info_file(self.publisher.__group__):
+        if meta_info_file := get_meta_info_file(self.publisher.__group__, self.live_ticker):
             meta_info = meta_info_file.load() or {}
             meta_info.pop(self.path.name)
             meta_info_file.write(meta_info)
@@ -222,7 +235,7 @@ class HTMLTestFile:
         Returns:
             None
         """
-        meta_info_file = get_meta_info_file(self.publisher.__group__)
+        meta_info_file = get_meta_info_file(self.publisher.__group__, self.live_ticker)
         meta_info = meta_info_file.load() or {}
         meta_info[self.path.name] = {"url": self.url, "crawl_date": self.crawl_date}
         meta_info = dict(sorted(meta_info.items()))
@@ -260,8 +273,10 @@ class HTMLTestFile:
         self._register_at_meta_info()
 
 
-def load_html_test_file_mapping(publisher: Publisher) -> Dict[Type[BaseParser], HTMLTestFile]:
-    html_paths = (test_resource_path / Path(f"{publisher.__group__.__name__.lower()}")).glob(
+def load_html_test_file_mapping(
+    publisher: Publisher, live_ticker: bool = False
+) -> Dict[Type[BaseParser], HTMLTestFile]:
+    html_paths = generate_absolute_section_path(publisher.__group__, live_ticker).glob(
         f"{publisher.__name__}_*.html.gz"
     )
     html_files = [HTMLTestFile.load(path) for path in html_paths]
@@ -274,28 +289,34 @@ def load_html_test_file_mapping(publisher: Publisher) -> Dict[Type[BaseParser], 
     return html_mapping
 
 
-def generate_absolute_section_path(group: PublisherGroup) -> Path:
-    return test_resource_path / group.__name__.lower()
+# live ticker test files live in a subdirectory of their group, next to the article test files, but are kept apart
+# so that they don't count as the (single) article test file of a parser version.
+LIVE_TICKER_DIRECTORY = "live_ticker"
 
 
-def generate_meta_info_path(group: PublisherGroup) -> Path:
-    return generate_absolute_section_path(group) / "meta.info"
+def generate_absolute_section_path(group: PublisherGroup, live_ticker: bool = False) -> Path:
+    path = test_resource_path / group.__name__.lower()
+    return path / LIVE_TICKER_DIRECTORY if live_ticker else path
 
 
-def get_meta_info_file(group: PublisherGroup) -> JSONFile[Dict[str, Dict[str, Any]]]:
-    return JSONFileWithExtractionDecoderEncoder(generate_meta_info_path(group))
+def generate_meta_info_path(group: PublisherGroup, live_ticker: bool = False) -> Path:
+    return generate_absolute_section_path(group, live_ticker) / "meta.info"
 
 
-def generate_parser_test_case_json_path(publisher: Publisher) -> Path:
-    return generate_absolute_section_path(publisher.__group__) / f"{publisher.__name__}.json"
+def get_meta_info_file(group: PublisherGroup, live_ticker: bool = False) -> JSONFile[Dict[str, Dict[str, Any]]]:
+    return JSONFileWithExtractionDecoderEncoder(generate_meta_info_path(group, live_ticker))
 
 
-def get_test_case_json(publisher: Publisher) -> JSONFile[Dict[str, Dict[str, Any]]]:
-    return JSONFileWithExtractionDecoderEncoder(generate_parser_test_case_json_path(publisher))
+def generate_parser_test_case_json_path(publisher: Publisher, live_ticker: bool = False) -> Path:
+    return generate_absolute_section_path(publisher.__group__, live_ticker) / f"{publisher.__name__}.json"
 
 
-def load_test_case_data(publisher: Publisher) -> Dict[str, Dict[str, Any]]:
-    test_case_file = get_test_case_json(publisher)
+def get_test_case_json(publisher: Publisher, live_ticker: bool = False) -> JSONFile[Dict[str, Dict[str, Any]]]:
+    return JSONFileWithExtractionDecoderEncoder(generate_parser_test_case_json_path(publisher, live_ticker))
+
+
+def load_test_case_data(publisher: Publisher, live_ticker: bool = False) -> Dict[str, Dict[str, Any]]:
+    test_case_file = get_test_case_json(publisher, live_ticker)
 
     if not (test_data := test_case_file.load()):
         raise ValueError(

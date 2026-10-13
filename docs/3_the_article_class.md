@@ -3,6 +3,7 @@
 * [The Article class](#the-article-class)
   * [What is an `Article`](#what-is-an-article)
   * [The articles' body](#the-articles-body)
+  * [Live tickers](#live-tickers)
   * [HTML](#html)
   * [Images](#images)
   * [Language detection](#language-detection)
@@ -104,6 +105,61 @@ This is a paragraph: People who would like to keep the details of their [...]
 **_NOTE:_** Not all publishers support the layout format shown above.
 Sometimes headlines are missing or the entire summary is.
 You can always check the specific parser what to expect, but even within publishers, the layout differs from article to article.
+
+## Live tickers
+
+Some publishers run live tickers: a single page collecting many short entries, each with its own timestamp, headline, text and sometimes authors and images.
+For publishers whose parser supports them, `crawl` yields a `LiveTicker` instead of an `Article` for such pages.
+Both are a `Publication` and share the attributes `title`, `authors`, `publishing_date`, `topics`, `images`, `plaintext` and `html`, so most code works with either.
+
+To tell them apart, check the type:
+
+````python
+from fundus import Crawler, PublisherCollection
+from fundus.scraping.publication import LiveTicker
+
+crawler = Crawler(PublisherCollection.de.Tagesschau)
+
+for publication in crawler.crawl(max_articles=10):
+    if isinstance(publication, LiveTicker):
+        print(f"Live ticker with {len(publication.body.entries)} entries: {publication.title}")
+    else:
+        print(f"Article: {publication.title}")
+````
+
+The `body` of a `LiveTicker` is a `LiveTickerBody` and not an `ArticleBody`. It consists of
+- a `summary` introducing the live ticker
+- a list of `entries`, each a `LiveTickerEntry`
+
+With `LiveTickerEntry` including
+- `sections`, a list of `ArticleSection` structured like the ones of an `ArticleBody`. An entry without a headline has a section with an empty `headline`
+- a `publishing_date`, `authors` and `images` of the entry, if available
+- the `html` of the entry
+
+````console
+LiveTickerBody
+    |-- summary: TextSequence
+    |-- entries: List[LiveTickerEntry]
+                        |-- sections: List[ArticleSection]
+                        |-- publishing_date: Optional[datetime]
+                        |-- authors: List[str]
+                        |-- images: List[Image]
+                        |-- html: str
+````
+
+The `authors` and `images` of a `LiveTicker` contain the ones of the page as well as the ones of all its entries.
+To work with the entries as if they were articles, iterate over the `LiveTicker`.
+It yields one `Article` per entry, using the headline of the entry as its title (or `LiveTicker Entry #<n>` if there is none):
+
+````python
+for publication in crawler.crawl(max_articles=10):
+    if isinstance(publication, LiveTicker):
+        for entry in publication:
+            print(entry.publishing_date, entry.title)
+````
+
+**_NOTE:_** Live tickers don't necessarily provide every attribute, e.g. authors or topics.
+When you filter with [`RequiresAll`](4_how_to_filter_articles.md), a live ticker has to provide all attributes its parser extracts, just like an article, and is dropped otherwise.
 
 ## HTML
 

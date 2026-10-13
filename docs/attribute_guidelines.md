@@ -74,3 +74,10 @@ Those attributes will be validated with unit tests when used.
         <td><code>image_extraction</code></td>
     </tr>
 </table>
+
+### Live tickers
+
+Parsers of publishers with live tickers may return a `LiveTickerBody` from `body` instead of an `ArticleBody`, so the return type becomes `Optional[Union[ArticleBody, LiveTickerBody]]`.
+Use `extract_body_with_selector` for this, which decides based on the page whether it is a live ticker.
+It takes the selectors of the article as well as the ones prefixed with `live_ticker_` (see [how to add a publisher](how_to_add_a_publisher.md#extracting-live-tickers)).
+The other attributes keep their meaning; `authors` and `images` describe the page itself, the ones of the entries are part of the `LiveTickerBody`.

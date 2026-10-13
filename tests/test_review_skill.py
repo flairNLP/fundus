@@ -20,8 +20,9 @@ import pytest
 from lxml.etree import XPath
 
 from fundus import Article
-from fundus.parser import ArticleBody, BaseParser
-from fundus.parser.data import ArticleSection, TextSequence
+from fundus.parser import ArticleBody, BaseParser, LiveTickerBody
+from fundus.parser.data import ArticleSection, LiveTickerEntry, TextSequence
+from fundus.scraping.publication import LiveTicker
 
 _SCRIPTS = Path(__file__).resolve().parents[1] / "skills" / "review-publisher" / "scripts"
 sys.path.insert(0, str(_SCRIPTS))
@@ -322,6 +323,37 @@ class TestStore:
         assert _store.read_html(cache_root, record) == content
         assert _store.body_units(record["body"]) == []
 
+    def test_body_units_of_a_live_ticker_cover_summary_and_every_entry(self):
+        entries = [
+            LiveTickerEntry(
+                sections=[ArticleSection(TextSequence(["Headline"]), TextSequence(["First", "Second"]))],
+                publishing_date=None,
+                authors=[],
+                images=[],
+            ),
+            LiveTickerEntry(
+                sections=[ArticleSection(TextSequence([]), TextSequence(["Third"]))],
+                publishing_date=None,
+                authors=[],
+                images=[],
+            ),
+        ]
+        body = LiveTickerBody(summary=TextSequence(["Summary"]), entries=entries)
+
+        assert _store.body_units(body.serialize()) == ["Summary", "Headline", "First", "Second", "Third"]
+
+    def test_save_article_records_the_kind_of_publication(self, cache_root: Path):
+        html = SimpleNamespace(
+            content="<html></html>", requested_url="https://x.test/a", crawl_date=datetime(2026, 6, 1)
+        )
+        extraction: Dict[str, Any] = dict(title="t", authors=[], topics=[], images=[], body=None)
+        article = Article(html=cast(Any, html), **extraction)
+        live_ticker = LiveTicker(html=cast(Any, html), **extraction)
+
+        assert not _store.is_live_ticker(_store.save_article(cache_root, 1, article))
+        assert _store.is_live_ticker(_store.save_article(cache_root, 2, live_ticker))
+        assert not _store.is_live_ticker({"index": 3})  # a record written before live tickers were supported
+
     def test_prepare_cache_dir_refuses_foreign_directories(self, cache_root: Path):
         foreign = cache_root / "foreign"
         foreign.mkdir()
@@ -554,6 +586,60 @@ class TestPayloadSkeleton:
         assert review._parser_source_path(cast(Any, iter([TestPayloadSkeleton]))).startswith("<")
 
 
+class TestLiveTickerReview:
+    def test_a_ticker_page_is_swept_with_its_own_selectors(self):
+        class Dummy(BaseParser):
+            _paragraph_selector = XPath("//p[@class='article']")
+            _live_ticker_paragraph_selector = XPath("//p[@class='entry']")
+
+        assert review._body_selectors(Dummy, live_ticker=False)["paragraph"] is Dummy._paragraph_selector
+        assert review._body_selectors(Dummy, live_ticker=True)["paragraph"] is Dummy._live_ticker_paragraph_selector
+
+    def test_flagged_tickers_are_read_first_then_in_crawl_order(self):
+        tickers: List[Any] = list("abcd")
+        risks = _ranked_risks(4, flagged=[2])
+
+        selected: List[Any] = review._select_live_tickers(tickers, risks, budget=2)
+        assert selected == ["c", "a"]
+        selected = cast(List[Any], review._select_live_tickers(tickers, risks, budget=10))
+        assert selected == ["c", "a", "b", "d"]
+
+    def test_status_shows_live_tickers_and_still_gates_on_candidates(
+        self, cache_root: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+    ) -> None:
+        cache = cache_root / "cache"
+        cache.mkdir()
+        monkeypatch.setattr(review, "default_cache_dir", lambda spec: cache)
+        state = TestPayloadSkeleton._ready_state()
+        state["articles"].append(
+            {"index": 2, "kind": "live_ticker", "url": "https://x.test/live", "html_file": "02.html"}
+        )
+        state["live_scan"] = {"pool": 1, "flagged": 0, "reviewed": 1}
+        _store.write_state(cache, state)
+
+        assert review.cmd_status(cast(Any, SimpleNamespace(publisher="xx.Test"))) == 0
+        output = capsys.readouterr().out
+        assert "crawl:     1 reviewed" in output  # the ticker is not counted as an article
+        assert "live:      1 live ticker(s) read" in output
+
+    def test_payload_names_the_live_tickers_it_covers(self, cache_root: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+        cache = cache_root / "cache"
+        cache.mkdir()
+        state = TestPayloadSkeleton._ready_state()
+        state["articles"].append(
+            {"index": 2, "kind": "live_ticker", "url": "https://x.test/live", "html_file": "02.html"}
+        )
+        _store.write_state(cache, state)
+        monkeypatch.setattr(review, "resolve_publisher", lambda spec: SimpleNamespace(parser=None))
+        monkeypatch.setattr(review, "_parser_source_path", lambda proxy: "src/fundus/publishers/xx/test.py")
+        monkeypatch.setattr(review, "default_cache_dir", lambda spec: cache)
+
+        assert review.cmd_payload(cast(Any, SimpleNamespace(publisher="xx.Test", pr=None))) == 0
+        findings = json.loads((cache / "findings.json").read_text(encoding="utf-8"))
+        assert findings["articles_cached"] == 1 and findings["live_tickers_cached"] == 1
+        assert "1 live ticker(s) read entry by entry" in json.loads((cache / "review.json").read_text())["body"]
+
+
 class TestBodySelectorsAccessor:
     def test_declared_and_absent_selectors(self):
         class Dummy(BaseParser):
@@ -562,3 +648,22 @@ class TestBodySelectorsAccessor:
         selectors = Dummy.body_selectors()
         assert selectors["paragraph"] is Dummy._paragraph_selector
         assert selectors["summary"] is None and selectors["subheadline"] is None
+
+
+class TestLiveTickerSelectorsAccessor:
+    def test_declared_and_absent_selectors(self):
+        class Dummy(BaseParser):
+            _live_ticker_boundary_selector = XPath("//div")
+            _live_ticker_paragraph_selector = XPath("//p")
+
+        selectors = Dummy.live_ticker_body_selectors()
+        assert selectors["paragraph"] is Dummy._live_ticker_paragraph_selector
+        assert selectors["summary"] is None and selectors["subheadline"] is None
+        assert Dummy.supports_live_tickers()
+
+    def test_a_version_without_live_ticker_support(self):
+        class Dummy(BaseParser):
+            _paragraph_selector = XPath("//p")
+
+        assert not Dummy.supports_live_tickers()
+        assert set(Dummy.live_ticker_body_selectors().values()) == {None}

@@ -22,7 +22,7 @@ rather than letting them be replayed against changed code; `done` removes the lo
 
 Usage (any working directory; <skill>/ is this skill's directory):
 
-    python <skill>/scripts/review.py crawl ca.NationalPost --pr 970 [--pool 100] [--review 10]
+    python <skill>/scripts/review.py crawl ca.NationalPost --pr 970 [--pool 100] [--review 10] [--live-url URL ...]
     python <skill>/scripts/review.py sweep ca.NationalPost [--version V1_1]
     python <skill>/scripts/review.py adjudicate ca.NationalPost D3f2a1c ok --note "cookie banner"
     python <skill>/scripts/review.py status ca.NationalPost
@@ -38,7 +38,7 @@ import logging
 import sys
 import time
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Sequence, Tuple
 
 import lxml.etree
 import lxml.html
@@ -52,6 +52,7 @@ from _store import (
     candidates,
     commit_id,
     default_cache_dir,
+    is_live_ticker,
     load_state,
     missing_attributes,
     new_state,
@@ -80,12 +81,17 @@ from _sweep import (
 from fundus import Article, Crawler
 from fundus.logging import set_log_level
 from fundus.parser import ParserProxy
+from fundus.publishers.base_objects import Publisher
+from fundus.scraping.html import WebSource
+from fundus.scraping.publication import LiveTicker, Publication
+from fundus.scraping.scraper import BaseScraper
 
 SCRIPT = Path(__file__).resolve()
 RULE = "=" * 100
 
 TEXT_CAP = 400  # stored/printed candidate text cap; `show` prints it in full from state
 REVIEW_ARTICLES = 10  # articles actually reviewed (the draw), independent of the pool scanned
+REVIEW_LIVE_TICKERS = 3  # live tickers read; a ticker is many entries long, so far fewer than articles
 
 
 # --- small helpers ---
@@ -137,7 +143,71 @@ def _candidate_lines(state: Dict[str, Any]) -> List[str]:
 # --- crawl ---
 
 
-def _scan_pool(parser_proxy: ParserProxy, pool: List[Article]) -> List[ArticleRisk]:
+def _body_selectors(version_cls: Any, live_ticker: bool) -> Dict[str, Any]:
+    """The selectors a version applies to a page: a live ticker page is read with its own set."""
+    selectors: Dict[str, Any] = (
+        version_cls.live_ticker_body_selectors() if live_ticker else version_cls.body_selectors()
+    )
+    return selectors
+
+
+def _fetch_live_tickers(publisher: Publisher, urls: List[str]) -> Tuple[List[LiveTicker], List[str]]:
+    """Fetch the given live ticker URLs; returns the tickers and the URLs that did not yield one.
+
+    Live tickers are rare in a crawl (a pool of 100 can easily hold none), so the review cannot rely on
+    drawing one. A URL that yields an `Article` instead means the parser's boundary selector did not
+    recognise the page as a ticker, which is a finding in itself, so it is reported rather than dropped.
+    """
+    if not urls:
+        return [], []
+    scraper = BaseScraper(
+        WebSource(urls, publisher=publisher, impersonate=True), publisher_mapping={publisher.name: publisher}
+    )
+    tickers = [
+        publication for publication in scraper.scrape(error_handling="suppress") if isinstance(publication, LiveTicker)
+    ]
+    found = {ticker.html.requested_url for ticker in tickers}
+    return tickers, [url for url in urls if url not in found]
+
+
+def _select_live_tickers(tickers: List[LiveTicker], risks: List[ArticleRisk], budget: int) -> List[LiveTicker]:
+    """The tickers worth a read: the scan's flagged ones first, then in crawl order.
+
+    A ticker pool is tiny next to an article pool, so the diversity sampling the articles get has
+    nothing to work with; ranking by what the scan flagged is the part that matters.
+    """
+    flagged = {risk.index for risk in risks if risk.flagged}
+    order = sorted(range(len(tickers)), key=lambda index: (index not in flagged, index))
+    return [tickers[index] for index in order[:budget]]
+
+
+def _print_live_ticker(index: int, ticker: LiveTicker) -> None:
+    """Tier-1 view of a live ticker: page attributes, then every entry with its own metadata."""
+    body = ticker.body
+    entries = body.entries if body is not None and hasattr(body, "entries") else []
+    print(RULE)
+    print(f"[{index}] (live ticker, {len(entries)} entries) {ticker.html.requested_url}")
+    print(f"{ticker.title} | {ticker.authors} | {ticker.topics} | imgs: {len(ticker.images)}")
+    if missing := missing_attributes(ticker):
+        print(f"! missing {', '.join(missing)} - fundus' default crawl would have dropped this live ticker.")
+    if body is not None and getattr(body, "summary", None):
+        print(f"summary: {body.summary}")
+    for number, entry in enumerate(entries, start=1):
+        print(f"  -- entry {number}: {entry.publishing_date} | authors: {entry.authors} | imgs: {len(entry.images)}")
+        if entry.publishing_date is None:
+            print("     ! no date - the date selector missed this entry")
+        if not entry:
+            print("     ! no text - an empty entry usually means a boundary or paragraph selector gap")
+        for image in entry.images:
+            print(f"     image: caption={image.caption!r} authors={image.authors} cover={image.is_cover}")
+        for section in entry.sections:
+            if section.headline:
+                print(f"     ## {section.headline}")
+            for paragraph in section.paragraphs:
+                print(f"     {paragraph}")
+
+
+def _scan_pool(parser_proxy: ParserProxy, pool: Sequence[Publication]) -> List[ArticleRisk]:
     """Sweep *every* crawled article and rank the pool by how badly the parser handled it.
 
     The sweep is offline and the pool is already parsed, so this costs one lxml parse per article
@@ -154,8 +224,9 @@ def _scan_pool(parser_proxy: ParserProxy, pool: List[Article]) -> List[ArticleRi
             swept.append((index, SweepResult(applicable=False, reason=f"html did not parse: {error}"), missing))
             continue
         version_cls = type(parser_proxy(article.html.crawl_date))
+        selectors = _body_selectors(version_cls, isinstance(article, LiveTicker))
         units = body_units(article.body.serialize() if article.body is not None else None)
-        swept.append((index, sweep_article(doc, version_cls.body_selectors(), units), missing))
+        swept.append((index, sweep_article(doc, selectors, units), missing))
     return rank_pool(swept)
 
 
@@ -215,6 +286,31 @@ def _scan_summary(pool: List[Article], risks: List[ArticleRisk], cached: Dict[in
     }
 
 
+def _supports_live_tickers(publisher: Publisher) -> bool:
+    return any(version.supports_live_tickers() for version in publisher.parser)
+
+
+def _print_live_summary(publisher: Publisher, live_scan: Dict[str, Any]) -> None:
+    """One block on live tickers: what was read, and what a review still owes when none were."""
+    supported = _supports_live_tickers(publisher)
+    if not supported and not live_scan.get("pool"):
+        return
+    print(
+        f"live tickers: {live_scan.get('pool', 0)} found, {live_scan.get('flagged', 0)} flagged, "
+        f"reading {live_scan.get('reviewed', 0)}"
+    )
+    for url in live_scan.get("url_misses") or []:
+        print(
+            f"! {url} did not yield a live ticker - the page was not recognised as one (boundary selector), or "
+            "could not be fetched; if it is a live ticker, that is a finding."
+        )
+    if supported and not live_scan.get("reviewed"):
+        print(
+            "! the parser declares live ticker support but no live ticker was read. Draws seldom contain one: if the\n"
+            "  PR touches live ticker selectors, find a live ticker URL and re-run crawl with --live-url <url> (§2)."
+        )
+
+
 def cmd_crawl(args: argparse.Namespace) -> int:
     if args.verbose:
         # Fundus' handlers default to ERROR, so the two things a short crawl needs explaining —
@@ -243,7 +339,14 @@ def cmd_crawl(args: argparse.Namespace) -> int:
         # which is exactly the parser failure a review must see. They reach the scan like any other.
         # `impersonate=True`: a declared profile only applies when the user opts in this way, and
         # publishers declaring none are unaffected - without it, protected publishers draw 0.
-        pool = list(Crawler(publisher, impersonate=True).crawl(max_articles=args.pool, only_complete=False))
+        # Articles and live tickers are reviewed side by side but read with different selectors, so
+        # they are split here. Only the tickers get an explicit-URL path, since a random draw seldom holds one.
+        crawled = list(Crawler(publisher, impersonate=True).crawl(max_articles=args.pool, only_complete=False))
+        pool = [publication for publication in crawled if isinstance(publication, Article)]
+        tickers = [publication for publication in crawled if isinstance(publication, LiveTicker)]
+        from_urls, url_misses = _fetch_live_tickers(publisher, args.live_url)
+        known = {ticker.html.requested_url for ticker in tickers}
+        tickers += [ticker for ticker in from_urls if ticker.html.requested_url not in known]
         risks = _scan_pool(publisher.parser, pool)
         selection = _select_for_review(pool, risks, args.review)
 
@@ -260,13 +363,31 @@ def cmd_crawl(args: argparse.Namespace) -> int:
             if missing := missing_attributes(article):
                 print(f"! missing {', '.join(missing)} - fundus' default crawl would have dropped this article.")
             print(str(article.body))
+
+        live_risks = _scan_pool(publisher.parser, tickers)
+        live_selection = _select_live_tickers(tickers, live_risks, args.review_live)
+        live_flagged = [risk for risk in live_risks if risk.flagged]
+        state["live_scan"] = {
+            "pool": len(tickers),
+            "requested_urls": list(args.live_url),
+            "url_misses": url_misses,
+            "flagged": len(live_flagged),
+            "reviewed": len(live_selection),
+            "articles": [{"url": tickers[risk.index].html.requested_url, "flags": risk.flags} for risk in live_risks],
+        }
+        for ticker in live_selection:
+            index = len(state["articles"]) + 1
+            state["articles"].append(save_article(cache_dir, index, ticker))
+            write_state(cache_dir, state)
+            _print_live_ticker(index, ticker)
         completed = True
     finally:
         state["crawl"]["finished"] = time.time()
         state["crawl"]["completed"] = completed
         write_state(cache_dir, state)
 
-    reviewing = len(state["articles"])
+    reviewing = sum(1 for record in state["articles"] if not is_live_ticker(record))
+    live_scan = state.get("live_scan") or {}
     flagged = [risk for risk in risks if risk.flagged]
     unreviewed = [risk for risk in flagged if risk.index not in cached]
     reviewed_flagged = len(flagged) - len(unreviewed)
@@ -276,6 +397,7 @@ def cmd_crawl(args: argparse.Namespace) -> int:
         f"({reviewed_flagged} flagged, {reviewing - reviewed_flagged} diverse) -> {cache_dir}"
     )
     print(_impersonation_line(publisher.impersonate))
+    _print_live_summary(publisher, live_scan)
     if reviewing == 0:
         print("0 articles crawled - sources or parser likely broken; that is itself a blocker-level finding.")
         if publisher.impersonate is None:
@@ -350,11 +472,11 @@ def cmd_sweep(args: argparse.Namespace) -> int:
         doc = lxml.html.document_fromstring(read_html(cache_dir, record))
         units = body_units(record["body"])
         units_per_article.append((index, units))
-        result = sweep_article(doc, version_cls.body_selectors(), units)
+        result = sweep_article(doc, _body_selectors(version_cls, is_live_ticker(record)), units)
         per_article.append((index, result))
 
         print(RULE)
-        print(f"[{index}] {record['url']}")
+        print(f"[{index}] {'(live ticker) ' if is_live_ticker(record) else ''}{record['url']}")
         print(f"     version={version_cls.__name__}  crawl_date={record['crawl_date']}")
         if not result.applicable:
             not_applicable += 1
@@ -479,11 +601,17 @@ def cmd_status(args: argparse.Namespace) -> int:
     print(f"publisher: {state['publisher']}")
     print(f"PR:        {state.get('pr') or '<not recorded - pass --pr on crawl>'}")
     print(f"cache:     {cache_dir}")
+    live_read = sum(1 for record in state["articles"] if is_live_ticker(record))
     print(
-        f"crawl:     {len(state['articles'])} reviewed (pool {crawl.get('pool', '?')}), "
+        f"crawl:     {len(state['articles']) - live_read} reviewed (pool {crawl.get('pool', '?')}), "
         f"{'completed' if crawl.get('completed') else 'NOT completed (interrupted?)'}"
     )
     print(_impersonation_line(crawl.get("impersonate")))
+    live_scan = state.get("live_scan") or {}
+    if live_scan or live_read:
+        print(
+            f"live:      {live_read} live ticker(s) read, {live_scan.get('pool', 0)} found, {live_scan.get('flagged', 0)} flagged"
+        )
     if scan is None:
         print("scan:      not run - the crawl was interrupted before the pool scan; re-crawl")
     else:
@@ -517,7 +645,8 @@ def cmd_status(args: argparse.Namespace) -> int:
             print(line)
 
     print("still yours (not machine-checked): Tier-1 coherence read; layout coverage (story/opinion/")
-    print("listicle/image-heavy); the over-capture scan beyond repeated boilerplate; image attributes.")
+    print("listicle/image-heavy); the over-capture scan beyond repeated boilerplate; image attributes;")
+    print("live ticker entries: boundaries, per-entry date/authors/images (PLAYBOOK §2).")
 
     gaps = payload_gaps(state)
     if gaps:
@@ -549,7 +678,13 @@ def _review_skeleton(parser_path: str, findings: Dict[str, Any], blockers: List[
     scope_line = (
         f"`{findings['publisher']}`: read {findings['articles_cached']} of {findings['articles_scanned']} scanned "
         f"({findings['flagged_by_scan']} flagged, {findings['flagged_by_scan'] - findings['flagged_not_reviewed']} "
-        f"in draw); layouts, over-capture, image attributes checked. <X> blockers + <Y> nits inline."
+        f"in draw); layouts, over-capture, image attributes checked"
+        + (
+            f"; {findings['live_tickers_cached']} live ticker(s) read entry by entry"
+            if findings.get("live_tickers_cached")
+            else ""
+        )
+        + ". <X> blockers + <Y> nits inline."
     )
     comments = [
         {
@@ -607,9 +742,11 @@ def cmd_payload(args: argparse.Namespace) -> int:
             }
         )
     scan = state.get("scan") or {}
+    live_read = sum(1 for record in state["articles"] if is_live_ticker(record))
     findings = {
         "publisher": state["publisher"],
-        "articles_cached": len(state["articles"]),
+        "articles_cached": len(state["articles"]) - live_read,
+        "live_tickers_cached": live_read,
         "articles_scanned": scan.get("pool", 0),
         "flagged_by_scan": scan.get("flagged", 0),
         "flagged_not_reviewed": scan.get("flagged", 0) - scan.get("reviewed_flagged", 0),
@@ -681,6 +818,17 @@ def main() -> int:
     crawl.add_argument("--pr", default=None, help="the PR under review, e.g. 970 - recorded in the state")
     crawl.add_argument("--pool", type=int, default=100, help="candidate articles to crawl and scan")
     crawl.add_argument("--review", type=int, default=REVIEW_ARTICLES, help="articles to cache and read from that pool")
+    # nargs="+" swallows a following positional, so pass --live-url after the publisher (as in the usage line)
+    crawl.add_argument(
+        "--live-url",
+        nargs="+",
+        default=[],
+        metavar="URL",
+        help="live ticker page(s) to read as well - a random draw seldom contains one",
+    )
+    crawl.add_argument(
+        "--review-live", type=int, default=REVIEW_LIVE_TICKERS, help="live tickers to cache and read entry by entry"
+    )
     crawl.add_argument(
         "--verbose", action="store_true", help="surface fundus' INFO logs: why articles/attributes were skipped"
     )

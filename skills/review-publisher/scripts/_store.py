@@ -37,8 +37,9 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 import fundus
-from fundus import Article, PublisherCollection, Requires
+from fundus import PublisherCollection, Requires
 from fundus.publishers.base_objects import Publisher
+from fundus.scraping.publication import LiveTicker, Publication
 
 STATE_FILE = "state.json"
 # What `payload` writes: the adjudicated evidence, and the review built from it.
@@ -53,6 +54,10 @@ VERDICTS = ("ok", "blocker")
 # `cmd_crawl`) so the broken articles reach the sampler; this re-applies it only to *name* what an
 # article is missing, so the Tier-1 read says "missing: body" instead of printing a bare `None`.
 REQUIRED_ATTRIBUTES = ("title", "body", "publishing_date")
+
+# The kinds of publication a state record can hold.
+ARTICLE = "article"
+LIVE_TICKER = "live_ticker"
 _completeness_filter = Requires(*REQUIRED_ATTRIBUTES)
 
 
@@ -234,7 +239,7 @@ def html_filename(index: int) -> str:
     return f"{index:02d}.html"
 
 
-def missing_attributes(article: Article) -> List[str]:
+def missing_attributes(article: Publication) -> List[str]:
     """The required attributes fundus' default extraction filter would have rejected `article` for.
 
     Delegates the truthiness call to fundus' own `Requires` rather than re-implementing it: an
@@ -245,7 +250,7 @@ def missing_attributes(article: Article) -> List[str]:
     return [name for name in REQUIRED_ATTRIBUTES if name in rejected.missing_attributes]
 
 
-def save_article(cache_dir: Path, index: int, article: Article) -> Dict[str, Any]:
+def save_article(cache_dir: Path, index: int, article: Publication) -> Dict[str, Any]:
     """Write one article's html and return its state record.
 
     The cache stores `html.content` — already decoded by fundus — re-encoded as UTF-8; the
@@ -258,6 +263,7 @@ def save_article(cache_dir: Path, index: int, article: Article) -> Dict[str, Any
     body = article.body
     return {
         "index": index,
+        "kind": LIVE_TICKER if isinstance(article, LiveTicker) else ARTICLE,
         "url": article.html.requested_url,
         "crawl_date": article.html.crawl_date.isoformat(),
         "title": article.title,
@@ -277,12 +283,24 @@ def record_crawl_date(record: Dict[str, Any]) -> datetime:
     return datetime.fromisoformat(str(record["crawl_date"]))
 
 
+def is_live_ticker(record: Dict[str, Any]) -> bool:
+    """Whether a state record holds a live ticker; records from before live tickers were supported are articles."""
+    return record.get("kind") == LIVE_TICKER
+
+
 def body_units(serialized_body: Optional[Dict[str, Any]]) -> List[str]:
-    """Flatten a serialized ArticleBody into its text units (summary, headlines, paragraphs)."""
+    """Flatten a serialized `ArticleBody` or `LiveTickerBody` into its text units.
+
+    An article contributes its summary, headlines and paragraphs. A live ticker contributes its summary
+    and, per entry, the headlines and paragraphs of the entry's sections.
+    """
     if not serialized_body:
         return []
     units: List[str] = list(serialized_body.get("summary") or [])
-    for section in serialized_body.get("sections") or []:
+    sections = list(serialized_body.get("sections") or [])
+    for entry in serialized_body.get("entries") or []:
+        sections.extend(entry.get("sections") or [])
+    for section in sections:
         units.extend(section.get("headline") or [])
         units.extend(section.get("paragraphs") or [])
     return units

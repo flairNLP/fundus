@@ -1,6 +1,6 @@
 import datetime
 import re
-from typing import List, Optional
+from typing import List, Optional, Union
 
 from lxml.cssselect import CSSSelector
 from lxml.etree import XPath, tostring
@@ -10,12 +10,14 @@ from fundus.parser import (
     ArticleBody,
     BaseParser,
     Image,
+    LiveTickerBody,
     ParserProxy,
     attribute,
     function,
 )
 from fundus.parser.utility import (
     extract_article_body_with_selector,
+    extract_body_with_selector,
     generic_author_parsing,
     generic_date_parsing,
     generic_nodes_to_text,
@@ -117,28 +119,41 @@ class IlGiornaleParser(ParserProxy):
         )
         _subheadline_selector = XPath("//main//*[self::h3 or self::h2 or (self::p and not(text()) and b)]")
 
+        _live_ticker_boundary_selector = XPath("//div[@class='b-article-body__live-block']")
+        _live_ticker_summary_selector = XPath("//p[@class='b-subheadline'] | //article/p[@class='c-paragraph']")
+        _live_ticker_subheadline_selector = XPath("//h3[@class='b-article-body__live-block-title']")
+        _live_ticker_paragraph_selector = XPath("//div[@class='b-article-body__live-block-body']/p")
+        _live_ticker_date_selector = XPath("//div[@class='b-article-body__live-block']/time")
+
         _topic_selector = XPath("//div[@class='c-stack b-article-tag']/a")
 
         @attribute
         def title(self) -> Optional[str]:
-            return self.precomputed.ld.xpath_search("//NewsArticle/headline", scalar=True)
+            return self.precomputed.ld.xpath_search("(//NewsArticle|//LiveBlogPosting)/headline", scalar=True)
 
         @attribute
-        def body(self) -> Optional[ArticleBody]:
-            return extract_article_body_with_selector(
+        def body(self) -> Optional[Union[ArticleBody, LiveTickerBody]]:
+            return extract_body_with_selector(
                 self.precomputed.doc,
                 summary_selector=self._summary_selector,
                 paragraph_selector=self._paragraph_selector,
                 subheadline_selector=self._subheadline_selector,
+                live_ticker_boundary_selector=self._live_ticker_boundary_selector,
+                live_ticker_summary_selector=self._live_ticker_summary_selector,
+                live_ticker_subheadline_selector=self._live_ticker_subheadline_selector,
+                live_ticker_paragraph_selector=self._live_ticker_paragraph_selector,
+                live_ticker_date_selector=self._live_ticker_date_selector,
             )
 
         @attribute
         def publishing_date(self) -> Optional[datetime.datetime]:
-            return generic_date_parsing(self.precomputed.ld.xpath_search("//NewsArticle/datePublished", scalar=True))
+            return generic_date_parsing(
+                self.precomputed.ld.xpath_search("(//NewsArticle|//LiveBlogPosting)/datePublished", scalar=True)
+            )
 
         @attribute
         def authors(self) -> List[str]:
-            return generic_author_parsing(self.precomputed.ld.xpath_search("//NewsArticle/author"))
+            return generic_author_parsing(self.precomputed.ld.xpath_search("(//NewsArticle|//LiveBlogPosting)/author"))
 
         @attribute
         def topics(self) -> List[str]:
