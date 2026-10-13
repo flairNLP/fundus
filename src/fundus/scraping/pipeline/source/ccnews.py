@@ -42,7 +42,7 @@ class CCNewsSource:
     """HTML source backed by a single CC-NEWS WARC archive on Common Crawl.
 
     Streams the archive once, walks its response records, and yields HTML for those records whose
-    target URI matches one of the configured publishers' domains. Unlike WebSource, there is no
+    target URI matches one of the configured publishers' domains, current or deprecated. Unlike WebSource, there is no
     per-URL network request: the archive contains pages already crawled by Common Crawl, so this
     source is effectively a selection-and-decode pipeline over a pre-fetched corpus.
     """
@@ -53,7 +53,8 @@ class CCNewsSource:
         Args:
             *publishers (Publisher): Publishers whose articles should be extracted. WARC records
                 whose target URI does not belong to any of these publishers' domains are dropped
-                during iteration.
+                during iteration. Deprecated domains count as well, since the archive keeps the
+                articles a publisher served before migrating to its current domain.
             warc_path (str): HTTPS URL of the WARC archive to read (e.g. a CC-NEWS .warc.gz path).
             headers (Optional[Dict[str, str]]): Request headers for the WARC download. Defaults to
                 the shared fundus user-agent header.
@@ -63,7 +64,9 @@ class CCNewsSource:
         self.warc_path = warc_path
         self.headers = headers or _default_header
         self._publisher_mapping: Dict[str, Publisher] = {
-            urlparse(publisher.domain).netloc: publisher for publisher in self.publishers
+            urlparse(domain).netloc: publisher
+            for publisher in self.publishers
+            for domain in (publisher.domain, *publisher.deprecated_domains)
         }
 
     @staticmethod

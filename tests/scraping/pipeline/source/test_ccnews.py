@@ -74,6 +74,11 @@ class TestCCNewsSourceConstruction:
         source = CCNewsSource(pub_a, pub_b, warc_path="x")
         assert source._publisher_mapping == {"a.example.com": pub_a, "b.example.com": pub_b}
 
+    def test_publisher_mapping_covers_deprecated_domains(self):
+        publisher = stub_publisher(domain="https://new.example.com/", deprecated_domains=["https://old.example.com/"])
+        source = CCNewsSource(publisher, warc_path="x")
+        assert source._publisher_mapping == {"new.example.com": publisher, "old.example.com": publisher}
+
     def test_empty_publishers_yields_empty_mapping(self):
         source = CCNewsSource(warc_path="x")
         assert source._publisher_mapping == {}
@@ -161,6 +166,11 @@ class TestValidate:
         publisher = stub_publisher(domain="https://example.com/")
         source = CCNewsSource(publisher, warc_path="x")
         assert source._validate("https://example.com/article", None) is publisher
+
+    def test_returns_publisher_for_deprecated_domain(self):
+        publisher = stub_publisher(domain="https://new.example.com/", deprecated_domains=["https://old.example.com/"])
+        source = CCNewsSource(publisher, warc_path="x")
+        assert source._validate("https://old.example.com/article", None) is publisher
 
     def test_returns_none_when_url_filter_blocks(self):
         publisher = stub_publisher(domain="https://example.com/")

@@ -82,6 +82,7 @@ class _PublisherStub:
 
     name: str = "test_pub"
     domain: str = "https://example.com/"
+    deprecated_domains: List[str] = field(default_factory=list)
     impersonate: Optional[str] = None
     request_header: Dict[str, str] = field(default_factory=lambda: dict(_DEFAULT_REQUEST_HEADER))
     robots: Optional[Any] = None
@@ -95,6 +96,7 @@ def stub_publisher(
     *,
     name: str = "test_pub",
     domain: str = "https://example.com/",
+    deprecated_domains: Optional[List[str]] = None,
     impersonate: Optional[str] = None,
     request_header: Optional[Dict[str, str]] = None,
     robots: Optional[Any] = None,
@@ -103,6 +105,7 @@ def stub_publisher(
     stub = _PublisherStub(
         name=name,
         domain=domain,
+        deprecated_domains=deprecated_domains if deprecated_domains is not None else [],
         impersonate=impersonate,
         request_header=request_header if request_header is not None else dict(_DEFAULT_REQUEST_HEADER),
         robots=robots,
