@@ -17,7 +17,7 @@ from fundus.parser.base_parser import (
     RegisteredFunction,
     attribute,
 )
-from fundus.parser.utility import generic_author_parsing
+from fundus.parser.utility import generic_author_parsing, generic_date_parsing
 from fundus.publishers import PublisherCollection
 from fundus.publishers.base_objects import Publisher
 from fundus.scraping.html import HTML, SourceInfo
@@ -480,6 +480,19 @@ class TestUtility:
             [{"name": "Peter Funny"}, {"name": "Funny Peter"}, {"this": "is not a pipe"}, {}]  # type: ignore
         ) == ["Peter Funny", "Funny Peter"]
         assert generic_author_parsing([{}]) == generic_author_parsing([{}, {"wrong": "key"}]) == []  # type: ignore
+
+    @pytest.mark.parametrize(
+        "date_string, expected",
+        [
+            ("03.10.2026, 09:37 Uhr", datetime.datetime(2026, 10, 3, 9, 37)),
+            ("20.09.2026 • 16:50 Uhr", datetime.datetime(2026, 9, 20, 16, 50)),
+            # ISO 8601 dates are read year first regardless of dayfirst
+            ("2026-10-03", datetime.datetime(2026, 10, 3)),
+            ("2026-10-03T07:37:58Z", datetime.datetime(2026, 10, 3, 7, 37, 58, tzinfo=datetime.timezone.utc)),
+        ],
+    )
+    def test_generic_date_parsing_dayfirst(self, date_string: str, expected: datetime.datetime):
+        assert generic_date_parsing(date_string, dayfirst=True) == expected
 
 
 class TestMetaInfo:

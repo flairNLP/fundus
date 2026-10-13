@@ -275,7 +275,7 @@ def extract_live_ticker_body_with_selector(
     entry_boundary_selector: Optional[XPath] = None,
     tag_filter: Optional[XPath] = None,
     date_selector: Optional[XPath] = None,
-    date_parser: Optional[Callable[[str], Optional[datetime]]] = None,
+    date_dayfirst: bool = False,
     author_selector: Optional[XPath] = None,
     image_selector: Optional[XPath] = None,
     image_caption_selector: XPath = _default_image_caption_selector,
@@ -284,10 +284,6 @@ def extract_live_ticker_body_with_selector(
     image_relative_urls: Union[bool, XPath] = False,
     image_size_pattern: Pattern[str] = _default_image_size_pattern,
 ) -> LiveTickerBody:
-    # resolved here, since generic_date_parsing is defined further down in this module
-    if date_parser is None:
-        date_parser = generic_date_parsing
-
     # depth first index for each element in tree
     df_idx_by_ref = {element: i for i, element in enumerate(doc.iter())}
 
@@ -343,7 +339,7 @@ def extract_live_ticker_body_with_selector(
                         "make sure the date selector matches exactly one element per entry"
                     )
                 date_seen = True
-                entry_date = date_parser(node.text_content())
+                entry_date = generic_date_parsing(node.text_content(), dayfirst=date_dayfirst)
             elif isinstance(node, AuthorNode):
                 entry_authors.extend(generic_author_parsing(node.text_content()))
             elif isinstance(node, ImageNode):
@@ -398,7 +394,7 @@ def extract_body_with_selector(
     live_ticker_summary_selector: Optional[XPath] = None,
     live_ticker_subheadline_selector: Optional[XPath] = None,
     live_ticker_date_selector: Optional[XPath] = None,
-    live_ticker_date_parser: Optional[Callable[[str], Optional[datetime]]] = None,
+    live_ticker_date_dayfirst: bool = False,
     live_ticker_author_selector: Optional[XPath] = None,
     live_ticker_image_selector: Optional[XPath] = None,
     live_ticker_image_caption_selector: XPath = _default_image_caption_selector,
@@ -424,7 +420,7 @@ def extract_body_with_selector(
             paragraph_selector=live_ticker_paragraph_selector,
             subheadline_selector=live_ticker_subheadline_selector,
             date_selector=live_ticker_date_selector,
-            date_parser=live_ticker_date_parser,
+            date_dayfirst=live_ticker_date_dayfirst,
             author_selector=live_ticker_author_selector,
             image_selector=live_ticker_image_selector,
             image_caption_selector=live_ticker_image_caption_selector,
@@ -826,11 +822,37 @@ class CustomParserInfo(parser.parserinfo):
     # type ignore due to types-python-dateutil==2.9.0.20251008, see https://github.com/flairNLP/fundus/issues/806
 
 
-def generic_date_parsing(date_str: Optional[str], tz: Optional[timezone] = None) -> Optional[datetime]:
+def generic_date_parsing(
+    date_str: Optional[str], tz: Optional[timezone] = None, dayfirst: bool = False
+) -> Optional[datetime]:
+    """Parses <date_str> into a datetime.
+
+    Args:
+        date_str: The string to parse.
+        tz: The timezone assumed if <date_str> doesn't specify one.
+        dayfirst: If True, ambiguous dates like 03.10.2026 are read day first. ISO 8601 dates are always
+            read year first. Defaults to False.
+
+    Returns:
+        The parsed datetime or None if <date_str> is None.
+    """
     if date_str is None:
         return None
 
-    if not (parsed_date := parser.parse(date_str, tzinfos=_tz_infos, parserinfo=CustomParserInfo(), fuzzy=True)):
+    parsed_date: Optional[datetime] = None
+    if dayfirst:
+        # dateutil applies dayfirst to year first dates as well, turning 2026-10-03 into March 10th,
+        # so ISO 8601 dates are parsed separately
+        try:
+            parsed_date = parser.isoparse(date_str.strip())
+        except ValueError:
+            pass
+
+    if parsed_date is None and not (
+        parsed_date := parser.parse(
+            date_str, tzinfos=_tz_infos, parserinfo=CustomParserInfo(), fuzzy=True, dayfirst=dayfirst
+        )
+    ):
         return None
 
     if tz is not None and parsed_date.tzinfo is None:

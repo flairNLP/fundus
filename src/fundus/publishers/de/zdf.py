@@ -1,5 +1,4 @@
 import datetime
-import re
 from typing import List, Optional, Union
 
 from lxml.cssselect import CSSSelector
@@ -32,6 +31,13 @@ class ZDFParser(ParserProxy):
         _summary_selector = CSSSelector("p.c1bdz7f4")
         _subheadline_selector = CSSSelector("h2.hhhtovw")
 
+        _image_selector = XPath(
+            "//picture//img[not(contains(@class, 'error') or contains(@src, 'zdfheute-whatsapp-channel'))"
+            " or contains(@alt, 'Autorenfoto')]"
+        )
+        # the paragraphs bounding the images
+        _image_paragraph_selector = _paragraph_selector
+
         @attribute
         def body(self) -> Optional[ArticleBody]:
             return extract_article_body_with_selector(
@@ -57,11 +63,8 @@ class ZDFParser(ParserProxy):
         def images(self) -> List[Image]:
             return image_extraction(
                 doc=self.precomputed.doc,
-                paragraph_selector=self._paragraph_selector,
-                image_selector=XPath(
-                    "//picture//img[not(contains(@class, 'error') or contains(@src, 'zdfheute-whatsapp-channel'))"
-                    " or contains(@alt, 'Autorenfoto')]"
-                ),
+                paragraph_selector=self._image_paragraph_selector,
+                image_selector=self._image_selector,
                 caption_selector=XPath(
                     "./ancestor::*[(self::div and @class='c1owvrps c10o8fzf') or self::figure]//*[contains(@class,'c1pbsmr2')]"
                 ),
@@ -85,10 +88,13 @@ class ZDFParser(ParserProxy):
         _live_ticker_image_selector = XPath("//article[@data-guid]//picture//img")
         _live_ticker_image_alt_selector = XPath("./@alt[. != 'Videoplayer']")
 
-        @staticmethod
-        def _parse_live_ticker_date(date_string: str) -> Optional[datetime.datetime]:
-            # dates are given as DD.MM.YYYY, which generic_date_parsing would read month first
-            return generic_date_parsing(re.sub(r"(\d{1,2})\.(\d{1,2})\.(\d{4})", r"\3-\2-\1", date_string))
+        # images of live ticker entries are attached to their entry, not to the page
+        _image_selector = XPath(
+            "//picture//img[not(contains(@class, 'error') or contains(@src, 'zdfheute-whatsapp-channel'))"
+            " or contains(@alt, 'Autorenfoto')][not(ancestor::article[@data-guid])]"
+        )
+        # live tickers have no article paragraphs, so their entries bound the images instead
+        _image_paragraph_selector = XPath(f"{_paragraph_selector.path}|{_live_ticker_paragraph_selector.path}")
 
         @attribute
         def body(self) -> Optional[Union[ArticleBody, LiveTickerBody]]:
@@ -102,19 +108,11 @@ class ZDFParser(ParserProxy):
                 live_ticker_paragraph_selector=self._live_ticker_paragraph_selector,
                 live_ticker_subheadline_selector=self._live_ticker_subheadline_selector,
                 live_ticker_date_selector=self._live_ticker_date_selector,
-                live_ticker_date_parser=self._parse_live_ticker_date,
+                live_ticker_date_dayfirst=True,
                 live_ticker_image_selector=self._live_ticker_image_selector,
                 live_ticker_image_alt_selector=self._live_ticker_image_alt_selector,
                 live_ticker_image_relative_urls=True,
             )
-
-        @attribute
-        def images(self) -> List[Image]:
-            # a live ticker page has no images of its own, the images of its entries are attached to them
-            if self._live_ticker_boundary_selector(self.precomputed.doc):
-                return []
-            images: List[Image] = super().images()
-            return images
 
         @attribute
         def topics(self) -> List[str]:
