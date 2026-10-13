@@ -9,7 +9,7 @@ from curl_cffi.requests.impersonate import normalize_browser_type
 from robots import RobotFileParser
 
 from fundus.logging import create_logger
-from fundus.parser.base_parser import ParserProxy
+from fundus.parser import ParserProxy
 from fundus.scraping.filter import URLFilter
 from fundus.scraping.session import _default_header, session_handler
 from fundus.scraping.url import SourceHandler, URLSource

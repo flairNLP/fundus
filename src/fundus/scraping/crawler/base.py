@@ -24,9 +24,9 @@ from fundus.publishers.base_objects import Publisher, PublisherGroup
 from fundus.scraping.article import Article
 from fundus.scraping.filter import ExtractionFilter, Requires, RequiresAll, URLFilter
 from fundus.scraping.session import session_handler
-from fundus.scraping.url import strip_query_and_fragment
 from fundus.utils.events import __EVENTS__, __MAIN_THREAD_ALIAS__
 from fundus.utils.timeout import Timeout
+from fundus.utils.url import strip_query_and_fragment
 
 logger = create_logger(__name__)
 

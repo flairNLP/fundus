@@ -3,7 +3,7 @@ from typing import Any, Dict, List
 
 from lxml.etree import XPath, tostring
 
-from fundus.parser.data import LinkedDataMapping
+from fundus.parser.linked_data import LinkedDataMapping
 
 lds: List[Dict[str, Any]] = [
     {"@type": "Example1", "value": 1, "data": {"inner": "value", "nested": {"dict": True}}},

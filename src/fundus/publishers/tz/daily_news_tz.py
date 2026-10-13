@@ -11,9 +11,13 @@ from fundus.parser import (
     Image,
     ParserProxy,
     attribute,
-    utility,
 )
-from fundus.parser.utility import image_extraction
+from fundus.parser.extraction import (
+    extract_article_body_with_selector,
+    generic_author_parsing,
+    generic_date_parsing,
+    image_extraction,
+)
 
 
 class DailyNewsTZParser(ParserProxy):
@@ -42,7 +46,7 @@ class DailyNewsTZParser(ParserProxy):
 
         @attribute
         def body(self) -> Optional[ArticleBody]:
-            article_body = utility.extract_article_body_with_selector(
+            article_body = extract_article_body_with_selector(
                 self.precomputed.doc,
                 summary_selector=self._summary_selector,
                 subheadline_selector=self._subheadline_selector,
@@ -52,13 +56,13 @@ class DailyNewsTZParser(ParserProxy):
 
         @attribute
         def authors(self) -> List[str]:
-            return utility.generic_author_parsing(
+            return generic_author_parsing(
                 self.precomputed.meta.get("twitter:data1") or self.precomputed.ld.xpath_search("//Article//author")
             )
 
         @attribute
         def publishing_date(self) -> Optional[datetime]:
-            return utility.generic_date_parsing(self.precomputed.ld.bf_search("datePublished"))
+            return generic_date_parsing(self.precomputed.ld.bf_search("datePublished"))
 
         @attribute
         def images(self) -> List[Image]:

@@ -10,9 +10,14 @@ from fundus.parser import (
     Image,
     ParserProxy,
     attribute,
-    utility,
 )
-from fundus.parser.utility import image_extraction
+from fundus.parser.extraction import (
+    extract_article_body_with_selector,
+    generic_author_parsing,
+    generic_date_parsing,
+    generic_topic_parsing,
+    image_extraction,
+)
 
 
 class KrautreporterParser(ParserProxy):
@@ -36,7 +41,7 @@ class KrautreporterParser(ParserProxy):
 
         @attribute
         def body(self) -> Optional[ArticleBody]:
-            article_body = utility.extract_article_body_with_selector(
+            article_body = extract_article_body_with_selector(
                 self.precomputed.doc,
                 summary_selector=self._summary_selector,
                 subheadline_selector=self._subheadline_selector,
@@ -47,16 +52,16 @@ class KrautreporterParser(ParserProxy):
         @attribute
         def authors(self) -> List[str]:
             author_string = self.precomputed.meta.get("author")
-            return utility.generic_author_parsing(author_string)
+            return generic_author_parsing(author_string)
 
         @attribute
         def publishing_date(self) -> Optional[datetime]:
             date_string = self.precomputed.ld.xpath_search("NewsArticle/datePublished", scalar=True)
-            return utility.generic_date_parsing(date_string)
+            return generic_date_parsing(date_string)
 
         @attribute
         def topics(self) -> List[str]:
-            return utility.generic_topic_parsing(self._topic_selector(self.precomputed.doc))
+            return generic_topic_parsing(self._topic_selector(self.precomputed.doc))
 
         @attribute
         def images(self) -> List[Image]:

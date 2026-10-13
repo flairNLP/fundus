@@ -20,8 +20,7 @@ import pytest
 from lxml.etree import XPath
 
 from fundus import Article
-from fundus.parser import ArticleBody, BaseParser
-from fundus.parser.data import ArticleSection, TextSequence
+from fundus.parser import ArticleBody, ArticleSection, BaseParser, TextSequence
 
 _SCRIPTS = Path(__file__).resolve().parents[2] / "skills" / "review-publisher" / "scripts"
 sys.path.insert(0, str(_SCRIPTS))
@@ -141,7 +140,7 @@ class TestSweepArticle:
         # The parser body is normalize_whitespace()-normalized; the sweep must use the
         # same normalization or zero-width characters cause false drop candidates.
         raw = "Zero​width joined words make a sentence."
-        from fundus.parser.utility import normalize_whitespace
+        from fundus.parser.extraction import normalize_whitespace
 
         doc = _doc(
             f"""

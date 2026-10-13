@@ -6,7 +6,7 @@ If you want to contribute a parser to this library, please ensure that these att
 
 > [!NOTE]
 > There are certain utility functions to aid you with parsing.
-> These can be found under `fundus/parser/utility.py`.
+> These can be imported from `fundus.parser.extraction`.
 > We *highly* recommend using them.
 
 The following table lists Fundus' core attributes and includes the name of the corresponding utility function.

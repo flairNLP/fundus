@@ -16,7 +16,8 @@ from fundus.scraping.delay import Pacer, RobotsCrawlDelay
 from fundus.scraping.filter import URLFilter
 from fundus.scraping.html import HTML, SourceInfo
 from fundus.scraping.session import session_handler
-from fundus.scraping.url import URLSource, is_valid_url
+from fundus.scraping.url import URLSource
+from fundus.utils.url import is_valid_url
 
 logger = create_logger(__name__)
 

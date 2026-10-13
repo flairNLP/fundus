@@ -6,11 +6,7 @@ from lxml.cssselect import CSSSelector
 from lxml.etree import XPath
 
 from fundus.parser import ArticleBody, BaseParser, Image, ParserProxy, attribute
-from fundus.parser.utility import (
-    extract_article_body_with_selector,
-    generic_date_parsing,
-    image_extraction,
-)
+from fundus.parser.extraction import extract_article_body_with_selector, generic_date_parsing, image_extraction
 
 
 class TageszeitungParser(ParserProxy):

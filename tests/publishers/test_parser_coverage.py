@@ -7,7 +7,8 @@ from typing import List, Optional, Tuple, Type
 import lxml.html
 
 from fundus import PublisherCollection
-from fundus.parser.base_parser import Attribute, BaseParser
+from fundus.parser import BaseParser
+from fundus.parser.base import Attribute
 from fundus.publishers import Publisher
 from tests.resources import attribute_annotations_mapping
 from tests.utility import (

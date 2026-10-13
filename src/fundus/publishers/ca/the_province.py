@@ -3,7 +3,7 @@ from typing import List
 from lxml.etree import XPath
 
 from fundus.parser import Image, ParserProxy, attribute
-from fundus.parser.utility import image_extraction
+from fundus.parser.extraction import image_extraction
 from fundus.publishers.shared.postmedia import PostMediaParser
 
 

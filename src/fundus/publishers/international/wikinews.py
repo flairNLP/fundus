@@ -12,11 +12,7 @@ from lxml.etree import XPath
 
 from fundus.logging import create_logger
 from fundus.parser import ArticleBody, BaseParser, Image, ParserProxy, attribute
-from fundus.parser.utility import (
-    extract_article_body_with_selector,
-    image_extraction,
-    normalize_whitespace,
-)
+from fundus.parser.extraction import extract_article_body_with_selector, image_extraction, normalize_whitespace
 from fundus.scraping.session import InterruptableSession
 from fundus.scraping.url import URLSource
 

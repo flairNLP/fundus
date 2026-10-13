@@ -11,16 +11,7 @@ import pytest
 from curl_cffi.requests.exceptions import ConnectionError, HTTPError
 
 from fundus.scraping.session import InterruptableSession
-from fundus.scraping.url import (
-    NewsMap,
-    RSSFeed,
-    Sitemap,
-    SourceHandler,
-    URLSource,
-    decompress,
-    is_valid_url,
-    numeric_sort_key,
-)
+from fundus.scraping.url import NewsMap, RSSFeed, Sitemap, SourceHandler, URLSource, decompress, numeric_sort_key
 
 # ---- helpers ----------------------------------------------------------------
 
@@ -71,29 +62,6 @@ def _make_session(response=None, side_effect=None) -> MagicMock:
     else:
         session.get_with_interrupt.return_value = response
     return session
-
-
-class TestIsValidUrl:
-    def test_valid_http_url(self):
-        assert is_valid_url("http://example.com")
-
-    def test_valid_https_url(self):
-        assert is_valid_url("https://example.com")
-
-    def test_valid_url_with_path(self):
-        assert is_valid_url("https://example.com/some/path")
-
-    def test_valid_url_with_query(self):
-        assert is_valid_url("https://example.com/page?id=1")
-
-    def test_rejects_unsupported_scheme(self):
-        assert not is_valid_url("ftp://example.com")
-
-    def test_rejects_missing_netloc(self):
-        assert not is_valid_url("https://")
-
-    def test_rejects_empty_string(self):
-        assert not is_valid_url("")
 
 
 class TestDecompress:

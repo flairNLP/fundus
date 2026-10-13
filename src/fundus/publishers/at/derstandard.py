@@ -5,9 +5,8 @@ from typing import List, Optional
 from lxml.cssselect import CSSSelector
 from lxml.etree import XPath
 
-from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute
-from fundus.parser.data import Image
-from fundus.parser.utility import (
+from fundus.parser import ArticleBody, BaseParser, Image, ParserProxy, attribute
+from fundus.parser.extraction import (
     extract_article_body_with_selector,
     generic_author_parsing,
     generic_date_parsing,

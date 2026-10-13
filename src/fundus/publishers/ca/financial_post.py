@@ -1,7 +1,7 @@
 from lxml.etree import XPath
 
 from fundus.parser import ParserProxy, function
-from fundus.parser.utility import transform_breaks_to_tag
+from fundus.parser.extraction import transform_breaks_to_tag
 from fundus.publishers.shared.postmedia import PostMediaParser
 
 

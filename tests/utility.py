@@ -10,8 +10,7 @@ from typing import Any, Callable, Dict, Generic, List, Optional, Type, TypeVar
 from typing_extensions import Self
 
 from fundus import PublisherCollection
-from fundus.parser import ArticleBody, BaseParser
-from fundus.parser.data import Image
+from fundus.parser import ArticleBody, BaseParser, Image
 from fundus.publishers.base_objects import Publisher, PublisherGroup
 from fundus.scraping.article import Article
 from fundus.scraping.html import HTML, SourceInfo

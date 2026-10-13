@@ -5,7 +5,7 @@ import lxml.html
 from lxml.etree import XPath
 
 from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute, function
-from fundus.parser.utility import (
+from fundus.parser.extraction import (
     extract_article_body_with_selector,
     generic_author_parsing,
     generic_date_parsing,

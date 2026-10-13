@@ -4,10 +4,7 @@ from typing import Optional
 from lxml.cssselect import CSSSelector
 
 from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute
-from fundus.parser.utility import (
-    extract_article_body_with_selector,
-    generic_date_parsing,
-)
+from fundus.parser.extraction import extract_article_body_with_selector, generic_date_parsing
 
 
 class WorldTruthParser(ParserProxy):

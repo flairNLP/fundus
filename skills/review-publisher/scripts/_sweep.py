@@ -27,7 +27,7 @@ from typing import Any, Dict, List, Optional, Sequence, Set, Tuple, Type
 import lxml.html
 
 from fundus.parser import BaseParser, ParserProxy
-from fundus.parser.utility import normalize_whitespace
+from fundus.parser.extraction import normalize_whitespace
 
 # Structural blocks whose dropped content silently corrupts the body. A paragraph-only
 # selector never matches these, so any one of them with real text is a drop candidate.

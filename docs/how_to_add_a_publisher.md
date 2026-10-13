@@ -579,7 +579,7 @@ Instead, we recommend referring to [this](https://devhints.io/xpath) documentati
 > Although it's possible to select nodes using the built-in methods of  `lxml.html.HtmlElement`, it's recommended to use the dedicated selectors [`CSSSelect`](https://lxml.de/cssselect.html) and [`XPath`](https://lxml.de/xpathxslt.html), as demonstrated in the above examples.
 
 > [!NOTE]
-> The `fundus/parser/utility.py` module includes several utility functions that can assist you in implementing parser attributes.
+> The `fundus.parser.extraction` package includes several utility functions that can assist you in implementing parser attributes.
 > Make sure to examine other parsers and consult the [attribute guidelines](attribute_guidelines.md) for specifics on attribute implementation.
 > We strongly encourage utilizing these utility functions, especially when parsing the `ArticleBody`.
 
@@ -607,8 +607,8 @@ This function only requires the `doc` element of the article and the `_paragraph
 The skeleton of the function looks like this:
 
 ```python
-from fundus.parser.utility import image_extraction
 from fundus.parser import Image
+from fundus.parser.extraction import image_extraction
 
 @attribute
 def images(self) -> List[Image]:
@@ -663,7 +663,7 @@ from lxml.cssselect import CSSSelector
 from lxml.etree import XPath
 
 from fundus.parser import ArticleBody, BaseParser, ParserProxy, attribute
-from fundus.parser.utility import (
+from fundus.parser.extraction import (
     extract_article_body_with_selector,
     generic_author_parsing,
     generic_date_parsing,

@@ -78,7 +78,7 @@ gh pr diff <PR_NUMBER>
   unless plainly cargo-culted. **Absent** — the tell is §2's crawl coming back empty. It's opt-in
   user-side, so under the default `Crawler(impersonate=False)` a declared profile does nothing and
   the publisher just yields nothing, silently; the review's crawl always passes `impersonate=True`.
-- **Changes to `parser/utility.py`** (`generic_topic_parsing`, `apply_result_filter`,
+- **Changes to `parser/extraction/`** (`generic_topic_parsing`, `apply_result_filter`,
   `image_extraction`, …) affect every publisher — check the call sites.
 
 ## 2. Crawl live articles and verify the body
