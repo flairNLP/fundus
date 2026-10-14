@@ -1,32 +1,30 @@
 import logging
 import subprocess
+import warnings
 from argparse import ArgumentParser, Namespace
-from logging import WARN
 from typing import List, Optional
 
 from tqdm import tqdm
 
 from fundus import Crawler, PublisherCollection
-from fundus.logging import create_logger, set_log_level
+from fundus.logging import set_log_level
 from fundus.publishers.base_objects import Publisher
 from fundus.scraping.article import Article
 from fundus.scraping.filter import RequiresAll
-from fundus.scraping.html import WebSource
-from fundus.scraping.scraper import BaseScraper
-from tests.test_parser import attributes_required_to_cover
+from fundus.scraping.pipeline import Pipeline
+from fundus.scraping.pipeline.source.web import WebSource
+from tests.publishers.test_parser_coverage import attributes_required_to_cover
 from tests.utility import HTMLTestFile, get_test_case_json, load_html_test_file_mapping
-
-logger = create_logger(__name__)
 
 
 def get_test_article(publisher: Publisher, url: Optional[str] = None) -> Optional[Article]:
     if url is not None:
         source = WebSource([url], publisher=publisher, impersonate=True)
-        scraper = BaseScraper(source, publisher_mapping={publisher.name: publisher})
-        return next(scraper.scrape(error_handling="suppress", extraction_filter=RequiresAll()), None)
+        pipeline = Pipeline(source, publishers=[publisher])
+        return next(pipeline.run(raise_on_error=False, extraction_filter=RequiresAll()), None)
 
     crawler = Crawler(publisher, impersonate=True)
-    return next(crawler.crawl(max_articles=1, error_handling="suppress", only_complete=RequiresAll()), None)
+    return next(crawler.crawl(max_articles=1, only_complete=RequiresAll()), None)
 
 
 def parse_arguments() -> Namespace:
@@ -91,8 +89,6 @@ def main() -> None:
     # sort args.attributes for consistency
     arguments.attributes = sorted(set(arguments.attributes) or attributes_required_to_cover)
 
-    logger.setLevel(WARN)
-
     publishers: List[Publisher] = (
         list(PublisherCollection)
         if arguments.publishers is None
@@ -114,7 +110,7 @@ def main() -> None:
 
             if arguments.overwrite or not html_mapping.get(publisher.parser.latest_version):
                 if not (article := get_test_article(publisher, url)):
-                    logger.error(f"Couldn't get article for {publisher.name}. Skipping")
+                    warnings.warn(f"Couldn't get article for {publisher.name}. Skipping")
                     continue
 
                 # remove previous file

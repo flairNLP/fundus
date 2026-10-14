@@ -49,8 +49,8 @@ crawler = Crawler(PublisherCollection)
 
 # How to crawl articles
 
-Now to crawl articles make use of the `crawl()` method of the initialized crawler class.
-Calling this will return an `Iterator` over articles.
+To crawl articles, call the `crawl()` method of the initialized crawler.
+This returns an `Iterator` over articles.
 
 Let's crawl one news article from a publisher based in the US and print it.
 
@@ -76,7 +76,7 @@ Fundus-Article:
 - From:   FreeBeacon (2023-05-11 18:41)
 ```
 
-You can also crawl all available articles by simply removing the `max_articles` parameter.
+You can also crawl all available articles by simply omitting the `max_articles` parameter.
 
 ```` python
 # crawl all available articles

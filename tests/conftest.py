@@ -1,8 +1,9 @@
 from pathlib import Path
-from typing import List
+from typing import Iterator, List
 
-# noinspection PyUnresolvedReferences
-import pytest  # noqa: F401
+import pytest
+
+from fundus.utils.events import __EVENTS__
 
 
 def path_to_plugin(path: Path) -> str:
@@ -15,3 +16,17 @@ def path_to_plugin(path: Path) -> str:
 # Documentation on the `pytest_plugins` variable:
 # https://docs.pytest.org/en/latest/reference/reference.html#globalvar-pytest_plugins
 pytest_plugins: List[str] = [path_to_plugin(fixture) for fixture in Path("tests/fixtures").glob("fixture_*.py")]
+
+
+@pytest.fixture(autouse=True)
+def _reset_events_registry() -> Iterator[None]:
+    """Clear the process-global ``__EVENTS__`` registry after every test.
+
+    ``__EVENTS__`` holds alias→event mappings that persist across tests by design.
+    Without an explicit reset, a test that sets the ``"stop"``event or registers
+    an alias leaks that state into the next test. ``CrawlerBase.crawl``already
+    resets on exit via ``main_context``, but tests that touch ``WebSource`` /
+    ``CCNewsSource`` / the registry directly bypass that.
+    """
+    yield
+    __EVENTS__.reset()

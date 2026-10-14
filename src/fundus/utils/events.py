@@ -7,11 +7,59 @@ from bidict import bidict
 
 from fundus.logging import create_logger
 
+# TODO (planned redesign): replace __EVENTS__ with explicit CancellationToken objects.
+#
+# Current state. __EVENTS__ is a global registry that maps a string alias (publisher
+# name, "main-thread") to a dict of named threading.Event objects, plus a bidict
+# linking aliases to thread ids so callers running inside a thread context can resolve
+# `key=None` to "their own" events. It mashes three concerns into one mechanism:
+#   1. cooperative cancellation (per-publisher stop signal)
+#   2. shutdown propagation (system-wide stop via set_for_all(future=True))
+#   3. post-mortem queryability (main thread asking "did publisher X already stop?"
+#      after its worker exited, hence aliases-persist-after-thread-exit)
+#
+# Pain points: implicit thread-id resolution, string-keyed events (only "stop" exists
+# in practice), the `future=True` hack for shutdown, leaky test setup (every test that
+# touches WebSource/CCNewsSource needs __EVENTS__.context("test") aliasing), and an
+# unclear seam for multiprocessing (threading.Event does not cross process boundaries).
+#
+# Planned shape:
+#
+#     class CancellationToken:
+#         def __init__(self) -> None:
+#             self._event = threading.Event()
+#             self._children: list[CancellationToken] = []
+#         def cancel(self) -> None: ...
+#         def is_cancelled(self) -> bool: ...
+#         def wait(self, timeout: float) -> bool: ...
+#         def child(self) -> "CancellationToken": ...   # cancelled when parent is
+#
+# Mapping current usage onto tokens:
+#   - Source classes (WebSource, CCNewsSource): receive a CancellationToken via
+#     constructor instead of reading from __EVENTS__.
+#   - Crawler: holds a `dict[Publisher, CancellationToken]`. On per-publisher limit
+#     reached, calls `tokens[publisher].cancel()`. Replaces __EVENTS__.set_event(
+#     "stop", publisher_name) and __EVENTS__.is_event_set(...) at the same site.
+#   - Shutdown: a root token; each publisher's token is `root.child()`. Cancelling
+#     root cancels all children — replaces set_for_all(future=True) / clear_for_all.
+#   - queueing.enqueue_results: takes the shutdown token, replaces the
+#     __EVENTS__.is_event_set("stop", __MAIN_THREAD_ALIAS__) probe in _delivered.
+#   - Session.get_with_interrupt: takes a CancellationToken, polls
+#     token.is_cancelled() instead of __EVENTS__.
+#
+# What disappears: aliases, the thread-id bidict, main_context_lock, string event
+# keys, default_events, future=True / clear_for_all, the test-context fixture, and
+# every `from fundus.utils.events import __EVENTS__` in non-orchestrator code.
+
 _T = TypeVar("_T")
 
 logger = create_logger(__name__)
 
 __DEFAULT_EVENTS__: List[str] = ["stop"]
+
+# Alias under which the main thread registers its context in __EVENTS__; crawlers set/probe
+# the "stop" event against it to drive cooperative shutdown.
+__MAIN_THREAD_ALIAS__ = "main-thread"
 
 _sentinel = object()
 

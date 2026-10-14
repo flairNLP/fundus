@@ -1,8 +1,12 @@
 from __future__ import annotations
 
+import random
 import re
 import threading
+import time
 from contextlib import contextmanager
+from datetime import datetime, timezone
+from email.utils import parsedate_to_datetime
 from queue import Empty, Queue
 from typing import Any, Dict, Iterator, List, NamedTuple, Optional, Union
 from urllib.parse import urljoin
@@ -23,12 +27,14 @@ _charset_re = re.compile(rb"charset\s*=\s*[\"']?\s*([^\"'\s;>]+)", re.IGNORECASE
 
 
 class CrashThread(BaseException):
-    """Is raised to end a thread without relying on the thread ending naturally"""
+    """Raised to terminate a thread without waiting for it to exit naturally."""
 
     pass
 
 
 class _RequestTask(NamedTuple):
+    """A unit of work handed to the session worker thread: the URL, request kwargs, and a queue for the result."""
+
     url: str
     kwargs: Any
     result_queue: Queue[Union[curl_cffi.requests.Response, Exception]]
@@ -69,14 +75,34 @@ class InterruptableSession(curl_cffi.requests.Session[curl_cffi.requests.Respons
     The daemon thread owns the curl handle for the lifetime of the session, enabling
     connection reuse across requests. get_with_interrupt() submits work to the daemon
     thread and polls for a stop event every second, raising CrashThread if interrupted.
+    5xx responses are retried in place with interruptable exponential backoff (see
+    get_with_interrupt); an exhausted retry surfaces as a normal HTTPError.
     """
 
-    def __init__(self, **kwargs: Any) -> None:
-        # use_thread_local_curl=True gives the worker thread its own curl handle, separate
-        # from the caller thread's handle closed in close(). Prevents close() from touching
-        # a handle that may still be in use by the worker.
+    def __init__(
+        self,
+        *,
+        max_retries: int = 3,
+        retry_backoff_base: float = 1.0,
+        retry_backoff_cap: float = 30.0,
+        **kwargs: Any,
+    ) -> None:
+        """Start the persistent worker thread; forwards kwargs to curl_cffi.Session.
+
+        use_thread_local_curl is forced on so the worker thread gets its own curl handle,
+        separate from the caller thread's handle that close() tears down; otherwise close()
+        could touch a handle still in use by the worker.
+
+        Args:
+            max_retries (int): Number of additional attempts for 5xx responses (0 disables retrying).
+            retry_backoff_base (float): Base for the full-jitter exponential backoff between retries (seconds).
+            retry_backoff_cap (float): Upper bound on a single backoff wait, including Retry-After (seconds).
+        """
         kwargs.pop("use_thread_local_curl", None)
         super().__init__(use_thread_local_curl=True, **kwargs)
+        self.max_retries = max_retries
+        self.retry_backoff_base = retry_backoff_base
+        self.retry_backoff_cap = retry_backoff_cap
         self._closed = False
         self._task_queue: Queue[Optional[_RequestTask]] = Queue()
         self._worker_thread = threading.Thread(target=self._worker_loop, name=f"session-worker-{id(self)}", daemon=True)
@@ -84,6 +110,7 @@ class InterruptableSession(curl_cffi.requests.Session[curl_cffi.requests.Respons
 
     @staticmethod
     def _log_response(response: curl_cffi.requests.Response) -> None:
+        """Debug-log the request method, any redirect chain, the final status, and elapsed time."""
         history: List[curl_cffi.requests.Response] = object.__getattribute__(response, "_history")
         method = getattr(getattr(response, "request", None), "method", "GET")
         if history:
@@ -117,6 +144,7 @@ class InterruptableSession(curl_cffi.requests.Session[curl_cffi.requests.Respons
         raise TooManyRedirects(f"Exceeded {self.max_redirects} maximum redirects following {url!r}")
 
     def _worker_loop(self) -> None:
+        """Pull tasks off the queue and run each request, returning the response or the raised error; exit on the None sentinel."""
         while True:
             task = self._task_queue.get()
             if task is None:
@@ -126,17 +154,44 @@ class InterruptableSession(curl_cffi.requests.Session[curl_cffi.requests.Respons
             except Exception as error:
                 task.result_queue.put(error)
 
-    def get_with_interrupt(self, url: str, **kwargs: Any) -> curl_cffi.requests.Response:
-        """Interruptable GET request.
+    @staticmethod
+    def _parse_retry_after(value: str) -> Optional[float]:
+        """Parse a Retry-After header (delta-seconds or HTTP-date) into seconds from now, or None if unparseable."""
+        value = value.strip()
+        if value.isdigit():
+            return float(value)
+        try:
+            # Raises TypeError (py<3.10) or ValueError (py>=3.10) on unparseable input.
+            parsed = parsedate_to_datetime(value)
+        except (TypeError, ValueError):
+            return None
+        if parsed.tzinfo is None:
+            parsed = parsed.replace(tzinfo=timezone.utc)
+        return max(0.0, (parsed - datetime.now(timezone.utc)).total_seconds())
 
-        Submits the request to the persistent daemon thread and polls every second
-        for a stop event. Raises CrashThread if interrupted. When impersonating a
-        browser, kwargs are dropped so curl_cffi can apply the full browser
-        fingerprint unmodified.
+    def _retry_backoff(self, response: curl_cffi.requests.Response, attempt: int) -> float:
+        """Seconds to wait before retrying: a valid Retry-After (capped) if present, else full-jitter exponential backoff."""
+        retry_after = response.headers.get("retry-after")
+        if retry_after is not None and (parsed := self._parse_retry_after(retry_after)) is not None:
+            return min(parsed, self.retry_backoff_cap)
+        window = min(self.retry_backoff_cap, self.retry_backoff_base * 2**attempt)
+        return random.uniform(0.0, window)
+
+    @staticmethod
+    def _sleep_with_interrupt(seconds: float, url: str) -> None:
+        """Sleep up to `seconds`, waking every second to honor the stop event (raises CrashThread if set)."""
+        deadline = time.monotonic() + seconds
+        while (remaining := deadline - time.monotonic()) > 0:
+            if __EVENTS__.is_event_set("stop"):
+                logger.debug(f"Interrupt backoff before retrying {url!r}")
+                raise CrashThread(f"Backoff before retrying {url} was interrupted by stop event")
+            time.sleep(min(1.0, remaining))
+
+    def _submit_and_wait(self, url: str, request_kwargs: Dict[str, Any]) -> curl_cffi.requests.Response:
+        """Submit one request to the worker thread and block until a result, polling the stop event each second.
+
+        Raises any exception the worker raised, or CrashThread if the stop event fires while waiting.
         """
-        if self._closed:
-            raise RuntimeError("Session is closed")
-        request_kwargs: Dict[str, Any] = {} if self.impersonate else kwargs
         response_queue: Queue[Union[curl_cffi.requests.Response, Exception]] = Queue()
         self._task_queue.put(_RequestTask(url, request_kwargs, response_queue))
 
@@ -150,9 +205,43 @@ class InterruptableSession(curl_cffi.requests.Session[curl_cffi.requests.Respons
             else:
                 if isinstance(response, Exception):
                     raise response
-                self._log_response(response)
-                response.raise_for_status()
                 return response
+
+    def get_with_interrupt(self, url: str, **kwargs: Any) -> curl_cffi.requests.Response:
+        """Interruptable GET request with in-place 5xx retry.
+
+        Submits the request to the persistent daemon thread and polls every second
+        for a stop event. Raises CrashThread if interrupted. When impersonating a
+        browser, kwargs are dropped so curl_cffi can apply the full browser
+        fingerprint unmodified.
+
+        A 5xx response is retried up to max_retries times with interruptable
+        exponential backoff (honoring Retry-After); once retries are exhausted the
+        status surfaces as a normal HTTPError via raise_for_status.
+        """
+        if self._closed:
+            raise RuntimeError("Session is closed")
+        request_kwargs: Dict[str, Any] = {} if self.impersonate else kwargs
+
+        # Hand-rolled rather than curl_cffi's retry=/RetryStrategy: that only retries transport
+        # exceptions (not 5xx), ignores Retry-After, and sleeps with a blocking time.sleep that the
+        # stop event can't interrupt.
+        for attempt in range(self.max_retries + 1):
+            response = self._submit_and_wait(url, request_kwargs)
+            self._log_response(response)
+            if response.status_code >= 500 and attempt < self.max_retries:
+                backoff = self._retry_backoff(response, attempt)
+                logger.debug(
+                    f"Server error {response.status_code} for {url!r}; "
+                    f"retry {attempt + 1}/{self.max_retries} in {backoff:.2f}s"
+                )
+                self._sleep_with_interrupt(backoff, url)
+                continue
+            response.raise_for_status()
+            return response
+
+        # Unreachable: the loop either returns or raises on its final iteration.
+        raise AssertionError("retry loop exited without returning")
 
     def close(self) -> None:
         """Signal the worker thread to exit and close this thread's curl handle.
@@ -174,9 +263,15 @@ class SessionHandler:
     session, the old session is closed and replaced.
     """
 
-    DEFAULT_SESSION_KWARGS: Dict[str, Any] = {"timeout": 30}
+    DEFAULT_SESSION_KWARGS: Dict[str, Any] = {
+        "timeout": 30,
+        "max_retries": 3,
+        "retry_backoff_base": 1.0,
+        "retry_backoff_cap": 30.0,
+    }
 
     def __init__(self) -> None:
+        """Initialize the per-thread session registry with the default session kwargs."""
         self._session_kwargs: Dict[str, Any] = dict(self.DEFAULT_SESSION_KWARGS)
         self._context_lock = threading.RLock()
         self._sessions: Dict[int, InterruptableSession] = {}

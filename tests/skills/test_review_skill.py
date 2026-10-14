@@ -23,7 +23,7 @@ from fundus import Article
 from fundus.parser import ArticleBody, BaseParser
 from fundus.parser.data import ArticleSection, TextSequence
 
-_SCRIPTS = Path(__file__).resolve().parents[1] / "skills" / "review-publisher" / "scripts"
+_SCRIPTS = Path(__file__).resolve().parents[2] / "skills" / "review-publisher" / "scripts"
 sys.path.insert(0, str(_SCRIPTS))
 
 import _store  # noqa: E402
