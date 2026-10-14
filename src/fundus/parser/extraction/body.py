@@ -100,7 +100,9 @@ def extract_article_body_with_selector(
         if not selector and node_type:
             raise ValueError("Both a selector and node type are required")
 
-        return [node for element in selector(doc) if (node := node_type(df_idx_by_ref[element], element))]
+        nodes = (node_type(df_idx_by_ref[element], element) for element in selector(doc))
+        # a node only counts if text is left once <tag_filter> is applied, as that is the text the body is built from
+        return [node for node in nodes if normalize_whitespace(node.text_content(tag_filter=tag_filter))]
 
     summary_nodes = extract_nodes(summary_selector, SummaryNode) if summary_selector else []
     subhead_nodes = extract_nodes(subheadline_selector, SubheadNode) if subheadline_selector else []
