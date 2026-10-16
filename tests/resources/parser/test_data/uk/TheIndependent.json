@@ -1,19 +1,115 @@
 {
   "V1": {
     "authors": [
-      "Angus Thompson"
+      "Camilla Foster"
     ],
     "body": {
-      "summary": [],
+      "summary": [
+        "Seasonal shifts bring closer indoor contact with viruses and drier air can weaken your body’s natural defences, explains a GP"
+      ],
       "sections": [
         {
           "headline": [],
           "paragraphs": [
-            "Australian teenager Holly Bowles has become the sixth person to die from suspected methanol poisoning after travelling in Laos.",
-            "The 19-year-old’s death in a Thai hospital was confirmed in a family statement to Australian news outlets this morning and comes a day after her friend Bianca Jones, also 19, died from the same incident in the riverside party town Van Vieng.",
-            "Ms Bowles’ father, Shaun Bowles, confirmed his daughter’s passing to Nine News. “It is with broken hearts, and we are so sad to say that our beautiful girl Holly is now at peace,” he said.",
-            "British backpacker and lawyer Simone White was among those to have died in the suspected methanol poisoning case after allegedly being served free drinks in Laos.",
-            "It comes as Thai police have detained the owner and the manager of Nana Backpacker Hostel, where affected travellers who visited the town were staying, however no one has been charged over the incident."
+            "As temperatures start to fall, the chilly autumnal air appears to bring a noticeable increase in sniffles, sneezes and tissues being shared around the office.",
+            "With the changing season comes a shift in weather and our daily routines, but why do so many of us feel run-down and unwell at this time of year?",
+            "With this in mind, we spoke to Dr Nikki Ramskill, GP and founder of The Female Health Doctor Clinic, to find out the reasons behind this seasonal surge in illnesses."
+          ]
+        },
+        {
+          "headline": [
+            "Viruses are more active"
+          ],
+          "paragraphs": [
+            "“Viruses that cause the flu and the common cold tend to be more active in cold weather and circulate and spread quicker in autumn and winter,” says Ramskill.",
+            "“Flu is caused by influenza viruses and the common cold is usually caused by rhinoviruses. Therefore, although the flu vaccination will help reduce your risk of flu, it won’t stop you getting a cold.”",
+            "Covid and norovirus also are common this time of year, the GP adds."
+          ]
+        },
+        {
+          "headline": [
+            "Dry air can impair our immune defences"
+          ],
+          "paragraphs": [
+            "“Our nasal passages are designed to try and capture viruses to try and get rid of them. However, cold dry air this time of year can dry out the mucus membranes in these passages which leaves us more exposed as it means that there is less of a barrier for viruses to get through,” explains Ramskill."
+          ]
+        },
+        {
+          "headline": [
+            "Spend more time inside"
+          ],
+          "paragraphs": [
+            "“This time of year we tend to change our routine and the way we are do things a bit. For example, rather than being outside in the fresh air, we tend to spend more time inside,” says the GP.",
+            "“We tend to close windows and doors more, which reduces ventilation and increases the likelihood of germs accumulating and spreading between people inside the house.”"
+          ]
+        },
+        {
+          "headline": [
+            "People have returned to work and school after the summer break"
+          ],
+          "paragraphs": [
+            "“In the summer many of us go on holiday and have time away from everyone and spend more time outside, but in autumn when we return to work and school we are surrounded with loads of other people and viruses tend to spread much quicker,” says Ramskill.",
+            "“If you are using the tube or work in an open-plan office, you’re much more likely to catch something unless you’re disinfecting everything all the time, as the chance of you ingesting or inhaling viruses are much much higher.”",
+            "Young children, in particular, are renowned for picking up illnesses at school.",
+            "“There are so many bugs going around schools this time of year that young children will bring home,” says the GP. “A lot of the time their immune systems won’t have encountered most of these viruses and bugs before so will be still learning how to manage them.”"
+          ]
+        },
+        {
+          "headline": [
+            "Busy schedules and stress"
+          ],
+          "paragraphs": [
+            "“Autumn can be a busy time of year, and if you’re burning the candle at both ends, are not sleeping very well, and aren’t eating a healthy diet, then you’re not giving your body what it needs to keep your immune system as optimal as possible,” says Ramskill.",
+            "Here are some tips on how to protect yourself from illnesses this time of year…"
+          ]
+        },
+        {
+          "headline": [
+            "Wrap up warm"
+          ],
+          "paragraphs": [
+            "“When you go out, make sure that you wrap up warm and are doing everything you can to preserve your body temperature,” advises Ramskill."
+          ]
+        },
+        {
+          "headline": [
+            "Keep to a healthy diet and regular sleep routine"
+          ],
+          "paragraphs": [
+            "“Make sure that you are eating a varied diet and are getting enough sleep,” says Ramskill."
+          ]
+        },
+        {
+          "headline": [
+            "Get some fresh air"
+          ],
+          "paragraphs": [
+            "“Try to get some fresh air so you’re not constantly in a stuffy office all the time,” recommends the GP."
+          ]
+        },
+        {
+          "headline": [
+            "Get a flu vaccine"
+          ],
+          "paragraphs": [
+            "“Check to see if are eligible for a free flu vaccination on the NHS,” advises Ramskill. “If you are a vulnerable patient, you need to make sure that you get one every year and you should receive an invitation from the NHS to book one.”",
+            "According to the NHS website, you can get the free NHS flu vaccine if you meet any of the follow criteria:",
+            "Are aged 65 or over (including those who will be 65 by 31 March 2027)",
+            "Are aged 18 to 64 and have certain long-term health conditions",
+            "Are pregnant – you can have a flu vaccine during any stage of pregnancy",
+            "Live in a care home",
+            "Are the main carer for an older or disabled person, or receive a carer’s allowance",
+            "Live with someone who has a weakened immune system",
+            "Are aged 16 or over and rough sleeping or staying in a homeless hostel or night shelter.",
+            "“If you are not eligible for a free flu vaccine on the NHS, you can pay to get one done privately,” says Ramskill."
+          ]
+        },
+        {
+          "headline": [
+            "Be vigilant about cleaning hands and surfaces"
+          ],
+          "paragraphs": [
+            "“Wash your hands regularly and be more vigilant about cleaning your desk, phone, keyboard and anything that other people might be touching,” advises Ramskill."
           ]
         }
       ]
@@ -22,58 +118,156 @@
       {
         "versions": [
           {
-            "url": "https://static.independent.co.uk/2023/08/25/15/3_2.png?quality=75&width=360&crop=3%3A2%2Csmart&auto=webp",
+            "url": "https://cdn.ex.co/transformations-account/production/99589e92-e6b5-4a6b-8db4-bb0120ace3e1/71007200-7300-4b00-a600-570049004500/thumbnail-270.webp",
             "query_width": null,
             "size": {
-              "width": 360,
+              "width": 480,
               "height": 0
             },
-            "type": "image/png"
+            "type": "image/webp"
           },
           {
-            "url": "https://static.independent.co.uk/2023/08/25/15/3_2.png?quality=75&width=768&crop=3%3A2%2Csmart&auto=webp",
+            "url": "https://cdn.ex.co/transformations-account/production/99589e92-e6b5-4a6b-8db4-bb0120ace3e1/71007200-7300-4b00-a600-570049004500/thumbnail-360.webp",
             "query_width": null,
             "size": {
-              "width": 768,
+              "width": 640,
               "height": 0
             },
-            "type": "image/png"
-          },
-          {
-            "url": "https://static.independent.co.uk/2023/08/25/15/3_2.png?quality=75&width=1000&crop=3%3A2%2Csmart&auto=webp",
-            "query_width": null,
-            "size": {
-              "width": 1000,
-              "height": 0
-            },
-            "type": "image/png"
-          },
-          {
-            "url": "https://static.independent.co.uk/2023/08/25/15/3_2.png?quality=75&width=1250&crop=3%3A2%2Csmart&auto=webp",
-            "query_width": null,
-            "size": {
-              "width": 1250,
-              "height": 0
-            },
-            "type": "image/png"
+            "type": "image/webp"
           }
         ],
         "is_cover": true,
-        "description": null,
-        "caption": null,
-        "authors": [
-          "The Independent"
+        "description": "Can We Cure The Common Cold?...",
+        "caption": "Related: Can We Cure The Common Cold?...",
+        "authors": [],
+        "position": 301
+      },
+      {
+        "versions": [
+          {
+            "url": "https://static.independent.co.uk/2026/10/09/15/01M4GDG8XVPDPB7W8J0E9RYMAJ.jpg?quality=75&width=320&crop=3%3A2%2Csmart&auto=webp",
+            "query_width": null,
+            "size": {
+              "width": 320,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://static.independent.co.uk/2026/10/09/15/01M4GDG8XVPDPB7W8J0E9RYMAJ.jpg?quality=75&width=640&crop=3%3A2%2Csmart&auto=webp",
+            "query_width": null,
+            "size": {
+              "width": 640,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          }
         ],
-        "position": 751
+        "is_cover": false,
+        "description": "‘Viruses that cause the flu and the common cold tend to be more active in cold weather,’ says Ramskill",
+        "caption": "‘Viruses that cause the flu and the common cold tend to be more active in cold weather,’ says Ramskill",
+        "authors": [
+          "PA"
+        ],
+        "position": 341
+      },
+      {
+        "versions": [
+          {
+            "url": "https://static.independent.co.uk/2026/10/09/15/01M4GDG8Q4KBW0MT6P934GTAZ1.jpg?quality=75&width=320&auto=webp",
+            "query_width": null,
+            "size": {
+              "width": 320,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://static.independent.co.uk/2026/10/09/15/01M4GDG8Q4KBW0MT6P934GTAZ1.jpg?quality=75&width=640&auto=webp",
+            "query_width": null,
+            "size": {
+              "width": 640,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": false,
+        "description": "Young children, in particular, are renowned for picking up illnesses at school",
+        "caption": "Young children, in particular, are renowned for picking up illnesses at school",
+        "authors": [
+          "PA"
+        ],
+        "position": 406
+      },
+      {
+        "versions": [
+          {
+            "url": "https://static.independent.co.uk/2026/10/09/15/01M4GDG9R8P33EAVVJET7JP0M2.jpg?quality=75&width=320&auto=webp",
+            "query_width": null,
+            "size": {
+              "width": 320,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://static.independent.co.uk/2026/10/09/15/01M4GDG9R8P33EAVVJET7JP0M2.jpg?quality=75&width=640&auto=webp",
+            "query_width": null,
+            "size": {
+              "width": 640,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": false,
+        "description": "‘Autumn can be a busy time of year,’ says Ramskill",
+        "caption": "‘Autumn can be a busy time of year,’ says Ramskill",
+        "authors": [
+          "PA"
+        ],
+        "position": 425
+      },
+      {
+        "versions": [
+          {
+            "url": "https://static.independent.co.uk/2026/10/09/15/01M4GDG6NT15T5PPS1R7EKFYG3.jpg?quality=75&width=320&auto=webp",
+            "query_width": null,
+            "size": {
+              "width": 320,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://static.independent.co.uk/2026/10/09/15/01M4GDG6NT15T5PPS1R7EKFYG3.jpg?quality=75&width=640&auto=webp",
+            "query_width": null,
+            "size": {
+              "width": 640,
+              "height": 0
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": false,
+        "description": "‘If you are not eligible for a free flu vaccine on the NHS, you can pay to get one done privately,’ says Ramskill",
+        "caption": "‘If you are not eligible for a free flu vaccine on the NHS, you can pay to get one done privately,’ says Ramskill",
+        "authors": [
+          "PA"
+        ],
+        "position": 468
       }
     ],
-    "publishing_date": "2024-11-22 08:49:59+00:00",
-    "title": "Laos methanol poisonings: Australian teenager Holly Bowles becomes sixth to die as police detain hostel bosses",
+    "publishing_date": "2026-10-12 08:14:38+00:00",
+    "title": "Why do I always get ill this time of year? A GP explains ",
     "topics": [
-      "Australian",
-      "Laos",
-      "Thai",
-      "Internal"
+      "NHS",
+      "GP",
+      "Covid",
+      "Norovirus",
+      "Common cold",
+      "Summer"
     ]
   }
 }
