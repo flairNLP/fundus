@@ -598,44 +598,64 @@ For practical examples, refer to existing parser implementations to understand h
 
 Live tickers are pages consisting of many timestamped entries.
 If a publisher has them, the `body` attribute can return a `LiveTickerBody` instead of an `ArticleBody`.
-Use `extract_body_with_selector` instead of `extract_article_body_with_selector` for this.
-It takes the selectors you already use for the article body and the additional selectors for the live ticker, all prefixed with `live_ticker_`:
+The selectors for live tickers are bundled in a `LiveTickerSelectors`, which you declare as the class attribute `_live_ticker` of your parser:
 
-- `live_ticker_boundary_selector`: selects one element per entry, marking where an entry starts. **A page is treated as a live ticker, if this selector matches**, otherwise as an article.
-- `live_ticker_paragraph_selector`: the paragraphs of the entries.
-- `live_ticker_summary_selector`: the summary of the whole live ticker. All summary nodes must be located before the first entry.
-- `live_ticker_subheadline_selector`: the headlines of the entries.
-- `live_ticker_date_selector`: the date of an entry. It must match exactly one element per entry, otherwise an error is raised. Elements with a `datetime` attribute are read from it, all others from their text.
-- `live_ticker_date_dayfirst`: set to `True` if the publisher writes dates day first, e.g. `03.10.2026`, since ambiguous dates are read month first by default (see `ZDF` or `Tagesschau`). ISO 8601 dates are always read year first.
-- `live_ticker_date_default`: a `datetime` filling in what the dates of the entries leave out, e.g. the day of an entry only stating `16:12`. Without it, the current date is used, which makes the result depend on the day the parser runs (see `LeMonde`).
-- `live_ticker_author_selector`: the authors of an entry.
-- `live_ticker_image_selector`: the `<img>` elements of an entry. To enrich the images, `live_ticker_image_caption_selector`, `live_ticker_image_alt_selector`, `live_ticker_image_author_selector`, `live_ticker_image_size_pattern` and `live_ticker_image_relative_urls` work like the corresponding arguments of `image_extraction`.
+- `boundary_selector` (required): selects one element per entry, marking where an entry starts. **A page is treated as a live ticker, if this selector matches**, otherwise as an article.
+- `paragraph_selector` (required): the paragraphs of the entries.
+- `summary_selector`: the summary of the whole live ticker. All summary nodes must be located before the first entry.
+- `subheadline_selector`: the headlines of the entries.
+- `date_selector`: the date of an entry. It must match at most one element per entry, otherwise an error is raised. Elements with a `datetime` attribute are read from it, all others from their text.
+- `date_dayfirst`: set to `True` if the publisher writes dates day first, e.g. `03.10.2026`, since ambiguous dates are read month first by default (see `ZDF` or `Tagesschau`). ISO 8601 dates are always read year first.
+- `date_default`: a `datetime` filling in what the dates of the entries leave out, e.g. the day of an entry only stating `16:12`. Without it, the current date is used, which makes the result depend on the day the parser runs. Since it usually depends on the page, set it with `dataclasses.replace` when calling the extraction (see `LeMonde`).
+- `date_tz`: the timezone of entry dates that don't state one, e.g. `ZoneInfo("Europe/Berlin")`. Set it whenever the dates are written without a timezone, so the entry dates are timezone-aware like the `publishing_date` of the page.
+- `author_selector`: the authors of an entry.
+- `image_selector`: the `<img>` elements of an entry. To enrich the images, `image_caption_selector`, `image_alt_selector`, `image_author_selector`, `image_size_pattern` and `image_relative_urls` work like the corresponding arguments of `image_extraction`.
 
-Only `live_ticker_paragraph_selector` and `live_ticker_boundary_selector` are required for the live ticker, everything else is optional.
-The article `paragraph_selector` is still required as well, since it is used for pages that are not live tickers.
 The selectors are evaluated on the whole page, an element belongs to the entry that precedes it in the document.
 Therefore, a selector should only match content of the live ticker.
 
+Pass `_live_ticker` to `extract_body_with_selector`, which you use instead of `extract_article_body_with_selector`.
+It takes the selectors of the article body as before and decides based on the page which extraction to use:
+
 ````python
-@attribute
-def body(self) -> Optional[Union[ArticleBody, LiveTickerBody]]:
-    return extract_body_with_selector(
-        self.precomputed.doc,
-        summary_selector=self._summary_selector,
-        subheadline_selector=self._subheadline_selector,
-        paragraph_selector=self._paragraph_selector,
-        live_ticker_boundary_selector=self._live_ticker_boundary_selector,
-        live_ticker_summary_selector=self._live_ticker_summary_selector,
-        live_ticker_subheadline_selector=self._live_ticker_subheadline_selector,
-        live_ticker_paragraph_selector=self._live_ticker_paragraph_selector,
-        live_ticker_date_selector=self._live_ticker_date_selector,
+from zoneinfo import ZoneInfo
+
+from fundus.parser.utility import LiveTickerSelectors, extract_body_with_selector
+
+class V1(BaseParser):
+    _paragraph_selector = XPath("//article/p")
+    _summary_selector = XPath("//p[@class='teaser']")
+    _subheadline_selector = XPath("//article/h2")
+
+    _live_ticker = LiveTickerSelectors(
+        boundary_selector=XPath("//div[@class='ticker-entry']"),
+        paragraph_selector=XPath("//div[@class='ticker-entry']//p"),
+        summary_selector=_summary_selector,
+        subheadline_selector=XPath("//div[@class='ticker-entry']//h2"),
+        date_selector=XPath("//div[@class='ticker-entry']//time"),
+        date_tz=ZoneInfo("Europe/Berlin"),
     )
+
+    @attribute
+    def body(self) -> Optional[Union[ArticleBody, LiveTickerBody]]:
+        return extract_body_with_selector(
+            self.precomputed.doc,
+            summary_selector=self._summary_selector,
+            subheadline_selector=self._subheadline_selector,
+            paragraph_selector=self._paragraph_selector,
+            live_ticker=self._live_ticker,
+        )
 ````
 
-Because the entries of a live ticker carry their own images and authors, the `images` attribute of the parser should describe the page only.
-Images of entries are attached to their entry by `live_ticker_image_selector`.
+Always declare the selectors as `_live_ticker`, since this is where tools like the publisher review look for them.
 
-For examples, have a look at the parsers of `SZ`, `Tagesschau`, `ZDF` or `IlGiornale`.
+Because the entries of a live ticker carry their own images and authors, the `images` attribute of the parser should describe the page only.
+Therefore, always pass `live_ticker=self._live_ticker` to `image_extraction` as well.
+On a live ticker page, it then only extracts the images in front of the first entry, since the images of the entries are attached to their entry by `image_selector`.
+Without it, the images would be bounded by the article paragraphs, which a live ticker page usually lacks, so the extraction fails or picks up the images of the entries.
+If `images` is defined in an earlier version without live ticker support, passing `self._live_ticker` there is fine, since it is `None` until a version declares it (see `SZ` or `ZDF`).
+
+For examples, have a look at the parsers of `SZ`, `Tagesschau`, `ZDF`, `LeMonde` or `IlGiornale`.
 
 ### Extracting the images
 

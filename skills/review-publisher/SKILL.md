@@ -33,6 +33,7 @@ hold onto even before you open it:
   READY before any verdict. The judgment calls stay yours; skipping them silently does not.
 - **Live tickers need a URL.** A random crawl seldom draws one. If the PR adds or touches live ticker
   support, get a ticker URL and pass `--live-url` to `crawl`; heed the driver's `!` line when none was read (§2).
+  Ticker support also needs a `live_ticker/` test case, since the tests skip a publisher without one (§1).
 - **Each publisher is its own review** — its own crawl, sweep, and `status READY`; a blocker on one
   does not discharge the checks on the rest.
 - **Verdict:** any blocker → `REQUEST_CHANGES`, else `COMMENT`. Never `APPROVE`; your own PR → `COMMENT`.

@@ -218,7 +218,9 @@ live_ticker_attributes_required_to_cover = {"title", "publishing_date", "body"}
 # `<x>_selector` must live on the class as `_<x>_selector`. Nothing declares that, so where the name
 # drifts, external tooling (skills/review-publisher) silently reads `None` instead of the selector.
 # Enforced here until the selectors become declared class variables, see #958 - which retires this.
+# Live ticker selectors are declared as `_live_ticker`, so only their passing as `self._live_ticker` is checked.
 _BODY_SELECTOR_PARAMETERS = ("paragraph_selector", "summary_selector", "subheadline_selector")
+_BODY_EXTRACTION_FUNCTIONS = ("extract_article_body_with_selector", "extract_body_with_selector")
 
 
 def _called_name(func: ast.expr) -> Optional[str]:
@@ -231,9 +233,9 @@ def _misnamed_body_selectors(parser_class: Type[BaseParser]) -> List[str]:
     """Body selectors `parser_class` passes under a name `BaseParser.body_selectors` cannot find."""
     misnamed: List[str] = []
     for node in ast.walk(ast.parse(textwrap.dedent(inspect.getsource(parser_class)))):
-        if not isinstance(node, ast.Call) or _called_name(node.func) != "extract_article_body_with_selector":
+        if not isinstance(node, ast.Call) or _called_name(node.func) not in _BODY_EXTRACTION_FUNCTIONS:
             continue
-        # extract_article_body_with_selector(doc, paragraph_selector, summary_selector, subheadline_selector, ...)
+        # both functions take (doc, paragraph_selector, summary_selector, subheadline_selector, ...)
         arguments: List[Tuple[str, ast.expr]] = [
             (_BODY_SELECTOR_PARAMETERS[index - 1], argument)
             for index, argument in enumerate(node.args)
@@ -253,6 +255,12 @@ def _misnamed_body_selectors(parser_class: Type[BaseParser]) -> List[str]:
                 misnamed.append(
                     f"{parser_class.__qualname__} passes {parameter}=self.{value.attr}, expected self._{parameter}"
                 )
+        for keyword in node.keywords:
+            # `BaseParser.live_ticker_body_selectors` reads `_live_ticker`, possibly passed on via `replace(...)`
+            if keyword.arg == "live_ticker" and not any(
+                isinstance(sub, ast.Attribute) and sub.attr == "_live_ticker" for sub in ast.walk(keyword.value)
+            ):
+                misnamed.append(f"{parser_class.__qualname__} passes live_ticker without self._live_ticker")
     return misnamed
 
 

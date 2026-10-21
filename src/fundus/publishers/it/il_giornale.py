@@ -5,6 +5,7 @@ from typing import List, Optional, Union
 from lxml.cssselect import CSSSelector
 from lxml.etree import XPath, tostring
 from lxml.html import document_fromstring
+from zoneinfo import ZoneInfo
 
 from fundus.parser import (
     ArticleBody,
@@ -16,6 +17,7 @@ from fundus.parser import (
     function,
 )
 from fundus.parser.utility import (
+    LiveTickerSelectors,
     extract_article_body_with_selector,
     extract_body_with_selector,
     generic_author_parsing,
@@ -119,11 +121,14 @@ class IlGiornaleParser(ParserProxy):
         )
         _subheadline_selector = XPath("//main//*[self::h3 or self::h2 or (self::p and not(text()) and b)]")
 
-        _live_ticker_boundary_selector = XPath("//div[@class='b-article-body__live-block']")
-        _live_ticker_summary_selector = XPath("//p[@class='b-subheadline'] | //article/p[@class='c-paragraph']")
-        _live_ticker_subheadline_selector = XPath("//h3[@class='b-article-body__live-block-title']")
-        _live_ticker_paragraph_selector = XPath("//div[@class='b-article-body__live-block-body']/p")
-        _live_ticker_date_selector = XPath("//div[@class='b-article-body__live-block']/time")
+        _live_ticker = LiveTickerSelectors(
+            boundary_selector=XPath("//div[@class='b-article-body__live-block']"),
+            paragraph_selector=XPath("//div[@class='b-article-body__live-block-body']/p"),
+            summary_selector=XPath("//p[@class='b-subheadline'] | //article/p[@class='c-paragraph']"),
+            subheadline_selector=XPath("//h3[@class='b-article-body__live-block-title']"),
+            date_selector=XPath("//div[@class='b-article-body__live-block']/time"),
+            date_tz=ZoneInfo("Europe/Rome"),
+        )
 
         _topic_selector = XPath("//div[@class='c-stack b-article-tag']/a")
 
@@ -138,11 +143,7 @@ class IlGiornaleParser(ParserProxy):
                 summary_selector=self._summary_selector,
                 paragraph_selector=self._paragraph_selector,
                 subheadline_selector=self._subheadline_selector,
-                live_ticker_boundary_selector=self._live_ticker_boundary_selector,
-                live_ticker_summary_selector=self._live_ticker_summary_selector,
-                live_ticker_subheadline_selector=self._live_ticker_subheadline_selector,
-                live_ticker_paragraph_selector=self._live_ticker_paragraph_selector,
-                live_ticker_date_selector=self._live_ticker_date_selector,
+                live_ticker=self._live_ticker,
             )
 
         @attribute
@@ -167,4 +168,5 @@ class IlGiornaleParser(ParserProxy):
                 author_selector=re.compile(
                     r"(?i)(?<=\.)(?P<credits>((\s*[A-Za-zÀ-ÿ]+\s*){1,3}/)+(\s*[A-Za-zÀ-ÿ]+\s*){1,3})$"
                 ),
+                live_ticker=self._live_ticker,
             )

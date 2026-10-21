@@ -84,12 +84,25 @@ gh pr diff <PR_NUMBER>
   unless plainly cargo-culted. **Absent** — the tell is §2's crawl coming back empty. It's opt-in
   user-side, so under the default `Crawler(impersonate=False)` a declared profile does nothing and
   the publisher just yields nothing, silently; the review's crawl always passes `impersonate=True`.
-- **Live ticker support** (`_live_ticker_*_selector`, `extract_body_with_selector`; skip if the PR has
-  none). `body` returns `Optional[Union[ArticleBody, LiveTickerBody]]`. The boundary selector decides
-  whether a page is a ticker at all, so it must match *only* ticker pages: a selector that also matches an
-  ordinary article turns it into a one-entry ticker. Entry images belong to
-  `live_ticker_image_selector` (with its caption/alt/author companions); the parser's own `images`
-  attribute should describe the page, not re-list the entries' images.
+- **Live ticker support** (`_live_ticker = LiveTickerSelectors(...)`, `extract_body_with_selector`; skip
+  if the PR has none). `body` returns `Optional[Union[ArticleBody, LiveTickerBody]]`. The selectors must
+  live on `_live_ticker` and be passed from there — `live_ticker=self._live_ticker`, or a
+  `dataclasses.replace(self._live_ticker, ...)` of it for page-dependent settings — the review reads them
+  from `_live_ticker`. The boundary selector decides whether a page is a ticker at all, so it must match
+  *only* ticker pages: a selector that also matches an ordinary article turns it into a one-entry ticker.
+  Check the entry dates against how the site writes them:
+  - written without a timezone → `date_tz`, so they come out timezone-aware like the page's `publishing_date`;
+  - written day first (`03.10.2026`, `27/09`) → `date_dayfirst=True`, otherwise they are read month first
+    and silently come out as the wrong day;
+  - stating only a time, or day and month (`16:12`, `Le 27/09 à 22:01`) → `date_default`, taken from the
+    page, otherwise the missing parts come from the day the parser runs and the dates drift with it.
+
+  Entry images belong to `image_selector` (with its caption/alt/author companions); the parser's own
+  `images` attribute should describe the page, not re-list the entries' images, so `image_extraction`
+  gets `live_ticker=self._live_ticker` too. **A live ticker test case is required**: the PR must add
+  `tests/resources/parser/test_data/<cc>/live_ticker/<Publisher>.json` with its HTML, generated with
+  `generate_parser_test_files -l`. Without it the live ticker tests skip the publisher, and CI passes
+  with the ticker parser untested — a missing one is a blocker.
 - **Changes to `parser/utility.py`** (`generic_topic_parsing`, `apply_result_filter`,
   `image_extraction`, …) affect every publisher — check the call sites.
 
@@ -166,7 +179,8 @@ and credit) and text. Read it entry by entry against the live page:
   date selector missed it.
 - **Ownership**: each image, author and date sits on the entry it belongs to. Images are the usual
   offender — an inline image attaches to whichever entry precedes it in the document.
-- **Order and dates**: entries in the site's order, dates plausible and parsed with the right timezone.
+- **Order and dates**: entries in the site's order, dates plausible and timezone-aware, in the
+  site's timezone.
 - **Chrome between entries**: teasers, "read more" boxes and ads that sit between entries must not end
   up inside one.
 
@@ -257,7 +271,7 @@ Usual culprits for missing content:
 - **Over-capture**: boilerplate or captions leaking *into* the body.
 
 For live tickers, the culprits are the boundary selector (entries merged or split), the date selector
-(missing or wrong timezone), and `live_ticker_image_selector` with its caption/author selectors.
+(missing date, or a naive date for lack of `date_tz`), and `image_selector` with its caption/author selectors.
 
 For images, compare each `caption`/`authors`/`is_cover` against the live `<figure>`: paired with the
 right image, prefixes like `"Photo by "` stripped. These map to `caption_selector`,
@@ -275,9 +289,9 @@ Classify every finding — the split decides the event:
 
 - **Blockers** — crashes; empty/wrong required attributes; body that misrepresents the article
   (missing paragraphs/lists or leaked boilerplate); live ticker entries merged, split, or carrying another
-  entry's text, date, authors or images; mis-paired image data; missing/incorrect
-  `free_access` on a premium publisher; `VALID_UNTIL`/version-bump mistakes; a wrong
-  `validate=False` attribute.
+  entry's text, date, authors or images; live ticker support without a live ticker test case;
+  mis-paired image data; missing/incorrect `free_access` on a premium publisher;
+  `VALID_UNTIL`/version-bump mistakes; a wrong `validate=False` attribute.
 - **Nits** — dropped trailers ("With files from …"), minor topic noise.
 
 Event: **any blocker → `REQUEST_CHANGES`; no blockers → `COMMENT`; your own PR → `COMMENT`

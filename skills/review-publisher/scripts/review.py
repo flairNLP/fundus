@@ -78,12 +78,11 @@ from _sweep import (
     version_classes,
 )
 
-from fundus import Article, Crawler
+from fundus import Article, Crawler, LiveTicker, Publication
 from fundus.logging import set_log_level
 from fundus.parser import ParserProxy
 from fundus.publishers.base_objects import Publisher
 from fundus.scraping.html import WebSource
-from fundus.scraping.publication import LiveTicker, Publication
 from fundus.scraping.scraper import BaseScraper
 
 SCRIPT = Path(__file__).resolve()
@@ -184,13 +183,13 @@ def _select_live_tickers(tickers: List[LiveTicker], risks: List[ArticleRisk], bu
 def _print_live_ticker(index: int, ticker: LiveTicker) -> None:
     """Tier-1 view of a live ticker: page attributes, then every entry with its own metadata."""
     body = ticker.body
-    entries = body.entries if body is not None and hasattr(body, "entries") else []
+    entries = body.entries if body is not None else []
     print(RULE)
     print(f"[{index}] (live ticker, {len(entries)} entries) {ticker.html.requested_url}")
     print(f"{ticker.title} | {ticker.authors} | {ticker.topics} | imgs: {len(ticker.images)}")
     if missing := missing_attributes(ticker):
         print(f"! missing {', '.join(missing)} - fundus' default crawl would have dropped this live ticker.")
-    if body is not None and getattr(body, "summary", None):
+    if body is not None and body.summary:
         print(f"summary: {body.summary}")
     for number, entry in enumerate(entries, start=1):
         print(f"  -- entry {number}: {entry.publishing_date} | authors: {entry.authors} | imgs: {len(entry.images)}")
@@ -373,7 +372,7 @@ def cmd_crawl(args: argparse.Namespace) -> int:
             "url_misses": url_misses,
             "flagged": len(live_flagged),
             "reviewed": len(live_selection),
-            "articles": [{"url": tickers[risk.index].html.requested_url, "flags": risk.flags} for risk in live_risks],
+            "tickers": [{"url": tickers[risk.index].html.requested_url, "flags": risk.flags} for risk in live_risks],
         }
         for ticker in live_selection:
             index = len(state["articles"]) + 1

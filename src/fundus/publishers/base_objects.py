@@ -40,7 +40,10 @@ class CustomRobotFileParser(RobotFileParser):
     }
 
     def __init__(
-        self, url: str, headers: Optional[Dict[str, str]] = None, impersonate: Optional[BrowserTypeLiteral] = None
+        self,
+        url: str,
+        headers: Optional[Dict[str, str]] = None,
+        impersonate: Optional[BrowserTypeLiteral] = None,
     ):
         self.headers = headers
         self.disallows_training: bool = False
@@ -77,7 +80,10 @@ class CustomRobotFileParser(RobotFileParser):
 
 class Robots:
     def __init__(
-        self, url: str, headers: Optional[Dict[str, str]] = None, impersonate: Optional[BrowserTypeLiteral] = None
+        self,
+        url: str,
+        headers: Optional[Dict[str, str]] = None,
+        impersonate: Optional[BrowserTypeLiteral] = None,
     ):
         self.url = url
         self.robots_file_parser = CustomRobotFileParser(url, headers=headers, impersonate=impersonate)
@@ -243,7 +249,9 @@ class Publisher:
         )
 
     def supports(
-        self, source_types: Optional[List[Type[URLSource]]] = None, languages: Optional[List[str]] = None
+        self,
+        source_types: Optional[List[Type[URLSource]]] = None,
+        languages: Optional[List[str]] = None,
     ) -> bool:
         """Returns True, if this publisher has a source left to contribute under the given restrictions.
 

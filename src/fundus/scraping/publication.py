@@ -90,6 +90,35 @@ class Publication:
     def __getattr__(self, item: str):
         raise AttributeError(f"{type(self).__name__!r} object has no attribute {str(item)!r}")
 
+    def _contents_description(self) -> str:
+        """What the publication includes, shown in the header of its string representation."""
+        return (
+            f" including {len(self.images)} image(s)" if self.images and not isinstance(self.images, Exception) else ""
+        )
+
+    def __str__(self):
+        # the subsequent indent here is a bit wacky, but textwrapper.dedent won't work with tabs, so we have to use
+        # whitespaces instead.
+        title_wrapper = TextWrapper(width=80, max_lines=1, initial_indent="")
+        text_wrapper = TextWrapper(width=80, max_lines=2, initial_indent="", subsequent_indent="          ")
+        wrapped_title = title_wrapper.fill(
+            f"{Fore.RED}--missing title--{Style.RESET_ALL}" if self.title is None else self.title.strip()
+        )
+        wrapped_plaintext = text_wrapper.fill(
+            f"{Fore.RED}--missing plaintext--{Style.RESET_ALL}" if self.plaintext is None else self.plaintext.strip()
+        )
+
+        text = (
+            f"Fundus-{type(self).__name__}{self._contents_description()}:"
+            f'\n- Title: "{wrapped_title}"'
+            f'\n- Text:  "{wrapped_plaintext}"'
+            f"\n- URL:    {self.html.requested_url}"
+            f"\n- From:   {self.publisher}"
+            f"{' (' + self.publishing_date.strftime('%Y-%m-%d %H:%M') + ')' if self.publishing_date else ''}"
+        )
+
+        return dedent(text)
+
     @property
     def plaintext(self) -> Optional[str]:
         return str(self.body) or None if not isinstance(self.body, Exception) else None
@@ -153,64 +182,15 @@ class Publication:
 
 
 class Article(Publication):
-    def __str__(self):
-        # the subsequent indent here is a bit wacky, but textwrapper.dedent won't work with tabs, so we have to use
-        # whitespaces instead.
-        title_wrapper = TextWrapper(width=80, max_lines=1, initial_indent="")
-        text_wrapper = TextWrapper(width=80, max_lines=2, initial_indent="", subsequent_indent="          ")
-        wrapped_title = title_wrapper.fill(
-            f"{Fore.RED}--missing title--{Style.RESET_ALL}" if self.title is None else self.title.strip()
-        )
-        wrapped_plaintext = text_wrapper.fill(
-            f"{Fore.RED}--missing plaintext--{Style.RESET_ALL}" if self.plaintext is None else self.plaintext.strip()
-        )
-
-        image_text = (
-            f" including {len(self.images)} image(s)" if self.images and not isinstance(self.images, Exception) else ""
-        )
-
-        text = (
-            f"Fundus-Article{image_text}:"
-            f'\n- Title: "{wrapped_title}"'
-            f'\n- Text:  "{wrapped_plaintext}"'
-            f"\n- URL:    {self.html.requested_url}"
-            f"\n- From:   {self.publisher}"
-            f"{' (' + self.publishing_date.strftime('%Y-%m-%d %H:%M') + ')' if self.publishing_date else ''}"
-        )
-
-        return dedent(text)
-
     @property
     def body(self) -> Optional[ArticleBody]:
         return self.__extraction__.get("body")
 
 
 class LiveTicker(Publication):
-    def __str__(self):
-        # the subsequent indent here is a bit wacky, but textwrapper.dedent won't work with tabs, so we have to use
-        # whitespaces instead.
-        title_wrapper = TextWrapper(width=80, max_lines=1, initial_indent="")
-        text_wrapper = TextWrapper(width=80, max_lines=2, initial_indent="", subsequent_indent="          ")
-        wrapped_title = title_wrapper.fill(
-            f"{Fore.RED}--missing title--{Style.RESET_ALL}" if self.title is None else self.title.strip()
-        )
-        wrapped_plaintext = text_wrapper.fill(
-            f"{Fore.RED}--missing plaintext--{Style.RESET_ALL}" if self.plaintext is None else self.plaintext.strip()
-        )
-
+    def _contents_description(self) -> str:
         entry_count = len(self.body.entries) if isinstance(self.body, LiveTickerBody) else 0
-        summary_text = f" including {entry_count} entries and {len(self.images)} image(s)"
-
-        text = (
-            f"Fundus-LiveTicker{summary_text}:"
-            f'\n- Title: "{wrapped_title}"'
-            f'\n- Text:  "{wrapped_plaintext}"'
-            f"\n- URL:    {self.html.requested_url}"
-            f"\n- From:   {self.publisher}"
-            f"{' (Newest Entry from: ' + self.publishing_date.strftime('%Y-%m-%d %H:%M') + ')' if self.publishing_date else ''}"
-        )
-
-        return dedent(text)
+        return f" including {entry_count} entries and {len(self.images)} image(s)"
 
     def __iter__(self) -> Iterator[Article]:
         if not isinstance(self.body, LiveTickerBody):
@@ -223,7 +203,7 @@ class LiveTicker(Publication):
                 crawl_date=self.html.crawl_date,
                 source_info=self.html.source_info,
             )
-            if not (title := str(entry.sections[0].headline)).strip():
+            if not (title := str(entry.sections[0].headline) if entry.sections else "").strip():
                 title = f"LiveTicker Entry #{idx + 1}"
             yield Article(
                 html=html_entry,

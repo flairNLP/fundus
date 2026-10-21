@@ -37,9 +37,8 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 import fundus
-from fundus import PublisherCollection, Requires
+from fundus import LiveTicker, Publication, PublisherCollection, Requires
 from fundus.publishers.base_objects import Publisher
-from fundus.scraping.publication import LiveTicker, Publication
 
 STATE_FILE = "state.json"
 # What `payload` writes: the adjudicated evidence, and the review built from it.

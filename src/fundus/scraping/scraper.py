@@ -72,7 +72,7 @@ class BaseScraper:
                         else:
                             logger.debug(f"Skipped article at {html.requested_url!r} because of extraction filter")
                     else:
-                        if "body" in extraction.keys() and isinstance(extraction["body"], LiveTickerBody):
+                        if isinstance(extraction.get("body"), LiveTickerBody):
                             article: Publication = LiveTicker(html=html, **extraction)
                         else:
                             article = Article(html=html, **extraction)

@@ -115,8 +115,7 @@ Both are a `Publication` and share the attributes `title`, `authors`, `publishin
 To tell them apart, check the type:
 
 ````python
-from fundus import Crawler, PublisherCollection
-from fundus.scraping.publication import LiveTicker
+from fundus import Crawler, LiveTicker, PublisherCollection
 
 crawler = Crawler(PublisherCollection.de.Tagesschau)
 
@@ -133,7 +132,7 @@ The `body` of a `LiveTicker` is a `LiveTickerBody` and not an `ArticleBody`. It 
 
 With `LiveTickerEntry` including
 - `sections`, a list of `ArticleSection` structured like the ones of an `ArticleBody`. An entry without a headline has a section with an empty `headline`
-- a `publishing_date`, `authors` and `images` of the entry, if available
+- a timezone-aware `publishing_date`, `authors` and `images` of the entry, if available
 - the `html` of the entry
 
 ````console
@@ -148,6 +147,7 @@ LiveTickerBody
 ````
 
 The `authors` and `images` of a `LiveTicker` contain the ones of the page as well as the ones of all its entries.
+The `publishing_date` of a `LiveTicker` is the publishing date of the page, not the date of its newest entry.
 To work with the entries as if they were articles, iterate over the `LiveTicker`.
 It yields one `Article` per entry, using the headline of the entry as its title (or `LiveTicker Entry #<n>` if there is none):
 

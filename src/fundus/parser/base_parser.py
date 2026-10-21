@@ -28,7 +28,11 @@ from lxml.etree import XPath
 
 from fundus.logging import create_logger
 from fundus.parser.data import LinkedDataMapping
-from fundus.parser.utility import get_ld_content, get_meta_content
+from fundus.parser.utility import (
+    LiveTickerSelectors,
+    get_ld_content,
+    get_meta_content,
+)
 
 RegisteredFunctionT_co = TypeVar("RegisteredFunctionT_co", covariant=True, bound="RegisteredFunction")
 
@@ -209,6 +213,8 @@ class Precomputed:
 class BaseParser(ABC):
     VALID_UNTIL: date
     precomputed: Precomputed
+    # the selectors a version extracts live tickers with, None for a version without live ticker support
+    _live_ticker: Optional[LiveTickerSelectors] = None
 
     def __init__(self, timestamp: Optional[date] = None):
         def predicate(x: object) -> bool:
@@ -238,7 +244,8 @@ class BaseParser(ABC):
     def body_selectors(cls) -> Dict[str, Optional[XPath]]:
         """The version's body selectors, keyed 'summary' / 'subheadline' / 'paragraph'.
 
-        These are the selectors a version feeds to ``extract_article_body_with_selector``;
+        These are the selectors a version feeds to ``extract_article_body_with_selector`` (or as the
+        article selectors to ``extract_body_with_selector``);
         a value is None when the version does not declare the corresponding selector
         (or builds its body another way entirely). Public so external tooling (e.g. the
         review skill under skills/) does not have to reach into the private
@@ -259,21 +266,21 @@ class BaseParser(ABC):
     def live_ticker_body_selectors(cls) -> Dict[str, Optional[XPath]]:
         """The version's live ticker selectors, keyed like :meth:`body_selectors`.
 
-        These are the selectors a version feeds to ``extract_body_with_selector`` as
-        ``live_ticker_<x>_selector``, i.e. the ones applied to a live ticker page instead of the
-        article ones. A value is None when the version does not declare the corresponding selector.
-        All values are None for a version without live ticker support.
+        These are the selectors of the version's ``_live_ticker``, i.e. the ones applied to a live ticker
+        page instead of the article ones. A value is None when ``_live_ticker`` does not set the
+        corresponding selector. All values are None for a version without live ticker support.
         """
+        live_ticker = cls._live_ticker
         return {
-            "summary": getattr(cls, "_live_ticker_summary_selector", None),
-            "subheadline": getattr(cls, "_live_ticker_subheadline_selector", None),
-            "paragraph": getattr(cls, "_live_ticker_paragraph_selector", None),
+            "summary": live_ticker.summary_selector if live_ticker else None,
+            "subheadline": live_ticker.subheadline_selector if live_ticker else None,
+            "paragraph": live_ticker.paragraph_selector if live_ticker else None,
         }
 
     @classmethod
     def supports_live_tickers(cls) -> bool:
-        """Whether the version declares a live ticker boundary selector, the one deciding if a page is a ticker."""
-        return getattr(cls, "_live_ticker_boundary_selector", None) is not None
+        """Whether the version declares live ticker selectors."""
+        return cls._live_ticker is not None
 
     @classmethod
     def _search_members(cls, obj_type: type) -> List[Tuple[str, Any]]:

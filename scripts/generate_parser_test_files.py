@@ -6,12 +6,11 @@ from typing import List, Optional
 
 from tqdm import tqdm
 
-from fundus import Crawler, PublisherCollection
+from fundus import Crawler, Publication, PublisherCollection
 from fundus.logging import create_logger, set_log_level
 from fundus.publishers.base_objects import Publisher
 from fundus.scraping.filter import Requires, RequiresAll
 from fundus.scraping.html import WebSource
-from fundus.scraping.publication import Publication
 from fundus.scraping.scraper import BaseScraper
 from tests.test_parser import (
     attributes_required_to_cover,

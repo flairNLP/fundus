@@ -10,9 +10,8 @@ import traceback
 from argparse import ArgumentParser
 from typing import Any, Callable, List, Optional, Union
 
-from fundus import Crawler, PublisherCollection
+from fundus import Crawler, Publication, PublisherCollection
 from fundus.publishers.base_objects import Publisher, PublisherGroup
-from fundus.scraping.publication import Publication
 from fundus.scraping.session import session_handler
 
 

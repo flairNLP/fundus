@@ -22,6 +22,7 @@ from lxml.etree import XPath
 from fundus import Article
 from fundus.parser import ArticleBody, BaseParser, LiveTickerBody
 from fundus.parser.data import ArticleSection, LiveTickerEntry, TextSequence
+from fundus.parser.utility import LiveTickerSelectors
 from fundus.scraping.publication import LiveTicker
 
 _SCRIPTS = Path(__file__).resolve().parents[1] / "skills" / "review-publisher" / "scripts"
@@ -590,10 +591,12 @@ class TestLiveTickerReview:
     def test_a_ticker_page_is_swept_with_its_own_selectors(self):
         class Dummy(BaseParser):
             _paragraph_selector = XPath("//p[@class='article']")
-            _live_ticker_paragraph_selector = XPath("//p[@class='entry']")
+            _live_ticker = LiveTickerSelectors(
+                boundary_selector=XPath("//div"), paragraph_selector=XPath("//p[@class='entry']")
+            )
 
         assert review._body_selectors(Dummy, live_ticker=False)["paragraph"] is Dummy._paragraph_selector
-        assert review._body_selectors(Dummy, live_ticker=True)["paragraph"] is Dummy._live_ticker_paragraph_selector
+        assert review._body_selectors(Dummy, live_ticker=True)["paragraph"] is Dummy._live_ticker.paragraph_selector
 
     def test_flagged_tickers_are_read_first_then_in_crawl_order(self):
         tickers: List[Any] = list("abcd")
@@ -653,11 +656,10 @@ class TestBodySelectorsAccessor:
 class TestLiveTickerSelectorsAccessor:
     def test_declared_and_absent_selectors(self):
         class Dummy(BaseParser):
-            _live_ticker_boundary_selector = XPath("//div")
-            _live_ticker_paragraph_selector = XPath("//p")
+            _live_ticker = LiveTickerSelectors(boundary_selector=XPath("//div"), paragraph_selector=XPath("//p"))
 
         selectors = Dummy.live_ticker_body_selectors()
-        assert selectors["paragraph"] is Dummy._live_ticker_paragraph_selector
+        assert selectors["paragraph"] is Dummy._live_ticker.paragraph_selector
         assert selectors["summary"] is None and selectors["subheadline"] is None
         assert Dummy.supports_live_tickers()
 

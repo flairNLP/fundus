@@ -4,6 +4,7 @@ from typing import Any, Dict, List, Optional
 import lxml.html
 import pytest
 from lxml.etree import XPath
+from zoneinfo import ZoneInfo
 
 from fundus import Article
 from fundus.parser import ArticleBody, LiveTickerBody
@@ -14,7 +15,11 @@ from fundus.parser.data import (
     LiveTickerEntry,
     TextSequence,
 )
-from fundus.parser.utility import extract_live_ticker_body_with_selector
+from fundus.parser.utility import (
+    LiveTickerSelectors,
+    extract_body_with_selector,
+    extract_live_ticker_body_with_selector,
+)
 from fundus.scraping.html import HTML, SourceInfo
 from fundus.scraping.publication import LiveTicker
 
@@ -198,6 +203,23 @@ class TestLiveTicker:
         assert entry.html.content == "<div>First</div>"
         assert entry.html.requested_url == html.requested_url
 
+    def test_iter_entry_without_sections(self):
+        entry = LiveTickerEntry(sections=[], publishing_date=None, authors=[], images=[], html="")
+
+        (article,) = LiveTicker(body=LiveTickerBody(summary=TextSequence([]), entries=[entry]), html=html)
+
+        assert article.title == "LiveTicker Entry #1"
+
+    def test_str(self):
+        body = LiveTickerBody(summary=TextSequence([]), entries=[build_entry(), build_entry()])
+        publishing_date = datetime.datetime(2025, 1, 1, 12, 30)
+
+        text = str(LiveTicker(title="Title", body=body, publishing_date=publishing_date, html=html))
+
+        assert text.startswith("Fundus-LiveTicker including 2 entries and 0 image(s):")
+        # the publishing date is the one of the page, not of the newest entry
+        assert text.endswith("(2025-01-01 12:30)")
+
     def test_iter_without_live_ticker_body(self):
         assert list(LiveTicker(html=html)) == []
         assert list(LiveTicker(body=ArticleBody(summary=TextSequence([]), sections=[]), html=html)) == []
@@ -264,9 +286,11 @@ class TestExtractLiveTickerBody:
     def test_images_are_assigned_to_their_entry(self):
         body = extract_live_ticker_body_with_selector(
             lxml.html.fromstring(self.page),
-            paragraph_selector=XPath("//p"),
-            entry_boundary_selector=XPath("//div[@class='entry']"),
-            image_selector=XPath("//figure//img"),
+            LiveTickerSelectors(
+                boundary_selector=XPath("//div[@class='entry']"),
+                paragraph_selector=XPath("//p"),
+                image_selector=XPath("//figure//img"),
+            ),
         )
 
         first, second, third = body.entries
@@ -278,9 +302,11 @@ class TestExtractLiveTickerBody:
     def test_image_positions_are_ordered(self):
         body = extract_live_ticker_body_with_selector(
             lxml.html.fromstring(self.page),
-            paragraph_selector=XPath("//p"),
-            entry_boundary_selector=XPath("//div[@class='entry']"),
-            image_selector=XPath("//figure//img"),
+            LiveTickerSelectors(
+                boundary_selector=XPath("//div[@class='entry']"),
+                paragraph_selector=XPath("//p"),
+                image_selector=XPath("//figure//img"),
+            ),
         )
 
         positions = [image.position for entry in body.entries for image in entry.images]
@@ -291,8 +317,52 @@ class TestExtractLiveTickerBody:
     def test_without_image_selector(self):
         body = extract_live_ticker_body_with_selector(
             lxml.html.fromstring(self.page),
-            paragraph_selector=XPath("//p"),
-            entry_boundary_selector=XPath("//div[@class='entry']"),
+            LiveTickerSelectors(boundary_selector=XPath("//div[@class='entry']"), paragraph_selector=XPath("//p")),
         )
 
         assert all(entry.images == [] for entry in body.entries)
+
+    def test_date_tz(self):
+        page = """
+        <html><body>
+        <div class="entry"><time>03.10.2026, 09:37</time><p>First</p></div>
+        <div class="entry"><time datetime="2026-10-03T07:37:00+00:00"></time><p>Second</p></div>
+        </body></html>
+        """
+        body = extract_live_ticker_body_with_selector(
+            lxml.html.fromstring(page),
+            LiveTickerSelectors(
+                boundary_selector=XPath("//div[@class='entry']"),
+                paragraph_selector=XPath("//p"),
+                date_selector=XPath("//time"),
+                date_dayfirst=True,
+                date_tz=ZoneInfo("Europe/Berlin"),
+            ),
+        )
+
+        first, second = (entry.publishing_date for entry in body.entries)
+
+        # dates without a timezone get <date_tz>, the others keep theirs
+        assert first == datetime.datetime(2026, 10, 3, 9, 37, tzinfo=ZoneInfo("Europe/Berlin"))
+        assert second == datetime.datetime(2026, 10, 3, 7, 37, tzinfo=datetime.timezone.utc)
+        assert first == second
+
+
+class TestExtractBodyWithSelector:
+    live_ticker = LiveTickerSelectors(boundary_selector=XPath("//div[@class='entry']"), paragraph_selector=XPath("//p"))
+
+    def test_live_ticker_page(self):
+        doc = lxml.html.fromstring(TestExtractLiveTickerBody.page)
+
+        body = extract_body_with_selector(doc, paragraph_selector=XPath("//p"), live_ticker=self.live_ticker)
+
+        assert isinstance(body, LiveTickerBody)
+        assert len(body.entries) == 3
+
+    def test_article_page(self):
+        doc = lxml.html.fromstring("<html><body><p>Paragraph</p></body></html>")
+
+        assert isinstance(
+            extract_body_with_selector(doc, paragraph_selector=XPath("//p"), live_ticker=self.live_ticker), ArticleBody
+        )
+        assert isinstance(extract_body_with_selector(doc, paragraph_selector=XPath("//p")), ArticleBody)
