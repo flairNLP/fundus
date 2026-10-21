@@ -3,11 +3,12 @@ import datetime
 import inspect
 import pickle
 import textwrap
-from typing import Any, Dict, List, Optional, Tuple, Type, Union
+from typing import Any, Dict, Iterator, List, Optional, Tuple, Type, Union
 
 import lxml.html
 import pytest
 
+from fundus.parser import ArticleBody, LiveTickerBody
 from fundus.parser.base_parser import (
     Attribute,
     AttributeCollection,
@@ -16,12 +17,16 @@ from fundus.parser.base_parser import (
     RegisteredFunction,
     attribute,
 )
-from fundus.parser.utility import generic_author_parsing
+from fundus.parser.utility import generic_author_parsing, generic_date_parsing
 from fundus.publishers import PublisherCollection
 from fundus.publishers.base_objects import Publisher
+from fundus.scraping.html import HTML, SourceInfo
+from fundus.scraping.publication import LiveTicker
+from fundus.scraping.scraper import BaseScraper
 from tests.resources import attribute_annotations_mapping
 from tests.utility import (
     get_meta_info_file,
+    get_test_case_json,
     load_html_test_file_mapping,
     load_supported_publishers_markdown,
     load_test_case_data,
@@ -205,12 +210,17 @@ attributes_required_to_cover = {"title", "authors", "topics", "publishing_date",
 
 attributes_parsers_are_required_to_cover = {"body"}
 
+# live tickers don't necessarily provide every attribute, e.g. authors or topics, so fewer are required
+live_ticker_attributes_required_to_cover = {"title", "publishing_date", "body"}
+
 
 # `BaseParser.body_selectors` locates a version's body selectors by convention: a selector passed as
 # `<x>_selector` must live on the class as `_<x>_selector`. Nothing declares that, so where the name
 # drifts, external tooling (skills/review-publisher) silently reads `None` instead of the selector.
 # Enforced here until the selectors become declared class variables, see #958 - which retires this.
+# Live ticker selectors are declared as `_live_ticker`, so only their passing as `self._live_ticker` is checked.
 _BODY_SELECTOR_PARAMETERS = ("paragraph_selector", "summary_selector", "subheadline_selector")
+_BODY_EXTRACTION_FUNCTIONS = ("extract_article_body_with_selector", "extract_body_with_selector")
 
 
 def _called_name(func: ast.expr) -> Optional[str]:
@@ -223,9 +233,9 @@ def _misnamed_body_selectors(parser_class: Type[BaseParser]) -> List[str]:
     """Body selectors `parser_class` passes under a name `BaseParser.body_selectors` cannot find."""
     misnamed: List[str] = []
     for node in ast.walk(ast.parse(textwrap.dedent(inspect.getsource(parser_class)))):
-        if not isinstance(node, ast.Call) or _called_name(node.func) != "extract_article_body_with_selector":
+        if not isinstance(node, ast.Call) or _called_name(node.func) not in _BODY_EXTRACTION_FUNCTIONS:
             continue
-        # extract_article_body_with_selector(doc, paragraph_selector, summary_selector, subheadline_selector, ...)
+        # both functions take (doc, paragraph_selector, summary_selector, subheadline_selector, ...)
         arguments: List[Tuple[str, ast.expr]] = [
             (_BODY_SELECTOR_PARAMETERS[index - 1], argument)
             for index, argument in enumerate(node.args)
@@ -245,6 +255,12 @@ def _misnamed_body_selectors(parser_class: Type[BaseParser]) -> List[str]:
                 misnamed.append(
                     f"{parser_class.__qualname__} passes {parameter}=self.{value.attr}, expected self._{parameter}"
                 )
+        for keyword in node.keywords:
+            # `BaseParser.live_ticker_body_selectors` reads `_live_ticker`, possibly passed on via `replace(...)`
+            if keyword.arg == "live_ticker" and not any(
+                isinstance(sub, ast.Attribute) and sub.attr == "_live_ticker" for sub in ast.walk(keyword.value)
+            ):
+                misnamed.append(f"{parser_class.__qualname__} passes live_ticker without self._live_ticker")
     return misnamed
 
 
@@ -260,7 +276,11 @@ class TestParser:
             ), f"{versioned_parser.__name__!r} should implement at least {attributes_parsers_are_required_to_cover!r}"
             for attr in versioned_parser.attributes().validated:
                 if annotation := attribute_annotations_mapping[attr.__name__]:
-                    assert attr.__annotations__.get("return") == annotation, (
+                    allowed = [annotation]
+                    if attr.__name__ == "body":
+                        # live ticker publishers may return a LiveTickerBody in addition to an ArticleBody
+                        allowed.append(Optional[Union[ArticleBody, LiveTickerBody]])
+                    assert attr.__annotations__.get("return") in allowed, (
                         f"Attribute {attr.__name__!r} for {versioned_parser.__name__!r} is of wrong type. "
                         f"{attr.__annotations__.get('return')} != {annotation}"
                     )
@@ -332,6 +352,108 @@ class TestParser:
                 assert isinstance(value, Attribute), f"The name {attr!r} is reserved for attributes only."
 
 
+class FixedSource:
+    """An HTMLSource yielding the given HTML only."""
+
+    def __init__(self, *htmls: HTML):
+        self.htmls = htmls
+
+    def fetch(self, url_filter=None) -> Iterator[HTML]:
+        yield from self.htmls
+
+
+def _supports_live_ticker(publisher: Publisher) -> bool:
+    return any(versioned_parser.supports_live_tickers() for versioned_parser in publisher.parser)
+
+
+live_ticker_publishers = [publisher for publisher in PublisherCollection if _supports_live_ticker(publisher)]
+
+
+@pytest.mark.parametrize(
+    "publisher", live_ticker_publishers, ids=[publisher.__name__ for publisher in live_ticker_publishers]
+)
+class TestLiveTickerParser:
+    """Counterpart of `TestParser.test_parsing` for live tickers.
+
+    Live tickers can't be found by crawling, so their test files are kept apart from the article test files
+    (in a `live_ticker` subdirectory) and generated from explicit URLs:
+    `python -m scripts.generate_parser_test_files -l -p <publisher> -u <live ticker url>`.
+    """
+
+    def test_parsing(self, publisher: Publisher) -> None:
+        html_mapping = load_html_test_file_mapping(publisher, live_ticker=True)
+        if not html_mapping and not get_test_case_json(publisher, live_ticker=True).path.exists():
+            # live tickers can't be found by crawling, so not every publisher has a test case yet
+            pytest.skip(f"No live ticker test case for {publisher.name} yet")
+        comparative_data = load_test_case_data(publisher, live_ticker=True)
+
+        # only versions implementing live ticker extraction need a live ticker test case
+        for versioned_parser in publisher.parser:
+            if not versioned_parser.supports_live_tickers():
+                continue
+
+            version_name = versioned_parser.__name__
+            assert (version_data := comparative_data.get(version_name)), (
+                f"Missing live ticker test data for parser version {version_name!r}"
+            )
+            assert (html := html_mapping.get(versioned_parser)), (
+                f"Missing live ticker test HTML for parser version {version_name} of publisher {publisher.name}"
+            )
+
+            timestamp_instantiated_parser = publisher.parser(html.crawl_date)
+
+            for key, value in version_data.items():
+                if key == "topics":
+                    # LiveTickers inherit topic parsing from the Article class, and it is not guaranteed to be supported
+                    # for LiveTickers. If it is, it is enough to check for the Article test case.
+                    continue
+                if not value:
+                    raise ValueError(
+                        f"There is no value set for key {key!r} in the test JSON. "
+                        f"Only complete live tickers should be used as test cases"
+                    )
+
+            supported_attrs = set(timestamp_instantiated_parser.registered_attributes.names)
+            missing_attrs = live_ticker_attributes_required_to_cover & supported_attrs - set(version_data.keys())
+            assert not missing_attrs, (
+                f"Live ticker test JSON for {version_name} of publisher {publisher.name} "
+                f"does not cover the following attribute(s): {missing_attrs}"
+            )
+
+            assert list(version_data.keys()) == sorted(version_data.keys()), (
+                f"Live ticker test JSON for {version_name} is not in alphabetical order"
+            )
+            assert set(version_data.keys()) <= supported_attrs, (
+                f"Live ticker test JSON for {version_name} contains unsupported attribute(s): "
+                f"{set(version_data.keys()) - supported_attrs}"
+            )
+
+            extraction = timestamp_instantiated_parser.parse(html.content, "raise")
+
+            body = extraction["body"]
+            assert isinstance(body, LiveTickerBody), f"The test HTML for {version_name} is not a live ticker"
+            assert body.entries, f"The live ticker of {version_name} has no entries"
+
+            for key, value in version_data.items():
+                assert value == extraction[key], f"{key!r} is not equal"
+
+            pickle.dumps(extraction)
+
+    def test_live_ticker_is_scraped_as_live_ticker(self, publisher: Publisher) -> None:
+        for versioned_parser, html_file in load_html_test_file_mapping(publisher, live_ticker=True).items():
+            html = HTML(
+                content=html_file.content,
+                crawl_date=html_file.crawl_date,
+                requested_url=html_file.url,
+                responded_url=html_file.url,
+                source_info=SourceInfo(publisher.name),
+            )
+            scraper = BaseScraper(FixedSource(html), publisher_mapping={publisher.name: publisher})
+            (publication,) = scraper.scrape(error_handling="raise")
+            assert isinstance(publication, LiveTicker)
+            assert list(publication), "iterating the live ticker should yield its entries as articles"
+
+
 class TestUtility:
     def test_generic_author_parsing(self):
         # type None
@@ -366,6 +488,32 @@ class TestUtility:
             [{"name": "Peter Funny"}, {"name": "Funny Peter"}, {"this": "is not a pipe"}, {}]  # type: ignore
         ) == ["Peter Funny", "Funny Peter"]
         assert generic_author_parsing([{}]) == generic_author_parsing([{}, {"wrong": "key"}]) == []  # type: ignore
+
+    @pytest.mark.parametrize(
+        "date_string, expected",
+        [
+            ("03.10.2026, 09:37 Uhr", datetime.datetime(2026, 10, 3, 9, 37)),
+            ("20.09.2026 • 16:50 Uhr", datetime.datetime(2026, 9, 20, 16, 50)),
+            # ISO 8601 dates are read year first regardless of dayfirst
+            ("2026-10-03", datetime.datetime(2026, 10, 3)),
+            ("2026-10-03T07:37:58Z", datetime.datetime(2026, 10, 3, 7, 37, 58, tzinfo=datetime.timezone.utc)),
+        ],
+    )
+    def test_generic_date_parsing_dayfirst(self, date_string: str, expected: datetime.datetime):
+        assert generic_date_parsing(date_string, dayfirst=True) == expected
+
+    @pytest.mark.parametrize(
+        "date_string, expected",
+        [
+            ("16:12", datetime.datetime(2026, 10, 13, 16, 12)),
+            ("Le 27/09 à 22:01", datetime.datetime(2026, 9, 27, 22, 1)),
+            # dates stating more than the default are not affected by it
+            ("03.10.2025, 09:37 Uhr", datetime.datetime(2025, 10, 3, 9, 37)),
+        ],
+    )
+    def test_generic_date_parsing_default(self, date_string: str, expected: datetime.datetime):
+        default = datetime.datetime(2026, 10, 13)
+        assert generic_date_parsing(date_string, dayfirst=True, default=default) == expected
 
 
 class TestMetaInfo:

@@ -10,9 +10,8 @@ import traceback
 from argparse import ArgumentParser
 from typing import Any, Callable, List, Optional, Union
 
-from fundus import Crawler, PublisherCollection
+from fundus import Crawler, Publication, PublisherCollection
 from fundus.publishers.base_objects import Publisher, PublisherGroup
-from fundus.scraping.article import Article
 from fundus.scraping.session import session_handler
 
 
@@ -54,7 +53,7 @@ def main() -> None:
                     continue
                 crawler: Crawler = Crawler(publisher, delay=0.4, ignore_robots=True, impersonate=True)
 
-                complete_article: Optional[Article] = next(
+                complete_article: Optional[Publication] = next(
                     crawler.crawl(
                         max_articles=1, timeout=timeout_in_seconds, only_complete=True, error_handling="suppress"
                     ),
@@ -62,7 +61,7 @@ def main() -> None:
                 )
 
                 if complete_article is None:
-                    incomplete_article: Optional[Article] = next(
+                    incomplete_article: Optional[Publication] = next(
                         crawler.crawl(
                             max_articles=1, timeout=timeout_in_seconds, only_complete=False, error_handling="catch"
                         ),

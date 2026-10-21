@@ -1,12 +1,22 @@
 import datetime
-from typing import List, Optional
+from typing import List, Optional, Union
 
 from lxml.cssselect import CSSSelector
 from lxml.etree import XPath
+from zoneinfo import ZoneInfo
 
-from fundus.parser import ArticleBody, BaseParser, Image, ParserProxy, attribute
+from fundus.parser import (
+    ArticleBody,
+    BaseParser,
+    Image,
+    LiveTickerBody,
+    ParserProxy,
+    attribute,
+)
 from fundus.parser.utility import (
+    LiveTickerSelectors,
     extract_article_body_with_selector,
+    extract_body_with_selector,
     generic_author_parsing,
     generic_date_parsing,
     generic_topic_parsing,
@@ -22,6 +32,11 @@ class ZDFParser(ParserProxy):
         _paragraph_selector = XPath("//div[contains(@class,'r1nj4qn5')]")
         _summary_selector = CSSSelector("p.c1bdz7f4")
         _subheadline_selector = CSSSelector("h2.hhhtovw")
+
+        _image_selector = XPath(
+            "//picture//img[not(contains(@class, 'error') or contains(@src, 'zdfheute-whatsapp-channel'))"
+            " or contains(@alt, 'Autorenfoto')]"
+        )
 
         @attribute
         def body(self) -> Optional[ArticleBody]:
@@ -49,10 +64,7 @@ class ZDFParser(ParserProxy):
             return image_extraction(
                 doc=self.precomputed.doc,
                 paragraph_selector=self._paragraph_selector,
-                image_selector=XPath(
-                    "//picture//img[not(contains(@class, 'error') or contains(@src, 'zdfheute-whatsapp-channel'))"
-                    " or contains(@alt, 'Autorenfoto')]"
-                ),
+                image_selector=self._image_selector,
                 caption_selector=XPath(
                     "./ancestor::*[(self::div and @class='c1owvrps c10o8fzf') or self::figure]//*[contains(@class,'c1pbsmr2')]"
                 ),
@@ -60,6 +72,7 @@ class ZDFParser(ParserProxy):
                     "./ancestor::*[(self::div and @class='c1owvrps c10o8fzf') or self::figure]//small[contains(@class, 'tsdggcs')]"
                 ),
                 lower_boundary_selector=XPath("//div[@class='s1am5zo f1uhhdhr']"),
+                live_ticker=self._live_ticker,
             )
 
     class V1_1(V1):
@@ -68,6 +81,29 @@ class ZDFParser(ParserProxy):
             "//figure/blockquote"
         )
         _topic_selector = XPath("//div[@class='t130q2hl']//a")
+
+        _live_ticker = LiveTickerSelectors(
+            boundary_selector=XPath("//article[@data-guid]"),
+            paragraph_selector=XPath("//article[@data-guid]//*[self::p or self::li][not(@class)]"),
+            summary_selector=CSSSelector("p.c1bdz7f4"),
+            subheadline_selector=XPath("//article[@data-guid]/h2"),
+            date_selector=XPath("//article[@data-guid]//time"),
+            date_dayfirst=True,
+            date_tz=ZoneInfo("Europe/Berlin"),
+            image_selector=XPath("//article[@data-guid]//picture//img"),
+            image_alt_selector=XPath("./@alt[. != 'Videoplayer']"),
+            image_relative_urls=True,
+        )
+
+        @attribute
+        def body(self) -> Optional[Union[ArticleBody, LiveTickerBody]]:
+            return extract_body_with_selector(
+                self.precomputed.doc,
+                paragraph_selector=self._paragraph_selector,
+                summary_selector=self._summary_selector,
+                subheadline_selector=self._subheadline_selector,
+                live_ticker=self._live_ticker,
+            )
 
         @attribute
         def topics(self) -> List[str]:

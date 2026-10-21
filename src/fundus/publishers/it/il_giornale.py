@@ -1,21 +1,25 @@
 import datetime
 import re
-from typing import List, Optional
+from typing import List, Optional, Union
 
 from lxml.cssselect import CSSSelector
 from lxml.etree import XPath, tostring
 from lxml.html import document_fromstring
+from zoneinfo import ZoneInfo
 
 from fundus.parser import (
     ArticleBody,
     BaseParser,
     Image,
+    LiveTickerBody,
     ParserProxy,
     attribute,
     function,
 )
 from fundus.parser.utility import (
+    LiveTickerSelectors,
     extract_article_body_with_selector,
+    extract_body_with_selector,
     generic_author_parsing,
     generic_date_parsing,
     generic_nodes_to_text,
@@ -117,28 +121,40 @@ class IlGiornaleParser(ParserProxy):
         )
         _subheadline_selector = XPath("//main//*[self::h3 or self::h2 or (self::p and not(text()) and b)]")
 
+        _live_ticker = LiveTickerSelectors(
+            boundary_selector=XPath("//div[@class='b-article-body__live-block']"),
+            paragraph_selector=XPath("//div[@class='b-article-body__live-block-body']/p"),
+            summary_selector=XPath("//p[@class='b-subheadline'] | //article/p[@class='c-paragraph']"),
+            subheadline_selector=XPath("//h3[@class='b-article-body__live-block-title']"),
+            date_selector=XPath("//div[@class='b-article-body__live-block']/time"),
+            date_tz=ZoneInfo("Europe/Rome"),
+        )
+
         _topic_selector = XPath("//div[@class='c-stack b-article-tag']/a")
 
         @attribute
         def title(self) -> Optional[str]:
-            return self.precomputed.ld.xpath_search("//NewsArticle/headline", scalar=True)
+            return self.precomputed.ld.xpath_search("(//NewsArticle|//LiveBlogPosting)/headline", scalar=True)
 
         @attribute
-        def body(self) -> Optional[ArticleBody]:
-            return extract_article_body_with_selector(
+        def body(self) -> Optional[Union[ArticleBody, LiveTickerBody]]:
+            return extract_body_with_selector(
                 self.precomputed.doc,
                 summary_selector=self._summary_selector,
                 paragraph_selector=self._paragraph_selector,
                 subheadline_selector=self._subheadline_selector,
+                live_ticker=self._live_ticker,
             )
 
         @attribute
         def publishing_date(self) -> Optional[datetime.datetime]:
-            return generic_date_parsing(self.precomputed.ld.xpath_search("//NewsArticle/datePublished", scalar=True))
+            return generic_date_parsing(
+                self.precomputed.ld.xpath_search("(//NewsArticle|//LiveBlogPosting)/datePublished", scalar=True)
+            )
 
         @attribute
         def authors(self) -> List[str]:
-            return generic_author_parsing(self.precomputed.ld.xpath_search("//NewsArticle/author"))
+            return generic_author_parsing(self.precomputed.ld.xpath_search("(//NewsArticle|//LiveBlogPosting)/author"))
 
         @attribute
         def topics(self) -> List[str]:
@@ -152,4 +168,5 @@ class IlGiornaleParser(ParserProxy):
                 author_selector=re.compile(
                     r"(?i)(?<=\.)(?P<credits>((\s*[A-Za-zÀ-ÿ]+\s*){1,3}/)+(\s*[A-Za-zÀ-ÿ]+\s*){1,3})$"
                 ),
+                live_ticker=self._live_ticker,
             )

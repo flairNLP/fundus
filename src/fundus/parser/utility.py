@@ -7,7 +7,7 @@ import re
 from collections import defaultdict
 from copy import copy
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import datetime, tzinfo
 from functools import total_ordering
 from typing import (
     Callable,
@@ -32,7 +32,8 @@ import lxml.html
 import more_itertools
 from dateutil import parser
 from lxml.cssselect import CSSSelector
-from lxml.etree import XPath
+from lxml.etree import XPath, tostring
+from lxml.html import Element
 
 from fundus.logging import create_logger
 from fundus.parser.data import (
@@ -44,6 +45,8 @@ from fundus.parser.data import (
     ImageURLError,
     ImageVersion,
     LinkedDataMapping,
+    LiveTickerBody,
+    LiveTickerEntry,
     TextSequence,
 )
 from fundus.scraping.url import is_valid_url
@@ -70,14 +73,18 @@ def normalize_whitespace(text: str) -> str:
 @total_ordering
 @dataclass(eq=False)
 class Node:
-    position: int
+    position: float
     node: lxml.html.HtmlElement = field(compare=False)
     _break_selector: ClassVar[XPath] = XPath("*//br")
 
     # one could replace this recursion with XPath using an expression like this:
     # //*[not(self::script) and text()]/text(), but for whatever reason, that's actually 50-150% slower
     # than simply using the implemented mixture below
-    def text_content(self, excluded_tags: Optional[List[str]] = None, tag_filter: Optional[XPath] = None) -> str:
+    def text_content(
+        self,
+        excluded_tags: Optional[List[str]] = None,
+        tag_filter: Optional[XPath] = None,
+    ) -> str:
         guarded_excluded_tags: List[str] = excluded_tags or []
 
         def _text_content(element: lxml.html.HtmlElement) -> str:
@@ -125,12 +132,94 @@ class SummaryNode(Node):
     pass
 
 
+@dataclass(eq=False)
+class BoundaryNode(Node):
+    def __post_init__(self):
+        self.position -= 0.5  # in case a content node is also a boundary node, we want the boundary to come first
+
+
 class SubheadNode(Node):
     pass
 
 
+@dataclass(eq=False)
+class DateNode(Node):
+    _datetime_selector = XPath("./@datetime")
+    _timestamp: Optional[str] = None
+
+    def __post_init__(self):
+        if (timestamp := self._datetime_selector(self.node)) is not None:
+            self._timestamp = " ".join(generic_nodes_to_text(timestamp))
+
+    def text_content(
+        self,
+        excluded_tags: Optional[List[str]] = None,
+        tag_filter: Optional[XPath] = None,
+    ) -> str:
+        return self._timestamp if self._timestamp else super().text_content(excluded_tags, tag_filter)
+
+
+class AuthorNode(Node):
+    pass
+
+
+class ImageNode(Node):
+    # an image element carries no meaningful text of its own, so the default text-based truthiness
+    # (see Node.__bool__) would filter every image node out before it reaches the extraction loop
+    def __bool__(self):
+        return True
+
+
 class ParagraphNode(Node):
     pass
+
+
+def _extract_nodes(
+    doc: lxml.html.HtmlElement,
+    df_idx_by_ref: Dict[lxml.html.HtmlElement, int],
+    selector: XPath,
+    node_type: Type[Node],
+) -> List[Node]:
+    if not selector or not node_type:
+        raise ValueError("Both a selector and node type are required")
+
+    return [node for element in selector(doc) if (node := node_type(df_idx_by_ref[element], element))]
+
+
+# defaults shared by all image extractions
+_default_image_caption_selector = XPath("./ancestor::figure//figcaption")
+_default_image_alt_selector = XPath("./@alt")
+_default_image_author_selector = XPath(
+    "(./ancestor::figure//*[(contains(@class, 'copyright') or contains(@class, 'credit')) and text()])[1]"
+)
+_default_image_size_pattern = re.compile(
+    r"width([=-])(?P<width>[0-9.]+)|height([=-])(?P<height>[0-9.]+)|dpr=(?P<dpr>[0-9.]+|)"
+)
+
+
+def _resolve_domain(doc: lxml.html.HtmlElement, relative_urls: Union[bool, XPath]) -> Optional[str]:
+    """Determines the domain to prepend to relative image URLs, if <relative_urls> is set."""
+    if not relative_urls:
+        return None
+    selector = _og_url_selector if isinstance(relative_urls, bool) else relative_urls
+    if not (domain := selector(doc)):
+        raise ValueError("Could not determine domain")
+    return domain  # type: ignore[no-any-return]
+
+
+def _nodes_to_text_sequence(nodes: Iterable[Node], tag_filter: Optional[XPath] = None) -> TextSequence:
+    return TextSequence(
+        normalize_whitespace(node.text_content(excluded_tags=["script"], tag_filter=tag_filter)) for node in nodes
+    )
+
+
+def _build_sections(instructions: Iterable[List[Node]], tag_filter: Optional[XPath] = None) -> List[ArticleSection]:
+    sections: List[ArticleSection] = []
+    for chunk in more_itertools.chunked(instructions, 2):
+        if len(chunk) == 1:
+            chunk.append([])
+        sections.append(ArticleSection(*(_nodes_to_text_sequence(c, tag_filter) for c in chunk)))
+    return sections
 
 
 def extract_article_body_with_selector(
@@ -144,10 +233,7 @@ def extract_article_body_with_selector(
     df_idx_by_ref = {element: i for i, element in enumerate(doc.iter())}
 
     def extract_nodes(selector: XPath, node_type: Type[Node]) -> List[Node]:
-        if not selector and node_type:
-            raise ValueError("Both a selector and node type are required")
-
-        return [node for element in selector(doc) if (node := node_type(df_idx_by_ref[element], element))]
+        return _extract_nodes(doc, df_idx_by_ref, selector, node_type)
 
     summary_nodes = extract_nodes(summary_selector, SummaryNode) if summary_selector else []
     subhead_nodes = extract_nodes(subheadline_selector, SubheadNode) if subheadline_selector else []
@@ -176,33 +262,187 @@ def extract_article_body_with_selector(
 
     if not summary_nodes:
         instructions = more_itertools.prepend([], instructions)
-    elif not nodes[: len(summary_nodes)] == summary_nodes:
+    elif nodes[: len(summary_nodes)] != summary_nodes:
         raise ValueError("All summary nodes should be at the beginning of the article")
 
     if not subhead_nodes or (paragraph_nodes and subhead_nodes[0] > paragraph_nodes[0]):
         first = next(instructions)
         instructions = itertools.chain([first, []], instructions)
 
-    summary = TextSequence(
-        map(
-            lambda x: normalize_whitespace(x.text_content(excluded_tags=["script"], tag_filter=tag_filter)),
-            next(instructions),
-        )
-    )
-    sections: List[ArticleSection] = []
-
-    for chunk in more_itertools.chunked(instructions, 2):
-        if len(chunk) == 1:
-            chunk.append([])
-        texts = [
-            list(
-                map(lambda x: normalize_whitespace(x.text_content(excluded_tags=["script"], tag_filter=tag_filter)), c)
-            )
-            for c in chunk
-        ]
-        sections.append(ArticleSection(*map(TextSequence, texts)))
+    summary = _nodes_to_text_sequence(next(instructions), tag_filter)
+    sections = _build_sections(instructions, tag_filter)
 
     return ArticleBody(summary=summary, sections=sections)
+
+
+@dataclass(frozen=True)
+class LiveTickerSelectors:
+    """The selectors and settings used to extract the body of a live ticker page.
+
+    Parsers supporting live tickers declare an instance of this as the class attribute ``_live_ticker``
+    and pass it to :func:`extract_body_with_selector`. A page is treated as a live ticker if
+    <boundary_selector> matches.
+
+    Args:
+        boundary_selector: Selects one element per entry, marking where an entry starts.
+        paragraph_selector: Selects the paragraphs of the entries.
+        summary_selector: Selects the summary of the whole live ticker, located in front of the first entry.
+        subheadline_selector: Selects the headlines of the entries.
+        date_selector: Selects the date of an entry. Has to match at most one element per entry. Elements with
+            a ``datetime`` attribute are read from it, all others from their text.
+        date_dayfirst: Whether ambiguous dates, e.g. 03.10.2026, are read day first. See ``generic_date_parsing``.
+        date_default: The datetime filling in what the dates of the entries leave out, e.g. the day of an entry
+            only stating its time. Without it, the current date is used.
+        date_tz: The timezone assumed for entry dates not stating one.
+        author_selector: Selects the authors of an entry.
+        image_selector: Selects the <img> elements of the entries.
+        image_caption_selector: Works like <caption_selector> of ``image_extraction``.
+        image_alt_selector: Works like <alt_selector> of ``image_extraction``.
+        image_author_selector: Works like <author_selector> of ``image_extraction``.
+        image_relative_urls: Works like <relative_urls> of ``image_extraction``.
+        image_size_pattern: Works like <size_pattern> of ``image_extraction``.
+    """
+
+    boundary_selector: XPath
+    paragraph_selector: XPath
+    summary_selector: Optional[XPath] = None
+    subheadline_selector: Optional[XPath] = None
+    date_selector: Optional[XPath] = None
+    date_dayfirst: bool = False
+    date_default: Optional[datetime] = None
+    date_tz: Optional[tzinfo] = None
+    author_selector: Optional[XPath] = None
+    image_selector: Optional[XPath] = None
+    image_caption_selector: XPath = _default_image_caption_selector
+    image_alt_selector: XPath = _default_image_alt_selector
+    image_author_selector: Union[XPath, Pattern[str], List[Pattern[str]]] = _default_image_author_selector
+    image_relative_urls: Union[bool, XPath] = False
+    image_size_pattern: Pattern[str] = _default_image_size_pattern
+
+
+def extract_live_ticker_body_with_selector(
+    doc: lxml.html.HtmlElement,
+    selectors: LiveTickerSelectors,
+    tag_filter: Optional[XPath] = None,
+) -> LiveTickerBody:
+    # depth first index for each element in tree
+    df_idx_by_ref = {element: i for i, element in enumerate(doc.iter())}
+
+    def extract_nodes(selector: Optional[XPath], node_type: Type[Node]) -> List[Node]:
+        return _extract_nodes(doc, df_idx_by_ref, selector, node_type) if selector else []
+
+    summary_nodes = extract_nodes(selectors.summary_selector, SummaryNode)
+    nodes = sorted(
+        summary_nodes
+        + extract_nodes(selectors.boundary_selector, BoundaryNode)
+        + extract_nodes(selectors.subheadline_selector, SubheadNode)
+        + extract_nodes(selectors.paragraph_selector, ParagraphNode)
+        + extract_nodes(selectors.date_selector, DateNode)
+        + extract_nodes(selectors.author_selector, AuthorNode)
+        + extract_nodes(selectors.image_selector, ImageNode)
+    )
+
+    if nodes[: len(summary_nodes)] != summary_nodes:
+        raise ValueError("All summary nodes should be at the beginning of the article")
+
+    summary = _nodes_to_text_sequence(summary_nodes, tag_filter)
+    domain = _resolve_domain(doc, selectors.image_relative_urls) if selectors.image_selector else None
+
+    entries: List[LiveTickerEntry] = []
+    entry_nodes = more_itertools.split_at(nodes[len(summary_nodes) :], pred=lambda x: isinstance(x, BoundaryNode))
+
+    for entry in entry_nodes:
+        if not entry:
+            continue
+
+        if len([node for node in entry if isinstance(node, DateNode)]) > 1:
+            raise ValueError(
+                "Live ticker entry contains more than one date, "
+                "make sure the date selector matches exactly one element per entry"
+            )
+
+        content_nodes = [node for node in entry if isinstance(node, (ParagraphNode, SubheadNode))]
+        instructions: Iterator[List[Node]] = more_itertools.split_when(
+            content_nodes, pred=lambda x, y: type(x) is not type(y)
+        )
+        if content_nodes and not isinstance(content_nodes[0], SubheadNode):
+            # no subheadline leads the entry, so its first paragraphs belong to a section without a headline
+            instructions = itertools.chain([[]], instructions)
+        elif not content_nodes:
+            instructions = iter([[]])
+
+        entry_date = None
+        entry_authors: List[str] = []
+        entry_image_nodes: List[IndexedImageNode] = []
+        wrapper = Element("div")
+        copied: Set[lxml.html.HtmlElement] = set()
+        for node in entry:
+            # nodes are in document order, so an ancestor is always seen first; copying only the outermost
+            # matched elements keeps nested matches from appearing twice in the entry's html
+            if not any(ancestor in copied for ancestor in node.node.iterancestors()):
+                wrapper.append(copy(node.node))
+                copied.add(node.node)
+            if isinstance(node, DateNode):
+                entry_date = generic_date_parsing(
+                    node.text_content(),
+                    tz=selectors.date_tz,
+                    dayfirst=selectors.date_dayfirst,
+                    default=selectors.date_default,
+                )
+            elif isinstance(node, AuthorNode):
+                entry_authors.extend(generic_author_parsing(node.text_content()))
+            elif isinstance(node, ImageNode):
+                entry_image_nodes.append(
+                    IndexedImageNode(position=int(node.position), content=node.node, is_cover=False)
+                )
+
+        # parsed as a batch per entry, so that the images are handled the same way as those of an article
+        entry_images = list(
+            parse_image_nodes(
+                image_nodes=entry_image_nodes,
+                caption_selector=selectors.image_caption_selector,
+                alt_selector=selectors.image_alt_selector,
+                author_selector=selectors.image_author_selector,
+                domain=domain,
+                size_pattern=selectors.image_size_pattern,
+            )
+        )
+
+        entries.append(
+            LiveTickerEntry(
+                sections=_build_sections(instructions, tag_filter),
+                publishing_date=entry_date,
+                authors=entry_authors,
+                images=entry_images,
+                html=tostring(wrapper, encoding="unicode"),
+            )
+        )
+    return LiveTickerBody(summary=summary, entries=entries)
+
+
+def extract_body_with_selector(
+    doc: lxml.html.HtmlElement,
+    paragraph_selector: XPath,
+    summary_selector: Optional[XPath] = None,
+    subheadline_selector: Optional[XPath] = None,
+    tag_filter: Optional[XPath] = None,
+    live_ticker: Optional[LiveTickerSelectors] = None,
+) -> Union[ArticleBody, LiveTickerBody]:
+    """Dispatches to either the plain article or the live ticker body extraction.
+
+    Uses the boundary selector of <live_ticker> to decide whether `doc` is a live ticker page. If no
+    <live_ticker> is given, or its boundary selector doesn't match, the page is treated as a regular article.
+    """
+    if live_ticker is not None and live_ticker.boundary_selector(doc):
+        return extract_live_ticker_body_with_selector(doc, live_ticker, tag_filter=tag_filter)
+
+    return extract_article_body_with_selector(
+        doc,
+        summary_selector=summary_selector,
+        subheadline_selector=subheadline_selector,
+        paragraph_selector=paragraph_selector,
+        tag_filter=tag_filter,
+    )
 
 
 _ld_node_selector = XPath("//script[@type='application/ld+json']")
@@ -313,7 +553,10 @@ def get_meta_content(root: lxml.html.HtmlElement) -> Dict[str, str]:
 
 
 def transform_breaks_to_tag(
-    element: lxml.html.HtmlElement, tag: str = "p", replace: bool = False, **attribs: str
+    element: lxml.html.HtmlElement,
+    tag: str = "p",
+    replace: bool = False,
+    **attribs: str,
 ) -> None:
     """Splits the content of <element> on <br> tags into paragraphs and wraps them in <tag> elements.
 
@@ -405,7 +648,9 @@ def generic_nodes_to_text(nodes: Sequence[Union[lxml.html.HtmlElement, str]], no
 
 
 def apply_substitution_pattern_over_list(
-    input_list: List[str], pattern: Pattern[str], replacement: Union[str, Callable[[Match[str]], str]] = ""
+    input_list: List[str],
+    pattern: Pattern[str],
+    replacement: Union[str, Callable[[Match[str]], str]] = "",
 ) -> List[str]:
     return [subbed for text in input_list if (subbed := re.sub(pattern, replacement, text).strip())]
 
@@ -587,11 +832,47 @@ class CustomParserInfo(parser.parserinfo):
     # type ignore due to types-python-dateutil==2.9.0.20251008, see https://github.com/flairNLP/fundus/issues/806
 
 
-def generic_date_parsing(date_str: Optional[str], tz: Optional[timezone] = None) -> Optional[datetime]:
+def generic_date_parsing(
+    date_str: Optional[str],
+    tz: Optional[tzinfo] = None,
+    dayfirst: bool = False,
+    default: Optional[datetime] = None,
+) -> Optional[datetime]:
+    """Parses <date_str> into a datetime.
+
+    Args:
+        date_str: The string to parse.
+        tz: The timezone assumed if <date_str> doesn't specify one.
+        dayfirst: If True, ambiguous dates like 03.10.2026 are read day first. ISO 8601 dates are always
+            read year first. Defaults to False.
+        default: The datetime used to fill in components <date_str> doesn't specify, e.g. the date of a time-only
+            string like "16:12". Defaults to None, which fills them in with the current date.
+
+    Returns:
+        The parsed datetime or None if <date_str> is None.
+    """
     if date_str is None:
         return None
 
-    if not (parsed_date := parser.parse(date_str, tzinfos=_tz_infos, parserinfo=CustomParserInfo(), fuzzy=True)):
+    parsed_date: Optional[datetime] = None
+    if dayfirst:
+        # dateutil applies dayfirst to year first dates as well, turning 2026-10-03 into March 10th,
+        # so ISO 8601 dates are parsed separately
+        try:
+            parsed_date = parser.isoparse(date_str.strip())
+        except ValueError:
+            pass
+
+    if parsed_date is None and not (
+        parsed_date := parser.parse(
+            date_str,
+            tzinfos=_tz_infos,
+            parserinfo=CustomParserInfo(),
+            fuzzy=True,
+            dayfirst=dayfirst,
+            default=default,
+        )
+    ):
         return None
 
     if tz is not None and parsed_date.tzinfo is None:
@@ -701,14 +982,20 @@ def parse_urls(node: lxml.html.HtmlElement) -> Optional[Dict[str, str]]:
 
 class _DimensionCalculator:
     def __init__(
-        self, width: Optional[float] = None, height: Optional[float] = None, ratio: Optional[float] = None
+        self,
+        width: Optional[float] = None,
+        height: Optional[float] = None,
+        ratio: Optional[float] = None,
     ) -> None:
         self.width = width
         self.height = height
         self.ratio = ratio
 
     def calculate(
-        self, width: Optional[float] = None, height: Optional[float] = None, dpr: Optional[float] = None
+        self,
+        width: Optional[float] = None,
+        height: Optional[float] = None,
+        dpr: Optional[float] = None,
     ) -> Optional[Dimension]:
         if not (width or height):
             width = self.width
@@ -723,7 +1010,9 @@ _width_x_height_pattern = re.compile(r"(?P<width>[0-9]+)x(?P<height>[0-9]+)")
 
 
 def get_versions_from_node(
-    source: lxml.html.HtmlElement, ratio: Optional[float], size_pattern: Optional[Pattern[str]]
+    source: lxml.html.HtmlElement,
+    ratio: Optional[float],
+    size_pattern: Optional[Pattern[str]],
 ) -> Set[ImageVersion]:
     if not (urls := parse_urls(source)):
         return set()
@@ -769,7 +1058,10 @@ def get_versions_from_node(
             kwargs.update({k: float(v) for k, v in match.groupdict().items() if v is not None})
 
         version = ImageVersion(
-            url=url, query_width=query_width, size=calculator.calculate(**kwargs), type=source.get("type")
+            url=url,
+            query_width=query_width,
+            size=calculator.calculate(**kwargs),
+            type=source.get("type"),
         )
         versions.add(version)
 
@@ -899,7 +1191,10 @@ class Bounds(NamedTuple):
 
 
 def determine_bounds(
-    dom: DOM, paragraph_selector: XPath, upper_boundary_selector: XPath, lower_boundary_selector: Optional[XPath]
+    dom: DOM,
+    paragraph_selector: XPath,
+    upper_boundary_selector: XPath,
+    lower_boundary_selector: Optional[XPath],
 ) -> Optional[Bounds]:
     def get_sorted_indices(nodes: List[lxml.html.HtmlElement]) -> List[int]:
         return sorted([dom.get_index(node) for node in nodes])
@@ -931,15 +1226,12 @@ def image_extraction(
     image_selector: XPath = XPath("//figure//img"),
     upper_boundary_selector: XPath = XPath("//main"),
     lower_boundary_selector: Optional[XPath] = None,
-    caption_selector: XPath = XPath("./ancestor::figure//figcaption"),
-    alt_selector: XPath = XPath("./@alt"),
-    author_selector: Union[XPath, Pattern[str], List[Pattern[str]]] = XPath(
-        "(./ancestor::figure//*[(contains(@class, 'copyright') or contains(@class, 'credit')) and text()])[1]"
-    ),
+    caption_selector: XPath = _default_image_caption_selector,
+    alt_selector: XPath = _default_image_alt_selector,
+    author_selector: Union[XPath, Pattern[str], List[Pattern[str]]] = _default_image_author_selector,
     relative_urls: Union[bool, XPath] = False,
-    size_pattern: Pattern[str] = re.compile(
-        r"width([=-])(?P<width>[0-9.]+)|height([=-])(?P<height>[0-9.]+)|dpr=(?P<dpr>[0-9.]+|)"
-    ),
+    size_pattern: Pattern[str] = _default_image_size_pattern,
+    live_ticker: Optional[LiveTickerSelectors] = None,
 ) -> List[Image]:
     """Extracts images enriched with metadata from <dom> based on given selectors.
 
@@ -965,6 +1257,10 @@ def image_extraction(
             domain
         size_pattern: Regular expression to select <width>, <height> and <dpr> from the image URL. The given regExp
             will be matched with re.findall and overwrites existing values. Defaults to None.
+        live_ticker: The live ticker selectors of the parser, if the publisher has live tickers. If their boundary
+            selector matches, the page is a live ticker, which has no article paragraphs to bound the images. Only the
+            images before its first entry are then extracted, since the ones of the entries belong to them.
+            <upper_boundary_selector>, <lower_boundary_selector> and <paragraph_selector> are ignored in that case.
 
     Returns:
         A list of Images contained within the article
@@ -975,21 +1271,26 @@ def image_extraction(
     dom = DOM(doc)
 
     # determine bounds based on df index
-    if not (bounds := determine_bounds(dom, paragraph_selector, upper_boundary_selector, lower_boundary_selector)):
-        raise ValueError("Bounds could not be determined")
-
-    if relative_urls:
-        if isinstance(relative_urls, bool):
-            selector = _og_url_selector
-        else:
-            selector = relative_urls
-        if not (domain := selector(dom.root)):
-            raise ValueError("Could not determine domain")
+    if live_ticker is not None and (entries := live_ticker.boundary_selector(doc)):
+        first_entry = min(dom.get_index(entry) for entry in entries)
+        # everything in front of the first entry is considered a cover image, like the ones in front of a paragraph
+        bounds: Optional[Bounds] = Bounds(upper=-1, first_paragraph=first_entry, lower=first_entry)
     else:
-        domain = None
+        bounds = determine_bounds(dom, paragraph_selector, upper_boundary_selector, lower_boundary_selector)
+    if not bounds:
+        raise ValueError(
+            "Bounds could not be determined, <paragraph_selector> and <lower_boundary_selector> "
+            "should select at least one element behind the upper boundary"
+        )
+
+    domain = _resolve_domain(dom.root, relative_urls)
 
     image_nodes = [
-        IndexedImageNode(position=position, content=node, is_cover=position < (bounds.first_paragraph or 0))
+        IndexedImageNode(
+            position=position,
+            content=node,
+            is_cover=position < (bounds.first_paragraph or 0),
+        )
         for node in image_selector(doc)
         if bounds.upper < (position := dom.get_index(node)) < bounds.lower
     ]
