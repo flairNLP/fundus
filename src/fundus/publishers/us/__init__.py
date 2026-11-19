@@ -40,6 +40,7 @@ class US(metaclass=PublisherGroup):
             ),
             NewsMap("https://apnews.com/news-sitemap-content.xml", languages={"en", "es"}),
         ],
+        impersonate="chrome",
     )
 
     CNBC = Publisher(
