@@ -87,8 +87,8 @@ class UK(metaclass=PublisherGroup):
         domain="https://www.euronews.com/",
         parser=EuronewsParser,
         sources=[
-            Sitemap("https://www.euronews.com/sitemaps/en/articles.xml"),
-            NewsMap("https://www.euronews.com/sitemaps/en/latest-news.xml"),
+            Sitemap("https://www.euronews.com/sitemap/articles.xml"),
+            NewsMap("https://www.euronews.com/news.xml"),
         ],
     )
 

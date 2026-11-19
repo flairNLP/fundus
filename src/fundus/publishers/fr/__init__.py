@@ -26,8 +26,8 @@ class FR(metaclass=PublisherGroup):
         domain="https://fr.euronews.com/",
         parser=EuronewsParser,
         sources=[
-            Sitemap("https://fr.euronews.com/sitemaps/fr/articles.xml"),
-            NewsMap("https://fr.euronews.com/sitemaps/fr/latest-news.xml"),
+            Sitemap("https://fr.euronews.com/sitemap/articles.xml"),
+            NewsMap("https://fr.euronews.com/news.xml"),
         ],
     )
 
