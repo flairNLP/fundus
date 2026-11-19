@@ -62,11 +62,13 @@ class APNewsParser(ParserProxy):
         # unfortunately we would need to render the site first before parsing images for this version
 
     class V1_1(V1):
+        _bloat_regex = r"^Related coverage →|——|___|[A-z ]{5,20}reported from[A-z ]{2,20}\.\s*$"
+
         _author_selector = CSSSelector("div.Page-authors")
         _subheadline_selector = XPath("//div[contains(@class, 'RichTextStoryBody')] /h2[not(text()='___')]")
         _paragraph_selector = XPath(
-            "//div[contains(@class, 'RichTextStoryBody')] /p[not(preceding-sibling::*[1][self::h2 and text()='___'])]"
-            # only p-elements not directly following h2 elements with text() = '___'
+            f"//div[contains(@class, 'RichTextStoryBody')] /p[text() and not(preceding-sibling::*[1][text()='___'] or re:test(string(), '{_bloat_regex}'))]",
+            namespaces={"re": "http://exslt.org/regular-expressions"},
         )
 
         @attribute
