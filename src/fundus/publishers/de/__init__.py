@@ -474,8 +474,8 @@ class DE(metaclass=PublisherGroup):
         domain="https://de.euronews.com/",
         parser=EuronewsParser,
         sources=[
-            Sitemap("https://de.euronews.com/sitemaps/de/articles.xml"),
-            NewsMap("https://de.euronews.com/sitemaps/de/latest-news.xml"),
+            Sitemap("https://de.euronews.com/sitemap/articles.xml"),
+            NewsMap("https://de.euronews.com/news.xml"),
         ],
         url_filter=regex_filter("/video/"),
     )
