@@ -71,6 +71,7 @@ class FreiePresseParser(ParserProxy):
             )
 
     class V1_1(V1):
+        VALID_UNTIL = datetime.date(2026, 11, 24)
         _paragraph_selector = CSSSelector("#artikel-content p:not(.bold)")
 
         @attribute
@@ -89,3 +90,24 @@ class FreiePresseParser(ParserProxy):
                 author_selector=re.compile(r"(?i)bild:(?P<credits>.*)"),
                 relative_urls=True,
             )
+
+    class V1_2(V1_1):
+        @attribute
+        def authors(self) -> List[str]:
+            # authors are referenced by @id and resolved through the Person nodes of the ld+json graph
+            persons = {
+                person.get("@id"): person.get("name")
+                for person in self.precomputed.ld.xpath_search("Person")
+                if isinstance(person, dict)
+            }
+            authors = []
+            for author in self.precomputed.ld.xpath_search("NewsArticle/author"):
+                if isinstance(author, dict):
+                    author = author.get("name") or persons.get(author.get("@id"))
+                if author and author != "Chemnitzer Verlag und Druck GmbH & Co. KG":
+                    authors.append(author)
+            return generic_author_parsing(authors)
+
+        @attribute
+        def topics(self) -> List[str]:
+            return generic_topic_parsing(self.precomputed.ld.bf_search("keywords"))
