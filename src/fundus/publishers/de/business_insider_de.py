@@ -19,7 +19,7 @@ class BusinessInsiderDEParser(ParserProxy):
     class V1(BaseParser):
         VALID_UNTIL = datetime.date(2026, 11, 24)
         _summary_selector = CSSSelector("article div.bi-bulletpoints li, article div.bi-bulletpoints > p")
-        _subheadline_selector = CSSSelector("article > div > h2, article > div > h3")
+        _subheadline_selector: XPath = CSSSelector("article > div > h2, article > div > h3")
         _paragraph_selector = XPath(
             """
             //article
