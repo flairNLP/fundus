@@ -53,5 +53,66 @@
     ],
     "publishing_date": "2024-04-28 09:36:00+02:00",
     "title": "Samsung Galaxy Unpacked: Launchtermin für neue Foldables, Galaxy Ring und mehr soll feststehen – das erwarten wir"
+  },
+  "V1_1": {
+    "authors": [
+      "Laura Lopez"
+    ],
+    "body": {
+      "summary": [
+        "Die USA verschärfen ihre Kontrollmechanismen für integrierte Schaltkreise in 16 und 14 Nanometern – moderne Fertigungsknoten machen dabei weniger als 20 Prozent des weltweiten Chipmarkts aus."
+      ],
+      "sections": [
+        {
+          "headline": [],
+          "paragraphs": [
+            "Das US-Handelsministerium hat China einen weiteren Schlag versetzt. Die neue Regulierung verschärft die Kontrollmechanismen für integrierte Schaltkreise in 16 und 14 Nanometern sowie für bestimmte moderne Fertigungsknoten.",
+            "Diese Strukturbreiten sind zwar verhältnismäßig alt, werden aber weiterhin im großen Stil für Halbleiter in Haushaltsgeräten, Mobiltelefonen und Fahrzeugen genutzt. Genau deshalb spielen sie eine entscheidende Rolle für Chinas Halbleiterindustrie.",
+            "Die neuen Richtlinien betreffen dabei längst nicht nur US-Unternehmen, sondern binden jeden Chiphersteller, der in den USA entwickelte Technologien und Patente einsetzt. TSMC, der weltweit größte Halbleiterauftragsfertiger, nutzt diese Patente. Ebendarum hat der Branchenriese einen Teil seiner Lieferungen nach China vorerst gestoppt, um sicherzustellen, dass alle Auslieferungen den jüngsten Vorgaben der US-Behörden genügen.",
+            "Bislang zielten die US-Sanktionen vor allem darauf ab, Chinas Zugriff auf fortschrittliche Spitzenhalbleiter abzufedern. Ab sofort beschränkt die Strategie jedoch auch den Verkauf ausgereifter Chips. Der US-Regierung ist bewusst, wie unverzichtbar diese Bauteile für China sind: Zahlreiche chinesische Produzenten von Haushaltsgeräten, Fernsehgeräten, Unterhaltungselektronik und Autos verbauen sie massenhaft in ihren Produkten.",
+            "Gleichzeitig sind chinesische Unternehmen in diesem Szenario nur teilweise auf TSMC angewiesen. SMIC, Hua Hong Semiconductor und weitere einheimische Halbleiterkonzerne besitzen die Kapazitäten, um ältere Fertigungsknoten selbst zu bedienen – ein völliges Verschwinden vom chinesischen Markt droht daher nicht.",
+            "Offen ist allerdings, ob Chinas Halbleiterhersteller die enorme Nachfrage ihrer heimischen Kundschaft bereits im vollen Umfang stemmen können."
+          ]
+        },
+        {
+          "headline": [
+            "Ausgereifte Chips sind unverzichtbar für Chinas Industrie – und die USA wissen das"
+          ],
+          "paragraphs": [
+            "In den ersten beiden Monaten des Jahres 2026 exportierte China integrierte Schaltkreise im Gesamtwert von 43.300 Millionen Dollar – ein sattes Plus von 72,6 Prozent im Vergleich zum selben Zeitraum 2025.",
+            "Diese Zahlen stammen direkt aus den chinesischen Zollregistern und gelten daher als verlässlich. Bemerkenswert daran ist: Während Chinas Gesamtexporte im Januar und Februar um 21,8 Prozent zulegten, wurde die Halbleiterbranche ganz offensichtlich weitaus stärker gefördert und forciert als andere Wirtschaftszweige.",
+            "In den vergangenen Jahren trieb vorrangig der Binnenmarkt das Wachstum der chinesischen Halbleiterindustrie voran. Doch die aktuellen Außenhandelszahlen belegen, dass auch die weltweite Nachfrage enorm hoch ist. In diesem Kontext stellt sich für euch berechtigterweise die Frage, welche Arten von Schaltkreisen die chinesischen Fertigungslinien derzeit in solchen Massen verlassen.",
+            "Die Antwort ist aufschlussreich: Es handelt sich primär um Chips aus ausgereiften Fertigungstechnologien, in der Regel in 28 Nanometern oder noch größeren Strukturbreiten. Ein beträchtlicher Teil der chinesischen Chiphersteller wie Hua Hong Semiconductor, China Resources Microelectronics oder Guangzhou ZenSemi produziert Halbleiter in 28 Nanometern oder mit noch älteren Verfahren.",
+            "Zudem errichtet Beijing Yandong Microelectronics (YDME) derzeit ein neues Werk für 4.600 Millionen Dollar, das gezielt auf die Fertigung von 28-Nanometer-Halbleitern auf 300-Millimeter-Wafern ausgelegt ist.",
+            "Diese Unternehmen würden nicht derart entschlossen auf ältere Chipgenerationen setzen, wenn sich das Geschäft nicht auszahlen würde. Vor allem aber ist dieser Schritt essenziell, um Chinas Halbleiterindustrie in einer angespannten Phase abzusichern.",
+            "Den USA ist bewusst, dass diese Fertigungskapazitäten das Fundament für Chinas Streben nach technologischer Eigenständigkeit bilden. Aus genau diesem Grund dehnt Washington seine Restriktionen nun auf Halbleiter aus, die zwar weit von der technologischen Speerspitze entfernt, aber für das industrielle Rückgrat unverzichtbar sind."
+          ]
+        }
+      ]
+    },
+    "images": [
+      {
+        "versions": [
+          {
+            "url": "https://images.cgames.de/images/gamestar/290/tsmc-chips-bildquelle-tsmc_6452410.jpg",
+            "query_width": null,
+            "size": {
+              "width": 960,
+              "height": 540
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": true,
+        "description": "TSMC ist der wichtigste Halbleiterauftragsfertiger der Welt, aber China ist nicht vollständig auf ihn angewiesen. (Bildquelle: TSMC)",
+        "caption": "TSMC ist der wichtigste Halbleiterauftragsfertiger der Welt, aber China ist nicht vollständig auf ihn angewiesen.",
+        "authors": [
+          "TSMC"
+        ],
+        "position": 466
+      }
+    ],
+    "publishing_date": "2026-11-25 12:31:00+01:00",
+    "title": "Neuer Schlag der USA gegen China: Nun geraten auch einfache Chips für Fernseher und Smartphones ins Visier"
   }
 }
