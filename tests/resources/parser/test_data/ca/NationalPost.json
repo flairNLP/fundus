@@ -2078,5 +2078,105 @@
       "missile",
       "wired"
     ]
+  },
+  "V2": {
+    "authors": [
+      "National Post"
+    ],
+    "body": {
+      "summary": [
+        "'Few people anywhere work harder or care as deeply'"
+      ],
+      "sections": [
+        {
+          "headline": [],
+          "paragraphs": [
+            "Sharon Kirkey is an award-winning reporter for the National Post whose work spans more than three decades, most of it focused on health.",
+            "She began as a general assignment and city reporter with the…"
+          ]
+        }
+      ]
+    },
+    "images": [
+      {
+        "versions": [
+          {
+            "url": "https://nationalpost.com/wp-content/uploads/sites/2/2026/11/sharon-kirkey.jpg?resize=160,107",
+            "query_width": null,
+            "size": {
+              "width": 160,
+              "height": 107
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://nationalpost.com/wp-content/uploads/sites/2/2026/11/sharon-kirkey.jpg?resize=200,133",
+            "query_width": null,
+            "size": {
+              "width": 200,
+              "height": 133
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://nationalpost.com/wp-content/uploads/sites/2/2026/11/sharon-kirkey.jpg?resize=360,240",
+            "query_width": null,
+            "size": {
+              "width": 360,
+              "height": 240
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://nationalpost.com/wp-content/uploads/sites/2/2026/11/sharon-kirkey.jpg?resize=400,267",
+            "query_width": null,
+            "size": {
+              "width": 400,
+              "height": 266
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://nationalpost.com/wp-content/uploads/sites/2/2026/11/sharon-kirkey.jpg?resize=560,373",
+            "query_width": null,
+            "size": {
+              "width": 560,
+              "height": 373
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://nationalpost.com/wp-content/uploads/sites/2/2026/11/sharon-kirkey.jpg?resize=768,512",
+            "query_width": null,
+            "size": {
+              "width": 768,
+              "height": 512
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://nationalpost.com/wp-content/uploads/sites/2/2026/11/sharon-kirkey.jpg",
+            "query_width": null,
+            "size": {
+              "width": 1200,
+              "height": 799
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": true,
+        "description": "National Post health reporter Sharon Kirkey.",
+        "caption": "National Post health reporter Sharon Kirkey.",
+        "authors": [
+          "Peter J. Thompson / National Post"
+        ],
+        "position": 483
+      }
+    ],
+    "publishing_date": "2026-11-25 14:33:51+00:00",
+    "title": "Meet our health reporter",
+    "topics": [
+      "Editors Notes"
+    ]
   }
 }

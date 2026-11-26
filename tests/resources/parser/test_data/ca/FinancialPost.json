@@ -204,5 +204,181 @@
       "Rosenberg Research",
       "TD Economics"
     ]
+  },
+  "V2": {
+    "authors": [
+      "Gigi Suhanic"
+    ],
+    "body": {
+      "summary": [
+        "The central bank made a \"tough, forward-looking\" call by increasing its benchmark lending rate to 2.5%"
+      ],
+      "sections": [
+        {
+          "headline": [],
+          "paragraphs": [
+            "The Bank of Canada made a “tough, forward-looking” call on Wednesday by increasing its benchmark lending rate by 25 basis points to 2.5 per cent and at least one more hike is likely to come, economists say.",
+            "Following the rate announcement, investors cut their bets for a rate hike in December to 55 per cent from 100 per cent on Tuesday, according to market swap data from Bloomberg.",
+            "Here’s what economists had to say about the central bank’s latest decision and what could be in store for the next few rate announcements."
+          ]
+        },
+        {
+          "headline": [
+            "‘Guard against energy prices’: CIBC"
+          ],
+          "paragraphs": [
+            "The Bank of Canada hiked “as it looks to guard against the threat of elevated energy prices becoming a widespread inflationary problem,” Andrew Grantham, an economist at CIBC Capital Markets, said in a note on Wednesday.",
+            "Central bank officials said core inflation remains around the two per cent target, but they are worried that rising inflation expectations and producer prices could drive inflation up, with higher transportation costs likely to start seeping through the economy.",
+            "The latest Monetary Policy Report forecasts inflation to remain above two per cent — the Bank of Canada’s target — at the end of next year and for economic slack to tighten but still persist.",
+            "CIBC is calling for the Bank of Canada to skip a December rate hike, but raise it in January and then hold it at 2.75 per cent, the mid-point of its neutral range of 2.25 per cent to 3.25 per cent."
+          ]
+        },
+        {
+          "headline": [
+            "‘Tough decision’: Desjardins"
+          ],
+          "paragraphs": [
+            "“Those relying on backward-looking data and outdated models of inflation will no doubt say this rate hike is a mistake,” Royce Mendes, head of macro strategy at Desjardins Group, said in a note on Wednesday.",
+            "“In reality, central bankers made a tough, forward-looking decision that reduces the risk of a painfully aggressive tightening cycle down the road.”",
+            "The Bank of Canada is forecasting headline inflation of 3.4 per cent in the fourth quarter and 2.6 per cent in the same period next year, “up significantly” from previous forecasts.",
+            "But Mendes said that doesn’t mean further increases are carved in stone, since Bank of Canada governor Tiff Macklem has said future rate decisions will be made “one meeting at a time.”",
+            "He said the chances of an increase in December are now 50-50, but Desjardins is sticking with its call for the Bank of Canada to skip a December hike and add one more “final” increase in January."
+          ]
+        },
+        {
+          "headline": [
+            "‘Clearance to stamp out inflation’: Capital Economics"
+          ],
+          "paragraphs": [
+            "“The Bank of Canada’s decision to raise the policy rate shows the balance of risks has now tipped towards the threat of energy-driven inflation over the downside risks from trade tensions,” Bradley Saunders, North America economist at Capital Economics Ltd., said in a note on Wednesday.",
+            "Policymakers indicated they did consider holding rates even as they try to push back against the “hawkish” market bets that had been pricing in rate increases for months.",
+            "“In the end, the Bank of Canada deemed the upside risks to inflation from the oil price shock to be too great to look past any longer, pointing to rising production and transportation costs, as well as signs of impending cost passthrough in its latest quarterly surveys,” Saunders said.",
+            "The central bank upgraded its outlook for the economy, with gross domestic product rising by about two per cent next year on better business investment, improving exports and government spending “giving the bank clearance to continue hiking to stamp out inflation.”",
+            "But Capital Economics said it is less “bullish” on growth and that tariffs will drag on investment, while government spending on projects won’t kick in until 2028.",
+            "It is currently calling for two more rate hikes."
+          ]
+        }
+      ]
+    },
+    "images": [
+      {
+        "versions": [
+          {
+            "url": "https://financialpost.com/wp-content/uploads/sites/3/2026/10/1006-biz-gs-bonds1.jpg?resize=160,107",
+            "query_width": null,
+            "size": {
+              "width": 160,
+              "height": 107
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://financialpost.com/wp-content/uploads/sites/3/2026/10/1006-biz-gs-bonds1.jpg?resize=200,133",
+            "query_width": null,
+            "size": {
+              "width": 200,
+              "height": 133
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://financialpost.com/wp-content/uploads/sites/3/2026/10/1006-biz-gs-bonds1.jpg?resize=360,240",
+            "query_width": null,
+            "size": {
+              "width": 360,
+              "height": 240
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://financialpost.com/wp-content/uploads/sites/3/2026/10/1006-biz-gs-bonds1.jpg?resize=560,373",
+            "query_width": null,
+            "size": {
+              "width": 560,
+              "height": 373
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://financialpost.com/wp-content/uploads/sites/3/2026/10/1006-biz-gs-bonds1.jpg?resize=768,512",
+            "query_width": null,
+            "size": {
+              "width": 768,
+              "height": 512
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://financialpost.com/wp-content/uploads/sites/3/2026/10/1006-biz-gs-bonds1.jpg?resize=1200,800",
+            "query_width": null,
+            "size": {
+              "width": 1200,
+              "height": 799
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://financialpost.com/wp-content/uploads/sites/3/2026/10/1006-biz-gs-bonds1.jpg?resize=2388,1591",
+            "query_width": null,
+            "size": {
+              "width": 2388,
+              "height": 1591
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": true,
+        "description": "Bank of Canada building in Ottawa on Wednesday, Sept. 30, 2026.",
+        "caption": "The Bank of Canada is forecasting headline inflation of 3.4 per cent in the fourth quarter and 2.6 per cent in the same period next year.",
+        "authors": [
+          "HYUNGCHEOL PARK/Postmedia"
+        ],
+        "position": 510
+      },
+      {
+        "versions": [
+          {
+            "url": "https://financialpost.com/wp-content/uploads/sites/3/2026/10/bank-of-canada-rate-hike.png?resize=400,291",
+            "query_width": null,
+            "size": {
+              "width": 400,
+              "height": 291
+            },
+            "type": "image/png"
+          },
+          {
+            "url": "https://financialpost.com/wp-content/uploads/sites/3/2026/10/bank-of-canada-rate-hike.png?resize=768,559",
+            "query_width": null,
+            "size": {
+              "width": 768,
+              "height": 559
+            },
+            "type": "image/png"
+          },
+          {
+            "url": "https://financialpost.com/wp-content/uploads/sites/3/2026/10/bank-of-canada-rate-hike.png",
+            "query_width": null,
+            "size": {
+              "width": 1200,
+              "height": 874
+            },
+            "type": "image/png"
+          }
+        ],
+        "is_cover": false,
+        "description": "bank-of-canada-rate-hike",
+        "caption": null,
+        "authors": [],
+        "position": 537
+      }
+    ],
+    "publishing_date": "2026-10-28 16:38:03+00:00",
+    "title": "Bank of Canada not done hiking rates as it looks to ‘stamp out’ inflation, say economists",
+    "topics": [
+      "Interest Rates",
+      "Inflation",
+      "Bank Of Canada",
+      "Economy"
+    ]
   }
 }
