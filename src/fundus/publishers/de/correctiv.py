@@ -180,7 +180,6 @@ class CorrectivParser(ParserProxy):
             )
 
     class V2_1(V2):
-        # content blocks of the cvui design system: info boxes and collapsible lists
         _cvui_paragraphs = (
             "//article//div[contains(@class, 'entry-content')]/div[contains(@class, 'wp-block-cvui-infobox')]//p"
             " | //article//div[contains(@class, 'entry-content')]/div[contains(@class, 'wp-block-cvui-interactive-list')]"
