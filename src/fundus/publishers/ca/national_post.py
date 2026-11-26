@@ -85,4 +85,14 @@ class NationalPostParser(ParserProxy):
             )
 
     class V1_1(PostMediaParser.V1):
+        VALID_UNTIL = datetime.date(2026, 10, 27)
+
         _bloat_topics = PostMediaParser.V1._bloat_topics | {"nationalpost.com"}
+
+    class V2(PostMediaParser.V2):
+        _bloat_topics = PostMediaParser.V2._bloat_topics | {
+            "National Post",
+            "nationalpost.com",
+            "NP Comment",
+            "NP Columnists",
+        }

@@ -44,9 +44,9 @@ class CA(metaclass=PublisherGroup):
         domain="https://financialpost.com",
         parser=FinancialPostParser,
         sources=[
-            NewsMap("https://financialpost.com/sitemap-news.xml"),
-            Sitemap("https://financialpost.com/sitemap-old.xml"),
-            RSSFeed("https://financialpost.com/feed"),
+            NewsMap("https://financialpost.com/news-sitemap.xml"),
+            Sitemap("https://financialpost.com/sitemaps/article-new.xml/"),
+            Sitemap("https://financialpost.com/sitemaps/article-archive.xml/"),
         ],
     )
 
@@ -88,9 +88,9 @@ class CA(metaclass=PublisherGroup):
         domain="https://nationalpost.com",
         parser=NationalPostParser,
         sources=[
-            NewsMap("https://nationalpost.com/sitemap-news.xml"),
-            Sitemap("https://nationalpost.com/sitemap-old.xml"),
-            RSSFeed("https://nationalpost.com/feed"),
+            NewsMap("https://nationalpost.com/news-sitemap.xml"),
+            Sitemap("https://nationalpost.com/sitemaps/article-archive.xml"),
+            Sitemap("https://nationalpost.com/sitemaps/article-new.xml"),
         ],
     )
 

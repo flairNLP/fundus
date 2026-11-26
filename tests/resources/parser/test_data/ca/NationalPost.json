@@ -2078,5 +2078,115 @@
       "missile",
       "wired"
     ]
+  },
+  "V2": {
+    "authors": [
+      "Stewart Lewis"
+    ],
+    "body": {
+      "summary": [
+        "The Parole Board of Canada has approved pardons for 944 cannabis possession convictions"
+      ],
+      "sections": [
+        {
+          "headline": [],
+          "paragraphs": [
+            "The Parole Board of Canada has approved pardons for 944 cannabis possession convictions since mid-2019, according to spokesperson Andrea Fournier.",
+            "That number is likely to increase with the recent Parole Board launch of an online portal to apply for criminal record pardons, including for possession of cannabis for personal use.",
+            "“For eligible individuals, obtaining a … cannabis record (pardon) can help remove barriers to employment, education, volunteering and housing,” the Parole Board says in the news release accompanying the launch.",
+            "The 944 pardons followed from new legislation that enabled “a streamlined application process for simple possession,” Fournier told National Post in an email on Wednesday.",
+            "“Between August 1, 2019 … and November 20, 2026, the PBC has received 1,476 applications for cannabis record (pardons),” she said, adding that 526 applications were returned because “the individual was either not eligible for the streamlined application process or their documentation was incomplete.”",
+            "The federal government legalized possession of up to 30 grams of legal cannabis on Oct. 17, 2018. It followed the legalization for medical cannabis, two decades earlier.",
+            "Potential pardon applicants can check on their eligibility on the federal government website.",
+            "It says a person can apply for a cannabis record pardon if they “were convicted in Canada as an adult of simple possession of cannabis … Simple possession is a charge for possession of a controlled substance, in this case cannabis, for personal use (i.e., with no intent to traffic).”",
+            "Individuals who are neither Canadian citizens or residents can also apply if they have “a record of conviction(s) for simple possession of cannabis in Canada.”",
+            "The new portal enables applicants to start an application and return later to complete it. Supporting documents can be uploaded, such as: the conviction record, court documents, police record checks and identification.",
+            "Applicants can then track their application’s progress online.",
+            "“By simplifying the application process, the PBC Service Portal helps people benefit from programs that can support their successful reintegration, while maintaining the integrity of the … cannabis record (pardon) processes and supporting public safety,” states the parole board new release."
+          ]
+        }
+      ]
+    },
+    "images": [
+      {
+        "versions": [
+          {
+            "url": "https://nationalpost.com/wp-content/uploads/sites/2/2026/11/adobestock_marijuana_306469855.jpeg?resize=160,107",
+            "query_width": null,
+            "size": {
+              "width": 160,
+              "height": 107
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://nationalpost.com/wp-content/uploads/sites/2/2026/11/adobestock_marijuana_306469855.jpeg?resize=200,133",
+            "query_width": null,
+            "size": {
+              "width": 200,
+              "height": 133
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://nationalpost.com/wp-content/uploads/sites/2/2026/11/adobestock_marijuana_306469855.jpeg?resize=360,240",
+            "query_width": null,
+            "size": {
+              "width": 360,
+              "height": 240
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://nationalpost.com/wp-content/uploads/sites/2/2026/11/adobestock_marijuana_306469855.jpeg?resize=560,373",
+            "query_width": null,
+            "size": {
+              "width": 560,
+              "height": 373
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://nationalpost.com/wp-content/uploads/sites/2/2026/11/adobestock_marijuana_306469855.jpeg?resize=768,512",
+            "query_width": null,
+            "size": {
+              "width": 768,
+              "height": 512
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://nationalpost.com/wp-content/uploads/sites/2/2026/11/adobestock_marijuana_306469855.jpeg?resize=1200,800",
+            "query_width": null,
+            "size": {
+              "width": 1200,
+              "height": 799
+            },
+            "type": "image/jpeg"
+          },
+          {
+            "url": "https://nationalpost.com/wp-content/uploads/sites/2/2026/11/adobestock_marijuana_306469855.jpeg?resize=2400,1600",
+            "query_width": null,
+            "size": {
+              "width": 2400,
+              "height": 1599
+            },
+            "type": "image/jpeg"
+          }
+        ],
+        "is_cover": true,
+        "description": "Cannabis",
+        "caption": "Cannabis with pre-rolled cannabis cigarette. (File photo)",
+        "authors": [
+          "Michael - stock.adobe.com"
+        ],
+        "position": 483
+      }
+    ],
+    "publishing_date": "2026-11-25 19:51:48+00:00",
+    "title": "Canadians with cannabis possession records can apply for pardon through new online portal",
+    "topics": [
+      "Crime & Justice"
+    ]
   }
 }

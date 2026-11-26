@@ -1,3 +1,5 @@
+import datetime
+
 from lxml.etree import XPath
 
 from fundus.parser import ParserProxy, function
@@ -7,6 +9,8 @@ from fundus.publishers.shared.postmedia import PostMediaParser
 
 class FinancialPostParser(ParserProxy):
     class V1(PostMediaParser.V1):
+        VALID_UNTIL = datetime.date(2026, 10, 27)
+
         _paragraph_selector = XPath(
             "//div[@class='story-v2-content-element-inline']/p[not(starts-with(text(), '—')) and (span[text()] or text())]"
         )
@@ -25,3 +29,11 @@ class FinancialPostParser(ParserProxy):
         @function(priority=0)
         def _replace_br_tags(self):
             transform_breaks_to_tag(self.precomputed.doc)
+
+    class V2(PostMediaParser.V2):
+        _bloat_topics = PostMediaParser.V2._bloat_topics | {
+            "Financial Post",
+            "financialpost.com",
+            "Business Wire News Releases",
+            "PMN Press Releases",
+        }

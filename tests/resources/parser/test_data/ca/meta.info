@@ -11,6 +11,10 @@
     "url": "https://financialpost.com/news/economy/economists-weigh-in-jobs-report",
     "crawl_date": "2026-06-06 14:43:48.828020"
   },
+  "FinancialPost_2026_11_25.html.gz": {
+    "url": "https://financialpost.com/economy/economists-call-for-at-least-one-more-rate-hike-as-bank-of-canada-looks-to-stamp-out-inflation/",
+    "crawl_date": "2026-11-25 16:58:42.873481"
+  },
   "GlobalNews_2026_05_24.html.gz": {
     "url": "https://globalnews.ca/news/11862251/russia-missile-attack-kyiv-ukraine/",
     "crawl_date": "2026-05-24 23:53:36.585712"
@@ -22,6 +26,10 @@
   "NationalPost_2025_05_08.html.gz": {
     "url": "https://nationalpost.com/news/world/latest-india-pakistan-missiles",
     "crawl_date": "2025-05-08 12:58:11.334767"
+  },
+  "NationalPost_2026_11_26.html.gz": {
+    "url": "https://nationalpost.com/news/crime-justice/canadians-with-cannabis-possession-records-can-apply-for-pardon-through-new-online-portal/",
+    "crawl_date": "2026-11-26 11:27:51.646190"
   },
   "OttawaCitizen_2026_05_26.html.gz": {
     "url": "https://ottawacitizen.com/public-service/ircc-gave-up-office-space",
