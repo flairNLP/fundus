@@ -67,6 +67,7 @@ class CorrectivParser(ParserProxy):
             )
 
     class V2(BaseParser):
+        VALID_UNTIL = datetime.date(2026, 11, 24)
         # credit labels CORRECTIV sets at the foot of an article
         _paragraph_bloat_sentence_beginnings = [
             "Text and research",
@@ -177,3 +178,34 @@ class CorrectivParser(ParserProxy):
                 author_selector=self._author_selector,
                 image_selector=XPath("//figure[@id]/img | //figure[@class='figure']/picture/img"),
             )
+
+    class V2_1(V2):
+        _cvui_paragraphs = (
+            "//article//div[contains(@class, 'entry-content')]/div[contains(@class, 'wp-block-cvui-infobox')]//p"
+            " | //article//div[contains(@class, 'entry-content')]/div[contains(@class, 'wp-block-cvui-interactive-list')]"
+            "//div[contains(@class, 'wp-block-cvui-interactive-list-item')]/p"
+        )
+        _extra_subheadlines = (
+            "//article//div[contains(@class, 'entry-content')]/div[contains(@class, 'wp-block-cvui-interactive-list')]"
+            "//h3 | //article//div[contains(@class, 'entry-content')]/h4"
+        )
+
+        @attribute
+        def images(self) -> List[Image]:
+            return image_extraction(
+                doc=self.precomputed.doc,
+                paragraph_selector=self._paragraph_selector,
+                author_selector=self._author_selector,
+                image_selector=XPath(
+                    f"//article//header//figure/img"
+                    f" | {self._entry_content}//figure[contains(@class, 'wp-block-image')"
+                    f" and not(ancestor::div[contains(@class, 'sans-font')])]//img"
+                ),
+            )
+
+    # V2's selectors are composed from class-level strings, which are not in scope of a subclass body
+    V2_1._paragraph_selector = XPath(
+        f"{V2._paragraph_selector.path} | {V2_1._cvui_paragraphs}",
+        namespaces={"re": "http://exslt.org/regular-expressions"},
+    )
+    V2_1._subheadline_selector = XPath(f"{V2._subheadline_selector.path} | {V2_1._extra_subheadlines}")
